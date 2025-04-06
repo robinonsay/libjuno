@@ -17,7 +17,7 @@ jobs:
           submodules: true
 
       - name: Configure project with CMake
-        run: cmake -B build . -DLIBJUNO_TESTS=On
+        run: cmake -B build . -DJUNO_TESTS=On
 
       - name: Build project
         run: make -C build

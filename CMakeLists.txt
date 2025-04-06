@@ -1,28 +1,28 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(libjuno VERSION 1.0.0 LANGUAGES C)
+project(juno VERSION 1.0.0 LANGUAGES C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_COMPILER /usr/bin/gcc)
-option(LIBJUNO_TESTS "Enable unit testing" OFF)
-message("Testing: ${LIBJUNO_TESTS}")
+option(JUNO_TESTS "Enable unit testing" OFF)
+message("Testing: ${JUNO_TESTS}")
 
 # Create the library (update the source files as needed)
-aux_source_directory(${CMAKE_SOURCE_DIR}/src LIBJUNO_SRCS)
-add_library(libjuno STATIC
-    ${LIBJUNO_SRCS}
+aux_source_directory(${CMAKE_SOURCE_DIR}/src JUNO_SRCS)
+add_library(${PROJECT_NAME} STATIC
+    ${JUNO_SRCS}
 )
 
 # Specify the include directories for consumers of this library
-target_include_directories(libjuno PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/inc
 PRIVATE
     ${CMAKE_SOURCE_DIR}/src
 )
 
 # Enable a comprehensive set of warnings
-target_compile_options(libjuno PUBLIC
+target_compile_options(${PROJECT_NAME} PUBLIC
 -Wall                     # Enable most warning messages
 -Wextra                   # Enable additional warning messages
 -Werror                   # Treat all warnings as errors
@@ -39,15 +39,17 @@ target_compile_options(libjuno PUBLIC
 )
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL Debug)
-    target_compile_options(libjuno -O2)
+    target_compile_options(juno -O2)
 endif()
 
 
 
-if(LIBJUNO_TESTS)
+if(JUNO_TESTS)
     enable_testing()
     add_library(unity ${CMAKE_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${CMAKE_SOURCE_DIR}/deps/unity/src)
     add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
 endif()
 
+add_library(${PROJECT_NAME}_Shared SHARED $<TARGET_OBJECTS:${PROJECT_NAME}>)
+set_target_properties(${PROJECT_NAME}_Shared PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
