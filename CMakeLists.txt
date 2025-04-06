@@ -36,6 +36,12 @@ target_compile_options(${PROJECT_NAME} PUBLIC
 -Wswitch-default         # Warn whenever a switch statement does not have a default case
 -Wstrict-aliasing=2       # Enforce strict aliasing rules to avoid undefined behavior
 -fno-common                 # Disallow multiple definitions of common symbols
+PRIVATE
+-ffreestanding          # Disable the hosted environment
+)
+
+target_link_options( ${PROJECT_NAME} PRIVATE
+    -nostdlib
 )
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL Debug)

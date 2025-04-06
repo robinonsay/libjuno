@@ -2,6 +2,7 @@
 #define JUNO_MEMORY_DIRECT_H
 
 #include "juno/memory/memory_types.h"
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -32,6 +33,25 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvUserData
 );
+
+inline void Juno_Memset(void *pcMem, uint8_t iVal, size_t zSize)
+{
+    uint8_t *pcByte = pcMem;
+    for(size_t i = 0; i < zSize; ++i)
+    {
+        pcByte[i] = iVal;
+    }
+}
+
+inline void Juno_Memcpy(void *pDest, const void *pSrc, size_t zSize)
+{
+    uint8_t *pcDestByte = pDest;
+    const uint8_t *pcSrcByte = pSrc;
+    for(size_t i = 0; i < zSize; ++i)
+    {
+        pcDestByte[i] = pcSrcByte[i];
+    }
+}
 
 /**
  * @brief Allocates a block of memory.

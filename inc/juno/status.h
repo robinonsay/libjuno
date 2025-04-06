@@ -1,7 +1,5 @@
 #ifndef JUNO_STATUS_H
 #define JUNO_STATUS_H
-#include <stdio.h>
-#include <string.h>
 
 typedef enum JUNO_STATUS_TAG
 {
@@ -20,9 +18,7 @@ typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCust
 #ifndef FAIL_MESSAGE_LEN
 #define FAIL_MESSAGE_LEN    256
 #endif
-#define FAIL(tStatus, pfcnFailureHandler, pvUserData, ...)\
-char pcMessage[FAIL_MESSAGE_LEN] = {0};\
-snprintf(pcMessage, FAIL_MESSAGE_LEN, __VA_ARGS__);\
+#define FAIL(tStatus, pfcnFailureHandler, pvUserData, pcMessage)\
 if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvUserData);}
 
 #endif

@@ -5,7 +5,9 @@
 #include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
+
+
+
 
 /**
  * @brief Validates the essential members of a memory block structure.
@@ -66,7 +68,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     // Initially, no freed blocks are available
     ptMemBlk->zFreed = 0;
     // Clear the memory area
-    memset(pvMemory, 0, zTypeSize * zLength);
+    Juno_Memset(pvMemory, 0, zTypeSize * zLength);
     return Juno_MemoryBlkValidate(ptMemBlk);
 }
 
@@ -92,7 +94,7 @@ JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, void **pvRetAddr)
         tStatus = JUNO_STATUS_MEMALLOC_ERROR;
         // Log error through the failure handler
         FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvUserData,
-            "Failed to allocate block memory. Memory is full: %lu", ptMemBlk->zLength
+            "Failed to allocate block memory. Memory is full"
         );
         return tStatus;
     }
@@ -162,7 +164,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     }
     
     // Clear the block memory
-    memset(pvAddr, 0, ptMemBlk->zTypeSize);
+    Juno_Memset(pvAddr, 0, ptMemBlk->zTypeSize);
     // Check if the block being freed is the last allocated block
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
     if(pvEndOfBlk == pvAddr)
