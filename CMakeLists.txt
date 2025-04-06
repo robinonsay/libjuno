@@ -29,8 +29,6 @@ target_compile_options(libjuno PUBLIC
 -pedantic                 # Enforce ISO C standards
 -Wshadow                  # Warn when variable declarations shadow outer scope variables
 -Wcast-align             # Warn for potential issues with pointer casts
--Wconversion             # Warn about implicit conversions that may alter a value
--Wsign-conversion        # Warn for implicit sign conversions
 -Wstrict-prototypes      # Warn if a function is declared without specifying argument types
 -Wmissing-prototypes      # Warn if a global function is defined without a previous prototype declaration
 -Wundef                  # Warn if an undefined identifier is evaluated in an #if directive
@@ -38,8 +36,12 @@ target_compile_options(libjuno PUBLIC
 -Wswitch-default         # Warn whenever a switch statement does not have a default case
 -Wstrict-aliasing=2       # Enforce strict aliasing rules to avoid undefined behavior
 -fno-common                 # Disallow multiple definitions of common symbols
--O2 # Optimize for performance while maintaining predictability
 )
+
+if(NOT CMAKE_BUILD_TYPE STREQUAL Debug)
+    target_compile_options(libjuno -O2)
+endif()
+
 
 
 if(LIBJUNO_TESTS)

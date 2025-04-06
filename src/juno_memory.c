@@ -1,5 +1,3 @@
-#ifndef JUNO_MEMORY_IMPL_H
-#define JUNO_MEMORY_IMPL_H
 #include "juno/macros.h"
 #include "juno/memory.h"
 #include "juno/memory/memory_direct.h"
@@ -7,9 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 static JUNO_STATUS_T Juno_MemoryBlkValidate(JUNO_MEMORY_BLOCK_T *ptMemBlk)
 {
@@ -74,7 +70,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     ASSERT_SUCCESS(tStatus, return tStatus);
     void *pvStartAddr = ptMemBlk->pvMemory;
     void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * ptMemBlk->zLength];
-    if(pvAddr < pvStartAddr || pvEndAddr < pvAddr)
+    if(pvAddr < pvStartAddr || pvEndAddr < pvAddr || ptMemBlk->zUsed == 0)
     {
         tStatus = JUNO_STATUS_MEMFREE_ERROR;
         FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvUserData,
@@ -118,8 +114,3 @@ const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void)
 {
     return &tJuno_MemoryBlkApi;
 }
-
-#ifdef __cplusplus
-}
-#endif
-#endif

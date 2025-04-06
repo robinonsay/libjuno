@@ -2,5 +2,5 @@
 set(LIBJUNO_TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
 add_executable(test_memory ${LIBJUNO_TEST_DIR}/test_memory.c)
 include_directories(${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/inc)
-target_link_libraries(test_memory unity)
+target_link_libraries(test_memory libjuno unity)
 add_test(test_memory test_memory)
