@@ -1,6 +1,6 @@
 #include "juno/macros.h"
-#include "juno/memory.h"
-#include "juno/memory/memory_direct.h"
+#include "juno/memory/memory.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>

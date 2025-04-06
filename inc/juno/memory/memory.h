@@ -1,6 +1,6 @@
 #ifndef JUNO_MEMORY_DIRECT_H
 #define JUNO_MEMORY_DIRECT_H
-#include "juno/memory.h"
+#include "juno/memory/memory_types.h"
 #include <stdint.h>
 #ifdef __cplusplus
 extern "C" {

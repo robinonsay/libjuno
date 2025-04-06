@@ -1,7 +1,6 @@
-#include "juno/memory.h"
+#include "juno/memory/memory.h"
 #include "juno/status.h"
 #include "unity.h"
-#include "juno/memory/memory_direct.h"
 #include "unity_internals.h"
 #include <stddef.h>
 #include <stdint.h>
