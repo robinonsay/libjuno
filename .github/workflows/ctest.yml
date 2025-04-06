@@ -1,4 +1,4 @@
-name: Run CTest Unit Tests
+name: Build and Test
 
 on:
   push:
@@ -7,13 +7,18 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Configure project with CMake
+        run: cmake -B build . -DLIBJUNO_TESTS=On
+
+      - name: Build project
+        run: make -C build
+
       - name: Run CTest unit tests
-        working-directory: build
-        run: ctest --output-on-failure
+        run: cd build && ctest --output-on-failure
