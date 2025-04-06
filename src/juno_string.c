@@ -21,7 +21,6 @@ static JUNO_STATUS_T Juno_StringValidate(JUNO_STRING_T *ptString)
 JUNO_STATUS_T Juno_StringInit(
     JUNO_STRING_T *ptString,
     JUNO_MEMORY_ALLOC_T *ptAlloc,
-    size_t zLen,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvUserData
 )
@@ -33,8 +32,7 @@ JUNO_STATUS_T Juno_StringInit(
     ptString->ptAlloc = ptAlloc;
     ptString->pfcnFailureHandler = pfcnFailureHandler;
     ptString->pvUserData = pvUserData;
-    ptString->tMemory.zSize = zLen;
-    return Juno_MemoryGet(ptString->ptAlloc, &ptString->tMemory);
+    return JUNO_STATUS_SUCCESS;
 }
 
 JUNO_STATUS_T Juno_StringFromCStr(
@@ -79,24 +77,14 @@ JUNO_STATUS_T Juno_StringGetSize(JUNO_STRING_T *ptString, size_t *pzRetSize)
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_StringConcat(JUNO_STRING_T *ptString1, JUNO_STRING_T *ptString2, size_t zNewSize)
+JUNO_STATUS_T Juno_StringConcat(JUNO_STRING_T *ptString1, JUNO_STRING_T *ptString2)
 {
     ASSERT_EXISTS((ptString1 && ptString2));
     JUNO_STATUS_T tStatus = Juno_StringValidate(ptString1);
     ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = Juno_StringValidate(ptString2);
     ASSERT_SUCCESS(tStatus, return tStatus);
-    if(zNewSize > 0 && zNewSize < ptString1->tMemory.zSize + ptString2->tMemory.zSize)
-    {
-        tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        FAIL(tStatus, ptString1->pfcnFailureHandler, ptString1->pvUserData,
-        "Failed to concat strings. New size is too small");
-        return tStatus;
-    }
-    if(!zNewSize)
-    {
-        zNewSize = ptString1->tMemory.zSize + ptString2->tMemory.zSize;
-    }
+    size_t zNewSize = ptString1->tMemory.zSize + ptString2->tMemory.zSize;
     JUNO_MEMORY_T tNewMemory = {0};
     tNewMemory.zSize = zNewSize;
     tStatus = Juno_MemoryGet(ptString1->ptAlloc, &tNewMemory);

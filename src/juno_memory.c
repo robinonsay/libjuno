@@ -25,6 +25,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
 )
 {
     ASSERT_EXISTS(ptMemBlk);
+    ptMemBlk->tHdr.tType = JUNO_MEMORY_ALLOC_TYPE_BLOCK;
     ptMemBlk->pvMemory = (uint8_t *) pvMemory;
     ptMemBlk->pvMemoryFreeStack = pvMemoryFreeStack;
     ptMemBlk->zTypeSize = zTypeSize;
@@ -33,6 +34,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     ptMemBlk->pfcnFailureHandler = pfcnFailureHandler;
     ptMemBlk->pvUserData = pvUserData;
     ptMemBlk->zFreed = 0;
+    memset(pvMemory, 0, zTypeSize * zLength);
     return Juno_MemoryBlkValidate(ptMemBlk);
 }
 
@@ -90,6 +92,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
             return tStatus;           
         }
     }
+    memset(pvAddr, 0, ptMemBlk->zTypeSize);
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
     if(pvEndOfBlk == pvAddr)
     {
@@ -111,13 +114,6 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     {
         case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
         {
-            if(ptMemory->zSize != ptMem->tBlock.zTypeSize)
-            {
-                tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
-                "Failed to allocate memory | Invalid size %lu with block alloc", ptMemory->zSize);
-                return tStatus;
-            }
             tStatus = Juno_MemoryBlkGet(&ptMem->tBlock, &ptMemory->pvAddr);
             break;
         }
@@ -137,13 +133,6 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     {
         case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
         {
-            if(ptMemory->zSize != ptMem->tBlock.zTypeSize)
-            {
-                tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
-                "Failed to free memory | Invalid size %lu with block alloc", ptMemory->zSize);
-                return tStatus;
-            }
             tStatus = Juno_MemoryBlkPut(&ptMem->tBlock, ptMemory->pvAddr);
             ptMemory->pvAddr = NULL;
             ptMemory->zSize = 0;
