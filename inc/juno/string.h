@@ -4,6 +4,9 @@
 #include "juno/macros.h"
 #include "juno/status.h"
 #include <stddef.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct JUNO_STRING_TAG JUNO_STRING_T;
 typedef struct JUNO_STRING_API_TAG JUNO_STRING_API_T;
@@ -27,6 +30,9 @@ struct JUNO_STRING_API_TAG
     JUNO_STATUS_T (*Concat)(JUNO_STRING_T *ptString1, JUNO_STRING_T *ptString2);
 };
 
-const JUNO_STRING_API_T* Juno_StringImpl(void);
+const JUNO_STRING_API_T* Juno_StringApi(void);
 
+#ifdef __cplusplus
+}
 #endif
+#endif // JUNO_STRING_H

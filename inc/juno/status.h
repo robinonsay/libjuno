@@ -6,7 +6,10 @@
 typedef enum JUNO_STATUS_TAG
 {
     JUNO_STATUS_SUCCESS         = 0,
-    JUNO_STATUS_NULLPTR_ERROR   = 1,
+    JUNO_STATUS_ERR             = 1,
+    JUNO_STATUS_NULLPTR_ERROR   = 2,
+    JUNO_STATUS_MEMALLOC_ERROR  = 3,
+    JUNO_STATUS_MEMFREE_ERROR   = 4,
 } JUNO_STATUS_T;
 
 typedef void JUNO_USER_DATA_T;
@@ -15,9 +18,9 @@ typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCust
 #ifndef FAIL_MESSAGE_LEN
 #define FAIL_MESSAGE_LEN    256
 #endif
-#define FAIL(tStatus, pfcnFailureHandler, pvUserData, format, ...)\
-const char pcMessage[FAIL_MESSAGE_LEN] = {};\
-snprintf(pcMessage, FAIL_MESSAGE_LEN, format, __VA_ARGS__);\
-pfcnFailureHandler(tStatus, pcMessage, pvUserData);
+#define FAIL(tStatus, pfcnFailureHandler, pvUserData, ...)\
+char pcMessage[FAIL_MESSAGE_LEN] = {0};\
+snprintf(pcMessage, FAIL_MESSAGE_LEN, __VA_ARGS__);\
+if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvUserData);}
 
 #endif

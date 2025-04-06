@@ -2,6 +2,7 @@
 #define JUNO_MACROS_H
 
 #include "juno/status.h"
+#include <stdint.h>
 
 #define DECLARE_FAILURE_HANDLER \
 JUNO_FAILURE_HANDLER_T pfcnFailureHandler;\
@@ -17,5 +18,6 @@ if(!ptr) \
 { \
     failOp; \
 }
+
 
 #endif // JUNO_MACROS_H
