@@ -10,6 +10,14 @@ extern "C" {
 #include "juno/memory/memory_types.h"
 
 typedef struct JUNO_MEMORY_BLOCK_API_TAG JUNO_MEMORY_BLOCK_API_T;
+typedef struct JUNO_MEMORY_API_TAG JUNO_MEMORY_API_T;
+
+struct JUNO_MEMORY_API_TAG
+{
+
+    JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvRetAddr);
+    JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvAddr);
+};
 
 struct JUNO_MEMORY_BLOCK_API_TAG
 {
@@ -27,6 +35,7 @@ struct JUNO_MEMORY_BLOCK_API_TAG
 };
 
 const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void);
+const JUNO_MEMORY_API_T * Juno_MemoryApi(void);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,7 @@
 #include "juno/macros.h"
 #include "juno/memory/memory.h"
 #include "juno/memory/memory_api.h"
+#include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -102,6 +103,60 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     return tStatus;
 }
 
+JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory)
+{
+    ASSERT_EXISTS(ptMem);
+    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    switch (ptMem->tHdr.tType)
+    {
+        case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
+        {
+            if(ptMemory->zSize != ptMem->tBlock.zTypeSize)
+            {
+                tStatus = JUNO_STATUS_MEMALLOC_ERROR;
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
+                "Failed to allocate memory | Invalid size %lu with block alloc", ptMemory->zSize);
+                return tStatus;
+            }
+            tStatus = Juno_MemoryBlkGet(&ptMem->tBlock, &ptMemory->pvAddr);
+            break;
+        }
+        default:
+        {
+            tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+        }
+    }
+    return tStatus;
+}
+
+JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory)
+{
+    ASSERT_EXISTS(ptMem);
+    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    switch (ptMem->tHdr.tType)
+    {
+        case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
+        {
+            if(ptMemory->zSize != ptMem->tBlock.zTypeSize)
+            {
+                tStatus = JUNO_STATUS_MEMALLOC_ERROR;
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
+                "Failed to free memory | Invalid size %lu with block alloc", ptMemory->zSize);
+                return tStatus;
+            }
+            tStatus = Juno_MemoryBlkPut(&ptMem->tBlock, ptMemory->pvAddr);
+            ptMemory->pvAddr = NULL;
+            ptMemory->zSize = 0;
+            break;
+        }
+        default:
+        {
+            tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+        }
+    }
+    return tStatus;
+}
+
 static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
 {
     .Init = Juno_MemoryBlkInit,
@@ -109,8 +164,18 @@ static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
     .Put = Juno_MemoryBlkPut
 };
 
+static const JUNO_MEMORY_API_T tJuno_MemoryApi =
+{
+    .Get = Juno_MemoryGet,
+    .Put = Juno_MemoryPut
+};
 
 const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void)
 {
     return &tJuno_MemoryBlkApi;
+}
+
+const JUNO_MEMORY_API_T * Juno_MemoryApi(void)
+{
+    return &tJuno_MemoryApi;
 }
