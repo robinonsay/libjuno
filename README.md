@@ -1,6 +1,8 @@
 <img src="assets/juno_logo_rect.svg" alt="drawing" width="400em"/>
-[![GitHub Actions Workflow Status](https://github.com/robinonsay/libjuno/actions/workflows/ci.yml/badge.svg)](https://github.com/robinonsay/libjuno/actions/workflows/ci.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+![GitHub Actions Workflow Status](https://github.com/robinonsay/libjuno/actions/workflows/ci.yml/badge.svg)
+![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+
 # LibJuno
 The Juno library aims to make C99 development faster and more memory safe
 
