@@ -6,6 +6,7 @@
 #include "juno/string/string_api.h"
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 static JUNO_STATUS_T Juno_StringValidate(JUNO_STRING_T *ptString)
 {
@@ -61,7 +62,7 @@ JUNO_STATUS_T Juno_StringFromCStr(
     JUNO_STATUS_T tStatus = Juno_MemoryGet(ptString->ptAlloc, &ptString->tMemory);
     ASSERT_SUCCESS(tStatus, return tStatus);
     // Copy the C-string into the allocated memory.
-    Juno_Memcpy(ptString->tMemory.pvAddr, pcStr, zLen);
+    memcpy(ptString->tMemory.pvAddr, pcStr, zLen);
     return tStatus;
 }
 
@@ -104,10 +105,10 @@ JUNO_STATUS_T Juno_StringConcat(JUNO_STRING_T *ptString1, JUNO_STRING_T *ptStrin
     ASSERT_SUCCESS(tStatus, return tStatus);
     uint8_t *ptNewStr = tNewMemory.pvAddr;
     // Copy the first string into the new memory.
-    Juno_Memcpy(ptNewStr, ptString1->tMemory.pvAddr, ptString1->tMemory.zSize);
+    memcpy(ptNewStr, ptString1->tMemory.pvAddr, ptString1->tMemory.zSize);
     ptNewStr = &ptNewStr[ptString1->tMemory.zSize];
     // Append the second string after the first.
-    Juno_Memcpy(ptNewStr, ptString2->tMemory.pvAddr, ptString2->tMemory.zSize);
+    memcpy(ptNewStr, ptString2->tMemory.pvAddr, ptString2->tMemory.zSize);
     // Free the old memory block and update the string.
     tStatus = Juno_MemoryPut(ptString1->ptAlloc, &ptString1->tMemory);
     ASSERT_SUCCESS(tStatus, {

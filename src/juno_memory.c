@@ -5,6 +5,7 @@
 #include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 static JUNO_STATUS_T Juno_MemoryBlkValidate(JUNO_MEMORY_BLOCK_T *ptMemBlk)
 {
@@ -41,7 +42,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     // Initially, no freed blocks are available
     ptMemBlk->zFreed = 0;
     // Clear the memory area
-    Juno_Memset(pvMemory, 0, zTypeSize * zLength);
+    memset(pvMemory, 0, zTypeSize * zLength);
     return Juno_MemoryBlkValidate(ptMemBlk);
 }
 
@@ -116,7 +117,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     }
     
     // Clear the block memory
-    Juno_Memset(pvAddr, 0, ptMemBlk->zTypeSize);
+    memset(pvAddr, 0, ptMemBlk->zTypeSize);
     // Check if the block being freed is the last allocated block
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
     if(pvEndOfBlk == pvAddr)
@@ -178,25 +179,6 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     return tStatus;
 }
 
-
-void Juno_Memset(void *pMem, const uint8_t iVal, size_t zSize)
-{
-    uint8_t *pcMem = pMem;
-    for(size_t i = 0; i < zSize; i++)
-    {
-        pcMem[i] = iVal;
-    }
-}
-
-void Juno_Memcpy(void *pDest, const void *pSrc, size_t zSize)
-{
-    uint8_t *pcDest = pDest;
-    const uint8_t *pcSrc = pSrc;
-    for(size_t i = 0; i < zSize; i++)
-    {
-        pcDest[i] = pcSrc[i];
-    }
-}
 // Define static API structures to expose functions returning pointers to these APIs.
 static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
 {

@@ -82,33 +82,6 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
  */
 JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory);
 
-/**
- * @brief Fills a block of memory with a specific byte value.
- *
- * This function writes a given byte value to a memory block of a specified size. It first aligns the
- * destination pointer to a multiple of sizeof(size_t) and fills any leading unaligned bytes individually.
- * Once aligned, it fills the memory in blocks of size_t for efficiency, and finally handles any remaining bytes.
- *
- * @param pcMem Pointer to the memory block to be set.
- * @param iVal The value to be assigned to each byte.
- * @param zSize The total number of bytes to set in the memory block.
- */
-void Juno_Memset(void *pcMem, const uint8_t iVal, size_t zSize);
-
-/**
- * @brief Copies memory from source to destination.
- *
- * This function transfers zSize bytes from the memory block pointed to by pSrc
- * to the memory block pointed to by pDest. It first copies byte-by-byte until both 
- * source and destination pointers are aligned to a multiple of sizeof(size_t), which
- * allows for a more efficient block copy using word-sized chunks. After the bulk copy,
- * any remaining bytes are copied individually.
- *
- * @param pDest Pointer to the destination memory block.
- * @param pSrc Pointer to the source memory block.
- * @param zSize The number of bytes to copy.
- */
-void Juno_Memcpy(void *pDest, const void *pSrc, size_t zSize);
 #ifdef __cplusplus
 }
 #endif
