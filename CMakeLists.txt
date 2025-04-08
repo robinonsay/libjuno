@@ -52,13 +52,22 @@ target_link_options( ${PROJECT_NAME} PRIVATE
     -nostdlib
 )
 
-if(NOT CMAKE_BUILD_TYPE STREQUAL Debug)
+if(NOT CMAKE_BUILD_TYPE STREQUAL Debug AND NOT JUNO_TESTS)
+    message("Optimization Enabled")
     target_compile_options(${PROJECT_NAME} PUBLIC -O2)
 endif()
 
 
 
 if(JUNO_TESTS)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        --coverage
+        -g
+        -O0
+    )
+    link_libraries(
+        gcov
+    )
     enable_testing()
     add_library(unity ${CMAKE_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${CMAKE_SOURCE_DIR}/deps/unity/src)

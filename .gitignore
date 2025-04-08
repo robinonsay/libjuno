@@ -54,3 +54,5 @@ dkms.conf
 .cache/
 build/
 compile_commands.json
+venv/
+.venv/
