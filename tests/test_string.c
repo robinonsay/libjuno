@@ -39,7 +39,7 @@ static void test_nominal_string(void)
 {
 	JUNO_STRING_T tStr = {0};
 	const char *pcTestStr = "Hello World!";
-	JUNO_STATUS_T tStatus = Juno_StringFromCStr(
+	JUNO_STATUS_T tStatus = Juno_StringInit(
 		&tStr,
 		&gtMemoryBlock,
 		pcTestStr,
@@ -64,7 +64,7 @@ static void test_nominal_concat(void)
 	JUNO_STRING_T tStr[2] = {0};
 	const char *pcTestStr = "Hello ";
 	const char *pcTestStr2 = "World!";
-	JUNO_STATUS_T tStatus = Juno_StringFromCStr(
+	JUNO_STATUS_T tStatus = Juno_StringInit(
 		&tStr[0],
 		&gtMemoryBlock,
 		pcTestStr,
@@ -72,7 +72,7 @@ static void test_nominal_concat(void)
 		NULL,
 		NULL
 	);
-	tStatus = Juno_StringFromCStr(
+	tStatus = Juno_StringInit(
 		&tStr[1],
 		&gtMemoryBlock,
 		pcTestStr2,
@@ -84,10 +84,11 @@ static void test_nominal_concat(void)
 	tStatus = Juno_StringConcat(&tStr[0], &tStr[1]);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	int i = 0;
-	for(const char *c=pcTestStr; *c;c++)
+	const char *pcTruthStr = "Hello World!";
+	for(const char *c=pcTruthStr; *c;c++)
 	{
 		const char *pcChar = tStr[0].tMemory.pvAddr;
-		TEST_ASSERT_EQUAL(pcTestStr[i], pcChar[i]);
+		TEST_ASSERT_EQUAL(pcTruthStr[i], pcChar[i]);
 		i += 1;
 	}
 	tStatus = Juno_StringFree(&tStr[0]);
@@ -96,10 +97,40 @@ static void test_nominal_concat(void)
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+static void test_nominal_append(void)
+{
+	JUNO_STRING_T tStr = {0};
+	const char *pcTestStr = "Hello ";
+	const char *pcTestStr2 = "World!";
+	JUNO_STATUS_T tStatus = Juno_StringInit(
+		&tStr,
+		&gtMemoryBlock,
+		pcTestStr,
+		strlen(pcTestStr),
+		NULL,
+		NULL
+	);
+	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+	tStatus = Juno_StringAppend(&tStr, pcTestStr2, strlen(pcTestStr2));
+	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+	int i = 0;
+	const char *pcTruthStr = "Hello World!";
+	for(const char *c=pcTruthStr; *c;c++)
+	{
+		const char *pcChar = tStr.tMemory.pvAddr;
+		TEST_ASSERT_EQUAL(pcTruthStr[i], pcChar[i]);
+		i += 1;
+	}
+	tStatus = Juno_StringFree(&tStr);
+	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+
 int main(void)
 {
 	UNITY_BEGIN();
 	RUN_TEST(test_nominal_string);
 	RUN_TEST(test_nominal_concat);
+	RUN_TEST(test_nominal_append);
 	return UNITY_END();
 }

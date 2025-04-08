@@ -30,7 +30,7 @@ PRIVATE
 )
 
 # Enable a comprehensive set of warnings
-target_compile_options(${PROJECT_NAME} PUBLIC
+target_compile_options(${PROJECT_NAME} PRIVATE
 -Wall                           # Enable most warning messages
 -Wextra                         # Enable additional warning messages
 -Werror                         # Treat all warnings as errors
@@ -42,9 +42,8 @@ target_compile_options(${PROJECT_NAME} PUBLIC
 -Wundef                         # Warn if an undefined identifier is evaluated in an #if directive
 -Wswitch                        # Warn about missing cases in switch statements
 -Wswitch-default                # Warn whenever a switch statement does not have a default case
--Wmissing-field-initializers    #Warn about missing fields in struct init
+-Wmissing-field-initializers    # Warn about missing fields in struct init
 -fno-common                     # Disallow multiple definitions of common symbols
-PRIVATE
 -fno-strict-aliasing            # Disable strict aliasing
 -ffreestanding                  # Disable the hosted environment
 )

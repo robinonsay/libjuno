@@ -17,17 +17,13 @@ typedef struct JUNO_STRING_TAG JUNO_STRING_T;
 
 struct JUNO_STRING_TAG
 {
-    /**
-     * @brief Pointer to the memory allocator.
-     */
+    /// The allocator for the string
     JUNO_MEMORY_ALLOC_T *ptAlloc;
-    /**
-     * @brief Structure containing memory information.
-     */
+    /// The memory location of the string
     JUNO_MEMORY_T tMemory;
-    /**
-     * @brief Failure handler for memory or string operations.
-     */
+    /// The length of the string
+    size_t zLen;
+    /// Failure handler
     DECLARE_FAILURE_HANDLER;
 };
 

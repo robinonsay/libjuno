@@ -9,22 +9,6 @@ extern "C" {
 #include "juno/string/string_types.h"
 
 /**
- * @brief Initializes a JUNO string.
- *
- * @param ptString Pointer to the JUNO string structure.
- * @param ptAlloc Memory allocator.
- * @param pfcnFailureHandler Failure handler callback.
- * @param pvUserData User data pointer.
- * @return JUNO_STATUS_T result status.
- */
-JUNO_STATUS_T Juno_StringInit(
-    JUNO_STRING_T *ptString,
-    JUNO_MEMORY_ALLOC_T *ptAlloc,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvUserData
-);
-
-/**
  * @brief Creates a JUNO string from a C string.
  *
  * @param ptString Pointer to the JUNO string structure.
@@ -35,7 +19,7 @@ JUNO_STATUS_T Juno_StringInit(
  * @param pvUserData User data pointer.
  * @return JUNO_STATUS_T result status.
  */
-JUNO_STATUS_T Juno_StringFromCStr(
+JUNO_STATUS_T Juno_StringInit(
     JUNO_STRING_T *ptString,
     JUNO_MEMORY_ALLOC_T *ptAlloc,
     const char *pcStr,
@@ -60,14 +44,14 @@ JUNO_STATUS_T Juno_StringSetAlloc(JUNO_STRING_T *ptString, JUNO_MEMORY_ALLOC_T *
  * @param pzRetSize Pointer to variable to store the string size.
  * @return JUNO_STATUS_T result status.
  */
-JUNO_STATUS_T Juno_StringGetSize(JUNO_STRING_T *ptString, size_t *pzRetSize);
+JUNO_STATUS_T Juno_StringLength(JUNO_STRING_T *ptString, size_t *pzRetSize);
 
 /// Writes a C-String to the Juno String
 /// @param ptString The juno string to write to
 /// @param pcCstr The C string
 /// @param zLen The length of the C string
 /// @return JUNO_STATUS_T result status
-JUNO_STATUS_T Juno_StringWrite(JUNO_STRING_T *ptString, const char *pcCstr, size_t zLen);
+JUNO_STATUS_T Juno_StringAppend(JUNO_STRING_T *ptString, const char *pcCstr, size_t zLen);
 
 /**
  * @brief Concatenates two JUNO strings.
