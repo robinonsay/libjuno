@@ -6,7 +6,15 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_COMPILER /usr/bin/gcc)
 option(JUNO_TESTS "Enable unit testing" OFF)
+option(JUNO_API "Enables the juno api" OFF)
 message("Testing: ${JUNO_TESTS}")
+message("Api: ${JUNO_API}")
+
+if(JUNO_API)
+    add_definitions(-DJUNO_API)
+endif(JUNO_API)
+
+
 
 # Create the library (update the source files as needed)
 aux_source_directory(${CMAKE_SOURCE_DIR}/src JUNO_SRCS)

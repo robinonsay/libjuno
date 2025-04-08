@@ -1,4 +1,5 @@
 #include "juno/memory/memory.h"
+#include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include "unity.h"
 #include "unity_internals.h"
@@ -38,11 +39,15 @@ static void test_nominal_single_alloc_and_free(void)
 		NULL
 	);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	void *ptTestPtr = NULL;
-	tStatus = Juno_MemoryBlkGet(&tMemBlock, &ptTestPtr);
+	JUNO_MEMORY_T tMemory = {0};
+	tStatus = Juno_MemoryBlkGet(&tMemBlock, &tMemory);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	tStatus = Juno_MemoryBlkPut(&tMemBlock, ptTestPtr);
+	TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
+	TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+	tStatus = Juno_MemoryBlkPut(&tMemBlock, &tMemory);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+	TEST_ASSERT_NULL(tMemory.pvAddr);
+	TEST_ASSERT_EQUAL(0, tMemory.pvAddr);
 }
 
 static void test_nominal_multiple_alloc_and_free(void)
@@ -59,34 +64,41 @@ static void test_nominal_multiple_alloc_and_free(void)
 	);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	TEST_BLOCK_T *ptTestPtr[10] = {0};
+	JUNO_MEMORY_T ptMemory[10] = {0};
 	for(int j = 0; j < 5; j++)
 	{
 		for(size_t i = 0; i < 10; i++)
 		{
-			void *pvMem = NULL;
-			tStatus = Juno_MemoryBlkGet(&tMemBlock, &pvMem);
-			ptTestPtr[i] = pvMem;
+			tStatus = Juno_MemoryBlkGet(&tMemBlock, &ptMemory[i]);
+			ptTestPtr[i] = ptMemory[i].pvAddr;
 			TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+			TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
+			TEST_ASSERT_NOT_EQUAL(0, ptMemory[i].pvAddr);
 			ptTestPtr[i]->bTestFlag=true;
 			ptTestPtr[i]->iTestNum = i;
 		}
 		for(size_t i = 0; i < 5; i++)
 		{
-			tStatus = Juno_MemoryBlkPut(&tMemBlock, ptTestPtr[i]);
+			tStatus = Juno_MemoryBlkPut(&tMemBlock, &ptMemory[i]);
 			TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+			TEST_ASSERT_NULL(ptMemory[i].pvAddr);
+			TEST_ASSERT_EQUAL(0, ptMemory[i].pvAddr);
 			ptTestPtr[i] = NULL;
 		}
 		for(size_t i = 0; i < 5; i++)
 		{
-			void *pvMem = NULL;
-			tStatus = Juno_MemoryBlkGet(&tMemBlock, &pvMem);
-			ptTestPtr[i] = pvMem;
+			tStatus = Juno_MemoryBlkGet(&tMemBlock, &ptMemory[i]);
+			ptTestPtr[i] = ptMemory[i].pvAddr;
 			TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+			TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
+			TEST_ASSERT_NOT_EQUAL(0, ptMemory[i].pvAddr);
 		}
 		for(size_t i = 0; i < 10; i++)
 		{
-			tStatus = Juno_MemoryBlkPut(&tMemBlock, ptTestPtr[i]);
+			tStatus = Juno_MemoryBlkPut(&tMemBlock, &ptMemory[i]);
 			TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+			TEST_ASSERT_NULL(ptMemory[i].pvAddr);
+			TEST_ASSERT_EQUAL(0, ptMemory[i].pvAddr);
 			ptTestPtr[i] = NULL;
 		}
 	}
@@ -106,27 +118,33 @@ static void test_negative_memory_empty(void)
 		NULL
 	);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-
-	tStatus = Juno_MemoryBlkPut(&tMemBlock, ptTestBlock);
+	JUNO_MEMORY_T tFailMemory = {
+		.pvAddr = ptTestBlock,
+		.zSize = 128
+	};
+	tStatus = Juno_MemoryBlkPut(&tMemBlock, &tFailMemory);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_MEMFREE_ERROR, tStatus);
 	TEST_BLOCK_T *ptTestPtr[10] = {0};
+	JUNO_MEMORY_T ptMemory[10] = {0};
 	for(size_t i = 0; i < 10; i++)
 	{
-		void *pvMem = NULL;
-		tStatus = Juno_MemoryBlkGet(&tMemBlock, &pvMem);
-		ptTestPtr[i] = pvMem;
+		tStatus = Juno_MemoryBlkGet(&tMemBlock, &ptMemory[i]);
+		ptTestPtr[i] = ptMemory[i].pvAddr;
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+		TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
+		TEST_ASSERT_NOT_EQUAL(0, ptMemory[i].pvAddr);
 		ptTestPtr[i]->bTestFlag=true;
 		ptTestPtr[i]->iTestNum = i;
 	}
 	for(size_t i = 0; i < 10; i++)
 	{
-		tStatus = Juno_MemoryBlkPut(&tMemBlock, ptTestPtr[i]);
+		tStatus = Juno_MemoryBlkPut(&tMemBlock, &ptMemory[i]);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+		TEST_ASSERT_NULL(ptMemory[i].pvAddr);
+		TEST_ASSERT_EQUAL(0, ptMemory[i].pvAddr);
+		ptTestPtr[i] = NULL;
 	}
-	tStatus = Juno_MemoryBlkPut(&tMemBlock, ptTestPtr[0]);
-	TEST_ASSERT_EQUAL(JUNO_STATUS_MEMFREE_ERROR, tStatus);
-	tStatus = Juno_MemoryBlkPut(&tMemBlock, ptTestPtr);
+	tStatus = Juno_MemoryBlkPut(&tMemBlock, &ptMemory[0]);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_MEMFREE_ERROR, tStatus);
 }
 
@@ -144,17 +162,19 @@ static void test_negative_memory_full(void)
 	);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	TEST_BLOCK_T *ptTestPtr[10] = {0};
+	JUNO_MEMORY_T ptMemory[10] = {0};
 	for(size_t i = 0; i < 10; i++)
 	{
-		void *pvMem = NULL;
-		tStatus = Juno_MemoryBlkGet(&tMemBlock, &pvMem);
-		ptTestPtr[i] = pvMem;
+		tStatus = Juno_MemoryBlkGet(&tMemBlock, &ptMemory[i]);
+		ptTestPtr[i] = ptMemory[i].pvAddr;
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+		TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
+		TEST_ASSERT_NOT_EQUAL(0, ptMemory[i].pvAddr);
 		ptTestPtr[i]->bTestFlag=true;
 		ptTestPtr[i]->iTestNum = i;
 	}
-	void *pvMem = NULL;
-	tStatus = Juno_MemoryBlkGet(&tMemBlock, &pvMem);
+	JUNO_MEMORY_T tFailMemory = {0};
+	tStatus = Juno_MemoryBlkGet(&tMemBlock, &tFailMemory);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_MEMALLOC_ERROR, tStatus);
 }
 

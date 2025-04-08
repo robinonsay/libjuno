@@ -46,7 +46,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     return Juno_MemoryBlkValidate(ptMemBlk);
 }
 
-JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, void **pvRetAddr)
+JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory)
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMemBlk);
@@ -75,13 +75,29 @@ JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, void **pvRetAddr)
         ptMemBlk->zUsed += 1;
     }
     // Retrieve the latest free block and update free stack
-    *pvRetAddr = ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed-1];
+    ptMemory->pvAddr = ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed-1];
+    ptMemory->zSize = ptMemBlk->zTypeSize;
     ptMemBlk->zFreed -= 1;
     ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed] = NULL;
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
+JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize)
+{
+    JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMem);
+    ASSERT_SUCCESS(tStatus, return tStatus);
+    if(zNewSize > ptMem->zTypeSize)
+    {
+        tStatus = JUNO_STATUS_MEMALLOC_ERROR;
+        FAIL(tStatus, ptMem->pfcnFailureHandler, ptMem->pvUserData,
+            "Failed to update memory, size is too big"
+        );
+    }
+    ptMemory->zSize = zNewSize;
+    return tStatus;
+}
+
+JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory)
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMemBlk);
@@ -92,7 +108,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * ptMemBlk->zLength];
     
     // Check if the address is outside the managed memory range or no block is in use
-    if(pvAddr < pvStartAddr || pvEndAddr < pvAddr || ptMemBlk->zUsed == 0)
+    if(ptMemory->pvAddr < pvStartAddr || pvEndAddr < ptMemory->pvAddr || ptMemBlk->zUsed == 0)
     {
         tStatus = JUNO_STATUS_MEMFREE_ERROR;
         // Log error if invalid address detected
@@ -105,7 +121,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     // Ensure the block has not already been freed
     for(size_t i = 0; i < ptMemBlk->zFreed; ++i)
     {
-        if(ptMemBlk->pvMemoryFreeStack[i] == pvAddr)
+        if(ptMemBlk->pvMemoryFreeStack[i] == ptMemory->pvAddr)
         {
             tStatus = JUNO_STATUS_MEMFREE_ERROR;
             // Log error for duplicate free attempt
@@ -117,10 +133,10 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     }
     
     // Clear the block memory
-    memset(pvAddr, 0, ptMemBlk->zTypeSize);
+    memset(ptMemory->pvAddr, 0, ptMemBlk->zTypeSize);
     // Check if the block being freed is the last allocated block
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
-    if(pvEndOfBlk == pvAddr)
+    if(pvEndOfBlk == ptMemory->pvAddr)
     {
         // Simply decrement used counter without adding to free stack.
         ptMemBlk->zUsed -= 1;
@@ -128,8 +144,31 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr)
     else
     {
         // Otherwise, add the block back to the free stack.
-        ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed] = pvAddr;
+        ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed] = ptMemory->pvAddr;
         ptMemBlk->zFreed += 1;
+    }
+    ptMemory->pvAddr = NULL;
+    ptMemory->zSize = 0;
+    return tStatus;
+}
+
+JUNO_STATUS_T Juno_MemoryUpdate(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize)
+{
+    ASSERT_EXISTS(ptMem);
+    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    // Switch based on allocation type stored in the header
+    switch (ptMem->tHdr.tType)
+    {
+        case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
+        {
+            // Delegate to block allocation getter
+            tStatus = Juno_MemoryBlkUpdate(&ptMem->tBlock, ptMemory, zNewSize);
+            break;
+        }
+        default:
+        {
+            tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+        }
     }
     return tStatus;
 }
@@ -144,7 +183,7 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
         case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
         {
             // Delegate to block allocation getter
-            tStatus = Juno_MemoryBlkGet(&ptMem->tBlock, &ptMemory->pvAddr);
+            tStatus = Juno_MemoryBlkGet(&ptMem->tBlock, ptMemory);
             break;
         }
         default:
@@ -165,7 +204,7 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
         case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
         {
             // Delegate to block free function
-            tStatus = Juno_MemoryBlkPut(&ptMem->tBlock, ptMemory->pvAddr);
+            tStatus = Juno_MemoryBlkPut(&ptMem->tBlock, ptMemory);
             // Clear the memory descriptor fields
             ptMemory->pvAddr = NULL;
             ptMemory->zSize = 0;
@@ -179,6 +218,7 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     return tStatus;
 }
 
+#ifdef JUNO_API
 // Define static API structures to expose functions returning pointers to these APIs.
 static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
 {
@@ -202,3 +242,4 @@ const JUNO_MEMORY_API_T * Juno_MemoryApi(void)
 {
     return &tJuno_MemoryApi;
 }
+#endif

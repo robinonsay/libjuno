@@ -130,6 +130,7 @@ JUNO_STATUS_T Juno_StringFree(JUNO_STRING_T *ptString)
     return tStatus;
 }
 
+#ifdef JUNO_API
 // API structure and accessor remain unchanged.
 static const JUNO_STRING_API_T tJuno_StringApi =
 {
@@ -146,4 +147,4 @@ const JUNO_STRING_API_T* Juno_StringApi(void)
     // Return the API structure for external access.
     return &tJuno_StringApi;
 }
-
+#endif

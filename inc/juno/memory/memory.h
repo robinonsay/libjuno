@@ -2,6 +2,7 @@
 #define JUNO_MEMORY_DIRECT_H
 
 #include "juno/memory/memory_types.h"
+#include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -44,7 +45,14 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
  *
  * @return JUNO_STATUS_T Status of the allocation attempt.
  */
-JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, void **pvRetAddr);
+JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pvRetAddr);
+
+/// @brief Updates the current memory allocation to a new size (realloc)
+/// @param ptMem Pointer to the memory allocator
+/// @param ptMemory The memory to update with a new size
+/// @param zNewSize The new size of the memory
+/// @return JUNO_STATUS_T Status of the allocation
+JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
 
 /**
  * @brief Frees a previously allocated block of memory.
@@ -56,7 +64,7 @@ JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, void **pvRetAddr)
  *
  * @return JUNO_STATUS_T Status of the free operation.
  */
-JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr);
+JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pvAddr);
 
 /**
  * @brief Generic memory allocation function.
@@ -69,6 +77,13 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvAddr);
  * @return JUNO_STATUS_T Status of the allocation.
  */
 JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory);
+
+/// @brief Updates the current memory allocation to a new size (realloc)
+/// @param ptMem Pointer to the memory allocator
+/// @param ptMemory The memory to update with a new size
+/// @param zNewSize The new size of the memory
+/// @return JUNO_STATUS_T Status of the allocation
+JUNO_STATUS_T Juno_MemoryUpdate(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
 
 /**
  * @brief Generic memory free function.

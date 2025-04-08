@@ -62,6 +62,13 @@ JUNO_STATUS_T Juno_StringSetAlloc(JUNO_STRING_T *ptString, JUNO_MEMORY_ALLOC_T *
  */
 JUNO_STATUS_T Juno_StringGetSize(JUNO_STRING_T *ptString, size_t *pzRetSize);
 
+/// Writes a C-String to the Juno String
+/// @param ptString The juno string to write to
+/// @param pcCstr The C string
+/// @param zLen The length of the C string
+/// @return JUNO_STATUS_T result status
+JUNO_STATUS_T Juno_StringWrite(JUNO_STRING_T *ptString, const char *pcCstr, size_t zLen);
+
 /**
  * @brief Concatenates two JUNO strings.
  *
