@@ -3,7 +3,6 @@
 #include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include "juno/string/string.h"
-#include "juno/string/string_api.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -131,6 +130,7 @@ JUNO_STATUS_T Juno_StringFree(JUNO_STRING_T *ptString)
 }
 
 #ifdef JUNO_API
+#include "juno/string/string_api.h"
 // API structure and accessor remain unchanged.
 static const JUNO_STRING_API_T tJuno_StringApi =
 {

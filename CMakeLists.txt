@@ -31,21 +31,22 @@ PRIVATE
 
 # Enable a comprehensive set of warnings
 target_compile_options(${PROJECT_NAME} PUBLIC
--Wall                     # Enable most warning messages
--Wextra                   # Enable additional warning messages
--Werror                   # Treat all warnings as errors
--pedantic                 # Enforce ISO C standards
--Wshadow                  # Warn when variable declarations shadow outer scope variables
--Wcast-align             # Warn for potential issues with pointer casts
--Wstrict-prototypes      # Warn if a function is declared without specifying argument types
--Wmissing-prototypes      # Warn if a global function is defined without a previous prototype declaration
--Wundef                  # Warn if an undefined identifier is evaluated in an #if directive
--Wswitch                 # Warn about missing cases in switch statements
--Wswitch-default         # Warn whenever a switch statement does not have a default case
--fno-common                 # Disallow multiple definitions of common symbols
+-Wall                           # Enable most warning messages
+-Wextra                         # Enable additional warning messages
+-Werror                         # Treat all warnings as errors
+-pedantic                       # Enforce ISO C standards
+-Wshadow                        # Warn when variable declarations shadow outer scope variables
+-Wcast-align                    # Warn for potential issues with pointer casts
+-Wstrict-prototypes             # Warn if a function is declared without specifying argument types
+-Wmissing-prototypes            # Warn if a global function is defined without a previous prototype declaration
+-Wundef                         # Warn if an undefined identifier is evaluated in an #if directive
+-Wswitch                        # Warn about missing cases in switch statements
+-Wswitch-default                # Warn whenever a switch statement does not have a default case
+-Wmissing-field-initializers    #Warn about missing fields in struct init
+-fno-common                     # Disallow multiple definitions of common symbols
 PRIVATE
--fno-strict-aliasing    # Disable strict aliasing
--ffreestanding          # Disable the hosted environment
+-fno-strict-aliasing            # Disable strict aliasing
+-ffreestanding                  # Disable the hosted environment
 )
 
 target_link_options( ${PROJECT_NAME} PRIVATE
