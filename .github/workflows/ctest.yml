@@ -34,7 +34,7 @@ jobs:
           gcovr -r . --html --html-details -o coverage_report/coverage.html
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage_report
