@@ -24,7 +24,8 @@ add_library(${PROJECT_NAME} STATIC
 
 # Specify the include directories for consumers of this library
 target_include_directories(${PROJECT_NAME} PUBLIC
-    ${CMAKE_SOURCE_DIR}/inc
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/inc>
+    $<INSTALL_INTERFACE:inc>
 PRIVATE
     ${CMAKE_SOURCE_DIR}/src
 )
@@ -76,3 +77,45 @@ endif()
 
 add_library(${PROJECT_NAME}_Shared SHARED $<TARGET_OBJECTS:${PROJECT_NAME}>)
 set_target_properties(${PROJECT_NAME}_Shared PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
+
+# Install the library target
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_Shared
+    EXPORT junoTargets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION inc
+)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/juno DESTINATION inc)
+
+# Export the targets to a script
+install(EXPORT junoTargets
+    FILE junoTargets.cmake
+    NAMESPACE juno::
+    DESTINATION lib/cmake/juno
+)
+
+include(CMakePackageConfigHelpers)
+
+# Configure the package configuration file
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/junoConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/junoConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/juno
+    NO_SET_AND_CHECK_MACRO
+)
+
+# Write a version file
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/junoConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+# Install the package configuration files
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/junoConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/junoConfigVersion.cmake"
+    DESTINATION lib/cmake/juno
+)

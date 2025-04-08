@@ -4,10 +4,22 @@
 ![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 # LibJuno
-The Juno library aims to make C99 development faster and more memory safe
+* LibJuno is a lightweight C99 library designed specifically for embedded systems.
+* It focuses on providing essential functionalities like memory management, string operations, and more!
+* LibJuno optimizes for memory safety and efficiency in constrained environments.
+* LibJuno is compiled without the standard library to maximize portability.
 
-## Summary
-LibJuno is a lightweight C standard library designed specifically for embedded systems. It focuses on providing essential functionalities like memory management and string operations while ensuring safety and efficiency in constrained environments.
+## Using LibJuno
+* By default, LibJuno will compile both a shared and static library
+
+## Dependencies
+* LibJuno is aims to minimze dependencies, including dependencies on the C standard library
+* Dependencies of LibJuno are listed here
+   * This does not include dependencies on compilers or build scripting/tooling
+
+| Dependency Name | Rationale                                      |
+|-----------------|------------------------------------------------|
+| `<string.h>`    | `string.h` is used for `memset` and `memcpy`.  |
 
 ## Building and Testing
 1. Create and navigate to a build directory:
