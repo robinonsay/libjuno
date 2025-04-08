@@ -34,9 +34,9 @@ target_compile_options(${PROJECT_NAME} PUBLIC
 -Wundef                  # Warn if an undefined identifier is evaluated in an #if directive
 -Wswitch                 # Warn about missing cases in switch statements
 -Wswitch-default         # Warn whenever a switch statement does not have a default case
--Wstrict-aliasing=2       # Enforce strict aliasing rules to avoid undefined behavior
 -fno-common                 # Disallow multiple definitions of common symbols
 PRIVATE
+-fno-strict-aliasing    # Disable strict aliasing
 -ffreestanding          # Disable the hosted environment
 )
 

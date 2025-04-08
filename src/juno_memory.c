@@ -244,6 +244,25 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     return tStatus;
 }
 
+
+void Juno_Memset(void *pMem, const uint8_t iVal, size_t zSize)
+{
+    uint8_t *pcMem = pMem;
+    for(size_t i = 0; i < zSize; i++)
+    {
+        pcMem[i] = iVal;
+    }
+}
+
+void Juno_Memcpy(void *pDest, const void *pSrc, size_t zSize)
+{
+    uint8_t *pcDest = pDest;
+    const uint8_t *pcSrc = pSrc;
+    for(size_t i = 0; i < zSize; i++)
+    {
+        pcDest[i] = pcSrc[i];
+    }
+}
 // Define static API structures to expose functions returning pointers to these APIs.
 static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
 {
