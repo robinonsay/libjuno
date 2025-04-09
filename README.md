@@ -5,8 +5,8 @@
 
 # LibJuno
 * LibJuno is a lightweight C99 library designed specifically for embedded systems.
-* It focuses on providing essential functionalities like memory management, string operations, and more!
-* LibJuno optimizes for memory safety and efficiency in constrained environments.
+* LibJuno focuses on providing essential functionalities like memory management, data structures, string operations and more all without dynamic memory allocation!
+* LibJuno optimizes for memory safety, determinism and efficiency in constrained environments.
 * LibJuno is compiled without the standard library to maximize portability.
 
 ## Using LibJuno

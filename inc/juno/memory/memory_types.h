@@ -27,26 +27,9 @@ extern "C" {
 static type name[length] = {0}; \
 static uint8_t* MEMORY_FREE_STACK(name)[length] = {0}
 
-/**
- * @brief Opaque type representing a memory block structure.
- */
 typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
-
-/**
- * @brief Opaque type representing a memory allocation header.
- */
 typedef struct JUNO_MEMORY_ALLOC_HDR_TAG JUNO_MEMORY_ALLOC_HDR_T;
-
-/**
- * @brief Structure describing an allocated memory segment.
- *
- * Contains details such as the pointer to the allocated address and its size.
- */
 typedef struct JUNO_MEMORY_TAG JUNO_MEMORY_T;
-
-/**
- * @brief Union representing a generic memory allocation.
- */
 typedef union JUNO_MEMORY_ALLOC_TAG JUNO_MEMORY_ALLOC_T;
 
 /**

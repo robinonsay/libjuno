@@ -4,9 +4,9 @@ project(juno VERSION 1.0.0 LANGUAGES C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_COMPILER /usr/bin/gcc)
 option(JUNO_TESTS "Enable unit testing" OFF)
 option(JUNO_API "Enables the juno api" OFF)
+message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 message("Api: ${JUNO_API}")
 
@@ -53,14 +53,9 @@ target_link_options( ${PROJECT_NAME} PRIVATE
     -nostdlib
 )
 
-if(NOT CMAKE_BUILD_TYPE STREQUAL Debug AND NOT JUNO_TESTS)
-    message("Optimization Enabled")
-    target_compile_options(${PROJECT_NAME} PUBLIC -O2)
-endif()
-
-
 
 if(JUNO_TESTS)
+    set(CMAKE_BUILD_TYPE Debug)
     target_compile_options(${PROJECT_NAME} PRIVATE
         --coverage
         -g
