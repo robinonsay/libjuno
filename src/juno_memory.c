@@ -1,6 +1,7 @@
 #include "juno/macros.h"
 #include "juno/memory/memory.h"
 #include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -217,8 +218,6 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     return tStatus;
 }
 
-#ifdef JUNO_API
-#include "juno/memory/memory_api.h"
 // Define static API structures to expose functions returning pointers to these APIs.
 static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
 {
@@ -242,4 +241,3 @@ const JUNO_MEMORY_API_T * Juno_MemoryApi(void)
 {
     return &tJuno_MemoryApi;
 }
-#endif
