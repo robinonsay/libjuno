@@ -2,5 +2,6 @@
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}/build/"
     ],
-    "vim.useSystemClipboard": true
+    "vim.useSystemClipboard": true,
+    "clangd.path": "/usr/bin/clangd"
 }
