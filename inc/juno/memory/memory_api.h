@@ -36,10 +36,8 @@ struct JUNO_MEMORY_BLOCK_API_TAG
     JUNO_STATUS_T (*Put)(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory);
 };
 
-#ifdef JUNO_API
 const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void);
 const JUNO_MEMORY_API_T * Juno_MemoryApi(void);
-#endif
 
 #ifdef __cplusplus
 }

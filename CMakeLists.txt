@@ -47,6 +47,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 -fno-common                     # Disallow multiple definitions of common symbols
 -fno-strict-aliasing            # Disable strict aliasing
 -ffreestanding                  # Disable the hosted environment
+-fPIC
 )
 
 target_link_options( ${PROJECT_NAME} PRIVATE
