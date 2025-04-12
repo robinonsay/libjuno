@@ -3,6 +3,7 @@
 
 #include "juno/hash/hash_api.h"
 #include "juno/macros.h"
+#include "juno/memory/memory_types.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -12,26 +13,13 @@ extern "C" {
 #endif
 
 typedef struct JUNO_MAP_TAG JUNO_MAP_T;
-typedef struct JUNO_MAP_KEY_TAG JUNO_MAP_KEY_T;
-typedef struct JUNO_MAP_VALUE_TAG JUNO_MAP_VALUE_T;
-typedef bool (*JUNO_MAP_KEY_EQUAL_FCN_T)(JUNO_MAP_KEY_T ptKey1, JUNO_MAP_KEY_T ptKey2);
-
-struct JUNO_MAP_KEY_TAG
-{
-    void *ptKey;
-};
-
-struct JUNO_MAP_VALUE_TAG
-{
-    void *ptValue;
-};
+typedef bool (*JUNO_MAP_KEY_EQUAL_FCN_T)(JUNO_MEMORY_T ptKey1, JUNO_MEMORY_T ptKey2);
 
 struct JUNO_MAP_TAG
 {
     const JUNO_HASH_API_T *ptHashApi;
-    JUNO_MAP_KEY_T *ptMapKeys;
-    JUNO_MAP_VALUE_T *ptMapValues;
-    size_t zKeySize;
+    JUNO_MEMORY_T *ptMapKeys;
+    JUNO_MEMORY_T *ptMapValues;
     size_t zCapacity;
     size_t zLenHashTable;
     JUNO_MAP_KEY_EQUAL_FCN_T pfcnIsEqual;
