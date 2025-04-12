@@ -38,7 +38,7 @@ JUNO_STATUS_T Juno_StringInit(
     ptString->tMemory.zSize = zLen;
     ptString->zLen = zLen;
     // Request memory allocation for the string.
-    JUNO_STATUS_T tStatus = Juno_MemoryGet(ptString->ptAlloc, &ptString->tMemory);
+    JUNO_STATUS_T tStatus = Juno_MemoryGet(ptString->ptAlloc, &ptString->tMemory, zLen);
     ASSERT_SUCCESS(tStatus, return tStatus);
     // Copy the C-string into the allocated memory.
     memcpy(ptString->tMemory.pvAddr, pcStr, zLen);

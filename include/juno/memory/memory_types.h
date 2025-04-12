@@ -24,8 +24,8 @@ extern "C" {
  * @param length Number of elements in the memory block.
  */
 #define MEMORY_BLOCK(name, type, length) \
-static type name[length] = {0}; \
-static uint8_t* MEMORY_FREE_STACK(name)[length] = {0}
+static type name[length] = {}; \
+static uint8_t* MEMORY_FREE_STACK(name)[length] = {};
 
 typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
 typedef struct JUNO_MEMORY_ALLOC_HDR_TAG JUNO_MEMORY_ALLOC_HDR_T;

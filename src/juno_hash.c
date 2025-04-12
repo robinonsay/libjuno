@@ -16,12 +16,12 @@ JUNO_STATUS_T Juno_HashDjB2(const uint8_t *pcBuff, size_t zBuffSize, size_t *pzR
 }
 
 
-static const JUNO_HASH_API_T tHashApi =
+static const JUNO_HASH_API_T tDjB2HashApi =
 {
     .Hash = Juno_HashDjB2
 };
 
 const JUNO_HASH_API_T* Juno_HashDjB2Api(void)
 {
-    return &tHashApi;
+    return &tDjB2HashApi;
 }
