@@ -1,5 +1,6 @@
 #include "juno/memory/memory.h"
 #include "juno/memory/memory_types.h"
+#include "juno/memory/alloc.h"
 #include "juno/status.h"
 #include "unity.h"
 #include "unity_internals.h"
@@ -16,7 +17,7 @@ typedef struct TEST_BLOCK_TAG
 } TEST_BLOCK_T;
 
 JUNO_MEMORY_BLOCK(ptTestBlock, TEST_BLOCK_T, 10);
-JUNO_MEMORY_METADATA(ptTestMetadata, 10);
+JUNO_MEMORY_BLOCK_METADATA(ptTestMetadata, 10);
 
 void setUp(void)
 {

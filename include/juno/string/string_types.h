@@ -7,12 +7,10 @@
 extern "C" {
 #endif
 
-/**
- * @brief Represents a JUNO string.
- *
- * This structure encapsulates the memory allocation, underlying memory storage,
- * and associated failure handling for a string.
- */
+
+/// @brief Represents a JUNO string.
+/// This structure encapsulates the memory allocation, underlying memory storage,
+/// and associated failure handling for a string.
 typedef struct JUNO_STRING_TAG JUNO_STRING_T;
 
 struct JUNO_STRING_TAG

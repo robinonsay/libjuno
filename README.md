@@ -12,6 +12,9 @@
 ## Using LibJuno
 * By default, LibJuno will compile both a shared and static library
 
+### Documentation
+* [Memory Module](include/juno/memory/README.md)
+
 ## Dependencies
 * LibJuno is aims to minimze dependencies, including dependencies on the C standard library
 * Dependencies of LibJuno are listed here

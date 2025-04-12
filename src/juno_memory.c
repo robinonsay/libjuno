@@ -1,6 +1,7 @@
 #include "juno/macros.h"
 #include "juno/memory/memory.h"
 #include "juno/memory/memory_types.h"
+#include "juno/memory/alloc.h"
 #include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include <stddef.h>
@@ -17,7 +18,7 @@ static inline JUNO_STATUS_T Juno_MemoryBlkValidate(JUNO_MEMORY_BLOCK_T *ptMemBlk
 JUNO_STATUS_T Juno_MemoryBlkInit(
     JUNO_MEMORY_BLOCK_T *ptMemBlk,
     void *pvMemory,
-    JUNO_MEMORY_METADATA_T *ptMetadata,
+    JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
