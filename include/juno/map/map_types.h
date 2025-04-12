@@ -1,6 +1,7 @@
 #ifndef JUNO_MAP_TYPES_H
 #define JUNO_MAP_TYPES_H
 
+#include "juno/hash/hash_api.h"
 #include "juno/macros.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -13,7 +14,7 @@ extern "C" {
 typedef struct JUNO_MAP_TAG JUNO_MAP_T;
 typedef struct JUNO_MAP_KEY_TAG JUNO_MAP_KEY_T;
 typedef struct JUNO_MAP_VALUE_TAG JUNO_MAP_VALUE_T;
-typedef bool (*JUNO_MAP_KEY_EQUAL_FCN_T)(void * pvKey1, void *pvKey2);
+typedef bool (*JUNO_MAP_KEY_EQUAL_FCN_T)(JUNO_MAP_KEY_T ptKey1, JUNO_MAP_KEY_T ptKey2);
 
 struct JUNO_MAP_KEY_TAG
 {
@@ -27,8 +28,10 @@ struct JUNO_MAP_VALUE_TAG
 
 struct JUNO_MAP_TAG
 {
-    JUNO_MAP_KEY_T *pvMapKeys;
-    JUNO_MAP_VALUE_T *pvMapValues;
+    const JUNO_HASH_API_T *ptHashApi;
+    JUNO_MAP_KEY_T *ptMapKeys;
+    JUNO_MAP_VALUE_T *ptMapValues;
+    size_t zKeySize;
     size_t zCapacity;
     size_t zLenHashTable;
     JUNO_MAP_KEY_EQUAL_FCN_T pfcnIsEqual;

@@ -14,6 +14,7 @@ extern "C" {
 /// @param ptMap A pointer to the map to initalize
 /// @param ptKeyTable The allocated memory for the keys
 /// @param ptValueTable The allocated memory for the values
+/// @param zKeySize The size of the key
 /// @param zCapacity The capacity of the map table
 /// @param pfcnIsEqual A function to determine if two keys are equal
 /// @param pfcnFailureHandler The failure handler
@@ -21,8 +22,10 @@ extern "C" {
 /// @return Returns a JUNO_STATUS_SUCCESS on success, and error otherwise
 JUNO_STATUS_T Juno_MapInit(
     JUNO_MAP_T *ptMap,
+    const JUNO_HASH_API_T *ptHashApi,
     JUNO_MAP_KEY_T *ptKeyTable,
     JUNO_MAP_VALUE_T *ptValueTable,
+    size_t zKeySize,
     size_t zCapacity,
     JUNO_MAP_KEY_EQUAL_FCN_T pfcnIsEqual,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
@@ -34,7 +37,7 @@ JUNO_STATUS_T Juno_MapInit(
 /// @param ptKey A key to add
 /// @param pvValue A value to add
 /// @return Status of operation
-JUNO_STATUS_T Juno_MapAdd(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey, JUNO_MAP_VALUE_T tValue);
+JUNO_STATUS_T Juno_MapSet(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey, JUNO_MAP_VALUE_T tValue);
 
 /// Remove a key,value pair from the map
 /// @param ptMap A pointer to the map
