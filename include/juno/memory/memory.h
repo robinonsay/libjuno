@@ -28,7 +28,7 @@ extern "C" {
 JUNO_STATUS_T Juno_MemoryBlkInit(
     JUNO_MEMORY_BLOCK_T *ptMemBlk,
     void *pvMemory,
-    uint8_t **pvMemoryFreeStack,
+    JUNO_MEMORY_METADATA_T *pvMetadata,
     size_t zTypeSize,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,

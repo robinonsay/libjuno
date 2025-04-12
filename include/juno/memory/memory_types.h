@@ -10,23 +10,19 @@ extern "C" {
 #endif
 
 /**
- * @brief Macro to define a free memory stack name.
- *
- * Usage: MEMORY_FREE_STACK(myStack) expands to pzmyStackFreeStack.
- */
-#define MEMORY_FREE_STACK(name) pz##name##FreeStack
-
-/**
  * @brief Macro to declare a static memory block and its associated free stack.
  *
  * @param name Name of the memory block.
  * @param type Data type of each block element.
  * @param length Number of elements in the memory block.
  */
-#define MEMORY_BLOCK(name, type, length) \
-static type name[length] = {}; \
-static uint8_t* MEMORY_FREE_STACK(name)[length] = {};
+#define JUNO_MEMORY_BLOCK(name, type, length) \
+static type name[length] = {};
 
+#define JUNO_MEMORY_METADATA(name, length) \
+static JUNO_MEMORY_METADATA_T name[length] = {};
+
+typedef struct JUNO_MEMORY_METADATA_TAG JUNO_MEMORY_METADATA_T;
 typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
 typedef struct JUNO_MEMORY_ALLOC_HDR_TAG JUNO_MEMORY_ALLOC_HDR_T;
 typedef struct JUNO_MEMORY_TAG JUNO_MEMORY_T;
@@ -40,6 +36,11 @@ typedef enum JUNO_MEMORY_ALLOC_TYPE_TAG
     JUNO_MEMORY_ALLOC_TYPE_RESERVED = 0, /**< Reserved allocation type. */
     JUNO_MEMORY_ALLOC_TYPE_BLOCK    = 1, /**< Block-based memory allocation. */
 } JUNO_MEMORY_ALLOC_TYPE_T;
+
+struct JUNO_MEMORY_METADATA_TAG
+{
+    uint8_t *ptFreeMem;
+};
 
 /**
  * @brief Structure for memory allocation header.
@@ -69,14 +70,14 @@ struct JUNO_MEMORY_TAG
  */
 struct JUNO_MEMORY_BLOCK_TAG
 {
-    JUNO_MEMORY_ALLOC_HDR_T tHdr;      /**< Header indicating the allocation type. */
-    uint8_t *pvMemory;                 /**< Pointer to the allocated memory area. */
-    uint8_t **pvMemoryFreeStack;       /**< Array of pointers serving as a free stack. */
-    size_t zTypeSize;                  /**< Size of each block element. */
-    size_t zLength;                    /**< Total number of blocks available. */
-    size_t zUsed;                      /**< Current count of allocated blocks. */
-    size_t zFreed;                     /**< Current count of freed blocks in the free stack. */
-    DECLARE_FAILURE_HANDLER;           /**< Macro to declare a failure handler. */
+    JUNO_MEMORY_ALLOC_HDR_T tHdr;       /**< Header indicating the allocation type. */
+    uint8_t *pvMemory;                  /**< Pointer to the allocated memory area. */
+    JUNO_MEMORY_METADATA_T *ptMetadata; /**< Array of metadata for each block. */
+    size_t zTypeSize;                   /**< Size of each block element. */
+    size_t zLength;                     /**< Total number of blocks available. */
+    size_t zUsed;                       /**< Current count of allocated blocks. */
+    size_t zFreed;                      /**< Current count of freed blocks in the free stack. */
+    DECLARE_FAILURE_HANDLER;            /**< Macro to declare a failure handler. */
 };
 
 /**

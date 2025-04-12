@@ -13,7 +13,9 @@ typedef struct
 {
 	char data[256];
 } TEST_DATA_T;
-MEMORY_BLOCK(ptStringMemory, TEST_DATA_T, 10);
+
+JUNO_MEMORY_BLOCK(ptStringMemory, TEST_DATA_T, 10);
+JUNO_MEMORY_METADATA(ptStringMemoryMetadata, 10);
 JUNO_MEMORY_ALLOC_T gtMemoryBlock = {0};
 
 void setUp(void)
@@ -23,7 +25,7 @@ void setUp(void)
 	Juno_MemoryBlkInit(
 		&gtMemoryBlock.tBlock,
 		ptStringMemory,
-		MEMORY_FREE_STACK(ptStringMemory),
+		ptStringMemoryMetadata,
 		sizeof(TEST_DATA_T),
 		10,
 		NULL,

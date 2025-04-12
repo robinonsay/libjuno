@@ -1,5 +1,6 @@
 #include "juno/hash/hash_api.h"
 #include "juno/map/map_types.h"
+#include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include "unity.h"
 #include <stdbool.h>
@@ -31,24 +32,23 @@ void tearDown(void)
 
 }
 
-static bool IsKeyEqual(JUNO_MAP_KEY_T tKey1, JUNO_MAP_KEY_T tKey2)
+static bool IsKeyEqual(JUNO_MEMORY_T tKey1, JUNO_MEMORY_T tKey2)
 {
-	TEST_KEY *ptKey1 = (TEST_KEY*)(tKey1.ptKey);
-	TEST_KEY *ptKey2 = (TEST_KEY*)(tKey2.ptKey);
+	TEST_KEY *ptKey1 = (TEST_KEY*)(tKey1.pvAddr);
+	TEST_KEY *ptKey2 = (TEST_KEY*)(tKey2.pvAddr);
 	return strcmp(ptKey1->key, ptKey2->key) == 0;
 }
 
 static void test_nominal_map(void)
 {
 	JUNO_MAP_T tMap = {};
-	JUNO_MAP_KEY_T tKeyTbl[10] = {};
-	JUNO_MAP_VALUE_T tValTbl[10] = {};
+	JUNO_MEMORY_T tKeyTbl[10] = {};
+	JUNO_MEMORY_T tValTbl[10] = {};
 	JUNO_STATUS_T tStatus = gptMapApi->Init(
 		&tMap,
 		gptHashApi,
 		tKeyTbl,
 		tValTbl,
-		sizeof(TEST_KEY),
 		10,
 		IsKeyEqual,
 		NULL,
@@ -63,8 +63,8 @@ static void test_nominal_map(void)
 		tTestValues[i].value = i+1;
 		tStatus = gptMapApi->Set(
 			&tMap,
-			(JUNO_MAP_KEY_T){.ptKey = &tTestKeys[i]},
-			(JUNO_MAP_VALUE_T){.ptValue = &tTestValues[i]}
+			(JUNO_MEMORY_T){.pvAddr = &tTestKeys[i], .zSize = sizeof(*tTestKeys)},
+			(JUNO_MEMORY_T){.pvAddr = &tTestValues[i], .zSize = sizeof(*tTestValues)}
 		);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	}
@@ -72,33 +72,33 @@ static void test_nominal_map(void)
 	TEST_VALUE tTestExtraV = {.value = 10};
 	tStatus = gptMapApi->Set(
 		&tMap,
-		(JUNO_MAP_KEY_T){.ptKey = &tTestExtra},
-		(JUNO_MAP_VALUE_T){.ptValue = &tTestExtraV}
+		(JUNO_MEMORY_T){.pvAddr = &tTestExtra, .zSize = sizeof(TEST_KEY)},
+		(JUNO_MEMORY_T){.pvAddr = &tTestExtraV, .zSize = sizeof(TEST_VALUE)}
 	);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	for(int i = 0; i < 10; i++)
 	{
-		JUNO_MAP_VALUE_T tValue = {};
+		JUNO_MEMORY_T tValue = {};
 		tStatus = gptMapApi->Get(
 			&tMap,
-			(JUNO_MAP_KEY_T){.ptKey = &tTestKeys[i]},
+			(JUNO_MEMORY_T){.pvAddr = &tTestKeys[i], .zSize = sizeof(TEST_KEY)},
 			&tValue
 		);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-		TEST_VALUE *ptValue = (TEST_VALUE *)(tValue.ptValue);
+		TEST_VALUE *ptValue = (TEST_VALUE *)(tValue.pvAddr);
 		TEST_ASSERT_EQUAL(i+1, ptValue->value);
 	}
 	for(int i = 0; i < 10; i++)
 	{
 		tStatus = gptMapApi->Remove(
 			&tMap,
-			(JUNO_MAP_KEY_T){.ptKey = &tTestKeys[i]}
+			(JUNO_MEMORY_T){.pvAddr = &tTestKeys[i], .zSize = sizeof(TEST_KEY)}
 		);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-		JUNO_MAP_VALUE_T tValue = {};
+		JUNO_MEMORY_T tValue = {};
 		tStatus = gptMapApi->Get(
 			&tMap,
-			(JUNO_MAP_KEY_T){.ptKey = &tTestKeys[i]},
+			(JUNO_MEMORY_T){.pvAddr = &tTestKeys[i], .zSize = sizeof(TEST_KEY)},
 			&tValue
 		);
 		TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
@@ -108,15 +108,14 @@ static void test_nominal_map(void)
 static void test_null_init(void)
 {
 	JUNO_MAP_T tMap = {};
-	JUNO_MAP_KEY_T tKeyTbl[5] = {};
-	JUNO_MAP_VALUE_T tValTbl[5] = {};
+	JUNO_MEMORY_T tKeyTbl[5] = {};
+	JUNO_MEMORY_T tValTbl[5] = {};
 	/* Passing NULL for key table */
 	JUNO_STATUS_T tStatus = gptMapApi->Init(
 		&tMap,
 		gptHashApi,
 		NULL,
 		tValTbl,
-		sizeof(TEST_KEY),
 		5,
 		IsKeyEqual,
 		NULL,
@@ -131,7 +130,6 @@ static void test_null_init(void)
 		gptHashApi,
 		tKeyTbl,
 		NULL,
-		sizeof(TEST_KEY),
 		5,
 		IsKeyEqual,
 		NULL,
@@ -148,8 +146,8 @@ static void test_null_set(void)
 	/* Call Set with null map pointer */
 	JUNO_STATUS_T tStatus = gptMapApi->Set(
 		NULL,
-		(JUNO_MAP_KEY_T){.ptKey = &tKey},
-		(JUNO_MAP_VALUE_T){.ptValue = &tValue}
+		(JUNO_MEMORY_T){.pvAddr = &tKey, .zSize = sizeof(TEST_KEY)},
+		(JUNO_MEMORY_T){.pvAddr = &tValue, .zSize = sizeof(TEST_VALUE)}
 	);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
@@ -158,10 +156,10 @@ static void test_null_set(void)
 static void test_null_get(void)
 {
 	TEST_KEY tKey = {.key = "Test"};
-	JUNO_MAP_VALUE_T tValue = {};
+	JUNO_MEMORY_T tValue = {};
 	JUNO_STATUS_T tStatus = gptMapApi->Get(
 		NULL,
-		(JUNO_MAP_KEY_T){.ptKey = &tKey},
+		(JUNO_MEMORY_T){.pvAddr = &tKey, .zSize = sizeof(TEST_KEY)},
 		&tValue
 	);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
@@ -173,7 +171,7 @@ static void test_null_remove(void)
 	TEST_KEY tKey = {.key = "Test"};
 	JUNO_STATUS_T tStatus = gptMapApi->Remove(
 		NULL,
-		(JUNO_MAP_KEY_T){.ptKey = &tKey}
+		(JUNO_MEMORY_T){.pvAddr = &tKey, .zSize = sizeof(TEST_KEY)}
 	);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
@@ -182,14 +180,13 @@ static void test_null_remove(void)
 static void test_remove_nonexistent_key(void)
 {
 	JUNO_MAP_T tMap = {};
-	JUNO_MAP_KEY_T tKeyTbl[5] = {};
-	JUNO_MAP_VALUE_T tValTbl[5] = {};
+	JUNO_MEMORY_T tKeyTbl[5] = {};
+	JUNO_MEMORY_T tValTbl[5] = {};
 	JUNO_STATUS_T tStatus = gptMapApi->Init(
 		&tMap,
 		gptHashApi,
 		tKeyTbl,
 		tValTbl,
-		sizeof(TEST_KEY),
 		5,
 		IsKeyEqual,
 		NULL,
@@ -199,7 +196,7 @@ static void test_remove_nonexistent_key(void)
 	TEST_KEY tKey = {.key = "Nonexistent"};
 	tStatus = gptMapApi->Remove(
 		&tMap,
-		(JUNO_MAP_KEY_T){.ptKey = &tKey}
+		(JUNO_MEMORY_T){.pvAddr = &tKey, .zSize = sizeof(TEST_KEY)}
 	);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
@@ -208,14 +205,13 @@ static void test_remove_nonexistent_key(void)
 static void test_duplicate_key_insertion(void)
 {
 	JUNO_MAP_T tMap = {};
-	JUNO_MAP_KEY_T tKeyTbl[5] = {};
-	JUNO_MAP_VALUE_T tValTbl[5] = {};
+	JUNO_MEMORY_T tKeyTbl[5] = {};
+	JUNO_MEMORY_T tValTbl[5] = {};
 	JUNO_STATUS_T tStatus = gptMapApi->Init(
 		&tMap,
 		gptHashApi,
 		tKeyTbl,
 		tValTbl,
-		sizeof(TEST_KEY),
 		5,
 		IsKeyEqual,
 		NULL,
@@ -229,25 +225,25 @@ static void test_duplicate_key_insertion(void)
 	/* First insertion should succeed */
 	tStatus = gptMapApi->Set(
 		&tMap,
-		(JUNO_MAP_KEY_T){.ptKey = &tKey},
-		(JUNO_MAP_VALUE_T){.ptValue = &tValue1}
+		(JUNO_MEMORY_T){.pvAddr = &tKey, .zSize = sizeof(TEST_KEY)},
+		(JUNO_MEMORY_T){.pvAddr = &tValue1, .zSize = sizeof(TEST_VALUE)}
 	);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 
 	/* Second insertion with same key expected to fail */
 	tStatus = gptMapApi->Set(
 		&tMap,
-		(JUNO_MAP_KEY_T){.ptKey = &tKey},
-		(JUNO_MAP_VALUE_T){.ptValue = &tValue2}
+		(JUNO_MEMORY_T){.pvAddr = &tKey, .zSize = sizeof(TEST_KEY)},
+		(JUNO_MEMORY_T){.pvAddr = &tValue2, .zSize = sizeof(TEST_VALUE)}
 	);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	JUNO_MAP_VALUE_T tRetVal = {};
+	JUNO_MEMORY_T tRetVal = {};
 	tStatus = gptMapApi->Get(
 		&tMap,
-		(JUNO_MAP_KEY_T){.ptKey = &tKey},
+		(JUNO_MEMORY_T){.pvAddr = &tKey, .zSize = sizeof(TEST_KEY)},
 		&tRetVal
 	);
-	TEST_VALUE *ptRetVal = (TEST_VALUE *)(tRetVal.ptValue);
+	TEST_VALUE *ptRetVal = (TEST_VALUE *)(tRetVal.pvAddr);
 	TEST_ASSERT_EQUAL(tValue2.value, ptRetVal->value);
 }
 
@@ -256,14 +252,13 @@ static void test_overflow_map(void)
 {
 	const int capacity = 3;
 	JUNO_MAP_T tMap = {};
-	JUNO_MAP_KEY_T tKeyTbl[3] = {};
-	JUNO_MAP_VALUE_T tValTbl[3] = {};
+	JUNO_MEMORY_T tKeyTbl[3] = {};
+	JUNO_MEMORY_T tValTbl[3] = {};
 	JUNO_STATUS_T tStatus = gptMapApi->Init(
 		&tMap,
 		gptHashApi,
 		tKeyTbl,
 		tValTbl,
-		sizeof(TEST_KEY),
 		capacity,
 		IsKeyEqual,
 		NULL,
@@ -280,8 +275,8 @@ static void test_overflow_map(void)
 		tTestValues[i].value = i;
 		tStatus = gptMapApi->Set(
 			&tMap,
-			(JUNO_MAP_KEY_T){.ptKey = &tTestKeys[i]},
-			(JUNO_MAP_VALUE_T){.ptValue = &tTestValues[i]}
+			(JUNO_MEMORY_T){.pvAddr = &tTestKeys[i], .zSize = sizeof(*tTestKeys)},
+			(JUNO_MEMORY_T){.pvAddr = &tTestValues[i], .zSize = sizeof(*tTestValues)}
 		);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	}
@@ -290,8 +285,8 @@ static void test_overflow_map(void)
 	tTestValues[3].value = 3;
 	tStatus = gptMapApi->Set(
 		&tMap,
-		(JUNO_MAP_KEY_T){.ptKey = &tTestKeys[3]},
-		(JUNO_MAP_VALUE_T){.ptValue = &tTestValues[3]}
+			(JUNO_MEMORY_T){.pvAddr = &tTestKeys[3], .zSize = sizeof(*tTestKeys)},
+			(JUNO_MEMORY_T){.pvAddr = &tTestValues[3], .zSize = sizeof(*tTestValues)}
 	);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }

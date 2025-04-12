@@ -3,6 +3,7 @@
 #include "juno/map/map.h"
 #include "juno/map/map_api.h"
 #include "juno/map/map_types.h"
+#include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -15,7 +16,7 @@ static inline JUNO_STATUS_T Juno_MapValidate(JUNO_MAP_T *ptMap)
         return JUNO_STATUS_NULLPTR_ERROR;
     }
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
-    if(!(ptMap->ptMapKeys && ptMap->ptHashApi && ptMap->zKeySize && ptMap->ptMapValues && ptMap->zCapacity && ptMap->pfcnIsEqual))
+    if(!(ptMap->ptMapKeys && ptMap->ptHashApi && ptMap->ptMapValues && ptMap->zCapacity && ptMap->pfcnIsEqual))
     {
         tStatus = JUNO_STATUS_NULLPTR_ERROR;
         FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvUserData, "Invalid dependencies");
@@ -27,9 +28,8 @@ static inline JUNO_STATUS_T Juno_MapValidate(JUNO_MAP_T *ptMap)
 JUNO_STATUS_T Juno_MapInit(
     JUNO_MAP_T *ptMap,
     const JUNO_HASH_API_T *ptHashApi,
-    JUNO_MAP_KEY_T *ptKeyTable,
-    JUNO_MAP_VALUE_T *ptValueTable,
-    size_t zKeySize,
+    JUNO_MEMORY_T *ptKeyTable,
+    JUNO_MEMORY_T *ptValueTable,
     size_t zCapacity,
     JUNO_MAP_KEY_EQUAL_FCN_T pfcnIsEqual,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
@@ -43,7 +43,6 @@ JUNO_STATUS_T Juno_MapInit(
     ptMap->ptHashApi = ptHashApi;
     ptMap->ptMapKeys = ptKeyTable;
     ptMap->ptMapValues = ptValueTable;
-    ptMap->zKeySize = zKeySize;
     ptMap->zCapacity = zCapacity;
     ptMap->zLenHashTable = 0;
     ptMap->pfcnIsEqual = pfcnIsEqual;
@@ -51,15 +50,15 @@ JUNO_STATUS_T Juno_MapInit(
     ptMap->pvUserData = pvFailureUserData;
     JUNO_STATUS_T tStatus =  Juno_MapValidate(ptMap);
     ASSERT_SUCCESS(tStatus, return tStatus);
-    memset(ptKeyTable, 0, sizeof(JUNO_MAP_KEY_T) * zCapacity);
-    memset(ptValueTable, 0, sizeof(JUNO_MAP_VALUE_T) * zCapacity);
+    memset(ptKeyTable, 0, sizeof(JUNO_MEMORY_T) * zCapacity);
+    memset(ptValueTable, 0, sizeof(JUNO_MEMORY_T) * zCapacity);
     return tStatus;
 }
 
-static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey, size_t *pzRetSize, bool bShallEqual)
+static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, size_t *pzRetSize, bool bShallEqual)
 {
     size_t zHash = 0;
-    JUNO_STATUS_T tStatus = ptMap->ptHashApi->Hash((const uint8_t *)(tKey.ptKey), ptMap->zKeySize, &zHash);
+    JUNO_STATUS_T tStatus = ptMap->ptHashApi->Hash((const uint8_t *)(tKey.pvAddr), tKey.zSize, &zHash);
     ASSERT_SUCCESS(tStatus, return tStatus);
     // Get the capacity
     size_t zCapacity = ptMap->zCapacity;
@@ -71,9 +70,9 @@ static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T t
     for (size_t i = 0; i < zCapacity; i++)
     {
         // Get a pointer to the current key
-        JUNO_MAP_KEY_T tCurKey = ptMap->ptMapKeys[zIndex];
+        JUNO_MEMORY_T tCurKey = ptMap->ptMapKeys[zIndex];
         // Check if the spot is empty or the key is equal
-        if((!tCurKey.ptKey && !bShallEqual) || (tCurKey.ptKey && tKey.ptKey && ptMap->pfcnIsEqual(tCurKey, tKey)))
+        if((!tCurKey.pvAddr && !bShallEqual) || (tCurKey.pvAddr && tKey.pvAddr && ptMap->pfcnIsEqual(tCurKey, tKey)))
         {
             // Return the index
             *pzRetSize = zIndex;
@@ -91,7 +90,7 @@ static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T t
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_MapSet(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey, JUNO_MAP_VALUE_T tValue)
+JUNO_STATUS_T Juno_MapSet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T tValue)
 {
     JUNO_STATUS_T tStatus = Juno_MapValidate(ptMap);
     ASSERT_SUCCESS(tStatus, return tStatus);
@@ -103,27 +102,27 @@ JUNO_STATUS_T Juno_MapSet(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey, JUNO_MAP_VALUE
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_MapRemove(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey)
+JUNO_STATUS_T Juno_MapRemove(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey)
 {
     JUNO_STATUS_T tStatus = Juno_MapValidate(ptMap);
     ASSERT_SUCCESS(tStatus, return tStatus);
     size_t zIndex = 0;
     tStatus = Juno_MapGetIndex(ptMap, tKey, &zIndex, true);
     ASSERT_SUCCESS(tStatus, return tStatus);
-    ptMap->ptMapKeys[zIndex] = (JUNO_MAP_KEY_T){0};
-    ptMap->ptMapValues[zIndex] = (JUNO_MAP_VALUE_T){0};
+    ptMap->ptMapKeys[zIndex] = (JUNO_MEMORY_T){0};
+    ptMap->ptMapValues[zIndex] = (JUNO_MEMORY_T){0};
     return tStatus;
 }
 
 
-JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey, JUNO_MAP_VALUE_T *ptRetValue)
+JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T *ptRetValue)
 {
     JUNO_STATUS_T tStatus = Juno_MapValidate(ptMap);
     ASSERT_SUCCESS(tStatus, return tStatus);
     size_t zIndex = 0;
     tStatus = Juno_MapGetIndex(ptMap, tKey, &zIndex, true);
     ASSERT_SUCCESS(tStatus, return tStatus);
-    if(!ptMap->ptMapKeys[zIndex].ptKey)
+    if(!ptMap->ptMapKeys[zIndex].pvAddr)
     {
         tStatus = JUNO_STATUS_DNE_ERROR;
         FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvUserData, "Key Does not exist");

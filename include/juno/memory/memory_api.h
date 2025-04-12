@@ -25,15 +25,12 @@ struct JUNO_MEMORY_BLOCK_API_TAG
     JUNO_STATUS_T (*Init)(
         JUNO_MEMORY_BLOCK_T *ptMemBlk,
         void *pvMemory,
-        uint8_t **pvMemoryFreeStack,
+        JUNO_MEMORY_METADATA_T *ptMetadata,
         size_t zTypeSize,
         size_t zLength,
         JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
         JUNO_USER_DATA_T *pvUserData
     );
-    JUNO_STATUS_T (*Get)(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory);
-    JUNO_STATUS_T (*Update)(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
-    JUNO_STATUS_T (*Put)(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory);
 };
 
 const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void);
