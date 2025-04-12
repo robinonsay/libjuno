@@ -40,3 +40,7 @@
 - Networking support
 - Additional utility libraries for embedded applications
 
+## Inspiration for the Name
+Juno is the name of my wonderful dog and
+she has brought me so much comfort and stability throughout the years.
+I wanted to honor her legacy by naming an open-source library after her.
