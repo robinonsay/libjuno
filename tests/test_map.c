@@ -2,7 +2,6 @@
 #include "juno/map/map_types.h"
 #include "juno/status.h"
 #include "unity.h"
-#include "unity_internals.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
