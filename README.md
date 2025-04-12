@@ -25,14 +25,15 @@
 | `<string.h>`    | `string.h` is used for `memset` and `memcpy`.  |
 
 ## Building and Testing
-1. Create and navigate to a build directory:
-   - mkdir build && cd build
-2. Generate build files:
-   - cmake ..
+1. Generate build files:
+   - `cmake -B build .`
 3. Compile the project:
-   - make
+   - `make -C build`
 4. Run unit-tests:
-   - ctest
+   - `cmake -B build . -DJUNO_TESTS=ON`
+   - `make -C build`
+   - `cd build`
+   - `ctest`
 
 ## Current Modules
 - **Memory Management**: Provides block-based allocation, deallocation, and memory tracking.
