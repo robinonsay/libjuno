@@ -186,14 +186,21 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
         case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
         {
             // Delegate to block allocation getter
+            if(zSize > ptMem->tBlock.zTypeSize)
+            {
+                tStatus = JUNO_STATUS_MEMALLOC_ERROR;
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
+                    "Invalid size for block alloc"
+                );
+                return tStatus;
+            }
             tStatus = Juno_MemoryBlkGet(&ptMem->tBlock, ptMemory);
             break;
         }
         default:
         {
             tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
-            zSize = 0;
-            ptMemory->zSize = zSize;
+            ptMemory->zSize = 0;
             ptMemory->pvAddr = NULL;
         }
     }
