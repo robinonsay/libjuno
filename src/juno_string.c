@@ -1,5 +1,5 @@
 #include "juno/macros.h"
-#include "juno/memory/memory.h"
+#include "juno/memory/alloc.h"
 #include "juno/memory/memory_types.h"
 #include "juno/string/string_api.h"
 #include "juno/status.h"
