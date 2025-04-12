@@ -49,9 +49,11 @@ JUNO_STATUS_T Juno_MapInit(
     ptMap->pfcnIsEqual = pfcnIsEqual;
     ptMap->pfcnFailureHandler = pfcnFailureHandler;
     ptMap->pvUserData = pvFailureUserData;
+    JUNO_STATUS_T tStatus =  Juno_MapValidate(ptMap);
+    ASSERT_SUCCESS(tStatus, return tStatus);
     memset(ptKeyTable, 0, sizeof(JUNO_MAP_KEY_T) * zCapacity);
     memset(ptValueTable, 0, sizeof(JUNO_MAP_VALUE_T) * zCapacity);
-    return Juno_MapValidate(ptMap);
+    return tStatus;
 }
 
 static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptMap, JUNO_MAP_KEY_T tKey, size_t *pzRetSize, bool bShallEqual)
