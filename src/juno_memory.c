@@ -173,7 +173,7 @@ JUNO_STATUS_T Juno_MemoryUpdate(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMem
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory)
+JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zSize)
 {
     ASSERT_EXISTS(ptMem);
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
@@ -189,6 +189,9 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
         default:
         {
             tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+            zSize = 0;
+            ptMemory->zSize = zSize;
+            ptMemory->pvAddr = NULL;
         }
     }
     return tStatus;

@@ -76,7 +76,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pv
  *
  * @return JUNO_STATUS_T Status of the allocation.
  */
-JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory);
+JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zSize);
 
 /// @brief Updates the current memory allocation to a new size (realloc)
 /// @param ptMem Pointer to the memory allocator
