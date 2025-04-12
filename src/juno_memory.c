@@ -7,17 +7,17 @@
 #include <stdint.h>
 #include <string.h>
 
-static JUNO_STATUS_T Juno_MemoryBlkValidate(JUNO_MEMORY_BLOCK_T *ptMemBlk)
+static inline JUNO_STATUS_T Juno_MemoryBlkValidate(JUNO_MEMORY_BLOCK_T *ptMemBlk)
 {
     // Ensure that the memory block structure and its key members exist.
-    ASSERT_EXISTS((ptMemBlk && ptMemBlk->pvMemory && ptMemBlk->pvMemoryFreeStack && ptMemBlk->zLength && ptMemBlk->zTypeSize));
+    ASSERT_EXISTS((ptMemBlk && ptMemBlk->pvMemory && ptMemBlk->ptMetadata && ptMemBlk->zLength && ptMemBlk->zTypeSize));
     return JUNO_STATUS_SUCCESS;
 }
 
 JUNO_STATUS_T Juno_MemoryBlkInit(
     JUNO_MEMORY_BLOCK_T *ptMemBlk,
     void *pvMemory,
-    uint8_t **pvMemoryFreeStack,
+    JUNO_MEMORY_METADATA_T *ptMetadata,
     size_t zTypeSize,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
@@ -30,7 +30,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     ptMemBlk->tHdr.tType = JUNO_MEMORY_ALLOC_TYPE_BLOCK;
     // Initialize memory area and free stack pointer
     ptMemBlk->pvMemory = (uint8_t *) pvMemory;
-    ptMemBlk->pvMemoryFreeStack = pvMemoryFreeStack;
+    ptMemBlk->ptMetadata = ptMetadata;
     // Set type size and total number of blocks
     ptMemBlk->zTypeSize = zTypeSize;
     ptMemBlk->zLength = zLength;
@@ -41,9 +41,11 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     ptMemBlk->pvUserData = pvUserData;
     // Initially, no freed blocks are available
     ptMemBlk->zFreed = 0;
+    JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMemBlk);
+    ASSERT_SUCCESS(tStatus, return tStatus);
     // Clear the memory area
     memset(pvMemory, 0, zTypeSize * zLength);
-    return Juno_MemoryBlkValidate(ptMemBlk);
+    return tStatus;
 }
 
 JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory)
@@ -69,16 +71,16 @@ JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pt
         // Compute the offset for the next available block
         size_t zNextFreeBlock = ptMemBlk->zUsed * ptMemBlk->zTypeSize;
         // Place the new block on the free stack
-        ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed] = &ptMemBlk->pvMemory[zNextFreeBlock];
+        ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = &ptMemBlk->pvMemory[zNextFreeBlock];
         ptMemBlk->zFreed += 1;
         // Increment the used block counter
         ptMemBlk->zUsed += 1;
     }
     // Retrieve the latest free block and update free stack
-    ptMemory->pvAddr = ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed-1];
+    ptMemory->pvAddr = ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem;
     ptMemory->zSize = ptMemBlk->zTypeSize;
     ptMemBlk->zFreed -= 1;
-    ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed] = NULL;
+    ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = NULL;
     return tStatus;
 }
 
@@ -121,7 +123,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pt
     // Ensure the block has not already been freed
     for(size_t i = 0; i < ptMemBlk->zFreed; ++i)
     {
-        if(ptMemBlk->pvMemoryFreeStack[i] == ptMemory->pvAddr)
+        if(ptMemBlk->ptMetadata[i].ptFreeMem == ptMemory->pvAddr)
         {
             tStatus = JUNO_STATUS_MEMFREE_ERROR;
             // Log error for duplicate free attempt
@@ -144,7 +146,7 @@ JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pt
     else
     {
         // Otherwise, add the block back to the free stack.
-        ptMemBlk->pvMemoryFreeStack[ptMemBlk->zFreed] = ptMemory->pvAddr;
+        ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = ptMemory->pvAddr;
         ptMemBlk->zFreed += 1;
     }
     ptMemory->pvAddr = NULL;
@@ -225,8 +227,6 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
 static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
 {
     .Init = Juno_MemoryBlkInit,
-    .Get = Juno_MemoryBlkGet,
-    .Put = Juno_MemoryBlkPut
 };
 
 static const JUNO_MEMORY_API_T tJuno_MemoryApi =
