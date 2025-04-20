@@ -1,0 +1,6 @@
+#include "crc/arc.c"
+#include "crc/binhex.c"
+#include "crc/ccitt.c"
+#include "crc/ccitt32.c"
+#include "crc/kermit.c"
+#include "crc/zip.c"
