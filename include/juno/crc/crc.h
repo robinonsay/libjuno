@@ -11,27 +11,27 @@ extern "C"
 #define M1_32 0xffffff
 #define M2_32 0xffffff00
 
-extern unsigned long arc_crcinit;
-unsigned long Juno_ArcUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt);
+extern const unsigned long giJUNO_ARC_CRC_INIT;
+unsigned long Juno_ArcUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize);
 
 
-extern unsigned long binhex_crcinit;
-unsigned long Juno_BinhexUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt);
+extern const unsigned long giJUNO_BINHEX_CRC_INIT;
+unsigned long Juno_BinhexUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize);
 
 
-extern unsigned long ccitt_crcinit;
-unsigned long Juno_CcittUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt);
+extern const unsigned long giJUNO_CCITT_CRC_INIT;
+unsigned long Juno_CcittUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize);
 
 
-extern unsigned long ccitt32_crcinit;
-unsigned long Juno_Ccitt32UpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt);
+extern const unsigned long giJUNO_CCITT32_CRC_INIT;
+unsigned long Juno_Ccitt32UpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize);
 
 
-extern unsigned long kermit_crcinit;
-unsigned long Juno_KermitUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt);
+extern const unsigned long giJUNO_KERMIT_CRC_INIT;
+unsigned long Juno_KermitUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize);
 
-extern unsigned long zip_crcinit;
-unsigned long Juno_ZipUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt);
+extern const unsigned long giJUNO_ZIP_CRsC_INIT;
+unsigned long Juno_ZipUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,8 @@
 #include "juno/crc/crc.h"
+#include "juno/crc/crc_api.h"
+#include <stdio.h>
 
-unsigned long zip_crcinit = -1;
+const unsigned long giJUNO_ZIP_CRC_INIT = -1;
 
 static unsigned long zip_crctab[256] = {
     0x00000000, 0x09073096, 0x120e612c, 0x1b0951ba,
@@ -69,16 +71,25 @@ static unsigned long zip_crctab[256] = {
     0x1c0bbe37, 0x150c8ea1, 0x0e05df1b, 0x0702ef8d,
 };
 
-unsigned long Juno_ZipUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt)
+unsigned long Juno_ZipUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize)
 {
-    register unsigned long crc = icrc;
-    register unsigned char *cp = icp;
-    register int cnt = icnt;
+    register unsigned long crc = iCrc;
+    register unsigned char *cp = pcData;
+    register size_t cnt = zDataSize;
 
     while(cnt--) {
 	crc=((crc>>8)&M1_32)^zip_crctab[(crc&0xff)^*cp++];
     }
 
     return(crc);
+}
+
+static JUNO_CRC_API_T tZipApi = {
+    .Crc = Juno_ZipUpdateCrc
+};
+
+const JUNO_CRC_API_T * Juno_CrcZipApi(void)
+{
+    return &tZipApi;
 }
 

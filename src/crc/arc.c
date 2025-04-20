@@ -1,6 +1,8 @@
 #include "juno/crc/crc.h"
+#include "juno/crc/crc_api.h"
+#include <stdio.h>
 
-unsigned long arc_crcinit = 0;
+const unsigned long giJUNO_ARC_CRC_INIT = 0;
 
 static unsigned short arc_crctab[256] = {
     0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241,
@@ -37,16 +39,25 @@ static unsigned short arc_crctab[256] = {
     0x8201, 0x42c0, 0x4380, 0x8341, 0x4100, 0x81c1, 0x8081, 0x4040,
 };
 
-unsigned long Juno_ArcUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt)
+unsigned long Juno_ArcUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize)
 {
-    register unsigned long crc = icrc;
-    register unsigned char *cp = icp;
-    register int cnt = icnt;
+    register unsigned long crc = iCrc;
+    register unsigned char *cp = pcData;
+    register size_t cnt = zDataSize;
 
     while(cnt--) {
 	crc=((crc>>8)&M1_16)^arc_crctab[(crc&0xff)^*cp++];
     }
 
     return(crc);
+}
+
+static const JUNO_CRC_API_T tArcCrcApi = {
+    .Crc = Juno_ArcUpdateCrc
+};
+
+const JUNO_CRC_API_T * Juno_CrcArcApi(void)
+{
+    return &tArcCrcApi;
 }
 

@@ -1,6 +1,8 @@
 #include "juno/crc/crc.h"
+#include "juno/crc/crc_api.h"
+#include <stdio.h>
 
-unsigned long binhex_crcinit = 0;
+const unsigned long giJUNO_BINHEX_CRC_INIT = 0;
 
 static unsigned short binhex_crctab[256] = {
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
@@ -37,11 +39,11 @@ static unsigned short binhex_crctab[256] = {
     0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0,
 };
 
-unsigned long Juno_BinhexUpdateCrc(unsigned long icrc, unsigned char *icp, size_t icnt)
+unsigned long Juno_BinhexUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize)
 {
-    register unsigned long crc = icrc;
-    register unsigned char *cp = icp;
-    register int cnt = icnt;
+    register unsigned long crc = iCrc;
+    register unsigned char *cp = pcData;
+    register size_t cnt = zDataSize;
 
     while(cnt--) {
 	crc=((crc<<8)&M2_16)^binhex_crctab[((crc>>8)&0xff)^*cp++];
@@ -50,3 +52,11 @@ unsigned long Juno_BinhexUpdateCrc(unsigned long icrc, unsigned char *icp, size_
     return(crc);
 }
 
+static const JUNO_CRC_API_T tBinhexApi = {
+    .Crc = Juno_BinhexUpdateCrc
+};
+
+const JUNO_CRC_API_T * Juno_CrcBinhexApi(void)
+{
+    return &tBinhexApi;
+}
