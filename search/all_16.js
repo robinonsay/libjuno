@@ -7,7 +7,7 @@ var searchData=
   ['the_20api_4',['Using the API',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
   ['the_20block_20allocator_5',['2. Initialize the Block Allocator',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10',1,'']]],
   ['the_20generic_20memory_20api_6',['4. Using the Generic Memory API',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]],
-  ['the_20name_7',['Inspiration for the Name',['../index.html#autotoc_md27',1,'']]],
+  ['the_20name_7',['Inspiration for the Name',['../index.html#autotoc_md28',1,'']]],
   ['tmemory_8',['tMemory',['../structJUNO__STRING__TAG.html#a68c3b3adcf0feb34ee11184e3b0bce09',1,'JUNO_STRING_TAG']]],
   ['to_20integrate_20your_20custom_20allocator_9',['How to Integrate Your Custom Allocator',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md16',1,'']]],
   ['to_20use_10',['How to Use',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md8',1,'']]],

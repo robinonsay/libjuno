@@ -30,10 +30,12 @@ var NAVTREE =
         [ "Documentation", "index.html#autotoc_md22", null ]
       ] ],
       [ "Dependencies", "index.html#autotoc_md23", null ],
-      [ "Building and Testing", "index.html#autotoc_md24", null ],
-      [ "Current Modules", "index.html#autotoc_md25", null ],
-      [ "Future Modules", "index.html#autotoc_md26", null ],
-      [ "Inspiration for the Name", "index.html#autotoc_md27", null ]
+      [ "Building and Testing", "index.html#autotoc_md24", [
+        [ "CMake Build Option", "index.html#autotoc_md25", null ]
+      ] ],
+      [ "Current Modules", "index.html#autotoc_md26", null ],
+      [ "Future Modules", "index.html#autotoc_md27", null ],
+      [ "Inspiration for the Name", "index.html#autotoc_md28", null ]
     ] ],
     [ "Juno Hash Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
     [ "Juno Map Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
