@@ -35,6 +35,11 @@
    - `cd build`
    - `ctest`
 
+### CMake Build Option
+* `-DJUNO_TESTS=ON`: Enables Unity unit tests
+* `-DJUNO_POSIX=ON`: Enables the posix library for OS-dependent modules
+* `-DJUNO_DOCS=ON`: Enables doxygen generation via `make -C build docs`
+
 ## Current Modules
 - **Memory Management**: Provides block-based allocation, deallocation, and memory tracking.
 - **String Operations**: Handles string initialization, manipulation, concatenation, and cleanup.
