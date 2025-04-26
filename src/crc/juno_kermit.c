@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include "kermit.h"
 
-uint32_t Juno_KermitUpdateCrc(uint32_t iCrc, void *pcData, size_t zDataSize)
+uint32_t Juno_KermitUpdateCrc(uint32_t iCrc, const void *pcData, size_t zDataSize)
 {
     register uint32_t crc = iCrc;
-    register unsigned char *cp = pcData;
+    register const uint8_t *cp = pcData;
     register size_t cnt = zDataSize;
 
     while(cnt--) {

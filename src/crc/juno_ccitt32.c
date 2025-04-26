@@ -2,11 +2,11 @@
 #include "ccitt32.h"
 #include <stdio.h>
 
-uint32_t Juno_Ccitt32UpdateCrc(uint32_t iCrc, void *pcData, size_t zDataSize)
+uint32_t Juno_Ccitt32UpdateCrc(uint32_t iCrc, const void *pcData, size_t zDataSize)
 {
 
     register uint32_t crc = iCrc;
-    register unsigned char *cp = pcData;
+    register const uint8_t *cp = pcData;
     register size_t cnt = zDataSize;
 
     while(cnt--) {

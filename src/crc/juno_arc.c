@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include "arc.h"
 
-uint16_t Juno_ArcUpdateCrc(uint16_t iCrc, void *pcData, size_t zDataSize)
+uint16_t Juno_ArcUpdateCrc(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
     register uint16_t crc = iCrc;
-    register unsigned char *cp = pcData;
+    register const uint8_t *cp = pcData;
     register size_t cnt = zDataSize;
 
     while(cnt--) {
