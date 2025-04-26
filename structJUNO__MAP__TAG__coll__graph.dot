@@ -1,0 +1,12 @@
+digraph "JUNO_MAP_TAG"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [id="Node000001",label="JUNO_MAP_TAG",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [id="edge1_Node000001_Node000002",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" ptHashApi",fontcolor="grey" ];
+  Node2 [id="Node000002",label="JUNO_HASH_API_TAG",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structJUNO__HASH__API__TAG.html",tooltip=" "];
+  Node3 -> Node1 [id="edge2_Node000001_Node000003",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" pfcnIsEqual\nptMapKeys\nptMapValues",fontcolor="grey" ];
+  Node3 [id="Node000003",label="JUNO_MEMORY_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__TAG.html",tooltip="Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start..."];
+}

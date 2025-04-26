@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['declare_5ffailure_5fhandler_0',['declare_failure_handler',['../structJUNO__MEMORY__BLOCK__TAG.html#a5a88cc9a81839e878c9f0c6864411328',1,'JUNO_MEMORY_BLOCK_TAG::DECLARE_FAILURE_HANDLER'],['../structJUNO__STRING__TAG.html#a186dc431440c79a238e5be314768b719',1,'JUNO_STRING_TAG::DECLARE_FAILURE_HANDLER'],['../structJUNO__TABLE__TAG.html#a6d604964b040533a1276f6a771d3ecca',1,'JUNO_TABLE_TAG::DECLARE_FAILURE_HANDLER']]]
+];

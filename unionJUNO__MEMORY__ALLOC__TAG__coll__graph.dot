@@ -1,0 +1,15 @@
+digraph "JUNO_MEMORY_ALLOC_TAG"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [id="Node000001",label="JUNO_MEMORY_ALLOC_TAG",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Union for a generic memory allocation. Accommodates various allocation types, currently including blo..."];
+  Node2 -> Node1 [id="edge1_Node000001_Node000002",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tHdr",fontcolor="grey" ];
+  Node2 [id="Node000002",label="JUNO_MEMORY_ALLOC_HDR_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__ALLOC__HDR__TAG.html",tooltip="Structure for memory allocation header. Contains general information including the type of allocation..."];
+  Node3 -> Node1 [id="edge2_Node000001_Node000003",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tBlock",fontcolor="grey" ];
+  Node3 [id="Node000003",label="JUNO_MEMORY_BLOCK_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__TAG.html",tooltip="Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as..."];
+  Node2 -> Node3 [id="edge3_Node000003_Node000002",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tHdr",fontcolor="grey" ];
+  Node4 -> Node3 [id="edge4_Node000003_Node000004",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" ptMetadata",fontcolor="grey" ];
+  Node4 [id="Node000004",label="JUNO_MEMORY_BLOCK_METADATA_TAG",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__METADATA__TAG.html",tooltip=" "];
+}
