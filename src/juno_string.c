@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <string.h>
 
-static JUNO_STATUS_T Juno_StringValidate(JUNO_STRING_T *ptString)
+static inline JUNO_STATUS_T Juno_StringValidate(JUNO_STRING_T *ptString)
 {
     // Validate that the string pointer and its allocator are not NULL.
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
