@@ -17,6 +17,8 @@ jobs:
     steps:
       # 1) Check out your repo
       - uses: actions/checkout@v3
+        with:
+          submodules: true
 
       # 2) (Optional) Install prerequisites
       - name: Install CMake & Doxygen
