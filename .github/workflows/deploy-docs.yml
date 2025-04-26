@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write    # read/write access to repo contents
+  pages:    write    # allows pushing to gh-pages
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
