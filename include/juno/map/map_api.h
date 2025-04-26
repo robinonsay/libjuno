@@ -15,7 +15,7 @@ typedef struct JUNO_MAP_API_TAG JUNO_MAP_API_T;
 struct JUNO_MAP_API_TAG
 {
     /// Initialize a Juno Map
-    /// @param ptMap A pointer to the map to initalize
+    /// @param ptMap A pointer to the map to initialize
     /// @param ptKeyTable The allocated memory for the keys
     /// @param ptValueTable The allocated memory for the values
     /// @param zKeySize The size of the key
