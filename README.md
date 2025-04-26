@@ -3,7 +3,7 @@
 ![GitHub Actions Workflow Status](https://github.com/robinonsay/libjuno/actions/workflows/ctest.yml/badge.svg)
 ![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
-# LibJuno
+# [LibJuno](https://github.com/robinonsay/libjuno)
 * LibJuno is a lightweight C99 library designed specifically for embedded systems.
 * LibJuno focuses on providing essential functionalities like memory management, data structures, string operations and more all without dynamic memory allocation!
 * LibJuno optimizes for memory safety, determinism and efficiency in constrained environments.
