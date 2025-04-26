@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "zip.h"
 
-uint32_t Juno_ZipUpdateCrc(uint32_t iCrc, const void *pcData, size_t zDataSize)
+uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)
 {
     register uint32_t crc = iCrc;
     register const uint8_t *cp = pcData;

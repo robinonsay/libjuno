@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "binhex.h"
 
-uint16_t Juno_BinhexUpdateCrc(uint16_t iCrc, const void *pcData, size_t zDataSize)
+uint16_t Juno_CrcBinhexUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
     register uint16_t crc = iCrc;
     register const uint8_t *cp = pcData;

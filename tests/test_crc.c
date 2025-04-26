@@ -26,7 +26,7 @@ static void test_zip_crc(void)
    ssize_t zFileSize = fread(pcTruthZipData, zTestDataLen + 4, 1, ptTruthFile);
    fclose(ptTruthFile);
    TEST_ASSERT_GREATER_THAN_size_t(0, zFileSize);
-   size_t zCrc = Juno_ZipUpdateCrc(JUNO_ZIP_CRC_INIT, (uint8_t *)pcTestZipData, zTestDataLen);
+   size_t zCrc = Juno_CrcZipUpdate(JUNO_ZIP_CRC_INIT, (uint8_t *)pcTestZipData, zTestDataLen);
    memcpy(&pcTestZipData[zTestDataLen], &zCrc, sizeof(zCrc));
    for(size_t i = 0; i < sizeof(pcTestZipData); i++)
    {
@@ -38,7 +38,7 @@ static void test_ccitt_crc(void)
    char pcTestZipData[32] = "helloworld";
    size_t zTestDataLen = strlen(pcTestZipData);
    char pcTruthZipData[32] = "helloworld\x8a\xab";
-   size_t zCrc = Juno_CcittUpdateCrc(JUNO_CCITT_CRC_INIT, (uint8_t *)pcTestZipData, zTestDataLen);
+   size_t zCrc = Juno_CrcCcittUpdate(JUNO_CCITT_CRC_INIT, (uint8_t *)pcTestZipData, zTestDataLen);
    memcpy(&pcTestZipData[zTestDataLen], &zCrc, sizeof(zCrc));
    for(size_t i = 0; i < sizeof(pcTestZipData); i++)
    {
