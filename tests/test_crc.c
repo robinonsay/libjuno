@@ -33,10 +33,23 @@ static void test_zip_crc(void)
 	   TEST_ASSERT_EQUAL(pcTruthZipData[i], pcTestZipData[i]);
    }
 }
+static void test_ccitt_crc(void)
+{
+   char pcTestZipData[32] = "helloworld";
+   size_t zTestDataLen = strlen(pcTestZipData);
+   char pcTruthZipData[32] = "helloworld\x8a\xab";
+   size_t zCrc = Juno_CcittUpdateCrc(JUNO_CCITT_CRC_INIT, (uint8_t *)pcTestZipData, zTestDataLen);
+   memcpy(&pcTestZipData[zTestDataLen], &zCrc, sizeof(zCrc));
+   for(size_t i = 0; i < sizeof(pcTestZipData); i++)
+   {
+	   TEST_ASSERT_EQUAL(pcTruthZipData[i], pcTestZipData[i]);
+   }
+}
 
 int main(void)
 {
 	UNITY_BEGIN();
 	RUN_TEST(test_zip_crc);
+	RUN_TEST(test_ccitt_crc);
 	return UNITY_END();
 }
