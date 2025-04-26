@@ -1,0 +1,42 @@
+name: Build & Deploy Docs
+
+# Trigger on pushes to main (or change to your default branch)
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Check out your repo
+      - uses: actions/checkout@v3
+
+      # 2) (Optional) Install prerequisites
+      - name: Install CMake & Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake doxygen
+
+      # 3) Configure & build your docs target
+      - name: Configure CMake
+        run: |
+          cmake -B public -DCMAKE_BUILD_TYPE=Release -DJUNO_DOCS=ON .
+      - name: Generate Doxygen docs
+        run: |
+          make -C public docs
+
+      # 4) Deploy the generated HTML to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # Uses the special GITHUB_TOKEN to push to gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Directory (in the runner) containing your built HTML
+          publish_dir: public/docs/html
+          # Branch to push to; Pages will serve from here
+          publish_branch: gh-pages
+          # Optional: keep history or force-push
+          keep_files: false
