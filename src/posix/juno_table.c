@@ -17,7 +17,7 @@
 static inline JUNO_STATUS_T Validate(JUNO_TABLE_MANAGER_T *ptTableManager)
 {
     // If manager or its path/buffer pointers are invalid, return error
-    if(!ptTableManager && ptTableManager->pcTablePath && ptTableManager->ptBuff)
+    if(!(ptTableManager && ptTableManager->pcTablePath && ptTableManager->ptBuff && ptTableManager->zBuffSize))
     {
         return JUNO_STATUS_NULLPTR_ERROR;
     }
