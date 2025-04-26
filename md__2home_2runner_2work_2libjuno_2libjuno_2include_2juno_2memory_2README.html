@@ -116,9 +116,9 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
   <div class="headertitle"><div class="title">Juno Memory Module</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a> The Juno Memory Module provides a unified API for memory management in embedded systems. It supports both generic memory allocation and fixed-size block-based allocation. The design is tailored for embedded projects, ensuring flexibility, deterministic failure handling, and future extensibility.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md2"></a> The Juno Memory Module provides a unified API for memory management in embedded systems. It supports both generic memory allocation and fixed-size block-based allocation. The design is tailored for embedded projects, ensuring flexibility, deterministic failure handling, and future extensibility.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Overview</h1>
 <ul>
 <li><b>Generic Memory Allocation</b> <br  />
@@ -148,7 +148,7 @@ Overview</h1>
  If the macro <code>JUNO_CUSTOM_ALLOC</code> is defined, the module expects the developer to provide their own definitions for memory allocation types. This allows for integration with external/custom memory managers without being tied to the default union and its implementations.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Data Structures</h1>
 <p>The key structures and macros are defined in <a class="el" href="memory__types_8h_source.html">memory_types.h</a>:</p>
 <ul>
@@ -164,9 +164,9 @@ Data Structures</h1>
  If <code>JUNO_CUSTOM_ALLOC</code> is not defined, this union is declared to accommodate multiple allocation types (currently block-based). If <code>JUNO_CUSTOM_ALLOC</code> is defined, you must provide your own implementation of allocation types.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 How to Use</h1>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 1. Declare Memory Blocks &amp; Metadata</h2>
 <p>Define your memory blocks and metadata arrays using the supplied macros:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;juno/memory/memory.h&quot;</span></div>
@@ -180,7 +180,7 @@ How to Use</h1>
 <div class="line"> </div>
 <div class="line">JUNO_MEMORY_BLOCK(myBlock, MY_BLOCK_T, 20);</div>
 <div class="line">JUNO_MEMORY_BLOCK_METADATA(myMetadata, 20);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
 2. Initialize the Block Allocator</h2>
 <p>Initialize the block-based memory allocator with its memory region, metadata, block size, and (optionally) a failure handler. For example:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;string.h&gt;</span></div>
@@ -209,7 +209,7 @@ How to Use</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="astructJUNO__MEMORY__BLOCK__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__BLOCK__TAG.html">JUNO_MEMORY_BLOCK_TAG</a></div><div class="ttdoc">Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as...</div><div class="ttdef"><b>Definition</b> memory_types.h:64</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 3. Allocate, Update, and Free Memory Blocks</h2>
 <p>Use the block-specific functions to manage memory allocations:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -241,7 +241,7 @@ How to Use</h1>
 <div class="line">}</div>
 <div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:56</div></div>
 <div class="ttc" id="astructJUNO__MEMORY__TAG_html_a410362e1eb4aa6c8ace8c6f369c6fe2a"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html#a410362e1eb4aa6c8ace8c6f369c6fe2a">JUNO_MEMORY_TAG::pvAddr</a></div><div class="ttdeci">void * pvAddr</div><div class="ttdoc">Pointer to the allocated memory.</div><div class="ttdef"><b>Definition</b> memory_types.h:57</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
 4. Using the Generic Memory API</h2>
 <p>You can initialize a <code>JUNO_MEMORY_ALLOC_T</code> directly using the block implementation. This allows you to use the generic allocator functions seamlessly:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -310,7 +310,7 @@ How to Use</h1>
 <div class="line">}</div>
 <div class="ttc" id="aunionJUNO__MEMORY__ALLOC__TAG_html"><div class="ttname"><a href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_TAG</a></div><div class="ttdoc">Union for a generic memory allocation. Accommodates various allocation types, currently including blo...</div><div class="ttdef"><b>Definition</b> memory_types.h:79</div></div>
 <div class="ttc" id="aunionJUNO__MEMORY__ALLOC__TAG_html_ac0788fdefb10deeee78f04fb411e3fe4"><div class="ttname"><a href="unionJUNO__MEMORY__ALLOC__TAG.html#ac0788fdefb10deeee78f04fb411e3fe4">JUNO_MEMORY_ALLOC_TAG::tBlock</a></div><div class="ttdeci">JUNO_MEMORY_BLOCK_T tBlock</div><div class="ttdoc">Block-based allocation structure.</div><div class="ttdef"><b>Definition</b> memory_types.h:81</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
 5. Example: Using a Failure Handler</h2>
 <p>The failure handler enables deterministic error management. For example, the following code demonstrates a callback that logs errors to <code>stderr</code>:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -362,7 +362,7 @@ How to Use</h1>
 <div class="line">    Juno_MemoryBlkPut(&amp;memBlock, &amp;memDesc);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
 Using the API</h2>
 <p>The Juno Memory Module exposes its operations through function pointer APIs, allowing downstream code to remain agnostic to the underlying allocation method. This design means that whether you're using the default block-based allocator or a fully custom implementation, the API remains the same.</p>
 <p>The module provides two primary API structures:</p>
@@ -456,7 +456,7 @@ Using the API</h2>
 <li>We invoke the <code>Get</code>, <code>Update</code>, and <code>Put</code> functions through the API, which internally dispatch to the block-based implementation (or any other implementation if replaced).</li>
 </ul>
 <p>Downstream consumers of the API can call these functions without knowing whether the underlying allocator is block-based or custom—promoting modularity and future extensibility.</p>
-<h1><a class="anchor" id="autotoc_md13"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Custom Allocators</h1>
 <p>If you wish to use a completely custom memory allocation implementation (for example, to integrate with an external memory manager), you can simply not include the default block-based implementation. Instead, implement your own custom allocation type and provide implementations for the allocator functions defined in <a class="el" href="alloc_8h_source.html">alloc.h</a>. Downstream consumers will use the same API regardless of the underlying implementation.</p>
 <p>Below is an example of a custom allocator that uses POSIX malloc, realloc, and free:</p>
@@ -540,7 +540,7 @@ Custom Allocators</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="astructJUNO__MEMORY__TAG_html_a981c345c95eba1755f12eeb37a0ef724"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html#a981c345c95eba1755f12eeb37a0ef724">JUNO_MEMORY_TAG::zSize</a></div><div class="ttdeci">size_t zSize</div><div class="ttdoc">Size of the allocated memory, in bytes.</div><div class="ttdef"><b>Definition</b> memory_types.h:58</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md16"></a>
 How to Integrate Your Custom Allocator</h2>
 <ol type="1">
 <li><b>Implement Your Custom Allocator Type:</b> <br  />
@@ -551,7 +551,7 @@ How to Integrate Your Custom Allocator</h2>
  Downstream dependencies link against these functions via the <a class="el" href="alloc_8h_source.html">alloc.h</a> API, or implelement the function pointer API. They won’t need to know whether your implementation is custom or the default block-based allocator.</li>
 </ol>
 <p>By using this approach, you can seamlessly substitute the default memory manager with your custom implementation while maintaining API compatibility for all dependent code.</p>
-<h1><a class="anchor" id="autotoc_md15"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 Additional Notes</h1>
 <ul>
 <li><b>Memory Alignment:</b> <br  />

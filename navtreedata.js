@@ -25,35 +25,36 @@
 var NAVTREE =
 [
   [ "LibJuno", "index.html", [
-    [ "LibJuno", "index.html#autotoc_md16", [
-      [ "Using LibJuno", "index.html#autotoc_md17", [
-        [ "Documentation", "index.html#autotoc_md18", null ]
+    [ "LibJuno", "index.html#autotoc_md20", [
+      [ "Using LibJuno", "index.html#autotoc_md21", [
+        [ "Documentation", "index.html#autotoc_md22", null ]
       ] ],
-      [ "Dependencies", "index.html#autotoc_md19", null ],
-      [ "Building and Testing", "index.html#autotoc_md20", null ],
-      [ "Current Modules", "index.html#autotoc_md21", null ],
-      [ "Future Modules", "index.html#autotoc_md22", null ],
-      [ "Inspiration for the Name", "index.html#autotoc_md23", null ]
+      [ "Dependencies", "index.html#autotoc_md23", null ],
+      [ "Building and Testing", "index.html#autotoc_md24", null ],
+      [ "Current Modules", "index.html#autotoc_md25", null ],
+      [ "Future Modules", "index.html#autotoc_md26", null ],
+      [ "Inspiration for the Name", "index.html#autotoc_md27", null ]
     ] ],
-    [ "README", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
-    [ "README", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
+    [ "Juno Hash Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
+    [ "Juno Map Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
     [ "Juno Memory Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html", [
-      [ "Overview", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md2", null ],
-      [ "Data Structures", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4", null ],
-      [ "How to Use", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6", [
-        [ "1. Declare Memory Blocks & Metadata", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md7", null ],
-        [ "2. Initialize the Block Allocator", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md8", null ],
-        [ "3. Allocate, Update, and Free Memory Blocks", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9", null ],
-        [ "4. Using the Generic Memory API", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10", null ],
-        [ "5. Example: Using a Failure Handler", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11", null ],
-        [ "Using the API", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12", null ]
+      [ "Overview", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4", null ],
+      [ "Data Structures", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6", null ],
+      [ "How to Use", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md8", [
+        [ "1. Declare Memory Blocks & Metadata", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9", null ],
+        [ "2. Initialize the Block Allocator", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10", null ],
+        [ "3. Allocate, Update, and Free Memory Blocks", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11", null ],
+        [ "4. Using the Generic Memory API", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12", null ],
+        [ "5. Example: Using a Failure Handler", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md13", null ],
+        [ "Using the API", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14", null ]
       ] ],
-      [ "Custom Allocators", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md13", [
-        [ "How to Integrate Your Custom Allocator", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14", null ]
+      [ "Custom Allocators", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md15", [
+        [ "How to Integrate Your Custom Allocator", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md16", null ]
       ] ],
-      [ "Additional Notes", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md15", null ]
+      [ "Additional Notes", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17", null ]
     ] ],
-    [ "README", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html", null ],
+    [ "Juno String Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html", null ],
+    [ "Juno Table Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],

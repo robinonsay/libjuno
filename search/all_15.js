@@ -4,5 +4,6 @@ var searchData=
   ['set_1',['Set',['../structJUNO__MAP__API__TAG.html#a3ee272bb656ccad597b426aff2de0f68',1,'JUNO_MAP_API_TAG']]],
   ['setalloc_2',['SetAlloc',['../structJUNO__STRING__API__TAG.html#ae0de9d65250efb96fe427a99573e5fd7',1,'JUNO_STRING_API_TAG']]],
   ['setbuffer_3',['SetBuffer',['../structJUNO__TABLE__API__TAG.html#a25ce8c4ad17c46d99bd2d0a6a365b23c',1,'JUNO_TABLE_API_TAG']]],
-  ['structures_4',['Data Structures',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]]
+  ['string_20module_4',['Juno String Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'']]],
+  ['structures_5',['Data Structures',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'']]]
 ];
