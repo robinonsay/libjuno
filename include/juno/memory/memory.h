@@ -1,6 +1,7 @@
 #ifndef JUNO_MEMORY_DIRECT_H
 #define JUNO_MEMORY_DIRECT_H
 
+#include "juno/memory/memory_api.h"
 #include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include <stddef.h>
@@ -50,6 +51,16 @@ JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *pt
 /// @param pvAddr Pointer to the allocated block to be freed.
 /// @return JUNO_STATUS_T Status of the free operation.
 JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pvAddr);
+
+/// @brief Retrieves the block-based memory API structure.
+/// @return Pointer to the memory block API structure.
+const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void);
+
+/// @brief Retrieves the generic memory API structure.
+/// @return Pointer to the generic memory API structre.
+const JUNO_MEMORY_API_T * Juno_MemoryApi(void);
+
+
 #ifdef __cplusplus
 }
 #endif

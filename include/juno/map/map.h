@@ -1,6 +1,7 @@
 #ifndef JUNO_MAP_H
 #define JUNO_MAP_H
 
+#include "juno/map/map_api.h"
 #include "juno/map/map_types.h"
 #include "juno/memory/memory_types.h"
 #include "juno/status.h"
@@ -52,6 +53,7 @@ JUNO_STATUS_T Juno_MapRemove(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey);
 /// @return Status of operation
 JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T *ptRetValue);
 
+const JUNO_MAP_API_T * Juno_MapApi(void);
 #ifdef __cplusplus
 }
 #endif

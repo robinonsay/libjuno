@@ -1,4 +1,4 @@
-#include "juno/hash/hash_api.h"
+#include "juno/hash/hash.h"
 #include "juno/map/map_types.h"
 #include "juno/memory/memory_types.h"
 #include "juno/status.h"
@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include "juno/map/map_api.h"
+#include "juno/map/map.h"
 
 static const JUNO_MAP_API_T *gptMapApi = NULL;
 static const JUNO_HASH_API_T *gptHashApi = NULL;

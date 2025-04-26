@@ -1,6 +1,8 @@
 #ifndef JUNO_STATUS_H
 #define JUNO_STATUS_H
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef enum JUNO_STATUS_TAG
 {
     JUNO_STATUS_SUCCESS             = 0,
@@ -22,5 +24,7 @@ typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCust
 #endif
 #define FAIL(tStatus, pfcnFailureHandler, pvUserData, pcMessage)\
 if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvUserData);}
-
+#ifdef __cplusplus
+}
+#endif
 #endif

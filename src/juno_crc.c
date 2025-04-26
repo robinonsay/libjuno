@@ -1,0 +1,6 @@
+#include "crc/juno_arc.c"
+#include "crc/juno_binhex.c"
+#include "crc/juno_ccitt.c"
+#include "crc/juno_ccitt32.c"
+#include "crc/juno_kermit.c"
+#include "crc/juno_zip.c"

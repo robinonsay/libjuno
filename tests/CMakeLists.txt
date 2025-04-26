@@ -10,3 +10,9 @@ foreach(file ${JUNO_TEST_SRCS})
     target_link_libraries(${test_name} ${PROJECT_NAME} unity)
     add_test(${test_name} ${test_name})
 endforeach()
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/tests/test_zip_crc.bin"
+  "${CMAKE_BINARY_DIR}/tests/test_zip_crc.bin"
+  COPYONLY
+)
