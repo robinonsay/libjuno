@@ -3,7 +3,7 @@
 #include "unity_internals.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include "juno/hash/hash_api.h"
+#include "juno/hash/hash.h"
 
 static const JUNO_HASH_API_T *gptHashApi = NULL;
 

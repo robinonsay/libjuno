@@ -1,10 +1,6 @@
-#include "juno/crc/crc.h"
-#include "juno/crc/crc_api.h"
-#include <stdio.h>
+#include <stdint.h>
 
-const unsigned long giJUNO_KERMIT_CRC_INIT = 0;
-
-static unsigned short kermit_crctab[256] = {
+static uint16_t kermit_crctab[256] = {
     0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
     0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
     0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
@@ -38,26 +34,3 @@ static unsigned short kermit_crctab[256] = {
     0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330,
     0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78,
 };
-
-unsigned long Juno_KermitUpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize)
-{
-    register unsigned long crc = iCrc;
-    register unsigned char *cp = pcData;
-    register size_t cnt = zDataSize;
-
-    while(cnt--) {
-	crc=((crc>>8)&M1_16)^kermit_crctab[(crc&0xff)^*cp++];
-    }
-
-    return(crc);
-}
-
-static const JUNO_CRC_API_T tKermitApi = {
-    .Crc = Juno_KermitUpdateCrc
-};
-
-
-const JUNO_CRC_API_T * Juno_CrcKermitApi(void)
-{
-    return &tKermitApi;
-}

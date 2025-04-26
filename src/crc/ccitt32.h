@@ -1,10 +1,5 @@
-#include "juno/crc/crc.h"
-#include "juno/crc/crc_api.h"
-
-#include <stdio.h>
-const unsigned long giJUNO_CCITT32_CRC_INIT = -1;
-
-static unsigned long ccitt32_crctab[256] = {
+#include <stdint.h>
+static uint32_t ccitt32_crctab[256] = {
     0x00000000, 0x04c11db7, 0x09823b6e, 0x0d4326d9,
     0x130476dc, 0x17c56b6b, 0x1a864db2, 0x1e475005,
     0x2608edb8, 0x22c9f00f, 0x2f8ad6d6, 0x2b4bcb61,
@@ -70,26 +65,3 @@ static unsigned long ccitt32_crctab[256] = {
     0xafb010b1, 0xab710d06, 0xa6322bdf, 0xa2f33668,
     0xbcb4666d, 0xb8757bda, 0xb5365d03, 0xb1f740b4,
 };
-
-unsigned long Juno_Ccitt32UpdateCrc(unsigned long iCrc, unsigned char *pcData, size_t zDataSize)
-{
-
-    register unsigned long crc = iCrc;
-    register unsigned char *cp = pcData;
-    register size_t cnt = zDataSize;
-
-    while(cnt--) {
-	crc=((crc<<8)&M2_32)^ccitt32_crctab[((crc>>24)&0xff)^*cp++];
-    }
-
-    return(crc);
-}
-
-static const JUNO_CRC_API_T tCcitt32Api = {
-    .Crc = Juno_Ccitt32UpdateCrc
-};
-
-const JUNO_CRC_API_T * Juno_CrcCcitt32Api(void)
-{
-    return &tCcitt32Api;
-}

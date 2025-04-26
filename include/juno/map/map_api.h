@@ -32,7 +32,6 @@ struct JUNO_MAP_API_TAG
     JUNO_STATUS_T (*Get)(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T *ptRetValue);
 };
 
-const JUNO_MAP_API_T * Juno_MapApi(void);
 
 #ifdef __cplusplus
 }

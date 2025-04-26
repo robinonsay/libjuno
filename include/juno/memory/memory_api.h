@@ -71,13 +71,6 @@ struct JUNO_MEMORY_BLOCK_API_TAG
     );
 };
 
-/// @brief Retrieves the block-based memory API structure.
-/// @return Pointer to the memory block API structure.
-const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void);
-
-/// @brief Retrieves the generic memory API structure.
-/// @return Pointer to the generic memory API structre.
-const JUNO_MEMORY_API_T * Juno_MemoryApi(void);
 
 #ifdef __cplusplus
 }

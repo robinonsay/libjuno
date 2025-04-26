@@ -2,6 +2,7 @@
 #define JUNO_STRING_H
 #include "juno/memory/memory_types.h"
 #include "juno/status.h"
+#include "juno/string/string_api.h"
 #include <stddef.h>
 #ifdef __cplusplus
 extern "C" {
@@ -54,6 +55,8 @@ JUNO_STATUS_T Juno_StringConcat(JUNO_STRING_T *ptString1, JUNO_STRING_T *ptStrin
 /// @param ptString Pointer to the JUNO string structure.
 /// @return JUNO_STATUS_T result status.
 JUNO_STATUS_T Juno_StringFree(JUNO_STRING_T *ptString);
+
+const JUNO_STRING_API_T* Juno_StringApi(void);
 
 #ifdef __cplusplus
 }

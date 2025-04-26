@@ -32,7 +32,6 @@ struct JUNO_STRING_API_TAG
 
 };
 
-const JUNO_STRING_API_T* Juno_StringApi(void);
 
 #ifdef __cplusplus
 }
