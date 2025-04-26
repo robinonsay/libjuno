@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "LibJuno", "index.html", [
-    [ "<a href=\"https://github.com/robinonsay/libjuno\" >LibJuno</a>", "index.html#autotoc_md20", [
+    [ "LibJuno", "index.html#autotoc_md20", [
       [ "Using LibJuno", "index.html#autotoc_md21", [
         [ "Documentation", "index.html#autotoc_md22", null ]
       ] ],
