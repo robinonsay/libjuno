@@ -43,7 +43,7 @@ struct JUNO_TABLE_API_TAG
     /// @param ptBuff The new table buffer
     /// @param zBuffSize The table buffer size
     /// @return Returns a `JUNO_STATUS_T` code
-    JUNO_STATUS_T (*SetBuffer)(JUNO_TABLE_MANAGER_T *ptTableManager, JUNO_TABLE_HDR_T *ptBuff, size_t zBuffSize);
+    JUNO_STATUS_T (*SetBuffer)(JUNO_TABLE_MANAGER_T *ptTableManager, JUNO_TABLE_HDR_T *ptBuff);
 };
 
 #ifdef __cplusplus

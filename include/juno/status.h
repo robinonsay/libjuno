@@ -17,6 +17,7 @@ typedef enum JUNO_STATUS_TAG
     JUNO_STATUS_FILE_ERROR          = 9,
     JUNO_STATUS_READ_ERROR          = 10,
     JUNO_STATUS_WRITE_ERROR         = 11,
+    JUNO_STATUS_CRC_ERROR           = 12,
 } JUNO_STATUS_T;
 
 typedef void JUNO_USER_DATA_T;

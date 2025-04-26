@@ -16,10 +16,6 @@ typedef struct JUNO_TABLE_PRIVATE_TAG JUNO_TABLE_PRIVATE_T;
 
 struct JUNO_TABLE_HDR_TAG
 {
-    /// The size of the table
-    size_t zTableSize;
-    /// The number of elements;
-    size_t zLen;
     /// CRC32 checksum
     uint32_t iCrc32;
 };

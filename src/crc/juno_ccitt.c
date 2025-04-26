@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "ccitt.h"
 
-uint16_t Juno_CcittUpdateCrc(uint16_t iCrc, const void *pcData, size_t zDataSize)
+uint16_t Juno_CrcCcittUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
     register uint16_t crc = iCrc;
     register const uint8_t *cp = pcData;

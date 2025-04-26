@@ -37,7 +37,7 @@ JUNO_STATUS_T Juno_TablePosixSave(JUNO_TABLE_MANAGER_T *ptTableManager);
 /// @param ptBuff The new table buffer
 /// @param zBuffSize The table buffer size
 /// @return Returns a `JUNO_STATUS_T` code
-JUNO_STATUS_T Juno_TablePosixSetBuffer(JUNO_TABLE_MANAGER_T *ptTableManager, JUNO_TABLE_HDR_T *ptBuff, size_t zBuffSize);
+JUNO_STATUS_T Juno_TablePosixSetBuffer(JUNO_TABLE_MANAGER_T *ptTableManager, JUNO_TABLE_HDR_T *ptBuff);
 
 /// Get the POSIX `JUNO_TABLE_API_T`
 /// @return Return the `JUNO_TABLE_API_T`
