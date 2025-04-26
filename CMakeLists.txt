@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 option(JUNO_TESTS "Enable unit testing" OFF)
 option(JUNO_POSIX "Enable posix" OFF)
+option(JUNO_DOCS "Enable doxygen docs" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
@@ -114,4 +115,30 @@ if(JUNO_TESTS)
     add_library(unity ${CMAKE_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${CMAKE_SOURCE_DIR}/deps/unity/src)
     add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
+endif()
+
+
+if(JUNO_DOCS)
+# 1) Find Doxygen
+find_package(Doxygen REQUIRED)
+
+if (DOXYGEN_FOUND)
+  # 2a) Point to your template Doxyfile.in (in source tree)
+  set(DOXYFILE_IN  ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+  # 2b) Tell CMake where to generate the real Doxyfile
+  set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+  # 2c) Substitute @PROJECT_NAME@, @PROJECT_VERSION@, etc.
+  configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+
+  # 3) Create a custom target "docs"
+  add_custom_target(docs
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating API documentation with Doxygen"
+    VERBATIM
+  )
+else()
+  message(WARNING "Doxygen not found—'make docs' target will be unavailable.")
+endif()
 endif()
