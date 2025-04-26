@@ -50,7 +50,8 @@ JUNO_STATUS_T Juno_MapRemove(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey);
 /// @param ptMap A pointer to the map
 /// @param tKey The key to use
 /// @param ptRetVal The return value retrieved using the key
-/// @return Status of operation
+/// @return Status of operation.
+/// Returns `JUNO_STATUS_DNE_ERROR` if the key is not in the map
 JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T *ptRetValue);
 
 const JUNO_MAP_API_T * Juno_MapApi(void);
