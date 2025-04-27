@@ -11,5 +11,5 @@ digraph "JUNO_MEMORY_ALLOC_TAG"
   Node3 [id="Node000003",label="JUNO_MEMORY_BLOCK_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__TAG.html",tooltip="Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as..."];
   Node2 -> Node3 [id="edge3_Node000003_Node000002",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tHdr",fontcolor="grey" ];
   Node4 -> Node3 [id="edge4_Node000003_Node000004",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" ptMetadata",fontcolor="grey" ];
-  Node4 [id="Node000004",label="JUNO_MEMORY_BLOCK_METADATA_TAG",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__METADATA__TAG.html",tooltip=" "];
+  Node4 [id="Node000004",label="JUNO_MEMORY_BLOCK_METADATA_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__METADATA__TAG.html",tooltip=" "];
 }

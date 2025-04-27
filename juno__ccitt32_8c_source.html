@@ -121,11 +121,12 @@ $(document).ready(function(){initNavTree('juno__ccitt32_8c_source.html',''); ini
   <div class="headertitle"><div class="title">juno_ccitt32.c</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;juno/crc/crc.h&quot;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;ccitt32.h&quot;</span></div>
+<a href="juno__ccitt32_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="crc_8h.html">juno/crc/crc.h</a>&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;<a class="code" href="ccitt32_8h.html">ccitt32.h</a>&quot;</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, <span class="keyword">const</span> <span class="keywordtype">void</span> *pcData, <span class="keywordtype">size_t</span> zDataSize)</div>
+<div class="foldopen" id="foldopen00005" data-start="{" data-end="}">
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="crc_8h.html#a4e868dd96f542f42ecad980ad7e345ee">    5</a></span>uint32_t <a class="code hl_function" href="juno__ccitt32_8c.html#a4e868dd96f542f42ecad980ad7e345ee">Juno_CrcCcitt32Update</a>(uint32_t iCrc, <span class="keyword">const</span> <span class="keywordtype">void</span> *pcData, <span class="keywordtype">size_t</span> zDataSize)</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>{</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">register</span> uint32_t crc = iCrc;</div>
@@ -133,17 +134,22 @@ $(document).ready(function(){initNavTree('juno__ccitt32_8c_source.html',''); ini
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">register</span> <span class="keywordtype">size_t</span> cnt = zDataSize;</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keywordflow">while</span>(cnt--) {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    crc=((crc&lt;&lt;8)&amp;M2_32)^ccitt32_crctab[((crc&gt;&gt;24)&amp;0xff)^*cp++];</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    crc=((crc&lt;&lt;8)&amp;<a class="code hl_define" href="crc_8h.html#ac35ec6bd37c71fc6febc26afe5431252">M2_32</a>)^ccitt32_crctab[((crc&gt;&gt;24)&amp;0xff)^*cp++];</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    }</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keywordflow">return</span>(crc);</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>}</div>
+</div>
+<div class="ttc" id="accitt32_8h_html"><div class="ttname"><a href="ccitt32_8h.html">ccitt32.h</a></div></div>
+<div class="ttc" id="acrc_8h_html"><div class="ttname"><a href="crc_8h.html">crc.h</a></div></div>
+<div class="ttc" id="acrc_8h_html_ac35ec6bd37c71fc6febc26afe5431252"><div class="ttname"><a href="crc_8h.html#ac35ec6bd37c71fc6febc26afe5431252">M2_32</a></div><div class="ttdeci">#define M2_32</div><div class="ttdef"><b>Definition</b> crc.h:12</div></div>
+<div class="ttc" id="ajuno__ccitt32_8c_html_a4e868dd96f542f42ecad980ad7e345ee"><div class="ttname"><a href="juno__ccitt32_8c.html#a4e868dd96f542f42ecad980ad7e345ee">Juno_CrcCcitt32Update</a></div><div class="ttdeci">uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_ccitt32.c:5</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_aaf0231a54e81f715efc83e4edb207e4.html">crc</a></li><li class="navelem"><b>juno_ccitt32.c</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_aaf0231a54e81f715efc83e4edb207e4.html">crc</a></li><li class="navelem"><a class="el" href="juno__ccitt32_8c.html">juno_ccitt32.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

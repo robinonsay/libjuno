@@ -13,7 +13,7 @@ digraph "JUNO_STRING_TAG"
   Node4 [id="Node000004",label="JUNO_MEMORY_BLOCK_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__TAG.html",tooltip="Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as..."];
   Node3 -> Node4 [id="edge4_Node000004_Node000003",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tHdr",fontcolor="grey" ];
   Node5 -> Node4 [id="edge5_Node000004_Node000005",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" ptMetadata",fontcolor="grey" ];
-  Node5 [id="Node000005",label="JUNO_MEMORY_BLOCK_METADATA_TAG",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__METADATA__TAG.html",tooltip=" "];
+  Node5 [id="Node000005",label="JUNO_MEMORY_BLOCK_METADATA_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__BLOCK__METADATA__TAG.html",tooltip=" "];
   Node6 -> Node1 [id="edge6_Node000001_Node000006",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tMemory",fontcolor="grey" ];
   Node6 [id="Node000006",label="JUNO_MEMORY_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__MEMORY__TAG.html",tooltip="Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start..."];
 }

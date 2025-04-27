@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['save_0',['Save',['../structJUNO__TABLE__API__TAG.html#a0e2afcb9ec2ad312680f0d40d88ab622',1,'JUNO_TABLE_API_TAG']]],
-  ['set_1',['Set',['../structJUNO__MAP__API__TAG.html#a3ee272bb656ccad597b426aff2de0f68',1,'JUNO_MAP_API_TAG']]],
-  ['setalloc_2',['SetAlloc',['../structJUNO__STRING__API__TAG.html#ae0de9d65250efb96fe427a99573e5fd7',1,'JUNO_STRING_API_TAG']]],
-  ['setbuffer_3',['SetBuffer',['../structJUNO__TABLE__API__TAG.html#a25ce8c4ad17c46d99bd2d0a6a365b23c',1,'JUNO_TABLE_API_TAG']]],
-  ['string_20module_4',['Juno String Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'']]],
-  ['structures_5',['Data Structures',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'']]]
+  ['readme_2emd_0',['readme.md',['../include_2juno_2hash_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2map_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2memory_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2string_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2table_2README_8md.html',1,'(Global Namespace)'],['../README_8md.html',1,'(Global Namespace)']]],
+  ['remove_1',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]]
 ];

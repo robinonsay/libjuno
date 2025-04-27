@@ -1,0 +1,18 @@
+var searchData=
+[
+  ['juno_5fmemory_5falloc_5ftype_5fblock_0',['JUNO_MEMORY_ALLOC_TYPE_BLOCK',['../memory__types_8h.html#a864dfe2d3e47ab6ad2e0951937f24d9ba8d0ff8413f590ed9c983d6dbebe3d2f1',1,'memory_types.h']]],
+  ['juno_5fmemory_5falloc_5ftype_5freserved_1',['JUNO_MEMORY_ALLOC_TYPE_RESERVED',['../memory__types_8h.html#a864dfe2d3e47ab6ad2e0951937f24d9baed49d5a3ce7fa2afa135c17a4f35578c',1,'memory_types.h']]],
+  ['juno_5fstatus_5fcrc_5ferror_2',['JUNO_STATUS_CRC_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664ae164e215722d72961a66382501edd54a',1,'status.h']]],
+  ['juno_5fstatus_5fdne_5ferror_3',['JUNO_STATUS_DNE_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a482545204a69e26fab4e6b520fa1cbe9',1,'status.h']]],
+  ['juno_5fstatus_5ferr_4',['JUNO_STATUS_ERR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238',1,'status.h']]],
+  ['juno_5fstatus_5ffile_5ferror_5',['JUNO_STATUS_FILE_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a9704948643262a848c89e08bc088f3de',1,'status.h']]],
+  ['juno_5fstatus_5finvalid_5fsize_5ferror_6',['JUNO_STATUS_INVALID_SIZE_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3',1,'status.h']]],
+  ['juno_5fstatus_5finvalid_5ftype_5ferror_7',['JUNO_STATUS_INVALID_TYPE_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a9cdd319dcdfd9d445fe00ef8bc36d1e5',1,'status.h']]],
+  ['juno_5fstatus_5fmemalloc_5ferror_8',['JUNO_STATUS_MEMALLOC_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664ab3a365b29351f0ef0aa562514c981aaf',1,'status.h']]],
+  ['juno_5fstatus_5fmemfree_5ferror_9',['JUNO_STATUS_MEMFREE_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664ac0c16796f6cf2b09b1bcc5da4a758f38',1,'status.h']]],
+  ['juno_5fstatus_5fnullptr_5ferror_10',['JUNO_STATUS_NULLPTR_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda',1,'status.h']]],
+  ['juno_5fstatus_5fread_5ferror_11',['JUNO_STATUS_READ_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a691551daf0782c49e043b1cdcfdd5cb6',1,'status.h']]],
+  ['juno_5fstatus_5fsuccess_12',['JUNO_STATUS_SUCCESS',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710',1,'status.h']]],
+  ['juno_5fstatus_5ftable_5ffull_5ferror_13',['JUNO_STATUS_TABLE_FULL_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a484bc40388f9acf5d6e3a9d6c700ee4d',1,'status.h']]],
+  ['juno_5fstatus_5fwrite_5ferror_14',['JUNO_STATUS_WRITE_ERROR',['../status_8h.html#a7be0a0a69c5086c083a713ecb7738664a25ae03ece1fe1f5c19232855f1aef3d4',1,'status.h']]]
+];

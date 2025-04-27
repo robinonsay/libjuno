@@ -18,4 +18,8 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno"
   dir_247cda594a1ab670a2704371990491e3 [label="table", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_247cda594a1ab670a2704371990491e3.html",tooltip=""];
   }
   }
+  dir_7d134b198f51d759fae4dbc0397c07cc->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="3", labeldistance=1.5 headhref="dir_000005_000006.html" href="dir_000005_000006.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_7d134b198f51d759fae4dbc0397c07cc->dir_19d249a700c11f44389cb05327db4a5b [headlabel="1", labeldistance=1.5 headhref="dir_000005_000002.html" href="dir_000005_000002.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_1ee06b418de2fbaa3d5b1443d2d582cb->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="2", labeldistance=1.5 headhref="dir_000009_000006.html" href="dir_000009_000006.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_247cda594a1ab670a2704371990491e3->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="2", labeldistance=1.5 headhref="dir_000010_000006.html" href="dir_000010_000006.html" color="steelblue1" fontcolor="steelblue1"];
 }
