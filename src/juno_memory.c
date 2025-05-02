@@ -272,22 +272,11 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     return tStatus;
 }
 
-// Define static API structures to expose functions returning pointers to these APIs.
-static const JUNO_MEMORY_BLOCK_API_T tJuno_MemoryBlkApi =
-{
-    .Init = Juno_MemoryBlkInit,
-};
-
 static const JUNO_MEMORY_API_T tJuno_MemoryApi =
 {
     .Get = Juno_MemoryGet,
     .Put = Juno_MemoryPut
 };
-
-const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void)
-{
-    return &tJuno_MemoryBlkApi;
-}
 
 const JUNO_MEMORY_API_T * Juno_MemoryApi(void)
 {

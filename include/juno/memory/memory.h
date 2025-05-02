@@ -53,8 +53,6 @@ JUNO_STATUS_T Juno_MemoryUpdate(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMem
 JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory);
 
 
-const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void);
-
 /// @brief Retrieves the generic memory API structure.
 /// @return Pointer to the generic memory API structre.
 const JUNO_MEMORY_API_T * Juno_MemoryApi(void);
