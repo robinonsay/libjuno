@@ -275,6 +275,7 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
 static const JUNO_MEMORY_API_T tJuno_MemoryApi =
 {
     .Get = Juno_MemoryGet,
+    .Update = Juno_MemoryUpdate,
     .Put = Juno_MemoryPut
 };
 
