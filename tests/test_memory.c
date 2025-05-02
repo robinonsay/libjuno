@@ -47,10 +47,46 @@ static void test_nominal_single_alloc_and_free(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
     TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(1, tMemory.iRefCount);
     tStatus = Juno_MemoryPut(&tMem, &tMemory);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NULL(tMemory.pvAddr);
     TEST_ASSERT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(0, tMemory.iRefCount);
+    tStatus = Juno_MemoryGet(&tMem, &tMemory, sizeof(TEST_BLOCK_T));
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(1, tMemory.iRefCount);
+    JUNO_NEW_REF(ptNewRef) = Juno_MemoryGetRef(&tMemory);
+    TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(2, tMemory.iRefCount);
+    TEST_ASSERT_NOT_NULL(JUNO_REF(ptNewRef)->pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, JUNO_REF(ptNewRef)->pvAddr);
+    TEST_ASSERT_EQUAL(2, JUNO_REF(ptNewRef)->iRefCount);
+    tStatus = Juno_MemoryPut(&tMem, JUNO_REF(ptNewRef));
+    TEST_ASSERT_EQUAL(JUNO_STATUS_REF_IN_USE_ERROR, tStatus);
+    TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(1, tMemory.iRefCount);
+    JUNO_REF(ptNewRef) = Juno_MemoryGetRef(&tMemory);
+    TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(2, tMemory.iRefCount);
+    TEST_ASSERT_NOT_NULL(JUNO_REF(ptNewRef)->pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, JUNO_REF(ptNewRef)->pvAddr);
+    TEST_ASSERT_EQUAL(2, JUNO_REF(ptNewRef)->iRefCount);
+    Juno_MemoryPutRef(JUNO_REF(ptNewRef));
+    TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(1, tMemory.iRefCount);
+    tStatus = Juno_MemoryPut(&tMem, &tMemory);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_NULL(tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(0, tMemory.iRefCount);
+
 }
 
 static void test_nominal_multiple_alloc_and_free(void)

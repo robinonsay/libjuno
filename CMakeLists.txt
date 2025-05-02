@@ -38,7 +38,8 @@ set(JUNO_COMPILE_OPTIONS
     -Wmissing-field-initializers    # Warn about missing fields in struct init
     -fno-common                     # Disallow multiple definitions of common symbols
     -fno-strict-aliasing            # Disable strict aliasing
-    -fPIC
+    -fPIC                           # Platform Independent
+    -O1                             # Turn on some optimization
 )
 
 
