@@ -25,6 +25,8 @@ static JUNO_MEMORY_BLOCK_METADATA_T name[length] = {};
 
 #define JUNO_REF(name) REF##name
 #define JUNO_NEW_REF(name) JUNO_MEMORY_T *JUNO_REF(name)
+#define JUNO_NEW_REF_FROM(name) JUNO_NEW_REF(name) = Juno_MemoryGetRef(&name)
+#define JUNO_NEW_REF_FROM_PTR(name) JUNO_NEW_REF(name) = Juno_MemoryGetRef(name)
 
 typedef struct JUNO_MEMORY_BLOCK_METADATA_TAG JUNO_MEMORY_BLOCK_METADATA_T;
 typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
