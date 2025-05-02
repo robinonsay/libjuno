@@ -1,7 +1,6 @@
 #include "juno/macros.h"
 #include "juno/memory/memory.h"
 #include "juno/memory/memory_types.h"
-#include "juno/memory/alloc.h"
 #include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include <stddef.h>
@@ -13,6 +12,21 @@ static inline JUNO_STATUS_T Juno_MemoryBlkValidate(JUNO_MEMORY_BLOCK_T *ptMemBlk
     // Ensure that the memory block structure and its key members exist.
     ASSERT_EXISTS((ptMemBlk && ptMemBlk->pvMemory && ptMemBlk->ptMetadata && ptMemBlk->zLength && ptMemBlk->zTypeSize));
     return JUNO_STATUS_SUCCESS;
+}
+
+static inline JUNO_STATUS_T Juno_MemoryDecrementRef(JUNO_MEMORY_T *ptMemory)
+{
+    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    // Check if there are references 
+    if(!ptMemory->iRefCount)
+    {
+        // No references to memory, this is an invalid reference
+        tStatus = JUNO_STATUS_INVALID_REF_ERROR;
+        return tStatus;
+    }
+    // Decrement the reference count
+    ptMemory->iRefCount -= 1;
+    return tStatus;
 }
 
 JUNO_STATUS_T Juno_MemoryBlkInit(
@@ -49,7 +63,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory)
+static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory)
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMemBlk);
@@ -80,12 +94,13 @@ JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pt
     // Retrieve the latest free block and update free stack
     ptMemory->pvAddr = ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem;
     ptMemory->zSize = ptMemBlk->zTypeSize;
+    ptMemory->iRefCount = 1;
     ptMemBlk->zFreed -= 1;
     ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = NULL;
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize)
+static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize)
 {
     JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMem);
     ASSERT_SUCCESS(tStatus, return tStatus);
@@ -100,12 +115,11 @@ JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *pt
     return tStatus;
 }
 
-JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory)
+static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *ptMemory)
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMemBlk);
     ASSERT_SUCCESS(tStatus, return tStatus);
-    
     // Calculate start and end addresses for the memory block area
     void *pvStartAddr = ptMemBlk->pvMemory;
     void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * ptMemBlk->zLength];
@@ -211,13 +225,30 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
 {
     ASSERT_EXISTS(ptMem);
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    // Decrement the reference counts
+    tStatus = Juno_MemoryDecrementRef(ptMemory);
+    if(tStatus) return tStatus;
+    // There are still valid references to this memory, end with success
+    if(ptMemory->iRefCount)
+    {
+        tStatus = JUNO_STATUS_REF_IN_USE_ERROR;
+    }
     // Switch based on allocation type stored in the header
     switch (ptMem->tHdr.tType)
     {
         case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
         {
+            if(tStatus)
+            {
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData, "Failed to free memory, reference in use");
+                return tStatus;
+            }
             // Delegate to block free function
             tStatus = Juno_MemoryBlkPut(&ptMem->tBlock, ptMemory);
+            if(tStatus)
+            {
+                ptMemory->iRefCount++;
+            }
             // Clear the memory descriptor fields
             ptMemory->pvAddr = NULL;
             ptMemory->zSize = 0;

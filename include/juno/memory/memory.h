@@ -31,34 +31,34 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     JUNO_USER_DATA_T *pvUserData
 );
 
-/// @brief Allocates a block of memory.
-/// Retrieves an available fixed-size memory block from the free stack or creates a new allocation if available.
-/// @param ptMemBlk Pointer to the memory block structure.
-/// @param pvRetAddr Address where the pointer to the allocated block will be stored.
-/// @return JUNO_STATUS_T Status of the allocation attempt.
-JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pvRetAddr);
+/// @brief Generic memory allocation function.
+/// Allocates memory by using the appropriate allocation method based on the allocation type.
+/// @param ptMem Pointer to the memory allocation structure.
+/// @param ptMemory Pointer to a memory descriptor where allocation details will be stored.
+/// @return JUNO_STATUS_T Status of the allocation.
+JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zSize);
 
 /// @brief Updates the current memory allocation to a new size (realloc).
 /// @param ptMem Pointer to the memory allocator.
 /// @param ptMemory The memory to update with a new size.
 /// @param zNewSize The new size of the memory.
 /// @return JUNO_STATUS_T Status of the allocation.
-JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
+JUNO_STATUS_T Juno_MemoryUpdate(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
 
-/// @brief Frees a previously allocated block of memory.
-/// Returns a memory block back to the free stack so it can be reused.
-/// @param ptMemBlk Pointer to the memory block structure.
-/// @param pvAddr Pointer to the allocated block to be freed.
+/// @brief Generic memory free function.
+/// Releases memory back to the allocator and clears the memory descriptor.
+/// @param ptMem Pointer to the memory allocation structure.
+/// @param ptMemory Pointer to the memory descriptor to free.
 /// @return JUNO_STATUS_T Status of the free operation.
-JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMORY_T *pvAddr);
+JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory);
 
-/// @brief Retrieves the block-based memory API structure.
-/// @return Pointer to the memory block API structure.
+
 const JUNO_MEMORY_BLOCK_API_T * Juno_MemoryBlkApi(void);
 
 /// @brief Retrieves the generic memory API structure.
 /// @return Pointer to the generic memory API structre.
 const JUNO_MEMORY_API_T * Juno_MemoryApi(void);
+
 
 
 #ifdef __cplusplus

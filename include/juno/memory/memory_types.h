@@ -4,6 +4,7 @@
 #include "juno/macros.h"
 #include <stddef.h>
 #include <stdint.h>
+#include "stddef.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,9 +55,29 @@ struct JUNO_MEMORY_ALLOC_HDR_TAG
 /// Describes the allocated memory with a pointer to the start and its size.
 struct JUNO_MEMORY_TAG
 {
-    void *pvAddr; ///< Pointer to the allocated memory.
-    size_t zSize; ///< Size of the allocated memory, in bytes.
+    /// Pointer to the allocated memory.
+    void *pvAddr;
+    /// Size of the allocated memory, in bytes.
+    size_t zSize;
+    /// The reference count for this memory
+    size_t iRefCount;
 };
+
+/// Get the reference to this juno memory
+/// - This function will track the reference count to this memory
+/// - The reference count is used to prevent freeing of used memory
+/// - When using `JUNO_MEMORY_T` it is recommended to pass memory
+///   around using this function to increment the reference count
+/// @param ptMemory The memory to get the reference to
+/// @return The reference to the memory
+inline JUNO_MEMORY_T * Juno_MemoryGetRef(JUNO_MEMORY_T *ptMemory)
+{
+    if(ptMemory->iRefCount)
+    {
+        ptMemory->iRefCount += 1;
+    }
+    return ptMemory;
+}
 
 /// @brief Structure representing a block-based memory allocator.
 /// Manages a fixed-size memory area along with associated free memory tracking.
