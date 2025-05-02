@@ -194,11 +194,21 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
 {
     ASSERT_EXISTS(ptMem);
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    if(!zSize)
+    {
+        tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+    }
     // Switch based on allocation type stored in the header
     switch (ptMem->tHdr.tType)
     {
         case JUNO_MEMORY_ALLOC_TYPE_BLOCK:
         {
+            if(tStatus)
+            {
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
+                "Attempted to allocate memory with size 0");
+                return tStatus;
+            }
             // Delegate to block allocation getter
             if(zSize > ptMem->tBlock.zTypeSize)
             {

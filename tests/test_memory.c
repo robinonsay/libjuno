@@ -349,6 +349,28 @@ static void test_generic_memory_get_put(void)
     TEST_ASSERT_NULL(tMemory.pvAddr);
 }
 
+// Test allocation with zero size
+static void test_zero_size_allocation(void)
+{
+    JUNO_MEMORY_ALLOC_T tMem = {0};
+    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
+        &tMem.tBlock,
+        ptTestBlock,
+        ptTestMetadata,
+        sizeof(TEST_BLOCK_T),
+        10,
+        NULL,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    JUNO_MEMORY_T tMemory = {0};
+    // Attempt zero-size allocation
+    tStatus = Juno_MemoryGet(&tMem, &tMemory, 0);
+    // The implementation should handle this gracefully
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -361,5 +383,6 @@ int main(void)
     RUN_TEST(test_free_unallocated);
     RUN_TEST(test_update_memory);
     RUN_TEST(test_generic_memory_get_put);
+    RUN_TEST(test_zero_size_allocation);
     return UNITY_END();
 }
