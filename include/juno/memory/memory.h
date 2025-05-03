@@ -15,7 +15,7 @@ extern "C" {
 /// Sets up a memory block with an associated free stack for managing fixed-size allocations.
 /// @param ptMemBlk Pointer to the memory block structure to initialize.
 /// @param pvMemory Pointer to the contiguous memory used for allocations.
-/// @param pvMemoryFreeStack Pointer to an array of pointers used as the free stack.
+/// @param pvMetadata Pointer to an array for block metadata tracking.
 /// @param zTypeSize Size in bytes of each element in the block.
 /// @param zLength Total number of possible allocations.
 /// @param pfcnFailureHandler Callback function to handle failures.

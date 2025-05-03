@@ -242,6 +242,7 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
     if(ptMemory->iRefCount)
     {
         tStatus = JUNO_STATUS_REF_IN_USE_ERROR;
+        ptMemory->iRefCount += 1;
     }
     // Switch based on allocation type stored in the header
     switch (ptMem->tHdr.tType)
