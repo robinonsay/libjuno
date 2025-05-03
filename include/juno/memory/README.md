@@ -7,10 +7,43 @@ The Juno Memory Module provides a unified API for memory management in embedded 
 ### Prerequisites
 - Basic understanding of C programming
 - LibJuno included in your build system (via CMake)
-- Understanding of your project's memory requirements
+
+### Header Files Organization
+
+The Juno Memory Module is organized into the following header files:
+
+1. **memory_types.h** - Contains core type definitions
+   - `JUNO_MEMORY_T` - Structure for memory allocation tracking
+   - `JUNO_MEMORY_BLOCK_T` - Structure for block-based allocators
+   - `JUNO_MEMORY_ALLOC_T` - Union for generic allocation types
+   - Macros for memory block declaration (`JUNO_MEMORY_BLOCK`, `JUNO_MEMORY_BLOCK_METADATA`)
+   - Reference counting macros (`JUNO_REF`, `JUNO_NEW_REF_FROM`, etc.)
+   - Inline reference counting functions (`Juno_MemoryGetRef`, `Juno_MemoryPutRef`)
+
+2. **memory.h** - Contains the main function declarations
+   - `Juno_MemoryBlkInit` - Initialize a block allocator
+   - `Juno_MemoryGet` - Allocate memory
+   - `Juno_MemoryUpdate` - Resize memory allocation
+   - `Juno_MemoryPut` - Free memory
+   - `Juno_MemoryApi` - Get the API structure
+
+3. **memory_api.h** - Contains the function pointer API structure
+   - `JUNO_MEMORY_API_T` - Structure of function pointers for memory operations
+
+These header files should be included :
+```c
+#include "juno/status.h"              // Required for status codes
+#include "juno/memory/memory_types.h"  // Required for type definitions
+#include "juno/memory/memory.h"        // Required for function declarations
+```
+
+If you're using the function pointer API, you should also include:
+```c
+#include "juno/memory/memory_api.h"   // Required for API structure
+```
 
 ### Quick Start
-For the impatient, here's how to get started with the memory module in three steps:
+Here's how to get started with the memory module in three steps:
 
 1. **Include Headers**
    ```c
@@ -34,9 +67,30 @@ For the impatient, here's how to get started with the memory module in three ste
 
 3. **Initialize and Use the Memory Manager**
    ```c
+   #include <stdio.h>
+   
+   // Define a failure handler callback
+   void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData) {
+       (void)pvUserData;  // Unused in this example
+       fprintf(stderr, "Memory Error (code %d): %s\n", tStatus, pcCustomMessage);
+   }
+   
    // Initialize the memory block manager
    JUNO_MEMORY_BLOCK_T memBlock = {0};
-   Juno_MemoryBlkInit(&memBlock, myMemoryPool, myMetadata, sizeof(MY_DATA_T), 10, NULL, NULL);
+   JUNO_STATUS_T status = Juno_MemoryBlkInit(
+       &memBlock, 
+       myMemoryPool, 
+       myMetadata, 
+       sizeof(MY_DATA_T), 
+       10, 
+       MyFailureHandler,   // Failure handler callback
+       NULL                // No user data
+   );
+   
+   if (status != JUNO_STATUS_SUCCESS) {
+       // Failure handler will already have been called with the error
+       return -1;
+   }
    
    // Setup generic allocator (wrapping the block allocator)
    JUNO_MEMORY_ALLOC_T memAlloc = {0};
@@ -45,7 +99,11 @@ For the impatient, here's how to get started with the memory module in three ste
    
    // Allocate memory
    JUNO_MEMORY_T memory = {0};
-   Juno_MemoryGet(&memAlloc, &memory, sizeof(MY_DATA_T));
+   status = Juno_MemoryGet(&memAlloc, &memory, sizeof(MY_DATA_T));
+   if (status != JUNO_STATUS_SUCCESS) {
+       // Failure handler will already have been called
+       return -1;
+   }
    
    // Use the memory
    MY_DATA_T* data = (MY_DATA_T*)memory.pvAddr;
@@ -119,10 +177,12 @@ The key structures and macros are defined in memory_types.h:
 
 LibJuno offers two ways to use its memory functionality:
 
-1. **Direct Function Calls**: Call functions like `Juno_MemoryGet()` directly - simple and straightforward
-2. **Function Pointer API**: Use `Juno_MemoryApi()` to get a struct of function pointers - enables more flexible designs
+1. **Function Pointer API**: Use `Juno_MemoryApi()` to get a struct of function pointers - enables more flexible designs
+2. **Direct Function Calls**: Call functions like `Juno_MemoryGet()` directly - simple and straightforward
 
-For newcomers, we recommend starting with direct function calls and moving to the function pointer API when you need more flexibility.
+The function pointer API is preferred since it enables modularity through out your project.
+If you need the performance and timing benefits of direct function calls, those are available
+as well.
 
 
 ## How to Use
@@ -154,6 +214,12 @@ Initialize the block-based memory allocator with its memory region, metadata, bl
 #include <string.h>
 #include <stdio.h>
 
+// Callback function matching JUNO_FAILURE_HANDLER_T signature.
+void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData) {
+    (void)pvUserData;  // Unused in this example.
+    fprintf(stderr, "Memory Error (code %d): %s\n", tStatus, pcCustomMessage);
+}
+
 int main(void) {
     JUNO_MEMORY_BLOCK_T memBlock = {0};
 
@@ -164,15 +230,11 @@ int main(void) {
         myMetadata,
         sizeof(MY_BLOCK_T),
         20,
-        NULL,    // No failure callback
+        MyFailureHandler,    // Failure callback
         NULL     // No user data
     );
-
-    if (status != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Memory block initialization failed!\n");
-        return -1;
-    }
-
+    // Failure handler is automatically called
+    if (status) return -1;
     // Continue using the allocator...
     return 0;
 }
@@ -184,6 +246,12 @@ After initializing the block allocator, you need to wrap it in the generic alloc
 
 ````c
 #include <stdio.h>
+
+// Failure handler callback
+void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData) {
+    (void)pvUserData;  // Unused in this example
+    fprintf(stderr, "Memory Error (code %d): %s\n", tStatus, pcCustomMessage);
+}
 
 void useMemoryBlocks(JUNO_MEMORY_BLOCK_T *memBlock) {
     // Create a generic allocator from the block allocator
@@ -206,17 +274,43 @@ void useMemoryBlocks(JUNO_MEMORY_BLOCK_T *memBlock) {
         // Note: For block allocators, you can only update to a size <= the original block size
         status = Juno_MemoryUpdate(&allocator, &memDesc, sizeof(MY_BLOCK_T));
         if (status != JUNO_STATUS_SUCCESS) {
-            fprintf(stderr, "Block update failed!\n");
+            // Failure handler will already have been called
+            return;
         }
 
         // Free the block when done with it
         status = Juno_MemoryPut(&allocator, &memDesc);
         if (status != JUNO_STATUS_SUCCESS) {
-            fprintf(stderr, "Block free failed!\n");
+            // Failure handler will already have been called
+            return;
         }
     } else {
-        fprintf(stderr, "Block allocation failed!\n");
+        // Failure handler will already have been called
+        return;
     }
+}
+
+int main(void) {
+    JUNO_MEMORY_BLOCK_T memBlock = {0};
+    
+    // Initialize with a failure handler
+    JUNO_STATUS_T status = Juno_MemoryBlkInit(
+        &memBlock,
+        myBlock,
+        myMetadata,
+        sizeof(MY_BLOCK_T),
+        20,
+        MyFailureHandler,    // Failure callback
+        NULL                 // No user data
+    );
+    
+    if (status != JUNO_STATUS_SUCCESS) {
+        // Failure handler will already have been called
+        return -1;
+    }
+    
+    useMemoryBlocks(&memBlock);
+    return 0;
 }
 ````
 
@@ -238,6 +332,12 @@ typedef struct MY_BLOCK_TAG {
     char data[32];
 } MY_BLOCK_T;
 
+// Define a failure handler callback
+void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData) {
+    (void)pvUserData;  // Unused in this example
+    fprintf(stderr, "Memory Error (code %d): %s\n", tStatus, pcCustomMessage);
+}
+
 // Declare memory block and metadata arrays.
 JUNO_MEMORY_BLOCK(myBlock, MY_BLOCK_T, 20);
 JUNO_MEMORY_BLOCK_METADATA(myMetadata, 20);
@@ -253,12 +353,12 @@ int main(void) {
         myMetadata,
         sizeof(MY_BLOCK_T),
         20,
-        NULL,    // No failure callback.
-        NULL     // No user data.
+        MyFailureHandler,    // Failure callback
+        NULL                 // No user data
     );
 
     if (status != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Memory block initialization failed!\n");
+        // Failure handler will already have been called
         return -1;
     }
 
@@ -276,16 +376,19 @@ int main(void) {
         // Note: For block allocators, you can only update to a size <= the original block size
         status = Juno_MemoryUpdate(&myAlloc, &memDesc, sizeof(MY_BLOCK_T));
         if (status != JUNO_STATUS_SUCCESS) {
-            fprintf(stderr, "Memory update failed!\n");
+            // Failure handler will already have been called
+            return -1;
         }
 
         // Free the memory using the generic free API.
         status = Juno_MemoryPut(&myAlloc, &memDesc);
         if (status != JUNO_STATUS_SUCCESS) {
-            fprintf(stderr, "Memory free failed!\n");
+            // Failure handler will already have been called
+            return -1;
         }
     } else {
-        fprintf(stderr, "Memory allocation failed!\n");
+        // Failure handler will already have been called
+        return -1;
     }
 
     return 0;
@@ -348,14 +451,52 @@ typedef struct MY_DATA_TAG {
     char name[32];
 } MY_DATA_T;
 
+// Define a failure handler callback
+void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData) {
+    (void)pvUserData;  // Unused in this example
+    fprintf(stderr, "Memory Error (code %d): %s\n", tStatus, pcCustomMessage);
+}
+
 // Create static memory arrays
 JUNO_MEMORY_BLOCK(myMemoryPool, MY_DATA_T, 10);
 JUNO_MEMORY_BLOCK_METADATA(myMetadata, 10);
 
+// This function demonstrates shared access to memory
+// It takes a reference to the memory and modifies the contents
+void useSharedData(JUNO_MEMORY_T *ptMemory) {
+    // Create a new reference to the shared memory
+    JUNO_NEW_REF_FROM_PTR(ptMemory);
+    
+    // Access and modify the data through our reference
+    MY_DATA_T *pSharedData = (MY_DATA_T *)JUNO_REF(ptMemory)->pvAddr;
+    pSharedData->id += 10;  // Modify the ID
+    strncpy(pSharedData->name, "Modified Resource", sizeof(pSharedData->name)-1);
+    
+    printf("In useSharedData: ID=%d, Name=%s\n", pSharedData->id, pSharedData->name);
+    
+    // Release our reference when done
+    // Note: This decrements the reference count but doesn't free the memory
+    // because the original reference in main() still exists
+    Juno_MemoryPutRef(JUNO_REF(ptMemory));
+}
+
 int main(void) {
     // Initialize the memory block
     JUNO_MEMORY_BLOCK_T memBlock = {0};
-    Juno_MemoryBlkInit(&memBlock, myMemoryPool, myMetadata, sizeof(MY_DATA_T), 10, NULL, NULL);
+    JUNO_STATUS_T status = Juno_MemoryBlkInit(
+        &memBlock, 
+        myMemoryPool, 
+        myMetadata, 
+        sizeof(MY_DATA_T), 
+        10, 
+        MyFailureHandler,    // Failure handler callback
+        NULL                 // No user data
+    );
+    
+    if (status != JUNO_STATUS_SUCCESS) {
+        // Failure handler will already have been called
+        return -1;
+    }
     
     // Create generic allocator from the block
     JUNO_MEMORY_ALLOC_T memAlloc = {0};
@@ -364,7 +505,11 @@ int main(void) {
     
     // Allocate memory (reference count = 1)
     JUNO_MEMORY_T memory = {0};
-    Juno_MemoryGet(&memAlloc, &memory, sizeof(MY_DATA_T));
+    status = Juno_MemoryGet(&memAlloc, &memory, sizeof(MY_DATA_T));
+    if (status != JUNO_STATUS_SUCCESS) {
+        // Failure handler will already have been called
+        return -1;
+    }
     
     // Initialize the data
     MY_DATA_T *pData = (MY_DATA_T *)memory.pvAddr;
@@ -379,7 +524,11 @@ int main(void) {
     
     // Final cleanup - this will actually free the memory
     // since this is the last reference
-    Juno_MemoryPut(&memAlloc, &memory);
+    status = Juno_MemoryPut(&memAlloc, &memory);
+    if (status != JUNO_STATUS_SUCCESS) {
+        // Failure handler will already have been called
+        return -1;
+    }
     
     return 0;
 }
@@ -391,9 +540,7 @@ int main(void) {
 
 2. **Check Return Values**: When calling `Juno_MemoryPut()`, check the return value. If it returns `JUNO_STATUS_REF_IN_USE_ERROR`, it means there are still outstanding references to the memory.
 
-3. **Circular References**: Be careful not to create circular references which can cause memory leaks.
-
-4. **Reference Count Debugging**: You can check the current reference count by examining the `iRefCount` field of the `JUNO_MEMORY_T` structure.
+3. **Reference Count Debugging**: You can check the current reference count by examining the `iRefCount` field of the `JUNO_MEMORY_T` structure.
 
 #### When to Use Reference Counting
 
@@ -439,7 +586,6 @@ int main(void) {
     );
 
     if (status != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Memory block initialization failed!\n");
         return -1;
     }
 
@@ -486,6 +632,12 @@ typedef struct MY_BLOCK_TAG {
     char data[32];
 } MY_BLOCK_T;
 
+// Define a failure handler callback
+void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData) {
+    (void)pvUserData;  // Unused in this example
+    fprintf(stderr, "Memory API Error (code %d): %s\n", tStatus, pcCustomMessage);
+}
+
 // Declare static memory block and metadata using provided macros
 JUNO_MEMORY_BLOCK(myBlock, MY_BLOCK_T, 20);
 JUNO_MEMORY_BLOCK_METADATA(myMetadata, 20);
@@ -499,11 +651,11 @@ int main(void) {
         myMetadata,
         sizeof(MY_BLOCK_T),
         20,
-        NULL,   // No failure handler in this example
-        NULL
+        MyFailureHandler,  // Failure handler callback
+        NULL               // No user data
     );
     if (status != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Block allocator initialization failed\n");
+        // The failure handler will already have been called
         return -1;
     }
 
@@ -514,7 +666,7 @@ int main(void) {
     // Allocate a memory block using the generic Get API.
     status = pApi->Get(&memBlock, &memDesc, sizeof(MY_BLOCK_T));
     if (status != JUNO_STATUS_SUCCESS || memDesc.pvAddr == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
+        // The failure handler will already have been called
         return -1;
     }
 
@@ -524,17 +676,17 @@ int main(void) {
     strcpy(pBlock->data, "Using API function pointers");
     printf("Allocated Block: ID %d, Data: %s\n", pBlock->id, pBlock->data);
 
-    // Update the memory block size - NOTE: Must use direct call since Update is not 
-    // available in the API structure
-    status = Juno_MemoryUpdate(&memBlock, &memDesc, sizeof(MY_BLOCK_T));
+    // Update the memory block size using the API's Update function
+    status = pApi->Update(&memBlock, &memDesc, sizeof(MY_BLOCK_T));
     if (status != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Memory update failed\n");
+        // The failure handler will already have been called
+        return -1;
     }
 
     // Free the allocated block using the generic Put API.
     status = pApi->Put(&memBlock, &memDesc);
     if (status != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Memory free failed\n");
+        // The failure handler will already have been called
         return -1;
     }
 
@@ -546,8 +698,7 @@ In this example:
 
 - We initialize a block-based allocator.
 - We retrieve the generic API using `Juno_MemoryApi()`.
-- We invoke the `Get` and `Put` functions through the API, which internally dispatch to the block-based implementation.
-- We use the direct `Juno_MemoryUpdate()` function since it's not available in the API.
+- We invoke the `Get`, `Update`, and `Put` functions through the API, which internally dispatch to the block-based implementation.
 
 ## Common Issues and Troubleshooting
 
@@ -565,137 +716,6 @@ In this example:
 ## Custom Allocators
 
 If you wish to use a completely custom memory allocation implementation (for example, to integrate with an external memory manager), you can define `JUNO_CUSTOM_ALLOC` and implement your own custom allocation type and functions that adhere to the generic API. This allows for seamless integration with third-party allocators or completely custom memory management mechanisms.
-
-Below is an example of a custom allocator that uses POSIX malloc, realloc, and free:
-
-````c
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include "juno/status.h"
-
-// Developer-defined custom allocator type.
-// This type can store any context information needed by your allocator.
-typedef struct JUNO_MEMORY_ALLOC_T {
-    int dummy;  // Example context field.
-} JUNO_MEMORY_ALLOC_T;
-#define JUNO_CUSTOM_ALLOC
-#include "juno/memory/alloc.h"
-// The memory descriptor type is defined in the API as JUNO_MEMORY_T.
-// Here, we will use it directly which contains:
-//   void *pvAddr;   // Pointer to the allocated memory.
-//   size_t zSize;   // Size of the allocation.
-
-// Custom implementation of the generic memory allocation functions.
-// Downstream code will call these functions exactly as defined in alloc.h.
-
-JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zSize) {
-    // The ptMem parameter can be cast to your custom allocator type if needed.
-    (void)ptMem;  // Unused in this simple example.
-    
-    // Check for invalid size
-    if (zSize == 0) {
-        return JUNO_STATUS_INVALID_SIZE_ERROR;
-    }
-    
-    ptMemory->pvAddr = malloc(zSize);
-    if (ptMemory->pvAddr == NULL) {
-        return JUNO_STATUS_MEMALLOC_ERROR;
-    }
-    ptMemory->zSize = zSize;
-    ptMemory->iRefCount = 1;  // Initialize reference count
-    return JUNO_STATUS_SUCCESS;
-}
-
-JUNO_STATUS_T Juno_MemoryUpdate(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize) {
-    (void)ptMem;  // Unused in this simple example.
-    
-    // Check for invalid size
-    if (zNewSize == 0) {
-        return JUNO_STATUS_INVALID_SIZE_ERROR;
-    }
-    
-    void *pNew = realloc(ptMemory->pvAddr, zNewSize);
-    if (pNew == NULL) {
-        return JUNO_STATUS_MEMALLOC_ERROR;
-    }
-    ptMemory->pvAddr = pNew;
-    ptMemory->zSize = zNewSize;
-    return JUNO_STATUS_SUCCESS;
-}
-
-JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory) {
-    (void)ptMem;  // Unused in this simple example.
-    
-    // Check for null pointer
-    if (ptMemory->pvAddr == NULL) {
-        return JUNO_STATUS_MEMFREE_ERROR;
-    }
-    
-    // Check reference count before freeing
-    if (ptMemory->iRefCount == 0) {
-        return JUNO_STATUS_INVALID_REF_ERROR;
-    }
-    
-    // Decrement reference count
-    ptMemory->iRefCount--;
-    
-    // If references still exist, don't free memory
-    if (ptMemory->iRefCount > 0) {
-        return JUNO_STATUS_REF_IN_USE_ERROR;
-    }
-    
-    free(ptMemory->pvAddr);
-    ptMemory->pvAddr = NULL;
-    ptMemory->zSize = 0;
-    ptMemory->iRefCount = 0;
-    return JUNO_STATUS_SUCCESS;
-}
-
-// Custom implementation of reference counting helper functions
-JUNO_MEMORY_T * Juno_MemoryGetRef(JUNO_MEMORY_T *ptMemory) {
-    if (ptMemory && ptMemory->iRefCount > 0) {
-        ptMemory->iRefCount++;
-    }
-    return ptMemory;
-}
-
-void Juno_MemoryPutRef(JUNO_MEMORY_T *ptMemory) {
-    if (ptMemory && ptMemory->iRefCount > 0) {
-        ptMemory->iRefCount--;
-    }
-}
-
-int main(void) {
-    // Create an instance of your custom allocator.
-    JUNO_MEMORY_ALLOC_T myAllocStruct = { 0 };
-    // We use our custom allocator type directly
-    JUNO_MEMORY_ALLOC_T *pAlloc = &myAllocStruct;
-    JUNO_MEMORY_T memDesc = { 0 };
-
-    // Allocate 128 bytes of memory.
-    if (Juno_MemoryGet(pAlloc, &memDesc, 128) != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Custom Juno_MemoryGet failed.\n");
-        return -1;
-    }
-    // Use the memory (store a sample string).
-    strcpy((char *)memDesc.pvAddr, "Hello from Custom Allocator!");
-    printf("%s\n", (char *)memDesc.pvAddr);
-
-    // Update allocation to 256 bytes.
-    if (Juno_MemoryUpdate(pAlloc, &memDesc, 256) != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Custom Juno_MemoryUpdate failed.\n");
-        return -1;
-    }
-
-    // Free the allocation.
-    if (Juno_MemoryPut(pAlloc, &memDesc) != JUNO_STATUS_SUCCESS) {
-        fprintf(stderr, "Custom Juno_MemoryPut failed.\n");
-        return -1;
-    }
-    return 0;
-}
-````
 
 ### How to Integrate Your Custom Allocator
 
