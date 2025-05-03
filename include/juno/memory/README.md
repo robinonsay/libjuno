@@ -76,9 +76,9 @@ Here's how to get started with the memory module in three steps:
    }
    
    // Initialize the memory block manager
-   JUNO_MEMORY_BLOCK_T memBlock = {0};
+   JUNO_MEMORY_ALLOC_T memAlloc = {0};
    JUNO_STATUS_T status = Juno_MemoryBlkInit(
-       &memBlock, 
+       &memAlloc.tBlock, 
        myMemoryPool, 
        myMetadata, 
        sizeof(MY_DATA_T), 
@@ -91,11 +91,6 @@ Here's how to get started with the memory module in three steps:
        // Failure handler will already have been called with the error
        return -1;
    }
-   
-   // Setup generic allocator (wrapping the block allocator)
-   JUNO_MEMORY_ALLOC_T memAlloc = {0};
-   memAlloc.tHdr.tType = JUNO_MEMORY_ALLOC_TYPE_BLOCK;  // Set the allocation type
-   memAlloc.tBlock = memBlock;
    
    // Allocate memory
    JUNO_MEMORY_T memory = {0};
@@ -221,11 +216,11 @@ void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_U
 }
 
 int main(void) {
-    JUNO_MEMORY_BLOCK_T memBlock = {0};
+    JUNO_MEMORY_ALLOC_T memAlloc = {0};
 
     // Initialize block allocator; pass NULL for a failure handler if not needed.
     JUNO_STATUS_T status = Juno_MemoryBlkInit(
-        &memBlock,
+        &memAlloc.tBlock,
         myBlock,
         myMetadata,
         sizeof(MY_BLOCK_T),
@@ -242,7 +237,7 @@ int main(void) {
 
 ### 3. Allocate, Update, and Free Memory Blocks
 
-After initializing the block allocator, you need to wrap it in the generic allocator interface (`JUNO_MEMORY_ALLOC_T`) to use the main memory functions:
+It is recommended to use the generic allocator interface (`JUNO_MEMORY_ALLOC_T`).
 
 ````c
 #include <stdio.h>
@@ -253,15 +248,10 @@ void MyFailureHandler(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_U
     fprintf(stderr, "Memory Error (code %d): %s\n", tStatus, pcCustomMessage);
 }
 
-void useMemoryBlocks(JUNO_MEMORY_BLOCK_T *memBlock) {
-    // Create a generic allocator from the block allocator
-    JUNO_MEMORY_ALLOC_T allocator = {0};
-    allocator.tHdr.tType = JUNO_MEMORY_ALLOC_TYPE_BLOCK;  // Set the allocation type
-    allocator.tBlock = *memBlock;  // Copy the block allocator into the union
-    
+void useMemoryBlocks(JUNO_MEMORY_ALLOC_T *allocator) {
     // Now use the generic API functions
     JUNO_MEMORY_T memDesc = {0};
-    JUNO_STATUS_T status = Juno_MemoryGet(&allocator, &memDesc, sizeof(MY_BLOCK_T));
+    JUNO_STATUS_T status = Juno_MemoryGet(allocator, &memDesc, sizeof(MY_BLOCK_T));
     
     if (status == JUNO_STATUS_SUCCESS && memDesc.pvAddr != NULL) {
         MY_BLOCK_T *pData = (MY_BLOCK_T *)memDesc.pvAddr;
@@ -272,14 +262,14 @@ void useMemoryBlocks(JUNO_MEMORY_BLOCK_T *memBlock) {
 
         // Try updating the block; the update verifies that the new size does not exceed the fixed size.
         // Note: For block allocators, you can only update to a size <= the original block size
-        status = Juno_MemoryUpdate(&allocator, &memDesc, sizeof(MY_BLOCK_T));
+        status = Juno_MemoryUpdate(allocator, &memDesc, sizeof(MY_BLOCK_T));
         if (status != JUNO_STATUS_SUCCESS) {
             // Failure handler will already have been called
             return;
         }
 
         // Free the block when done with it
-        status = Juno_MemoryPut(&allocator, &memDesc);
+        status = Juno_MemoryPut(allocator, &memDesc);
         if (status != JUNO_STATUS_SUCCESS) {
             // Failure handler will already have been called
             return;
@@ -291,11 +281,11 @@ void useMemoryBlocks(JUNO_MEMORY_BLOCK_T *memBlock) {
 }
 
 int main(void) {
-    JUNO_MEMORY_BLOCK_T memBlock = {0};
+    JUNO_MEMORY_ALLOC_T memAlloc = {0};
     
     // Initialize with a failure handler
     JUNO_STATUS_T status = Juno_MemoryBlkInit(
-        &memBlock,
+        &memAlloc.tBlock,
         myBlock,
         myMetadata,
         sizeof(MY_BLOCK_T),
@@ -309,7 +299,7 @@ int main(void) {
         return -1;
     }
     
-    useMemoryBlocks(&memBlock);
+    useMemoryBlocks(&memAlloc);
     return 0;
 }
 ````
@@ -482,9 +472,9 @@ void useSharedData(JUNO_MEMORY_T *ptMemory) {
 
 int main(void) {
     // Initialize the memory block
-    JUNO_MEMORY_BLOCK_T memBlock = {0};
+    JUNO_MEMORY_ALLOC_T memAlloc = {0};
     JUNO_STATUS_T status = Juno_MemoryBlkInit(
-        &memBlock, 
+        &memAlloc.tBlock, 
         myMemoryPool, 
         myMetadata, 
         sizeof(MY_DATA_T), 
@@ -497,11 +487,6 @@ int main(void) {
         // Failure handler will already have been called
         return -1;
     }
-    
-    // Create generic allocator from the block
-    JUNO_MEMORY_ALLOC_T memAlloc = {0};
-    memAlloc.tHdr.tType = JUNO_MEMORY_ALLOC_TYPE_BLOCK;  // Set the allocation type
-    memAlloc.tBlock = memBlock;
     
     // Allocate memory (reference count = 1)
     JUNO_MEMORY_T memory = {0};
@@ -574,9 +559,9 @@ JUNO_MEMORY_BLOCK_METADATA(myMetadata, 10);
 
 int main(void) {
     // Initialize block allocator
-    JUNO_MEMORY_BLOCK_T memBlock = {0};
+    JUNO_MEMORY_ALLOC_T memAlloc = {0};
     JUNO_STATUS_T status = Juno_MemoryBlkInit(
-        &memBlock,
+        &memAlloc.tBlock,
         myBlock,
         myMetadata,
         sizeof(MY_BLOCK_T),
@@ -588,11 +573,6 @@ int main(void) {
     if (status != JUNO_STATUS_SUCCESS) {
         return -1;
     }
-
-    // Create generic allocator
-    JUNO_MEMORY_ALLOC_T memAlloc = {0};
-    memAlloc.tHdr.tType = JUNO_MEMORY_ALLOC_TYPE_BLOCK;  // Set the allocation type
-    memAlloc.tBlock = memBlock;
 
     // Force an error scenario: attempt to allocate with a size larger than allowed.
     JUNO_MEMORY_T memDesc = {0};
@@ -644,9 +624,9 @@ JUNO_MEMORY_BLOCK_METADATA(myMetadata, 20);
 
 int main(void) {
     // Initialize the block-based allocator
-    JUNO_MEMORY_ALLOC_T memBlock = {0};
+    JUNO_MEMORY_ALLOC_T memAlloc = {0};
     JUNO_STATUS_T status = Juno_MemoryBlkInit(
-        &memBlock.tBlock,
+        &memAlloc.tBlock,
         myBlock,
         myMetadata,
         sizeof(MY_BLOCK_T),
