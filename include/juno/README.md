@@ -91,8 +91,8 @@ Juno_MemoryPutRef(ptMemRef);
 For detailed documentation on individual modules, please refer to:
 
 - [Memory Module](memory/README.md)
-- [String Module](string/README.md)
-- [CRC Module](crc/README.md)
-- [Hash Module](hash/README.md)
-- [Map Module](map/README.md)
-- [Table Module](table/README.md)
+- [String Module (Beta)](string/README.md)
+- [CRC Module (Beta)](crc/README.md)
+- [Hash Module (Beta)](hash/README.md)
+- [Map Module (Beta)](map/README.md)
+- [Table Module (Beta)](table/README.md)
