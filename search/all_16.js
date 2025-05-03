@@ -1,19 +1,10 @@
 var searchData=
 [
-  ['patterns_0',['Common Patterns',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md32',1,'']]],
-  ['pctablepath_1',['pcTablePath',['../structJUNO__TABLE__TAG.html#abb11e209d2533e726c9d81bb96e49523',1,'JUNO_TABLE_TAG']]],
-  ['pfcnisequal_2',['pfcnIsEqual',['../structJUNO__MAP__TAG.html#a36e5330b721a1f851de1019f05d8332b',1,'JUNO_MAP_TAG']]],
-  ['pointer_20api_3',['7. Using the Function Pointer API',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md24',1,'']]],
-  ['prerequisites_4',['Prerequisites',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]],
-  ['principles_5',['General Design Principles',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md31',1,'']]],
-  ['ptalloc_6',['ptAlloc',['../structJUNO__STRING__TAG.html#a46b99df5113bc2d747aec7c0d75cf1a7',1,'JUNO_STRING_TAG']]],
-  ['ptbuff_7',['ptBuff',['../structJUNO__TABLE__TAG.html#a59285c84b08a97379bf7c9b1674ae468',1,'JUNO_TABLE_TAG']]],
-  ['ptfreemem_8',['ptFreeMem',['../structJUNO__MEMORY__BLOCK__METADATA__TAG.html#ae9c03435c5af618a1615d32f930376c3',1,'JUNO_MEMORY_BLOCK_METADATA_TAG']]],
-  ['pthashapi_9',['ptHashApi',['../structJUNO__MAP__TAG.html#a8e897169b7330cee0ec09840a083368d',1,'JUNO_MAP_TAG']]],
-  ['ptmapkeys_10',['ptMapKeys',['../structJUNO__MAP__TAG.html#ad538eb526378e5b01d9265200ab8f3f4',1,'JUNO_MAP_TAG']]],
-  ['ptmapvalues_11',['ptMapValues',['../structJUNO__MAP__TAG.html#aa45fa0b453a8f06ff4997118d939f81e',1,'JUNO_MAP_TAG']]],
-  ['ptmetadata_12',['ptMetadata',['../structJUNO__MEMORY__BLOCK__TAG.html#a8984570abb3a8dc6262e29bf3d936904',1,'JUNO_MEMORY_BLOCK_TAG']]],
-  ['put_13',['Put',['../structJUNO__MEMORY__API__TAG.html#ac4f01d949fe0959517d8da164b581cfd',1,'JUNO_MEMORY_API_TAG']]],
-  ['pvaddr_14',['pvAddr',['../structJUNO__MEMORY__TAG.html#a410362e1eb4aa6c8ace8c6f369c6fe2a',1,'JUNO_MEMORY_TAG']]],
-  ['pvmemory_15',['pvMemory',['../structJUNO__MEMORY__BLOCK__TAG.html#a5e667206e76589485a5b5a96d9e3beda',1,'JUNO_MEMORY_BLOCK_TAG']]]
+  ['readme_2emd_0',['readme.md',['../include_2juno_2hash_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2map_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2memory_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2string_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2table_2README_8md.html',1,'(Global Namespace)'],['../README_8md.html',1,'(Global Namespace)']]],
+  ['reference_1',['API Reference',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md23',1,'']]],
+  ['reference_20counting_2',['reference counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md43',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'Step 4: Share Memory with Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md35',1,'When to Use Reference Counting']]],
+  ['reference_20counting_20macros_3',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md31',1,'']]],
+  ['reference_20management_4',['Reference Management',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26',1,'']]],
+  ['release_20memory_5',['Step 5: Release Memory',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10',1,'']]],
+  ['remove_6',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]]
 ];

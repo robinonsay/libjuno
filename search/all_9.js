@@ -1,17 +1,10 @@
 var searchData=
 [
-  ['ccitt_2eh_0',['ccitt.h',['../ccitt_8h.html',1,'']]],
-  ['ccitt32_2eh_1',['ccitt32.h',['../ccitt32_8h.html',1,'']]],
-  ['cmake_20build_20option_2',['CMake Build Option',['../index.html#autotoc_md45',1,'']]],
-  ['code_3',['Reference Counting Example Code',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md20',1,'']]],
-  ['common_20issues_20and_20troubleshooting_4',['Common Issues and Troubleshooting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md25',1,'']]],
-  ['common_20patterns_5',['Common Patterns',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md32',1,'']]],
-  ['concat_6',['Concat',['../structJUNO__STRING__API__TAG.html#a1f277f8a812af2f222b269c0d02d17c3',1,'JUNO_STRING_API_TAG']]],
-  ['counting_7',['counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'5. Using Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md21',1,'Important Rules for Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md36',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'Visual Example of Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md22',1,'When to Use Reference Counting']]],
-  ['counting_20basics_8',['Reference Counting Basics',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md18',1,'']]],
-  ['counting_20example_20code_9',['Reference Counting Example Code',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md20',1,'']]],
-  ['crc_2eh_10',['crc.h',['../crc_8h.html',1,'']]],
-  ['current_20modules_11',['Current Modules',['../index.html#autotoc_md46',1,'']]],
-  ['custom_20allocator_12',['How to Integrate Your Custom Allocator',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27',1,'']]],
-  ['custom_20allocators_13',['Custom Allocators',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26',1,'']]]
+  ['data_20types_0',['Data Types',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'']]],
+  ['deallocation_1',['Memory Deallocation',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md18',1,'']]],
+  ['declare_20memory_20blocks_2',['Step 1: Declare Memory Blocks',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'']]],
+  ['declare_5ffailure_5fhandler_3',['declare_failure_handler',['../structJUNO__MAP__TAG.html#a30675f92b31b8ce7c3deb2e4cdcba1f0',1,'JUNO_MAP_TAG::DECLARE_FAILURE_HANDLER'],['../structJUNO__MEMORY__BLOCK__TAG.html#a5a88cc9a81839e878c9f0c6864411328',1,'JUNO_MEMORY_BLOCK_TAG::DECLARE_FAILURE_HANDLER'],['../structJUNO__STRING__TAG.html#a186dc431440c79a238e5be314768b719',1,'JUNO_STRING_TAG::DECLARE_FAILURE_HANDLER'],['../structJUNO__TABLE__TAG.html#a6d604964b040533a1276f6a771d3ecca',1,'JUNO_TABLE_TAG::DECLARE_FAILURE_HANDLER'],['../macros_8h.html#a01acfed96d7669edb557768388cdb89f',1,'DECLARE_FAILURE_HANDLER:&#160;macros.h']]],
+  ['dependencies_4',['Dependencies',['../index.html#autotoc_md50',1,'']]],
+  ['design_20principles_5',['General Design Principles',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md38',1,'']]],
+  ['documentation_6',['documentation',['../index.html#autotoc_md49',1,'Documentation'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44',1,'Module Documentation']]]
 ];

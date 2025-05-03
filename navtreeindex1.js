@@ -1,5 +1,12 @@
 var NAVTREEINDEX1 =
 {
+"structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368":[7,0,1,0],
+"structJUNO__MAP__API__TAG.html#a94fd4fce808f03c7677b6b1d159061c9":[7,0,1,1],
+"structJUNO__MAP__TAG.html":[7,0,2],
+"structJUNO__MAP__TAG.html#a30675f92b31b8ce7c3deb2e4cdcba1f0":[7,0,2,0],
+"structJUNO__MAP__TAG.html#a311c0bbe0cd784ba33c96485128ae1b2":[7,0,2,6],
+"structJUNO__MAP__TAG.html#a36e5330b721a1f851de1019f05d8332b":[7,0,2,1],
+"structJUNO__MAP__TAG.html#a8e897169b7330cee0ec09840a083368d":[7,0,2,2],
 "structJUNO__MAP__TAG.html#aa45fa0b453a8f06ff4997118d939f81e":[7,0,2,4],
 "structJUNO__MAP__TAG.html#ad538eb526378e5b01d9265200ab8f3f4":[7,0,2,3],
 "structJUNO__MAP__TAG.html#ae1bd404f4d0f1290fc9a9d4e3b5fa472":[7,0,2,5],

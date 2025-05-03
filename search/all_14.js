@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['name_0',['Inspiration for the Name',['../index.html#autotoc_md48',1,'']]],
-  ['notes_1',['Additional Notes',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]]
+  ['operations_0',['Memory Operations',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md25',1,'']]],
+  ['option_1',['CMake Build Option',['../index.html#autotoc_md52',1,'']]],
+  ['overview_2',['Overview',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md3',1,'']]]
 ];

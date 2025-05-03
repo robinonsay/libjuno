@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['general_20design_20principles_0',['General Design Principles',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md31',1,'']]],
-  ['generic_20memory_20api_1',['4. Using the Generic Memory API',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md16',1,'']]],
-  ['get_2',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751',1,'JUNO_MEMORY_API_TAG::Get']]],
-  ['getting_20started_3',['Getting Started',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md3',1,'']]]
+  ['handling_0',['handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md29',1,'Error Handling'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md41',1,'Error Handling']]],
+  ['hash_1',['Hash',['../structJUNO__HASH__API__TAG.html#a5e61fcea3fc3bbd7928cd8c7f3bac075',1,'JUNO_HASH_API_TAG']]],
+  ['hash_20module_2',['Juno Hash Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'']]],
+  ['hash_2eh_3',['hash.h',['../hash_8h.html',1,'']]],
+  ['hash_5fapi_2eh_4',['hash_api.h',['../hash__api_8h.html',1,'']]]
 ];

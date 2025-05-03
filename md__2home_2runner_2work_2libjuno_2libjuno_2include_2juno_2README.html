@@ -124,8 +124,8 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
   <div class="headertitle"><div class="title">LibJuno</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md29"></a> LibJuno is a lightweight C99 library designed specifically for embedded systems. It focuses on providing essential functionalities like memory management, data structures, string operations, and more without dynamic memory allocation. LibJuno optimizes for memory safety, determinism, and efficiency in constrained environments.</p>
-<h1><a class="anchor" id="autotoc_md30"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md36"></a> LibJuno is a lightweight C99 library designed specifically for embedded systems. It focuses on providing essential functionalities like memory management, data structures, string operations, and more without dynamic memory allocation. LibJuno optimizes for memory safety, determinism, and efficiency in constrained environments.</p>
+<h1><a class="anchor" id="autotoc_md37"></a>
 Library Architecture</h1>
 <p>LibJuno is structured around several key modules, each providing specialized functionality while maintaining a consistent API pattern:</p>
 <ul>
@@ -136,7 +136,7 @@ Library Architecture</h1>
 <li><b>Map</b>: Provides key-value pair storage and retrieval</li>
 <li><b>Table</b>: Implements structured data storage with optional persistence</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md31"></a>
+<h1><a class="anchor" id="autotoc_md38"></a>
 General Design Principles</h1>
 <p>LibJuno follows several core design principles:</p>
 <ol type="1">
@@ -146,9 +146,9 @@ General Design Principles</h1>
 <li><b>Error Handling</b>: Comprehensive error codes and optional failure handlers for robust error management.</li>
 <li><b>Reference Counting</b>: Memory objects use reference counting to prevent premature deallocation of shared resources.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md32"></a>
+<h1><a class="anchor" id="autotoc_md39"></a>
 Common Patterns</h1>
-<h2><a class="anchor" id="autotoc_md33"></a>
+<h2><a class="anchor" id="autotoc_md40"></a>
 API Structure</h2>
 <p>Each module follows a consistent pattern:</p>
 <div class="fragment"><div class="line"><span class="comment">// Direct function call</span></div>
@@ -158,7 +158,7 @@ API Structure</h2>
 <div class="line"><span class="keyword">const</span> JUNO_MODULE_API_T* Juno_ModuleApi(<span class="keywordtype">void</span>);</div>
 <div class="line"><span class="comment">// Then use ptModuleApi-&gt;Function(...)</span></div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md34"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md41"></a>
 Error Handling</h2>
 <p>LibJuno uses a standardized error handling approach:</p>
 <div class="fragment"><div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus = Juno_ModuleFunction(...);</div>
@@ -174,7 +174,7 @@ Error Handling</h2>
 <div class="line"><span class="comment">// Then during initialization</span></div>
 <div class="line">Juno_ModuleInit(..., MyFailureHandler, pvUserData);</div>
 <div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:25</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md35"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md42"></a>
 Memory Management</h2>
 <p>Memory in LibJuno is typically managed through pre-allocated blocks:</p>
 <div class="fragment"><div class="line"><span class="comment">// Declare memory block</span></div>
@@ -187,8 +187,8 @@ Memory Management</h2>
 <div class="ttc" id="amemory_8h_html_af3ffa1610a483a7ccdad71afeabcbb88"><div class="ttname"><a href="memory_8h.html#af3ffa1610a483a7ccdad71afeabcbb88">Juno_MemoryBlkInit</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MemoryBlkInit(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvMemory, JUNO_MEMORY_BLOCK_METADATA_T *pvMetadata, size_t zTypeSize, size_t zLength, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdoc">Initializes a memory block for allocation. Sets up a memory block with an associated free stack for m...</div><div class="ttdef"><b>Definition</b> juno_memory.c:32</div></div>
 <div class="ttc" id="amemory__types_8h_html_a8942ee7462829b506969cd42e66d2ad7"><div class="ttname"><a href="memory__types_8h.html#a8942ee7462829b506969cd42e66d2ad7">JUNO_MEMORY_BLOCK_METADATA</a></div><div class="ttdeci">#define JUNO_MEMORY_BLOCK_METADATA(name, length)</div><div class="ttdoc">Macro to declare a static array for memory metadata.</div><div class="ttdef"><b>Definition</b> memory_types.h:23</div></div>
 <div class="ttc" id="amemory__types_8h_html_af0d3dee078bfb9d9aeaf19018245ad9b"><div class="ttname"><a href="memory__types_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b">JUNO_MEMORY_BLOCK</a></div><div class="ttdeci">#define JUNO_MEMORY_BLOCK(name, type, length)</div><div class="ttdoc">Macro to declare a static memory block and its associated free stack.</div><div class="ttdef"><b>Definition</b> memory_types.h:17</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__BLOCK__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__BLOCK__TAG.html">JUNO_MEMORY_BLOCK_TAG</a></div><div class="ttdoc">Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as...</div><div class="ttdef"><b>Definition</b> memory_types.h:76</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md36"></a>
+<div class="ttc" id="astructJUNO__MEMORY__BLOCK__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__BLOCK__TAG.html">JUNO_MEMORY_BLOCK_TAG</a></div><div class="ttdoc">Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as...</div><div class="ttdef"><b>Definition</b> memory_types.h:74</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md43"></a>
 Reference Counting</h2>
 <p>Memory objects support reference counting to manage shared resources:</p>
 <div class="fragment"><div class="line"><span class="comment">// Get a reference to memory</span></div>
@@ -196,8 +196,8 @@ Reference Counting</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Release reference when done</span></div>
 <div class="line">Juno_MemoryPutRef(ptMemRef);</div>
-<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:62</div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md37"></a>
+<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:60</div></div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md44"></a>
 Module Documentation</h1>
 <p>For detailed documentation on individual modules, please refer to:</p>
 <ul>
