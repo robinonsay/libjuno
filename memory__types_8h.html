@@ -162,6 +162,14 @@ Macros</h2></td></tr>
 <tr class="memitem:a8942ee7462829b506969cd42e66d2ad7" id="r_a8942ee7462829b506969cd42e66d2ad7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__types_8h.html#a8942ee7462829b506969cd42e66d2ad7">JUNO_MEMORY_BLOCK_METADATA</a>(name,  length)&#160;&#160;&#160;static <a class="el" href="memory__types_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> name[length] = {};</td></tr>
 <tr class="memdesc:a8942ee7462829b506969cd42e66d2ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to declare a static array for memory metadata.  <br /></td></tr>
 <tr class="separator:a8942ee7462829b506969cd42e66d2ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d3ef94c99154090eeddec26bd3d6bf2" id="r_a5d3ef94c99154090eeddec26bd3d6bf2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__types_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(name)&#160;&#160;&#160;REF##name</td></tr>
+<tr class="separator:a5d3ef94c99154090eeddec26bd3d6bf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17ee3efcb223e0831576875ebeebfee6" id="r_a17ee3efcb223e0831576875ebeebfee6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__types_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(name)&#160;&#160;&#160;<a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *<a class="el" href="memory__types_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(name)</td></tr>
+<tr class="separator:a17ee3efcb223e0831576875ebeebfee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacb7a6f049a062cf519587f55c9913a5" id="r_aacb7a6f049a062cf519587f55c9913a5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__types_8h.html#aacb7a6f049a062cf519587f55c9913a5">JUNO_NEW_REF_FROM</a>(name)&#160;&#160;&#160;<a class="el" href="memory__types_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(name) = Juno_MemoryGetRef(&amp;name)</td></tr>
+<tr class="separator:aacb7a6f049a062cf519587f55c9913a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e67eaa689fbe7174c687dd5df16bc29" id="r_a1e67eaa689fbe7174c687dd5df16bc29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__types_8h.html#a1e67eaa689fbe7174c687dd5df16bc29">JUNO_NEW_REF_FROM_PTR</a>(name)&#160;&#160;&#160;<a class="el" href="memory__types_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(name) = Juno_MemoryGetRef(name)</td></tr>
+<tr class="separator:a1e67eaa689fbe7174c687dd5df16bc29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -266,6 +274,78 @@ Enumerations</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a17ee3efcb223e0831576875ebeebfee6" name="a17ee3efcb223e0831576875ebeebfee6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17ee3efcb223e0831576875ebeebfee6">&#9670;&#160;</a></span>JUNO_NEW_REF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_NEW_REF</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">name</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *<a class="el" href="memory__types_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(name)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aacb7a6f049a062cf519587f55c9913a5" name="aacb7a6f049a062cf519587f55c9913a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacb7a6f049a062cf519587f55c9913a5">&#9670;&#160;</a></span>JUNO_NEW_REF_FROM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_NEW_REF_FROM</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">name</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="memory__types_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(name) = Juno_MemoryGetRef(&amp;name)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1e67eaa689fbe7174c687dd5df16bc29" name="a1e67eaa689fbe7174c687dd5df16bc29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e67eaa689fbe7174c687dd5df16bc29">&#9670;&#160;</a></span>JUNO_NEW_REF_FROM_PTR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_NEW_REF_FROM_PTR</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">name</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="memory__types_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(name) = Juno_MemoryGetRef(name)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5d3ef94c99154090eeddec26bd3d6bf2" name="a5d3ef94c99154090eeddec26bd3d6bf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d3ef94c99154090eeddec26bd3d6bf2">&#9670;&#160;</a></span>JUNO_REF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_REF</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">name</td><td>)</td>
+          <td>&#160;&#160;&#160;REF##name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

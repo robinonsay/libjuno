@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['generic_20memory_20api_0',['4. Using the Generic Memory API',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]],
-  ['get_1',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751',1,'JUNO_MEMORY_API_TAG::Get']]]
+  ['error_20handling_0',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md34',1,'']]],
+  ['example_20code_1',['Reference Counting Example Code',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md20',1,'']]],
+  ['example_20of_20reference_20counting_2',['Visual Example of Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'']]],
+  ['example_3a_20using_20a_20failure_20handler_3',['6. Example: Using a Failure Handler',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md23',1,'']]]
 ];

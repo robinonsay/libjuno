@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['readme_2emd_0',['readme.md',['../include_2juno_2hash_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2map_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2memory_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2string_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2table_2README_8md.html',1,'(Global Namespace)'],['../README_8md.html',1,'(Global Namespace)']]],
-  ['remove_1',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]]
+  ['of_20reference_20counting_0',['Visual Example of Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'']]],
+  ['option_1',['CMake Build Option',['../index.html#autotoc_md45',1,'']]],
+  ['organization_2',['Header Files Organization',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md5',1,'']]],
+  ['overview_3',['Overview',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md8',1,'']]]
 ];

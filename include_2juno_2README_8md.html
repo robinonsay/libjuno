@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LibJuno: JUNO_MEMORY_BLOCK_API_TAG Struct Reference</title>
+<title>LibJuno: /home/runner/work/libjuno/libjuno/include/juno/README.md File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -87,7 +87,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structJUNO__MEMORY__BLOCK__API__TAG.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('include_2juno_2README_8md.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -113,66 +113,15 @@ $(document).ready(function(){initNavTree('structJUNO__MEMORY__BLOCK__API__TAG.ht
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#pub-attribs">Data Fields</a>  </div>
-  <div class="headertitle"><div class="title">JUNO_MEMORY_BLOCK_API_TAG Struct Reference</div></div>
+  <div class="headertitle"><div class="title">/home/runner/work/libjuno/libjuno/include/juno/README.md File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>API for block-based memory management operations.  
- <a href="structJUNO__MEMORY__BLOCK__API__TAG.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="memory__api_8h_source.html">memory_api.h</a>&gt;</code></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Data Fields</h2></td></tr>
-<tr class="memitem:a505a87c6b1bd4438e76fce0b8524dba6" id="r_a505a87c6b1bd4438e76fce0b8524dba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__MEMORY__BLOCK__API__TAG.html#a505a87c6b1bd4438e76fce0b8524dba6">Init</a> )(<a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *ptMemBlk, void *pvMemory, <a class="el" href="memory__types_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> *ptMetadata, size_t zTypeSize, size_t zLength, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
-<tr class="memdesc:a505a87c6b1bd4438e76fce0b8524dba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a memory block for block-based allocation.  <br /></td></tr>
-<tr class="separator:a505a87c6b1bd4438e76fce0b8524dba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>API for block-based memory management operations. </p>
-<p>This structure holds the initialization function for block-based memory management. </p>
-</div><h2 class="groupheader">Field Documentation</h2>
-<a id="a505a87c6b1bd4438e76fce0b8524dba6" name="a505a87c6b1bd4438e76fce0b8524dba6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a505a87c6b1bd4438e76fce0b8524dba6">&#9670;&#160;</a></span>Init</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_MEMORY_BLOCK_API_TAG::Init) (<a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *ptMemBlk, void *pvMemory, <a class="el" href="memory__types_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> *ptMetadata, size_t zTypeSize, size_t zLength, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initializes a memory block for block-based allocation. </p>
-<p>This function sets up a memory block with its associated free stack to support block-based memory allocations.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptMemBlk</td><td>Pointer to the memory block structure to initialize. </td></tr>
-    <tr><td class="paramname">pvMemory</td><td>Pointer to the contiguous memory used for allocations. </td></tr>
-    <tr><td class="paramname">ptMetadata</td><td>Pointer to the array of metadata for managing memory blocks. </td></tr>
-    <tr><td class="paramname">zTypeSize</td><td>Size in bytes of each block element. </td></tr>
-    <tr><td class="paramname">zLength</td><td>Total number of blocks available. </td></tr>
-    <tr><td class="paramname">pfcnFailureHandler</td><td>Callback function to handle allocation failures. </td></tr>
-    <tr><td class="paramname">pvUserData</td><td>User data passed to the failure handler. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T Status of the initialization operation. </dd></dl>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/runner/work/libjuno/libjuno/include/juno/memory/<a class="el" href="memory__api_8h_source.html">memory_api.h</a></li>
-</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="structJUNO__MEMORY__BLOCK__API__TAG.html">JUNO_MEMORY_BLOCK_API_TAG</a></li>
+    <li class="navelem"><a class="el" href="include_2juno_2README_8md.html">README.md</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

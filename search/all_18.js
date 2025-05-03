@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['update_0',['Update',['../structJUNO__MEMORY__API__TAG.html#aa87138a9c0fe6be63a92c9f12fd9d82b',1,'JUNO_MEMORY_API_TAG']]],
-  ['update_20and_20free_20memory_20blocks_1',['3. Allocate, Update, and Free Memory Blocks',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11',1,'']]],
-  ['use_2',['How to Use',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md8',1,'']]],
-  ['using_20a_20failure_20handler_3',['5. Example: Using a Failure Handler',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md13',1,'']]],
-  ['using_20libjuno_4',['Using LibJuno',['../index.html#autotoc_md21',1,'']]],
-  ['using_20the_20api_5',['Using the API',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
-  ['using_20the_20generic_20memory_20api_6',['4. Using the Generic Memory API',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]]
+  ['readme_2emd_0',['readme.md',['../include_2juno_2hash_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2map_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2memory_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2string_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2table_2README_8md.html',1,'(Global Namespace)'],['../README_8md.html',1,'(Global Namespace)']]],
+  ['reference_20counting_1',['reference counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'5. Using Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md21',1,'Important Rules for Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md36',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'Visual Example of Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md22',1,'When to Use Reference Counting']]],
+  ['reference_20counting_20basics_2',['Reference Counting Basics',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md18',1,'']]],
+  ['reference_20counting_20example_20code_3',['Reference Counting Example Code',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md20',1,'']]],
+  ['remove_4',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]],
+  ['rules_20for_20reference_20counting_5',['Important Rules for Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md21',1,'']]]
 ];

@@ -18,6 +18,8 @@ var status_8h =
       [ "JUNO_STATUS_FILE_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a9704948643262a848c89e08bc088f3de", null ],
       [ "JUNO_STATUS_READ_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a691551daf0782c49e043b1cdcfdd5cb6", null ],
       [ "JUNO_STATUS_WRITE_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a25ae03ece1fe1f5c19232855f1aef3d4", null ],
-      [ "JUNO_STATUS_CRC_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664ae164e215722d72961a66382501edd54a", null ]
+      [ "JUNO_STATUS_CRC_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664ae164e215722d72961a66382501edd54a", null ],
+      [ "JUNO_STATUS_INVALID_REF_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a7c36e4300890a40c246be1b2458397eb", null ],
+      [ "JUNO_STATUS_REF_IN_USE_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688", null ]
     ] ]
 ];

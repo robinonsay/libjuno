@@ -141,18 +141,15 @@ Functions</h2></td></tr>
 <tr class="memitem:af3ffa1610a483a7ccdad71afeabcbb88" id="r_af3ffa1610a483a7ccdad71afeabcbb88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#af3ffa1610a483a7ccdad71afeabcbb88">Juno_MemoryBlkInit</a> (<a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *ptMemBlk, void *pvMemory, <a class="el" href="memory__types_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> *pvMetadata, size_t zTypeSize, size_t zLength, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
 <tr class="memdesc:af3ffa1610a483a7ccdad71afeabcbb88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a memory block for allocation. Sets up a memory block with an associated free stack for managing fixed-size allocations.  <br /></td></tr>
 <tr class="separator:af3ffa1610a483a7ccdad71afeabcbb88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ded51df7488237edb27933993212d76" id="r_a5ded51df7488237edb27933993212d76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#a5ded51df7488237edb27933993212d76">Juno_MemoryBlkGet</a> (<a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *ptMemBlk, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *pvRetAddr)</td></tr>
-<tr class="memdesc:a5ded51df7488237edb27933993212d76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of memory. Retrieves an available fixed-size memory block from the free stack or creates a new allocation if available.  <br /></td></tr>
-<tr class="separator:a5ded51df7488237edb27933993212d76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af059b713f466473f019f272aa32fbffc" id="r_af059b713f466473f019f272aa32fbffc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#af059b713f466473f019f272aa32fbffc">Juno_MemoryBlkUpdate</a> (<a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *ptMem, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMemory, size_t zNewSize)</td></tr>
-<tr class="memdesc:af059b713f466473f019f272aa32fbffc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the current memory allocation to a new size (realloc).  <br /></td></tr>
-<tr class="separator:af059b713f466473f019f272aa32fbffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a101b5c75a305d22f5f1b9e0c40c715ca" id="r_a101b5c75a305d22f5f1b9e0c40c715ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#a101b5c75a305d22f5f1b9e0c40c715ca">Juno_MemoryBlkPut</a> (<a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *ptMemBlk, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *pvAddr)</td></tr>
-<tr class="memdesc:a101b5c75a305d22f5f1b9e0c40c715ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a previously allocated block of memory. Returns a memory block back to the free stack so it can be reused.  <br /></td></tr>
-<tr class="separator:a101b5c75a305d22f5f1b9e0c40c715ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f64b0a4f83141df43bc88db1b30efee" id="r_a7f64b0a4f83141df43bc88db1b30efee"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="memory__api_8h.html#abaf57ed4511966bbcbdc1510a3cd74ae">JUNO_MEMORY_BLOCK_API_T</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#a7f64b0a4f83141df43bc88db1b30efee">Juno_MemoryBlkApi</a> (void)</td></tr>
-<tr class="memdesc:a7f64b0a4f83141df43bc88db1b30efee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the block-based memory API structure.  <br /></td></tr>
-<tr class="separator:a7f64b0a4f83141df43bc88db1b30efee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9375eba6d3c6528d1def42e52f21e70f" id="r_a9375eba6d3c6528d1def42e52f21e70f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#a9375eba6d3c6528d1def42e52f21e70f">Juno_MemoryGet</a> (<a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMemory, size_t zSize)</td></tr>
+<tr class="memdesc:a9375eba6d3c6528d1def42e52f21e70f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic memory allocation function. Allocates memory by using the appropriate allocation method based on the allocation type.  <br /></td></tr>
+<tr class="separator:a9375eba6d3c6528d1def42e52f21e70f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbd6e1663e2cde5c0be6e5a82d3081d0" id="r_acbd6e1663e2cde5c0be6e5a82d3081d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#acbd6e1663e2cde5c0be6e5a82d3081d0">Juno_MemoryUpdate</a> (<a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMemory, size_t zNewSize)</td></tr>
+<tr class="memdesc:acbd6e1663e2cde5c0be6e5a82d3081d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the current memory allocation to a new size (realloc).  <br /></td></tr>
+<tr class="separator:acbd6e1663e2cde5c0be6e5a82d3081d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9edcbb3ad4fdca38d7f7b5dfe88096f9" id="r_a9edcbb3ad4fdca38d7f7b5dfe88096f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#a9edcbb3ad4fdca38d7f7b5dfe88096f9">Juno_MemoryPut</a> (<a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMemory)</td></tr>
+<tr class="memdesc:a9edcbb3ad4fdca38d7f7b5dfe88096f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic memory free function. Releases memory back to the allocator and clears the memory descriptor.  <br /></td></tr>
+<tr class="separator:a9edcbb3ad4fdca38d7f7b5dfe88096f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60af3907f5b1c64a0c15a3f6bfc88f3b" id="r_a60af3907f5b1c64a0c15a3f6bfc88f3b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="memory__api_8h.html#a605797d8b90927b22369714488073282">JUNO_MEMORY_API_T</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory_8h.html#a60af3907f5b1c64a0c15a3f6bfc88f3b">Juno_MemoryApi</a> (void)</td></tr>
 <tr class="memdesc:a60af3907f5b1c64a0c15a3f6bfc88f3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the generic memory API structure.  <br /></td></tr>
 <tr class="separator:a60af3907f5b1c64a0c15a3f6bfc88f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,65 +173,6 @@ Functions</h2></td></tr>
 
 <p>Retrieves the generic memory API structure. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the generic memory API structre. </dd></dl>
-
-</div>
-</div>
-<a id="a7f64b0a4f83141df43bc88db1b30efee" name="a7f64b0a4f83141df43bc88db1b30efee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f64b0a4f83141df43bc88db1b30efee">&#9670;&#160;</a></span>Juno_MemoryBlkApi()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="memory__api_8h.html#abaf57ed4511966bbcbdc1510a3cd74ae">JUNO_MEMORY_BLOCK_API_T</a> * Juno_MemoryBlkApi </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the block-based memory API structure. </p>
-<dl class="section return"><dt>Returns</dt><dd>Pointer to the memory block API structure. </dd></dl>
-
-</div>
-</div>
-<a id="a5ded51df7488237edb27933993212d76" name="a5ded51df7488237edb27933993212d76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ded51df7488237edb27933993212d76">&#9670;&#160;</a></span>Juno_MemoryBlkGet()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Juno_MemoryBlkGet </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *&#160;</td>
-          <td class="paramname"><em>ptMemBlk</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
-          <td class="paramname"><em>pvRetAddr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Allocates a block of memory. Retrieves an available fixed-size memory block from the free stack or creates a new allocation if available. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptMemBlk</td><td>Pointer to the memory block structure. </td></tr>
-    <tr><td class="paramname">pvRetAddr</td><td>Address where the pointer to the allocated block will be stored. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T Status of the allocation attempt. </dd></dl>
 
 </div>
 </div>
@@ -311,23 +249,29 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a101b5c75a305d22f5f1b9e0c40c715ca" name="a101b5c75a305d22f5f1b9e0c40c715ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a101b5c75a305d22f5f1b9e0c40c715ca">&#9670;&#160;</a></span>Juno_MemoryBlkPut()</h2>
+<a id="a9375eba6d3c6528d1def42e52f21e70f" name="a9375eba6d3c6528d1def42e52f21e70f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9375eba6d3c6528d1def42e52f21e70f">&#9670;&#160;</a></span>Juno_MemoryGet()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Juno_MemoryBlkPut </td>
+          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Juno_MemoryGet </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *&#160;</td>
-          <td class="paramname"><em>ptMemBlk</em>, </td>
+          <td class="paramtype"><a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *&#160;</td>
+          <td class="paramname"><em>ptMem</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
-          <td class="paramname"><em>pvAddr</em>&#160;</td>
+          <td class="paramname"><em>ptMemory</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>zSize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -337,11 +281,49 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Frees a previously allocated block of memory. Returns a memory block back to the free stack so it can be reused. </p>
+<p>Generic memory allocation function. Allocates memory by using the appropriate allocation method based on the allocation type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ptMemBlk</td><td>Pointer to the memory block structure. </td></tr>
-    <tr><td class="paramname">pvAddr</td><td>Pointer to the allocated block to be freed. </td></tr>
+    <tr><td class="paramname">ptMem</td><td>Pointer to the memory allocation structure. </td></tr>
+    <tr><td class="paramname">ptMemory</td><td>Pointer to a memory descriptor where allocation details will be stored. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T Status of the allocation. </dd></dl>
+
+</div>
+</div>
+<a id="a9edcbb3ad4fdca38d7f7b5dfe88096f9" name="a9edcbb3ad4fdca38d7f7b5dfe88096f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9edcbb3ad4fdca38d7f7b5dfe88096f9">&#9670;&#160;</a></span>Juno_MemoryPut()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Juno_MemoryPut </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *&#160;</td>
+          <td class="paramname"><em>ptMem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
+          <td class="paramname"><em>ptMemory</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generic memory free function. Releases memory back to the allocator and clears the memory descriptor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptMem</td><td>Pointer to the memory allocation structure. </td></tr>
+    <tr><td class="paramname">ptMemory</td><td>Pointer to the memory descriptor to free. </td></tr>
   </table>
   </dd>
 </dl>
@@ -349,16 +331,16 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af059b713f466473f019f272aa32fbffc" name="af059b713f466473f019f272aa32fbffc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af059b713f466473f019f272aa32fbffc">&#9670;&#160;</a></span>Juno_MemoryBlkUpdate()</h2>
+<a id="acbd6e1663e2cde5c0be6e5a82d3081d0" name="acbd6e1663e2cde5c0be6e5a82d3081d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbd6e1663e2cde5c0be6e5a82d3081d0">&#9670;&#160;</a></span>Juno_MemoryUpdate()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Juno_MemoryBlkUpdate </td>
+          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Juno_MemoryUpdate </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *&#160;</td>
           <td class="paramname"><em>ptMem</em>, </td>
         </tr>
         <tr>
