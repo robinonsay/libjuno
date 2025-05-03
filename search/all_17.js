@@ -13,7 +13,7 @@ var searchData=
   ['step_204_3a_20share_20memory_20with_20reference_20counting_10',['Step 4: Share Memory with Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'']]],
   ['step_205_3a_20release_20memory_11',['Step 5: Release Memory',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10',1,'']]],
   ['step_206_3a_20using_20the_20memory_20api_20alternative_20approach_12',['Step 6: Using the Memory API (Alternative Approach)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11',1,'']]],
-  ['string_20module_13',['Juno String Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'']]],
+  ['string_20module_20beta_13',['Juno String Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'']]],
   ['string_2eh_14',['string.h',['../string_8h.html',1,'']]],
   ['string_5fapi_2eh_15',['string_api.h',['../string__api_8h.html',1,'']]],
   ['string_5ftypes_2eh_16',['string_types.h',['../string__types_8h.html',1,'']]],

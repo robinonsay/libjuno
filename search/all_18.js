@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['table_20module_0',['Juno Table Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html',1,'']]],
+  ['table_20module_20beta_0',['Juno Table Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html',1,'']]],
   ['table_5fapi_2eh_1',['table_api.h',['../table__api_8h.html',1,'']]],
   ['table_5fposix_2eh_2',['table_posix.h',['../table__posix_8h.html',1,'']]],
   ['table_5ftypes_2eh_3',['table_types.h',['../table__types_8h.html',1,'']]],

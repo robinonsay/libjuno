@@ -8,7 +8,7 @@ var searchData=
   ['macros_5',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md31',1,'']]],
   ['macros_2eh_6',['macros.h',['../macros_8h.html',1,'']]],
   ['management_7',['management',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md42',1,'Memory Management'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26',1,'Reference Management']]],
-  ['map_20module_8',['Juno Map Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'']]],
+  ['map_20module_20beta_8',['Juno Map Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'']]],
   ['map_2eh_9',['map.h',['../map_8h.html',1,'']]],
   ['map_5fapi_2eh_10',['map_api.h',['../map__api_8h.html',1,'']]],
   ['map_5ftypes_2eh_11',['map_types.h',['../map__types_8h.html',1,'']]],
@@ -26,7 +26,8 @@ var searchData=
   ['memory_2eh_23',['memory.h',['../memory_8h.html',1,'']]],
   ['memory_5fapi_2eh_24',['memory_api.h',['../memory__api_8h.html',1,'']]],
   ['memory_5ftypes_2eh_25',['memory_types.h',['../memory__types_8h.html',1,'']]],
-  ['module_26',['module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'Juno Hash Module'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'Juno Map Module'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html',1,'Juno Memory Module'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'Juno String Module'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html',1,'Juno Table Module']]],
-  ['module_20documentation_27',['Module Documentation',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44',1,'']]],
-  ['modules_28',['modules',['../index.html#autotoc_md53',1,'Current Modules'],['../index.html#autotoc_md54',1,'Future Modules']]]
+  ['module_26',['Juno Memory Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html',1,'']]],
+  ['module_20beta_27',['module beta',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'Juno Hash Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'Juno Map Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'Juno String Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html',1,'Juno Table Module (Beta)']]],
+  ['module_20documentation_28',['Module Documentation',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44',1,'']]],
+  ['modules_29',['modules',['../index.html#autotoc_md53',1,'Current Modules'],['../index.html#autotoc_md54',1,'Future Modules']]]
 ];

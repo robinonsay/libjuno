@@ -37,8 +37,8 @@ var NAVTREE =
       [ "Future Modules", "index.html#autotoc_md54", null ],
       [ "Inspiration for the Name", "index.html#autotoc_md55", null ]
     ] ],
-    [ "Juno Hash Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
-    [ "Juno Map Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
+    [ "Juno Hash Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
+    [ "Juno Map Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
     [ "Juno Memory Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html", [
       [ "Overview", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md3", null ],
       [ "Memory Block Visualization", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4", null ],
@@ -90,8 +90,8 @@ var NAVTREE =
       ] ],
       [ "Module Documentation", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44", null ]
     ] ],
-    [ "Juno String Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html", null ],
-    [ "Juno Table Module", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html", null ],
+    [ "Juno String Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html", null ],
+    [ "Juno Table Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
