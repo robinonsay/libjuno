@@ -71,11 +71,12 @@ foreach(lib ${JUNO_LIBS})
     )
 endforeach()
 
-
 set(JUNO_SHARED_TARGET ${PROJECT_NAME}_Shared)
 add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
 set_target_properties(${JUNO_SHARED_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 target_include_directories(${JUNO_SHARED_TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+install(TARGETS ${JUNO_LIBS} ${JUNO_SHARED_TARGET} DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 if(JUNO_POSIX)
     set(JUNO_POSIX_TARGET ${PROJECT_NAME}_posix)
@@ -85,6 +86,7 @@ if(JUNO_POSIX)
     target_compile_options(${JUNO_POSIX_TARGET} PRIVATE
         ${JUNO_COMPILE_OPTIONS}
     )
+    install(TARGETS ${JUNO_POSIX_TARGET} DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif(JUNO_POSIX)
 
 if(JUNO_TESTS)
