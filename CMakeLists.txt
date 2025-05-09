@@ -76,8 +76,6 @@ add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
 set_target_properties(${JUNO_SHARED_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 target_include_directories(${JUNO_SHARED_TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-install(TARGETS ${JUNO_LIBS} ${JUNO_SHARED_TARGET} DESTINATION ${CMAKE_INSTALL_PREFIX})
-
 if(JUNO_POSIX)
     set(JUNO_POSIX_TARGET ${PROJECT_NAME}_posix)
     aux_source_directory(${CMAKE_SOURCE_DIR}/src/posix JUNO_POSIX_SRCS)
@@ -86,8 +84,27 @@ if(JUNO_POSIX)
     target_compile_options(${JUNO_POSIX_TARGET} PRIVATE
         ${JUNO_COMPILE_OPTIONS}
     )
-    install(TARGETS ${JUNO_POSIX_TARGET} DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif(JUNO_POSIX)
+
+install(
+  TARGETS ${JUNO_LIBS} ${JUNO_SHARED_TARGET} ${JUNO_POSIX_TARGET}
+  EXPORT junoTargets                          # for later use in find_package()
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # usually “lib”
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/include/     # source directory
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/juno  # usually “include/juno”
+  FILES_MATCHING PATTERN "*.h"               # only headers
+)
+
+install(
+  EXPORT junoTargets
+  FILE junoConfig.cmake
+  NAMESPACE juno::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
+)
 
 if(JUNO_TESTS)
     set(CMAKE_BUILD_TYPE Debug)
