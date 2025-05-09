@@ -21,7 +21,10 @@ aux_source_directory(${CMAKE_SOURCE_DIR}/src JUNO_SRCS)
 add_library(${PROJECT_NAME} STATIC
     ${JUNO_SRCS}
 )
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+)
 
 set(JUNO_COMPILE_OPTIONS
     -Wall                           # Enable most warning messages
@@ -57,7 +60,8 @@ endforeach()
 # Specify the include directories for consumers of this library
 foreach(lib ${JUNO_LIBS})
     target_include_directories(${lib} PUBLIC
-        ${CMAKE_SOURCE_DIR}/include
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
         PRIVATE
         ${CMAKE_SOURCE_DIR}/src
     )
@@ -74,7 +78,10 @@ endforeach()
 set(JUNO_SHARED_TARGET ${PROJECT_NAME}_Shared)
 add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
 set_target_properties(${JUNO_SHARED_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
-target_include_directories(${JUNO_SHARED_TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+)
 
 if(JUNO_POSIX)
     set(JUNO_POSIX_TARGET ${PROJECT_NAME}_posix)
@@ -95,15 +102,8 @@ install(
 
 install(
   DIRECTORY ${CMAKE_SOURCE_DIR}/include/     # source directory
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/juno  # usually “include/juno”
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include  # usually “include/juno”
   FILES_MATCHING PATTERN "*.h"               # only headers
-)
-
-install(
-  EXPORT junoTargets
-  FILE junoConfig.cmake
-  NAMESPACE juno::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
 )
 
 if(JUNO_TESTS)
