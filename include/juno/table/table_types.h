@@ -1,6 +1,5 @@
 #ifndef JUNO_TABLE_TYPES_H
 #define JUNO_TABLE_TYPES_H
-#include "juno/macros.h"
 #include "juno/memory/memory_types.h"
 #include <stdint.h>
 #include <stddef.h>
@@ -29,7 +28,10 @@ struct JUNO_TABLE_TAG
     /// The memory buffer size
     size_t zBuffSize;
     /// The failure handler
-    DECLARE_FAILURE_HANDLER;
+
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler;
+    JUNO_USER_DATA_T *pvUserData;
+
 };
 
 #ifdef __cplusplus

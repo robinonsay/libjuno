@@ -1,6 +1,5 @@
 #ifndef JUNO_STRING_TYPES_H
 #define JUNO_STRING_TYPES_H
-#include "juno/macros.h"
 #include "juno/memory/memory_types.h"
 #include <stddef.h>
 #ifdef __cplusplus
@@ -22,7 +21,8 @@ struct JUNO_STRING_TAG
     /// The length of the string
     size_t zLen;
     /// Failure handler
-    DECLARE_FAILURE_HANDLER;
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler;
+    JUNO_USER_DATA_T *pvUserData;
 };
 
 #ifdef __cplusplus

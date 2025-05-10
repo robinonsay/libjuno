@@ -1,10 +1,10 @@
 #ifndef JUNO_MEMORY_H
 #define JUNO_MEMORY_H
 
-#include "juno/macros.h"
 #include <stddef.h>
 #include <stdint.h>
 #include "stddef.h"
+#include "juno/status.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,7 +79,8 @@ struct JUNO_MEMORY_BLOCK_TAG
     size_t zLength;                     ///< Total number of blocks available.
     size_t zUsed;                       ///< Current count of allocated blocks.
     size_t zFreed;                      ///< Current count of freed blocks in the free stack.
-    DECLARE_FAILURE_HANDLER;            ///< Macro to declare a failure handler.
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler;
+    JUNO_USER_DATA_T *pvUserData;
 };
 
 #ifndef JUNO_CUSTOM_ALLOC
