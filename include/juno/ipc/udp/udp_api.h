@@ -4,6 +4,7 @@
 #include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include "juno/ipc/udp/udp_types.h"
+#include "juno/string/string_types.h"
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -30,8 +31,7 @@ struct JUNO_UDP_API_TAG
     JUNO_STATUS_T (*Init)(
         JUNO_UDP_T *ptUdp,
         JUNO_UDP_OS_DATA_T *ptOsData,
-        const char *pcAddr,
-        uint16_t iPort,
+        JUNO_STRING_T pcIpAddr,
         JUNO_FAILURE_HANDLER_T pfcnFailureHdlr,
         JUNO_USER_DATA_T *pvFailureUserData
     );
@@ -75,7 +75,6 @@ struct JUNO_UDP_API_TAG
         @return Returns `JUNO_STATUS_SUCCESS` if the operations was successful
     */
     JUNO_STATUS_T (*Free)(JUNO_UDP_T *ptUdp);
-
 };
 
 #ifdef __cplusplus

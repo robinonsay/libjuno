@@ -1,11 +1,9 @@
 #ifndef JUNO_STRING_TYPES_H
 #define JUNO_STRING_TYPES_H
-#include "juno/memory/memory_types.h"
 #include <stddef.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 /// @brief Represents a JUNO string.
 /// This structure encapsulates the memory allocation, underlying memory storage,
@@ -14,15 +12,8 @@ typedef struct JUNO_STRING_TAG JUNO_STRING_T;
 
 struct JUNO_STRING_TAG
 {
-    /// The allocator for the string
-    JUNO_MEMORY_ALLOC_T *ptAlloc;
-    /// The memory location of the string
-    JUNO_MEMORY_T tMemory;
-    /// The length of the string
-    size_t zLen;
-    /// Failure handler
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler;
-    JUNO_USER_DATA_T *pvUserData;
+    const char *pcCStr;
+    size_t zSize;
 };
 
 #ifdef __cplusplus
