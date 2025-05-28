@@ -29,7 +29,8 @@ struct JUNO_TABLE_TAG
     /// The memory buffer size
     size_t zBuffSize;
     /// The failure handler
-    DECLARE_FAILURE_HANDLER;
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler;
+    JUNO_USER_DATA_T *pvFailureUserData;
 };
 
 #ifdef __cplusplus

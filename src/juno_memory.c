@@ -36,7 +36,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     size_t zTypeSize,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvUserData
+    JUNO_USER_DATA_T *pvFailureUserData
 )
 {
     // Validate input pointer
@@ -53,7 +53,7 @@ JUNO_STATUS_T Juno_MemoryBlkInit(
     ptMemBlk->zUsed = 0;
     // Set the failure handler and its user data
     ptMemBlk->pfcnFailureHandler = pfcnFailureHandler;
-    ptMemBlk->pvUserData = pvUserData;
+    ptMemBlk->pvFailureUserData = pvFailureUserData;
     // Initially, no freed blocks are available
     ptMemBlk->zFreed = 0;
     JUNO_STATUS_T tStatus = Juno_MemoryBlkValidate(ptMemBlk);
@@ -74,7 +74,7 @@ static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMOR
     {
         tStatus = JUNO_STATUS_MEMALLOC_ERROR;
         // Log error through the failure handler
-        FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvUserData,
+        FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvFailureUserData,
             "Failed to allocate block memory. Memory is full"
         );
         return tStatus;
@@ -107,7 +107,7 @@ static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_BLOCK_T *ptMem, JUNO_MEMOR
     if(zNewSize > ptMem->zTypeSize)
     {
         tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-        FAIL(tStatus, ptMem->pfcnFailureHandler, ptMem->pvUserData,
+        FAIL(tStatus, ptMem->pfcnFailureHandler, ptMem->pvFailureUserData,
             "Failed to update memory, size is too big"
         );
     }
@@ -129,7 +129,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMOR
     {
         tStatus = JUNO_STATUS_MEMFREE_ERROR;
         // Log error if invalid address detected
-        FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvUserData,
+        FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvFailureUserData,
             "Failed to free block memory. Invalid Address"
         );
         return tStatus;
@@ -142,7 +142,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_BLOCK_T *ptMemBlk, JUNO_MEMOR
         {
             tStatus = JUNO_STATUS_MEMFREE_ERROR;
             // Log error for duplicate free attempt
-            FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvUserData,
+            FAIL(tStatus, ptMemBlk->pfcnFailureHandler, ptMemBlk->pvFailureUserData,
                 "Failed to free block memory. Memory already freed"
             );
             return tStatus;           
@@ -205,7 +205,7 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
         {
             if(tStatus)
             {
-                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvFailureUserData,
                 "Attempted to allocate memory with size 0");
                 return tStatus;
             }
@@ -213,7 +213,7 @@ JUNO_STATUS_T Juno_MemoryGet(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
             if(zSize > ptMem->tBlock.zTypeSize)
             {
                 tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData,
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvFailureUserData,
                     "Invalid size for block alloc"
                 );
                 return tStatus;
@@ -251,7 +251,7 @@ JUNO_STATUS_T Juno_MemoryPut(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory
         {
             if(tStatus)
             {
-                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvUserData, "Failed to free memory, reference in use");
+                FAIL(tStatus, ptMem->tBlock.pfcnFailureHandler, ptMem->tBlock.pvFailureUserData, "Failed to free memory, reference in use");
                 return tStatus;
             }
             // Delegate to block free function

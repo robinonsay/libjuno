@@ -19,7 +19,7 @@ static inline JUNO_STATUS_T Juno_MapValidate(JUNO_MAP_T *ptMap)
     if(!(ptMap->ptMapKeys && ptMap->ptHashApi && ptMap->ptMapValues && ptMap->zCapacity && ptMap->pfcnIsEqual))
     {
         tStatus = JUNO_STATUS_NULLPTR_ERROR;
-        FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvUserData, "Invalid dependencies");
+        FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvFailureUserData, "Invalid dependencies");
     }
     return tStatus;
 
@@ -47,7 +47,7 @@ JUNO_STATUS_T Juno_MapInit(
     ptMap->zLenHashTable = 0;
     ptMap->pfcnIsEqual = pfcnIsEqual;
     ptMap->pfcnFailureHandler = pfcnFailureHandler;
-    ptMap->pvUserData = pvFailureUserData;
+    ptMap->pvFailureUserData = pvFailureUserData;
     JUNO_STATUS_T tStatus =  Juno_MapValidate(ptMap);
     ASSERT_SUCCESS(tStatus, return tStatus);
     memset(ptKeyTable, 0, sizeof(JUNO_MEMORY_T) * zCapacity);
@@ -84,7 +84,7 @@ static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tK
     }
     if(tStatus != JUNO_STATUS_SUCCESS)
     {
-        FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvUserData, "Map is full");
+        FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvFailureUserData, "Map is full");
     }
     // Return the status
     return tStatus;
@@ -125,7 +125,7 @@ JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T *
     if(!ptMap->ptMapKeys[zIndex].pvAddr)
     {
         tStatus = JUNO_STATUS_DNE_ERROR;
-        FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvUserData, "Key Does not exist");
+        FAIL(tStatus, ptMap->pfcnFailureHandler, ptMap->pvFailureUserData, "Key Does not exist");
         return tStatus;
     }
     *ptRetValue = ptMap->ptMapValues[zIndex];
