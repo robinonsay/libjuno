@@ -28,8 +28,11 @@ typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCust
 #ifndef FAIL_MESSAGE_LEN
 #define FAIL_MESSAGE_LEN    256
 #endif
-#define FAIL(tStatus, pfcnFailureHandler, pvUserData, pcMessage)\
-if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvUserData);}
+#define FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)\
+if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}
+
+#define FAIL_MODULE(tStatus, ptMod, pcMessage)\
+if(ptMod && ptMod->pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, ptMod->pvFailureUserData);}
 #ifdef __cplusplus
 }
 #endif
