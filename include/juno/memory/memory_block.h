@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "juno/status.h"
 #include "stddef.h"
-
+#include "juno/memory/memory_api.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -29,10 +29,8 @@ static JUNO_MEMORY_BLOCK_METADATA_T name[length] = {};
 typedef struct JUNO_MEMORY_BLOCK_METADATA_TAG JUNO_MEMORY_BLOCK_METADATA_T;
 typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
 typedef struct JUNO_MEMORY_ALLOC_HDR_TAG JUNO_MEMORY_ALLOC_HDR_T;
-typedef struct JUNO_MEMORY_TAG JUNO_MEMORY_T;
 
 #ifndef JUNO_CUSTOM_ALLOC
-typedef union JUNO_MEMORY_ALLOC_TAG JUNO_MEMORY_ALLOC_T;
 #endif
 
 /// @brief Enumeration of memory allocation types.
@@ -54,17 +52,7 @@ struct JUNO_MEMORY_ALLOC_HDR_TAG
     JUNO_MEMORY_ALLOC_TYPE_T tType; ///< Type of memory allocation.
 };
 
-/// @brief Structure for an allocated memory segment.
-/// Describes the allocated memory with a pointer to the start and its size.
-struct JUNO_MEMORY_TAG
-{
-    /// Pointer to the allocated memory.
-    void *pvAddr;
-    /// Size of the allocated memory, in bytes.
-    size_t zSize;
-    /// The reference count for this memory
-    size_t iRefCount;
-};
+
 
 
 
@@ -123,6 +111,25 @@ static inline void Juno_MemoryPutRef(JUNO_MEMORY_T *ptMemory)
         ptMemory->iRefCount -= 1;
     }
 }
+/// @brief Initializes a memory block for allocation.
+/// Sets up a memory block with an associated free stack for managing fixed-size allocations.
+/// @param ptMemBlk Pointer to the memory block structure to initialize.
+/// @param pvMemory Pointer to the contiguous memory used for allocations.
+/// @param pvMetadata Pointer to an array for block metadata tracking.
+/// @param zTypeSize Size in bytes of each element in the block.
+/// @param zLength Total number of possible allocations.
+/// @param pfcnFailureHandler Callback function to handle failures.
+/// @param pvUserData User data passed to the failure handler.
+/// @return JUNO_STATUS_T Status of the initialization.
+JUNO_STATUS_T Juno_MemoryBlkInit(
+    JUNO_MEMORY_BLOCK_T *ptMemBlk,
+    void *pvMemory,
+    JUNO_MEMORY_BLOCK_METADATA_T *pvMetadata,
+    size_t zTypeSize,
+    size_t zLength,
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
+    JUNO_USER_DATA_T *pvUserData
+);
 
 #ifdef __cplusplus
 }

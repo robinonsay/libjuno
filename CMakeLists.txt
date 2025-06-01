@@ -5,7 +5,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 option(JUNO_TESTS "Enable unit testing" OFF)
-option(JUNO_POSIX "Enable posix" OFF)
 option(JUNO_DOCS "Enable doxygen docs" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
@@ -82,16 +81,6 @@ target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
 )
 
-if(JUNO_POSIX)
-    set(JUNO_POSIX_TARGET ${PROJECT_NAME}_posix)
-    aux_source_directory(${CMAKE_SOURCE_DIR}/src/posix JUNO_POSIX_SRCS)
-    add_library(${JUNO_POSIX_TARGET} SHARED ${JUNO_POSIX_SRCS})
-    target_link_libraries(${JUNO_POSIX_TARGET} PUBLIC ${JUNO_SHARED_TARGET})
-    target_compile_options(${JUNO_POSIX_TARGET} PRIVATE
-        ${JUNO_COMPILE_OPTIONS}
-    )
-endif(JUNO_POSIX)
-
 install(
   TARGETS ${JUNO_LIBS} ${JUNO_SHARED_TARGET} ${JUNO_POSIX_TARGET}
   EXPORT junoTargets                          # for later use in find_package()
@@ -122,14 +111,6 @@ if(JUNO_TESTS)
         -O0
     )
     target_link_libraries(${JUNO_SHARED_TARGET} PRIVATE gcov)
-    if(JUNO_POSIX)
-        target_compile_options(${JUNO_POSIX_TARGET} PRIVATE
-            --coverage
-            -g
-            -O0
-        )
-        target_link_libraries(${JUNO_POSIX_TARGET} PRIVATE gcov)
-    endif()
     enable_testing()
     add_library(unity ${CMAKE_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${CMAKE_SOURCE_DIR}/deps/unity/src)

@@ -4,6 +4,7 @@
 */
 #ifndef TEMPLATE_API_H
 #define TEMPLATE_API_H
+#include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #ifdef __cplusplus
 extern "C"
@@ -16,6 +17,8 @@ typedef struct TEMPLATE_PRIVATE_TAG TEMPLATE_PRIVATE_T;
 
 struct TEMPLATE_TAG
 {
+    JUNO_MEMORY_ALLOC_T *_ptAlloc;
+    JUNO_MEMORY_T _tPrivateMemory;
     TEMPLATE_PRIVATE_T *_ptPrivate;
     /*
     
@@ -31,7 +34,7 @@ struct TEMPLATE_API_TAG
     /// Initializes the module and resources for template
     JUNO_STATUS_T (*Init)(
         TEMPLATE_T *ptTemplate,
-        TEMPLATE_PRIVATE_T *ptPrivate,
+        JUNO_MEMORY_ALLOC_T *ptAlloc,
         /* TODO: Insert initialization arguments for module members here*/
         JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
         JUNO_USER_DATA_T *_pvFailureUserData
