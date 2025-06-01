@@ -1,5 +1,5 @@
-#include "juno/memory/memory_block.h"
-#include "juno/memory/memory_api.h"
+#include "juno/memory/memory.h"
+#include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include "unity.h"
 #include "unity_internals.h"

@@ -17,14 +17,13 @@ def rename_in_file(path: Path, old: str, new:str):
     with open(path, "r") as file:
         for line in file:
             if old.islower():
-                new_mod = new.lower()
+                new = new.lower()
             elif old.isupper():
-                new_mod = new.upper()
+                new = new.upper()
             elif old[0].isupper():
-                new_split = new.split('_')
-                new_split = [w.capitalize() for w in new_split]
-                new_mod = ''.join(new_split)
-            new_contents.append(line.replace(old, new_mod))
+                new = new.capitalize()
+                new = new.replace('_', '')
+            new_contents.append(line.replace(old, new))
     with open(path, "w") as file:
         file.writelines(new_contents)
 
