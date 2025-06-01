@@ -8,6 +8,7 @@
 
 #define JUNO_FAILURE_HANDLER    _pfcnFailureHandler
 #define JUNO_FAILURE_USER_DATA    _pvFailurUserData
+#define JUNO_MODULE_EMPTY
 #define JUNO_MODULE(name, members) \
 struct name##_TAG \
 { \
