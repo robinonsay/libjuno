@@ -2,38 +2,28 @@
 #include "juno/macros.h"
 #include "juno/status.h"
 
-static inline JUNO_STATUS_T Validate(TEMPLATE_T *ptTemplate)
+static inline JUNO_STATUS_T Validate(TEMPLATE_IMPL_T *ptImpl)
 {
-    if(!ptTemplate)
-    {
-        return JUNO_STATUS_NULLPTR_ERROR;
-    }
-    /*
-    
-        TODO: Assert other dependencies and members here
-
-    */
-    ASSERT_EXISTS((ptTemplate->_ptPrivate));
+    ASSERT_EXISTS((ptImpl /* TODO: Assert other dependencies and members here using &&*/));
     return JUNO_STATUS_SUCCESS;
 }
 static JUNO_STATUS_T Init(
     TEMPLATE_T *ptTemplate,
-    TEMPLATE_PRIVATE_T *ptPrivate,
     /* TODO: Insert initialization arguments for module members here*/
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *_pvFailureUserData
 )
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
-    ptTemplate->_ptPrivate = ptPrivate;
-    ptTemplate->_pfcnFailureHandler = pfcnFailureHandler;
-    ptTemplate->_pvFailureUserData = _pvFailureUserData;
+    TEMPLATE_IMPL_T *ptImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
+    ptTemplate->JUNO_FAILURE_HANDLER = pfcnFailureHandler;
+    ptTemplate->JUNO_FAILURE_USER_DATA = _pvFailureUserData;
     /*
     
         TODO: Assign other member variables here
 
     */
-    tStatus = Validate(ptTemplate);
+    tStatus = Validate(ptImpl);
     /*
     
         TODO: Initialize resources here
@@ -43,7 +33,9 @@ static JUNO_STATUS_T Init(
 }
 static JUNO_STATUS_T Free(TEMPLATE_T *ptTemplate)
 {
-    JUNO_STATUS_T tStatus = Validate(ptTemplate);
+
+    TEMPLATE_IMPL_T *ptImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
+    JUNO_STATUS_T tStatus = Validate(ptImpl);
     /*
     
         TODO: Free resources here
