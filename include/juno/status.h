@@ -34,7 +34,7 @@ typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCust
 if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}
 
 #define FAIL_MODULE(tStatus, ptMod, pcMessage)\
-if(ptMod && ptMod->pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, ptMod->pvFailureUserData);}
+if(ptMod && ptMod->JUNO_FAILURE_HANDLER){ptMod->JUNO_FAILURE_HANDLER(tStatus, pcMessage, ptMod->JUNO_FAILURE_USER_DATA);}
 #ifdef __cplusplus
 }
 #endif
