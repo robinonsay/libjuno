@@ -75,9 +75,8 @@ foreach(lib ${JUNO_LIBS})
     )
 endforeach()
 
-set(JUNO_SHARED_TARGET ${PROJECT_NAME}_Shared)
+set(JUNO_SHARED_TARGET ${PROJECT_NAME}_shared)
 add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
-set_target_properties(${JUNO_SHARED_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>

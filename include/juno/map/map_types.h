@@ -23,7 +23,8 @@ struct JUNO_MAP_TAG
     size_t zCapacity;
     size_t zLenHashTable;
     JUNO_MAP_KEY_EQUAL_FCN_T pfcnIsEqual;
-    DECLARE_FAILURE_HANDLER;
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler;            ///< Macro to declare a failure handler.
+    JUNO_USER_DATA_T *pvFailureUserData;
 };
 
 #ifdef __cplusplus

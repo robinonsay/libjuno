@@ -48,7 +48,7 @@ JUNO_STATUS_T Juno_TablePosixInit(
     ptTableManager->zBuffSize = zBuffSize;
     // Register failure callback and user data
     ptTableManager->pfcnFailureHandler = pfcnFailureHdlr;
-    ptTableManager->pvUserData = pvFailureUserData;
+    ptTableManager->pvFailureUserData = pvFailureUserData;
     // Validate setup before returning
     tStatus = Validate(ptTableManager);
     return tStatus;
@@ -64,7 +64,7 @@ JUNO_STATUS_T Juno_TablePosixLoad(JUNO_TABLE_MANAGER_T *ptTableManager)
     {
         tStatus = JUNO_STATUS_DNE_ERROR;
         const char *pcErrMsg = strerror(errno);
-        FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvUserData, pcErrMsg);
+        FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvFailureUserData, pcErrMsg);
         return tStatus;
     }
     // Open table file for reading in binary mode
@@ -73,7 +73,7 @@ JUNO_STATUS_T Juno_TablePosixLoad(JUNO_TABLE_MANAGER_T *ptTableManager)
     {
         tStatus = JUNO_STATUS_FILE_ERROR;
         const char *pcErrMsg = strerror(errno);
-        FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvUserData, pcErrMsg);
+        FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvFailureUserData, pcErrMsg);
         return tStatus;
     }
     // Read buffer and handle any I/O or size mismatches
@@ -86,7 +86,7 @@ JUNO_STATUS_T Juno_TablePosixLoad(JUNO_TABLE_MANAGER_T *ptTableManager)
         {
             tStatus = JUNO_STATUS_READ_ERROR;
             const char *pcErrMsg = strerror(errno);
-            FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvUserData, pcErrMsg);
+            FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvFailureUserData, pcErrMsg);
             return tStatus;
         }
         else
@@ -95,7 +95,7 @@ JUNO_STATUS_T Juno_TablePosixLoad(JUNO_TABLE_MANAGER_T *ptTableManager)
             FAIL(
                 tStatus,
                 ptTableManager->pfcnFailureHandler,
-                ptTableManager->pvUserData,
+                ptTableManager->pvFailureUserData,
                 "Invalid size for table"
             );
             return tStatus;
@@ -108,7 +108,7 @@ JUNO_STATUS_T Juno_TablePosixLoad(JUNO_TABLE_MANAGER_T *ptTableManager)
         FAIL(
             tStatus,
             ptTableManager->pfcnFailureHandler,
-            ptTableManager->pvUserData,
+            ptTableManager->pvFailureUserData,
             "Invalid CRC"
         );
     }
@@ -129,7 +129,7 @@ JUNO_STATUS_T Juno_TablePosixSave(JUNO_TABLE_MANAGER_T *ptTableManager)
     {
         tStatus = JUNO_STATUS_FILE_ERROR;
         const char *pcErrMsg = strerror(errno);
-        FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvUserData, pcErrMsg);
+        FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvFailureUserData, pcErrMsg);
         return tStatus;
     }
     // Write buffer and handle write errors or size mismatches
@@ -142,7 +142,7 @@ JUNO_STATUS_T Juno_TablePosixSave(JUNO_TABLE_MANAGER_T *ptTableManager)
         {
             tStatus = JUNO_STATUS_WRITE_ERROR;
             const char *pcErrMsg = strerror(errno);
-            FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvUserData, pcErrMsg);
+            FAIL(tStatus, ptTableManager->pfcnFailureHandler, ptTableManager->pvFailureUserData, pcErrMsg);
             return tStatus;
         }
         else
@@ -151,7 +151,7 @@ JUNO_STATUS_T Juno_TablePosixSave(JUNO_TABLE_MANAGER_T *ptTableManager)
             FAIL(
                 tStatus,
                 ptTableManager->pfcnFailureHandler,
-                ptTableManager->pvUserData,
+                ptTableManager->pvFailureUserData,
                 "Invalid size for table"
             );
             return tStatus;
