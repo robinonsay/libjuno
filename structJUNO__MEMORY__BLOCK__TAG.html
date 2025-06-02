@@ -160,21 +160,23 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a72c6b86bda4779965097d152bb2f5f3e" id="r_a72c6b86bda4779965097d152bb2f5f3e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__MEMORY__BLOCK__TAG.html#a72c6b86bda4779965097d152bb2f5f3e">zFreed</a></td></tr>
 <tr class="memdesc:a72c6b86bda4779965097d152bb2f5f3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current count of freed blocks in the free stack.  <br /></td></tr>
 <tr class="separator:a72c6b86bda4779965097d152bb2f5f3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a88cc9a81839e878c9f0c6864411328" id="r_a5a88cc9a81839e878c9f0c6864411328"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__MEMORY__BLOCK__TAG.html#a5a88cc9a81839e878c9f0c6864411328">DECLARE_FAILURE_HANDLER</a></td></tr>
-<tr class="memdesc:a5a88cc9a81839e878c9f0c6864411328"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to declare a failure handler.  <br /></td></tr>
-<tr class="separator:a5a88cc9a81839e878c9f0c6864411328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7077b7207ef08329e54dff10831a399e" id="r_a7077b7207ef08329e54dff10831a399e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__MEMORY__BLOCK__TAG.html#a7077b7207ef08329e54dff10831a399e">pfcnFailureHandler</a></td></tr>
+<tr class="memdesc:a7077b7207ef08329e54dff10831a399e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to declare a failure handler.  <br /></td></tr>
+<tr class="separator:a7077b7207ef08329e54dff10831a399e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac51f3a5f84dd7ccd92735a35e359a7a4" id="r_ac51f3a5f84dd7ccd92735a35e359a7a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__MEMORY__BLOCK__TAG.html#ac51f3a5f84dd7ccd92735a35e359a7a4">pvFailureUserData</a></td></tr>
+<tr class="separator:ac51f3a5f84dd7ccd92735a35e359a7a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Structure representing a block-based memory allocator. Manages a fixed-size memory area along with associated free memory tracking. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="a5a88cc9a81839e878c9f0c6864411328" name="a5a88cc9a81839e878c9f0c6864411328"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a88cc9a81839e878c9f0c6864411328">&#9670;&#160;</a></span>DECLARE_FAILURE_HANDLER</h2>
+<a id="a7077b7207ef08329e54dff10831a399e" name="a7077b7207ef08329e54dff10831a399e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7077b7207ef08329e54dff10831a399e">&#9670;&#160;</a></span>pfcnFailureHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MEMORY_BLOCK_TAG::DECLARE_FAILURE_HANDLER</td>
+          <td class="memname"><a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> JUNO_MEMORY_BLOCK_TAG::pfcnFailureHandler</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -196,6 +198,20 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Array of metadata for each block. </p>
+
+</div>
+</div>
+<a id="ac51f3a5f84dd7ccd92735a35e359a7a4" name="ac51f3a5f84dd7ccd92735a35e359a7a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac51f3a5f84dd7ccd92735a35e359a7a4">&#9670;&#160;</a></span>pvFailureUserData</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a>* JUNO_MEMORY_BLOCK_TAG::pvFailureUserData</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

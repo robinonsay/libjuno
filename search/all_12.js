@@ -29,5 +29,6 @@ var searchData=
   ['module_26',['Juno Memory Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html',1,'']]],
   ['module_20beta_27',['module beta',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'Juno Hash Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'Juno Map Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'Juno String Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html',1,'Juno Table Module (Beta)']]],
   ['module_20documentation_28',['Module Documentation',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44',1,'']]],
-  ['modules_29',['modules',['../index.html#autotoc_md53',1,'Current Modules'],['../index.html#autotoc_md54',1,'Future Modules']]]
+  ['module_2eh_29',['module.h',['../module_8h.html',1,'']]],
+  ['modules_30',['modules',['../index.html#autotoc_md53',1,'Current Modules'],['../index.html#autotoc_md54',1,'Future Modules']]]
 ];

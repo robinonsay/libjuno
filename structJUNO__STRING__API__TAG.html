@@ -131,165 +131,53 @@ $(document).ready(function(){initNavTree('structJUNO__STRING__API__TAG.html','')
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a96aee79c6ec80da180d8c4809e837c77" id="r_a96aee79c6ec80da180d8c4809e837c77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#a96aee79c6ec80da180d8c4809e837c77">Init</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptAlloc, const char *pcStr, size_t zLen, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
-<tr class="memdesc:a96aee79c6ec80da180d8c4809e837c77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a JUNO string from a C string.  <br /></td></tr>
-<tr class="separator:a96aee79c6ec80da180d8c4809e837c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0de9d65250efb96fe427a99573e5fd7" id="r_ae0de9d65250efb96fe427a99573e5fd7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#ae0de9d65250efb96fe427a99573e5fd7">SetAlloc</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptAlloc)</td></tr>
-<tr class="memdesc:ae0de9d65250efb96fe427a99573e5fd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new memory allocator for a JUNO string.  <br /></td></tr>
-<tr class="separator:ae0de9d65250efb96fe427a99573e5fd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae962e0293bfa4d8efb9ec9f9ecf19f0d" id="r_ae962e0293bfa4d8efb9ec9f9ecf19f0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#ae962e0293bfa4d8efb9ec9f9ecf19f0d">Length</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, size_t *pzRetSize)</td></tr>
-<tr class="memdesc:ae962e0293bfa4d8efb9ec9f9ecf19f0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the size of the JUNO string.  <br /></td></tr>
-<tr class="separator:ae962e0293bfa4d8efb9ec9f9ecf19f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f277f8a812af2f222b269c0d02d17c3" id="r_a1f277f8a812af2f222b269c0d02d17c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#a1f277f8a812af2f222b269c0d02d17c3">Concat</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString1, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString2)</td></tr>
-<tr class="separator:a1f277f8a812af2f222b269c0d02d17c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6f956f48dcc503ac1c0914cb116eeb0" id="r_aa6f956f48dcc503ac1c0914cb116eeb0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#aa6f956f48dcc503ac1c0914cb116eeb0">Append</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, const char *pcCstr, size_t zLen)</td></tr>
-<tr class="separator:aa6f956f48dcc503ac1c0914cb116eeb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95029121279524e6078b573172b0af45" id="r_a95029121279524e6078b573172b0af45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#a95029121279524e6078b573172b0af45">Free</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString)</td></tr>
-<tr class="memdesc:a95029121279524e6078b573172b0af45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees resources associated with the JUNO string.  <br /></td></tr>
-<tr class="separator:a95029121279524e6078b573172b0af45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a991f4f868c295beb7915d63ad80f7d8d" id="r_a991f4f868c295beb7915d63ad80f7d8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#a991f4f868c295beb7915d63ad80f7d8d">Append</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tString)</td></tr>
+<tr class="separator:a991f4f868c295beb7915d63ad80f7d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa72386de2d7ec7e7f82606433e46c8bd" id="r_aa72386de2d7ec7e7f82606433e46c8bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#aa72386de2d7ec7e7f82606433e46c8bd">Find</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tSearchString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptResult)</td></tr>
+<tr class="separator:aa72386de2d7ec7e7f82606433e46c8bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e3b9c0df753c713992d00d7185c687d" id="r_a5e3b9c0df753c713992d00d7185c687d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__STRING__API__TAG.html#a5e3b9c0df753c713992d00d7185c687d">Split</a> )(<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tDelim, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptArrStrs, size_t zArrLen)</td></tr>
+<tr class="separator:a5e3b9c0df753c713992d00d7185c687d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="aa6f956f48dcc503ac1c0914cb116eeb0" name="aa6f956f48dcc503ac1c0914cb116eeb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6f956f48dcc503ac1c0914cb116eeb0">&#9670;&#160;</a></span>Append</h2>
+<a id="a991f4f868c295beb7915d63ad80f7d8d" name="a991f4f868c295beb7915d63ad80f7d8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a991f4f868c295beb7915d63ad80f7d8d">&#9670;&#160;</a></span>Append</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Append) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, const char *pcCstr, size_t zLen)</td>
+          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Append) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tString)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Writes a C-String to the Juno String </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptString</td><td>The juno string to write to </td></tr>
-    <tr><td class="paramname">pcCstr</td><td>The C string </td></tr>
-    <tr><td class="paramname">zLen</td><td>The length of the C string </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T result status </dd></dl>
 
 </div>
 </div>
-<a id="a1f277f8a812af2f222b269c0d02d17c3" name="a1f277f8a812af2f222b269c0d02d17c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f277f8a812af2f222b269c0d02d17c3">&#9670;&#160;</a></span>Concat</h2>
+<a id="aa72386de2d7ec7e7f82606433e46c8bd" name="aa72386de2d7ec7e7f82606433e46c8bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa72386de2d7ec7e7f82606433e46c8bd">&#9670;&#160;</a></span>Find</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Concat) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString1, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString2)</td>
+          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Find) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tSearchString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptResult)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Concat two strings together </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptString1</td><td>The first string </td></tr>
-    <tr><td class="paramname">ptString2</td><td>The second string </td></tr>
-    <tr><td class="paramname">zNewSize</td><td>The size of the new string. If the size is 0, the new size will be inferred </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
-<a id="a95029121279524e6078b573172b0af45" name="a95029121279524e6078b573172b0af45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95029121279524e6078b573172b0af45">&#9670;&#160;</a></span>Free</h2>
+<a id="a5e3b9c0df753c713992d00d7185c687d" name="a5e3b9c0df753c713992d00d7185c687d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e3b9c0df753c713992d00d7185c687d">&#9670;&#160;</a></span>Split</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Free) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString)</td>
+          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Split) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> tDelim, <a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptArrStrs, size_t zArrLen)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Frees resources associated with the JUNO string. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptString</td><td>Pointer to the JUNO string structure. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T result status. </dd></dl>
-
-</div>
-</div>
-<a id="a96aee79c6ec80da180d8c4809e837c77" name="a96aee79c6ec80da180d8c4809e837c77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96aee79c6ec80da180d8c4809e837c77">&#9670;&#160;</a></span>Init</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Init) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptAlloc, const char *pcStr, size_t zLen, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Creates a JUNO string from a C string. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptString</td><td>Pointer to the JUNO string structure. </td></tr>
-    <tr><td class="paramname">ptAlloc</td><td>Memory allocator. </td></tr>
-    <tr><td class="paramname">pcStr</td><td>C-string input. </td></tr>
-    <tr><td class="paramname">zLen</td><td>Length of the input string. </td></tr>
-    <tr><td class="paramname">pfcnFailureHandler</td><td>Failure handler callback. </td></tr>
-    <tr><td class="paramname">pvUserData</td><td>User data pointer. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T result status. </dd></dl>
-
-</div>
-</div>
-<a id="ae962e0293bfa4d8efb9ec9f9ecf19f0d" name="ae962e0293bfa4d8efb9ec9f9ecf19f0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae962e0293bfa4d8efb9ec9f9ecf19f0d">&#9670;&#160;</a></span>Length</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::Length) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, size_t *pzRetSize)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the size of the JUNO string. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptString</td><td>Pointer to the JUNO string structure. </td></tr>
-    <tr><td class="paramname">pzRetSize</td><td>Pointer to variable to store the string size. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T result status. </dd></dl>
-
-</div>
-</div>
-<a id="ae0de9d65250efb96fe427a99573e5fd7" name="ae0de9d65250efb96fe427a99573e5fd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0de9d65250efb96fe427a99573e5fd7">&#9670;&#160;</a></span>SetAlloc</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(* JUNO_STRING_API_TAG::SetAlloc) (<a class="el" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">JUNO_STRING_T</a> *ptString, <a class="el" href="memory__types_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptAlloc)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sets a new memory allocator for a JUNO string. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptString</td><td>Pointer to the JUNO string structure. </td></tr>
-    <tr><td class="paramname">ptAlloc</td><td>New memory allocator. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_T result status. </dd></dl>
 
 </div>
 </div>

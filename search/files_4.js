@@ -9,7 +9,6 @@ var searchData=
   ['juno_5fkermit_2ec_6',['juno_kermit.c',['../juno__kermit_8c.html',1,'']]],
   ['juno_5fmap_2ec_7',['juno_map.c',['../juno__map_8c.html',1,'']]],
   ['juno_5fmemory_2ec_8',['juno_memory.c',['../juno__memory_8c.html',1,'']]],
-  ['juno_5fstring_2ec_9',['juno_string.c',['../juno__string_8c.html',1,'']]],
-  ['juno_5ftable_2ec_10',['juno_table.c',['../juno__table_8c.html',1,'']]],
-  ['juno_5fzip_2ec_11',['juno_zip.c',['../juno__zip_8c.html',1,'']]]
+  ['juno_5ftable_2ec_9',['juno_table.c',['../juno__table_8c.html',1,'']]],
+  ['juno_5fzip_2ec_10',['juno_zip.c',['../juno__zip_8c.html',1,'']]]
 ];

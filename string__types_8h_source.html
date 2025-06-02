@@ -131,39 +131,30 @@ $(document).ready(function(){initNavTree('string__types_8h_source.html',''); ini
 <div class="contents">
 <a href="string__types_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef JUNO_STRING_TYPES_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define JUNO_STRING_TYPES_H</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8h.html">juno/macros.h</a>&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="memory__types_8h.html">juno/memory/memory_types.h</a>&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="memory__api_8h.html">juno/memory/memory_api.h</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">    9</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__STRING__TAG.html">JUNO_STRING_TAG</a> <a class="code hl_struct" href="structJUNO__STRING__TAG.html">JUNO_STRING_T</a>;</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105">   14</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__STRING__TAG.html">JUNO_STRING_TAG</a> <a class="code hl_struct" href="structJUNO__STRING__TAG.html">JUNO_STRING_T</a>;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html">   16</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__STRING__TAG.html">JUNO_STRING_TAG</a></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html#a46b99df5113bc2d747aec7c0d75cf1a7">   19</a></span>    <a class="code hl_union" href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_T</a> *<a class="code hl_variable" href="structJUNO__STRING__TAG.html#a46b99df5113bc2d747aec7c0d75cf1a7">ptAlloc</a>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html#a68c3b3adcf0feb34ee11184e3b0bce09">   21</a></span>    <a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> <a class="code hl_variable" href="structJUNO__STRING__TAG.html#a68c3b3adcf0feb34ee11184e3b0bce09">tMemory</a>;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html#a12fd93b6485cdbb9215fe5faf25f72bd">   23</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structJUNO__STRING__TAG.html#a12fd93b6485cdbb9215fe5faf25f72bd">zLen</a>;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html#a186dc431440c79a238e5be314768b719">   25</a></span>    <a class="code hl_variable" href="structJUNO__STRING__TAG.html#a186dc431440c79a238e5be314768b719">DECLARE_FAILURE_HANDLER</a>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>};</div>
+<div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html">   11</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__STRING__TAG.html">JUNO_STRING_TAG</a></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>{</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html#a293544452c3278f7c0d19c30df8db5d1">   13</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="structJUNO__STRING__TAG.html#a293544452c3278f7c0d19c30df8db5d1">pcBuff</a>;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structJUNO__STRING__TAG.html#a2f9fc2dc4814c2e3a6d4412db768f892">   14</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structJUNO__STRING__TAG.html#a2f9fc2dc4814c2e3a6d4412db768f892">zSize</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>};</div>
 </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="amacros_8h_html"><div class="ttname"><a href="macros_8h.html">macros.h</a></div></div>
-<div class="ttc" id="amemory__types_8h_html"><div class="ttname"><a href="memory__types_8h.html">memory_types.h</a></div></div>
-<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:60</div></div>
-<div class="ttc" id="astructJUNO__STRING__TAG_html"><div class="ttname"><a href="structJUNO__STRING__TAG.html">JUNO_STRING_TAG</a></div><div class="ttdef"><b>Definition</b> string_types.h:17</div></div>
-<div class="ttc" id="astructJUNO__STRING__TAG_html_a12fd93b6485cdbb9215fe5faf25f72bd"><div class="ttname"><a href="structJUNO__STRING__TAG.html#a12fd93b6485cdbb9215fe5faf25f72bd">JUNO_STRING_TAG::zLen</a></div><div class="ttdeci">size_t zLen</div><div class="ttdoc">The length of the string.</div><div class="ttdef"><b>Definition</b> string_types.h:23</div></div>
-<div class="ttc" id="astructJUNO__STRING__TAG_html_a186dc431440c79a238e5be314768b719"><div class="ttname"><a href="structJUNO__STRING__TAG.html#a186dc431440c79a238e5be314768b719">JUNO_STRING_TAG::DECLARE_FAILURE_HANDLER</a></div><div class="ttdeci">DECLARE_FAILURE_HANDLER</div><div class="ttdoc">Failure handler.</div><div class="ttdef"><b>Definition</b> string_types.h:25</div></div>
-<div class="ttc" id="astructJUNO__STRING__TAG_html_a46b99df5113bc2d747aec7c0d75cf1a7"><div class="ttname"><a href="structJUNO__STRING__TAG.html#a46b99df5113bc2d747aec7c0d75cf1a7">JUNO_STRING_TAG::ptAlloc</a></div><div class="ttdeci">JUNO_MEMORY_ALLOC_T * ptAlloc</div><div class="ttdoc">The allocator for the string.</div><div class="ttdef"><b>Definition</b> string_types.h:19</div></div>
-<div class="ttc" id="astructJUNO__STRING__TAG_html_a68c3b3adcf0feb34ee11184e3b0bce09"><div class="ttname"><a href="structJUNO__STRING__TAG.html#a68c3b3adcf0feb34ee11184e3b0bce09">JUNO_STRING_TAG::tMemory</a></div><div class="ttdeci">JUNO_MEMORY_T tMemory</div><div class="ttdoc">The memory location of the string.</div><div class="ttdef"><b>Definition</b> string_types.h:21</div></div>
-<div class="ttc" id="aunionJUNO__MEMORY__ALLOC__TAG_html"><div class="ttname"><a href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_TAG</a></div><div class="ttdoc">Union for a generic memory allocation. Accommodates various allocation types, currently including blo...</div><div class="ttdef"><b>Definition</b> memory_types.h:89</div></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="amemory__api_8h_html"><div class="ttname"><a href="memory__api_8h.html">memory_api.h</a></div></div>
+<div class="ttc" id="astructJUNO__STRING__TAG_html"><div class="ttname"><a href="structJUNO__STRING__TAG.html">JUNO_STRING_TAG</a></div><div class="ttdef"><b>Definition</b> string_types.h:12</div></div>
+<div class="ttc" id="astructJUNO__STRING__TAG_html_a293544452c3278f7c0d19c30df8db5d1"><div class="ttname"><a href="structJUNO__STRING__TAG.html#a293544452c3278f7c0d19c30df8db5d1">JUNO_STRING_TAG::pcBuff</a></div><div class="ttdeci">const char * pcBuff</div><div class="ttdef"><b>Definition</b> string_types.h:13</div></div>
+<div class="ttc" id="astructJUNO__STRING__TAG_html_a2f9fc2dc4814c2e3a6d4412db768f892"><div class="ttname"><a href="structJUNO__STRING__TAG.html#a2f9fc2dc4814c2e3a6d4412db768f892">JUNO_STRING_TAG::zSize</a></div><div class="ttdeci">size_t zSize</div><div class="ttdef"><b>Definition</b> string_types.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

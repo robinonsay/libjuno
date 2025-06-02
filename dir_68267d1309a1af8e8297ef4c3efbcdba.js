@@ -5,6 +5,5 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "juno_crc.c", "juno__crc_8c.html", null ],
     [ "juno_hash.c", "juno__hash_8c.html", "juno__hash_8c" ],
     [ "juno_map.c", "juno__map_8c.html", "juno__map_8c" ],
-    [ "juno_memory.c", "juno__memory_8c.html", "juno__memory_8c" ],
-    [ "juno_string.c", "juno__string_8c.html", "juno__string_8c" ]
+    [ "juno_memory.c", "juno__memory_8c.html", "juno__memory_8c" ]
 ];

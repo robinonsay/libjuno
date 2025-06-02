@@ -1,7 +1,8 @@
 var status_8h =
 [
-    [ "FAIL", "status_8h.html#a89efce80dbef9a35cac15d91aeb7ffdb", null ],
+    [ "FAIL", "status_8h.html#a4add9a0b045bd7ca03a0f1c652240530", null ],
     [ "FAIL_MESSAGE_LEN", "status_8h.html#af8848982071962a8122475add8bc3e54", null ],
+    [ "FAIL_MODULE", "status_8h.html#aa5d0cfd15953954d428cc546665003e6", null ],
     [ "JUNO_FAILURE_HANDLER_T", "status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc", null ],
     [ "JUNO_STATUS_T", "status_8h.html#aede45f0a23d8d5a902e6562474b1904b", null ],
     [ "JUNO_USER_DATA_T", "status_8h.html#af575dc984c80091757afe42a5d5c2b60", null ],
@@ -20,6 +21,8 @@ var status_8h =
       [ "JUNO_STATUS_WRITE_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a25ae03ece1fe1f5c19232855f1aef3d4", null ],
       [ "JUNO_STATUS_CRC_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664ae164e215722d72961a66382501edd54a", null ],
       [ "JUNO_STATUS_INVALID_REF_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a7c36e4300890a40c246be1b2458397eb", null ],
-      [ "JUNO_STATUS_REF_IN_USE_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688", null ]
+      [ "JUNO_STATUS_REF_IN_USE_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688", null ],
+      [ "JUNO_STATUS_INVALID_DATA_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664aa44cf1bd3032747152dbbae6a45b2405", null ],
+      [ "JUNO_STATUS_TIMEOUT_ERROR", "status_8h.html#a7be0a0a69c5086c083a713ecb7738664a05216abdb91689a763ce70bac18a1677", null ]
     ] ]
 ];

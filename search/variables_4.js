@@ -1,4 +1,10 @@
 var searchData=
 [
-  ['get_0',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751',1,'JUNO_MEMORY_API_TAG::Get']]]
+  ['icrc32_0',['iCrc32',['../structJUNO__TABLE__HDR__TAG.html#af93a14e2e9baf621fc997c881be8422d',1,'JUNO_TABLE_HDR_TAG']]],
+  ['imicros_1',['iMicros',['../structJUNO__TIMESTAMP__TAG.html#a565a0031b2d0ff3318bd51d4e05065d9',1,'JUNO_TIMESTAMP_TAG']]],
+  ['imillis_2',['iMillis',['../structJUNO__TIMESTAMP__TAG.html#afd23abdf403d40ddad7b0085dac08395',1,'JUNO_TIMESTAMP_TAG']]],
+  ['inanos_3',['iNanos',['../structJUNO__TIMESTAMP__TAG.html#a244cb0aa4ca5f458b98874dafbb16daa',1,'JUNO_TIMESTAMP_TAG']]],
+  ['init_4',['init',['../structJUNO__IO__SERIAL__API__TAG.html#aae886eb3a099a7a4c91c1e20d93714b0',1,'JUNO_IO_SERIAL_API_TAG::Init'],['../structJUNO__MAP__API__TAG.html#a94fd4fce808f03c7677b6b1d159061c9',1,'JUNO_MAP_API_TAG::Init'],['../structJUNO__TABLE__API__TAG.html#ae76dfd9f5fe8dc33cdc59d02a2e5ece0',1,'JUNO_TABLE_API_TAG::Init']]],
+  ['irefcount_5',['iRefCount',['../structJUNO__MEMORY__TAG.html#a6a3a86510e2ff84dadb57446ddbe16f2',1,'JUNO_MEMORY_TAG']]],
+  ['iseconds_6',['iSeconds',['../structJUNO__TIMESTAMP__TAG.html#a485c4829775b4f8d6f31ead05fe7a1c0',1,'JUNO_TIMESTAMP_TAG']]]
 ];

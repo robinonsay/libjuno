@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['free_0',['Free',['../structJUNO__STRING__API__TAG.html#a95029121279524e6078b573172b0af45',1,'JUNO_STRING_API_TAG']]]
+  ['hash_0',['Hash',['../structJUNO__HASH__API__TAG.html#a5e61fcea3fc3bbd7928cd8c7f3bac075',1,'JUNO_HASH_API_TAG']]]
 ];
