@@ -11,7 +11,8 @@ typedef struct JUNO_STRING_TAG JUNO_STRING_T;
 struct JUNO_STRING_TAG
 {
     const char *pcBuff;
-    size_t zSize;
+    size_t zLen;
+    size_t zCapacity;
 };
 
 #ifdef __cplusplus

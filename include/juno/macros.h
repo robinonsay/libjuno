@@ -5,8 +5,14 @@
 #include <stdint.h>
 
 #define ASSERT_EXISTS(ptr) \
-if(!ptr) \
+if(!(ptr)) \
 { \
+    return JUNO_STATUS_NULLPTR_ERROR; \
+}
+
+#define ASSERT_EXISTS_MODULE(ptr, ptMod, str) if(!(ptr)) \
+{ \
+    FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptMod, str); \
     return JUNO_STATUS_NULLPTR_ERROR; \
 }
 
