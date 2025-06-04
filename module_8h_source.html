@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.1.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.2.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -135,32 +135,33 @@ $(document).ready(function(){initNavTree('module_8h_source.html',''); initResiza
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">    7</a></span><span class="preprocessor">#define JUNO_MODULE_DECLARE(name)   typedef struct name##_TAG name;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">    7</a></span><span class="preprocessor">#define JUNO_MODULE_DECLARE(name)   typedef struct name##_TAG name</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">    9</a></span><span class="preprocessor">#define JUNO_FAILURE_HANDLER    _pfcnFailureHandler</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">   10</a></span><span class="preprocessor">#define JUNO_FAILURE_USER_DATA    _pvFailurUserData</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">   11</a></span><span class="preprocessor">#define JUNO_MODULE_EMPTY</span></div>
 <div class="foldopen" id="foldopen00012" data-start="" data-end="">
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="module_8h.html#a705cfb9b828731969587c4a3eb9a9f26">   12</a></span><span class="preprocessor">#define JUNO_MODULE(name, members) \</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="module_8h.html#aa2744aab9558918dc26def681ed44d1e">   12</a></span><span class="preprocessor">#define JUNO_MODULE(name, API, members) \</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">struct name##_TAG \</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">{ \</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">    members \</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">    JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">}</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">    const API *ptApi; \</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">    members \</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">    JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">}</span></div>
 </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">   20</a></span><span class="preprocessor">#define JUNO_MODULE_SUPER   tSuper</span></div>
-<div class="foldopen" id="foldopen00021" data-start="" data-end="">
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e">   21</a></span><span class="preprocessor">#define JUNO_MODULE_DERIVE(name, base, members) \</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">struct name##_TAG \</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">{ \</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">    base JUNO_MODULE_SUPER; \</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">    members \</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">}</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">   21</a></span><span class="preprocessor">#define JUNO_MODULE_SUPER   tSuper</span></div>
+<div class="foldopen" id="foldopen00022" data-start="" data-end="">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e">   22</a></span><span class="preprocessor">#define JUNO_MODULE_DERIVE(name, base, members) \</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">struct name##_TAG \</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">{ \</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">    base JUNO_MODULE_SUPER; \</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">    members \</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">}</span></div>
 </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_MODULE_H</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_MODULE_H</span></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

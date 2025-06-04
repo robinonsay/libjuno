@@ -15,6 +15,7 @@ var searchData=
   ['arc_2eh_12',['arc.h',['../arc_8h.html',1,'']]],
   ['architecture_13',['Library Architecture',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md37',1,'']]],
   ['assert_5fexists_14',['ASSERT_EXISTS',['../macros_8h.html#abf729d00254f692443168dcdc098b5f1',1,'macros.h']]],
-  ['assert_5fsuccess_15',['ASSERT_SUCCESS',['../macros_8h.html#a11bb3cae9586d9a5e68eec88fe23b3ef',1,'macros.h']]],
-  ['avoid_16',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]]
+  ['assert_5fexists_5fmodule_15',['ASSERT_EXISTS_MODULE',['../macros_8h.html#a7d6f321ea5cc3cbc9066cf33a9c80c77',1,'macros.h']]],
+  ['assert_5fsuccess_16',['ASSERT_SUCCESS',['../macros_8h.html#a11bb3cae9586d9a5e68eec88fe23b3ef',1,'macros.h']]],
+  ['avoid_17',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]]
 ];

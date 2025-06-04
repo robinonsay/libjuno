@@ -14,6 +14,7 @@ var searchData=
   ['to_20avoid_11',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]],
   ['to_20use_20reference_20counting_12',['When to Use Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md35',1,'']]],
   ['tryread_13',['TryRead',['../structJUNO__IO__SERIAL__API__TAG.html#a4074eac102b245fe24b15b39ece4eb65',1,'JUNO_IO_SERIAL_API_TAG']]],
-  ['ttype_14',['tType',['../structJUNO__MEMORY__ALLOC__HDR__TAG.html#a9bac4a6883a4f9f63301846c802db78d',1,'JUNO_MEMORY_ALLOC_HDR_TAG']]],
-  ['types_15',['Data Types',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'']]]
+  ['tryreaduntil_14',['TryReadUntil',['../structJUNO__IO__SERIAL__API__TAG.html#a96108d57ac0ed372269abdf3cae83e4a',1,'JUNO_IO_SERIAL_API_TAG']]],
+  ['ttype_15',['tType',['../structJUNO__MEMORY__ALLOC__HDR__TAG.html#a9bac4a6883a4f9f63301846c802db78d',1,'JUNO_MEMORY_ALLOC_HDR_TAG']]],
+  ['types_16',['Data Types',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'']]]
 ];

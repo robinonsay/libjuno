@@ -8,6 +8,6 @@ var time__api_8h =
     [ "JUNO_TIME_NANOS_T", "time__api_8h.html#a0de0400c81daffcd3f14f7447109e2bc", null ],
     [ "JUNO_TIME_SECONDS_T", "time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846", null ],
     [ "JUNO_TIMESTAMP_T", "time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde", null ],
-    [ "JUNO_MODULE", "time__api_8h.html#ad1f0ef0676502fcd93dbd321ed0c860b", null ],
+    [ "JUNO_MODULE", "time__api_8h.html#aa9b8a136b578ceddcb739c603cb18306", null ],
     [ "JUNO_MODULE_DECLARE", "time__api_8h.html#a7563f75bd6490dceb45b8875056d82a7", null ]
 ];
