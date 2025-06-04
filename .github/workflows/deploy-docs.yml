@@ -23,6 +23,7 @@ jobs:
       # 2) (Optional) Install prerequisites
       - name: Install CMake & Doxygen
         run: |
+          python3 scripts/increase_version.py
           sudo apt-get update
           sudo apt-get install -y cmake doxygen
 
@@ -46,3 +47,15 @@ jobs:
           publish_branch: gh-pages
           # Optional: keep history or force-push
           keep_files: false
+      - name: Commit & push version bump
+        run: |
+          # Configure a bot identity for the commit
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add CMakeLists.txt
+          # If there are no changes, exit quietly. Otherwise commit.
+          git diff --cached --quiet || \
+            (git commit -m "Bump minor version [skip ci]" && git push)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -5,6 +5,7 @@
 #ifndef TEMPLATE_IMPL_H
 #define TEMPLATE_IMPL_H
 #include "juno/module.h"
+#include "juno/status.h"
 #include "template_api.h"
 #ifdef __cplusplus
 extern "C"
@@ -21,7 +22,8 @@ JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_T,
 */
 );
 
-const TEMPLATE_API_T * Template_ImplApi();
+/* TODO: Insert initialization arguments for module members here*/
+JUNO_STATUS_T Template_ImplApi(TEMPLATE_IMPL_T *ptTemplateImpl, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
 #ifdef __cplusplus
 }
 #endif

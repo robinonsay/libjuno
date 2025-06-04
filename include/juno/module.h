@@ -4,14 +4,15 @@
 #include "juno/status.h"
 #include <stdint.h>
 
-#define JUNO_MODULE_DECLARE(name)   typedef struct name##_TAG name;
+#define JUNO_MODULE_DECLARE(name)   typedef struct name##_TAG name
 
 #define JUNO_FAILURE_HANDLER    _pfcnFailureHandler
 #define JUNO_FAILURE_USER_DATA    _pvFailurUserData
 #define JUNO_MODULE_EMPTY
-#define JUNO_MODULE(name, members) \
+#define JUNO_MODULE(name, API, members) \
 struct name##_TAG \
 { \
+    const API *ptApi; \
     members \
     JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \
     JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \

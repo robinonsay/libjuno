@@ -6,6 +6,7 @@
 #define JUNO_IO_SERIAL_API_H
 #include "juno/status.h"
 #include "juno/module.h"
+#include "juno/string/string_types.h"
 #include "juno/time/time_api.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -19,7 +20,7 @@ typedef struct JUNO_IO_SERIAL_API_TAG JUNO_IO_SERIAL_API_T;
 typedef uint32_t JUNO_IO_SERIAL_BAUDRATE_T;
 JUNO_MODULE_DECLARE(JUNO_IO_SERIAL_T);
 
-JUNO_MODULE(JUNO_IO_SERIAL_T,
+JUNO_MODULE(JUNO_IO_SERIAL_T, JUNO_IO_SERIAL_API_T, 
     JUNO_IO_SERIAL_BAUDRATE_T iBaud;
 );
 
@@ -34,9 +35,13 @@ struct JUNO_IO_SERIAL_API_TAG
     );
     /// Read from the serial device until `zBuffSize` is read
     JUNO_STATUS_T (*Read)(JUNO_IO_SERIAL_T *ptJunoIoSerial, char *pcBuff, size_t zBuffSize);
+    /// Read until a subset of characters is found
+    JUNO_STATUS_T (*ReadUntil)(JUNO_IO_SERIAL_T *ptJunoIoSerial, char *pcBuff, size_t zBuffSize, JUNO_STRING_T pcStopStr);
     /// Attempt to read from serial device for `iTimeoutMs`.
     /// Returns `JUNO_STATUS_TIMEOUT_ERROR` buffer could not be filled
     JUNO_STATUS_T (*TryRead)(JUNO_IO_SERIAL_T *ptJunoIoSerial, char *pcBuff, size_t zBuffSize, JUNO_TIME_MILLIS_T iTimeoutMs);
+    /// Attempt to read from a serial device for `iTimeoutMs` until a set of characters is found
+    JUNO_STATUS_T (*TryReadUntil)(JUNO_IO_SERIAL_T *ptJunoIoSerial, char *pcBuff, size_t zBuffSize, JUNO_STRING_T pcStopStr, JUNO_TIME_MILLIS_T iTimeoutMs);
     /// Write a buffer to the serial device
     JUNO_STATUS_T (*Write)(JUNO_IO_SERIAL_T *ptJunoIoSerial, const void *pcBuff, size_t zBuffSize);
     /// Poll the serial device for data for `iTimeoutMs`
