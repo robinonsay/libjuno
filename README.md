@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/robinonsay/libjuno/b710f2f363f589a5da475543f53a22d3d030cc26/assets/juno_logo_rect.svg" alt="drawing" width="400em"/>
 
 ![GitHub Actions Workflow Status](https://github.com/robinonsay/libjuno/actions/workflows/ctest.yml/badge.svg)
-![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT%202.0-blue.svg)
 
 # LibJuno
 * [LibJuno GitHub](https://github.com/robinonsay/libjuno)
