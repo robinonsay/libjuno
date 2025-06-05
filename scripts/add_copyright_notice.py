@@ -4,24 +4,25 @@ import argparse
 
 # The license header to prepend
 LICENSE_HEADER = """/**
-   Copyright 2025 Robin A. Onsay
+    MIT License
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+    Copyright (c) Year Robin A. Onsay
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
 */
 """
 
 # A unique substring to detect if the header is already present
-HEADER_MARKER = "Copyright 2025 Robin A. Onsay"
+HEADER_MARKER = "Copyright (c) Year Robin A. Onsay"
 
 def prepend_header_to_file(file_path: str, header: str) -> None:
     """
@@ -50,7 +51,10 @@ def process_directory(directory: str, header: str) -> None:
     """
     for root, _, files in os.walk(directory):
         for filename in files:
-            if filename.lower().endswith('.h'):
+            if filename.lower().endswith('.h')      or \
+                filename.lower().endswith('.hpp')   or \
+                filename.lower().endswith('.c')     or \
+                filename.lower().endswith('.cpp'):
                 full_path = os.path.join(root, filename)
                 prepend_header_to_file(full_path, header)
 
