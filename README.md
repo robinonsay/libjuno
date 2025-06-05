@@ -2,6 +2,7 @@
 
 ![GitHub Actions Workflow Status](https://github.com/robinonsay/libjuno/actions/workflows/ctest.yml/badge.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT%202.0-blue.svg)
+![GitHub Tag](https://img.shields.io/github/v/tag/robinonsay/libjuno)
 
 # LibJuno
 * [LibJuno GitHub](https://github.com/robinonsay/libjuno)
