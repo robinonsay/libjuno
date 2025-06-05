@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.12.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.13.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -160,7 +160,7 @@ Memory Block Visualization</h1>
 <div class="line">│ - Failure handler         │</div>
 <div class="line">└───────────────────────────┘</div>
 <div class="line">     Block Control Structure</div>
-</div><!-- fragment --><p>When calling <code>Juno_MemoryBlkInit()</code>:</p><ol type="1">
+</div><!-- fragment --><p>When calling <code><a class="el" href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145" title="Initializes a memory block for allocation. Sets up a memory block with an associated free stack for m...">JunoMemory_BlockApi()</a></code>:</p><ol type="1">
 <li>You pass in a pre-allocated memory array (<code>JUNO_MEMORY_BLOCK</code>)</li>
 <li>You pass in a pre-allocated metadata array (<code>JUNO_MEMORY_BLOCK_METADATA</code>)</li>
 <li>The function initializes the control structure that tracks:<ul>
@@ -194,8 +194,8 @@ Step 2: Initialize the Memory Allocator</h2>
 <div class="line">JUNO_MEMORY_ALLOC_T tMemAlloc = {0};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Initialize the block allocator</span></div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus = Juno_MemoryBlkInit(</div>
-<div class="line">    &amp;tMemAlloc.tBlock,        <span class="comment">// Pointer to memory block structure</span></div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus = <a class="code hl_function" href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145">JunoMemory_BlockApi</a>(</div>
+<div class="line">    &amp;tMemAlloc,        <span class="comment">// Pointer to memory block structure</span></div>
 <div class="line">    gptMyMemoryBlock,            <span class="comment">// Memory block array</span></div>
 <div class="line">    gptMyMemoryMetadata,         <span class="comment">// Metadata array</span></div>
 <div class="line">    <span class="keyword">sizeof</span>(MY_DATA_T),        <span class="comment">// Size of each element</span></div>
@@ -209,6 +209,7 @@ Step 2: Initialize the Memory Allocator</h2>
 <div class="line">    <span class="comment">// Handle initialization error</span></div>
 <div class="line">    <span class="keywordflow">return</span> -1;</div>
 <div class="line">}</div>
+<div class="ttc" id="amemory__block_8h_html_a7eccfbcf51027f0607d2b137400c4145"><div class="ttname"><a href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145">JunoMemory_BlockApi</a></div><div class="ttdeci">JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_T *ptJunoMemory, void *pvMemory, JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata, size_t zTypeSize, size_t zLength, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)</div><div class="ttdoc">Initializes a memory block for allocation. Sets up a memory block with an associated free stack for m...</div><div class="ttdef"><b>Definition</b> juno_memory_block.c:194</div></div>
 <div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">@ JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:24</div></div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
@@ -265,10 +266,7 @@ Step 5: Release Memory</h2>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 Step 6: Using the Memory API (Alternative Approach)</h2>
 <p>For a more dynamic approach, you can use the Memory API interface:</p>
-<div class="fragment"><div class="line"><span class="comment">// Get the memory API</span></div>
-<div class="line"><span class="keyword">const</span> JUNO_MEMORY_API_T *ptMemApi = Juno_MemoryApi();</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Use the API for operations</span></div>
+<div class="fragment"><div class="line"><span class="comment">// Use the API for operations</span></div>
 <div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> tMemory = {0};</div>
 <div class="line">tStatus = ptMemApi-&gt;Get(&amp;tMemAlloc, &amp;tMemory, <span class="keyword">sizeof</span>(MY_DATA_T));</div>
 <div class="line"> </div>
@@ -363,7 +361,7 @@ JUNO_MEMORY_ALLOC_T</h2>
 API Reference</h1>
 <h2><a class="anchor" id="autotoc_md24"></a>
 Initialization</h2>
-<div class="fragment"><div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Juno_MemoryBlkInit(</div>
+<div class="fragment"><div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> <a class="code hl_function" href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145">JunoMemory_BlockApi</a>(</div>
 <div class="line">    <a class="code hl_typedef" href="memory__api_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a> *ptMemBlk,</div>
 <div class="line">    <span class="keywordtype">void</span> *pvMemory,</div>
 <div class="line">    <a class="code hl_struct" href="structJUNO__MEMORY__BLOCK__METADATA__TAG.html">JUNO_MEMORY_BLOCK_METADATA_T</a> *pvMetadata,</div>
@@ -424,11 +422,7 @@ Reference Management</h2>
 </div><!-- fragment --><p>Releases a reference to memory, decrementing its reference count. Parameters:</p><ul>
 <li><code>ptMemory</code>: The memory reference to release</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md27"></a>
-API Access</h2>
-<div class="fragment"><div class="line"><span class="keyword">const</span> JUNO_MEMORY_API_T* Juno_MemoryApi(<span class="keywordtype">void</span>);</div>
-</div><!-- fragment --><p>Retrieves the memory API structure for function pointer-based access.</p>
-<h1><a class="anchor" id="autotoc_md28"></a>
+<h1><a class="anchor" id="autotoc_md27"></a>
 Usage Example</h1>
 <p>The following example demonstrates how to use the Juno Memory Module to implement a simple single linked list with reference counting:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;juno/memory/memory.h&quot;</span></div>
@@ -463,12 +457,11 @@ Usage Example</h1>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <span class="comment">// Get the memory API</span></div>
-<div class="line">    <span class="keyword">const</span> JUNO_MEMORY_API_T *ptMemApi = Juno_MemoryApi();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Initialize the memory allocator</span></div>
 <div class="line">    JUNO_MEMORY_ALLOC_T tMemAlloc = {};</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus = Juno_MemoryBlkInit(</div>
-<div class="line">        &amp;tMemAlloc.tBlock,</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus = <a class="code hl_function" href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145">JunoMemory_BlockApi</a>(</div>
+<div class="line">        &amp;tMemAlloc,</div>
 <div class="line">        nodeMemory,</div>
 <div class="line">        nodeMetadata,</div>
 <div class="line">        <span class="keyword">sizeof</span>(SINGLE_LINKED_LIST_NODE_T),</div>
@@ -480,7 +473,8 @@ Usage Example</h1>
 <div class="line">    <span class="keywordflow">if</span>(tStatus != <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>) {</div>
 <div class="line">        <span class="keywordflow">return</span> -1;</div>
 <div class="line">    }</div>
-<div class="line">    </div>
+<div class="line">    <span class="keyword">const</span> JUNO_MEMORY_API_T *ptMemApi = tMemAlloc.tBase.ptApi;</div>
+<div class="line"> </div>
 <div class="line">    <span class="comment">// Create a linked list</span></div>
 <div class="line">    SINGLE_LINKED_LIST_T tList = {</div>
 <div class="line">        .pfcnFailureHandler = FailureHandler</div>
@@ -555,7 +549,7 @@ Usage Example</h1>
 <div class="ttc" id="amemory__api_8h_html"><div class="ttname"><a href="memory__api_8h.html">memory_api.h</a></div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688">JUNO_STATUS_REF_IN_USE_ERROR</a></div><div class="ttdeci">@ JUNO_STATUS_REF_IN_USE_ERROR</div><div class="ttdef"><b>Definition</b> status.h:38</div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md29"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md28"></a>
 Error Handling</h1>
 <p>The memory module reports errors through status codes of type <code>JUNO_STATUS_T</code>:</p>
 <ul>
@@ -568,7 +562,7 @@ Error Handling</h1>
 <li><code>JUNO_STATUS_INVALID_TYPE_ERROR</code>: Invalid memory allocator type</li>
 <li><code>JUNO_STATUS_INVALID_SIZE_ERROR</code>: Invalid size parameter (e.g., zero size)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md30"></a>
+<h1><a class="anchor" id="autotoc_md29"></a>
 Best Practices</h1>
 <ol type="1">
 <li><b>Always check status codes</b>: Memory operations can fail, especially in resource-constrained environments.</li>
@@ -577,24 +571,24 @@ Best Practices</h1>
 <li><b>Implement failure handlers</b>: Use failure handlers to catch memory issues early.</li>
 <li><b>Clear returned memory</b>: Although the allocator zeros memory blocks, initialize your data structures explicitly.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md31"></a>
+<h1><a class="anchor" id="autotoc_md30"></a>
 Understanding Reference Counting Macros</h1>
 <p>The reference counting macros (<code>JUNO_REF</code> and <code>JUNO_NEW_REF</code>) can be confusing at first. Here's a detailed explanation of how they work:</p>
-<h2><a class="anchor" id="autotoc_md32"></a>
+<h2><a class="anchor" id="autotoc_md31"></a>
 JUNO_NEW_REF Macro</h2>
 <p>The <code>JUNO_NEW_REF</code> macro creates a new pointer to hold a reference to a memory object:</p>
 <div class="fragment"><div class="line"><span class="comment">// This expands to: JUNO_MEMORY_T *REFmyMemoryRef</span></div>
 <div class="line"><a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(myMemoryRef) = Juno_MemoryGetRef(&amp;originalMemory);</div>
 </div><!-- fragment --><p>This is equivalent to:</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *REFmyMemoryRef = Juno_MemoryGetRef(&amp;originalMemory);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md33"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md32"></a>
 JUNO_REF Macro</h2>
 <p>The <code>JUNO_REF</code> macro is used to access the reference you created with <code>JUNO_NEW_REF</code>:</p>
 <div class="fragment"><div class="line"><span class="comment">// This expands to: REFmyMemoryRef</span></div>
 <div class="line">MY_DATA_T *data = (MY_DATA_T *)<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(myMemoryRef)-&gt;pvAddr;</div>
 </div><!-- fragment --><p>This is equivalent to:</p>
 <div class="fragment"><div class="line">MY_DATA_T *data = (MY_DATA_T *)REFmyMemoryRef-&gt;<a class="code hl_variable" href="structJUNO__MEMORY__TAG.html#a410362e1eb4aa6c8ace8c6f369c6fe2a">pvAddr</a>;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md34"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md33"></a>
 Example Usage Pattern</h2>
 <p>Here's a complete example of using these macros:</p>
 <div class="fragment"><div class="line"><span class="comment">// Original memory allocation</span></div>
@@ -612,7 +606,7 @@ Example Usage Pattern</h2>
 <div class="line"><span class="comment">// Release the reference when done</span></div>
 <div class="line">Juno_MemoryPutRef(<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(dataRef));</div>
 <div class="line"><span class="comment">// This is equivalent to: Juno_MemoryPutRef(REFdataRef);</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md35"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md34"></a>
 When to Use Reference Counting</h2>
 <p>Use reference counting when:</p><ol type="1">
 <li>Sharing memory between multiple components</li>

@@ -17,6 +17,5 @@ var searchData=
   ['string_20module_20beta_14',['Juno String Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html',1,'']]],
   ['string_2eh_15',['string.h',['../string_8h.html',1,'']]],
   ['string_5fapi_2eh_16',['string_api.h',['../string__api_8h.html',1,'']]],
-  ['string_5ftypes_2eh_17',['string_types.h',['../string__types_8h.html',1,'']]],
-  ['structure_18',['API Structure',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md40',1,'']]]
+  ['string_5ftypes_2eh_17',['string_types.h',['../string__types_8h.html',1,'']]]
 ];

@@ -5,7 +5,7 @@ var searchData=
   ['fail_5fmodule_2',['FAIL_MODULE',['../status_8h.html#aa5d0cfd15953954d428cc546665003e6',1,'status.h']]],
   ['features_3',['Features',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md13',1,'']]],
   ['find_4',['Find',['../structJUNO__STRING__API__TAG.html#aa72386de2d7ec7e7f82606433e46c8bd',1,'JUNO_STRING_API_TAG']]],
-  ['for_20the_20name_5',['Inspiration for the Name',['../index.html#autotoc_md55',1,'']]],
+  ['for_20the_20name_5',['Inspiration for the Name',['../index.html#autotoc_md45',1,'']]],
   ['free_6',['Free',['../structJUNO__IO__SERIAL__API__TAG.html#ab90509479077f5f95a2b25c7679c305c',1,'JUNO_IO_SERIAL_API_TAG']]],
-  ['future_20modules_7',['Future Modules',['../index.html#autotoc_md54',1,'']]]
+  ['future_20modules_7',['Future Modules',['../index.html#autotoc_md44',1,'']]]
 ];

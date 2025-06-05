@@ -25,17 +25,17 @@
 var NAVTREE =
 [
   [ "LibJuno", "index.html", [
-    [ "LibJuno", "index.html#autotoc_md47", [
-      [ "Using LibJuno", "index.html#autotoc_md48", [
-        [ "Documentation", "index.html#autotoc_md49", null ]
+    [ "LibJuno", "index.html#autotoc_md37", [
+      [ "Using LibJuno", "index.html#autotoc_md38", [
+        [ "Documentation", "index.html#autotoc_md39", null ]
       ] ],
-      [ "Dependencies", "index.html#autotoc_md50", null ],
-      [ "Building and Testing", "index.html#autotoc_md51", [
-        [ "CMake Build Option", "index.html#autotoc_md52", null ]
+      [ "Dependencies", "index.html#autotoc_md40", null ],
+      [ "Building and Testing", "index.html#autotoc_md41", [
+        [ "CMake Build Option", "index.html#autotoc_md42", null ]
       ] ],
-      [ "Current Modules", "index.html#autotoc_md53", null ],
-      [ "Future Modules", "index.html#autotoc_md54", null ],
-      [ "Inspiration for the Name", "index.html#autotoc_md55", null ]
+      [ "Current Modules", "index.html#autotoc_md43", null ],
+      [ "Future Modules", "index.html#autotoc_md44", null ],
+      [ "Inspiration for the Name", "index.html#autotoc_md45", null ]
     ] ],
     [ "Juno Hash Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
     [ "Juno Map Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
@@ -66,29 +66,17 @@ var NAVTREE =
       [ "API Reference", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md23", [
         [ "Initialization", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md24", null ],
         [ "Memory Operations", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md25", null ],
-        [ "Reference Management", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26", null ],
-        [ "API Access", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27", null ]
+        [ "Reference Management", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26", null ]
       ] ],
-      [ "Usage Example", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28", null ],
-      [ "Error Handling", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md29", null ],
-      [ "Best Practices", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30", null ],
-      [ "Understanding Reference Counting Macros", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md31", [
-        [ "JUNO_NEW_REF Macro", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md32", null ],
-        [ "JUNO_REF Macro", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33", null ],
-        [ "Example Usage Pattern", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34", null ],
-        [ "When to Use Reference Counting", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md35", null ]
+      [ "Usage Example", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27", null ],
+      [ "Error Handling", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28", null ],
+      [ "Best Practices", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md29", null ],
+      [ "Understanding Reference Counting Macros", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30", [
+        [ "JUNO_NEW_REF Macro", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md31", null ],
+        [ "JUNO_REF Macro", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md32", null ],
+        [ "Example Usage Pattern", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33", null ],
+        [ "When to Use Reference Counting", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34", null ]
       ] ]
-    ] ],
-    [ "LibJuno", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html", [
-      [ "Library Architecture", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md37", null ],
-      [ "General Design Principles", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md38", null ],
-      [ "Common Patterns", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md39", [
-        [ "API Structure", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md40", null ],
-        [ "Error Handling", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md41", null ],
-        [ "Memory Management", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md42", null ],
-        [ "Reference Counting", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md43", null ]
-      ] ],
-      [ "Module Documentation", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44", null ]
     ] ],
     [ "Juno String Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html", null ],
     [ "Juno Table Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html", null ],
@@ -117,7 +105,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"structJUNO__IO__SERIAL__API__TAG.html#a4074eac102b245fe24b15b39ece4eb65"
+"structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
