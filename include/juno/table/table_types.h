@@ -17,7 +17,7 @@
 #ifndef JUNO_TABLE_TYPES_H
 #define JUNO_TABLE_TYPES_H
 #include "juno/macros.h"
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
 #include <stdint.h>
 #include <stddef.h>
 

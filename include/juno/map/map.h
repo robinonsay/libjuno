@@ -19,7 +19,7 @@
 
 #include "juno/map/map_api.h"
 #include "juno/map/map_types.h"
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>

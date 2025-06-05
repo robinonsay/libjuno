@@ -3,8 +3,7 @@ import os
 import argparse
 
 # The license header to prepend
-LICENSE_HEADER = """/**
-    @file
+LICENSE_HEADER = """/*
     MIT License
 
     Copyright (c) 2025 Robin A. Onsay

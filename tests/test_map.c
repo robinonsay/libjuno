@@ -1,6 +1,5 @@
 #include "juno/hash/hash.h"
 #include "juno/map/map_types.h"
-#include "juno/memory/memory_types.h"
 #include "juno/status.h"
 #include "unity.h"
 #include <stdbool.h>

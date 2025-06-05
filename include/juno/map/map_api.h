@@ -16,15 +16,15 @@
 */
 #ifndef JUNO_MAP_API_H
 #define JUNO_MAP_API_H
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include <stddef.h>
 #include <stdint.h>
+#include "juno/map/map_types.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "juno/map/map_types.h"
 
 typedef struct JUNO_MAP_API_TAG JUNO_MAP_API_T;
 

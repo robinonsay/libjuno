@@ -1,5 +1,6 @@
-#include "juno/memory/memory.h"
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
+#define JUNO_MEMORY_DEFAULT
+#include "juno/memory/memory_block.h"
 #include "juno/status.h"
 #include "unity.h"
 #include "unity_internals.h"
@@ -32,8 +33,8 @@ void tearDown(void)
 static void test_nominal_single_alloc_and_free(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -43,17 +44,18 @@ static void test_nominal_single_alloc_and_free(void)
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     JUNO_MEMORY_T tMemory = {0};
-    tStatus = Juno_MemoryGet(&tMem, &tMemory, sizeof(TEST_BLOCK_T));
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
+    tStatus = ptApi->Get(&tMem,  &tMemory,  sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
     TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
     TEST_ASSERT_EQUAL(1, tMemory.iRefCount);
-    tStatus = Juno_MemoryPut(&tMem, &tMemory);
+    tStatus = ptApi->Put(&tMem,  &tMemory);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NULL(tMemory.pvAddr);
     TEST_ASSERT_EQUAL(0, tMemory.pvAddr);
     TEST_ASSERT_EQUAL(0, tMemory.iRefCount);
-    tStatus = Juno_MemoryGet(&tMem, &tMemory, sizeof(TEST_BLOCK_T));
+    tStatus = ptApi->Get(&tMem,  &tMemory,  sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
     TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
@@ -65,7 +67,7 @@ static void test_nominal_single_alloc_and_free(void)
     TEST_ASSERT_NOT_NULL(JUNO_REF(tMemory)->pvAddr);
     TEST_ASSERT_NOT_EQUAL(0, JUNO_REF(tMemory)->pvAddr);
     TEST_ASSERT_EQUAL(2, JUNO_REF(tMemory)->iRefCount);
-    tStatus = Juno_MemoryPut(&tMem, JUNO_REF(tMemory));
+    tStatus = ptApi->Put(&tMem,  JUNO_REF(tMemory));
     TEST_ASSERT_EQUAL(JUNO_STATUS_REF_IN_USE_ERROR, tStatus);
     TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
     TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
@@ -85,7 +87,7 @@ static void test_nominal_single_alloc_and_free(void)
     TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
     TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
     TEST_ASSERT_EQUAL(1, tMemory.iRefCount);
-    tStatus = Juno_MemoryPut(&tMem, &tMemory);
+    tStatus = ptApi->Put(&tMem,  &tMemory);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NULL(tMemory.pvAddr);
     TEST_ASSERT_EQUAL(0, tMemory.pvAddr);
@@ -96,8 +98,8 @@ static void test_nominal_single_alloc_and_free(void)
 static void test_nominal_multiple_alloc_and_free(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -106,13 +108,14 @@ static void test_nominal_multiple_alloc_and_free(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
     TEST_BLOCK_T *ptTestPtr[10] = {0};
     JUNO_MEMORY_T ptMemory[10] = {0};
     for (int j = 0; j < 5; j++)
     {
         for (size_t i = 0; i < 10; i++)
         {
-            tStatus = Juno_MemoryGet(&tMem, &ptMemory[i], sizeof(TEST_BLOCK_T));
+            tStatus = ptApi->Get(&tMem,  &ptMemory[i],  sizeof(TEST_BLOCK_T));
             ptTestPtr[i] = ptMemory[i].pvAddr;
             TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
             TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
@@ -122,7 +125,7 @@ static void test_nominal_multiple_alloc_and_free(void)
         }
         for (size_t i = 0; i < 5; i++)
         {
-            tStatus = Juno_MemoryPut(&tMem, &ptMemory[i]);
+            tStatus = ptApi->Put(&tMem,  &ptMemory[i]);
             TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
             TEST_ASSERT_NULL(ptMemory[i].pvAddr);
             TEST_ASSERT_EQUAL(0, ptMemory[i].pvAddr);
@@ -130,7 +133,7 @@ static void test_nominal_multiple_alloc_and_free(void)
         }
         for (size_t i = 0; i < 5; i++)
         {
-            tStatus = Juno_MemoryGet(&tMem, &ptMemory[i], sizeof(TEST_BLOCK_T));
+            tStatus = ptApi->Get(&tMem,  &ptMemory[i],  sizeof(TEST_BLOCK_T));
             ptTestPtr[i] = ptMemory[i].pvAddr;
             TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
             TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
@@ -138,7 +141,7 @@ static void test_nominal_multiple_alloc_and_free(void)
         }
         for (size_t i = 0; i < 10; i++)
         {
-            tStatus = Juno_MemoryPut(&tMem, &ptMemory[i]);
+            tStatus = ptApi->Put(&tMem,  &ptMemory[i]);
             TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
             TEST_ASSERT_NULL(ptMemory[i].pvAddr);
             TEST_ASSERT_EQUAL(0, ptMemory[i].pvAddr);
@@ -150,8 +153,8 @@ static void test_nominal_multiple_alloc_and_free(void)
 static void test_negative_memory_empty(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -160,17 +163,18 @@ static void test_negative_memory_empty(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
     JUNO_MEMORY_T tFailMemory = {
         .pvAddr = ptTestBlock,
         .zSize = 128
     };
-    tStatus = Juno_MemoryPut(&tMem, &tFailMemory);
+    tStatus = ptApi->Put(&tMem,  &tFailMemory);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_BLOCK_T *ptTestPtr[10] = {0};
     JUNO_MEMORY_T ptMemory[10] = {0};
     for (size_t i = 0; i < 10; i++)
     {
-        tStatus = Juno_MemoryGet(&tMem, &ptMemory[i], sizeof(TEST_BLOCK_T));
+        tStatus = ptApi->Get(&tMem,  &ptMemory[i],  sizeof(TEST_BLOCK_T));
         ptTestPtr[i] = ptMemory[i].pvAddr;
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
         TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
@@ -180,21 +184,21 @@ static void test_negative_memory_empty(void)
     }
     for (size_t i = 0; i < 10; i++)
     {
-        tStatus = Juno_MemoryPut(&tMem, &ptMemory[i]);
+        tStatus = ptApi->Put(&tMem,  &ptMemory[i]);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
         TEST_ASSERT_NULL(ptMemory[i].pvAddr);
         TEST_ASSERT_EQUAL(0, ptMemory[i].pvAddr);
         ptTestPtr[i] = NULL;
     }
-    tStatus = Juno_MemoryPut(&tMem, &ptMemory[0]);
+    tStatus = ptApi->Put(&tMem, &ptMemory[0]);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
 static void test_negative_memory_full(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -203,11 +207,12 @@ static void test_negative_memory_full(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
     TEST_BLOCK_T *ptTestPtr[10] = {0};
     JUNO_MEMORY_T ptMemory[10] = {0};
     for (size_t i = 0; i < 10; i++)
     {
-        tStatus = Juno_MemoryGet(&tMem, &ptMemory[i], sizeof(TEST_BLOCK_T));
+        tStatus = ptApi->Get(&tMem,  &ptMemory[i],  sizeof(TEST_BLOCK_T));
         ptTestPtr[i] = ptMemory[i].pvAddr;
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
         TEST_ASSERT_NOT_NULL(ptMemory[i].pvAddr);
@@ -216,7 +221,7 @@ static void test_negative_memory_full(void)
         ptTestPtr[i]->iTestNum = i;
     }
     JUNO_MEMORY_T tFailMemory = {0};
-    tStatus = Juno_MemoryGet(&tMem, &tFailMemory, sizeof(TEST_BLOCK_T));
+    tStatus = ptApi->Get(&tMem,  &tFailMemory,  sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_MEMALLOC_ERROR, tStatus);
 }
 
@@ -227,8 +232,8 @@ static void test_invalid_init_parameters(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
     // Passing NULL for memory and metadata.
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         NULL,
         NULL,
         sizeof(TEST_BLOCK_T),
@@ -244,8 +249,8 @@ static void test_invalid_init_parameters(void)
 static void test_double_free(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -254,15 +259,16 @@ static void test_double_free(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
     JUNO_MEMORY_T tMemory = {0};
-    tStatus = Juno_MemoryGet(&tMem, &tMemory, sizeof(TEST_BLOCK_T));
+    tStatus = ptApi->Get(&tMem,  &tMemory,  sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
     // First free should succeed.
-    tStatus = Juno_MemoryPut(&tMem, &tMemory);
+    tStatus = ptApi->Put(&tMem,  &tMemory);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     // Second free should fail.
-    tStatus = Juno_MemoryPut(&tMem, &tMemory);
+    tStatus = ptApi->Put(&tMem,  &tMemory);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
@@ -270,8 +276,8 @@ static void test_double_free(void)
 static void test_free_unallocated(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -280,9 +286,10 @@ static void test_free_unallocated(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
     JUNO_MEMORY_T tMemory = {0};
     // tMemory never allocated via Get should be flagged as unallocated.
-    tStatus = Juno_MemoryPut(&tMem, &tMemory);
+    tStatus = ptApi->Put(&tMem,  &tMemory);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
@@ -292,8 +299,8 @@ static void test_free_unallocated(void)
 static void test_update_memory(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -302,20 +309,21 @@ static void test_update_memory(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
     
     JUNO_MEMORY_T tMemory = {0};
-    tStatus = Juno_MemoryGet(&tMem, &tMemory, sizeof(TEST_BLOCK_T));
+    tStatus = ptApi->Get(&tMem,  &tMemory,  sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     // Attempt update with same size: should succeed.
-    tStatus = Juno_MemoryUpdate(&tMem, &tMemory, sizeof(TEST_BLOCK_T));
+    tStatus = ptApi->Update(&tMem, &tMemory, sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     // Attempt update with a different size: expect failure.
-    tStatus = Juno_MemoryUpdate(&tMem, &tMemory, sizeof(TEST_BLOCK_T) + 1);
+    tStatus = ptApi->Update(&tMem, &tMemory, sizeof(TEST_BLOCK_T) + 1);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     // Free the memory.
-    tStatus = Juno_MemoryPut(&tMem, &tMemory);
+    tStatus = ptApi->Put(&tMem,  &tMemory);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
@@ -325,8 +333,8 @@ static void test_generic_memory_get_put(void)
 {
     // Use the block as a generic allocator.
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -335,20 +343,21 @@ static void test_generic_memory_get_put(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
 
     // Cast the address to the generic allocator type.
     JUNO_MEMORY_ALLOC_T *ptAlloc = (JUNO_MEMORY_ALLOC_T *)&tMem;
     JUNO_MEMORY_T tMemory = {0};
 
     // Use the generic get function.
-    tStatus = Juno_MemoryGet(ptAlloc, &tMemory, sizeof(TEST_BLOCK_T));
+    tStatus = ptApi->Get(ptAlloc,  &tMemory,  sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
     // Use the generic update function with a valid size.
-    tStatus = Juno_MemoryUpdate(ptAlloc, &tMemory, sizeof(TEST_BLOCK_T));
+    tStatus = ptApi->Update(ptAlloc, &tMemory, sizeof(TEST_BLOCK_T));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     // Free using the generic free function.
-    tStatus = Juno_MemoryPut(ptAlloc, &tMemory);
+    tStatus = ptApi->Put(ptAlloc,  &tMemory);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_NULL(tMemory.pvAddr);
 }
@@ -357,8 +366,8 @@ static void test_generic_memory_get_put(void)
 static void test_zero_size_allocation(void)
 {
     JUNO_MEMORY_ALLOC_T tMem = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMem.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
@@ -367,11 +376,77 @@ static void test_zero_size_allocation(void)
         NULL
     );
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
     
     JUNO_MEMORY_T tMemory = {0};
     // Attempt zero-size allocation
-    tStatus = Juno_MemoryGet(&tMem, &tMemory, 0);
+    tStatus = ptApi->Get(&tMem, &tMemory, 0);
     // The implementation should handle this gracefully
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+// Test allocation with zero size
+static void test_bad_api(void)
+{
+    JUNO_MEMORY_ALLOC_T tMem = {0};
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
+        ptTestBlock,
+        ptTestMetadata,
+        sizeof(TEST_BLOCK_T),
+        10,
+        NULL,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
+    tMem.tBase.ptApi = NULL;
+    JUNO_MEMORY_T tMemory = {0};
+    tStatus = ptApi->Get(&tMem, &tMemory, 0);
+    tStatus = ptApi->Put(&tMem, &tMemory);
+    tStatus = ptApi->Update(&tMem, &tMemory, 0);
+    // The implementation should handle this gracefully
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    tMem.tBase.ptApi = &ptApi[1];
+    tStatus = ptApi->Get(&tMem, &tMemory, 0);
+    tStatus = ptApi->Put(&tMem, &tMemory);
+    tStatus = ptApi->Update(&tMem, &tMemory, 0);
+    // The implementation should handle this gracefully
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+
+
+static void test_invalid_size_and_addr(void)
+{
+    JUNO_MEMORY_ALLOC_T tMem = {0};
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMem,
+        ptTestBlock,
+        ptTestMetadata,
+        sizeof(TEST_BLOCK_T),
+        10,
+        NULL,
+        NULL
+    );
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    JUNO_MEMORY_T tMemory = {0};
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tJunoMemoryBlock.tBase.ptApi;
+    tStatus = ptApi->Get(&tMem,  &tMemory,  sizeof(TEST_BLOCK_T)+1);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    tStatus = ptApi->Get(&tMem,  &tMemory,  sizeof(TEST_BLOCK_T));
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    JUNO_MEMORY_T tMemory2 = {0};
+    tStatus = ptApi->Get(&tMem,  &tMemory,  sizeof(TEST_BLOCK_T));
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_NOT_NULL(tMemory.pvAddr);
+    TEST_ASSERT_NOT_EQUAL(0, tMemory.pvAddr);
+    TEST_ASSERT_EQUAL(1, tMemory.iRefCount);
+    tMemory2 = tMemory;
+    tStatus = ptApi->Put(&tMem,  &tMemory);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    tMem.tJunoMemoryBlock.zFreed = 1;
+    tMem.tJunoMemoryBlock.ptMetadata[0].ptFreeMem = (uint8_t *)(tMemory2.pvAddr);
+    tStatus = ptApi->Put(&tMem,  &tMemory2);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
@@ -388,5 +463,7 @@ int main(void)
     RUN_TEST(test_update_memory);
     RUN_TEST(test_generic_memory_get_put);
     RUN_TEST(test_zero_size_allocation);
+    RUN_TEST(test_bad_api);
+    RUN_TEST(test_invalid_size_and_addr);
     return UNITY_END();
 }

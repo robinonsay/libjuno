@@ -1,5 +1,4 @@
-/**
-    @file
+/*
     MIT License
 
     Copyright (c) 2025 Robin A. Onsay
@@ -46,9 +45,7 @@ JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_BASE_T,
     */
 );
 
-#define TEMPLATE_IMPL   TEMPLATE_IMPL_T tTemplateImpl
-
-#ifndef TEMPLATE_DERIVED
+#ifdef TEMPLATE_DEFAULT
 /**
     This is the default implementation for `TEMPLATE_T`.
     If you want to derive new implementations for `TEMPLATE_T`
@@ -59,7 +56,7 @@ JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_BASE_T,
     to implement `TEMPLATE_IMPL`.
 */
 JUNO_MODULE(TEMPLATE_T, TEMPLATE_BASE_T,
-    TEMPLATE_IMPL;
+    TEMPLATE_IMPL_T tTemplateImpl;
 );
 #endif
 
