@@ -1,5 +1,4 @@
-/**
-    @file
+/*
     MIT License
 
     Copyright (c) 2025 Robin A. Onsay
