@@ -7,7 +7,7 @@ LICENSE_HEADER = """/**
     @file
     MIT License
 
-    Copyright (c) Year Robin A. Onsay
+    Copyright (c) 2025 Robin A. Onsay
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files
@@ -23,7 +23,7 @@ LICENSE_HEADER = """/**
 """
 
 # A unique substring to detect if the header is already present
-HEADER_MARKER = "Copyright (c) Year Robin A. Onsay"
+HEADER_MARKER = "Copyright (c) 2025 Robin A. Onsay"
 
 def prepend_header_to_file(file_path: str, header: str) -> None:
     """

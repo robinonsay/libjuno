@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) Year Robin A. Onsay
+    Copyright (c) 2025 Robin A. Onsay
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files
