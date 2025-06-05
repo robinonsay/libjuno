@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.10.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.11.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -150,7 +150,7 @@ $(document).ready(function(){initNavTree('map_8h_source.html',''); initResizable
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="map__api_8h.html">juno/map/map_api.h</a>&quot;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="map__types_8h.html">juno/map/map_types.h</a>&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="memory__types_8h.html">juno/memory/memory_types.h</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="memory__api_8h.html">juno/memory/memory_api.h</a>&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
@@ -181,15 +181,15 @@ $(document).ready(function(){initNavTree('map_8h_source.html',''); initResizable
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="amap_8h_html_a18e909d371373f663f677fae23587597"><div class="ttname"><a href="map_8h.html#a18e909d371373f663f677fae23587597">Juno_MapGet</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T *ptRetValue)</div><div class="ttdef"><b>Definition</b> juno_map.c:134</div></div>
-<div class="ttc" id="amap_8h_html_a479220678df0a6892cf9ff887f41e48d"><div class="ttname"><a href="map_8h.html#a479220678df0a6892cf9ff887f41e48d">Juno_MapSet</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapSet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T tValue)</div><div class="ttdef"><b>Definition</b> juno_map.c:109</div></div>
-<div class="ttc" id="amap_8h_html_a5aeebe3b36a8c403b824034426c52531"><div class="ttname"><a href="map_8h.html#a5aeebe3b36a8c403b824034426c52531">Juno_MapRemove</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapRemove(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey)</div><div class="ttdef"><b>Definition</b> juno_map.c:121</div></div>
-<div class="ttc" id="amap_8h_html_aadf838759e733d6b8c23314b7eba4b13"><div class="ttname"><a href="map_8h.html#aadf838759e733d6b8c23314b7eba4b13">Juno_MapApi</a></div><div class="ttdeci">const JUNO_MAP_API_T * Juno_MapApi(void)</div><div class="ttdef"><b>Definition</b> juno_map.c:159</div></div>
-<div class="ttc" id="amap_8h_html_ab7f61f5a561f9ecc1db6f705ee411a1e"><div class="ttname"><a href="map_8h.html#ab7f61f5a561f9ecc1db6f705ee411a1e">Juno_MapInit</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapInit(JUNO_MAP_T *ptMap, const JUNO_HASH_API_T *ptHashApi, JUNO_MEMORY_T *ptKeyTable, JUNO_MEMORY_T *ptValueTable, size_t zCapacity, JUNO_MAP_KEY_EQUAL_FCN_T pfcnIsEqual, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)</div><div class="ttdef"><b>Definition</b> juno_map.c:44</div></div>
+<div class="ttc" id="amap_8h_html_a18e909d371373f663f677fae23587597"><div class="ttname"><a href="map_8h.html#a18e909d371373f663f677fae23587597">Juno_MapGet</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T *ptRetValue)</div><div class="ttdef"><b>Definition</b> juno_map.c:133</div></div>
+<div class="ttc" id="amap_8h_html_a479220678df0a6892cf9ff887f41e48d"><div class="ttname"><a href="map_8h.html#a479220678df0a6892cf9ff887f41e48d">Juno_MapSet</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapSet(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey, JUNO_MEMORY_T tValue)</div><div class="ttdef"><b>Definition</b> juno_map.c:108</div></div>
+<div class="ttc" id="amap_8h_html_a5aeebe3b36a8c403b824034426c52531"><div class="ttname"><a href="map_8h.html#a5aeebe3b36a8c403b824034426c52531">Juno_MapRemove</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapRemove(JUNO_MAP_T *ptMap, JUNO_MEMORY_T tKey)</div><div class="ttdef"><b>Definition</b> juno_map.c:120</div></div>
+<div class="ttc" id="amap_8h_html_aadf838759e733d6b8c23314b7eba4b13"><div class="ttname"><a href="map_8h.html#aadf838759e733d6b8c23314b7eba4b13">Juno_MapApi</a></div><div class="ttdeci">const JUNO_MAP_API_T * Juno_MapApi(void)</div><div class="ttdef"><b>Definition</b> juno_map.c:158</div></div>
+<div class="ttc" id="amap_8h_html_ab7f61f5a561f9ecc1db6f705ee411a1e"><div class="ttname"><a href="map_8h.html#ab7f61f5a561f9ecc1db6f705ee411a1e">Juno_MapInit</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MapInit(JUNO_MAP_T *ptMap, const JUNO_HASH_API_T *ptHashApi, JUNO_MEMORY_T *ptKeyTable, JUNO_MEMORY_T *ptValueTable, size_t zCapacity, JUNO_MAP_KEY_EQUAL_FCN_T pfcnIsEqual, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)</div><div class="ttdef"><b>Definition</b> juno_map.c:43</div></div>
 <div class="ttc" id="amap__api_8h_html"><div class="ttname"><a href="map__api_8h.html">map_api.h</a></div></div>
 <div class="ttc" id="amap__types_8h_html"><div class="ttname"><a href="map__types_8h.html">map_types.h</a></div></div>
 <div class="ttc" id="amap__types_8h_html_a7a30095ec65ed014c5db79d5ba6a0c27"><div class="ttname"><a href="map__types_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27">JUNO_MAP_KEY_EQUAL_FCN_T</a></div><div class="ttdeci">bool(* JUNO_MAP_KEY_EQUAL_FCN_T)(JUNO_MEMORY_T ptKey1, JUNO_MEMORY_T ptKey2)</div><div class="ttdef"><b>Definition</b> map_types.h:32</div></div>
-<div class="ttc" id="amemory__types_8h_html"><div class="ttname"><a href="memory__types_8h.html">memory_types.h</a></div></div>
+<div class="ttc" id="amemory__api_8h_html"><div class="ttname"><a href="memory__api_8h.html">memory_api.h</a></div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:44</div></div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('map_8h_source.html',''); initResizable
 <div class="ttc" id="astructJUNO__HASH__API__TAG_html"><div class="ttname"><a href="structJUNO__HASH__API__TAG.html">JUNO_HASH_API_TAG</a></div><div class="ttdef"><b>Definition</b> hash_api.h:30</div></div>
 <div class="ttc" id="astructJUNO__MAP__API__TAG_html"><div class="ttname"><a href="structJUNO__MAP__API__TAG.html">JUNO_MAP_API_TAG</a></div><div class="ttdef"><b>Definition</b> map_api.h:32</div></div>
 <div class="ttc" id="astructJUNO__MAP__TAG_html"><div class="ttname"><a href="structJUNO__MAP__TAG.html">JUNO_MAP_TAG</a></div><div class="ttdef"><b>Definition</b> map_types.h:35</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:76</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_api.h:65</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

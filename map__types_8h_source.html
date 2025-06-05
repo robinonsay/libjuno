@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.10.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.11.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -150,7 +150,7 @@ $(document).ready(function(){initNavTree('map__types_8h_source.html',''); initRe
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="hash__api_8h.html">juno/hash/hash_api.h</a>&quot;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8h.html">juno/macros.h</a>&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="memory__types_8h.html">juno/memory/memory_types.h</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="memory__api_8h.html">juno/memory/memory_api.h</a>&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
@@ -184,7 +184,7 @@ $(document).ready(function(){initNavTree('map__types_8h_source.html',''); initRe
 <div class="ttc" id="ahash__api_8h_html"><div class="ttname"><a href="hash__api_8h.html">hash_api.h</a></div></div>
 <div class="ttc" id="amacros_8h_html"><div class="ttname"><a href="macros_8h.html">macros.h</a></div></div>
 <div class="ttc" id="amap__types_8h_html_a7a30095ec65ed014c5db79d5ba6a0c27"><div class="ttname"><a href="map__types_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27">JUNO_MAP_KEY_EQUAL_FCN_T</a></div><div class="ttdeci">bool(* JUNO_MAP_KEY_EQUAL_FCN_T)(JUNO_MEMORY_T ptKey1, JUNO_MEMORY_T ptKey2)</div><div class="ttdef"><b>Definition</b> map_types.h:32</div></div>
-<div class="ttc" id="amemory__types_8h_html"><div class="ttname"><a href="memory__types_8h.html">memory_types.h</a></div></div>
+<div class="ttc" id="amemory__api_8h_html"><div class="ttname"><a href="memory__api_8h.html">memory_api.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:44</div></div>
 <div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:43</div></div>
 <div class="ttc" id="astructJUNO__HASH__API__TAG_html"><div class="ttname"><a href="structJUNO__HASH__API__TAG.html">JUNO_HASH_API_TAG</a></div><div class="ttdef"><b>Definition</b> hash_api.h:30</div></div>
@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('map__types_8h_source.html',''); initRe
 <div class="ttc" id="astructJUNO__MAP__TAG_html_ad538eb526378e5b01d9265200ab8f3f4"><div class="ttname"><a href="structJUNO__MAP__TAG.html#ad538eb526378e5b01d9265200ab8f3f4">JUNO_MAP_TAG::ptMapKeys</a></div><div class="ttdeci">JUNO_MEMORY_T * ptMapKeys</div><div class="ttdef"><b>Definition</b> map_types.h:37</div></div>
 <div class="ttc" id="astructJUNO__MAP__TAG_html_ad95261e548544039a37a1e121daceb85"><div class="ttname"><a href="structJUNO__MAP__TAG.html#ad95261e548544039a37a1e121daceb85">JUNO_MAP_TAG::pfcnFailureHandler</a></div><div class="ttdeci">JUNO_FAILURE_HANDLER_T pfcnFailureHandler</div><div class="ttdoc">Macro to declare a failure handler.</div><div class="ttdef"><b>Definition</b> map_types.h:42</div></div>
 <div class="ttc" id="astructJUNO__MAP__TAG_html_ae1bd404f4d0f1290fc9a9d4e3b5fa472"><div class="ttname"><a href="structJUNO__MAP__TAG.html#ae1bd404f4d0f1290fc9a9d4e3b5fa472">JUNO_MAP_TAG::zCapacity</a></div><div class="ttdeci">size_t zCapacity</div><div class="ttdef"><b>Definition</b> map_types.h:39</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:76</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_api.h:65</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

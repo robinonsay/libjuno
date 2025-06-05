@@ -29,6 +29,6 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/macros.h"
   Node10 [id="Node000010",label="/home/runner/work/libjuno\l/libjuno/src/juno_hash.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__hash_8c.html",tooltip=" "];
   Node1 -> Node4 [id="edge14_Node000001_Node000004",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node1 -> Node11 [id="edge15_Node000001_Node000011",dir="back",color="steelblue1",style="solid",tooltip=" "];
-  Node11 [id="Node000011",label="/home/runner/work/libjuno\l/libjuno/src/juno_memory.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__memory_8c.html",tooltip=" "];
+  Node11 [id="Node000011",label="/home/runner/work/libjuno\l/libjuno/src/juno_memory\l_block.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__memory__block_8c.html",tooltip=" "];
   Node1 -> Node9 [id="edge16_Node000001_Node000009",dir="back",color="steelblue1",style="solid",tooltip=" "];
 }

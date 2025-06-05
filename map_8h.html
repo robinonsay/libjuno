@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.10.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.11.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -128,7 +128,7 @@ $(document).ready(function(){initNavTree('map_8h.html',''); initResizable(); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="map__api_8h_source.html">juno/map/map_api.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map__types_8h_source.html">juno/map/map_types.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="memory__types_8h_source.html">juno/memory/memory_types.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="memory__api_8h_source.html">juno/memory/memory_api.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
@@ -147,13 +147,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab7f61f5a561f9ecc1db6f705ee411a1e" id="r_ab7f61f5a561f9ecc1db6f705ee411a1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#ab7f61f5a561f9ecc1db6f705ee411a1e">Juno_MapInit</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, const <a class="el" href="hash__api_8h.html#a9b60c614fd9748ed271cc43e4e27d9f3">JUNO_HASH_API_T</a> *ptHashApi, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptKeyTable, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptValueTable, size_t zCapacity, <a class="el" href="map__types_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27">JUNO_MAP_KEY_EQUAL_FCN_T</a> pfcnIsEqual, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memitem:ab7f61f5a561f9ecc1db6f705ee411a1e" id="r_ab7f61f5a561f9ecc1db6f705ee411a1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#ab7f61f5a561f9ecc1db6f705ee411a1e">Juno_MapInit</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, const <a class="el" href="hash__api_8h.html#a9b60c614fd9748ed271cc43e4e27d9f3">JUNO_HASH_API_T</a> *ptHashApi, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptKeyTable, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptValueTable, size_t zCapacity, <a class="el" href="map__types_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27">JUNO_MAP_KEY_EQUAL_FCN_T</a> pfcnIsEqual, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
 <tr class="separator:ab7f61f5a561f9ecc1db6f705ee411a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a479220678df0a6892cf9ff887f41e48d" id="r_a479220678df0a6892cf9ff887f41e48d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a479220678df0a6892cf9ff887f41e48d">Juno_MapSet</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tKey, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tValue)</td></tr>
+<tr class="memitem:a479220678df0a6892cf9ff887f41e48d" id="r_a479220678df0a6892cf9ff887f41e48d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a479220678df0a6892cf9ff887f41e48d">Juno_MapSet</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tKey, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tValue)</td></tr>
 <tr class="separator:a479220678df0a6892cf9ff887f41e48d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5aeebe3b36a8c403b824034426c52531" id="r_a5aeebe3b36a8c403b824034426c52531"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a5aeebe3b36a8c403b824034426c52531">Juno_MapRemove</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tKey)</td></tr>
+<tr class="memitem:a5aeebe3b36a8c403b824034426c52531" id="r_a5aeebe3b36a8c403b824034426c52531"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a5aeebe3b36a8c403b824034426c52531">Juno_MapRemove</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tKey)</td></tr>
 <tr class="separator:a5aeebe3b36a8c403b824034426c52531"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18e909d371373f663f677fae23587597" id="r_a18e909d371373f663f677fae23587597"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a18e909d371373f663f677fae23587597">Juno_MapGet</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tKey, <a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptRetValue)</td></tr>
+<tr class="memitem:a18e909d371373f663f677fae23587597" id="r_a18e909d371373f663f677fae23587597"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a18e909d371373f663f677fae23587597">Juno_MapGet</a> (<a class="el" href="map__types_8h.html#a71d5820d7d3b2b300cf4d30b64fe4ad3">JUNO_MAP_T</a> *ptMap, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> tKey, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptRetValue)</td></tr>
 <tr class="separator:a18e909d371373f663f677fae23587597"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadf838759e733d6b8c23314b7eba4b13" id="r_aadf838759e733d6b8c23314b7eba4b13"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="map__api_8h.html#a91c31ed4effb59d959645fb13dc4bb0f">JUNO_MAP_API_T</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#aadf838759e733d6b8c23314b7eba4b13">Juno_MapApi</a> (void)</td></tr>
 <tr class="separator:aadf838759e733d6b8c23314b7eba4b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,13 +192,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
           <td class="paramname"><em>tKey</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
           <td class="paramname"><em>ptRetValue</em>&#160;</td>
         </tr>
         <tr>
@@ -241,13 +241,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
           <td class="paramname"><em>ptKeyTable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *&#160;</td>
           <td class="paramname"><em>ptValueTable</em>, </td>
         </tr>
         <tr>
@@ -313,7 +313,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
           <td class="paramname"><em>tKey</em>&#160;</td>
         </tr>
         <tr>
@@ -349,13 +349,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
           <td class="paramname"><em>tKey</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="memory__types_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a>&#160;</td>
           <td class="paramname"><em>tValue</em>&#160;</td>
         </tr>
         <tr>

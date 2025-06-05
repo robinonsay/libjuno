@@ -10,7 +10,7 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/string/string_api.h"
   Node2 -> Node3 [id="edge2_Node000002_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node3 [id="Node000003",label="/home/runner/work/libjuno\l/libjuno/src/juno_map.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__map_8c.html",tooltip=" "];
   Node2 -> Node4 [id="edge3_Node000002_Node000004",dir="back",color="steelblue1",style="solid",tooltip=" "];
-  Node4 [id="Node000004",label="/home/runner/work/libjuno\l/libjuno/src/juno_memory.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__memory_8c.html",tooltip=" "];
+  Node4 [id="Node000004",label="/home/runner/work/libjuno\l/libjuno/src/juno_memory\l_block.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__memory__block_8c.html",tooltip=" "];
   Node2 -> Node5 [id="edge4_Node000002_Node000005",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node5 [id="Node000005",label="/home/runner/work/libjuno\l/libjuno/src/posix/juno\l_table.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__table_8c.html",tooltip=" "];
 }
