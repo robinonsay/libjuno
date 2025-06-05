@@ -19,6 +19,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
         with:
+          submodules: true
           fetch-depth: 0      # <-- so that tags can be pushed
 
       # 2) Bump the version (this will edit CMakeLists.txt and print the new version)
