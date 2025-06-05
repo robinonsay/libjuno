@@ -19,7 +19,7 @@
 
 #include "juno/hash/hash_api.h"
 #include "juno/macros.h"
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>

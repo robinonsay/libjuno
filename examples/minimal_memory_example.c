@@ -45,7 +45,7 @@ int main(void) {
     
     // Step 2: Allocate memory
     JUNO_MEMORY_T tMemory = {0};
-    tStatus = Juno_MemoryGet(&tMemAlloc, &tMemory, sizeof(USER_DATA_T));
+    tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(USER_DATA_T));
     
     if (tStatus != JUNO_STATUS_SUCCESS) {
         printf("Failed to allocate memory\n");
@@ -76,7 +76,7 @@ int main(void) {
     
     // Step 5: Try to free memory while reference exists
     printf("\nAttempting to free memory with active references...\n");
-    tStatus = Juno_MemoryPut(&tMemAlloc, &tMemory);
+    tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
     
     if (tStatus == JUNO_STATUS_REF_IN_USE_ERROR) {
         printf("As expected, could not free memory with active references\n");
@@ -88,7 +88,7 @@ int main(void) {
     printf("Reference count after release: %zu\n", tMemory.iRefCount);
     
     printf("Freeing memory...\n");
-    tStatus = Juno_MemoryPut(&tMemAlloc, &tMemory);
+    tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
     
     if (tStatus == JUNO_STATUS_SUCCESS) {
         printf("Memory freed successfully\n");

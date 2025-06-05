@@ -105,7 +105,7 @@ Allocate memory for your data type:
 JUNO_MEMORY_T tMemory = {0};
 
 // Allocate memory
-tStatus = Juno_MemoryGet(&tMemAlloc, &tMemory, sizeof(MY_DATA_T));
+tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_DATA_T));
 if(tStatus != JUNO_STATUS_SUCCESS) {
     // Handle allocation error
     return -1;
@@ -147,7 +147,7 @@ Juno_MemoryPutRef(JUNO_REF(memoryRef));
 printf("Reference count: %zu\n", tMemory.iRefCount); // Should be 1
 
 // Now free the original memory
-tStatus = Juno_MemoryPut(&tMemAlloc, &tMemory);
+tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
 if(tStatus != JUNO_STATUS_SUCCESS) {
     // Handle error (could be JUNO_STATUS_REF_IN_USE_ERROR if references exist)
     printf("Error: Cannot free memory with active references\n");
@@ -209,7 +209,7 @@ Memory is allocated from a pre-defined block using the `Juno_MemoryGet` function
 ```c
 // Allocate memory
 JUNO_MEMORY_T tMemory = {0};
-JUNO_STATUS_T tStatus = Juno_MemoryGet(&tMemAlloc, &tMemory, sizeof(MY_STRUCT_T));
+JUNO_STATUS_T tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_STRUCT_T));
 ```
 
 ### Reference Counting
@@ -230,7 +230,7 @@ Memory is returned to the allocator using the `Juno_MemoryPut` function when it'
 
 ```c
 // Free memory
-JUNO_STATUS_T tStatus = Juno_MemoryPut(&tMemAlloc, &tMemory);
+JUNO_STATUS_T tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
 ```
 
 ## Data Types
@@ -557,7 +557,7 @@ Here's a complete example of using these macros:
 ```c
 // Original memory allocation
 JUNO_MEMORY_T tMemory = {0};
-tStatus = Juno_MemoryGet(&tMemAlloc, &tMemory, sizeof(MY_DATA_T));
+tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_DATA_T));
 
 // Create a named reference using the macro
 JUNO_NEW_REF(dataRef) = Juno_MemoryGetRef(&tMemory);

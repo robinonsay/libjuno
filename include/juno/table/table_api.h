@@ -16,7 +16,7 @@
 */
 #ifndef JUNO_TABLE_API_H
 #define JUNO_TABLE_API_H
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
 #include "juno/table/table_types.h"
 #include "juno/status.h"
 
