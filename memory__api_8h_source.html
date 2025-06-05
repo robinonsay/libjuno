@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.3.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.4.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -129,45 +129,46 @@ $(document).ready(function(){initNavTree('memory__api_8h_source.html',''); initR
   <div class="headertitle"><div class="title">memory_api.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="memory__api_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef JUNO_MEMORY_API_H</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define JUNO_MEMORY_API_H</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="memory__types_8h.html">juno/memory/memory_types.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="memory__api_8h.html#a605797d8b90927b22369714488073282">   12</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_TAG</a> <a class="code hl_struct" href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_T</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html">   18</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_TAG</a></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751">   26</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751">Get</a>)(<a class="code hl_union" href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *pvRetAddr, <span class="keywordtype">size_t</span> zSize);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html#aa87138a9c0fe6be63a92c9f12fd9d82b">   34</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__MEMORY__API__TAG.html#aa87138a9c0fe6be63a92c9f12fd9d82b">Update</a>)(<a class="code hl_union" href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemory, <span class="keywordtype">size_t</span> zNewSize);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html#ac4f01d949fe0959517d8da164b581cfd">   41</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__MEMORY__API__TAG.html#ac4f01d949fe0959517d8da164b581cfd">Put</a>)(<a class="code hl_union" href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *pvAddr);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
+<a href="memory__api_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#ifndef JUNO_MEMORY_API_H</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#define JUNO_MEMORY_API_H</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="memory__types_8h.html">juno/memory/memory_types.h</a>&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="memory__api_8h.html#a605797d8b90927b22369714488073282">   31</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_TAG</a> <a class="code hl_struct" href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_T</a>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00037" data-start="{" data-end="};">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html">   37</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_TAG</a></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751">   45</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751">Get</a>)(<a class="code hl_union" href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *pvRetAddr, <span class="keywordtype">size_t</span> zSize);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html#aa87138a9c0fe6be63a92c9f12fd9d82b">   53</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__MEMORY__API__TAG.html#aa87138a9c0fe6be63a92c9f12fd9d82b">Update</a>)(<a class="code hl_union" href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemory, <span class="keywordtype">size_t</span> zNewSize);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="structJUNO__MEMORY__API__TAG.html#ac4f01d949fe0959517d8da164b581cfd">   60</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__MEMORY__API__TAG.html#ac4f01d949fe0959517d8da164b581cfd">Put</a>)(<a class="code hl_union" href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_T</a> *ptMem, <a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *pvAddr);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>};</div>
 </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="ttc" id="amemory__types_8h_html"><div class="ttname"><a href="memory__types_8h.html">memory_types.h</a></div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_TAG</a></div><div class="ttdoc">API for generic memory allocation operations.</div><div class="ttdef"><b>Definition</b> memory_api.h:19</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html_a2bcb7fbc87a024a6386e76b9d26cf751"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751">JUNO_MEMORY_API_TAG::Get</a></div><div class="ttdeci">JUNO_STATUS_T(* Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvRetAddr, size_t zSize)</div><div class="ttdoc">Allocates memory using the specified memory allocation method.</div><div class="ttdef"><b>Definition</b> memory_api.h:26</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html_aa87138a9c0fe6be63a92c9f12fd9d82b"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html#aa87138a9c0fe6be63a92c9f12fd9d82b">JUNO_MEMORY_API_TAG::Update</a></div><div class="ttdeci">JUNO_STATUS_T(* Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize)</div><div class="ttdoc">Updates an existing memory allocation to a new size.</div><div class="ttdef"><b>Definition</b> memory_api.h:34</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html_ac4f01d949fe0959517d8da164b581cfd"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html#ac4f01d949fe0959517d8da164b581cfd">JUNO_MEMORY_API_TAG::Put</a></div><div class="ttdeci">JUNO_STATUS_T(* Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvAddr)</div><div class="ttdoc">Frees an allocated memory block.</div><div class="ttdef"><b>Definition</b> memory_api.h:41</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:60</div></div>
-<div class="ttc" id="aunionJUNO__MEMORY__ALLOC__TAG_html"><div class="ttname"><a href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_TAG</a></div><div class="ttdoc">Union for a generic memory allocation. Accommodates various allocation types, currently including blo...</div><div class="ttdef"><b>Definition</b> memory_types.h:90</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html">JUNO_MEMORY_API_TAG</a></div><div class="ttdoc">API for generic memory allocation operations.</div><div class="ttdef"><b>Definition</b> memory_api.h:38</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html_a2bcb7fbc87a024a6386e76b9d26cf751"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html#a2bcb7fbc87a024a6386e76b9d26cf751">JUNO_MEMORY_API_TAG::Get</a></div><div class="ttdeci">JUNO_STATUS_T(* Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvRetAddr, size_t zSize)</div><div class="ttdoc">Allocates memory using the specified memory allocation method.</div><div class="ttdef"><b>Definition</b> memory_api.h:45</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html_aa87138a9c0fe6be63a92c9f12fd9d82b"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html#aa87138a9c0fe6be63a92c9f12fd9d82b">JUNO_MEMORY_API_TAG::Update</a></div><div class="ttdeci">JUNO_STATUS_T(* Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize)</div><div class="ttdoc">Updates an existing memory allocation to a new size.</div><div class="ttdef"><b>Definition</b> memory_api.h:53</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__API__TAG_html_ac4f01d949fe0959517d8da164b581cfd"><div class="ttname"><a href="structJUNO__MEMORY__API__TAG.html#ac4f01d949fe0959517d8da164b581cfd">JUNO_MEMORY_API_TAG::Put</a></div><div class="ttdeci">JUNO_STATUS_T(* Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvAddr)</div><div class="ttdoc">Frees an allocated memory block.</div><div class="ttdef"><b>Definition</b> memory_api.h:60</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:79</div></div>
+<div class="ttc" id="aunionJUNO__MEMORY__ALLOC__TAG_html"><div class="ttname"><a href="unionJUNO__MEMORY__ALLOC__TAG.html">JUNO_MEMORY_ALLOC_TAG</a></div><div class="ttdoc">Union for a generic memory allocation. Accommodates various allocation types, currently including blo...</div><div class="ttdef"><b>Definition</b> memory_types.h:109</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

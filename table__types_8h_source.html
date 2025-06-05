@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.3.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.4.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -129,57 +129,58 @@ $(document).ready(function(){initNavTree('table__types_8h_source.html',''); init
   <div class="headertitle"><div class="title">table_types.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="table__types_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef JUNO_TABLE_TYPES_H</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define JUNO_TABLE_TYPES_H</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8h.html">juno/macros.h</a>&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="memory__types_8h.html">juno/memory/memory_types.h</a>&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="table__types_8h.html#a9b5de078040e6286edcf7eb475e59c36">   13</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__TAG.html">JUNO_TABLE_TAG</a> <a class="code hl_struct" href="structJUNO__TABLE__TAG.html">JUNO_TABLE_MANAGER_T</a>;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="table__types_8h.html#ae558c00240908f8c0afc7c9920647aac">   14</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_TAG</a> <a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_T</a>;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="table__types_8h.html#a7a94434d5a96ad076f0fa7f9bbf1468b">   15</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_TABLE_PRIVATE_TAG <a class="code hl_typedef" href="table__types_8h.html#a7a94434d5a96ad076f0fa7f9bbf1468b">JUNO_TABLE_PRIVATE_T</a>;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__HDR__TAG.html">   17</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_TAG</a></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__HDR__TAG.html#af93a14e2e9baf621fc997c881be8422d">   20</a></span>    uint32_t <a class="code hl_variable" href="structJUNO__TABLE__HDR__TAG.html#af93a14e2e9baf621fc997c881be8422d">iCrc32</a>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>};</div>
-</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html">   23</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__TAG.html">JUNO_TABLE_TAG</a></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#abb11e209d2533e726c9d81bb96e49523">   26</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="structJUNO__TABLE__TAG.html#abb11e209d2533e726c9d81bb96e49523">pcTablePath</a>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#a59285c84b08a97379bf7c9b1674ae468">   28</a></span>    <a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_T</a> *<a class="code hl_variable" href="structJUNO__TABLE__TAG.html#a59285c84b08a97379bf7c9b1674ae468">ptBuff</a>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#a96d61728990eb38453f3f373cb91239c">   30</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structJUNO__TABLE__TAG.html#a96d61728990eb38453f3f373cb91239c">zBuffSize</a>;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#aefa840f72d9be3fbee69cfdb8f0cd2de">   32</a></span>    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> <a class="code hl_variable" href="structJUNO__TABLE__TAG.html#aefa840f72d9be3fbee69cfdb8f0cd2de">pfcnFailureHandler</a>;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#ac166986d15fbb3d2d7f3db0847bd802c">   33</a></span>    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *<a class="code hl_variable" href="structJUNO__TABLE__TAG.html#ac166986d15fbb3d2d7f3db0847bd802c">pvFailureUserData</a>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>};</div>
-</div>
+<a href="table__types_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#ifndef JUNO_TABLE_TYPES_H</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#define JUNO_TABLE_TYPES_H</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8h.html">juno/macros.h</a>&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="memory__types_8h.html">juno/memory/memory_types.h</a>&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="table__types_8h.html#a9b5de078040e6286edcf7eb475e59c36">   32</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__TAG.html">JUNO_TABLE_TAG</a> <a class="code hl_struct" href="structJUNO__TABLE__TAG.html">JUNO_TABLE_MANAGER_T</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="table__types_8h.html#ae558c00240908f8c0afc7c9920647aac">   33</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_TAG</a> <a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_T</a>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="table__types_8h.html#a7a94434d5a96ad076f0fa7f9bbf1468b">   34</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_TABLE_PRIVATE_TAG <a class="code hl_typedef" href="table__types_8h.html#a7a94434d5a96ad076f0fa7f9bbf1468b">JUNO_TABLE_PRIVATE_T</a>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif</span></div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__HDR__TAG.html">   36</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_TAG</a></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__HDR__TAG.html#af93a14e2e9baf621fc997c881be8422d">   39</a></span>    uint32_t <a class="code hl_variable" href="structJUNO__TABLE__HDR__TAG.html#af93a14e2e9baf621fc997c881be8422d">iCrc32</a>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
+</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="};">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html">   42</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__TABLE__TAG.html">JUNO_TABLE_TAG</a></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#abb11e209d2533e726c9d81bb96e49523">   45</a></span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="structJUNO__TABLE__TAG.html#abb11e209d2533e726c9d81bb96e49523">pcTablePath</a>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#a59285c84b08a97379bf7c9b1674ae468">   47</a></span>    <a class="code hl_struct" href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_T</a> *<a class="code hl_variable" href="structJUNO__TABLE__TAG.html#a59285c84b08a97379bf7c9b1674ae468">ptBuff</a>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#a96d61728990eb38453f3f373cb91239c">   49</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structJUNO__TABLE__TAG.html#a96d61728990eb38453f3f373cb91239c">zBuffSize</a>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#aefa840f72d9be3fbee69cfdb8f0cd2de">   51</a></span>    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> <a class="code hl_variable" href="structJUNO__TABLE__TAG.html#aefa840f72d9be3fbee69cfdb8f0cd2de">pfcnFailureHandler</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="structJUNO__TABLE__TAG.html#ac166986d15fbb3d2d7f3db0847bd802c">   52</a></span>    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *<a class="code hl_variable" href="structJUNO__TABLE__TAG.html#ac166986d15fbb3d2d7f3db0847bd802c">pvFailureUserData</a>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
+</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="amacros_8h_html"><div class="ttname"><a href="macros_8h.html">macros.h</a></div></div>
 <div class="ttc" id="amemory__types_8h_html"><div class="ttname"><a href="memory__types_8h.html">memory_types.h</a></div></div>
-<div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:28</div></div>
-<div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:27</div></div>
-<div class="ttc" id="astructJUNO__TABLE__HDR__TAG_html"><div class="ttname"><a href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_TAG</a></div><div class="ttdef"><b>Definition</b> table_types.h:18</div></div>
-<div class="ttc" id="astructJUNO__TABLE__HDR__TAG_html_af93a14e2e9baf621fc997c881be8422d"><div class="ttname"><a href="structJUNO__TABLE__HDR__TAG.html#af93a14e2e9baf621fc997c881be8422d">JUNO_TABLE_HDR_TAG::iCrc32</a></div><div class="ttdeci">uint32_t iCrc32</div><div class="ttdoc">CRC32 checksum.</div><div class="ttdef"><b>Definition</b> table_types.h:20</div></div>
-<div class="ttc" id="astructJUNO__TABLE__TAG_html"><div class="ttname"><a href="structJUNO__TABLE__TAG.html">JUNO_TABLE_TAG</a></div><div class="ttdef"><b>Definition</b> table_types.h:24</div></div>
-<div class="ttc" id="astructJUNO__TABLE__TAG_html_a59285c84b08a97379bf7c9b1674ae468"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#a59285c84b08a97379bf7c9b1674ae468">JUNO_TABLE_TAG::ptBuff</a></div><div class="ttdeci">JUNO_TABLE_HDR_T * ptBuff</div><div class="ttdoc">The memory buffer for the table.</div><div class="ttdef"><b>Definition</b> table_types.h:28</div></div>
-<div class="ttc" id="astructJUNO__TABLE__TAG_html_a96d61728990eb38453f3f373cb91239c"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#a96d61728990eb38453f3f373cb91239c">JUNO_TABLE_TAG::zBuffSize</a></div><div class="ttdeci">size_t zBuffSize</div><div class="ttdoc">The memory buffer size.</div><div class="ttdef"><b>Definition</b> table_types.h:30</div></div>
-<div class="ttc" id="astructJUNO__TABLE__TAG_html_abb11e209d2533e726c9d81bb96e49523"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#abb11e209d2533e726c9d81bb96e49523">JUNO_TABLE_TAG::pcTablePath</a></div><div class="ttdeci">const char * pcTablePath</div><div class="ttdoc">The path to the table.</div><div class="ttdef"><b>Definition</b> table_types.h:26</div></div>
-<div class="ttc" id="astructJUNO__TABLE__TAG_html_ac166986d15fbb3d2d7f3db0847bd802c"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#ac166986d15fbb3d2d7f3db0847bd802c">JUNO_TABLE_TAG::pvFailureUserData</a></div><div class="ttdeci">JUNO_USER_DATA_T * pvFailureUserData</div><div class="ttdef"><b>Definition</b> table_types.h:33</div></div>
-<div class="ttc" id="astructJUNO__TABLE__TAG_html_aefa840f72d9be3fbee69cfdb8f0cd2de"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#aefa840f72d9be3fbee69cfdb8f0cd2de">JUNO_TABLE_TAG::pfcnFailureHandler</a></div><div class="ttdeci">JUNO_FAILURE_HANDLER_T pfcnFailureHandler</div><div class="ttdoc">The failure handler.</div><div class="ttdef"><b>Definition</b> table_types.h:32</div></div>
-<div class="ttc" id="atable__types_8h_html_a7a94434d5a96ad076f0fa7f9bbf1468b"><div class="ttname"><a href="table__types_8h.html#a7a94434d5a96ad076f0fa7f9bbf1468b">JUNO_TABLE_PRIVATE_T</a></div><div class="ttdeci">struct JUNO_TABLE_PRIVATE_TAG JUNO_TABLE_PRIVATE_T</div><div class="ttdef"><b>Definition</b> table_types.h:15</div></div>
+<div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:47</div></div>
+<div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:46</div></div>
+<div class="ttc" id="astructJUNO__TABLE__HDR__TAG_html"><div class="ttname"><a href="structJUNO__TABLE__HDR__TAG.html">JUNO_TABLE_HDR_TAG</a></div><div class="ttdef"><b>Definition</b> table_types.h:37</div></div>
+<div class="ttc" id="astructJUNO__TABLE__HDR__TAG_html_af93a14e2e9baf621fc997c881be8422d"><div class="ttname"><a href="structJUNO__TABLE__HDR__TAG.html#af93a14e2e9baf621fc997c881be8422d">JUNO_TABLE_HDR_TAG::iCrc32</a></div><div class="ttdeci">uint32_t iCrc32</div><div class="ttdoc">CRC32 checksum.</div><div class="ttdef"><b>Definition</b> table_types.h:39</div></div>
+<div class="ttc" id="astructJUNO__TABLE__TAG_html"><div class="ttname"><a href="structJUNO__TABLE__TAG.html">JUNO_TABLE_TAG</a></div><div class="ttdef"><b>Definition</b> table_types.h:43</div></div>
+<div class="ttc" id="astructJUNO__TABLE__TAG_html_a59285c84b08a97379bf7c9b1674ae468"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#a59285c84b08a97379bf7c9b1674ae468">JUNO_TABLE_TAG::ptBuff</a></div><div class="ttdeci">JUNO_TABLE_HDR_T * ptBuff</div><div class="ttdoc">The memory buffer for the table.</div><div class="ttdef"><b>Definition</b> table_types.h:47</div></div>
+<div class="ttc" id="astructJUNO__TABLE__TAG_html_a96d61728990eb38453f3f373cb91239c"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#a96d61728990eb38453f3f373cb91239c">JUNO_TABLE_TAG::zBuffSize</a></div><div class="ttdeci">size_t zBuffSize</div><div class="ttdoc">The memory buffer size.</div><div class="ttdef"><b>Definition</b> table_types.h:49</div></div>
+<div class="ttc" id="astructJUNO__TABLE__TAG_html_abb11e209d2533e726c9d81bb96e49523"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#abb11e209d2533e726c9d81bb96e49523">JUNO_TABLE_TAG::pcTablePath</a></div><div class="ttdeci">const char * pcTablePath</div><div class="ttdoc">The path to the table.</div><div class="ttdef"><b>Definition</b> table_types.h:45</div></div>
+<div class="ttc" id="astructJUNO__TABLE__TAG_html_ac166986d15fbb3d2d7f3db0847bd802c"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#ac166986d15fbb3d2d7f3db0847bd802c">JUNO_TABLE_TAG::pvFailureUserData</a></div><div class="ttdeci">JUNO_USER_DATA_T * pvFailureUserData</div><div class="ttdef"><b>Definition</b> table_types.h:52</div></div>
+<div class="ttc" id="astructJUNO__TABLE__TAG_html_aefa840f72d9be3fbee69cfdb8f0cd2de"><div class="ttname"><a href="structJUNO__TABLE__TAG.html#aefa840f72d9be3fbee69cfdb8f0cd2de">JUNO_TABLE_TAG::pfcnFailureHandler</a></div><div class="ttdeci">JUNO_FAILURE_HANDLER_T pfcnFailureHandler</div><div class="ttdoc">The failure handler.</div><div class="ttdef"><b>Definition</b> table_types.h:51</div></div>
+<div class="ttc" id="atable__types_8h_html_a7a94434d5a96ad076f0fa7f9bbf1468b"><div class="ttname"><a href="table__types_8h.html#a7a94434d5a96ad076f0fa7f9bbf1468b">JUNO_TABLE_PRIVATE_T</a></div><div class="ttdeci">struct JUNO_TABLE_PRIVATE_TAG JUNO_TABLE_PRIVATE_T</div><div class="ttdef"><b>Definition</b> table_types.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

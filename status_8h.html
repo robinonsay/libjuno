@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.3.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.4.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -142,7 +142,7 @@ Macros</h2></td></tr>
 <tr class="separator:af8848982071962a8122475add8bc3e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4add9a0b045bd7ca03a0f1c652240530" id="r_a4add9a0b045bd7ca03a0f1c652240530"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a4add9a0b045bd7ca03a0f1c652240530">FAIL</a>(tStatus,  pfcnFailureHandler,  pvFailureUserData,  pcMessage)&#160;&#160;&#160;if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}</td></tr>
 <tr class="separator:a4add9a0b045bd7ca03a0f1c652240530"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5d0cfd15953954d428cc546665003e6" id="r_aa5d0cfd15953954d428cc546665003e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#aa5d0cfd15953954d428cc546665003e6">FAIL_MODULE</a>(tStatus,  ptMod,  pcMessage)&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a>);}</td></tr>
+<tr class="memitem:aa5d0cfd15953954d428cc546665003e6" id="r_aa5d0cfd15953954d428cc546665003e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#aa5d0cfd15953954d428cc546665003e6">FAIL_MODULE</a>(tStatus,  ptMod,  pcMessage)&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA</a>);}</td></tr>
 <tr class="separator:aa5d0cfd15953954d428cc546665003e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
@@ -264,7 +264,7 @@ Enumerations</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a>);}</td>
+          <td></td><td>&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA</a>);}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -297,6 +297,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>MIT License</p>
+<p>Copyright (c) Year Robin A. Onsay</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. </p>
 
 </div>
 </div>
@@ -326,6 +330,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>MIT License</p>
+<p>Copyright (c) Year Robin A. Onsay</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710" name="a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"></a>JUNO_STATUS_SUCCESS&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238" name="a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238"></a>JUNO_STATUS_ERR&#160;</td><td class="fielddoc"></td></tr>

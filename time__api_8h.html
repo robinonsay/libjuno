@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.3.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.4.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -171,8 +171,10 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a7563f75bd6490dceb45b8875056d82a7" id="r_a7563f75bd6490dceb45b8875056d82a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a7563f75bd6490dceb45b8875056d82a7">JUNO_MODULE_DECLARE</a> (JUNO_TIME_T)</td></tr>
 <tr class="separator:a7563f75bd6490dceb45b8875056d82a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9b8a136b578ceddcb739c603cb18306" id="r_aa9b8a136b578ceddcb739c603cb18306"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#aa9b8a136b578ceddcb739c603cb18306">JUNO_MODULE</a> (JUNO_TIME_T, <a class="el" href="time__api_8h.html#a076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
-<tr class="separator:aa9b8a136b578ceddcb739c603cb18306"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4c610b3f132186b74a4a3e0af8ac204" id="r_ae4c610b3f132186b74a4a3e0af8ac204"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#ae4c610b3f132186b74a4a3e0af8ac204">JUNO_MODULE_BASE_DECLARE</a> (JUNO_TIME_BASE_T)</td></tr>
+<tr class="separator:ae4c610b3f132186b74a4a3e0af8ac204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affcf638007c14566377616b17359e676" id="r_affcf638007c14566377616b17359e676"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#affcf638007c14566377616b17359e676">JUNO_MODULE_BASE</a> (JUNO_TIME_BASE_T, <a class="el" href="time__api_8h.html#a076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
+<tr class="separator:affcf638007c14566377616b17359e676"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a076aada0c523de520d87145537969e4f" name="a076aada0c523de520d87145537969e4f"></a>
@@ -186,7 +188,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This header contains the time library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
+<p>MIT License</p>
+<p>Copyright (c) Year Robin A. Onsay</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. This header contains the time library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -261,16 +266,16 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="aa9b8a136b578ceddcb739c603cb18306" name="aa9b8a136b578ceddcb739c603cb18306"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9b8a136b578ceddcb739c603cb18306">&#9670;&#160;</a></span>JUNO_MODULE()</h2>
+<a id="affcf638007c14566377616b17359e676" name="affcf638007c14566377616b17359e676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affcf638007c14566377616b17359e676">&#9670;&#160;</a></span>JUNO_MODULE_BASE()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE </td>
+          <td class="memname">JUNO_MODULE_BASE </td>
           <td>(</td>
-          <td class="paramtype">JUNO_TIME_T&#160;</td>
+          <td class="paramtype">JUNO_TIME_BASE_T&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -289,6 +294,24 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4c610b3f132186b74a4a3e0af8ac204" name="ae4c610b3f132186b74a4a3e0af8ac204"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4c610b3f132186b74a4a3e0af8ac204">&#9670;&#160;</a></span>JUNO_MODULE_BASE_DECLARE()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_BASE_DECLARE </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_TIME_BASE_T&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

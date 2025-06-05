@@ -1,5 +1,8 @@
 var NAVTREEINDEX1 =
 {
+"string_8h_source.html":[8,0,0,0,5,0],
+"string__api_8h.html":[8,0,0,0,5,1],
+"string__api_8h.html#aeeddef0e85d1dee95f2fea118d450df9":[8,0,0,0,5,1,1],
 "string__api_8h_source.html":[8,0,0,0,5,1],
 "string__types_8h.html":[8,0,0,0,5,2],
 "string__types_8h.html#a3c2297073d00d8e3a9587fdb1b7cf105":[8,0,0,0,5,2,1],
@@ -98,11 +101,12 @@ var NAVTREEINDEX1 =
 "time__api_8h.html#a076aada0c523de520d87145537969e4f":[8,0,0,0,7,0,2],
 "time__api_8h.html#a0de0400c81daffcd3f14f7447109e2bc":[8,0,0,0,7,0,5],
 "time__api_8h.html#a1707ece796430ceb5a70bd23d7e8a47b":[8,0,0,0,7,0,4],
-"time__api_8h.html#a7563f75bd6490dceb45b8875056d82a7":[8,0,0,0,7,0,9],
+"time__api_8h.html#a7563f75bd6490dceb45b8875056d82a7":[8,0,0,0,7,0,10],
 "time__api_8h.html#a799a531590dcbcef96f20ff0d231be88":[8,0,0,0,7,0,3],
 "time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846":[8,0,0,0,7,0,6],
-"time__api_8h.html#aa9b8a136b578ceddcb739c603cb18306":[8,0,0,0,7,0,8],
 "time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde":[8,0,0,0,7,0,7],
+"time__api_8h.html#ae4c610b3f132186b74a4a3e0af8ac204":[8,0,0,0,7,0,9],
+"time__api_8h.html#affcf638007c14566377616b17359e676":[8,0,0,0,7,0,8],
 "time__api_8h_source.html":[8,0,0,0,7,0],
 "unionJUNO__MEMORY__ALLOC__TAG.html":[7,0,5],
 "unionJUNO__MEMORY__ALLOC__TAG.html#ac0788fdefb10deeee78f04fb411e3fe4":[7,0,5,0],

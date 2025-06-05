@@ -9,12 +9,15 @@ var searchData=
   ['juno_5fkermit_5fcrc_5finit_6',['JUNO_KERMIT_CRC_INIT',['../crc_8h.html#aebebe028705358ba9a347fc317f75c60',1,'crc.h']]],
   ['juno_5fmemory_5fblock_7',['JUNO_MEMORY_BLOCK',['../memory__types_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b',1,'memory_types.h']]],
   ['juno_5fmemory_5fblock_5fmetadata_8',['JUNO_MEMORY_BLOCK_METADATA',['../memory__types_8h.html#a8942ee7462829b506969cd42e66d2ad7',1,'memory_types.h']]],
-  ['juno_5fmodule_9',['JUNO_MODULE',['../module_8h.html#aa2744aab9558918dc26def681ed44d1e',1,'module.h']]],
-  ['juno_5fmodule_5fdeclare_10',['JUNO_MODULE_DECLARE',['../module_8h.html#af01d56040653e51fb5db7ef3fc2eddea',1,'module.h']]],
-  ['juno_5fmodule_5fderive_11',['JUNO_MODULE_DERIVE',['../module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e',1,'module.h']]],
-  ['juno_5fmodule_5fempty_12',['JUNO_MODULE_EMPTY',['../module_8h.html#a6dc58e4cd075d0ef32588498500af9a0',1,'module.h']]],
-  ['juno_5fmodule_5fsuper_13',['JUNO_MODULE_SUPER',['../module_8h.html#af98d3f7fa92446d974d322bcfe55b284',1,'module.h']]],
-  ['juno_5fnew_5fref_14',['JUNO_NEW_REF',['../memory__types_8h.html#a17ee3efcb223e0831576875ebeebfee6',1,'memory_types.h']]],
-  ['juno_5fref_15',['JUNO_REF',['../memory__types_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_types.h']]],
-  ['juno_5fzip_5fcrc_5finit_16',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
+  ['juno_5fmodule_9',['JUNO_MODULE',['../module_8h.html#a820e360cf2e7de522e97fecf1b123e96',1,'module.h']]],
+  ['juno_5fmodule_5fbase_10',['JUNO_MODULE_BASE',['../module_8h.html#a4a7bedb12e394caaedc93d23599a618e',1,'module.h']]],
+  ['juno_5fmodule_5fbase_5fdeclare_11',['JUNO_MODULE_BASE_DECLARE',['../module_8h.html#a88ba09a559027364496f4da4c765d2b0',1,'module.h']]],
+  ['juno_5fmodule_5fdeclare_12',['JUNO_MODULE_DECLARE',['../module_8h.html#af01d56040653e51fb5db7ef3fc2eddea',1,'module.h']]],
+  ['juno_5fmodule_5fderive_13',['JUNO_MODULE_DERIVE',['../module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e',1,'module.h']]],
+  ['juno_5fmodule_5fderive_5fdeclare_14',['JUNO_MODULE_DERIVE_DECLARE',['../module_8h.html#a5f07d8f34df731727db318bcef6b94ee',1,'module.h']]],
+  ['juno_5fmodule_5fempty_15',['JUNO_MODULE_EMPTY',['../module_8h.html#a6dc58e4cd075d0ef32588498500af9a0',1,'module.h']]],
+  ['juno_5fmodule_5fsuper_16',['JUNO_MODULE_SUPER',['../module_8h.html#af98d3f7fa92446d974d322bcfe55b284',1,'module.h']]],
+  ['juno_5fnew_5fref_17',['JUNO_NEW_REF',['../memory__types_8h.html#a17ee3efcb223e0831576875ebeebfee6',1,'memory_types.h']]],
+  ['juno_5fref_18',['JUNO_REF',['../memory__types_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_types.h']]],
+  ['juno_5fzip_5fcrc_5finit_19',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
 ];
