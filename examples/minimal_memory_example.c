@@ -1,5 +1,6 @@
-#include "juno/memory/memory.h"
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
+#define JUNO_MEMORY_DEFAULT
+#include "juno/memory/memory_block.h"
 #include "juno/status.h"
 #include <stdio.h>
 
@@ -26,8 +27,8 @@ int main(void) {
     
     // Step 1: Initialize the memory allocator
     JUNO_MEMORY_ALLOC_T tMemAlloc = {0};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMemAlloc.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMemAlloc,
         gUserDataMemory,
         gUserDataMetadata,
         sizeof(USER_DATA_T),
@@ -45,6 +46,7 @@ int main(void) {
     
     // Step 2: Allocate memory
     JUNO_MEMORY_T tMemory = {0};
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.tBase.ptApi;
     tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(USER_DATA_T));
     
     if (tStatus != JUNO_STATUS_SUCCESS) {

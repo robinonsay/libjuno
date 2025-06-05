@@ -1,11 +1,8 @@
-#include "juno/memory/memory.h"
 #include "juno/memory/memory_api.h"
-#include "juno/memory/memory_types.h"
+#define JUNO_MEMORY_DEFAULT
+#include "juno/memory/memory_block.h"
 #include "juno/status.h"
 #include <stdio.h>
-
-// The Memory API
-static const JUNO_MEMORY_API_T *gptMemoryApi = {};
 
 /// A SLL node
 typedef struct SINGLE_LINKED_LIST_NODE_TAG SINGLE_LINKED_LIST_NODE_T;
@@ -56,7 +53,8 @@ static JUNO_STATUS_T Push(JUNO_MEMORY_ALLOC_T *ptAlloc, SINGLE_LINKED_LIST_T *pt
         // Create a new node and return the status
         // Allocate the memory for the first node
         JUNO_MEMORY_T tMem = {};
-        JUNO_STATUS_T tStatus = gptMemoryApi->Get(ptAlloc, &tMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
+        const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tBase.ptApi;
+        JUNO_STATUS_T tStatus = ptApi->Get(ptAlloc, &tMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
         if(tStatus) return tStatus;
         // Using the memory directly since the SLL will own this memory
         ptThisNode = (SINGLE_LINKED_LIST_NODE_T *) tMem.pvAddr;
@@ -75,7 +73,8 @@ static JUNO_STATUS_T Push(JUNO_MEMORY_ALLOC_T *ptAlloc, SINGLE_LINKED_LIST_T *pt
     }
     // Allocate the memory for the first node
     JUNO_MEMORY_T tMem = {};
-    tStatus = gptMemoryApi->Get(ptAlloc, &tMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tBase.ptApi;
+    tStatus = ptApi->Get(ptAlloc, &tMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
     if(tStatus) return tStatus;
     // Using the memory directly since the SLL will own this memory
     ptThisNode->ptNext = (SINGLE_LINKED_LIST_NODE_T *) tMem.pvAddr;
@@ -110,19 +109,19 @@ static JUNO_STATUS_T Pop(JUNO_MEMORY_ALLOC_T *ptAlloc, SINGLE_LINKED_LIST_T *ptS
     }
     ptSll->ptStart = ptThisNode->ptNext;
     *piRetData = ptThisNode->iExampleData;
-    tStatus = gptMemoryApi->Put(ptAlloc, &ptThisNode->tMemory);
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tBase.ptApi;
+    tStatus = ptApi->Put(ptAlloc, &ptThisNode->tMemory);
     return tStatus;
 }
 
 int main()
 {
     // Instantiate the memory API
-    gptMemoryApi = Juno_MemoryApi();
     // The memory allocator
     JUNO_MEMORY_ALLOC_T tMemAlloc = {};
     // Initialize the block allocator
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMemAlloc.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMemAlloc,
         ptSllMemory,
         ptSllMemoryMetadata,
         sizeof(SINGLE_LINKED_LIST_NODE_T),
