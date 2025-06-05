@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.6.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -165,7 +165,7 @@ Error Handling</h2>
 <div class="line"><span class="keywordflow">if</span> (tStatus != <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>) {</div>
 <div class="line">    <span class="comment">// Handle error</span></div>
 <div class="line">}</div>
-<div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">@ JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:27</div></div>
+<div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">@ JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:24</div></div>
 </div><!-- fragment --><p>Modules also support optional failure handlers that can be registered during initialization:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> MyFailureHandler(<a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span>* pcMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a>* pvUserData) {</div>
 <div class="line">    <span class="comment">// Custom error handling</span></div>
@@ -173,7 +173,7 @@ Error Handling</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Then during initialization</span></div>
 <div class="line">Juno_ModuleInit(..., MyFailureHandler, pvUserData);</div>
-<div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:46</div></div>
+<div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:43</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md42"></a>
 Memory Management</h2>
 <p>Memory in LibJuno is typically managed through pre-allocated blocks:</p>
@@ -184,10 +184,10 @@ Memory Management</h2>
 <div class="line"><span class="comment">// Initialize block allocator</span></div>
 <div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__BLOCK__TAG.html">JUNO_MEMORY_BLOCK_T</a> tMemBlock;</div>
 <div class="line"><a class="code hl_function" href="memory_8h.html#af3ffa1610a483a7ccdad71afeabcbb88">Juno_MemoryBlkInit</a>(&amp;tMemBlock, myMemory, myMetadata, <span class="keyword">sizeof</span>(MyType), 10, NULL, NULL);</div>
-<div class="ttc" id="amemory_8h_html_af3ffa1610a483a7ccdad71afeabcbb88"><div class="ttname"><a href="memory_8h.html#af3ffa1610a483a7ccdad71afeabcbb88">Juno_MemoryBlkInit</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MemoryBlkInit(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvMemory, JUNO_MEMORY_BLOCK_METADATA_T *pvMetadata, size_t zTypeSize, size_t zLength, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdoc">Initializes a memory block for allocation. Sets up a memory block with an associated free stack for m...</div><div class="ttdef"><b>Definition</b> juno_memory.c:51</div></div>
-<div class="ttc" id="amemory__types_8h_html_a8942ee7462829b506969cd42e66d2ad7"><div class="ttname"><a href="memory__types_8h.html#a8942ee7462829b506969cd42e66d2ad7">JUNO_MEMORY_BLOCK_METADATA</a></div><div class="ttdeci">#define JUNO_MEMORY_BLOCK_METADATA(name, length)</div><div class="ttdoc">Macro to declare a static array for memory metadata.</div><div class="ttdef"><b>Definition</b> memory_types.h:42</div></div>
-<div class="ttc" id="amemory__types_8h_html_af0d3dee078bfb9d9aeaf19018245ad9b"><div class="ttname"><a href="memory__types_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b">JUNO_MEMORY_BLOCK</a></div><div class="ttdeci">#define JUNO_MEMORY_BLOCK(name, type, length)</div><div class="ttdoc">Macro to declare a static memory block and its associated free stack.</div><div class="ttdef"><b>Definition</b> memory_types.h:36</div></div>
-<div class="ttc" id="astructJUNO__MEMORY__BLOCK__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__BLOCK__TAG.html">JUNO_MEMORY_BLOCK_TAG</a></div><div class="ttdoc">Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as...</div><div class="ttdef"><b>Definition</b> memory_types.h:93</div></div>
+<div class="ttc" id="amemory_8h_html_af3ffa1610a483a7ccdad71afeabcbb88"><div class="ttname"><a href="memory_8h.html#af3ffa1610a483a7ccdad71afeabcbb88">Juno_MemoryBlkInit</a></div><div class="ttdeci">JUNO_STATUS_T Juno_MemoryBlkInit(JUNO_MEMORY_BLOCK_T *ptMemBlk, void *pvMemory, JUNO_MEMORY_BLOCK_METADATA_T *pvMetadata, size_t zTypeSize, size_t zLength, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdoc">Initializes a memory block for allocation. Sets up a memory block with an associated free stack for m...</div><div class="ttdef"><b>Definition</b> juno_memory.c:48</div></div>
+<div class="ttc" id="amemory__types_8h_html_a8942ee7462829b506969cd42e66d2ad7"><div class="ttname"><a href="memory__types_8h.html#a8942ee7462829b506969cd42e66d2ad7">JUNO_MEMORY_BLOCK_METADATA</a></div><div class="ttdeci">#define JUNO_MEMORY_BLOCK_METADATA(name, length)</div><div class="ttdoc">Macro to declare a static array for memory metadata.</div><div class="ttdef"><b>Definition</b> memory_types.h:39</div></div>
+<div class="ttc" id="amemory__types_8h_html_af0d3dee078bfb9d9aeaf19018245ad9b"><div class="ttname"><a href="memory__types_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b">JUNO_MEMORY_BLOCK</a></div><div class="ttdeci">#define JUNO_MEMORY_BLOCK(name, type, length)</div><div class="ttdoc">Macro to declare a static memory block and its associated free stack.</div><div class="ttdef"><b>Definition</b> memory_types.h:33</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__BLOCK__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__BLOCK__TAG.html">JUNO_MEMORY_BLOCK_TAG</a></div><div class="ttdoc">Structure representing a block-based memory allocator. Manages a fixed-size memory area along with as...</div><div class="ttdef"><b>Definition</b> memory_types.h:90</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md43"></a>
 Reference Counting</h2>
 <p>Memory objects support reference counting to manage shared resources:</p>
@@ -196,7 +196,7 @@ Reference Counting</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Release reference when done</span></div>
 <div class="line">Juno_MemoryPutRef(ptMemRef);</div>
-<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:79</div></div>
+<div class="ttc" id="astructJUNO__MEMORY__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a></div><div class="ttdoc">Structure for an allocated memory segment. Describes the allocated memory with a pointer to the start...</div><div class="ttdef"><b>Definition</b> memory_types.h:76</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md44"></a>
 Module Documentation</h1>
 <p>For detailed documentation on individual modules, please refer to:</p>
