@@ -15,7 +15,7 @@
     included in all copies or substantial portions of the Software.
 */
 
-/***/
+
 
 #ifndef HASH_H
 #define HASH_H

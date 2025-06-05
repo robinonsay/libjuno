@@ -15,7 +15,7 @@
     included in all copies or substantial portions of the Software.
 */
 
-/***/
+
 
 #ifndef HASH_API_H
 #define HASH_API_H

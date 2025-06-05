@@ -15,7 +15,7 @@
     included in all copies or substantial portions of the Software.
 */
 
-/***/
+
 
 #ifndef JUNO_CRC_H
 #define JUNO_CRC_H

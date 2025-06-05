@@ -15,7 +15,7 @@
     included in all copies or substantial portions of the Software.
 */
 
-/***/
+
 
 #include <stdint.h>
 static const uint16_t binhex_crctab[256] = {
