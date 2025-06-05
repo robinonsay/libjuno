@@ -4,6 +4,7 @@ import argparse
 
 # The license header to prepend
 LICENSE_HEADER = """/**
+    @file
     MIT License
 
     Copyright (c) Year Robin A. Onsay

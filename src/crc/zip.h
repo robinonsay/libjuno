@@ -1,4 +1,4 @@
-/**
+/*
     MIT License
 
     Copyright (c) Year Robin A. Onsay
@@ -14,9 +14,6 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
-
-
-
 #include <stdint.h>
 static const uint32_t zip_crctab[256] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
