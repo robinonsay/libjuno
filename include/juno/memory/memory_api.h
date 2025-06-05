@@ -1,4 +1,4 @@
-/**
+/*
     MIT License
 
     Copyright (c) Year Robin A. Onsay
@@ -14,9 +14,6 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
-
-
-
 #ifndef JUNO_MEMORY_API_H
 #define JUNO_MEMORY_API_H
 #include "juno/status.h"

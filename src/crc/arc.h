@@ -1,4 +1,4 @@
-/**
+/*
     MIT License
 
     Copyright (c) Year Robin A. Onsay
@@ -14,9 +14,6 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
-
-
-
 #include <stdint.h>
 static const uint16_t arc_crctab[256] = {
     0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241,

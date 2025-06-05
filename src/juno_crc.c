@@ -1,4 +1,4 @@
-/**
+/*
     MIT License
 
     Copyright (c) Year Robin A. Onsay
@@ -14,9 +14,6 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
-
-
-
 #include "crc/juno_arc.c"
 #include "crc/juno_binhex.c"
 #include "crc/juno_ccitt.c"
