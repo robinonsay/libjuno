@@ -1,33 +1,42 @@
 name: Build & Deploy Docs
 
-# Trigger on pushes to main (or change to your default branch)
+# Trigger on pushes to main (or whatever your default branch is)
 on:
   push:
     branches:
       - main
 
 permissions:
-  contents: write    # read/write access to repo contents
-  pages:    write    # allows pushing to gh-pages
+  contents: write    # to push commits + tags
+  pages:    write    # to push to gh-pages
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) Check out your repo
-      - uses: actions/checkout@v3
+      # 1) Check out the repo
+      - name: Check out repository
+        uses: actions/checkout@v3
         with:
-          submodules: true
+          fetch-depth: 0      # <-- so that tags can be pushed
 
-      # 2) (Optional) Install prerequisites
+      # 2) Bump the version (this will edit CMakeLists.txt and print the new version)
+      - name: Bump minor version
+        id: bump_version
+        run: |
+          # Run the Python version‐bump script and capture its stdout
+          NEW_VER=$(python3 scripts/increase_version.py)
+          echo "NEW_VERSION=$NEW_VER" >> $GITHUB_ENV
+        shell: bash
+
+      # 3) Install prerequisites (CMake + Doxygen)
       - name: Install CMake & Doxygen
         run: |
-          python3 scripts/increase_version.py
           sudo apt-get update
           sudo apt-get install -y cmake doxygen
 
-      # 3) Configure & build your docs target
+      # 4) Configure & build your docs target
       - name: Configure CMake
         run: |
           cmake -B public -DCMAKE_BUILD_TYPE=Release -DJUNO_DOCS=ON .
@@ -35,27 +44,52 @@ jobs:
         run: |
           make -C public docs
 
-      # 4) Deploy the generated HTML to GitHub Pages
+      # 5) Deploy the generated HTML to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          # Uses the special GITHUB_TOKEN to push to gh-pages
+          # Use the GITHUB_TOKEN to push to gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Directory (in the runner) containing your built HTML
+          # Directory containing your built HTML
           publish_dir: public/docs/html
           # Branch to push to; Pages will serve from here
           publish_branch: gh-pages
-          # Optional: keep history or force-push
+          # Overwrite everything each time
           keep_files: false
+
+      # 6) Commit & push the version bump (if CMakeLists.txt was changed)
       - name: Commit & push version bump
         run: |
-          # Configure a bot identity for the commit
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Stage the updated CMakeLists.txt
           git add CMakeLists.txt
-          # If there are no changes, exit quietly. Otherwise commit.
-          git diff --cached --quiet || \
-            (git commit -m "Bump minor version [skip ci]" && git push)
+
+          # Only commit if there are changes
+          if git diff --cached --quiet; then
+            echo "No version‐bump changes to commit"
+          else
+            git commit -m "Bump minor version to v${{ env.NEW_VERSION }} [skip ci]"
+            git push origin HEAD:main
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+
+      # 7) Create & push a tag for the new version (only if NEW_VERSION is non‐empty)
+      - name: Create and push Git tag
+        if: env.NEW_VERSION != ''
+        run: |
+          TAG="v${{ env.NEW_VERSION }}"
+          # Check if tag already exists locally or remotely
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists; skipping."
+          else
+            echo "Creating tag $TAG"
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash

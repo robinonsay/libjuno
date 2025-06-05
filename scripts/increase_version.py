@@ -1,12 +1,13 @@
+#!/usr/bin/env python3
 import re
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Path to your top‐level CMakeLists.txt
 cmake_file = Path("CMakeLists.txt")
 text = cmake_file.read_text()
 
-# Match: project(juno VERSION <major>.<minor>.<patch> LANGUAGES C)
+# Matches: project(juno VERSION <major>.<minor>.<patch> LANGUAGES C)
 pattern = (
     r"(project\s*\(\s*juno\s+VERSION\s+)"
     r"(\d+)\.(\d+)\.(\d+)"
@@ -14,17 +15,32 @@ pattern = (
 )
 
 def bump_match(m):
+    # Parse existing major/minor/patch
     major = int(m.group(2))
     minor = int(m.group(3))
-    # ignore the old patch; we’ll reset it:
+    # Always bump minor, reset patch to 0
     new_minor = minor + 1
     new_patch = 0
+    # Reconstruct the line prefix + new version + suffix
     return f"{m.group(1)}{major}.{new_minor}.{new_patch}{m.group(5)}"
 
-new_text = re.sub(pattern, bump_match, text)
-if new_text == text:
-    print("⚠️  No matching version line found (or already bumped). Exiting.")
+# Search for the version‐line
+m = re.search(pattern, text)
+if not m:
+    print("⚠️  No matching version line found (or already bumped). Exiting.", file=sys.stderr)
     sys.exit(0)
 
+# Compute the “new version” string (so that we can print it later)
+old_major = int(m.group(2))
+old_minor = int(m.group(3))
+new_major = old_major
+new_minor = old_minor + 1
+new_patch = 0
+new_version = f"{new_major}.{new_minor}.{new_patch}"
+
+# Apply the substitution
+new_text = re.sub(pattern, bump_match, text)
 cmake_file.write_text(new_text)
-print("✅  Version line updated.")
+
+# Print only the new version (e.g. "1.2.0") to stdout
+print(new_version)
