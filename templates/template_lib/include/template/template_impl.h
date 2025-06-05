@@ -22,6 +22,9 @@ JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_BASE_T,
     
     */
 );
+
+#define TEMPLATE_IMPL   TEMPLATE_IMPL_T tTemplateImpl
+
 #ifndef TEMPLATE_DERIVED
 /**
     This is the default implementation for `TEMPLATE_T`.
@@ -30,11 +33,10 @@ JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_BASE_T,
     `#include "template_impl.h"`
 
     Note: If you are implementing a derived module you will need
-    to implement `TEMPLATE_IMPL_T tTemplateImpl` as the underlying
-    source references `tTemplateImpl`.
+    to implement `TEMPLATE_IMPL`.
 */
 JUNO_MODULE(TEMPLATE_T, TEMPLATE_BASE_T,
-    TEMPLATE_IMPL_T tTemplateImpl;
+    TEMPLATE_IMPL;
 );
 #endif
 
