@@ -48,14 +48,14 @@ JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_BASE_T,
 #ifdef TEMPLATE_DEFAULT
 /**
     This is the default implementation for `TEMPLATE_T`.
-    If you want to derive new implementations for `TEMPLATE_T`
-    use `#define TEMPLATE_DERIVED` prior to including
+    If you want to use the default implementation for `TEMPLATE_T`
+    use `#define TEMPLATE_DEFAULT` prior to including
     `#include "template_impl.h"`
 
     Note: If you are implementing a derived module you will need
     to implement `TEMPLATE_IMPL`.
 */
-JUNO_MODULE(TEMPLATE_T, TEMPLATE_BASE_T,
+JUNO_MODULE(TEMPLATE_T, TEMPLATE_API_T, TEMPLATE_BASE_T,
     TEMPLATE_IMPL_T tTemplateImpl;
 );
 #endif

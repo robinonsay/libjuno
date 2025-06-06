@@ -28,9 +28,10 @@
 #define JUNO_FAILURE_USER_DATA    _pvFailurUserData
 #define JUNO_MODULE_EMPTY
 #define JUNO_MODULE_SUPER   tBase
-#define JUNO_MODULE(name, base, derived) \
+#define JUNO_MODULE(name, API, base, derived) \
 union name##_TAG \
 { \
+    const API *ptApi; \
     base JUNO_MODULE_SUPER; \
     derived \
 }
@@ -43,7 +44,6 @@ struct name##_TAG \
     JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \
     JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \
 }
-
 #define JUNO_MODULE_DERIVE(name, base, members) \
 struct name##_TAG \
 { \
