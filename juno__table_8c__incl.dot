@@ -46,16 +46,15 @@ digraph "/home/runner/work/libjuno/libjuno/src/posix/juno_table.c"
   Node14 [id="Node000014",label="string.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$string_8h.html",tooltip=" "];
   Node14 -> Node15 [id="edge27_Node000014_Node000015",color="steelblue1",style="solid",tooltip=" "];
   Node15 [id="Node000015",label="juno/string/string\l_api.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$string__api_8h.html",tooltip=" "];
-  Node15 -> Node16 [id="edge28_Node000015_Node000016",color="steelblue1",style="solid",tooltip=" "];
-  Node16 [id="Node000016",label="juno/memory/memory\l_types.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node15 -> Node9 [id="edge28_Node000015_Node000009",color="steelblue1",style="solid",tooltip=" "];
   Node15 -> Node6 [id="edge29_Node000015_Node000006",color="steelblue1",style="solid",tooltip=" "];
-  Node15 -> Node17 [id="edge30_Node000015_Node000017",color="steelblue1",style="solid",tooltip=" "];
-  Node17 [id="Node000017",label="juno/string/string\l_types.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$string__types_8h.html",tooltip=" "];
-  Node17 -> Node9 [id="edge31_Node000017_Node000009",color="steelblue1",style="solid",tooltip=" "];
-  Node17 -> Node11 [id="edge32_Node000017_Node000011",color="steelblue1",style="solid",tooltip=" "];
+  Node15 -> Node16 [id="edge30_Node000015_Node000016",color="steelblue1",style="solid",tooltip=" "];
+  Node16 [id="Node000016",label="juno/string/string\l_types.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$string__types_8h.html",tooltip=" "];
+  Node16 -> Node9 [id="edge31_Node000016_Node000009",color="steelblue1",style="solid",tooltip=" "];
+  Node16 -> Node11 [id="edge32_Node000016_Node000011",color="steelblue1",style="solid",tooltip=" "];
   Node15 -> Node11 [id="edge33_Node000015_Node000011",color="steelblue1",style="solid",tooltip=" "];
-  Node14 -> Node17 [id="edge34_Node000014_Node000017",color="steelblue1",style="solid",tooltip=" "];
+  Node14 -> Node16 [id="edge34_Node000014_Node000016",color="steelblue1",style="solid",tooltip=" "];
   Node14 -> Node11 [id="edge35_Node000014_Node000011",color="steelblue1",style="solid",tooltip=" "];
-  Node1 -> Node18 [id="edge36_Node000001_Node000018",color="steelblue1",style="solid",tooltip=" "];
-  Node18 [id="Node000018",label="unistd.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node1 -> Node17 [id="edge36_Node000001_Node000017",color="steelblue1",style="solid",tooltip=" "];
+  Node17 [id="Node000017",label="unistd.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
 }

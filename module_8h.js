@@ -2,7 +2,7 @@ var module_8h =
 [
     [ "JUNO_FAILURE_HANDLER", "module_8h.html#af2cc78723eab5f63af29ba0056fb2931", null ],
     [ "JUNO_FAILURE_USER_DATA", "module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad", null ],
-    [ "JUNO_MODULE", "module_8h.html#a820e360cf2e7de522e97fecf1b123e96", null ],
+    [ "JUNO_MODULE", "module_8h.html#a8c873e9a430b7afd3411a65c787f3101", null ],
     [ "JUNO_MODULE_BASE", "module_8h.html#a4a7bedb12e394caaedc93d23599a618e", null ],
     [ "JUNO_MODULE_BASE_DECLARE", "module_8h.html#a88ba09a559027364496f4da4c765d2b0", null ],
     [ "JUNO_MODULE_DECLARE", "module_8h.html#af01d56040653e51fb5db7ef3fc2eddea", null ],

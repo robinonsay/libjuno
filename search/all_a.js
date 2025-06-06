@@ -1,6 +1,28 @@
 var searchData=
 [
-  ['error_20handling_0',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]],
-  ['example_1',['Usage Example',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27',1,'']]],
-  ['example_20usage_20pattern_2',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]]
+  ['a_20gas_20powered_20engine_3a_20tt_20engine_5fv6_20h_20tt_20tt_20engine_5fv8_20h_20tt_0',['3.2. Deriving a Gas-Powered Engine: &lt;tt&gt;engine_v6.h&lt;/tt&gt; &amp; &lt;tt&gt;engine_v8.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46',1,'']]],
+  ['a_20simple_20module_20api_3a_20the_20gas_20tank_1',['2. Defining a Simple Module API: The Gas Tank',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md39',1,'']]],
+  ['a_20turbocharged_20engine_2',['5. Demonstrating Isolation of Changes: Adding a Turbocharged Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md56',1,'']]],
+  ['add_20tt_20engine_5fturbov6_20h_20tt_3',['5.1. Add &lt;tt&gt;engine_turbov6.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
+  ['adding_20a_20turbocharged_20engine_4',['5. Demonstrating Isolation of Changes: Adding a Turbocharged Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md56',1,'']]],
+  ['all_20together_3a_20tt_20main_20c_20tt_5',['4.3. Putting It All Together: &lt;tt&gt;main.c&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md53',1,'']]],
+  ['allocate_20memory_6',['Step 3: Allocate Memory',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md8',1,'']]],
+  ['allocation_7',['Memory Allocation',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md16',1,'']]],
+  ['allocator_8',['Step 2: Initialize the Memory Allocator',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md7',1,'']]],
+  ['alternative_20approach_9',['Step 6: Using the Memory API (Alternative Approach)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11',1,'']]],
+  ['an_20electric_20engine_3a_20tt_20engine_5felectric_20h_20tt_10',['3.3. An Electric Engine: &lt;tt&gt;engine_electric.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md48',1,'']]],
+  ['an_20engine_20module_3a_20deriving_20injecting_20dependencies_11',['3. Building an Engine Module: Deriving &amp; Injecting Dependencies',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md43',1,'']]],
+  ['an_20entirely_20different_20fuel_20source_3a_20“hybrid”_20engines_12',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md62',1,'']]],
+  ['an_20overview_13',['1. LibJuno’s Module System: An Overview',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md37',1,'']]],
+  ['and_20testing_14',['Building and Testing',['../index.html#autotoc_md79',1,'']]],
+  ['api_20alternative_20approach_15',['Step 6: Using the Memory API (Alternative Approach)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11',1,'']]],
+  ['api_20reference_16',['API Reference',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md23',1,'']]],
+  ['api_3a_20the_20gas_20tank_17',['2. Defining a Simple Module API: The Gas Tank',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md39',1,'']]],
+  ['append_18',['Append',['../structJUNO__STRING__API__TAG.html#a991f4f868c295beb7915d63ad80f7d8d',1,'JUNO_STRING_API_TAG']]],
+  ['approach_19',['Step 6: Using the Memory API (Alternative Approach)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11',1,'']]],
+  ['arc_2eh_20',['arc.h',['../arc_8h.html',1,'']]],
+  ['assert_5fexists_21',['ASSERT_EXISTS',['../macros_8h.html#abf729d00254f692443168dcdc098b5f1',1,'macros.h']]],
+  ['assert_5fexists_5fmodule_22',['ASSERT_EXISTS_MODULE',['../macros_8h.html#a7d6f321ea5cc3cbc9066cf33a9c80c77',1,'macros.h']]],
+  ['assert_5fsuccess_23',['ASSERT_SUCCESS',['../macros_8h.html#a11bb3cae9586d9a5e68eec88fe23b3ef',1,'macros.h']]],
+  ['avoid_24',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]]
 ];

@@ -9,7 +9,7 @@ var searchData=
   ['juno_5fkermit_5fcrc_5finit_6',['JUNO_KERMIT_CRC_INIT',['../crc_8h.html#aebebe028705358ba9a347fc317f75c60',1,'crc.h']]],
   ['juno_5fmemory_5fblock_7',['JUNO_MEMORY_BLOCK',['../memory__api_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b',1,'memory_api.h']]],
   ['juno_5fmemory_5fblock_5fmetadata_8',['JUNO_MEMORY_BLOCK_METADATA',['../memory__api_8h.html#a8942ee7462829b506969cd42e66d2ad7',1,'memory_api.h']]],
-  ['juno_5fmodule_9',['JUNO_MODULE',['../module_8h.html#a820e360cf2e7de522e97fecf1b123e96',1,'module.h']]],
+  ['juno_5fmodule_9',['JUNO_MODULE',['../module_8h.html#a8c873e9a430b7afd3411a65c787f3101',1,'module.h']]],
   ['juno_5fmodule_5fbase_10',['JUNO_MODULE_BASE',['../module_8h.html#a4a7bedb12e394caaedc93d23599a618e',1,'module.h']]],
   ['juno_5fmodule_5fbase_5fdeclare_11',['JUNO_MODULE_BASE_DECLARE',['../module_8h.html#a88ba09a559027364496f4da4c765d2b0',1,'module.h']]],
   ['juno_5fmodule_5fdeclare_12',['JUNO_MODULE_DECLARE',['../module_8h.html#af01d56040653e51fb5db7ef3fc2eddea',1,'module.h']]],

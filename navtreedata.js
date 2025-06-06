@@ -25,17 +25,17 @@
 var NAVTREE =
 [
   [ "LibJuno", "index.html", [
-    [ "LibJuno", "index.html#autotoc_md37", [
-      [ "Using LibJuno", "index.html#autotoc_md38", [
-        [ "Documentation", "index.html#autotoc_md39", null ]
+    [ "LibJuno", "index.html#autotoc_md75", [
+      [ "Using LibJuno", "index.html#autotoc_md76", [
+        [ "Documentation", "index.html#autotoc_md77", null ]
       ] ],
-      [ "Dependencies", "index.html#autotoc_md40", null ],
-      [ "Building and Testing", "index.html#autotoc_md41", [
-        [ "CMake Build Option", "index.html#autotoc_md42", null ]
+      [ "Dependencies", "index.html#autotoc_md78", null ],
+      [ "Building and Testing", "index.html#autotoc_md79", [
+        [ "CMake Build Option", "index.html#autotoc_md80", null ]
       ] ],
-      [ "Current Modules", "index.html#autotoc_md43", null ],
-      [ "Future Modules", "index.html#autotoc_md44", null ],
-      [ "Inspiration for the Name", "index.html#autotoc_md45", null ]
+      [ "Current Modules", "index.html#autotoc_md81", null ],
+      [ "Future Modules", "index.html#autotoc_md82", null ],
+      [ "Inspiration for the Name", "index.html#autotoc_md83", null ]
     ] ],
     [ "Juno Hash Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
     [ "Juno Map Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
@@ -78,6 +78,45 @@ var NAVTREE =
         [ "When to Use Reference Counting", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34", null ]
       ] ]
     ] ],
+    [ "Dependency Injection", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html", [
+      [ "1. LibJuno’s Module System: An Overview", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md37", null ],
+      [ "2. Defining a Simple Module API: The Gas Tank", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md39", [
+        [ "2.1. <tt>gastank_api.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md40", null ],
+        [ "2.2. <tt>gastank_impl.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md41", null ]
+      ] ],
+      [ "3. Building an Engine Module: Deriving & Injecting Dependencies", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md43", [
+        [ "3.1. <tt>engine_api.h</tt>: The Base Engine", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44", [
+          [ "What This Means", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md45", null ]
+        ] ],
+        [ "3.2. Deriving a Gas-Powered Engine: <tt>engine_v6.h</tt> & <tt>engine_v8.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46", [
+          [ "Implementation Sketch (in <tt>engine_v6.c</tt>)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md47", null ]
+        ] ],
+        [ "3.3. An Electric Engine: <tt>engine_electric.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md48", null ]
+      ] ],
+      [ "4. Wiring Everything Together: The Car Module & <tt>main.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50", [
+        [ "4.1. <tt>car_api.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md51", null ],
+        [ "4.2. <tt>car_impl.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md52", null ],
+        [ "4.3. Putting It All Together: <tt>main.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md53", [
+          [ "Why This Is Modular", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md54", null ]
+        ] ]
+      ] ],
+      [ "5. Demonstrating Isolation of Changes: Adding a Turbocharged Engine", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md56", [
+        [ "5.1. Add <tt>engine_turbov6.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57", null ],
+        [ "5.2. Implement <tt>engine_turbov6.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md58", null ],
+        [ "5.3. Modify <tt>main.c</tt> to Use Turbo V6", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md59", [
+          [ "Why This Is Completely Isolated", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md60", null ]
+        ] ]
+      ] ],
+      [ "6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md62", [
+        [ "6.1. <tt>engine_hybrid.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md63", null ],
+        [ "6.2. <tt>engine_hybrid.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md64", null ],
+        [ "6.3. Using the Hybrid Engine in <tt>main.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md65", null ]
+      ] ],
+      [ "7. How to Write Your Own Modules in LibJuno", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67", null ],
+      [ "8. Why Dependency Injection Matters in Embedded Systems", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md68", null ],
+      [ "9. Best Practices & Tips", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70", null ],
+      [ "10. Conclusion", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md72", null ]
+    ] ],
     [ "Juno String Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html", null ],
     [ "Juno Table Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html", null ],
     [ "Data Structures", "annotated.html", [
@@ -105,7 +144,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368"
+"status_8h.html#aede45f0a23d8d5a902e6562474b1904b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
