@@ -1,4 +1,4 @@
-# Dependency Injection in LibJuno
+# Dependency Injection
 
 In embedded systems, code often grows into tightly coupled, monolithic blocks where a change in one component ripples through the entire system. This makes maintenance and reuse difficult, especially as projects scale or requirements evolve. **LibJuno** offers a lightweight, C99-compatible approach to achieve modularity and dependency injection (DI) in embedded projects. By using LibJuno’s macros and a clear pattern for defining “modules” (essentially self-contained components with defined APIs), you can:
 
