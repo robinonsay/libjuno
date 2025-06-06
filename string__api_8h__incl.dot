@@ -17,9 +17,5 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/string/string_api.h"
   Node2 -> Node6 [id="edge6_Node000002_Node000006",color="steelblue1",style="solid",tooltip=" "];
   Node6 [id="Node000006",label="stddef.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node1 -> Node3 [id="edge7_Node000001_Node000003",color="steelblue1",style="solid",tooltip=" "];
-  Node1 -> Node7 [id="edge8_Node000001_Node000007",color="steelblue1",style="solid",tooltip=" "];
-  Node7 [id="Node000007",label="juno/string/string\l_types.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$string__types_8h.html",tooltip=" "];
-  Node7 -> Node2 [id="edge9_Node000007_Node000002",color="steelblue1",style="solid",tooltip=" "];
-  Node7 -> Node6 [id="edge10_Node000007_Node000006",color="steelblue1",style="solid",tooltip=" "];
-  Node1 -> Node6 [id="edge11_Node000001_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node4 [id="edge8_Node000001_Node000004",color="steelblue1",style="solid",tooltip=" "];
 }

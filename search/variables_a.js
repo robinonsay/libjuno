@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['update_0',['Update',['../structJUNO__MEMORY__ALLOC__API__TAG.html#a016cff55da0dced33033f7d647698ac4',1,'JUNO_MEMORY_ALLOC_API_TAG']]]
+  ['write_0',['Write',['../structJUNO__IO__SERIAL__API__TAG.html#a34b8f66ffd76ef26290c872a13295a83',1,'JUNO_IO_SERIAL_API_TAG']]]
 ];

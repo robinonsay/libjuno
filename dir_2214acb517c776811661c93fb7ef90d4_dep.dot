@@ -7,10 +7,8 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/io"
   compound=true
   subgraph clusterdir_366da5caa8e7ec3e54d94764b6f022bc {
     graph [ bgcolor="#edf0f7", pencolor="grey50", label="juno", fontname=Helvetica,fontsize=10 style="filled,dashed", URL="dir_366da5caa8e7ec3e54d94764b6f022bc.html",tooltip=""]
-  dir_1ee06b418de2fbaa3d5b1443d2d582cb [label="string", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_1ee06b418de2fbaa3d5b1443d2d582cb.html",tooltip=""];
   dir_f7826cb483c41652a57f47c29e86de5a [label="time", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_f7826cb483c41652a57f47c29e86de5a.html",tooltip=""];
   dir_2214acb517c776811661c93fb7ef90d4 [label="io", fillcolor="#edf0f7", color="grey25", style="filled,bold", URL="dir_2214acb517c776811661c93fb7ef90d4.html",tooltip=""];
   }
-  dir_2214acb517c776811661c93fb7ef90d4->dir_1ee06b418de2fbaa3d5b1443d2d582cb [headlabel="1", labeldistance=1.5 headhref="dir_000004_000010.html" href="dir_000004_000010.html" color="steelblue1" fontcolor="steelblue1"];
-  dir_2214acb517c776811661c93fb7ef90d4->dir_f7826cb483c41652a57f47c29e86de5a [headlabel="1", labeldistance=1.5 headhref="dir_000004_000012.html" href="dir_000004_000012.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_2214acb517c776811661c93fb7ef90d4->dir_f7826cb483c41652a57f47c29e86de5a [headlabel="1", labeldistance=1.5 headhref="dir_000004_000010.html" href="dir_000004_000010.html" color="steelblue1" fontcolor="steelblue1"];
 }

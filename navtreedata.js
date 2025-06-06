@@ -25,17 +25,17 @@
 var NAVTREE =
 [
   [ "LibJuno", "index.html", [
-    [ "LibJuno", "index.html#autotoc_md75", [
-      [ "Using LibJuno", "index.html#autotoc_md76", [
-        [ "Documentation", "index.html#autotoc_md77", null ]
+    [ "LibJuno", "index.html#autotoc_md73", [
+      [ "Using LibJuno", "index.html#autotoc_md74", [
+        [ "Documentation", "index.html#autotoc_md75", null ]
       ] ],
-      [ "Dependencies", "index.html#autotoc_md78", null ],
-      [ "Building and Testing", "index.html#autotoc_md79", [
-        [ "CMake Build Option", "index.html#autotoc_md80", null ]
+      [ "Dependencies", "index.html#autotoc_md76", null ],
+      [ "Building and Testing", "index.html#autotoc_md77", [
+        [ "CMake Build Option", "index.html#autotoc_md78", null ]
       ] ],
-      [ "Current Modules", "index.html#autotoc_md81", null ],
-      [ "Future Modules", "index.html#autotoc_md82", null ],
-      [ "Inspiration for the Name", "index.html#autotoc_md83", null ]
+      [ "Current Modules", "index.html#autotoc_md79", null ],
+      [ "Future Modules", "index.html#autotoc_md80", null ],
+      [ "Inspiration for the Name", "index.html#autotoc_md81", null ]
     ] ],
     [ "Juno Hash Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html", null ],
     [ "Juno Map Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html", null ],
@@ -117,8 +117,6 @@ var NAVTREE =
       [ "9. Best Practices & Tips", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70", null ],
       [ "10. Conclusion", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md72", null ]
     ] ],
-    [ "Juno String Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2string_2README.html", null ],
-    [ "Juno Table Module (Beta)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2table_2README.html", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
@@ -144,7 +142,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"status_8h.html#aede45f0a23d8d5a902e6562474b1904b"
+"string__direct_8h.html#a404dd7dc1e730d90b64dc3348fe754ce"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

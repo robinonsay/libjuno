@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.14.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.15.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -123,15 +123,16 @@ $(document).ready(function(){initNavTree('map__api_8h.html',''); initResizable()
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">map_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="memory__api_8h_source.html">juno/memory/memory_api.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="hash__api_8h_source.html">juno/hash/hash_api.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="memory__api_8h_source.html">juno/memory/memory_api.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
-<code>#include &lt;stddef.h&gt;</code><br />
-<code>#include &lt;stdint.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="map__types_8h_source.html">juno/map/map_types.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for map_api.h:</div>
 <div class="dyncontent">
@@ -154,6 +155,17 @@ Data Structures</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a91c31ed4effb59d959645fb13dc4bb0f" id="r_a91c31ed4effb59d959645fb13dc4bb0f"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__MAP__API__TAG.html">JUNO_MAP_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map__api_8h.html#a91c31ed4effb59d959645fb13dc4bb0f">JUNO_MAP_API_T</a></td></tr>
 <tr class="separator:a91c31ed4effb59d959645fb13dc4bb0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a30095ec65ed014c5db79d5ba6a0c27" id="r_a7a30095ec65ed014c5db79d5ba6a0c27"><td class="memItemLeft" align="right" valign="top">typedef bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map__api_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27">JUNO_MAP_KEY_EQUAL_FCN_T</a>) (<a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> ptKey1, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> ptKey2)</td></tr>
+<tr class="separator:a7a30095ec65ed014c5db79d5ba6a0c27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aab7416d84e4f2788c7b86d3ff66de19a" id="r_aab7416d84e4f2788c7b86d3ff66de19a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map__api_8h.html#aab7416d84e4f2788c7b86d3ff66de19a">JUNO_MODULE_DECLARE</a> (JUNO_MAP_T)</td></tr>
+<tr class="separator:aab7416d84e4f2788c7b86d3ff66de19a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa80ca23371d0f793c32533444dc0c503" id="r_aa80ca23371d0f793c32533444dc0c503"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map__api_8h.html#aa80ca23371d0f793c32533444dc0c503">JUNO_MODULE_BASE_DECLARE</a> (JUNO_MAP_BASE_T)</td></tr>
+<tr class="separator:aa80ca23371d0f793c32533444dc0c503"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad023d76b4cb8bf36e76b2decfebbd9f3" id="r_ad023d76b4cb8bf36e76b2decfebbd9f3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map__api_8h.html#ad023d76b4cb8bf36e76b2decfebbd9f3">JUNO_MODULE_BASE</a> (JUNO_MAP_BASE_T, <a class="el" href="map__api_8h.html#a91c31ed4effb59d959645fb13dc4bb0f">JUNO_MAP_API_T</a>, JUNO_HASH_T *ptHash;<a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMapKeys;<a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMapValues;size_t zCapacity;size_t zLenHashTable;<a class="el" href="map__api_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27">JUNO_MAP_KEY_EQUAL_FCN_T</a> pfcnIsEqual;)</td></tr>
+<tr class="separator:ad023d76b4cb8bf36e76b2decfebbd9f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a91c31ed4effb59d959645fb13dc4bb0f" name="a91c31ed4effb59d959645fb13dc4bb0f"></a>
@@ -164,6 +176,92 @@ Typedefs</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">typedef struct <a class="el" href="structJUNO__MAP__API__TAG.html">JUNO_MAP_API_TAG</a> <a class="el" href="map__api_8h.html#a91c31ed4effb59d959645fb13dc4bb0f">JUNO_MAP_API_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_map library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a7a30095ec65ed014c5db79d5ba6a0c27" name="a7a30095ec65ed014c5db79d5ba6a0c27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a30095ec65ed014c5db79d5ba6a0c27">&#9670;&#160;</a></span>JUNO_MAP_KEY_EQUAL_FCN_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef bool(* JUNO_MAP_KEY_EQUAL_FCN_T) (<a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> ptKey1, <a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> ptKey2)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ad023d76b4cb8bf36e76b2decfebbd9f3" name="ad023d76b4cb8bf36e76b2decfebbd9f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad023d76b4cb8bf36e76b2decfebbd9f3">&#9670;&#160;</a></span>JUNO_MODULE_BASE()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_BASE </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_MAP_BASE_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="map__api_8h.html#a91c31ed4effb59d959645fb13dc4bb0f">JUNO_MAP_API_T</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">JUNO_HASH_T *ptHash;<a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMapKeys;<a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a> *ptMapValues;size_t zCapacity;size_t zLenHashTable;<a class="el" href="map__api_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27">JUNO_MAP_KEY_EQUAL_FCN_T</a> pfcnIsEqual;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa80ca23371d0f793c32533444dc0c503" name="aa80ca23371d0f793c32533444dc0c503"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa80ca23371d0f793c32533444dc0c503">&#9670;&#160;</a></span>JUNO_MODULE_BASE_DECLARE()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_BASE_DECLARE </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_MAP_BASE_T&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aab7416d84e4f2788c7b86d3ff66de19a" name="aab7416d84e4f2788c7b86d3ff66de19a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab7416d84e4f2788c7b86d3ff66de19a">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_DECLARE </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_MAP_T&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
