@@ -21,34 +21,30 @@
 */
 
 /**
-    This header contains the juno_hash library API
+    This header contains the juno_string library API
     @author
 */
-#ifndef JUNO_HASH_API_H
-#define JUNO_HASH_API_H
+#ifndef JUNO_STRING_DIRECT_H
+#define JUNO_STRING_DIRECT_H
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
-#include "juno/module.h"
-#include <stddef.h>
+#include "juno/string/string_api.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct JUNO_HASH_API_TAG JUNO_HASH_API_T;
 
-JUNO_MODULE_DECLARE(JUNO_HASH_T);
-JUNO_MODULE_BASE_DECLARE(JUNO_HASH_BASE_T);
-
-JUNO_MODULE_BASE(JUNO_HASH_BASE_T, JUNO_HASH_API_T, JUNO_MODULE_EMPTY);
-
-struct JUNO_HASH_API_TAG
-{
-
-    JUNO_STATUS_T (*Hash)(JUNO_HASH_T *ptHash, const uint8_t *pcBuff, size_t zBuffSize, size_t *pzRetHash);
-
-};
+/// Initializes the module and resources for juno_string
+JUNO_STATUS_T JunoString_Init(JUNO_STRING_T *ptJunoString, JUNO_MEMORY_ALLOC_T *ptAlloc, const char *pcCStr, size_t zCStrSize);
+JUNO_STATUS_T JunoString_Append(JUNO_STRING_T *ptJunoString, JUNO_STRING_T *ptNewJunoString);
+JUNO_STATUS_T JunoString_AppendCStr(JUNO_STRING_T *ptJunoString, const char *pcCStr, size_t zCStrSize);
+JUNO_STATUS_T JunoString_GetSize(JUNO_STRING_T *ptJunoString, size_t *pzSize);
+/// Frees resources allocated by juno_string
+JUNO_STATUS_T JunoString_Free(JUNO_STRING_T *ptJunoString);
 
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_HASH_API_H
+#endif // JUNO_STRING_DIRECT_H
+
