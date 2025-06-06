@@ -16,7 +16,7 @@
 */
 #ifndef JUNO_STRING_API_H
 #define JUNO_STRING_API_H
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/string/string_types.h"
 #ifdef __cplusplus
