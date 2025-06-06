@@ -42,7 +42,7 @@ To help understand how memory blocks work in Juno, here's a visualization of the
      Block Control Structure
 ```
 
-When calling `Juno_MemoryBlkInit()`:
+When calling `JunoMemory_BlockApi()`:
 1. You pass in a pre-allocated memory array (`JUNO_MEMORY_BLOCK`)
 2. You pass in a pre-allocated metadata array (`JUNO_MEMORY_BLOCK_METADATA`)
 3. The function initializes the control structure that tracks:
@@ -79,8 +79,8 @@ Create and initialize a memory allocator to manage the block:
 JUNO_MEMORY_ALLOC_T tMemAlloc = {0};
 
 // Initialize the block allocator
-JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-    &tMemAlloc.tBlock,        // Pointer to memory block structure
+JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    &tMemAlloc,        // Pointer to memory block structure
     gptMyMemoryBlock,            // Memory block array
     gptMyMemoryMetadata,         // Metadata array
     sizeof(MY_DATA_T),        // Size of each element
@@ -159,8 +159,6 @@ if(tStatus != JUNO_STATUS_SUCCESS) {
 For a more dynamic approach, you can use the Memory API interface:
 
 ```c
-// Get the memory API
-const JUNO_MEMORY_API_T *ptMemApi = Juno_MemoryApi();
 
 // Use the API for operations
 JUNO_MEMORY_T tMemory = {0};
@@ -283,7 +281,7 @@ union JUNO_MEMORY_ALLOC_TAG
 ### Initialization
 
 ```c
-JUNO_STATUS_T Juno_MemoryBlkInit(
+JUNO_STATUS_T JunoMemory_BlockApi(
     JUNO_MEMORY_BLOCK_T *ptMemBlk,
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *pvMetadata,
@@ -359,14 +357,6 @@ void Juno_MemoryPutRef(JUNO_MEMORY_T *ptMemory);
 Releases a reference to memory, decrementing its reference count. Parameters:
 - `ptMemory`: The memory reference to release
 
-### API Access
-
-```c
-const JUNO_MEMORY_API_T* Juno_MemoryApi(void);
-```
-
-Retrieves the memory API structure for function pointer-based access.
-
 ## Usage Example
 
 The following example demonstrates how to use the Juno Memory Module to implement a simple single linked list with reference counting:
@@ -404,12 +394,11 @@ void FailureHandler(JUNO_STATUS_T tStatus, const char *pcMsg, JUNO_USER_DATA_T *
 
 int main() {
     // Get the memory API
-    const JUNO_MEMORY_API_T *ptMemApi = Juno_MemoryApi();
     
     // Initialize the memory allocator
     JUNO_MEMORY_ALLOC_T tMemAlloc = {};
-    JUNO_STATUS_T tStatus = Juno_MemoryBlkInit(
-        &tMemAlloc.tBlock,
+    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+        &tMemAlloc,
         nodeMemory,
         nodeMetadata,
         sizeof(SINGLE_LINKED_LIST_NODE_T),
@@ -421,7 +410,8 @@ int main() {
     if(tStatus != JUNO_STATUS_SUCCESS) {
         return -1;
     }
-    
+    const JUNO_MEMORY_API_T *ptMemApi = tMemAlloc.tBase.ptApi;
+
     // Create a linked list
     SINGLE_LINKED_LIST_T tList = {
         .pfcnFailureHandler = FailureHandler
