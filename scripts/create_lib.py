@@ -75,7 +75,7 @@ def copy_and_rename_template_files(lib_path: Path, implementations: list):
 def main():
     parser = ArgumentParser()
     parser.add_argument("lib_path")
-    parser.add_argument("implementation_names", nargs='+')
+    parser.add_argument("implementation_names", nargs='*')
     args = parser.parse_args()
     lib_path = Path(args.lib_path)
     impl_names = args.implementation_names

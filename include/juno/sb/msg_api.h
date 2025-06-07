@@ -21,38 +21,46 @@
 */
 
 /**
-    This header contains the template library API
+    This header contains the juno_msg library API
     @author
 */
-#ifndef TEMPLATE_API_H
-#define TEMPLATE_API_H
+#ifndef JUNO_MSG_API_H
+#define JUNO_MSG_API_H
 #include "juno/status.h"
 #include "juno/module.h"
+#include <stdio.h>
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct TEMPLATE_API_TAG TEMPLATE_API_T;
+typedef struct JUNO_MSG_API_TAG JUNO_MSG_API_T;
+typedef struct JUNO_MSG_BUFFER_TAG JUNO_MSG_BUFFER_T;
 
-JUNO_MODULE_DECLARE(TEMPLATE_T);
-JUNO_MODULE_BASE_DECLARE(TEMPLATE_BASE_T);
+JUNO_MODULE_DECLARE(JUNO_MSG_T);
+JUNO_MODULE_BASE_DECLARE(JUNO_MSG_BASE_T);
 
-JUNO_MODULE_BASE(TEMPLATE_BASE_T, TEMPLATE_API_T,
-    /*
-    
-        TODO: Add implementation independent member variables here
-    
-    */
+struct JUNO_MSG_BUFFER_TAG
+{
+    void *pvBuffer;
+    size_t zBufferSize;
+};
+
+JUNO_MODULE_BASE(JUNO_MSG_BASE_T, JUNO_MSG_API_T,
+    JUNO_MSG_BUFFER_T *ptBuffer;
 );
 
-struct TEMPLATE_API_TAG
+struct JUNO_MSG_API_TAG
 {
-    /// TODO: Replace this example function with your own functions
-    JUNO_STATUS_T (*ExampleFunction)(TEMPLATE_T *ptTemplate);
+    /// Verify the message
+    JUNO_STATUS_T (*VerifyMsg)(JUNO_MSG_T *ptJunoMsg);
+    /// Get the message buffer
+    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, JUNO_MSG_BUFFER_T *ptRetBuffer);
+    /// Set the message buffer
+    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, JUNO_MSG_BUFFER_T tRetBuffer);
 };
 
 #ifdef __cplusplus
 }
 #endif
-#endif // TEMPLATE_API_H
+#endif // JUNO_MSG_API_H
