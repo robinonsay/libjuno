@@ -80,7 +80,7 @@ target_include_directories(${TEMPLATE_APP_SHARED_TARGET} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC ${JUNO_LIBRARY})
 target_link_libraries(${TEMPLATE_APP_SHARED_TARGET} PUBLIC ${JUNO_SHARED_LIBRARY})
 
-target_compile_options(${TEMPLATE_SHARED_TARGET} PRIVATE
+target_compile_options(${TEMPLATE_APP_SHARED_TARGET} PRIVATE
     ${JUNO_COMPILE_OPTIONS}
     $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
 )
