@@ -19,7 +19,32 @@
 #include "juno/status.h"
 #include "template/template_api.h"
 
-static const TEMPLATE_API_T tTemplateImplApi;
+
+static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate);
+
+
+static JUNO_STATUS_T ExampleFunction(TEMPLATE_T *ptTemplate)
+{
+    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    tStatus = Verify(ptTemplate);
+    ASSERT_SUCCESS(tStatus, return tStatus)
+    TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
+    /*
+    
+    TODO: Initialize resources here
+    
+    */
+    return tStatus;
+}
+
+static const TEMPLATE_API_T tTemplateImplApi = {
+    .ExampleFunction = ExampleFunction,
+    /*
+        VERY IMPORTANT:
+        Assign API implementations here.
+        FAILING TO DO SO COULD RESULT IN UNDEFINED BEHAVIOR
+    */
+};
 
 static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
 {
@@ -38,45 +63,6 @@ static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
     }
     return JUNO_STATUS_SUCCESS;
 }
-
-static JUNO_STATUS_T Init(
-    TEMPLATE_T *ptTemplate
-    /* TODO: Insert initialization arguments for module members here*/
-)
-{
-    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
-    tStatus = Verify(ptTemplate);
-    ASSERT_SUCCESS(tStatus, return tStatus)
-    TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
-    /*
-    
-    TODO: Initialize resources here
-    
-    */
-    return tStatus;
-}
-static JUNO_STATUS_T Free(TEMPLATE_T *ptTemplate)
-{
-
-    JUNO_STATUS_T tStatus = Verify(ptTemplate);
-    ASSERT_SUCCESS(tStatus, return tStatus)
-    TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
-    /*
-    
-        TODO: Free resources here
-
-    */
-    return tStatus;
-}
-static const TEMPLATE_API_T tTemplateImplApi = {
-    .Init = Init,
-    /*
-        VERY IMPORTANT:
-        Assign API implementations here.
-        FAILING TO DO SO COULD RESULT IN UNDEFINED BEHAVIOR
-    */
-    .Free = Free
-};
 
 /* TODO: Insert initialization arguments for module members here*/
 JUNO_STATUS_T Template_ImplApi(TEMPLATE_T *ptTemplate, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
