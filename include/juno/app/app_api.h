@@ -21,11 +21,11 @@
 */
 
 /**
-    This header contains the template library API
+    This header contains the juno_app library API
     @author
 */
-#ifndef TEMPLATE_API_H
-#define TEMPLATE_API_H
+#ifndef JUNO_APP_API_H
+#define JUNO_APP_API_H
 #include "juno/status.h"
 #include "juno/module.h"
 #ifdef __cplusplus
@@ -33,26 +33,21 @@ extern "C"
 {
 #endif
 
-typedef struct TEMPLATE_API_TAG TEMPLATE_API_T;
+typedef struct JUNO_APP_API_TAG JUNO_APP_API_T;
 
-JUNO_MODULE_DECLARE(TEMPLATE_T);
-JUNO_MODULE_BASE_DECLARE(TEMPLATE_BASE_T);
+JUNO_MODULE_DECLARE(JUNO_APP_T);
+JUNO_MODULE_BASE_DECLARE(JUNO_APP_BASE_T);
 
-JUNO_MODULE_BASE(TEMPLATE_BASE_T, TEMPLATE_API_T,
-    /*
-    
-        TODO: Add implementation independent member variables here
-    
-    */
-);
+JUNO_MODULE_BASE(JUNO_APP_BASE_T, JUNO_APP_API_T, JUNO_MODULE_EMPTY);
 
-struct TEMPLATE_API_TAG
+struct JUNO_APP_API_TAG
 {
-    /// TODO: Replace this example function with your own functions
-    JUNO_STATUS_T (*ExampleFunction)(TEMPLATE_T *ptTemplate);
+    JUNO_STATUS_T (*Init)(JUNO_APP_T *ptJunoApp);
+    JUNO_STATUS_T (*Run)(JUNO_APP_T *ptJunoApp);
+    JUNO_STATUS_T (*Exit)(JUNO_APP_T *ptJunoApp);
 };
 
 #ifdef __cplusplus
 }
 #endif
-#endif // TEMPLATE_API_H
+#endif // JUNO_APP_API_H
