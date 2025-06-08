@@ -21,5 +21,6 @@ var searchData=
   ['error_20handling_18',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]],
   ['everything_20together_3a_20the_20car_20module_20tt_20main_20c_20tt_19',['4. Wiring Everything Together: The Car Module &amp; &lt;tt&gt;main.c&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50',1,'']]],
   ['example_20',['Usage Example',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27',1,'']]],
-  ['example_20usage_20pattern_21',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]]
+  ['example_20usage_20pattern_21',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]],
+  ['exit_22',['Exit',['../structJUNO__APP__API__TAG.html#a8957909d1f06e19066955441e6088c42',1,'JUNO_APP_API_TAG']]]
 ];

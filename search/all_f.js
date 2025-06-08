@@ -5,7 +5,7 @@ var searchData=
   ['fail_5fmodule_2',['FAIL_MODULE',['../status_8h.html#aa5d0cfd15953954d428cc546665003e6',1,'status.h']]],
   ['features_3',['Features',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md13',1,'']]],
   ['for_20the_20name_4',['Inspiration for the Name',['../index.html#autotoc_md81',1,'']]],
-  ['free_5',['free',['../structJUNO__IO__SERIAL__API__TAG.html#ab90509479077f5f95a2b25c7679c305c',1,'JUNO_IO_SERIAL_API_TAG::Free'],['../structJUNO__STRING__API__TAG.html#ae69f1e7a38c89e794a65dfd6a4bddef1',1,'JUNO_STRING_API_TAG::Free']]],
+  ['free_5',['Free',['../structJUNO__STRING__API__TAG.html#ae69f1e7a38c89e794a65dfd6a4bddef1',1,'JUNO_STRING_API_TAG']]],
   ['fuel_20source_3a_20“hybrid”_20engines_6',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md62',1,'']]],
   ['future_20modules_7',['Future Modules',['../index.html#autotoc_md80',1,'']]]
 ];

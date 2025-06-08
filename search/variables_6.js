@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['read_0',['Read',['../structJUNO__IO__SERIAL__API__TAG.html#a9092e9b17674eb687a8ac37422906ea3',1,'JUNO_IO_SERIAL_API_TAG']]],
-  ['readuntil_1',['ReadUntil',['../structJUNO__IO__SERIAL__API__TAG.html#ac185f0a24c1c499c473a108214f29b2b',1,'JUNO_IO_SERIAL_API_TAG']]],
-  ['remove_2',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]]
+  ['logdebug_0',['LogDebug',['../structJUNO__LOG__API__TAG.html#ae981c75dfdf45e9835032b726a2d0470',1,'JUNO_LOG_API_TAG']]],
+  ['logerror_1',['LogError',['../structJUNO__LOG__API__TAG.html#ae85d740823dfa5fb89d25c1129c895e3',1,'JUNO_LOG_API_TAG']]],
+  ['loginfo_2',['LogInfo',['../structJUNO__LOG__API__TAG.html#a9a51b5e5d95cf657aaf891d7aeb92637',1,'JUNO_LOG_API_TAG']]],
+  ['logwarning_3',['LogWarning',['../structJUNO__LOG__API__TAG.html#a3fe326662dcfab8c0139d99c10d67540',1,'JUNO_LOG_API_TAG']]]
 ];

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LibJuno: /home/runner/work/libjuno/libjuno/include/juno/io/serial_api.h File Reference</title>
+<title>LibJuno: /home/runner/work/libjuno/libjuno/include/juno/app/app_api.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.15.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.16.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -95,7 +95,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('serial__api_8h.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('app__api_8h.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -125,78 +125,57 @@ $(document).ready(function(){initNavTree('serial__api_8h.html',''); initResizabl
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">serial_api.h File Reference</div></div>
+  <div class="headertitle"><div class="title">app_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
-<code>#include &quot;juno/string/string_types.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="time__api_8h_source.html">juno/time/time_api.h</a>&quot;</code><br />
-<code>#include &lt;stddef.h&gt;</code><br />
-<code>#include &lt;stdint.h&gt;</code><br />
-<code>#include &lt;stdbool.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for serial_api.h:</div>
+Include dependency graph for app_api.h:</div>
 <div class="dyncontent">
-<div class="center"><img src="serial__api_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2io_2serial__api_8h" alt=""/></div>
+<div class="center"><img src="app__api_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2app_2app__api_8h" alt=""/></div>
 </div>
 </div>
-<p><a href="serial__api_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="app__api_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__IO__SERIAL__API__TAG.html">JUNO_IO_SERIAL_API_TAG</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__APP__API__TAG.html">JUNO_APP_API_TAG</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ac303f2e78da7b894213e7c58e55c7dfd" id="r_ac303f2e78da7b894213e7c58e55c7dfd"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__IO__SERIAL__API__TAG.html">JUNO_IO_SERIAL_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serial__api_8h.html#ac303f2e78da7b894213e7c58e55c7dfd">JUNO_IO_SERIAL_API_T</a></td></tr>
-<tr class="separator:ac303f2e78da7b894213e7c58e55c7dfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e25360b8225c17b0162965ace66cbe9" id="r_a4e25360b8225c17b0162965ace66cbe9"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serial__api_8h.html#a4e25360b8225c17b0162965ace66cbe9">JUNO_IO_SERIAL_BAUDRATE_T</a></td></tr>
-<tr class="separator:a4e25360b8225c17b0162965ace66cbe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fe52a97283928d689b320c3d307677b" id="r_a7fe52a97283928d689b320c3d307677b"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__APP__API__TAG.html">JUNO_APP_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="app__api_8h.html#a7fe52a97283928d689b320c3d307677b">JUNO_APP_API_T</a></td></tr>
+<tr class="separator:a7fe52a97283928d689b320c3d307677b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a80655a16b468047ae33966c7c62aad54" id="r_a80655a16b468047ae33966c7c62aad54"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serial__api_8h.html#a80655a16b468047ae33966c7c62aad54">JUNO_MODULE_DECLARE</a> (JUNO_IO_SERIAL_T)</td></tr>
-<tr class="separator:a80655a16b468047ae33966c7c62aad54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeda6b3a076e6a683e3d067c687f21d1a" id="r_aeda6b3a076e6a683e3d067c687f21d1a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serial__api_8h.html#aeda6b3a076e6a683e3d067c687f21d1a">JUNO_MODULE_BASE_DECLARE</a> (JUNO_IO_SERIAL_BASE_T)</td></tr>
-<tr class="separator:aeda6b3a076e6a683e3d067c687f21d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af93b415736fc2ca68d5898ab087324df" id="r_af93b415736fc2ca68d5898ab087324df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serial__api_8h.html#af93b415736fc2ca68d5898ab087324df">JUNO_MODULE_BASE</a> (JUNO_IO_SERIAL_BASE_T, <a class="el" href="serial__api_8h.html#ac303f2e78da7b894213e7c58e55c7dfd">JUNO_IO_SERIAL_API_T</a>, <a class="el" href="serial__api_8h.html#a4e25360b8225c17b0162965ace66cbe9">JUNO_IO_SERIAL_BAUDRATE_T</a> iBaud;)</td></tr>
-<tr class="separator:af93b415736fc2ca68d5898ab087324df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5de6595ad0cc575cd7babd2ae9fc22b" id="r_ac5de6595ad0cc575cd7babd2ae9fc22b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="app__api_8h.html#ac5de6595ad0cc575cd7babd2ae9fc22b">JUNO_MODULE_DECLARE</a> (JUNO_APP_T)</td></tr>
+<tr class="separator:ac5de6595ad0cc575cd7babd2ae9fc22b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650a5730c5b772ffb3ce36977fb72f86" id="r_a650a5730c5b772ffb3ce36977fb72f86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="app__api_8h.html#a650a5730c5b772ffb3ce36977fb72f86">JUNO_MODULE_BASE_DECLARE</a> (JUNO_APP_BASE_T)</td></tr>
+<tr class="separator:a650a5730c5b772ffb3ce36977fb72f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67f6bea08826d9256d7ae346c8c9fbe4" id="r_a67f6bea08826d9256d7ae346c8c9fbe4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="app__api_8h.html#a67f6bea08826d9256d7ae346c8c9fbe4">JUNO_MODULE_BASE</a> (JUNO_APP_BASE_T, <a class="el" href="app__api_8h.html#a7fe52a97283928d689b320c3d307677b">JUNO_APP_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
+<tr class="separator:a67f6bea08826d9256d7ae346c8c9fbe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ac303f2e78da7b894213e7c58e55c7dfd" name="ac303f2e78da7b894213e7c58e55c7dfd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac303f2e78da7b894213e7c58e55c7dfd">&#9670;&#160;</a></span>JUNO_IO_SERIAL_API_T</h2>
+<a id="a7fe52a97283928d689b320c3d307677b" name="a7fe52a97283928d689b320c3d307677b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fe52a97283928d689b320c3d307677b">&#9670;&#160;</a></span>JUNO_APP_API_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef struct <a class="el" href="structJUNO__IO__SERIAL__API__TAG.html">JUNO_IO_SERIAL_API_TAG</a> <a class="el" href="serial__api_8h.html#ac303f2e78da7b894213e7c58e55c7dfd">JUNO_IO_SERIAL_API_T</a></td>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__APP__API__TAG.html">JUNO_APP_API_TAG</a> <a class="el" href="app__api_8h.html#a7fe52a97283928d689b320c3d307677b">JUNO_APP_API_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This header contains the juno_io_serial library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
-
-</div>
-</div>
-<a id="a4e25360b8225c17b0162965ace66cbe9" name="a4e25360b8225c17b0162965ace66cbe9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e25360b8225c17b0162965ace66cbe9">&#9670;&#160;</a></span>JUNO_IO_SERIAL_BAUDRATE_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef uint32_t <a class="el" href="serial__api_8h.html#a4e25360b8225c17b0162965ace66cbe9">JUNO_IO_SERIAL_BAUDRATE_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_app library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="af93b415736fc2ca68d5898ab087324df" name="af93b415736fc2ca68d5898ab087324df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af93b415736fc2ca68d5898ab087324df">&#9670;&#160;</a></span>JUNO_MODULE_BASE()</h2>
+<a id="a67f6bea08826d9256d7ae346c8c9fbe4" name="a67f6bea08826d9256d7ae346c8c9fbe4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67f6bea08826d9256d7ae346c8c9fbe4">&#9670;&#160;</a></span>JUNO_MODULE_BASE()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -204,19 +183,19 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">JUNO_MODULE_BASE </td>
           <td>(</td>
-          <td class="paramtype">JUNO_IO_SERIAL_BASE_T&#160;</td>
+          <td class="paramtype">JUNO_APP_BASE_T&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="serial__api_8h.html#ac303f2e78da7b894213e7c58e55c7dfd">JUNO_IO_SERIAL_API_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="app__api_8h.html#a7fe52a97283928d689b320c3d307677b">JUNO_APP_API_T</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="serial__api_8h.html#a4e25360b8225c17b0162965ace66cbe9">JUNO_IO_SERIAL_BAUDRATE_T</a> iBaud;&#160;</td>
+          <td class="paramtype"><a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -229,8 +208,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aeda6b3a076e6a683e3d067c687f21d1a" name="aeda6b3a076e6a683e3d067c687f21d1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeda6b3a076e6a683e3d067c687f21d1a">&#9670;&#160;</a></span>JUNO_MODULE_BASE_DECLARE()</h2>
+<a id="a650a5730c5b772ffb3ce36977fb72f86" name="a650a5730c5b772ffb3ce36977fb72f86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a650a5730c5b772ffb3ce36977fb72f86">&#9670;&#160;</a></span>JUNO_MODULE_BASE_DECLARE()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,7 +217,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">JUNO_MODULE_BASE_DECLARE </td>
           <td>(</td>
-          <td class="paramtype">JUNO_IO_SERIAL_BASE_T&#160;</td>
+          <td class="paramtype">JUNO_APP_BASE_T&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -247,8 +226,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a80655a16b468047ae33966c7c62aad54" name="a80655a16b468047ae33966c7c62aad54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80655a16b468047ae33966c7c62aad54">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
+<a id="ac5de6595ad0cc575cd7babd2ae9fc22b" name="ac5de6595ad0cc575cd7babd2ae9fc22b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5de6595ad0cc575cd7babd2ae9fc22b">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -256,7 +235,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">JUNO_MODULE_DECLARE </td>
           <td>(</td>
-          <td class="paramtype">JUNO_IO_SERIAL_T&#160;</td>
+          <td class="paramtype">JUNO_APP_T&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -270,7 +249,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_366da5caa8e7ec3e54d94764b6f022bc.html">juno</a></li><li class="navelem"><a class="el" href="dir_2214acb517c776811661c93fb7ef90d4.html">io</a></li><li class="navelem"><a class="el" href="serial__api_8h.html">serial_api.h</a></li>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_366da5caa8e7ec3e54d94764b6f022bc.html">juno</a></li><li class="navelem"><a class="el" href="dir_ea3a8427487b97ef3e7ab80966e647b0.html">app</a></li><li class="navelem"><a class="el" href="app__api_8h.html">app_api.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

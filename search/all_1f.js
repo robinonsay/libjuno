@@ -7,6 +7,6 @@ var searchData=
   ['why_20this_20is_20modular_4',['Why This Is Modular',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md54',1,'']]],
   ['wiring_20everything_20together_3a_20the_20car_20module_20tt_20main_20c_20tt_5',['4. Wiring Everything Together: The Car Module &amp; &lt;tt&gt;main.c&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50',1,'']]],
   ['with_20reference_20counting_6',['Step 4: Share Memory with Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'']]],
-  ['write_7',['Write',['../structJUNO__IO__SERIAL__API__TAG.html#a34b8f66ffd76ef26290c872a13295a83',1,'JUNO_IO_SERIAL_API_TAG']]],
+  ['write_7',['Write',['../structJUNO__IO__API__TAG.html#a4429b731919972abce1fc32a1ea4c45f',1,'JUNO_IO_API_TAG']]],
   ['write_20your_20own_20modules_20in_20libjuno_8',['7. How to Write Your Own Modules in LibJuno',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67',1,'']]]
 ];

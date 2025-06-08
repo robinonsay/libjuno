@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['get_0',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__ALLOC__API__TAG.html#a0ac4d16586e6e5ae36a13889bacc8ee7',1,'JUNO_MEMORY_ALLOC_API_TAG::Get']]],
-  ['getsize_1',['GetSize',['../structJUNO__STRING__API__TAG.html#a75d02b815e5225c87bfbaada096e2d1e',1,'JUNO_STRING_API_TAG']]],
-  ['gettime_2',['GetTime',['../structJUNO__TIME__API__TAG.html#a5c7d934e92addfc37e905e82ec89e2b2',1,'JUNO_TIME_API_TAG']]]
+  ['free_0',['Free',['../structJUNO__STRING__API__TAG.html#ae69f1e7a38c89e794a65dfd6a4bddef1',1,'JUNO_STRING_API_TAG']]]
 ];

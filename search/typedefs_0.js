@@ -1,23 +1,4 @@
 var searchData=
 [
-  ['juno_5ffailure_5fhandler_5ft_0',['JUNO_FAILURE_HANDLER_T',['../status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc',1,'status.h']]],
-  ['juno_5fhash_5fapi_5ft_1',['JUNO_HASH_API_T',['../hash__api_8h.html#a9b60c614fd9748ed271cc43e4e27d9f3',1,'hash_api.h']]],
-  ['juno_5fio_5fserial_5fapi_5ft_2',['JUNO_IO_SERIAL_API_T',['../serial__api_8h.html#ac303f2e78da7b894213e7c58e55c7dfd',1,'serial_api.h']]],
-  ['juno_5fio_5fserial_5fbaudrate_5ft_3',['JUNO_IO_SERIAL_BAUDRATE_T',['../serial__api_8h.html#a4e25360b8225c17b0162965ace66cbe9',1,'serial_api.h']]],
-  ['juno_5fmap_5fapi_5ft_4',['JUNO_MAP_API_T',['../map__api_8h.html#a91c31ed4effb59d959645fb13dc4bb0f',1,'map_api.h']]],
-  ['juno_5fmap_5fkey_5fequal_5ffcn_5ft_5',['JUNO_MAP_KEY_EQUAL_FCN_T',['../map__api_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27',1,'map_api.h']]],
-  ['juno_5fmemory_5falloc_5fapi_5ft_6',['JUNO_MEMORY_ALLOC_API_T',['../memory__api_8h.html#ad19e7308f94739bf71e58c18ab2eed89',1,'memory_api.h']]],
-  ['juno_5fmemory_5fblock_5fmetadata_5ft_7',['JUNO_MEMORY_BLOCK_METADATA_T',['../memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334',1,'memory_api.h']]],
-  ['juno_5fmemory_5fblock_5ft_8',['JUNO_MEMORY_BLOCK_T',['../memory__api_8h.html#a4638233ae19853038fabd4275720d66e',1,'memory_api.h']]],
-  ['juno_5fmemory_5ft_9',['JUNO_MEMORY_T',['../memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a',1,'memory_api.h']]],
-  ['juno_5fstatus_5ft_10',['JUNO_STATUS_T',['../status_8h.html#aede45f0a23d8d5a902e6562474b1904b',1,'status.h']]],
-  ['juno_5fstring_5fapi_5ft_11',['JUNO_STRING_API_T',['../string__api_8h.html#aeeddef0e85d1dee95f2fea118d450df9',1,'string_api.h']]],
-  ['juno_5fstring_5fbuffer_5ft_12',['JUNO_STRING_BUFFER_T',['../string__api_8h.html#a2ae415f43912ee9d53fcc208b777fb89',1,'string_api.h']]],
-  ['juno_5ftime_5fapi_5ft_13',['JUNO_TIME_API_T',['../time__api_8h.html#a076aada0c523de520d87145537969e4f',1,'time_api.h']]],
-  ['juno_5ftime_5fmicros_5ft_14',['JUNO_TIME_MICROS_T',['../time__api_8h.html#a799a531590dcbcef96f20ff0d231be88',1,'time_api.h']]],
-  ['juno_5ftime_5fmillis_5ft_15',['JUNO_TIME_MILLIS_T',['../time__api_8h.html#a1707ece796430ceb5a70bd23d7e8a47b',1,'time_api.h']]],
-  ['juno_5ftime_5fnanos_5ft_16',['JUNO_TIME_NANOS_T',['../time__api_8h.html#a0de0400c81daffcd3f14f7447109e2bc',1,'time_api.h']]],
-  ['juno_5ftime_5fseconds_5ft_17',['JUNO_TIME_SECONDS_T',['../time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846',1,'time_api.h']]],
-  ['juno_5ftimestamp_5ft_18',['JUNO_TIMESTAMP_T',['../time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde',1,'time_api.h']]],
-  ['juno_5fuser_5fdata_5ft_19',['JUNO_USER_DATA_T',['../status_8h.html#af575dc984c80091757afe42a5d5c2b60',1,'status.h']]]
+  ['io_5fapi_5ft_0',['IO_API_T',['../io__api_8h.html#a2072bacf648796cde326426feefca2f3',1,'io_api.h']]]
 ];
