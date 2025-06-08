@@ -21,11 +21,13 @@
 */
 
 /**
-    This header contains the template library API
+    This header contains the juno_publisher library API
     @author
 */
-#ifndef TEMPLATE_API_H
-#define TEMPLATE_API_H
+#ifndef JUNO_PUBLISHER_API_H
+#define JUNO_PUBLISHER_API_H
+#include "juno/io/io_api.h"
+#include "juno/sb/msg_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #ifdef __cplusplus
@@ -33,26 +35,26 @@ extern "C"
 {
 #endif
 
-typedef struct TEMPLATE_API_TAG TEMPLATE_API_T;
+typedef struct JUNO_PUBLISHER_API_TAG JUNO_PUBLISHER_API_T;
+typedef struct JUNO_PUBLISHER_ID_TAG JUNO_PUBLISHER_ID_T;
 
-JUNO_MODULE_DECLARE(TEMPLATE_T);
-JUNO_MODULE_BASE_DECLARE(TEMPLATE_BASE_T);
+JUNO_MODULE_DECLARE(JUNO_PUBLISHER_T);
+JUNO_MODULE_BASE_DECLARE(JUNO_PUBLISHER_BASE_T);
 
-JUNO_MODULE_BASE(TEMPLATE_BASE_T, TEMPLATE_API_T,
-    /*
-    
-        TODO: Add implementation independent member variables here
-    
-    */
+JUNO_MODULE_BASE(JUNO_PUBLISHER_BASE_T, JUNO_PUBLISHER_API_T,
+    JUNO_IO_T *ptIoDevice;
+    JUNO_PUBLISHER_ID_T *ptPublisherId;
 );
 
-struct TEMPLATE_API_TAG
+struct JUNO_PUBLISHER_API_TAG
 {
-    /// TODO: Replace this example function with your own functions
-    JUNO_STATUS_T (*ExampleFunction)(TEMPLATE_T *ptTemplate);
+    /// Publish a sb messaage
+    JUNO_STATUS_T (*Publish)(JUNO_PUBLISHER_T *ptJunoPublisher, const JUNO_MSG_T *ptMsg);
+    /// Get the publisher ID
+    JUNO_STATUS_T (*GetPublisherId)(JUNO_PUBLISHER_T *ptJunoPublisher, JUNO_PUBLISHER_ID_T *ptRetPublisherId);
 };
 
 #ifdef __cplusplus
 }
 #endif
-#endif // TEMPLATE_API_H
+#endif // JUNO_PUBLISHER_API_H

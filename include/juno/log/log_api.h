@@ -21,11 +21,11 @@
 */
 
 /**
-    This header contains the template library API
+    This header contains the juno_log library API
     @author
 */
-#ifndef TEMPLATE_API_H
-#define TEMPLATE_API_H
+#ifndef JUNO_LOG_API_H
+#define JUNO_LOG_API_H
 #include "juno/status.h"
 #include "juno/module.h"
 #ifdef __cplusplus
@@ -33,26 +33,23 @@ extern "C"
 {
 #endif
 
-typedef struct TEMPLATE_API_TAG TEMPLATE_API_T;
+typedef struct JUNO_LOG_API_TAG JUNO_LOG_API_T;
 
-JUNO_MODULE_DECLARE(TEMPLATE_T);
-JUNO_MODULE_BASE_DECLARE(TEMPLATE_BASE_T);
+JUNO_MODULE_DECLARE(JUNO_LOG_T);
+JUNO_MODULE_BASE_DECLARE(JUNO_LOG_BASE_T);
 
-JUNO_MODULE_BASE(TEMPLATE_BASE_T, TEMPLATE_API_T,
-    /*
-    
-        TODO: Add implementation independent member variables here
-    
-    */
-);
+JUNO_MODULE_BASE(JUNO_LOG_BASE_T, JUNO_LOG_API_T, JUNO_MODULE_EMPTY);
 
-struct TEMPLATE_API_TAG
+struct JUNO_LOG_API_TAG
 {
     /// TODO: Replace this example function with your own functions
-    JUNO_STATUS_T (*ExampleFunction)(TEMPLATE_T *ptTemplate);
+    JUNO_STATUS_T (*LogDebug)(JUNO_LOG_T *ptJunoLog, const char *pcMsg, ...);
+    JUNO_STATUS_T (*LogInfo)(JUNO_LOG_T *ptJunoLog, const char *pcMsg, ...);
+    JUNO_STATUS_T (*LogWarning)(JUNO_LOG_T *ptJunoLog, const char *pcMsg, ...);
+    JUNO_STATUS_T (*LogError)(JUNO_LOG_T *ptJunoLog, const char *pcMsg, ...);
 };
 
 #ifdef __cplusplus
 }
 #endif
-#endif // TEMPLATE_API_H
+#endif // JUNO_LOG_API_H

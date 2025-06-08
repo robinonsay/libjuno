@@ -35,9 +35,9 @@ JUNO_MODULE_BASE_DECLARE(JUNO_TIME_BASE_T);
 typedef struct JUNO_TIMESTAMP_TAG JUNO_TIMESTAMP_T;
 
 typedef uint64_t JUNO_TIME_SECONDS_T;
-typedef uint32_t JUNO_TIME_MILLIS_T;
-typedef uint32_t JUNO_TIME_MICROS_T;
-typedef uint32_t JUNO_TIME_NANOS_T;
+typedef uint64_t JUNO_TIME_MILLIS_T;
+typedef uint64_t JUNO_TIME_MICROS_T;
+typedef uint64_t JUNO_TIME_NANOS_T;
 
 JUNO_MODULE_BASE(JUNO_TIME_BASE_T, JUNO_TIME_API_T, JUNO_MODULE_EMPTY);
 
@@ -52,6 +52,10 @@ struct JUNO_TIMESTAMP_TAG
 struct JUNO_TIME_API_TAG
 {
     JUNO_STATUS_T (*GetTime)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime);
+    JUNO_STATUS_T (*AddTime)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
+    JUNO_STATUS_T (*SubtractTime)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract);
+    JUNO_STATUS_T (*SleepTo)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup);
+    JUNO_STATUS_T (*Sleep)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tDuration);
 };
 
 #ifdef __cplusplus
