@@ -14,12 +14,11 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
+#include "juno/log/log_api.h"
 #include "template_app/template_app_api.h"
 #include "juno/macros.h"
 #include "juno/status.h"
 #include "template_app/template_app_api.h"
-#include <iostream>
-#include <ostream>
 #include <unistd.h>
 
 
@@ -31,8 +30,10 @@ static JUNO_STATUS_T Init(JUNO_APP_T *ptJunoApp)
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus)
-    // TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
-    std::cout << "Hello World Init" << std::endl;
+    TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    auto ptLogger = ptTemplateApp->ptLogger;
+    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    ptLoggerApi->LogInfo(ptLogger, "Template App Initialized");
     return tStatus;
 }
 
@@ -41,14 +42,10 @@ static JUNO_STATUS_T Run(JUNO_APP_T *ptJunoApp)
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus)
-    // TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
-    /*
-    
-    TODO: Initialize resources here
-    
-    */
-    std::cout << "Hello World Run" << std::endl;
-    sleep(1);
+    TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    auto ptLogger = ptTemplateApp->ptLogger;
+    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    ptLoggerApi->LogDebug(ptLogger, "Template App Running");
     return tStatus;
 }
 
@@ -57,13 +54,10 @@ static JUNO_STATUS_T Exit(JUNO_APP_T *ptJunoApp)
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus)
-    // TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
-    /*
-    
-    TODO: Initialize resources here
-    
-    */
-    std::cout << "Hello World Exit" << std::endl;
+    TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    auto ptLogger = ptTemplateApp->ptLogger;
+    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    ptLoggerApi->LogInfo(ptLogger, "Template App Exiting");
     return tStatus;
 }
 
@@ -92,7 +86,12 @@ static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp)
 }
 
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T JunoFsw_TemplateApp(JUNO_APP_T *ptJunoApp, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+JUNO_STATUS_T JunoFsw_TemplateApp(
+    JUNO_APP_T *ptJunoApp,
+    JUNO_LOG_T *ptLogger,
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
+    JUNO_USER_DATA_T *pvFailureUserData
+)
 {
     ASSERT_EXISTS(ptJunoApp);
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
@@ -101,10 +100,6 @@ JUNO_STATUS_T JunoFsw_TemplateApp(JUNO_APP_T *ptJunoApp, JUNO_FAILURE_HANDLER_T 
     ptTemplateApp->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus);
-    /*
-    
-    TODO: Assign private members here
-    
-    */
+    ptTemplateApp->ptLogger = ptLogger;
     return tStatus;
 }
