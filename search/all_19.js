@@ -2,7 +2,7 @@ var searchData=
 [
   ['pattern_0',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]],
   ['pitfalls_20to_20avoid_1',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]],
-  ['poll_2',['Poll',['../structJUNO__ASYNC__IO__API__TAG.html#a572e6e254d1810e48360610f5a2ea273',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['poll_2',['Poll',['../structJUNO__ASYNC__IO__API__TAG.html#a635e74653c23f3247f03be30a116fee6',1,'JUNO_ASYNC_IO_API_TAG']]],
   ['powered_20engine_3a_20tt_20engine_5fv6_20h_20tt_20tt_20engine_5fv8_20h_20tt_3',['3.2. Deriving a Gas-Powered Engine: &lt;tt&gt;engine_v6.h&lt;/tt&gt; &amp; &lt;tt&gt;engine_v8.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46',1,'']]],
   ['practices_4',['Best Practices',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md29',1,'']]],
   ['practices_20tips_5',['9. Best Practices &amp; Tips',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70',1,'']]],

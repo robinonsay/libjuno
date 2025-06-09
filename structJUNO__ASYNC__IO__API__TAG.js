@@ -1,6 +1,6 @@
 var structJUNO__ASYNC__IO__API__TAG =
 [
-    [ "Poll", "structJUNO__ASYNC__IO__API__TAG.html#a572e6e254d1810e48360610f5a2ea273", null ],
+    [ "Poll", "structJUNO__ASYNC__IO__API__TAG.html#a635e74653c23f3247f03be30a116fee6", null ],
     [ "Read", "structJUNO__ASYNC__IO__API__TAG.html#a0b2dad9eece7496525636e6c6b6618df", null ],
     [ "ReadUntil", "structJUNO__ASYNC__IO__API__TAG.html#a365b0c8ee2db33e67d99438e7d3a2888", null ],
     [ "TryRead", "structJUNO__ASYNC__IO__API__TAG.html#a1692e6c4ff546ad8da95494847017955", null ],
