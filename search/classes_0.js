@@ -1,8 +1,8 @@
 var searchData=
 [
   ['juno_5fapp_5fapi_5ftag_0',['JUNO_APP_API_TAG',['../structJUNO__APP__API__TAG.html',1,'']]],
-  ['juno_5fhash_5fapi_5ftag_1',['JUNO_HASH_API_TAG',['../structJUNO__HASH__API__TAG.html',1,'']]],
-  ['juno_5fio_5fapi_5ftag_2',['JUNO_IO_API_TAG',['../structJUNO__IO__API__TAG.html',1,'']]],
+  ['juno_5fasync_5fio_5fapi_5ftag_1',['JUNO_ASYNC_IO_API_TAG',['../structJUNO__ASYNC__IO__API__TAG.html',1,'']]],
+  ['juno_5fhash_5fapi_5ftag_2',['JUNO_HASH_API_TAG',['../structJUNO__HASH__API__TAG.html',1,'']]],
   ['juno_5flog_5fapi_5ftag_3',['JUNO_LOG_API_TAG',['../structJUNO__LOG__API__TAG.html',1,'']]],
   ['juno_5fmap_5fapi_5ftag_4',['JUNO_MAP_API_TAG',['../structJUNO__MAP__API__TAG.html',1,'']]],
   ['juno_5fmemory_5falloc_5fapi_5ftag_5',['JUNO_MEMORY_ALLOC_API_TAG',['../structJUNO__MEMORY__ALLOC__API__TAG.html',1,'']]],

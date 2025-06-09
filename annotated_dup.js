@@ -1,8 +1,8 @@
 var annotated_dup =
 [
     [ "JUNO_APP_API_TAG", "structJUNO__APP__API__TAG.html", "structJUNO__APP__API__TAG" ],
+    [ "JUNO_ASYNC_IO_API_TAG", "structJUNO__ASYNC__IO__API__TAG.html", "structJUNO__ASYNC__IO__API__TAG" ],
     [ "JUNO_HASH_API_TAG", "structJUNO__HASH__API__TAG.html", "structJUNO__HASH__API__TAG" ],
-    [ "JUNO_IO_API_TAG", "structJUNO__IO__API__TAG.html", "structJUNO__IO__API__TAG" ],
     [ "JUNO_LOG_API_TAG", "structJUNO__LOG__API__TAG.html", "structJUNO__LOG__API__TAG" ],
     [ "JUNO_MAP_API_TAG", "structJUNO__MAP__API__TAG.html", "structJUNO__MAP__API__TAG" ],
     [ "JUNO_MEMORY_ALLOC_API_TAG", "structJUNO__MEMORY__ALLOC__API__TAG.html", "structJUNO__MEMORY__ALLOC__API__TAG" ],

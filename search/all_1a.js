@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['read_0',['Read',['../structJUNO__IO__API__TAG.html#ac9d7a4455553c28d461f09cfa9a8afdb',1,'JUNO_IO_API_TAG']]],
+  ['read_0',['Read',['../structJUNO__ASYNC__IO__API__TAG.html#a0b2dad9eece7496525636e6c6b6618df',1,'JUNO_ASYNC_IO_API_TAG']]],
   ['readme_2emd_1',['readme.md',['../include_2juno_2map_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2memory_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2README_8md.html',1,'(Global Namespace)'],['../README_8md.html',1,'(Global Namespace)'],['../include_2juno_2hash_2README_8md.html',1,'(Global Namespace)']]],
-  ['readuntil_2',['ReadUntil',['../structJUNO__IO__API__TAG.html#aaf358901073e2e016378f64b46830871',1,'JUNO_IO_API_TAG']]],
+  ['readuntil_2',['ReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a365b0c8ee2db33e67d99438e7d3a2888',1,'JUNO_ASYNC_IO_API_TAG']]],
   ['recv_3',['Recv',['../structJUNO__SUBSCRIBER__API__TAG.html#ab2c12e62c12f83f0ebe8c4716ec42baa',1,'JUNO_SUBSCRIBER_API_TAG']]],
   ['reference_4',['API Reference',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md23',1,'']]],
   ['reference_20counting_5',['reference counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'Step 4: Share Memory with Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34',1,'When to Use Reference Counting']]],
