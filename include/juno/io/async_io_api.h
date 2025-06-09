@@ -24,8 +24,8 @@
     This header contains the io library API
     @author
 */
-#ifndef JUNO_IO_API_H
-#define JUNO_IO_API_H
+#ifndef JUNO_ASYNC_IO_API_H
+#define JUNO_ASYNC_IO_API_H
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/time/time_api.h"
@@ -34,32 +34,32 @@ extern "C"
 {
 #endif
 
-typedef struct JUNO_IO_API_TAG IO_API_T;
+typedef struct JUNO_ASYNC_IO_API_TAG JUNO_ASYNC_IO_API_T;
 
-JUNO_MODULE_DECLARE(JUNO_IO_T);
-JUNO_MODULE_BASE_DECLARE(JUNO_IO_BASE_T);
+JUNO_MODULE_DECLARE(JUNO_ASYNC_IO_T);
+JUNO_MODULE_BASE_DECLARE(JUNO_ASYNC_IO_BASE_T);
 
-JUNO_MODULE_BASE(JUNO_IO_BASE_T, IO_API_T, JUNO_MODULE_EMPTY);
+JUNO_MODULE_BASE(JUNO_IO_BASE_T, JUNO_ASYNC_IO_API_T, JUNO_MODULE_EMPTY);
 
-struct JUNO_IO_API_TAG
+struct JUNO_ASYNC_IO_API_TAG
 {
     /// Read the specified number of bytes from the IO
-    JUNO_STATUS_T (*Read)(JUNO_IO_T *ptIo, char *pcBuff, size_t zBuffSize);
+    JUNO_STATUS_T (*Read)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t zBuffSize);
     /// Try to read from the IO until timeout expires
-    JUNO_STATUS_T (*TryRead)(JUNO_IO_T *ptIo, char *pcBuff, size_t zBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*TryRead)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t zBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
     /// Read from the IO until the set of characters is recieved
-    JUNO_STATUS_T (*ReadUntil)(JUNO_IO_T *ptIo, char *pcBuff, size_t zBuffSize, const char *pcStopChars, size_t zSizeStopChars);
+    JUNO_STATUS_T (*ReadUntil)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t zBuffSize, const char *pcStopChars, size_t zSizeStopChars);
     /// Try to read from the IO until the set of characters is recieved
-    JUNO_STATUS_T (*TryReadUntil)(JUNO_IO_T *ptIo, char *pcBuff, size_t zBuffSize, const char *pcStopChars, size_t zSizeStopChars, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*TryReadUntil)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t zBuffSize, const char *pcStopChars, size_t zSizeStopChars, JUNO_TIME_MICROS_T iTimeoutUs);
     /// Write the specified number of bytes to the IO
-    JUNO_STATUS_T (*Write)(JUNO_IO_T *ptIo, const void *pvBuff, size_t zBuffSize);
+    JUNO_STATUS_T (*Write)(JUNO_ASYNC_IO_T *ptIo, const void *pvBuff, size_t zBuffSize);
     /// Try to write the specified number of bytes to the IO
-    JUNO_STATUS_T (*TryWrite)(JUNO_IO_T *ptIo, const void *pvBuff, size_t zBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*TryWrite)(JUNO_ASYNC_IO_T *ptIo, const void *pvBuff, size_t zBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
     /// Poll the IO
-    JUNO_STATUS_T (*Poll)(JUNO_IO_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs);
 };
 
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_IO_API_H
+#endif // JUNO_ASYNC_IO_API_H
