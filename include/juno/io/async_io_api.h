@@ -56,7 +56,7 @@ struct JUNO_ASYNC_IO_API_TAG
     /// Try to write the specified number of bytes to the IO
     JUNO_STATUS_T (*TryWrite)(JUNO_ASYNC_IO_T *ptIo, const void *pvBuff, size_t zBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
     /// Poll the IO
-    JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs, bool *pbHasData);
 };
 
 #ifdef __cplusplus
