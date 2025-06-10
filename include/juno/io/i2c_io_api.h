@@ -78,36 +78,45 @@ union JUNO_I2C_IO_MSG_TAG
     JUNO_I2C_IO_MSG_R_T tRead;
 };
 
-inline JUNO_I2C_IO_MSG_T ReadMsg(uint8_t iAddr, uint8_t *pcBuff, size_t zReadBuffSize)
-{
-    return (JUNO_I2C_IO_MSG_T)
-    {
-        .tRead = (JUNO_I2C_IO_MSG_R_T)
-        {
-            .tHdr = {JUNO_I2C_IO_MSG_TYPE_R, iAddr},
-            .ptReadBuff = pcBuff,
-            .zReadBuffSize = zReadBuffSize
-        }
-    };
+#define ReadMsg(iAddr, pcBuff, zBuffSize) \
+(JUNO_I2C_IO_MSG_T) \
+{ \
+    .tRead = (JUNO_I2C_IO_MSG_R_T) \
+    { \
+        .tHdr = {JUNO_I2C_IO_MSG_TYPE_R, iAddr}, \
+        .ptReadBuff = pcBuff, \
+        .zReadBuffSize = zBuffSize \
+    } \
 }
 
-inline JUNO_I2C_IO_MSG_T WriteMsg(uint8_t iAddr, const void *pvBuff, size_t zWriteBuffSize)
-{
-    return (JUNO_I2C_IO_MSG_T)
-    {
-        .tWrite = (JUNO_I2C_IO_MSG_W_T)
-        {
-            .tHdr = {JUNO_I2C_IO_MSG_TYPE_W, iAddr},
-            .ptWriteBuff = pvBuff,
-            .zWriteBuffSize = zWriteBuffSize
-        }
-    };
+#define WriteMsg(iAddr, pvBuff, zBuffSize) \
+(JUNO_I2C_IO_MSG_T) \
+{ \
+    .tWrite = (JUNO_I2C_IO_MSG_W_T) \
+    { \
+        .tHdr = {JUNO_I2C_IO_MSG_TYPE_W, iAddr}, \
+        .ptWriteBuff = pvBuff, \
+        .zWriteBuffSize = zBuffSize \
+    } \
 }
 
 JUNO_MODULE_BASE(JUNO_I2C_IO_BASE_T, JUNO_I2C_IO_API_T, JUNO_MODULE_EMPTY);
 
+#define JUNO_I2C_IO_TRANSFER(...) (JUNO_I2C_IO_MSG_T[]){__VA_ARGS__}
+
 struct JUNO_I2C_IO_API_TAG
 {
+    /**
+        Perform an I2C transfer.
+        A typical call would look like:
+
+        ```
+        ptApi->Transfer(ptI2c, JUNO_I2C_IO_TRANSFER{WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff))}, 1)
+        // OR
+        JUNO_I2C_IO_MSG_T ptArrTransfer[] = JUNO_I2C_IO_TRANSFER{WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff))};
+        ptApi->Transfer(ptI2c, ptArrTransfer, sizeof(ptArrTransfer) / sizeof(ptArrTransfer[0]));
+        ```
+    */
     JUNO_STATUS_T (*Transfer)(JUNO_I2C_IO_T *ptI2c, const JUNO_I2C_IO_MSG_T *ptArrMsgs, size_t zMsgArrLen);
 };
 
