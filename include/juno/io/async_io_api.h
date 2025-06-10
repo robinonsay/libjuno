@@ -29,6 +29,7 @@
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/time/time_api.h"
+#include <stdbool.h>
 #ifdef __cplusplus
 extern "C"
 {
