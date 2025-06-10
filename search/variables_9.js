@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['set_0',['Set',['../structJUNO__MAP__API__TAG.html#a3ee272bb656ccad597b426aff2de0f68',1,'JUNO_MAP_API_TAG']]],
-  ['setbuffer_1',['SetBuffer',['../structJUNO__MSG__API__TAG.html#aea2e2915c88121049d27e8cde4930b8d',1,'JUNO_MSG_API_TAG']]],
-  ['sleep_2',['Sleep',['../structJUNO__TIME__API__TAG.html#aab086915d1eb70741db07bed31ffe874',1,'JUNO_TIME_API_TAG']]],
-  ['sleepto_3',['SleepTo',['../structJUNO__TIME__API__TAG.html#a2305cb5124263b7da31ba713926e3d37',1,'JUNO_TIME_API_TAG']]],
-  ['subscribe_4',['Subscribe',['../structJUNO__SUBSCRIBER__API__TAG.html#aa95cc55ebf328b975e063c79b0122d25',1,'JUNO_SUBSCRIBER_API_TAG']]],
-  ['subtracttime_5',['SubtractTime',['../structJUNO__TIME__API__TAG.html#a6fbe3ef3579aa0f5c05fc446d26a8265',1,'JUNO_TIME_API_TAG']]]
+  ['read_0',['Read',['../structJUNO__ASYNC__IO__API__TAG.html#a0b2dad9eece7496525636e6c6b6618df',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['readuntil_1',['ReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a365b0c8ee2db33e67d99438e7d3a2888',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['recv_2',['Recv',['../structJUNO__SUBSCRIBER__API__TAG.html#ab2c12e62c12f83f0ebe8c4716ec42baa',1,'JUNO_SUBSCRIBER_API_TAG']]],
+  ['remove_3',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]],
+  ['run_4',['Run',['../structJUNO__APP__API__TAG.html#a43308acacd9e0abfbba158378392124f',1,'JUNO_APP_API_TAG']]]
 ];

@@ -11,6 +11,6 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/map"
   dir_19d249a700c11f44389cb05327db4a5b [label="hash", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_19d249a700c11f44389cb05327db4a5b.html",tooltip=""];
   dir_7d134b198f51d759fae4dbc0397c07cc [label="map", fillcolor="#edf0f7", color="grey25", style="filled,bold", URL="dir_7d134b198f51d759fae4dbc0397c07cc.html",tooltip=""];
   }
-  dir_7d134b198f51d759fae4dbc0397c07cc->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="1", labeldistance=1.5 headhref="dir_000008_000009.html" href="dir_000008_000009.html" color="steelblue1" fontcolor="steelblue1"];
-  dir_7d134b198f51d759fae4dbc0397c07cc->dir_19d249a700c11f44389cb05327db4a5b [headlabel="1", labeldistance=1.5 headhref="dir_000008_000003.html" href="dir_000008_000003.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_7d134b198f51d759fae4dbc0397c07cc->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="1", labeldistance=1.5 headhref="dir_000009_000010.html" href="dir_000009_000010.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_7d134b198f51d759fae4dbc0397c07cc->dir_19d249a700c11f44389cb05327db4a5b [headlabel="1", labeldistance=1.5 headhref="dir_000009_000004.html" href="dir_000009_000004.html" color="steelblue1" fontcolor="steelblue1"];
 }

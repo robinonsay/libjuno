@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['tryread_0',['TryRead',['../structJUNO__ASYNC__IO__API__TAG.html#a1692e6c4ff546ad8da95494847017955',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['tryreaduntil_1',['TryReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a9b06a6734804f751c992050e243fd72c',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['tryrecv_2',['TryRecv',['../structJUNO__SUBSCRIBER__API__TAG.html#a34c16a0b77935706b258e10bccfe8c10',1,'JUNO_SUBSCRIBER_API_TAG']]],
-  ['trywrite_3',['TryWrite',['../structJUNO__ASYNC__IO__API__TAG.html#abaa1733b94c1da59bd15d91f2cd1d721',1,'JUNO_ASYNC_IO_API_TAG']]]
+  ['set_0',['Set',['../structJUNO__MAP__API__TAG.html#a3ee272bb656ccad597b426aff2de0f68',1,'JUNO_MAP_API_TAG']]],
+  ['setbuffer_1',['SetBuffer',['../structJUNO__MSG__API__TAG.html#aea2e2915c88121049d27e8cde4930b8d',1,'JUNO_MSG_API_TAG']]],
+  ['sleep_2',['Sleep',['../structJUNO__TIME__API__TAG.html#aab086915d1eb70741db07bed31ffe874',1,'JUNO_TIME_API_TAG']]],
+  ['sleepto_3',['SleepTo',['../structJUNO__TIME__API__TAG.html#a2305cb5124263b7da31ba713926e3d37',1,'JUNO_TIME_API_TAG']]],
+  ['subscribe_4',['Subscribe',['../structJUNO__SUBSCRIBER__API__TAG.html#aa95cc55ebf328b975e063c79b0122d25',1,'JUNO_SUBSCRIBER_API_TAG']]],
+  ['subtracttime_5',['SubtractTime',['../structJUNO__TIME__API__TAG.html#a6fbe3ef3579aa0f5c05fc446d26a8265',1,'JUNO_TIME_API_TAG']]]
 ];

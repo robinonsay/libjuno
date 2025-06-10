@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['poll_0',['Poll',['../structJUNO__ASYNC__IO__API__TAG.html#a635e74653c23f3247f03be30a116fee6',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['ptfreemem_1',['ptFreeMem',['../structJUNO__MEMORY__BLOCK__METADATA__TAG.html#ae9c03435c5af618a1615d32f930376c3',1,'JUNO_MEMORY_BLOCK_METADATA_TAG']]],
-  ['publish_2',['Publish',['../structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1',1,'JUNO_PUBLISHER_API_TAG']]],
-  ['put_3',['Put',['../structJUNO__MEMORY__ALLOC__API__TAG.html#afd2e5681c55ecd4df9571d760024502a',1,'JUNO_MEMORY_ALLOC_API_TAG']]],
-  ['pvaddr_4',['pvAddr',['../structJUNO__MEMORY__TAG.html#a410362e1eb4aa6c8ace8c6f369c6fe2a',1,'JUNO_MEMORY_TAG']]],
-  ['pvbuffer_5',['pvBuffer',['../structJUNO__MSG__BUFFER__TAG.html#afca84a339abc2db2ed8ee01480dd7e35',1,'JUNO_MSG_BUFFER_TAG']]]
+  ['logdebug_0',['LogDebug',['../structJUNO__LOG__API__TAG.html#ae981c75dfdf45e9835032b726a2d0470',1,'JUNO_LOG_API_TAG']]],
+  ['logerror_1',['LogError',['../structJUNO__LOG__API__TAG.html#ae85d740823dfa5fb89d25c1129c895e3',1,'JUNO_LOG_API_TAG']]],
+  ['loginfo_2',['LogInfo',['../structJUNO__LOG__API__TAG.html#a9a51b5e5d95cf657aaf891d7aeb92637',1,'JUNO_LOG_API_TAG']]],
+  ['logwarning_3',['LogWarning',['../structJUNO__LOG__API__TAG.html#a3fe326662dcfab8c0139d99c10d67540',1,'JUNO_LOG_API_TAG']]]
 ];

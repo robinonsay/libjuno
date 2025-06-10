@@ -8,5 +8,6 @@ var searchData=
   ['wiring_20everything_20together_3a_20the_20car_20module_20tt_20main_20c_20tt_5',['4. Wiring Everything Together: The Car Module &amp; &lt;tt&gt;main.c&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50',1,'']]],
   ['with_20reference_20counting_6',['Step 4: Share Memory with Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'']]],
   ['write_7',['Write',['../structJUNO__ASYNC__IO__API__TAG.html#a57674eeb0cbf6f8f935a2be8c3ab83c4',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['write_20your_20own_20modules_20in_20libjuno_8',['7. How to Write Your Own Modules in LibJuno',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67',1,'']]]
+  ['write_20your_20own_20modules_20in_20libjuno_8',['7. How to Write Your Own Modules in LibJuno',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67',1,'']]],
+  ['writemsg_9',['WriteMsg',['../i2c__io__api_8h.html#aebcbf0ee0874bc10ff8f09d80c68a3c0',1,'i2c_io_api.h']]]
 ];
