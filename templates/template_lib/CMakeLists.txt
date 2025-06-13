@@ -26,6 +26,11 @@ set(JUNO_COMPILE_OPTIONS
     -O1                             # Turn on some optimization
 )
 
+set(JUNO_COMPILE_CXX_OPTIONS
+    -fno-rtti             # Warn if a function is declared without specifying argument types
+    -fno-exceptions       # Warn if a global function is defined without a previous prototype declaration
+)
+
 set(JUNO_COMPILE_C_OPTIONS
     -Wstrict-prototypes             # Warn if a function is declared without specifying argument types
     -Wmissing-prototypes            # Warn if a global function is defined without a previous prototype declaration
@@ -82,11 +87,13 @@ target_link_libraries(${TEMPLATE_SHARED_TARGET} PUBLIC ${JUNO_SHARED_LIBRARY})
 target_compile_options(${TEMPLATE_SHARED_TARGET} PRIVATE
     ${JUNO_COMPILE_OPTIONS}
     $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+    $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     ${JUNO_COMPILE_OPTIONS}
     $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+    $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
 )
 
 install(

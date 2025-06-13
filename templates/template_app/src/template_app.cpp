@@ -15,69 +15,85 @@
     included in all copies or substantial portions of the Software.
 */
 #include "juno/log/log_api.h"
-#include "template_app/template_app_api.h"
+#include "template_app/template_app.h"
 #include "juno/macros.h"
 #include "juno/status.h"
-#include "template_app/template_app_api.h"
 #include <unistd.h>
 
 
 static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp);
 
 
-static JUNO_STATUS_T Init(JUNO_APP_T *ptJunoApp)
+static JUNO_STATUS_T OnInit(JUNO_APP_T *ptJunoApp)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus)
+    // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    // Get the logger
     auto ptLogger = ptTemplateApp->ptLogger;
+    // Get the logger api
     auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    // Log that the app was intialized
     ptLoggerApi->LogInfo(ptLogger, "Template App Initialized");
     return tStatus;
 }
 
-static JUNO_STATUS_T Run(JUNO_APP_T *ptJunoApp)
+static JUNO_STATUS_T OnProcess(JUNO_APP_T *ptJunoApp)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus)
+    // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    // Get the logger
     auto ptLogger = ptTemplateApp->ptLogger;
+    // Get the logger api
     auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    // Log that the app is running
     ptLoggerApi->LogDebug(ptLogger, "Template App Running");
     return tStatus;
 }
 
-static JUNO_STATUS_T Exit(JUNO_APP_T *ptJunoApp)
+static JUNO_STATUS_T OnExit(JUNO_APP_T *ptJunoApp)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus)
+    // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    // Get the logger
     auto ptLogger = ptTemplateApp->ptLogger;
+    // Get the logger api
     auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    // Log that the app is running
     ptLoggerApi->LogInfo(ptLogger, "Template App Exiting");
     return tStatus;
 }
 
 static const JUNO_APP_API_T tTemplateAppApi{
-    .Init = Init,
-    .Run = Run,
-    .Exit = Exit
+    .OnInit = OnInit,
+    .OnProcess = OnProcess,
+    .OnExit = OnExit
 };
 
 static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp)
 {
+    // Assert the pointer is not null
     ASSERT_EXISTS(ptJunoApp);
+    // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    // Assert the module dependencies are present
     ASSERT_EXISTS_MODULE(
-        ptTemplateApp && ptTemplateApp->JUNO_MODULE_SUPER.ptApi
-        /* TODO: Assert other dependencies and members here using &&*/,
+        /* TODO: Assert other dependencies and members here using &&*/
+        ptTemplateApp &&
+        ptTemplateApp->tBase.ptApi,
         ptTemplateApp,
         "Module does not have all dependencies"
     );
-    if(ptTemplateApp->JUNO_MODULE_SUPER.ptApi != &tTemplateAppApi)
+    // Verify that this application is using the correct API
+    if(ptTemplateApp->tBase.ptApi != &tTemplateAppApi)
     {
         FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateApp, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
@@ -95,9 +111,9 @@ JUNO_STATUS_T JunoFsw_TemplateApp(
 {
     ASSERT_EXISTS(ptJunoApp);
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
-    ptTemplateApp->JUNO_MODULE_SUPER.ptApi = &tTemplateAppApi;
-    ptTemplateApp->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
-    ptTemplateApp->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA = pvFailureUserData;
+    ptTemplateApp->tBase.ptApi = &tTemplateAppApi;
+    ptTemplateApp->tBase.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
+    ptTemplateApp->tBase.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus);
     ptTemplateApp->ptLogger = ptLogger;

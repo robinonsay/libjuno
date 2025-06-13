@@ -42,7 +42,7 @@ JUNO_MODULE_DERIVE(TEMPLATE_APP_T, JUNO_APP_BASE_T,
     JUNO_LOG_T *ptLogger;
 );
 
-JUNO_STATUS_T JunoFsw_TemplateApp(
+JUNO_STATUS_T TemplateApp(
     JUNO_APP_T *ptTemplateApp,
     JUNO_LOG_T *ptLogger,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
