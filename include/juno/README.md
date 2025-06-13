@@ -89,7 +89,7 @@ Imagine we need a “gas tank” module that allows setting and getting fuel lev
 * **`gastank_api.h`**: Declares the `GASTANK_T` module and its API.
 * **`gastank_impl.h` / `gastank_impl.c`**: (Not shown in full) provides the implementation for our default gas-tank.
 
-### 2.1. `gastank_api.h`
+### 2.1. gastank_api.h
 
 ```c
 #ifndef GASTANK_API_H
@@ -151,7 +151,7 @@ struct GASTANK_API_TAG
   ```
 * Finally, `GASTANK_API_T` is a struct with two function pointers, one to set fuel, one to get it.
 
-### 2.2. `gastank_impl.h`
+### 2.2. gastank_impl.h
 
 ```c
 #ifndef GASTANK_IMPL_H
@@ -233,7 +233,7 @@ All interactions go through `ptBase->ptApi->FunctionName`, which hides implement
 
 Now let’s build an **Engine** module that depends on a gas tank (for V6/V8 engines) or on a battery (for electric engines). We’ll see how LibJuno supports deriving from a “base engine” and injecting the appropriate sub-module.
 
-### 3.1. `engine_api.h`: The Base Engine
+### 3.1. engine_api.h: The Base Engine
 
 ```c
 #ifndef ENGINE_API_H
@@ -286,7 +286,7 @@ struct ENGINE_API_TAG
   * A failure handler pointer and user data.
 * `ENGINE_API_T` is the set of function pointers that every engine implementation must provide, e.g. `Start()`, `SetRPM()`, `GetFuel()`, `Stop()`.
 
-### 3.2. Deriving a Gas-Powered Engine: `engine_v6.h` & `engine_v8.h`
+### 3.2. Deriving a Gas-Powered Engine: engine_v6.h & engine_v8.h
 
 For a gas engine, we need to store a pointer to a `GASTANK_T` so that when someone calls `GetFuel()`, we’ll delegate to the gas tank. We do this by “deriving” from `ENGINE_BASE_T`.
 
@@ -347,7 +347,7 @@ JUNO_STATUS_T Engine_V6Api(
 
 Similarly, **`engine_v8.h`** is identical except its type is `ENGINE_V8_T`. Both store `GASTANK_T *ptGastank` as their dependency.
 
-#### Implementation Sketch (in `engine_v6.c`)
+#### Implementation Sketch (in engine_v6.c)
 
 ```c
 static const ENGINE_API_T tEngineV6ImplApi = {
@@ -399,7 +399,7 @@ union ENGINE_T_TAG {
 
 A consumer only ever sees `ENGINE_T *ptEngine`, but under the hood, the memory contains either an `ENGINE_V6_T` or `ENGINE_V8_T` (depending on how you initialize it). The `ptApi` function pointers implement `GetFuel()` by delegating to `ptGastank`.
 
-### 3.3. An Electric Engine: `engine_electric.h`
+### 3.3. An Electric Engine: engine_electric.h
 
 ```c
 #ifndef ENGINE_ELECTRIC_H
@@ -454,11 +454,11 @@ Implementation notes:
 
 ---
 
-## 4. Wiring Everything Together: The Car Module & `main.c`
+## 4. Wiring Everything Together: The Car Module & main.c
 
 Now let’s see how a **`Car`** module consumes an `ENGINE_T`, but doesn’t care whether it’s V6, V8, or Electric—this is classic polymorphism via DI.
 
-### 4.1. `car_api.h`
+### 4.1. car_api.h
 
 ```c
 #ifndef CAR_API_H
@@ -503,7 +503,7 @@ struct CAR_API_TAG
 #endif // CAR_API_H
 ```
 
-### 4.2. `car_impl.h`
+### 4.2. car_impl.h
 
 ```c
 #ifndef CAR_IMPL_H
@@ -601,7 +601,7 @@ JUNO_STATUS_T Car_Stop_Impl(CAR_T *ptCar) {
 }
 ```
 
-### 4.3. Putting It All Together: `main.c`
+### 4.3. Putting It All Together: main.c
 
 ```c
 #include "battery_api.h"
@@ -707,7 +707,7 @@ Because modules communicate only through the API pointers, **no other code needs
 
 Imagine you now want a **Turbo V6** variant, which still needs a gas tank but behaves differently in its `Start`/`SetRPM` logic. Here’s how you’d proceed:
 
-### 5.1. Add `engine_turbov6.h`
+### 5.1. Add engine_turbov6.h
 
 ```c
 #ifndef ENGINE_TURBOV6_H
@@ -754,7 +754,7 @@ JUNO_STATUS_T Engine_TurboV6Api(
 #endif // ENGINE_TURBOV6_H
 ```
 
-### 5.2. Implement `engine_turbov6.c`
+### 5.2. Implement engine_turbov6.c
 
 ```c
 static const ENGINE_API_T tEngineTurboV6ImplApi = {
@@ -792,7 +792,7 @@ JUNO_STATUS_T Engine_TurboV6Api(
 // Implementation details: e.g., when Start() is called, spin up the turbo, check boost, etc.
 ```
 
-### 5.3. Modify `main.c` to Use Turbo V6
+### 5.3. Modify main.c to Use Turbo V6
 
 ```c
 #include "battery_api.h"
@@ -859,7 +859,7 @@ int main(void) {
 
 What if you want to create a **Hybrid Engine** that can run on gas *or* battery, depending on load? You could derive from the base engine and inject *both* a gas tank and a battery. Example:
 
-### 6.1. `engine_hybrid.h`
+### 6.1. engine_hybrid.h
 
 ```c
 #ifndef ENGINE_HYBRID_H
@@ -907,7 +907,7 @@ JUNO_STATUS_T Engine_HybridApi(
 #endif // ENGINE_HYBRID_H
 ```
 
-### 6.2. `engine_hybrid.c`
+### 6.2. engine_hybrid.c
 
 ```c
 static const ENGINE_API_T tEngineHybridImplApi = {
@@ -948,7 +948,7 @@ JUNO_STATUS_T Engine_HybridApi(
 */
 ```
 
-### 6.3. Using the Hybrid Engine in `main.c`
+### 6.3. Using the Hybrid Engine in main.c
 
 ```c
 #include "battery_api.h"
