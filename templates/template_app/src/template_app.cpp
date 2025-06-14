@@ -102,7 +102,7 @@ static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp)
 }
 
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T JunoFsw_TemplateApp(
+JUNO_STATUS_T TemplateApp(
     JUNO_APP_T *ptJunoApp,
     JUNO_LOG_T *ptLogger,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
