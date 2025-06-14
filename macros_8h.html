@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.20.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.21.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -171,7 +171,13 @@ Macros</h2></td></tr>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>; \</div>
 <div class="line">}</div>
 <div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a></div><div class="ttdeci">@ JUNO_STATUS_NULLPTR_ERROR</div><div class="ttdef"><b>Definition</b> status.h:26</div></div>
-</div><!-- fragment -->
+</div><!-- fragment --><p>Assert if <code>ptr</code> exists. For example <code><a class="el" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS(ptMyPointerFoo)</a></code> or <a class="el" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS(ptMyPointerFoo &amp;&amp; ptMyPointerBar)</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptr</td><td>A pointer or pointers concatinated with &amp;&amp; </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a7d6f321ea5cc3cbc9066cf33a9c80c77" name="a7d6f321ea5cc3cbc9066cf33a9c80c77"></a>
@@ -210,7 +216,15 @@ Macros</h2></td></tr>
 <div class="line">    FAIL_MODULE(<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>, ptMod, str); \</div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>; \</div>
 <div class="line">}</div>
-</div><!-- fragment -->
+</div><!-- fragment --><p>Assert if a module's dependencies exist </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptr</td><td>the Module dependecy or dependencies to assert (similar to <code>ASSERT_EXISTS</code>) </td></tr>
+    <tr><td class="paramname">ptMod</td><td>The module </td></tr>
+    <tr><td class="paramname">str</td><td>The error message if <code>ptr</code> fails assertion </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a11bb3cae9586d9a5e68eec88fe23b3ef" name="a11bb3cae9586d9a5e68eec88fe23b3ef"></a>
@@ -243,7 +257,14 @@ Macros</h2></td></tr>
 <div class="line">    failOp; \</div>
 <div class="line">}</div>
 <div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">@ JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:24</div></div>
-</div><!-- fragment -->
+</div><!-- fragment --><p>Assert the status is a success, if not perform <code>failOp</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tStatus</td><td>The status to assert </td></tr>
+    <tr><td class="paramname">failOp</td><td>The failure operation </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 </div><!-- contents -->

@@ -1,18 +1,14 @@
 var searchData=
 [
-  ['pattern_0',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]],
-  ['pitfalls_20to_20avoid_1',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]],
-  ['poll_2',['Poll',['../structJUNO__ASYNC__IO__API__TAG.html#a635e74653c23f3247f03be30a116fee6',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['powered_20engine_3a_20tt_20engine_5fv6_20h_20tt_20tt_20engine_5fv8_20h_20tt_3',['3.2. Deriving a Gas-Powered Engine: &lt;tt&gt;engine_v6.h&lt;/tt&gt; &amp; &lt;tt&gt;engine_v8.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46',1,'']]],
-  ['practices_4',['Best Practices',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md29',1,'']]],
-  ['practices_20tips_5',['9. Best Practices &amp; Tips',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70',1,'']]],
-  ['ptfreemem_6',['ptFreeMem',['../structJUNO__MEMORY__BLOCK__METADATA__TAG.html#ae9c03435c5af618a1615d32f930376c3',1,'JUNO_MEMORY_BLOCK_METADATA_TAG']]],
-  ['ptreadbuff_7',['ptReadBuff',['../structJUNO__I2C__IO__MSG__R__TAG.html#aab5c2b5a4bc6cbfeed6afd770f43250d',1,'JUNO_I2C_IO_MSG_R_TAG']]],
-  ['ptwritebuff_8',['ptWriteBuff',['../structJUNO__I2C__IO__MSG__W__TAG.html#a96dc0b7724e9c98e66e7657abb3636ab',1,'JUNO_I2C_IO_MSG_W_TAG']]],
-  ['publish_9',['Publish',['../structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1',1,'JUNO_PUBLISHER_API_TAG']]],
-  ['publisher_5fapi_2eh_10',['publisher_api.h',['../publisher__api_8h.html',1,'']]],
-  ['put_11',['Put',['../structJUNO__MEMORY__ALLOC__API__TAG.html#afd2e5681c55ecd4df9571d760024502a',1,'JUNO_MEMORY_ALLOC_API_TAG']]],
-  ['putting_20it_20all_20together_3a_20tt_20main_20c_20tt_12',['4.3. Putting It All Together: &lt;tt&gt;main.c&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md53',1,'']]],
-  ['pvaddr_13',['pvAddr',['../structJUNO__MEMORY__TAG.html#a410362e1eb4aa6c8ace8c6f369c6fe2a',1,'JUNO_MEMORY_TAG']]],
-  ['pvbuffer_14',['pvBuffer',['../structJUNO__MSG__BUFFER__TAG.html#afca84a339abc2db2ed8ee01480dd7e35',1,'JUNO_MSG_BUFFER_TAG']]]
+  ['read_0',['Read',['../structJUNO__ASYNC__IO__API__TAG.html#a0b2dad9eece7496525636e6c6b6618df',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['readme_2emd_1',['readme.md',['../include_2juno_2map_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2memory_2README_8md.html',1,'(Global Namespace)'],['../include_2juno_2README_8md.html',1,'(Global Namespace)'],['../README_8md.html',1,'(Global Namespace)'],['../include_2juno_2hash_2README_8md.html',1,'(Global Namespace)']]],
+  ['readmsg_2',['ReadMsg',['../i2c__io__api_8h.html#a32ba2488c58e4792c4d12d7585fbff58',1,'i2c_io_api.h']]],
+  ['readuntil_3',['ReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a365b0c8ee2db33e67d99438e7d3a2888',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['recv_4',['Recv',['../structJUNO__SUBSCRIBER__API__TAG.html#ab2c12e62c12f83f0ebe8c4716ec42baa',1,'JUNO_SUBSCRIBER_API_TAG']]],
+  ['reference_5',['API Reference',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md23',1,'']]],
+  ['reference_20counting_6',['reference counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'Step 4: Share Memory with Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34',1,'When to Use Reference Counting']]],
+  ['reference_20counting_20macros_7',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30',1,'']]],
+  ['reference_20management_8',['Reference Management',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26',1,'']]],
+  ['release_20memory_9',['Step 5: Release Memory',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10',1,'']]],
+  ['remove_10',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]]
 ];

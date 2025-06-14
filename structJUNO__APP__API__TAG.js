@@ -1,6 +1,6 @@
 var structJUNO__APP__API__TAG =
 [
-    [ "Exit", "structJUNO__APP__API__TAG.html#a8957909d1f06e19066955441e6088c42", null ],
-    [ "Init", "structJUNO__APP__API__TAG.html#a6dd77dc0d652f658fc29838967eb35d0", null ],
-    [ "Run", "structJUNO__APP__API__TAG.html#a43308acacd9e0abfbba158378392124f", null ]
+    [ "OnExit", "structJUNO__APP__API__TAG.html#a7655d73591ea6f608422fa51f240eac0", null ],
+    [ "OnInit", "structJUNO__APP__API__TAG.html#a90dcdac12b805f68ef8a5ad00653ff86", null ],
+    [ "OnProcess", "structJUNO__APP__API__TAG.html#aa0186207594727b023adfb84b8fd832e", null ]
 ];

@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.20.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.21.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -121,8 +121,6 @@ $(document).ready(function(){initNavTree('module_8h.html',''); initResizable(); 
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">module.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -143,6 +141,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">The name of the module type</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Declare a juno module implemented as a union </p>
+</div></td></tr>
 <tr class="memitem:af01d56040653e51fb5db7ef3fc2eddea" id="r_af01d56040653e51fb5db7ef3fc2eddea"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a>(name)&#160;&#160;&#160;typedef union name##_TAG name</td></tr>
 <tr class="separator:af01d56040653e51fb5db7ef3fc2eddea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88ba09a559027364496f4da4c765d2b0" id="r_a88ba09a559027364496f4da4c765d2b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a88ba09a559027364496f4da4c765d2b0">JUNO_MODULE_BASE_DECLARE</a>(name)&#160;&#160;&#160;typedef struct name##_TAG name</td></tr>
@@ -176,6 +177,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Alias for the failure handler for a module </p>
 
 </div>
 </div>
@@ -190,6 +192,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Alias for the failure handler user data for a module </p>
 
 </div>
 </div>
@@ -236,8 +239,17 @@ Macros</h2></td></tr>
 <div class="line">    base <a class="code hl_define" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a>; \</div>
 <div class="line">    derived \</div>
 <div class="line">}</div>
-<div class="ttc" id="amodule_8h_html_af98d3f7fa92446d974d322bcfe55b284"><div class="ttname"><a href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a></div><div class="ttdeci">#define JUNO_MODULE_SUPER</div><div class="ttdef"><b>Definition</b> module.h:30</div></div>
-</div><!-- fragment -->
+<div class="ttc" id="amodule_8h_html_af98d3f7fa92446d974d322bcfe55b284"><div class="ttname"><a href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a></div><div class="ttdeci">#define JUNO_MODULE_SUPER</div><div class="ttdef"><b>Definition</b> module.h:54</div></div>
+</div><!-- fragment --><p>Define a juno module. This needs to be done in the composition root. This is where users define all possible module implementations for a module. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the module as declared </td></tr>
+    <tr><td class="paramname">API</td><td>The name of the API type for the module </td></tr>
+    <tr><td class="paramname">base</td><td>The name of the base implementation type for the module as declared </td></tr>
+    <tr><td class="paramname">derived</td><td>The derived modules seperated by <code>;</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a4a7bedb12e394caaedc93d23599a618e" name="a4a7bedb12e394caaedc93d23599a618e"></a>
@@ -278,10 +290,18 @@ Macros</h2></td></tr>
 <div class="line">    JUNO_FAILURE_HANDLER_T <a class="code hl_define" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>; \</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *<a class="code hl_define" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a>; \</div>
 <div class="line">}</div>
-<div class="ttc" id="amodule_8h_html_a1da37e9e5393f35ceabb24ce0374c5ad"><div class="ttname"><a href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a></div><div class="ttdeci">#define JUNO_FAILURE_USER_DATA</div><div class="ttdef"><b>Definition</b> module.h:28</div></div>
-<div class="ttc" id="amodule_8h_html_af2cc78723eab5f63af29ba0056fb2931"><div class="ttname"><a href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a></div><div class="ttdeci">#define JUNO_FAILURE_HANDLER</div><div class="ttdef"><b>Definition</b> module.h:27</div></div>
+<div class="ttc" id="amodule_8h_html_a1da37e9e5393f35ceabb24ce0374c5ad"><div class="ttname"><a href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a></div><div class="ttdeci">#define JUNO_FAILURE_USER_DATA</div><div class="ttdef"><b>Definition</b> module.h:45</div></div>
+<div class="ttc" id="amodule_8h_html_af2cc78723eab5f63af29ba0056fb2931"><div class="ttname"><a href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a></div><div class="ttdeci">#define JUNO_FAILURE_HANDLER</div><div class="ttdef"><b>Definition</b> module.h:41</div></div>
 <div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:43</div></div>
-</div><!-- fragment -->
+</div><!-- fragment --><p>Implement a base for a module </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the module base implementation as declared </td></tr>
+    <tr><td class="paramname">API</td><td>The API type for the module </td></tr>
+    <tr><td class="paramname">members</td><td>The member components of the module base implementation </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a88ba09a559027364496f4da4c765d2b0" name="a88ba09a559027364496f4da4c765d2b0"></a>
@@ -299,6 +319,12 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Declare a base implementation for the module implemented as a struct </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the base implementation type </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -356,7 +382,15 @@ Macros</h2></td></tr>
 <div class="line">    base <a class="code hl_define" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a>; \</div>
 <div class="line">    members \</div>
 <div class="line">}</div>
-</div><!-- fragment -->
+</div><!-- fragment --><p>Implement a derivation of a module </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the module derivation as declared </td></tr>
+    <tr><td class="paramname">base</td><td>The name of the base implementation for the module as declared </td></tr>
+    <tr><td class="paramname">members</td><td>The member components of the module derivation </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a5f07d8f34df731727db318bcef6b94ee" name="a5f07d8f34df731727db318bcef6b94ee"></a>
@@ -374,6 +408,12 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Declare a derivation of a juno module implemented as a struct </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the derived module type </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -388,6 +428,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Empty macro that indicates a module implementation has no additional members </p>
 
 </div>
 </div>
@@ -402,6 +443,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Alias for the module base implementation </p>
 
 </div>
 </div>

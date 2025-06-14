@@ -81,36 +81,36 @@ var NAVTREE =
     [ "Dependency Injection", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html", [
       [ "1. LibJuno’s Module System: An Overview", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md37", null ],
       [ "2. Defining a Simple Module API: The Gas Tank", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md39", [
-        [ "2.1. <tt>gastank_api.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md40", null ],
-        [ "2.2. <tt>gastank_impl.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md41", null ]
+        [ "2.1. gastank_api.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md40", null ],
+        [ "2.2. gastank_impl.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md41", null ]
       ] ],
       [ "3. Building an Engine Module: Deriving & Injecting Dependencies", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md43", [
-        [ "3.1. <tt>engine_api.h</tt>: The Base Engine", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44", [
+        [ "3.1. engine_api.h: The Base Engine", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44", [
           [ "What This Means", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md45", null ]
         ] ],
-        [ "3.2. Deriving a Gas-Powered Engine: <tt>engine_v6.h</tt> & <tt>engine_v8.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46", [
-          [ "Implementation Sketch (in <tt>engine_v6.c</tt>)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md47", null ]
+        [ "3.2. Deriving a Gas-Powered Engine: engine_v6.h & engine_v8.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46", [
+          [ "Implementation Sketch (in engine_v6.c)", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md47", null ]
         ] ],
-        [ "3.3. An Electric Engine: <tt>engine_electric.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md48", null ]
+        [ "3.3. An Electric Engine: engine_electric.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md48", null ]
       ] ],
-      [ "4. Wiring Everything Together: The Car Module & <tt>main.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50", [
-        [ "4.1. <tt>car_api.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md51", null ],
-        [ "4.2. <tt>car_impl.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md52", null ],
-        [ "4.3. Putting It All Together: <tt>main.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md53", [
+      [ "4. Wiring Everything Together: The Car Module & main.c", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50", [
+        [ "4.1. car_api.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md51", null ],
+        [ "4.2. car_impl.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md52", null ],
+        [ "4.3. Putting It All Together: main.c", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md53", [
           [ "Why This Is Modular", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md54", null ]
         ] ]
       ] ],
       [ "5. Demonstrating Isolation of Changes: Adding a Turbocharged Engine", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md56", [
-        [ "5.1. Add <tt>engine_turbov6.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57", null ],
-        [ "5.2. Implement <tt>engine_turbov6.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md58", null ],
-        [ "5.3. Modify <tt>main.c</tt> to Use Turbo V6", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md59", [
+        [ "5.1. Add engine_turbov6.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57", null ],
+        [ "5.2. Implement engine_turbov6.c", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md58", null ],
+        [ "5.3. Modify main.c to Use Turbo V6", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md59", [
           [ "Why This Is Completely Isolated", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md60", null ]
         ] ]
       ] ],
       [ "6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md62", [
-        [ "6.1. <tt>engine_hybrid.h</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md63", null ],
-        [ "6.2. <tt>engine_hybrid.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md64", null ],
-        [ "6.3. Using the Hybrid Engine in <tt>main.c</tt>", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md65", null ]
+        [ "6.1. engine_hybrid.h", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md63", null ],
+        [ "6.2. engine_hybrid.c", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md64", null ],
+        [ "6.3. Using the Hybrid Engine in main.c", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md65", null ]
       ] ],
       [ "7. How to Write Your Own Modules in LibJuno", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67", null ],
       [ "8. Why Dependency Injection Matters in Embedded Systems", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md68", null ],

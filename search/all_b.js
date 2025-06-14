@@ -1,15 +1,21 @@
 var searchData=
 [
-  ['base_20engine_0',['3.1. &lt;tt&gt;engine_api.h&lt;/tt&gt;: The Base Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44',1,'']]],
-  ['best_20practices_1',['Best Practices',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md29',1,'']]],
-  ['best_20practices_20tips_2',['9. Best Practices &amp; Tips',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70',1,'']]],
-  ['beta_3',['beta',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'Juno Hash Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'Juno Map Module (Beta)']]],
-  ['binhex_2eh_4',['binhex.h',['../binhex_8h.html',1,'']]],
-  ['block_20visualization_5',['Memory Block Visualization',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]],
-  ['blocks_6',['blocks',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md15',1,'Memory Blocks'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'Step 1: Declare Memory Blocks']]],
-  ['buff_5fqueue_5fapi_2eh_7',['buff_queue_api.h',['../buff__queue__api_8h.html',1,'']]],
-  ['buff_5fstack_5fapi_2eh_8',['buff_stack_api.h',['../buff__stack__api_8h.html',1,'']]],
-  ['build_20option_9',['CMake Build Option',['../index.html#autotoc_md78',1,'']]],
-  ['building_20an_20engine_20module_3a_20deriving_20injecting_20dependencies_10',['3. Building an Engine Module: Deriving &amp; Injecting Dependencies',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md43',1,'']]],
-  ['building_20and_20testing_11',['Building and Testing',['../index.html#autotoc_md77',1,'']]]
+  ['c_0',['c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50',1,'4. Wiring Everything Together: The Car Module &amp; main.c'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md53',1,'4.3. Putting It All Together: main.c'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md58',1,'5.2. Implement engine_turbov6.c'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md64',1,'6.2. engine_hybrid.c'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md65',1,'6.3. Using the Hybrid Engine in main.c'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md47',1,'Implementation Sketch (in engine_v6.c)']]],
+  ['c_20to_20use_20turbo_20v6_1',['5.3. Modify main.c to Use Turbo V6',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md59',1,'']]],
+  ['car_20module_20main_20c_2',['4. Wiring Everything Together: The Car Module &amp; main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50',1,'']]],
+  ['car_5fapi_20h_3',['4.1. car_api.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md51',1,'']]],
+  ['car_5fimpl_20h_4',['4.2. car_impl.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md52',1,'']]],
+  ['ccitt_2eh_5',['ccitt.h',['../ccitt_8h.html',1,'']]],
+  ['ccitt32_2eh_6',['ccitt32.h',['../ccitt32_8h.html',1,'']]],
+  ['changes_3a_20adding_20a_20turbocharged_20engine_7',['5. Demonstrating Isolation of Changes: Adding a Turbocharged Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md56',1,'']]],
+  ['cmake_20build_20option_8',['CMake Build Option',['../index.html#autotoc_md78',1,'']]],
+  ['common_20pitfalls_20to_20avoid_9',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]],
+  ['completely_20isolated_10',['Why This Is Completely Isolated',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md60',1,'']]],
+  ['concepts_11',['Core Concepts',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
+  ['conclusion_12',['10. Conclusion',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md72',1,'']]],
+  ['core_20concepts_13',['Core Concepts',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
+  ['counting_14',['counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'Step 4: Share Memory with Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34',1,'When to Use Reference Counting']]],
+  ['counting_20macros_15',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30',1,'']]],
+  ['crc_2eh_16',['crc.h',['../crc_8h.html',1,'']]],
+  ['current_20modules_17',['Current Modules',['../index.html#autotoc_md79',1,'']]]
 ];

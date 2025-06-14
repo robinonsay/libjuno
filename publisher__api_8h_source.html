@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.20.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.21.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -148,49 +148,47 @@ $(document).ready(function(){initNavTree('publisher__api_8h_source.html',''); in
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#ifndef JUNO_PUBLISHER_API_H</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define JUNO_PUBLISHER_API_H</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;juno/io/io_api.h&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="msg__api_8h.html">juno/sb/msg_api.h</a>&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="module_8h.html">juno/module.h</a>&quot;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a9492aca08cbc1028e7baa18948507db4">   38</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_TAG</a> <a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_T</a>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">   39</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_PUBLISHER_ID_TAG <a class="code hl_typedef" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a>;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a70492e811c45013d0297526adac969fd">   41</a></span><a class="code hl_define" href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a>(JUNO_PUBLISHER_T);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a07f0884e7231bd33ca6aeef74c37f118">   42</a></span><a class="code hl_define" href="module_8h.html#a88ba09a559027364496f4da4c765d2b0">JUNO_MODULE_BASE_DECLARE</a>(JUNO_PUBLISHER_BASE_T);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a96f77cdf38d9409e02d7789cfb8b2ba2">   44</a></span><a class="code hl_define" href="module_8h.html#a4a7bedb12e394caaedc93d23599a618e">JUNO_MODULE_BASE</a>(JUNO_PUBLISHER_BASE_T, <a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_T</a>,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    JUNO_IO_T *ptIoDevice;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_typedef" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a> *ptPublisherId;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="foldopen" id="foldopen00049" data-start="{" data-end="};">
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="structJUNO__PUBLISHER__API__TAG.html">   49</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_TAG</a></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>{</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1">   52</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1">Publish</a>)(JUNO_PUBLISHER_T *ptJunoPublisher, <span class="keyword">const</span> JUNO_MSG_T *ptMsg);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f">   54</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f">GetPublisherId</a>)(JUNO_PUBLISHER_T *ptJunoPublisher, <a class="code hl_typedef" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a> *ptRetPublisherId);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>};</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="msg__api_8h.html">juno/sb/msg_api.h</a>&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="module_8h.html">juno/module.h</a>&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a9492aca08cbc1028e7baa18948507db4">   37</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_TAG</a> <a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_T</a>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">   38</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_PUBLISHER_ID_TAG <a class="code hl_typedef" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a70492e811c45013d0297526adac969fd">   40</a></span><a class="code hl_define" href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a>(JUNO_PUBLISHER_T);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#a07f0884e7231bd33ca6aeef74c37f118">   41</a></span><a class="code hl_define" href="module_8h.html#a88ba09a559027364496f4da4c765d2b0">JUNO_MODULE_BASE_DECLARE</a>(JUNO_PUBLISHER_BASE_T);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="publisher__api_8h.html#ad170325296f3c64947f756a8d1472bd0">   43</a></span><a class="code hl_define" href="module_8h.html#a4a7bedb12e394caaedc93d23599a618e">JUNO_MODULE_BASE</a>(JUNO_PUBLISHER_BASE_T, <a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_T</a>,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <a class="code hl_typedef" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a> *ptPublisherId;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="structJUNO__PUBLISHER__API__TAG.html">   47</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_TAG</a></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>{</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1">   50</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1">Publish</a>)(JUNO_PUBLISHER_T *ptJunoPublisher, <span class="keyword">const</span> JUNO_MSG_T *ptMsg);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f">   52</a></span>    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*<a class="code hl_variable" href="structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f">GetPublisherId</a>)(JUNO_PUBLISHER_T *ptJunoPublisher, <a class="code hl_typedef" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a> *ptRetPublisherId);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_PUBLISHER_API_H</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_PUBLISHER_API_H</span></div>
 <div class="ttc" id="amodule_8h_html"><div class="ttname"><a href="module_8h.html">module.h</a></div></div>
-<div class="ttc" id="amodule_8h_html_a4a7bedb12e394caaedc93d23599a618e"><div class="ttname"><a href="module_8h.html#a4a7bedb12e394caaedc93d23599a618e">JUNO_MODULE_BASE</a></div><div class="ttdeci">#define JUNO_MODULE_BASE(name, API, members)</div><div class="ttdef"><b>Definition</b> module.h:39</div></div>
-<div class="ttc" id="amodule_8h_html_a88ba09a559027364496f4da4c765d2b0"><div class="ttname"><a href="module_8h.html#a88ba09a559027364496f4da4c765d2b0">JUNO_MODULE_BASE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_BASE_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:24</div></div>
-<div class="ttc" id="amodule_8h_html_af01d56040653e51fb5db7ef3fc2eddea"><div class="ttname"><a href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:23</div></div>
+<div class="ttc" id="amodule_8h_html_a4a7bedb12e394caaedc93d23599a618e"><div class="ttname"><a href="module_8h.html#a4a7bedb12e394caaedc93d23599a618e">JUNO_MODULE_BASE</a></div><div class="ttdeci">#define JUNO_MODULE_BASE(name, API, members)</div><div class="ttdef"><b>Definition</b> module.h:81</div></div>
+<div class="ttc" id="amodule_8h_html_a88ba09a559027364496f4da4c765d2b0"><div class="ttname"><a href="module_8h.html#a88ba09a559027364496f4da4c765d2b0">JUNO_MODULE_BASE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_BASE_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:31</div></div>
+<div class="ttc" id="amodule_8h_html_af01d56040653e51fb5db7ef3fc2eddea"><div class="ttname"><a href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:26</div></div>
 <div class="ttc" id="amsg__api_8h_html"><div class="ttname"><a href="msg__api_8h.html">msg_api.h</a></div></div>
-<div class="ttc" id="apublisher__api_8h_html_a3c999589891aa152f8483e802eb436ff"><div class="ttname"><a href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a></div><div class="ttdeci">struct JUNO_PUBLISHER_ID_TAG JUNO_PUBLISHER_ID_T</div><div class="ttdef"><b>Definition</b> publisher_api.h:39</div></div>
+<div class="ttc" id="apublisher__api_8h_html_a3c999589891aa152f8483e802eb436ff"><div class="ttname"><a href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a></div><div class="ttdeci">struct JUNO_PUBLISHER_ID_TAG JUNO_PUBLISHER_ID_T</div><div class="ttdef"><b>Definition</b> publisher_api.h:38</div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
-<div class="ttc" id="astructJUNO__PUBLISHER__API__TAG_html"><div class="ttname"><a href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_TAG</a></div><div class="ttdef"><b>Definition</b> publisher_api.h:50</div></div>
-<div class="ttc" id="astructJUNO__PUBLISHER__API__TAG_html_acb429fe74225645e1a3b2219343263d1"><div class="ttname"><a href="structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1">JUNO_PUBLISHER_API_TAG::Publish</a></div><div class="ttdeci">JUNO_STATUS_T(* Publish)(JUNO_PUBLISHER_T *ptJunoPublisher, const JUNO_MSG_T *ptMsg)</div><div class="ttdoc">Publish a sb messaage.</div><div class="ttdef"><b>Definition</b> publisher_api.h:52</div></div>
-<div class="ttc" id="astructJUNO__PUBLISHER__API__TAG_html_ae4ec076d361bad121a10448fd5157a3f"><div class="ttname"><a href="structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f">JUNO_PUBLISHER_API_TAG::GetPublisherId</a></div><div class="ttdeci">JUNO_STATUS_T(* GetPublisherId)(JUNO_PUBLISHER_T *ptJunoPublisher, JUNO_PUBLISHER_ID_T *ptRetPublisherId)</div><div class="ttdoc">Get the publisher ID.</div><div class="ttdef"><b>Definition</b> publisher_api.h:54</div></div>
+<div class="ttc" id="astructJUNO__PUBLISHER__API__TAG_html"><div class="ttname"><a href="structJUNO__PUBLISHER__API__TAG.html">JUNO_PUBLISHER_API_TAG</a></div><div class="ttdef"><b>Definition</b> publisher_api.h:48</div></div>
+<div class="ttc" id="astructJUNO__PUBLISHER__API__TAG_html_acb429fe74225645e1a3b2219343263d1"><div class="ttname"><a href="structJUNO__PUBLISHER__API__TAG.html#acb429fe74225645e1a3b2219343263d1">JUNO_PUBLISHER_API_TAG::Publish</a></div><div class="ttdeci">JUNO_STATUS_T(* Publish)(JUNO_PUBLISHER_T *ptJunoPublisher, const JUNO_MSG_T *ptMsg)</div><div class="ttdoc">Publish a sb messaage.</div><div class="ttdef"><b>Definition</b> publisher_api.h:50</div></div>
+<div class="ttc" id="astructJUNO__PUBLISHER__API__TAG_html_ae4ec076d361bad121a10448fd5157a3f"><div class="ttname"><a href="structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f">JUNO_PUBLISHER_API_TAG::GetPublisherId</a></div><div class="ttdeci">JUNO_STATUS_T(* GetPublisherId)(JUNO_PUBLISHER_T *ptJunoPublisher, JUNO_PUBLISHER_ID_T *ptRetPublisherId)</div><div class="ttdoc">Get the publisher ID.</div><div class="ttdef"><b>Definition</b> publisher_api.h:52</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

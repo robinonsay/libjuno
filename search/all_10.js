@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['gas_20powered_20engine_3a_20tt_20engine_5fv6_20h_20tt_20tt_20engine_5fv8_20h_20tt_0',['3.2. Deriving a Gas-Powered Engine: &lt;tt&gt;engine_v6.h&lt;/tt&gt; &amp; &lt;tt&gt;engine_v8.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46',1,'']]],
-  ['gas_20tank_1',['2. Defining a Simple Module API: The Gas Tank',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md39',1,'']]],
-  ['gastank_5fapi_20h_20tt_2',['2.1. &lt;tt&gt;gastank_api.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md40',1,'']]],
-  ['gastank_5fimpl_20h_20tt_3',['2.2. &lt;tt&gt;gastank_impl.h&lt;/tt&gt;',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md41',1,'']]],
-  ['get_4',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__ALLOC__API__TAG.html#a0ac4d16586e6e5ae36a13889bacc8ee7',1,'JUNO_MEMORY_ALLOC_API_TAG::Get']]],
-  ['getbuffer_5',['GetBuffer',['../structJUNO__MSG__API__TAG.html#a0e8fae5730983ab7cf95ec1ecf3617dd',1,'JUNO_MSG_API_TAG']]],
-  ['getpublisherid_6',['GetPublisherId',['../structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f',1,'JUNO_PUBLISHER_API_TAG']]],
-  ['getsize_7',['GetSize',['../structJUNO__STRING__API__TAG.html#a75d02b815e5225c87bfbaada096e2d1e',1,'JUNO_STRING_API_TAG']]],
-  ['gettime_8',['GetTime',['../structJUNO__TIME__API__TAG.html#a5c7d934e92addfc37e905e82ec89e2b2',1,'JUNO_TIME_API_TAG']]],
-  ['getting_20started_9',['Getting Started',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md5',1,'']]]
+  ['h_0',['h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md40',1,'2.1. gastank_api.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md41',1,'2.2. gastank_impl.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md48',1,'3.3. An Electric Engine: engine_electric.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md51',1,'4.1. car_api.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md52',1,'4.2. car_impl.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'5.1. Add engine_turbov6.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md63',1,'6.1. engine_hybrid.h']]],
+  ['h_20engine_5fv8_20h_1',['3.2. Deriving a Gas-Powered Engine: engine_v6.h &amp; engine_v8.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md46',1,'']]],
+  ['h_3a_20the_20base_20engine_2',['3.1. engine_api.h: The Base Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md44',1,'']]],
+  ['handling_3',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]],
+  ['hash_4',['Hash',['../structJUNO__HASH__API__TAG.html#a74dcf0b2de3f4f78fa19d9964119321d',1,'JUNO_HASH_API_TAG']]],
+  ['hash_20module_20beta_5',['Juno Hash Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'']]],
+  ['hash_5fapi_2eh_6',['hash_api.h',['../hash__api_8h.html',1,'']]],
+  ['hash_5fdjb2_2eh_7',['hash_djb2.h',['../hash__djb2_8h.html',1,'']]],
+  ['how_20to_20write_20your_20own_20modules_20in_20libjuno_8',['7. How to Write Your Own Modules in LibJuno',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67',1,'']]],
+  ['hybrid_20engine_20in_20main_20c_9',['6.3. Using the Hybrid Engine in main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md65',1,'']]]
 ];
