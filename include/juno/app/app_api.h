@@ -42,9 +42,9 @@ JUNO_MODULE_BASE(JUNO_APP_BASE_T, JUNO_APP_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_APP_API_TAG
 {
-    JUNO_STATUS_T (*Init)(JUNO_APP_T *ptJunoApp);
-    JUNO_STATUS_T (*Run)(JUNO_APP_T *ptJunoApp);
-    JUNO_STATUS_T (*Exit)(JUNO_APP_T *ptJunoApp);
+    JUNO_STATUS_T (*OnInit)(JUNO_APP_T *ptJunoApp);
+    JUNO_STATUS_T (*OnProcess)(JUNO_APP_T *ptJunoApp);
+    JUNO_STATUS_T (*OnExit)(JUNO_APP_T *ptJunoApp);
 };
 
 #ifdef __cplusplus

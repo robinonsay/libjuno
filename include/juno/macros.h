@@ -20,18 +20,35 @@
 #include "juno/status.h"
 #include <stdint.h>
 
+/**
+    Assert if `ptr` exists.
+    For example `ASSERT_EXISTS(ptMyPointerFoo)` or ASSERT_EXISTS(ptMyPointerFoo && ptMyPointerBar)
+    @param ptr A pointer or pointers concatinated with &&
+*/
 #define ASSERT_EXISTS(ptr) \
 if(!(ptr)) \
 { \
     return JUNO_STATUS_NULLPTR_ERROR; \
 }
 
+/**
+    Assert if a module's dependencies exist
+    @param ptr the Module dependecy or dependencies
+    to assert (similar to `ASSERT_EXISTS`)
+    @param ptMod The module
+    @param str The error message if `ptr` fails assertion
+*/
 #define ASSERT_EXISTS_MODULE(ptr, ptMod, str) if(!(ptr)) \
 { \
     FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptMod, str); \
     return JUNO_STATUS_NULLPTR_ERROR; \
 }
 
+/**
+    Assert the status is a success, if not perform `failOp`
+    @param tStatus The status to assert
+    @param failOp The failure operation
+*/
 #define ASSERT_SUCCESS(tStatus, failOp) if(tStatus != JUNO_STATUS_SUCCESS) \
 { \
     failOp; \

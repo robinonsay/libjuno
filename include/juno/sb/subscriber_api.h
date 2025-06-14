@@ -26,7 +26,6 @@
 */
 #ifndef JUNO_SUBSCRIBER_API_H
 #define JUNO_SUBSCRIBER_API_H
-#include "juno/io/io_api.h"
 #include "juno/memory/memory_api.h"
 #include "juno/sb/msg_api.h"
 #include "juno/sb/publisher_api.h"
@@ -44,7 +43,6 @@ JUNO_MODULE_DECLARE(JUNO_SUBSCRIBER_T);
 JUNO_MODULE_BASE_DECLARE(JUNO_SUBSCRIBER_BASE_T);
 
 JUNO_MODULE_BASE(JUNO_SUBSCRIBER_BASE_T, JUNO_SUBSCRIBER_API_T,
-    JUNO_IO_T *ptIoDevice;
     JUNO_MEMORY_ALLOC_T *ptAlloc;
 );
 

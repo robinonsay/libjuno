@@ -51,12 +51,12 @@ static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
     ASSERT_EXISTS(ptTemplate);
     TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
     ASSERT_EXISTS_MODULE(
-        ptTemplate && ptTemplateImpl->JUNO_MODULE_SUPER.ptApi
+        ptTemplate && ptTemplateImpl->tBase.ptApi
         /* TODO: Assert other dependencies and members here using &&*/,
         ptTemplateImpl,
         "Module does not have all dependencies"
     );
-    if(ptTemplateImpl->JUNO_MODULE_SUPER.ptApi != &tTemplateImplApi)
+    if(ptTemplateImpl->tBase.ptApi != &tTemplateImplApi)
     {
         FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateImpl, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
@@ -69,9 +69,9 @@ JUNO_STATUS_T Template_ImplApi(TEMPLATE_T *ptTemplate, JUNO_FAILURE_HANDLER_T pf
 {
     ASSERT_EXISTS(ptTemplate);
     TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
-    ptTemplateImpl->JUNO_MODULE_SUPER.ptApi = &tTemplateImplApi;
-    ptTemplateImpl->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
-    ptTemplateImpl->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA = pvFailureUserData;
+    ptTemplateImpl->tBase.ptApi = &tTemplateImplApi;
+    ptTemplateImpl->tBase.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
+    ptTemplateImpl->tBase.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptTemplate);
     ASSERT_SUCCESS(tStatus, return tStatus);
     /*

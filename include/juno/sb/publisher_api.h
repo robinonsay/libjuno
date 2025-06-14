@@ -26,7 +26,6 @@
 */
 #ifndef JUNO_PUBLISHER_API_H
 #define JUNO_PUBLISHER_API_H
-#include "juno/io/io_api.h"
 #include "juno/sb/msg_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
@@ -42,7 +41,6 @@ JUNO_MODULE_DECLARE(JUNO_PUBLISHER_T);
 JUNO_MODULE_BASE_DECLARE(JUNO_PUBLISHER_BASE_T);
 
 JUNO_MODULE_BASE(JUNO_PUBLISHER_BASE_T, JUNO_PUBLISHER_API_T,
-    JUNO_IO_T *ptIoDevice;
     JUNO_PUBLISHER_ID_T *ptPublisherId;
 );
 

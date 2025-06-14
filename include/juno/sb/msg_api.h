@@ -47,7 +47,7 @@ struct JUNO_MSG_BUFFER_TAG
 };
 
 JUNO_MODULE_BASE(JUNO_MSG_BASE_T, JUNO_MSG_API_T,
-    JUNO_MSG_BUFFER_T *ptBuffer;
+    const JUNO_MSG_BUFFER_T *ptBuffer;
 );
 
 struct JUNO_MSG_API_TAG
@@ -55,9 +55,9 @@ struct JUNO_MSG_API_TAG
     /// Verify the message
     JUNO_STATUS_T (*VerifyMsg)(JUNO_MSG_T *ptJunoMsg);
     /// Get the message buffer
-    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, JUNO_MSG_BUFFER_T *ptRetBuffer);
+    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T *ptRetBuffer);
     /// Set the message buffer
-    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, JUNO_MSG_BUFFER_T tRetBuffer);
+    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T tRetBuffer);
 };
 
 #ifdef __cplusplus
