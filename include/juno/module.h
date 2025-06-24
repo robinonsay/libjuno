@@ -100,4 +100,11 @@ struct name##_TAG \
     members \
 }
 
+/**
+    Get the API pointer from the module
+    @param ptModule The module pointer
+    @param MODULE_BASE_NAME The base type of the module
+*/
+#define JUNO_MODULE_GET_API(ptModule, MODULE_BASE_NAME) ((const MODULE_BASE_NAME *)ptModule)->ptApi
+
 #endif // JUNO_MODULE_H
