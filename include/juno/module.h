@@ -99,7 +99,6 @@ struct name##_TAG \
     base JUNO_MODULE_SUPER; \
     members \
 }
-/
 
 /**
     Get the API pointer from the module
