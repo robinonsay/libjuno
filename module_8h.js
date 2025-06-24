@@ -9,5 +9,6 @@ var module_8h =
     [ "JUNO_MODULE_DERIVE", "module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e", null ],
     [ "JUNO_MODULE_DERIVE_DECLARE", "module_8h.html#a5f07d8f34df731727db318bcef6b94ee", null ],
     [ "JUNO_MODULE_EMPTY", "module_8h.html#a6dc58e4cd075d0ef32588498500af9a0", null ],
+    [ "JUNO_MODULE_GET_API", "module_8h.html#a66583f69ce4e3c713b650223110e2dd2", null ],
     [ "JUNO_MODULE_SUPER", "module_8h.html#af98d3f7fa92446d974d322bcfe55b284", null ]
 ];

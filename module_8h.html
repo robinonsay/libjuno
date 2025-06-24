@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.21.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.22.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -164,6 +164,8 @@ Macros</h2></td></tr>
 <tr class="separator:a4a7bedb12e394caaedc93d23599a618e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac819c57c8a408a832fcccb3c20b5f16e" id="r_ac819c57c8a408a832fcccb3c20b5f16e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e">JUNO_MODULE_DERIVE</a>(name,  base,  members)</td></tr>
 <tr class="separator:ac819c57c8a408a832fcccb3c20b5f16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66583f69ce4e3c713b650223110e2dd2" id="r_a66583f69ce4e3c713b650223110e2dd2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a66583f69ce4e3c713b650223110e2dd2">JUNO_MODULE_GET_API</a>(ptModule,  MODULE_BASE_NAME)&#160;&#160;&#160;((const MODULE_BASE_NAME *)ptModule)-&gt;ptApi</td></tr>
+<tr class="separator:a66583f69ce4e3c713b650223110e2dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="af2cc78723eab5f63af29ba0056fb2931" name="af2cc78723eab5f63af29ba0056fb2931"></a>
@@ -429,6 +431,41 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Empty macro that indicates a module implementation has no additional members </p>
+
+</div>
+</div>
+<a id="a66583f69ce4e3c713b650223110e2dd2" name="a66583f69ce4e3c713b650223110e2dd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66583f69ce4e3c713b650223110e2dd2">&#9670;&#160;</a></span>JUNO_MODULE_GET_API</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_MODULE_GET_API</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">ptModule, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">MODULE_BASE_NAME&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;((const MODULE_BASE_NAME *)ptModule)-&gt;ptApi</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the API pointer from the module </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptModule</td><td>The module pointer </td></tr>
+    <tr><td class="paramname">MODULE_BASE_NAME</td><td>The base type of the module </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

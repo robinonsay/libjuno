@@ -17,8 +17,9 @@ var searchData=
   ['juno_5fmodule_5fderive_14',['JUNO_MODULE_DERIVE',['../module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e',1,'module.h']]],
   ['juno_5fmodule_5fderive_5fdeclare_15',['JUNO_MODULE_DERIVE_DECLARE',['../module_8h.html#a5f07d8f34df731727db318bcef6b94ee',1,'module.h']]],
   ['juno_5fmodule_5fempty_16',['JUNO_MODULE_EMPTY',['../module_8h.html#a6dc58e4cd075d0ef32588498500af9a0',1,'module.h']]],
-  ['juno_5fmodule_5fsuper_17',['JUNO_MODULE_SUPER',['../module_8h.html#af98d3f7fa92446d974d322bcfe55b284',1,'module.h']]],
-  ['juno_5fnew_5fref_18',['JUNO_NEW_REF',['../memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6',1,'memory_api.h']]],
-  ['juno_5fref_19',['JUNO_REF',['../memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_api.h']]],
-  ['juno_5fzip_5fcrc_5finit_20',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
+  ['juno_5fmodule_5fget_5fapi_17',['JUNO_MODULE_GET_API',['../module_8h.html#a66583f69ce4e3c713b650223110e2dd2',1,'module.h']]],
+  ['juno_5fmodule_5fsuper_18',['JUNO_MODULE_SUPER',['../module_8h.html#af98d3f7fa92446d974d322bcfe55b284',1,'module.h']]],
+  ['juno_5fnew_5fref_19',['JUNO_NEW_REF',['../memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6',1,'memory_api.h']]],
+  ['juno_5fref_20',['JUNO_REF',['../memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_api.h']]],
+  ['juno_5fzip_5fcrc_5finit_21',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
 ];
