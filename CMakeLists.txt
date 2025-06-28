@@ -7,6 +7,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 option(JUNO_TESTS "Enable unit testing" OFF)
 option(JUNO_POSIX "Enable posix" OFF)
 option(JUNO_DOCS "Enable doxygen docs" OFF)
+option(JUNO_PIC "Compile Juno with Position Independent Code" ON)
+set(JUNO_OPTIMIZATION   01)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
@@ -41,10 +43,12 @@ set(JUNO_COMPILE_OPTIONS
     -Wmissing-field-initializers    # Warn about missing fields in struct init
     -fno-common                     # Disallow multiple definitions of common symbols
     -fno-strict-aliasing            # Disable strict aliasing
-    -fPIC                           # Platform Independent
-    -O1                             # Turn on some optimization
+    -${JUNO_OPTIMIZATION}
 )
 
+if(JUNO_PIC)
+    list(APPEND JUNO_COMPILE_OPTIONS -fPIC)
+endif()
 
 
 set(JUNO_LIBS ${PROJECT_NAME})
@@ -68,6 +72,7 @@ foreach(lib ${JUNO_LIBS})
     # Enable a comprehensive set of warnings
     target_compile_options(${lib} PRIVATE
         ${JUNO_COMPILE_OPTIONS}
+        -nostdlib
         -ffreestanding                  # Disable the hosted environment
     )
     target_link_options(${lib} PRIVATE
