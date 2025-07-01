@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.27.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -155,15 +155,15 @@ Typedefs</h2></td></tr>
 <tr class="separator:a9492aca08cbc1028e7baa18948507db4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c999589891aa152f8483e802eb436ff" id="r_a3c999589891aa152f8483e802eb436ff"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_PUBLISHER_ID_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a></td></tr>
 <tr class="separator:a3c999589891aa152f8483e802eb436ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96db84cb0f0c1a76851291310ff628b7" id="r_a96db84cb0f0c1a76851291310ff628b7"><td class="memItemLeft" align="right" valign="top">typedef union JUNO_PUBLISHER_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="publisher__api_8h.html#a96db84cb0f0c1a76851291310ff628b7">JUNO_PUBLISHER_T</a></td></tr>
+<tr class="separator:a96db84cb0f0c1a76851291310ff628b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a849cab13f3b90abed0233de49096cf75" id="r_a849cab13f3b90abed0233de49096cf75"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_PUBLISHER_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="publisher__api_8h.html#a849cab13f3b90abed0233de49096cf75">JUNO_PUBLISHER_ROOT_T</a></td></tr>
+<tr class="separator:a849cab13f3b90abed0233de49096cf75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a70492e811c45013d0297526adac969fd" id="r_a70492e811c45013d0297526adac969fd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="publisher__api_8h.html#a70492e811c45013d0297526adac969fd">JUNO_MODULE_DECLARE</a> (JUNO_PUBLISHER_T)</td></tr>
-<tr class="separator:a70492e811c45013d0297526adac969fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d6bdf0678d7e7f202b45d74e06386e0" id="r_a4d6bdf0678d7e7f202b45d74e06386e0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="publisher__api_8h.html#a4d6bdf0678d7e7f202b45d74e06386e0">JUNO_MODULE_ROOT_DECLARE</a> (JUNO_PUBLISHER_ROOT_T)</td></tr>
-<tr class="separator:a4d6bdf0678d7e7f202b45d74e06386e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8183ea47a9ea60d61c774fd012b036b" id="r_ac8183ea47a9ea60d61c774fd012b036b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="publisher__api_8h.html#ac8183ea47a9ea60d61c774fd012b036b">JUNO_MODULE_ROOT</a> (JUNO_PUBLISHER_ROOT_T, <a class="el" href="publisher__api_8h.html#a9492aca08cbc1028e7baa18948507db4">JUNO_PUBLISHER_API_T</a>, <a class="el" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a> *ptPublisherId;)</td></tr>
-<tr class="separator:ac8183ea47a9ea60d61c774fd012b036b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afad7055d2bee46afd3dffedb93d7ce4e" id="r_afad7055d2bee46afd3dffedb93d7ce4e"><td class="memItemLeft" align="right" valign="top">struct JUNO_PUBLISHER_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="publisher__api_8h.html#afad7055d2bee46afd3dffedb93d7ce4e">JUNO_MODULE_ROOT</a> (<a class="el" href="publisher__api_8h.html#a9492aca08cbc1028e7baa18948507db4">JUNO_PUBLISHER_API_T</a>, <a class="el" href="publisher__api_8h.html#a3c999589891aa152f8483e802eb436ff">JUNO_PUBLISHER_ID_T</a> *ptPublisherId;)</td></tr>
+<tr class="separator:afad7055d2bee46afd3dffedb93d7ce4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a9492aca08cbc1028e7baa18948507db4" name="a9492aca08cbc1028e7baa18948507db4"></a>
@@ -195,40 +195,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a70492e811c45013d0297526adac969fd" name="a70492e811c45013d0297526adac969fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70492e811c45013d0297526adac969fd">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
+<a id="a849cab13f3b90abed0233de49096cf75" name="a849cab13f3b90abed0233de49096cf75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a849cab13f3b90abed0233de49096cf75">&#9670;&#160;</a></span>JUNO_PUBLISHER_ROOT_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_PUBLISHER_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">typedef struct JUNO_PUBLISHER_ROOT_TAG <a class="el" href="publisher__api_8h.html#a849cab13f3b90abed0233de49096cf75">JUNO_PUBLISHER_ROOT_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ac8183ea47a9ea60d61c774fd012b036b" name="ac8183ea47a9ea60d61c774fd012b036b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8183ea47a9ea60d61c774fd012b036b">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+<a id="a96db84cb0f0c1a76851291310ff628b7" name="a96db84cb0f0c1a76851291310ff628b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96db84cb0f0c1a76851291310ff628b7">&#9670;&#160;</a></span>JUNO_PUBLISHER_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_ROOT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_PUBLISHER_ROOT_T&#160;</td>
-          <td class="paramname">, </td>
+          <td class="memname">typedef union JUNO_PUBLISHER_TAG <a class="el" href="publisher__api_8h.html#a96db84cb0f0c1a76851291310ff628b7">JUNO_PUBLISHER_T</a></td>
         </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="afad7055d2bee46afd3dffedb93d7ce4e" name="afad7055d2bee46afd3dffedb93d7ce4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afad7055d2bee46afd3dffedb93d7ce4e">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
         <tr>
-          <td class="paramkey"></td>
-          <td></td>
+          <td class="memname">struct JUNO_PUBLISHER_ROOT_TAG JUNO_MODULE_ROOT </td>
+          <td>(</td>
           <td class="paramtype"><a class="el" href="publisher__api_8h.html#a9492aca08cbc1028e7baa18948507db4">JUNO_PUBLISHER_API_T</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
@@ -242,24 +246,6 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4d6bdf0678d7e7f202b45d74e06386e0" name="a4d6bdf0678d7e7f202b45d74e06386e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d6bdf0678d7e7f202b45d74e06386e0">&#9670;&#160;</a></span>JUNO_MODULE_ROOT_DECLARE()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_ROOT_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_PUBLISHER_ROOT_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

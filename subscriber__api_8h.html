@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.27.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -151,15 +151,15 @@ Data Structures</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:af92e7b98894ecf631609868fff07ec12" id="r_af92e7b98894ecf631609868fff07ec12"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__SUBSCRIBER__API__TAG.html">JUNO_SUBSCRIBER_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subscriber__api_8h.html#af92e7b98894ecf631609868fff07ec12">JUNO_SUBSCRIBER_API_T</a></td></tr>
 <tr class="separator:af92e7b98894ecf631609868fff07ec12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a199fa7f0d73f9abf56ccea2ce7e228c5" id="r_a199fa7f0d73f9abf56ccea2ce7e228c5"><td class="memItemLeft" align="right" valign="top">typedef union JUNO_SUBSCRIBER_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subscriber__api_8h.html#a199fa7f0d73f9abf56ccea2ce7e228c5">JUNO_SUBSCRIBER_T</a></td></tr>
+<tr class="separator:a199fa7f0d73f9abf56ccea2ce7e228c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c89dc2af87ea54214412cba8fc5dfa6" id="r_a1c89dc2af87ea54214412cba8fc5dfa6"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_SUBSCRIBER_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subscriber__api_8h.html#a1c89dc2af87ea54214412cba8fc5dfa6">JUNO_SUBSCRIBER_ROOT_T</a></td></tr>
+<tr class="separator:a1c89dc2af87ea54214412cba8fc5dfa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af89598cf5c7fd08e988628b29af0365a" id="r_af89598cf5c7fd08e988628b29af0365a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subscriber__api_8h.html#af89598cf5c7fd08e988628b29af0365a">JUNO_MODULE_DECLARE</a> (JUNO_SUBSCRIBER_T)</td></tr>
-<tr class="separator:af89598cf5c7fd08e988628b29af0365a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcc4a3163e42a6981ead1cc1f5519ce2" id="r_afcc4a3163e42a6981ead1cc1f5519ce2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subscriber__api_8h.html#afcc4a3163e42a6981ead1cc1f5519ce2">JUNO_MODULE_ROOT_DECLARE</a> (JUNO_SUBSCRIBER_ROOT_T)</td></tr>
-<tr class="separator:afcc4a3163e42a6981ead1cc1f5519ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8d35ec0f94654cebc05e774d726fa95" id="r_ac8d35ec0f94654cebc05e774d726fa95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subscriber__api_8h.html#ac8d35ec0f94654cebc05e774d726fa95">JUNO_MODULE_ROOT</a> (JUNO_SUBSCRIBER_ROOT_T, <a class="el" href="subscriber__api_8h.html#af92e7b98894ecf631609868fff07ec12">JUNO_SUBSCRIBER_API_T</a>, JUNO_MEMORY_ALLOC_T *ptAlloc;)</td></tr>
-<tr class="separator:ac8d35ec0f94654cebc05e774d726fa95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82f36f64420d18375de861ace59149da" id="r_a82f36f64420d18375de861ace59149da"><td class="memItemLeft" align="right" valign="top">struct JUNO_SUBSCRIBER_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subscriber__api_8h.html#a82f36f64420d18375de861ace59149da">JUNO_MODULE_ROOT</a> (<a class="el" href="subscriber__api_8h.html#af92e7b98894ecf631609868fff07ec12">JUNO_SUBSCRIBER_API_T</a>, <a class="el" href="memory__api_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptAlloc;)</td></tr>
+<tr class="separator:a82f36f64420d18375de861ace59149da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="af92e7b98894ecf631609868fff07ec12" name="af92e7b98894ecf631609868fff07ec12"></a>
@@ -177,71 +177,57 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="af89598cf5c7fd08e988628b29af0365a" name="af89598cf5c7fd08e988628b29af0365a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af89598cf5c7fd08e988628b29af0365a">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
+<a id="a1c89dc2af87ea54214412cba8fc5dfa6" name="a1c89dc2af87ea54214412cba8fc5dfa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c89dc2af87ea54214412cba8fc5dfa6">&#9670;&#160;</a></span>JUNO_SUBSCRIBER_ROOT_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_SUBSCRIBER_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">typedef struct JUNO_SUBSCRIBER_ROOT_TAG <a class="el" href="subscriber__api_8h.html#a1c89dc2af87ea54214412cba8fc5dfa6">JUNO_SUBSCRIBER_ROOT_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ac8d35ec0f94654cebc05e774d726fa95" name="ac8d35ec0f94654cebc05e774d726fa95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8d35ec0f94654cebc05e774d726fa95">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+<a id="a199fa7f0d73f9abf56ccea2ce7e228c5" name="a199fa7f0d73f9abf56ccea2ce7e228c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a199fa7f0d73f9abf56ccea2ce7e228c5">&#9670;&#160;</a></span>JUNO_SUBSCRIBER_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_ROOT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_SUBSCRIBER_ROOT_T&#160;</td>
-          <td class="paramname">, </td>
+          <td class="memname">typedef union JUNO_SUBSCRIBER_TAG <a class="el" href="subscriber__api_8h.html#a199fa7f0d73f9abf56ccea2ce7e228c5">JUNO_SUBSCRIBER_T</a></td>
         </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a82f36f64420d18375de861ace59149da" name="a82f36f64420d18375de861ace59149da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82f36f64420d18375de861ace59149da">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
         <tr>
-          <td class="paramkey"></td>
-          <td></td>
+          <td class="memname">struct JUNO_SUBSCRIBER_ROOT_TAG JUNO_MODULE_ROOT </td>
+          <td>(</td>
           <td class="paramtype"><a class="el" href="subscriber__api_8h.html#af92e7b98894ecf631609868fff07ec12">JUNO_SUBSCRIBER_API_T</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">JUNO_MEMORY_ALLOC_T *ptAlloc;&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptAlloc;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afcc4a3163e42a6981ead1cc1f5519ce2" name="afcc4a3163e42a6981ead1cc1f5519ce2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcc4a3163e42a6981ead1cc1f5519ce2">&#9670;&#160;</a></span>JUNO_MODULE_ROOT_DECLARE()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_ROOT_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_SUBSCRIBER_ROOT_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.27.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -153,15 +153,15 @@ Data Structures</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a9b60c614fd9748ed271cc43e4e27d9f3" id="r_a9b60c614fd9748ed271cc43e4e27d9f3"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__HASH__API__TAG.html">JUNO_HASH_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hash__api_8h.html#a9b60c614fd9748ed271cc43e4e27d9f3">JUNO_HASH_API_T</a></td></tr>
 <tr class="separator:a9b60c614fd9748ed271cc43e4e27d9f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a096e052f53350555b5833ff13fa0b853" id="r_a096e052f53350555b5833ff13fa0b853"><td class="memItemLeft" align="right" valign="top">typedef union JUNO_HASH_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hash__api_8h.html#a096e052f53350555b5833ff13fa0b853">JUNO_HASH_T</a></td></tr>
+<tr class="separator:a096e052f53350555b5833ff13fa0b853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae5bb5a723f191c663f71ca20a927a5c" id="r_aae5bb5a723f191c663f71ca20a927a5c"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_HASH_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hash__api_8h.html#aae5bb5a723f191c663f71ca20a927a5c">JUNO_HASH_ROOT_T</a></td></tr>
+<tr class="separator:aae5bb5a723f191c663f71ca20a927a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad651ad99bdb851bab698efbc78c2a959" id="r_ad651ad99bdb851bab698efbc78c2a959"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hash__api_8h.html#ad651ad99bdb851bab698efbc78c2a959">JUNO_MODULE_DECLARE</a> (JUNO_HASH_T)</td></tr>
-<tr class="separator:ad651ad99bdb851bab698efbc78c2a959"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6355f1722226fe41d7826c5f97c8aee0" id="r_a6355f1722226fe41d7826c5f97c8aee0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hash__api_8h.html#a6355f1722226fe41d7826c5f97c8aee0">JUNO_MODULE_ROOT_DECLARE</a> (JUNO_HASH_ROOT_T)</td></tr>
-<tr class="separator:a6355f1722226fe41d7826c5f97c8aee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a493b5d9e6e3b50adcddc527695547f" id="r_a8a493b5d9e6e3b50adcddc527695547f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hash__api_8h.html#a8a493b5d9e6e3b50adcddc527695547f">JUNO_MODULE_ROOT</a> (JUNO_HASH_ROOT_T, <a class="el" href="hash__api_8h.html#a9b60c614fd9748ed271cc43e4e27d9f3">JUNO_HASH_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
-<tr class="separator:a8a493b5d9e6e3b50adcddc527695547f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a153a61297f1f1cc9ab1d31e69db5ad30" id="r_a153a61297f1f1cc9ab1d31e69db5ad30"><td class="memItemLeft" align="right" valign="top">struct JUNO_HASH_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hash__api_8h.html#a153a61297f1f1cc9ab1d31e69db5ad30">JUNO_MODULE_ROOT</a> (<a class="el" href="hash__api_8h.html#a9b60c614fd9748ed271cc43e4e27d9f3">JUNO_HASH_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
+<tr class="separator:a153a61297f1f1cc9ab1d31e69db5ad30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a9b60c614fd9748ed271cc43e4e27d9f3" name="a9b60c614fd9748ed271cc43e4e27d9f3"></a>
@@ -179,40 +179,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ad651ad99bdb851bab698efbc78c2a959" name="ad651ad99bdb851bab698efbc78c2a959"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad651ad99bdb851bab698efbc78c2a959">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
+<a id="aae5bb5a723f191c663f71ca20a927a5c" name="aae5bb5a723f191c663f71ca20a927a5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae5bb5a723f191c663f71ca20a927a5c">&#9670;&#160;</a></span>JUNO_HASH_ROOT_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_HASH_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">typedef struct JUNO_HASH_ROOT_TAG <a class="el" href="hash__api_8h.html#aae5bb5a723f191c663f71ca20a927a5c">JUNO_HASH_ROOT_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a8a493b5d9e6e3b50adcddc527695547f" name="a8a493b5d9e6e3b50adcddc527695547f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a493b5d9e6e3b50adcddc527695547f">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+<a id="a096e052f53350555b5833ff13fa0b853" name="a096e052f53350555b5833ff13fa0b853"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a096e052f53350555b5833ff13fa0b853">&#9670;&#160;</a></span>JUNO_HASH_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_ROOT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_HASH_ROOT_T&#160;</td>
-          <td class="paramname">, </td>
+          <td class="memname">typedef union JUNO_HASH_TAG <a class="el" href="hash__api_8h.html#a096e052f53350555b5833ff13fa0b853">JUNO_HASH_T</a></td>
         </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a153a61297f1f1cc9ab1d31e69db5ad30" name="a153a61297f1f1cc9ab1d31e69db5ad30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a153a61297f1f1cc9ab1d31e69db5ad30">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
         <tr>
-          <td class="paramkey"></td>
-          <td></td>
+          <td class="memname">struct JUNO_HASH_ROOT_TAG JUNO_MODULE_ROOT </td>
+          <td>(</td>
           <td class="paramtype"><a class="el" href="hash__api_8h.html#a9b60c614fd9748ed271cc43e4e27d9f3">JUNO_HASH_API_T</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
@@ -226,24 +230,6 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6355f1722226fe41d7826c5f97c8aee0" name="a6355f1722226fe41d7826c5f97c8aee0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6355f1722226fe41d7826c5f97c8aee0">&#9670;&#160;</a></span>JUNO_MODULE_ROOT_DECLARE()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_ROOT_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_HASH_ROOT_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

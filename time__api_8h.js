@@ -6,9 +6,9 @@ var time__api_8h =
     [ "JUNO_TIME_MICROS_T", "time__api_8h.html#a157796cd447440f52c16b99d69f1e045", null ],
     [ "JUNO_TIME_MILLIS_T", "time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821", null ],
     [ "JUNO_TIME_NANOS_T", "time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de", null ],
+    [ "JUNO_TIME_ROOT_T", "time__api_8h.html#aefeb9d6509263f33b8586b99ae66bcac", null ],
     [ "JUNO_TIME_SECONDS_T", "time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846", null ],
+    [ "JUNO_TIME_T", "time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993", null ],
     [ "JUNO_TIMESTAMP_T", "time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde", null ],
-    [ "JUNO_MODULE_DECLARE", "time__api_8h.html#a7563f75bd6490dceb45b8875056d82a7", null ],
-    [ "JUNO_MODULE_ROOT", "time__api_8h.html#a3c45e144cde97c71df7440570d53a1fd", null ],
-    [ "JUNO_MODULE_ROOT_DECLARE", "time__api_8h.html#a36850f2715144ed7694d3d83e036ce66", null ]
+    [ "JUNO_MODULE_ROOT", "time__api_8h.html#a1e1108a8eb94616ad1e0e8de8a1e12fc", null ]
 ];

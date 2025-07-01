@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.27.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -122,6 +122,7 @@ $(document).ready(function(){initNavTree('memory__block_8h.html',''); initResiza
 
 <div class="header">
   <div class="summary">
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">memory_block.h File Reference</div></div>
 </div><!--header-->
@@ -142,33 +143,46 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="memory__block_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aedb8dcf65a30cfeb601803caf159ae03" id="r_aedb8dcf65a30cfeb601803caf159ae03"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_MEMORY_ALLOC_BLOCK_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__block_8h.html#aedb8dcf65a30cfeb601803caf159ae03">JUNO_MEMORY_ALLOC_BLOCK_T</a></td></tr>
+<tr class="separator:aedb8dcf65a30cfeb601803caf159ae03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4e0ad1b6652d212a5b597dcf3f1775aa" id="r_a4e0ad1b6652d212a5b597dcf3f1775aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__block_8h.html#a4e0ad1b6652d212a5b597dcf3f1775aa">JUNO_MODULE_DERIVE_DECLARE</a> (JUNO_MEMORY_ALLOC_BLOCK_T)</td></tr>
-<tr class="separator:a4e0ad1b6652d212a5b597dcf3f1775aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8da9cdaac1e858e92fbeb32c2c9e875e" id="r_a8da9cdaac1e858e92fbeb32c2c9e875e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__block_8h.html#a8da9cdaac1e858e92fbeb32c2c9e875e">JUNO_MODULE_DERIVE</a> (JUNO_MEMORY_ALLOC_BLOCK_T, JUNO_MEMORY_ALLOC_ROOT_T, uint8_t *pvMemory;<a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> *ptMetadata;size_t zTypeSize;size_t zLength;size_t zUsed;size_t zFreed;)</td></tr>
-<tr class="separator:a8da9cdaac1e858e92fbeb32c2c9e875e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7eccfbcf51027f0607d2b137400c4145" id="r_a7eccfbcf51027f0607d2b137400c4145"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145">JunoMemory_BlockApi</a> (JUNO_MEMORY_ALLOC_T *ptJunoMemory, void *pvMemory, <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> *ptMetadata, size_t zTypeSize, size_t zLength, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memitem:a797460662c32d2e8a80a514b02ea9940" id="r_a797460662c32d2e8a80a514b02ea9940"><td class="memItemLeft" align="right" valign="top">struct JUNO_MEMORY_ALLOC_BLOCK_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__block_8h.html#a797460662c32d2e8a80a514b02ea9940">JUNO_MODULE_DERIVE</a> (<a class="el" href="memory__api_8h.html#aa94f75cec509d112d5de2e522bd7af25">JUNO_MEMORY_ALLOC_ROOT_T</a>, uint8_t *pvMemory;<a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> *ptMetadata;size_t zTypeSize;size_t zLength;size_t zUsed;size_t zFreed;)</td></tr>
+<tr class="separator:a797460662c32d2e8a80a514b02ea9940"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eccfbcf51027f0607d2b137400c4145" id="r_a7eccfbcf51027f0607d2b137400c4145"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145">JunoMemory_BlockApi</a> (<a class="el" href="memory__api_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *ptJunoMemory, void *pvMemory, <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> *ptMetadata, size_t zTypeSize, size_t zLength, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
 <tr class="memdesc:a7eccfbcf51027f0607d2b137400c4145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a memory block for allocation. Sets up a memory block with an associated free stack for managing fixed-size allocations.  <br /></td></tr>
 <tr class="separator:a7eccfbcf51027f0607d2b137400c4145"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a8da9cdaac1e858e92fbeb32c2c9e875e" name="a8da9cdaac1e858e92fbeb32c2c9e875e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8da9cdaac1e858e92fbeb32c2c9e875e">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE()</h2>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="aedb8dcf65a30cfeb601803caf159ae03" name="aedb8dcf65a30cfeb601803caf159ae03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedb8dcf65a30cfeb601803caf159ae03">&#9670;&#160;</a></span>JUNO_MEMORY_ALLOC_BLOCK_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_DERIVE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_MEMORY_ALLOC_BLOCK_T&#160;</td>
-          <td class="paramname">, </td>
+          <td class="memname">typedef struct JUNO_MEMORY_ALLOC_BLOCK_TAG <a class="el" href="memory__block_8h.html#aedb8dcf65a30cfeb601803caf159ae03">JUNO_MEMORY_ALLOC_BLOCK_T</a></td>
         </tr>
+      </table>
+</div><div class="memdoc">
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_memory block blockementation </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a797460662c32d2e8a80a514b02ea9940" name="a797460662c32d2e8a80a514b02ea9940"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a797460662c32d2e8a80a514b02ea9940">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
         <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">JUNO_MEMORY_ALLOC_ROOT_T&#160;</td>
+          <td class="memname">struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#aa94f75cec509d112d5de2e522bd7af25">JUNO_MEMORY_ALLOC_ROOT_T</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -187,25 +201,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4e0ad1b6652d212a5b597dcf3f1775aa" name="a4e0ad1b6652d212a5b597dcf3f1775aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e0ad1b6652d212a5b597dcf3f1775aa">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE_DECLARE()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_DERIVE_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_MEMORY_ALLOC_BLOCK_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_memory block blockementation </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
-
-</div>
-</div>
 <a id="a7eccfbcf51027f0607d2b137400c4145" name="a7eccfbcf51027f0607d2b137400c4145"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7eccfbcf51027f0607d2b137400c4145">&#9670;&#160;</a></span>JunoMemory_BlockApi()</h2>
 
@@ -215,7 +210,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoMemory_BlockApi </td>
           <td>(</td>
-          <td class="paramtype">JUNO_MEMORY_ALLOC_T *&#160;</td>
+          <td class="paramtype"><a class="el" href="memory__api_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a> *&#160;</td>
           <td class="paramname"><em>ptJunoMemory</em>, </td>
         </tr>
         <tr>

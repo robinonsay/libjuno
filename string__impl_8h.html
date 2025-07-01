@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.27.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -122,6 +122,7 @@ $(document).ready(function(){initNavTree('string__impl_8h.html',''); initResizab
 
 <div class="header">
   <div class="summary">
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">string_impl.h File Reference</div></div>
 </div><!--header-->
@@ -137,60 +138,50 @@ Include dependency graph for string_impl.h:</div>
 </div>
 <p><a href="string__impl_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a8ce5851d181f2093dab7e5a223b15c2b" id="r_a8ce5851d181f2093dab7e5a223b15c2b"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_STRING_IMPL_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="string__impl_8h.html#a8ce5851d181f2093dab7e5a223b15c2b">JUNO_STRING_IMPL_T</a></td></tr>
+<tr class="separator:a8ce5851d181f2093dab7e5a223b15c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad8c309e72eec884eea9dcd59dfd52f0f" id="r_ad8c309e72eec884eea9dcd59dfd52f0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="string__impl_8h.html#ad8c309e72eec884eea9dcd59dfd52f0f">JUNO_MODULE_DERIVE_DECLARE</a> (JUNO_STRING_IMPL_T)</td></tr>
-<tr class="separator:ad8c309e72eec884eea9dcd59dfd52f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8b2838ce6606d40b4fb01d2eb2d86d6" id="r_ab8b2838ce6606d40b4fb01d2eb2d86d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="string__impl_8h.html#ab8b2838ce6606d40b4fb01d2eb2d86d6">JUNO_MODULE_DERIVE</a> (JUNO_STRING_IMPL_T, JUNO_STRING_ROOT_T,)</td></tr>
-<tr class="separator:ab8b2838ce6606d40b4fb01d2eb2d86d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46b817f8e19b5d85e38a1f0c9007077c" id="r_a46b817f8e19b5d85e38a1f0c9007077c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="string__impl_8h.html#a46b817f8e19b5d85e38a1f0c9007077c">JunoString_ImplApi</a> (JUNO_STRING_T *ptJunoString, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memitem:a76fad6b9b04e1c30ac05ff44d21c51dd" id="r_a76fad6b9b04e1c30ac05ff44d21c51dd"><td class="memItemLeft" align="right" valign="top">struct JUNO_STRING_IMPL_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="string__impl_8h.html#a76fad6b9b04e1c30ac05ff44d21c51dd">JUNO_MODULE_DERIVE</a> (<a class="el" href="string__api_8h.html#a773c6555393574c7c45e030a3a9afd0d">JUNO_STRING_ROOT_T</a>,)</td></tr>
+<tr class="separator:a76fad6b9b04e1c30ac05ff44d21c51dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b817f8e19b5d85e38a1f0c9007077c" id="r_a46b817f8e19b5d85e38a1f0c9007077c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="string__impl_8h.html#a46b817f8e19b5d85e38a1f0c9007077c">JunoString_ImplApi</a> (<a class="el" href="string__api_8h.html#a9f04e17a193f4d7ef74721e49b0bd092">JUNO_STRING_T</a> *ptJunoString, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
 <tr class="separator:a46b817f8e19b5d85e38a1f0c9007077c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ab8b2838ce6606d40b4fb01d2eb2d86d6" name="ab8b2838ce6606d40b4fb01d2eb2d86d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8b2838ce6606d40b4fb01d2eb2d86d6">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE()</h2>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a8ce5851d181f2093dab7e5a223b15c2b" name="a8ce5851d181f2093dab7e5a223b15c2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ce5851d181f2093dab7e5a223b15c2b">&#9670;&#160;</a></span>JUNO_STRING_IMPL_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_DERIVE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_STRING_IMPL_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">JUNO_STRING_ROOT_T&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">typedef struct JUNO_STRING_IMPL_TAG <a class="el" href="string__impl_8h.html#a8ce5851d181f2093dab7e5a223b15c2b">JUNO_STRING_IMPL_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_string impl implementation </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
 
 </div>
 </div>
-<a id="ad8c309e72eec884eea9dcd59dfd52f0f" name="ad8c309e72eec884eea9dcd59dfd52f0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8c309e72eec884eea9dcd59dfd52f0f">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE_DECLARE()</h2>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a76fad6b9b04e1c30ac05ff44d21c51dd" name="a76fad6b9b04e1c30ac05ff44d21c51dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76fad6b9b04e1c30ac05ff44d21c51dd">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_DERIVE_DECLARE </td>
+          <td class="memname">struct JUNO_STRING_IMPL_TAG JUNO_MODULE_DERIVE </td>
           <td>(</td>
-          <td class="paramtype">JUNO_STRING_IMPL_T&#160;</td>
+          <td class="paramtype"><a class="el" href="string__api_8h.html#a773c6555393574c7c45e030a3a9afd0d">JUNO_STRING_ROOT_T</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_string impl implementation </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -203,7 +194,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoString_ImplApi </td>
           <td>(</td>
-          <td class="paramtype">JUNO_STRING_T *&#160;</td>
+          <td class="paramtype"><a class="el" href="string__api_8h.html#a9f04e17a193f4d7ef74721e49b0bd092">JUNO_STRING_T</a> *&#160;</td>
           <td class="paramname"><em>ptJunoString</em>, </td>
         </tr>
         <tr>
