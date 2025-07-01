@@ -35,9 +35,9 @@ extern "C"
 #endif
 
 
-JUNO_MODULE_DERIVE_DECLARE(JUNO_MAP_IMPL_T);
+typedef struct JUNO_MAP_IMPL_TAG JUNO_MAP_IMPL_T;
 
-JUNO_MODULE_DERIVE(JUNO_MAP_IMPL_T, JUNO_MAP_ROOT_T,
+struct JUNO_MAP_IMPL_TAG JUNO_MODULE_DERIVE(JUNO_MAP_ROOT_T,
     /*
     
     TODO: Include implementation specific members here
@@ -55,7 +55,7 @@ JUNO_MODULE_DERIVE(JUNO_MAP_IMPL_T, JUNO_MAP_ROOT_T,
     Note: If you are implementing a derived module you will need
     to implement `JUNO_MAP_IMPL`.
 */
-JUNO_MODULE(JUNO_MAP_T, JUNO_MAP_API_T, JUNO_MAP_ROOT_T,
+union JUNO_MAP_TAG JUNO_MODULE(JUNO_MAP_API_T, JUNO_MAP_ROOT_T,
     JUNO_MAP_IMPL_T tJunoMapImpl;
 );
 #endif

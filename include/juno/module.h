@@ -64,8 +64,7 @@
     @param derived The derived modules seperated by `;`
 
 */
-#define JUNO_MODULE(name, API, root, derived) \
-union name##_TAG \
+#define JUNO_MODULE(API, root, derived) \
 { \
     const API *ptApi; \
     root JUNO_MODULE_SUPER; \
@@ -78,8 +77,7 @@ union name##_TAG \
     @param API The API type for the module
     @param members The member components of the module root implementation
 */
-#define JUNO_MODULE_ROOT(name, API, members) \
-struct name##_TAG \
+#define JUNO_MODULE_ROOT(API, members) \
 { \
     const API *ptApi; \
     members \
@@ -93,8 +91,7 @@ struct name##_TAG \
     @param root The name of the root implementation for the module as declared
     @param members The member components of the module derivation
 */
-#define JUNO_MODULE_DERIVE(name, root, members) \
-struct name##_TAG \
+#define JUNO_MODULE_DERIVE(root, members) \
 { \
     root JUNO_MODULE_SUPER; \
     members \

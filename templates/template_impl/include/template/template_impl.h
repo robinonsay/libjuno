@@ -35,9 +35,9 @@ extern "C"
 #endif
 
 
-JUNO_MODULE_DERIVE_DECLARE(TEMPLATE_IMPL_T);
+typedef struct TEMPLATE_IMPL_TAG TEMPLATE_IMPL_T;
 
-JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_ROOT_T,
+struct TEMPLATE_IMPL_TAG JUNO_MODULE_DERIVE(TEMPLATE_ROOT_T,
     /*
     
     TODO: Include implementation specific members here
@@ -55,7 +55,7 @@ JUNO_MODULE_DERIVE(TEMPLATE_IMPL_T, TEMPLATE_ROOT_T,
     Note: If you are implementing a derived module you will need
     to implement `TEMPLATE_IMPL`.
 */
-JUNO_MODULE(TEMPLATE_T, TEMPLATE_API_T, TEMPLATE_ROOT_T,
+union TEMPLATE_TAG JUNO_MODULE(TEMPLATE_API_T, TEMPLATE_ROOT_T,
     TEMPLATE_IMPL_T tTemplateImpl;
 );
 #endif
