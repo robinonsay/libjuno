@@ -46,7 +46,7 @@ int main(void) {
     
     // Step 2: Allocate memory
     JUNO_MEMORY_T tMemory = {0};
-    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.tBase.ptApi;
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.tRoot.ptApi;
     tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(USER_DATA_T));
     
     if (tStatus != JUNO_STATUS_SUCCESS) {

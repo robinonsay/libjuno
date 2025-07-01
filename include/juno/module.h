@@ -25,15 +25,15 @@
 */
 #define JUNO_MODULE_DECLARE(name)   typedef union name##_TAG name
 /**
-    Declare a base implementation for the module implemented as a struct
-    @param name The name of the base implementation type
+    Declare a root implementation for the module implemented as a struct
+    @param name The name of the root implementation type
 */
-#define JUNO_MODULE_BASE_DECLARE(name)   typedef struct name##_TAG name
+#define JUNO_MODULE_ROOT_DECLARE(name)   typedef struct name##_TAG name
 /**
     Declare a derivation of a juno module implemented as a struct
     @param name The name of the derived module type
 */
-#define JUNO_MODULE_DERIVE_DECLARE(name)   JUNO_MODULE_BASE_DECLARE(name)
+#define JUNO_MODULE_DERIVE_DECLARE(name)   JUNO_MODULE_ROOT_DECLARE(name)
 
 /**
     Alias for the failure handler for a module
@@ -49,9 +49,9 @@
 */
 #define JUNO_MODULE_EMPTY
 /**
-    Alias for the module base implementation
+    Alias for the module root implementation
 */
-#define JUNO_MODULE_SUPER   tBase
+#define JUNO_MODULE_SUPER   tRoot
 
 /**
     Define a juno module. This needs to be done in
@@ -59,26 +59,26 @@
     all possible module implementations for a module.
     @param name The name of the module as declared
     @param API The name of the API type for the module
-    @param base The name of the base implementation type
+    @param root The name of the root implementation type
     for the module as declared
     @param derived The derived modules seperated by `;`
 
 */
-#define JUNO_MODULE(name, API, base, derived) \
+#define JUNO_MODULE(name, API, root, derived) \
 union name##_TAG \
 { \
     const API *ptApi; \
-    base JUNO_MODULE_SUPER; \
+    root JUNO_MODULE_SUPER; \
     derived \
 }
 
 /**
-    Implement a base for a module
-    @param name The name of the module base implementation as declared
+    Implement a root for a module
+    @param name The name of the module root implementation as declared
     @param API The API type for the module
-    @param members The member components of the module base implementation
+    @param members The member components of the module root implementation
 */
-#define JUNO_MODULE_BASE(name, API, members) \
+#define JUNO_MODULE_ROOT(name, API, members) \
 struct name##_TAG \
 { \
     const API *ptApi; \
@@ -90,21 +90,21 @@ struct name##_TAG \
 /**
     Implement a derivation of a module
     @param name The name of the module derivation as declared
-    @param base The name of the base implementation for the module as declared
+    @param root The name of the root implementation for the module as declared
     @param members The member components of the module derivation
 */
-#define JUNO_MODULE_DERIVE(name, base, members) \
+#define JUNO_MODULE_DERIVE(name, root, members) \
 struct name##_TAG \
 { \
-    base JUNO_MODULE_SUPER; \
+    root JUNO_MODULE_SUPER; \
     members \
 }
 
 /**
     Get the API pointer from the module
     @param ptModule The module pointer
-    @param MODULE_BASE_NAME The base type of the module
+    @param MODULE_ROOT_NAME The root type of the module
 */
-#define JUNO_MODULE_GET_API(ptModule, MODULE_BASE_NAME) ((const MODULE_BASE_NAME *)ptModule)->ptApi
+#define JUNO_MODULE_GET_API(ptModule, MODULE_ROOT_NAME) ((const MODULE_ROOT_NAME *)ptModule)->ptApi
 
 #endif // JUNO_MODULE_H

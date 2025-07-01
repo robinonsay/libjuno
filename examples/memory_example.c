@@ -53,7 +53,7 @@ static JUNO_STATUS_T Push(JUNO_MEMORY_ALLOC_T *ptAlloc, SINGLE_LINKED_LIST_T *pt
         // Create a new node and return the status
         // Allocate the memory for the first node
         JUNO_MEMORY_T tMem = {};
-        const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tBase.ptApi;
+        const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tRoot.ptApi;
         JUNO_STATUS_T tStatus = ptApi->Get(ptAlloc, &tMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
         if(tStatus) return tStatus;
         // Using the memory directly since the SLL will own this memory
@@ -73,7 +73,7 @@ static JUNO_STATUS_T Push(JUNO_MEMORY_ALLOC_T *ptAlloc, SINGLE_LINKED_LIST_T *pt
     }
     // Allocate the memory for the first node
     JUNO_MEMORY_T tMem = {};
-    const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tBase.ptApi;
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tRoot.ptApi;
     tStatus = ptApi->Get(ptAlloc, &tMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
     if(tStatus) return tStatus;
     // Using the memory directly since the SLL will own this memory
@@ -109,7 +109,7 @@ static JUNO_STATUS_T Pop(JUNO_MEMORY_ALLOC_T *ptAlloc, SINGLE_LINKED_LIST_T *ptS
     }
     ptSll->ptStart = ptThisNode->ptNext;
     *piRetData = ptThisNode->iExampleData;
-    const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tBase.ptApi;
+    const JUNO_MEMORY_ALLOC_API_T *ptApi = ptAlloc->tRoot.ptApi;
     tStatus = ptApi->Put(ptAlloc, &ptThisNode->tMemory);
     return tStatus;
 }
