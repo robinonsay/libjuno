@@ -35,9 +35,9 @@ extern "C"
 #endif
 
 
-JUNO_MODULE_DERIVE_DECLARE(JUNO_MEMORY_ALLOC_BLOCK_T);
+typedef struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MEMORY_ALLOC_BLOCK_T;
 
-JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_BLOCK_T, JUNO_MEMORY_ALLOC_ROOT_T,
+struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
     uint8_t *pvMemory;                  ///< Pointer to the allocated memory area.
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata; ///< Array of metadata for each block.
     size_t zTypeSize;                   ///< Size of each block element.
@@ -56,7 +56,7 @@ JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_BLOCK_T, JUNO_MEMORY_ALLOC_ROOT_T,
     Note: If you are blockementing a derived module you will need
     to blockement `JUNO_MEMORY_BLOCK`.
 */
-JUNO_MODULE(JUNO_MEMORY_ALLOC_T, JUNO_MEMORY_ALLOC_API_T, JUNO_MEMORY_ALLOC_ROOT_T,
+union JUNO_MEMORY_ALLOC_TAG JUNO_MODULE(JUNO_MEMORY_ALLOC_API_T, JUNO_MEMORY_ALLOC_ROOT_T,
     JUNO_MEMORY_ALLOC_BLOCK_T tJunoMemoryBlock;
 );
 #endif
