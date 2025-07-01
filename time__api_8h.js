@@ -8,7 +8,7 @@ var time__api_8h =
     [ "JUNO_TIME_NANOS_T", "time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de", null ],
     [ "JUNO_TIME_SECONDS_T", "time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846", null ],
     [ "JUNO_TIMESTAMP_T", "time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde", null ],
-    [ "JUNO_MODULE_BASE", "time__api_8h.html#affcf638007c14566377616b17359e676", null ],
-    [ "JUNO_MODULE_BASE_DECLARE", "time__api_8h.html#ae4c610b3f132186b74a4a3e0af8ac204", null ],
-    [ "JUNO_MODULE_DECLARE", "time__api_8h.html#a7563f75bd6490dceb45b8875056d82a7", null ]
+    [ "JUNO_MODULE_DECLARE", "time__api_8h.html#a7563f75bd6490dceb45b8875056d82a7", null ],
+    [ "JUNO_MODULE_ROOT", "time__api_8h.html#a3c45e144cde97c71df7440570d53a1fd", null ],
+    [ "JUNO_MODULE_ROOT_DECLARE", "time__api_8h.html#a36850f2715144ed7694d3d83e036ce66", null ]
 ];

@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.25.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -152,10 +152,10 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:abc47b74abb13d0065b1b64271692b756" id="r_abc47b74abb13d0065b1b64271692b756"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#abc47b74abb13d0065b1b64271692b756">JUNO_MODULE_DECLARE</a> (JUNO_LOG_T)</td></tr>
 <tr class="separator:abc47b74abb13d0065b1b64271692b756"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08a774d5875f0853ba6981376cba48cb" id="r_a08a774d5875f0853ba6981376cba48cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#a08a774d5875f0853ba6981376cba48cb">JUNO_MODULE_BASE_DECLARE</a> (JUNO_LOG_BASE_T)</td></tr>
-<tr class="separator:a08a774d5875f0853ba6981376cba48cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdf72668b3398a9d870f021518db18cc" id="r_acdf72668b3398a9d870f021518db18cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#acdf72668b3398a9d870f021518db18cc">JUNO_MODULE_BASE</a> (JUNO_LOG_BASE_T, <a class="el" href="log__api_8h.html#ab6441c7563bb6eca0f898fff16afc25d">JUNO_LOG_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
-<tr class="separator:acdf72668b3398a9d870f021518db18cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbb104bfba81409ab8dfaa89925d3dfa" id="r_adbb104bfba81409ab8dfaa89925d3dfa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#adbb104bfba81409ab8dfaa89925d3dfa">JUNO_MODULE_ROOT_DECLARE</a> (JUNO_LOG_ROOT_T)</td></tr>
+<tr class="separator:adbb104bfba81409ab8dfaa89925d3dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c2e68576b777cf6bf5954283fa76c62" id="r_a4c2e68576b777cf6bf5954283fa76c62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#a4c2e68576b777cf6bf5954283fa76c62">JUNO_MODULE_ROOT</a> (JUNO_LOG_ROOT_T, <a class="el" href="log__api_8h.html#ab6441c7563bb6eca0f898fff16afc25d">JUNO_LOG_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
+<tr class="separator:a4c2e68576b777cf6bf5954283fa76c62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="ab6441c7563bb6eca0f898fff16afc25d" name="ab6441c7563bb6eca0f898fff16afc25d"></a>
@@ -174,16 +174,34 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="acdf72668b3398a9d870f021518db18cc" name="acdf72668b3398a9d870f021518db18cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acdf72668b3398a9d870f021518db18cc">&#9670;&#160;</a></span>JUNO_MODULE_BASE()</h2>
+<a id="abc47b74abb13d0065b1b64271692b756" name="abc47b74abb13d0065b1b64271692b756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc47b74abb13d0065b1b64271692b756">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_BASE </td>
+          <td class="memname">JUNO_MODULE_DECLARE </td>
           <td>(</td>
-          <td class="paramtype">JUNO_LOG_BASE_T&#160;</td>
+          <td class="paramtype">JUNO_LOG_T&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4c2e68576b777cf6bf5954283fa76c62" name="a4c2e68576b777cf6bf5954283fa76c62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c2e68576b777cf6bf5954283fa76c62">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_ROOT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_LOG_ROOT_T&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -208,34 +226,16 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a08a774d5875f0853ba6981376cba48cb" name="a08a774d5875f0853ba6981376cba48cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08a774d5875f0853ba6981376cba48cb">&#9670;&#160;</a></span>JUNO_MODULE_BASE_DECLARE()</h2>
+<a id="adbb104bfba81409ab8dfaa89925d3dfa" name="adbb104bfba81409ab8dfaa89925d3dfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbb104bfba81409ab8dfaa89925d3dfa">&#9670;&#160;</a></span>JUNO_MODULE_ROOT_DECLARE()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_BASE_DECLARE </td>
+          <td class="memname">JUNO_MODULE_ROOT_DECLARE </td>
           <td>(</td>
-          <td class="paramtype">JUNO_LOG_BASE_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="abc47b74abb13d0065b1b64271692b756" name="abc47b74abb13d0065b1b64271692b756"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc47b74abb13d0065b1b64271692b756">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_LOG_T&#160;</td>
+          <td class="paramtype">JUNO_LOG_ROOT_T&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>

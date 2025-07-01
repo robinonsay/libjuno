@@ -11,7 +11,7 @@ var memory__api_8h =
     [ "JUNO_MEMORY_BLOCK_METADATA_T", "memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334", null ],
     [ "JUNO_MEMORY_BLOCK_T", "memory__api_8h.html#a4638233ae19853038fabd4275720d66e", null ],
     [ "JUNO_MEMORY_T", "memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a", null ],
-    [ "JUNO_MODULE_BASE", "memory__api_8h.html#a49d37c9eb8bb02c7a37dde0dd23f6071", null ],
-    [ "JUNO_MODULE_BASE_DECLARE", "memory__api_8h.html#a1b95ea98007e094b2701790bbdf11691", null ],
-    [ "JUNO_MODULE_DECLARE", "memory__api_8h.html#afbf2c205555d21f5cfb934b0d0300478", null ]
+    [ "JUNO_MODULE_DECLARE", "memory__api_8h.html#afbf2c205555d21f5cfb934b0d0300478", null ],
+    [ "JUNO_MODULE_ROOT", "memory__api_8h.html#ae28d265c9eeca3827f3ad48bdf29211d", null ],
+    [ "JUNO_MODULE_ROOT_DECLARE", "memory__api_8h.html#a8dd5fb2448da8ae4cee65d637a03d18d", null ]
 ];

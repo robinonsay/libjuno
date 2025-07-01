@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.25.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -162,9 +162,9 @@ $(document).ready(function(){initNavTree('subscriber__api_8h_source.html',''); i
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="subscriber__api_8h.html#af92e7b98894ecf631609868fff07ec12">   40</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structJUNO__SUBSCRIBER__API__TAG.html">JUNO_SUBSCRIBER_API_TAG</a> <a class="code hl_struct" href="structJUNO__SUBSCRIBER__API__TAG.html">JUNO_SUBSCRIBER_API_T</a>;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="subscriber__api_8h.html#af89598cf5c7fd08e988628b29af0365a">   42</a></span><a class="code hl_define" href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a>(JUNO_SUBSCRIBER_T);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="subscriber__api_8h.html#a1a744a0f681067037aa022c241e69051">   43</a></span><a class="code hl_define" href="module_8h.html#a88ba09a559027364496f4da4c765d2b0">JUNO_MODULE_BASE_DECLARE</a>(JUNO_SUBSCRIBER_BASE_T);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="subscriber__api_8h.html#afcc4a3163e42a6981ead1cc1f5519ce2">   43</a></span><a class="code hl_define" href="module_8h.html#a5548471668ce5c647cd7883270ec5a6b">JUNO_MODULE_ROOT_DECLARE</a>(JUNO_SUBSCRIBER_ROOT_T);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="subscriber__api_8h.html#adad6a17b1ad28e5594248badb302edcf">   45</a></span><a class="code hl_define" href="module_8h.html#a4a7bedb12e394caaedc93d23599a618e">JUNO_MODULE_BASE</a>(JUNO_SUBSCRIBER_BASE_T, <a class="code hl_struct" href="structJUNO__SUBSCRIBER__API__TAG.html">JUNO_SUBSCRIBER_API_T</a>,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="subscriber__api_8h.html#ac8d35ec0f94654cebc05e774d726fa95">   45</a></span><a class="code hl_define" href="module_8h.html#a3e09eba2e0c7170d65b2488d491b82cd">JUNO_MODULE_ROOT</a>(JUNO_SUBSCRIBER_ROOT_T, <a class="code hl_struct" href="structJUNO__SUBSCRIBER__API__TAG.html">JUNO_SUBSCRIBER_API_T</a>,</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    JUNO_MEMORY_ALLOC_T *ptAlloc;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
@@ -183,8 +183,8 @@ $(document).ready(function(){initNavTree('subscriber__api_8h_source.html',''); i
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_SUBSCRIBER_API_H</span></div>
 <div class="ttc" id="amemory__api_8h_html"><div class="ttname"><a href="memory__api_8h.html">memory_api.h</a></div></div>
 <div class="ttc" id="amodule_8h_html"><div class="ttname"><a href="module_8h.html">module.h</a></div></div>
-<div class="ttc" id="amodule_8h_html_a4a7bedb12e394caaedc93d23599a618e"><div class="ttname"><a href="module_8h.html#a4a7bedb12e394caaedc93d23599a618e">JUNO_MODULE_BASE</a></div><div class="ttdeci">#define JUNO_MODULE_BASE(name, API, members)</div><div class="ttdef"><b>Definition</b> module.h:81</div></div>
-<div class="ttc" id="amodule_8h_html_a88ba09a559027364496f4da4c765d2b0"><div class="ttname"><a href="module_8h.html#a88ba09a559027364496f4da4c765d2b0">JUNO_MODULE_BASE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_BASE_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:31</div></div>
+<div class="ttc" id="amodule_8h_html_a3e09eba2e0c7170d65b2488d491b82cd"><div class="ttname"><a href="module_8h.html#a3e09eba2e0c7170d65b2488d491b82cd">JUNO_MODULE_ROOT</a></div><div class="ttdeci">#define JUNO_MODULE_ROOT(name, API, members)</div><div class="ttdef"><b>Definition</b> module.h:81</div></div>
+<div class="ttc" id="amodule_8h_html_a5548471668ce5c647cd7883270ec5a6b"><div class="ttname"><a href="module_8h.html#a5548471668ce5c647cd7883270ec5a6b">JUNO_MODULE_ROOT_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_ROOT_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:31</div></div>
 <div class="ttc" id="amodule_8h_html_af01d56040653e51fb5db7ef3fc2eddea"><div class="ttname"><a href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:26</div></div>
 <div class="ttc" id="amsg__api_8h_html"><div class="ttname"><a href="msg__api_8h.html">msg_api.h</a></div></div>
 <div class="ttc" id="apublisher__api_8h_html"><div class="ttname"><a href="publisher__api_8h.html">publisher_api.h</a></div></div>

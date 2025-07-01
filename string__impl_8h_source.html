@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.25.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.26.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('string__impl_8h_source.html',''); init
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="string__impl_8h.html#ad8c309e72eec884eea9dcd59dfd52f0f">   38</a></span><a class="code hl_define" href="module_8h.html#a5f07d8f34df731727db318bcef6b94ee">JUNO_MODULE_DERIVE_DECLARE</a>(JUNO_STRING_IMPL_T);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="string__impl_8h.html#aaa85b5c593f06d0b76b0e71551ba09cb">   40</a></span><a class="code hl_define" href="module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e">JUNO_MODULE_DERIVE</a>(JUNO_STRING_IMPL_T, JUNO_STRING_BASE_T,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="string__impl_8h.html#ab8b2838ce6606d40b4fb01d2eb2d86d6">   40</a></span><a class="code hl_define" href="module_8h.html#a52dc5d1ae60547c88dc373c4644ad4fa">JUNO_MODULE_DERIVE</a>(JUNO_STRING_IMPL_T, JUNO_STRING_ROOT_T,</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">/*</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">    </span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">    TODO: Include implementation specific members here</span></div>
@@ -168,7 +168,7 @@ $(document).ready(function(){initNavTree('string__impl_8h_source.html',''); init
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#ifdef JUNO_STRING_DEFAULT</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><a class="code hl_define" href="module_8h.html#a8c873e9a430b7afd3411a65c787f3101">JUNO_MODULE</a>(JUNO_STRING_T, <a class="code hl_struct" href="structJUNO__STRING__API__TAG.html">JUNO_STRING_API_T</a>, JUNO_STRING_BASE_T,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><a class="code hl_define" href="module_8h.html#a963fa7ec6c5ea466703d727f99c470ea">JUNO_MODULE</a>(JUNO_STRING_T, <a class="code hl_struct" href="structJUNO__STRING__API__TAG.html">JUNO_STRING_API_T</a>, JUNO_STRING_ROOT_T,</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    JUNO_STRING_IMPL_T tJunoStringImpl;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#endif</span></div>
@@ -181,9 +181,9 @@ $(document).ready(function(){initNavTree('string__impl_8h_source.html',''); init
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_STRING_IMPL_H</span></div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="ttc" id="amodule_8h_html"><div class="ttname"><a href="module_8h.html">module.h</a></div></div>
+<div class="ttc" id="amodule_8h_html_a52dc5d1ae60547c88dc373c4644ad4fa"><div class="ttname"><a href="module_8h.html#a52dc5d1ae60547c88dc373c4644ad4fa">JUNO_MODULE_DERIVE</a></div><div class="ttdeci">#define JUNO_MODULE_DERIVE(name, root, members)</div><div class="ttdef"><b>Definition</b> module.h:96</div></div>
 <div class="ttc" id="amodule_8h_html_a5f07d8f34df731727db318bcef6b94ee"><div class="ttname"><a href="module_8h.html#a5f07d8f34df731727db318bcef6b94ee">JUNO_MODULE_DERIVE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_DERIVE_DECLARE(name)</div><div class="ttdef"><b>Definition</b> module.h:36</div></div>
-<div class="ttc" id="amodule_8h_html_a8c873e9a430b7afd3411a65c787f3101"><div class="ttname"><a href="module_8h.html#a8c873e9a430b7afd3411a65c787f3101">JUNO_MODULE</a></div><div class="ttdeci">#define JUNO_MODULE(name, API, base, derived)</div><div class="ttdef"><b>Definition</b> module.h:67</div></div>
-<div class="ttc" id="amodule_8h_html_ac819c57c8a408a832fcccb3c20b5f16e"><div class="ttname"><a href="module_8h.html#ac819c57c8a408a832fcccb3c20b5f16e">JUNO_MODULE_DERIVE</a></div><div class="ttdeci">#define JUNO_MODULE_DERIVE(name, base, members)</div><div class="ttdef"><b>Definition</b> module.h:96</div></div>
+<div class="ttc" id="amodule_8h_html_a963fa7ec6c5ea466703d727f99c470ea"><div class="ttname"><a href="module_8h.html#a963fa7ec6c5ea466703d727f99c470ea">JUNO_MODULE</a></div><div class="ttdeci">#define JUNO_MODULE(name, API, root, derived)</div><div class="ttdef"><b>Definition</b> module.h:67</div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:44</div></div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>

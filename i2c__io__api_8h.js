@@ -19,7 +19,7 @@ var i2c__io__api_8h =
       [ "JUNO_I2C_IO_MSG_TYPE_W", "i2c__io__api_8h.html#a538f27c885f6b9aed0dc840622594527a305e969d01c06388baed711d3bf25fea", null ],
       [ "JUNO_I2C_IO_MSG_TYPE_R", "i2c__io__api_8h.html#a538f27c885f6b9aed0dc840622594527a1d26061cd516174680bd18af8341287c", null ]
     ] ],
-    [ "JUNO_MODULE_BASE", "i2c__io__api_8h.html#adcde9fefac53f30ac1dd67d4e1a77b44", null ],
-    [ "JUNO_MODULE_BASE_DECLARE", "i2c__io__api_8h.html#afcf6a013aaaae252909cc703362fb3f0", null ],
-    [ "JUNO_MODULE_DECLARE", "i2c__io__api_8h.html#ad0b42d1d1a18a246da0a0272ea273346", null ]
+    [ "JUNO_MODULE_DECLARE", "i2c__io__api_8h.html#ad0b42d1d1a18a246da0a0272ea273346", null ],
+    [ "JUNO_MODULE_ROOT", "i2c__io__api_8h.html#aafa70b0130192d536bfb7ac9fec84d4e", null ],
+    [ "JUNO_MODULE_ROOT_DECLARE", "i2c__io__api_8h.html#ad49d5fa6f1c7f88194316144df570807", null ]
 ];
