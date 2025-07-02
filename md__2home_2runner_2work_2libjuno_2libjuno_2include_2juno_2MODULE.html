@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LibJuno: Overview</title>
+<title>LibJuno: Module Docs</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.29.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.30.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -121,16 +121,19 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Overview</div></div>
+  <div class="headertitle"><div class="title">Module Docs</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md40"></a>LibJuno implements dependency injection through modules and API traits. This is very similar to the Rust paradigm. There are 3 components to modules within LibJuno:</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md40"></a> </p>
+<h1><a class="anchor" id="autotoc_md41"></a>
+Overview</h1>
+<p>LibJuno implements dependency injection through modules and API traits. This is very similar to the Rust paradigm. There are 3 components to modules within LibJuno:</p>
 <ul>
 <li>The module</li>
 <li>The module root</li>
 <li>The module derivations</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md41"></a>
+<h1><a class="anchor" id="autotoc_md42"></a>
 The Module Root</h1>
 <p>Before talking about the module itself we need to go over the module root.</p>
 <ul>
@@ -152,7 +155,7 @@ The Module Root</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md42"></a>
+<h1><a class="anchor" id="autotoc_md43"></a>
 Implementing a Module: Derivations</h1>
 <ul>
 <li>Concrete implementations for a module are created through deriving the module.</li>
@@ -160,7 +163,7 @@ Implementing a Module: Derivations</h1>
 <li>The module derivations can contain implementation specific details, dependencies, and other private memebers.</li>
 <li>You can think of the members placed within the derivation as "private" in C++ terms</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md43"></a>
+<h1><a class="anchor" id="autotoc_md44"></a>
 The Module</h1>
 <p>Now with a background on the module root and module derivations, we can talk about the module.</p>
 <ul>
@@ -171,7 +174,7 @@ The Module</h1>
 </li>
 <li>API traits are provided a pointer to the module.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md45"></a>
 How to Define The Module Union</h2>
 <p>Below is an example of defining a module union: </p><div class="fragment"><div class="line"><span class="keyword">union </span>MY_MODULE_T <a class="code hl_define" href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a>(MY_MODULE_API_T, MY_MODULE_ROOT_T,</div>
 <div class="line">    MY_MODULE_DERIVATION_1_T;</div>
