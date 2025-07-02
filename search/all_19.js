@@ -10,5 +10,6 @@ var searchData=
   ['reference_20counting_20macros_7',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30',1,'']]],
   ['reference_20management_8',['Reference Management',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26',1,'']]],
   ['release_20memory_9',['Step 5: Release Memory',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10',1,'']]],
-  ['remove_10',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]]
+  ['remove_10',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]],
+  ['root_11',['root',['../module_8h.html#autotoc_md36',1,'The Module Root'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2MODULE.html#autotoc_md41',1,'The Module Root']]]
 ];

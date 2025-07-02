@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.28.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.29.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -142,14 +142,38 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">The name of the module type</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p>Declare a juno module implemented as a union </p>
+<tr><td colspan="2"><div class="groupText"><p>DOC </p>
+<h2><a class="anchor" id="autotoc_md35"></a>
+Overview</h2>
+<p>LibJuno implements dependency injection through modules and API traits. This is very similar to the Rust paradigm. There are 3 components to modules within LibJuno:</p>
+<p>The module The module root The module derivations</p>
+<h2><a class="anchor" id="autotoc_md36"></a>
+The Module Root</h2>
+<p>Before talking about the module itself we need to go over the module root.</p>
+<p>The module root is a common set of member variables shared across all module derivations and implementations. When a module is derived there is a compile-time gurantee that the module can be safely up-cast to the module root. All derivations of the module can up-cast to the module root. The module root always provides the following as defined by the macros: <code>ptApi</code> &ndash; A pointer to the API traits <code>_pfcnFailureHandler</code> &ndash; A failure handler callback <code>_pvFailurUserData</code> &ndash; User defined data pointer to provide to the failure handler callback <b>Members within the module root should be freestanding</b> The real power within DI is to isolate dependencies The module root should not contain any dependencies. Ideally the module root should only contain types supported by your freestanding C standard, like C99 or C11. This enables highly portable modules. Implementation details and dependencies belong in the module derivations</p>
+<h2><a class="anchor" id="autotoc_md37"></a>
+Implementing a Module: Derivations</h2>
+<p>Concrete implementations for a module are created through deriving the module. A derivation is guranteed to have the module root as the the first member. Module derivations can always be safely up-cast to the module root. The module derivations can contain implementation specific details, dependencies, and other private memebers. You can think of the members placed within the derivation as "private" in C++ terms</p>
+<h2><a class="anchor" id="autotoc_md38"></a>
+The Module</h2>
+<p>Now with a background on the module root and module derivations, we can talk about the module.</p>
+<p>The module is a union of all possible derivations, including the root. The module is forward-declared. Module implementations will provide a default implementation of the module that can be overridden when <code>..._CUSTOM</code> is defined. The user of the module would define <code>..._CUSTOM</code> if they want polymorphic behavior. API traits are provided a pointer to the module.</p>
+<h3><a class="anchor" id="autotoc_md39"></a>
+How to Define The Module Union</h3>
+<p>Below is an example of defining a module union: </p><div class="fragment"><div class="line"><span class="keyword">union </span>MY_MODULE_T <a class="code hl_define" href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a>(MY_MODULE_API_T, MY_MODULE_ROOT_T,</div>
+<div class="line">    MY_MODULE_DERIVATION_1_T;</div>
+<div class="line">    MY_MODULE_DERIVATION_2_T;</div>
+<div class="line">    MY_MODULE_DERIVATION_3_T;</div>
+<div class="line">);</div>
+<div class="ttc" id="amodule_8h_html_a838097554fddc892fc3e26329157ebc6"><div class="ttname"><a href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a></div><div class="ttdeci">#define JUNO_MODULE(API_T, ROOT_T, derived)</div><div class="ttdef"><b>Definition</b> module.h:154</div></div>
+</div><!-- fragment --><p> Declare a juno module implemented as a union </p>
 </div></td></tr>
-<tr class="memitem:af01d56040653e51fb5db7ef3fc2eddea" id="r_af01d56040653e51fb5db7ef3fc2eddea"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#af01d56040653e51fb5db7ef3fc2eddea">JUNO_MODULE_DECLARE</a>(name)&#160;&#160;&#160;typedef union name##_TAG name</td></tr>
-<tr class="separator:af01d56040653e51fb5db7ef3fc2eddea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5548471668ce5c647cd7883270ec5a6b" id="r_a5548471668ce5c647cd7883270ec5a6b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a5548471668ce5c647cd7883270ec5a6b">JUNO_MODULE_ROOT_DECLARE</a>(name)&#160;&#160;&#160;typedef struct name##_TAG name</td></tr>
-<tr class="separator:a5548471668ce5c647cd7883270ec5a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f07d8f34df731727db318bcef6b94ee" id="r_a5f07d8f34df731727db318bcef6b94ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a5f07d8f34df731727db318bcef6b94ee">JUNO_MODULE_DERIVE_DECLARE</a>(name)&#160;&#160;&#160;<a class="el" href="module_8h.html#a5548471668ce5c647cd7883270ec5a6b">JUNO_MODULE_ROOT_DECLARE</a>(name)</td></tr>
-<tr class="separator:a5f07d8f34df731727db318bcef6b94ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ecb577f51a5d8b065b5911389fff2d7" id="r_a0ecb577f51a5d8b065b5911389fff2d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a0ecb577f51a5d8b065b5911389fff2d7">JUNO_MODULE_DECLARE</a>(NAME_T)&#160;&#160;&#160;typedef union NAME_T NAME_T</td></tr>
+<tr class="separator:a0ecb577f51a5d8b065b5911389fff2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0446375ade1958ae0eac0e071e7ff86b" id="r_a0446375ade1958ae0eac0e071e7ff86b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a0446375ade1958ae0eac0e071e7ff86b">JUNO_MODULE_ROOT_DECLARE</a>(NAME_T)&#160;&#160;&#160;typedef struct NAME_T NAME_T</td></tr>
+<tr class="separator:a0446375ade1958ae0eac0e071e7ff86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a319d8fd47f7c274e99e084625ae5749b" id="r_a319d8fd47f7c274e99e084625ae5749b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a319d8fd47f7c274e99e084625ae5749b">JUNO_MODULE_DERIVE_DECLARE</a>(NAME_T)&#160;&#160;&#160;<a class="el" href="module_8h.html#a0446375ade1958ae0eac0e071e7ff86b">JUNO_MODULE_ROOT_DECLARE</a>(NAME_T)</td></tr>
+<tr class="separator:a319d8fd47f7c274e99e084625ae5749b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2cc78723eab5f63af29ba0056fb2931" id="r_af2cc78723eab5f63af29ba0056fb2931"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>&#160;&#160;&#160;_pfcnFailureHandler</td></tr>
 <tr class="separator:af2cc78723eab5f63af29ba0056fb2931"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1da37e9e5393f35ceabb24ce0374c5ad" id="r_a1da37e9e5393f35ceabb24ce0374c5ad"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a>&#160;&#160;&#160;_pvFailurUserData</td></tr>
@@ -158,14 +182,14 @@ Macros</h2></td></tr>
 <tr class="separator:a6dc58e4cd075d0ef32588498500af9a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af98d3f7fa92446d974d322bcfe55b284" id="r_af98d3f7fa92446d974d322bcfe55b284"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a>&#160;&#160;&#160;tRoot</td></tr>
 <tr class="separator:af98d3f7fa92446d974d322bcfe55b284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78ad112952b58e63424fa1d960f600a3" id="r_a78ad112952b58e63424fa1d960f600a3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a78ad112952b58e63424fa1d960f600a3">JUNO_MODULE</a>(API,  root,  derived)</td></tr>
-<tr class="separator:a78ad112952b58e63424fa1d960f600a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a136115d6e1c3095a645249172c33a3fd" id="r_a136115d6e1c3095a645249172c33a3fd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a136115d6e1c3095a645249172c33a3fd">JUNO_MODULE_ROOT</a>(API,  members)</td></tr>
-<tr class="separator:a136115d6e1c3095a645249172c33a3fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b3269e9e54ad60c7fd94ecad6550603" id="r_a1b3269e9e54ad60c7fd94ecad6550603"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a1b3269e9e54ad60c7fd94ecad6550603">JUNO_MODULE_DERIVE</a>(root,  members)</td></tr>
-<tr class="separator:a1b3269e9e54ad60c7fd94ecad6550603"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af25d28ca1bbb16f2b0899b55d555cd4f" id="r_af25d28ca1bbb16f2b0899b55d555cd4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#af25d28ca1bbb16f2b0899b55d555cd4f">JUNO_MODULE_GET_API</a>(ptModule,  MODULE_ROOT_NAME)&#160;&#160;&#160;((const MODULE_ROOT_NAME *)ptModule)-&gt;ptApi</td></tr>
-<tr class="separator:af25d28ca1bbb16f2b0899b55d555cd4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a838097554fddc892fc3e26329157ebc6" id="r_a838097554fddc892fc3e26329157ebc6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a>(API_T,  ROOT_T,  derived)</td></tr>
+<tr class="separator:a838097554fddc892fc3e26329157ebc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add0b87e2c0a6d5a0eaff6eb95c94148d" id="r_add0b87e2c0a6d5a0eaff6eb95c94148d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#add0b87e2c0a6d5a0eaff6eb95c94148d">JUNO_MODULE_ROOT</a>(API_T,  members)</td></tr>
+<tr class="separator:add0b87e2c0a6d5a0eaff6eb95c94148d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a543c7a97bd77bbccec506297d92b5e8f" id="r_a543c7a97bd77bbccec506297d92b5e8f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a543c7a97bd77bbccec506297d92b5e8f">JUNO_MODULE_DERIVE</a>(ROOT_T,  members)</td></tr>
+<tr class="separator:a543c7a97bd77bbccec506297d92b5e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47c6440bbc9d03756a4f35e1cb970591" id="r_a47c6440bbc9d03756a4f35e1cb970591"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a47c6440bbc9d03756a4f35e1cb970591">JUNO_MODULE_GET_API</a>(ptModule,  ROOT_T)&#160;&#160;&#160;((const ROOT_T *)ptModule)-&gt;ptApi</td></tr>
+<tr class="separator:a47c6440bbc9d03756a4f35e1cb970591"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="af2cc78723eab5f63af29ba0056fb2931" name="af2cc78723eab5f63af29ba0056fb2931"></a>
@@ -198,8 +222,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="a78ad112952b58e63424fa1d960f600a3" name="a78ad112952b58e63424fa1d960f600a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78ad112952b58e63424fa1d960f600a3">&#9670;&#160;</a></span>JUNO_MODULE</h2>
+<a id="a838097554fddc892fc3e26329157ebc6" name="a838097554fddc892fc3e26329157ebc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a838097554fddc892fc3e26329157ebc6">&#9670;&#160;</a></span>JUNO_MODULE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,13 +232,13 @@ Macros</h2></td></tr>
           <td class="memname">#define JUNO_MODULE</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">API, </td>
+          <td class="paramname">API_T, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">root, </td>
+          <td class="paramname">ROOT_T, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -230,12 +254,18 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">{ \</div>
-<div class="line">    <span class="keyword">const</span> API *ptApi; \</div>
-<div class="line">    root <a class="code hl_define" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a>; \</div>
+<div class="line">    <span class="keyword">const</span> API_T *ptApi; \</div>
+<div class="line">    ROOT_T <a class="code hl_define" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a>; \</div>
 <div class="line">    derived \</div>
 <div class="line">}</div>
-<div class="ttc" id="amodule_8h_html_af98d3f7fa92446d974d322bcfe55b284"><div class="ttname"><a href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a></div><div class="ttdeci">#define JUNO_MODULE_SUPER</div><div class="ttdef"><b>Definition</b> module.h:54</div></div>
-</div><!-- fragment --><p>Define a juno module. This needs to be done in the composition root. This is where users define all possible module implementations for a module. </p><dl class="params"><dt>Parameters</dt><dd>
+<div class="ttc" id="amodule_8h_html_af98d3f7fa92446d974d322bcfe55b284"><div class="ttname"><a href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a></div><div class="ttdeci">#define JUNO_MODULE_SUPER</div><div class="ttdef"><b>Definition</b> module.h:132</div></div>
+</div><!-- fragment --><p>Define a juno module. This needs to be done in the composition root. This is where users define all possible module implementations for a module.</p>
+<p>Example: </p><div class="fragment"><div class="line"><span class="keyword">union </span>MY_MODULE_T <a class="code hl_define" href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a>(MY_MODULE_API_T, MY_MODULE_ROOT_T,</div>
+<div class="line">    MY_MODULE_DERIVATION_1_T;</div>
+<div class="line">    MY_MODULE_DERIVATION_2_T;</div>
+<div class="line">    MY_MODULE_DERIVATION_3_T;</div>
+<div class="line">);</div>
+</div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the module as declared </td></tr>
     <tr><td class="paramname">API</td><td>The name of the API type for the module </td></tr>
@@ -247,8 +277,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="af01d56040653e51fb5db7ef3fc2eddea" name="af01d56040653e51fb5db7ef3fc2eddea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af01d56040653e51fb5db7ef3fc2eddea">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE</h2>
+<a id="a0ecb577f51a5d8b065b5911389fff2d7" name="a0ecb577f51a5d8b065b5911389fff2d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ecb577f51a5d8b065b5911389fff2d7">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,16 +287,16 @@ Macros</h2></td></tr>
           <td class="memname">#define JUNO_MODULE_DECLARE</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">name</td><td>)</td>
-          <td>&#160;&#160;&#160;typedef union name##_TAG name</td>
+          <td class="paramname">NAME_T</td><td>)</td>
+          <td>&#160;&#160;&#160;typedef union NAME_T NAME_T</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a1b3269e9e54ad60c7fd94ecad6550603" name="a1b3269e9e54ad60c7fd94ecad6550603"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b3269e9e54ad60c7fd94ecad6550603">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE</h2>
+<a id="a543c7a97bd77bbccec506297d92b5e8f" name="a543c7a97bd77bbccec506297d92b5e8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a543c7a97bd77bbccec506297d92b5e8f">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -275,7 +305,7 @@ Macros</h2></td></tr>
           <td class="memname">#define JUNO_MODULE_DERIVE</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">root, </td>
+          <td class="paramname">ROOT_T, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -291,10 +321,14 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">{ \</div>
-<div class="line">    root <a class="code hl_define" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a>; \</div>
+<div class="line">    ROOT_T <a class="code hl_define" href="module_8h.html#af98d3f7fa92446d974d322bcfe55b284">JUNO_MODULE_SUPER</a>; \</div>
 <div class="line">    members \</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Implement a derivation of a module </p><dl class="params"><dt>Parameters</dt><dd>
+</div><!-- fragment --><p>Implement a derivation of a module Example: </p><div class="fragment"><div class="line"><span class="keyword">struct </span>MY_MODULE_DERIVED_T <a class="code hl_define" href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a>(MY_MODULE_ROOT_T,</div>
+<div class="line">    int iExampleSpecificMember;</div>
+<div class="line">    SOME_DEPENEDENCY_T tSomeDep;</div>
+<div class="line">);</div>
+</div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the module derivation as declared </td></tr>
     <tr><td class="paramname">root</td><td>The name of the root implementation for the module as declared </td></tr>
@@ -305,8 +339,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="a5f07d8f34df731727db318bcef6b94ee" name="a5f07d8f34df731727db318bcef6b94ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f07d8f34df731727db318bcef6b94ee">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE_DECLARE</h2>
+<a id="a319d8fd47f7c274e99e084625ae5749b" name="a319d8fd47f7c274e99e084625ae5749b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a319d8fd47f7c274e99e084625ae5749b">&#9670;&#160;</a></span>JUNO_MODULE_DERIVE_DECLARE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -315,8 +349,8 @@ Macros</h2></td></tr>
           <td class="memname">#define JUNO_MODULE_DERIVE_DECLARE</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">name</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="module_8h.html#a5548471668ce5c647cd7883270ec5a6b">JUNO_MODULE_ROOT_DECLARE</a>(name)</td>
+          <td class="paramname">NAME_T</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="module_8h.html#a0446375ade1958ae0eac0e071e7ff86b">JUNO_MODULE_ROOT_DECLARE</a>(NAME_T)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -344,8 +378,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="af25d28ca1bbb16f2b0899b55d555cd4f" name="af25d28ca1bbb16f2b0899b55d555cd4f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af25d28ca1bbb16f2b0899b55d555cd4f">&#9670;&#160;</a></span>JUNO_MODULE_GET_API</h2>
+<a id="a47c6440bbc9d03756a4f35e1cb970591" name="a47c6440bbc9d03756a4f35e1cb970591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47c6440bbc9d03756a4f35e1cb970591">&#9670;&#160;</a></span>JUNO_MODULE_GET_API</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -360,12 +394,12 @@ Macros</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">MODULE_ROOT_NAME&#160;</td>
+          <td class="paramname">ROOT_T&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;((const MODULE_ROOT_NAME *)ptModule)-&gt;ptApi</td>
+          <td></td><td>&#160;&#160;&#160;((const ROOT_T *)ptModule)-&gt;ptApi</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -379,8 +413,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="a136115d6e1c3095a645249172c33a3fd" name="a136115d6e1c3095a645249172c33a3fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a136115d6e1c3095a645249172c33a3fd">&#9670;&#160;</a></span>JUNO_MODULE_ROOT</h2>
+<a id="add0b87e2c0a6d5a0eaff6eb95c94148d" name="add0b87e2c0a6d5a0eaff6eb95c94148d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add0b87e2c0a6d5a0eaff6eb95c94148d">&#9670;&#160;</a></span>JUNO_MODULE_ROOT</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -389,7 +423,7 @@ Macros</h2></td></tr>
           <td class="memname">#define JUNO_MODULE_ROOT</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">API, </td>
+          <td class="paramname">API_T, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -405,15 +439,20 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">{ \</div>
-<div class="line">    <span class="keyword">const</span> API *ptApi; \</div>
+<div class="line">    <span class="keyword">const</span> API_T *ptApi; \</div>
 <div class="line">    members \</div>
 <div class="line">    JUNO_FAILURE_HANDLER_T <a class="code hl_define" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>; \</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *<a class="code hl_define" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a>; \</div>
 <div class="line">}</div>
-<div class="ttc" id="amodule_8h_html_a1da37e9e5393f35ceabb24ce0374c5ad"><div class="ttname"><a href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a></div><div class="ttdeci">#define JUNO_FAILURE_USER_DATA</div><div class="ttdef"><b>Definition</b> module.h:45</div></div>
-<div class="ttc" id="amodule_8h_html_af2cc78723eab5f63af29ba0056fb2931"><div class="ttname"><a href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a></div><div class="ttdeci">#define JUNO_FAILURE_HANDLER</div><div class="ttdef"><b>Definition</b> module.h:41</div></div>
+<div class="ttc" id="amodule_8h_html_a1da37e9e5393f35ceabb24ce0374c5ad"><div class="ttname"><a href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a></div><div class="ttdeci">#define JUNO_FAILURE_USER_DATA</div><div class="ttdef"><b>Definition</b> module.h:121</div></div>
+<div class="ttc" id="amodule_8h_html_af2cc78723eab5f63af29ba0056fb2931"><div class="ttname"><a href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a></div><div class="ttdeci">#define JUNO_FAILURE_HANDLER</div><div class="ttdef"><b>Definition</b> module.h:117</div></div>
 <div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:43</div></div>
-</div><!-- fragment --><p>Implement a root for a module </p><dl class="params"><dt>Parameters</dt><dd>
+</div><!-- fragment --><p>Implement a root for a module Example: </p><div class="fragment"><div class="line"><span class="keyword">struct </span>MY_MODULE_ROOT_T <a class="code hl_define" href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a>(MY_MODULE_API_T,</div>
+<div class="line">    uint32_t iExampleRoot1Member;</div>
+<div class="line">    uint32_t iExampleRoot2Member;</div>
+<div class="line">    uint32_t iExampleRoot3Member;</div>
+<div class="line">);</div>
+</div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the module root implementation as declared </td></tr>
     <tr><td class="paramname">API</td><td>The API type for the module </td></tr>
@@ -424,8 +463,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="a5548471668ce5c647cd7883270ec5a6b" name="a5548471668ce5c647cd7883270ec5a6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5548471668ce5c647cd7883270ec5a6b">&#9670;&#160;</a></span>JUNO_MODULE_ROOT_DECLARE</h2>
+<a id="a0446375ade1958ae0eac0e071e7ff86b" name="a0446375ade1958ae0eac0e071e7ff86b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0446375ade1958ae0eac0e071e7ff86b">&#9670;&#160;</a></span>JUNO_MODULE_ROOT_DECLARE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -434,8 +473,8 @@ Macros</h2></td></tr>
           <td class="memname">#define JUNO_MODULE_ROOT_DECLARE</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">name</td><td>)</td>
-          <td>&#160;&#160;&#160;typedef struct name##_TAG name</td>
+          <td class="paramname">NAME_T</td><td>)</td>
+          <td>&#160;&#160;&#160;typedef struct NAME_T NAME_T</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -459,7 +498,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Alias for the module root implementation </p>
+<p>Alias for the module root implementation. All modules can call <code>.tRoot</code> to access the module root. </p>
 
 </div>
 </div>

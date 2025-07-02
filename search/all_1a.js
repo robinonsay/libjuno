@@ -3,11 +3,11 @@ var searchData=
   ['set_0',['Set',['../structJUNO__MAP__API__TAG.html#a3ee272bb656ccad597b426aff2de0f68',1,'JUNO_MAP_API_TAG']]],
   ['setbuffer_1',['SetBuffer',['../structJUNO__MSG__API__TAG.html#abffdc5283d77dc9632fc5e67e8cc8868',1,'JUNO_MSG_API_TAG']]],
   ['share_20memory_20with_20reference_20counting_2',['Step 4: Share Memory with Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'']]],
-  ['simple_20module_20api_3a_20the_20gas_20tank_3',['2. Defining a Simple Module API: The Gas Tank',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md39',1,'']]],
-  ['sketch_20in_20engine_5fv6_20c_4',['Implementation Sketch (in engine_v6.c)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md47',1,'']]],
+  ['simple_20module_20api_3a_20the_20gas_20tank_3',['2. Defining a Simple Module API: The Gas Tank',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md49',1,'']]],
+  ['sketch_20in_20engine_5fv6_20c_4',['Implementation Sketch (in engine_v6.c)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
   ['sleep_5',['Sleep',['../structJUNO__TIME__API__TAG.html#aab086915d1eb70741db07bed31ffe874',1,'JUNO_TIME_API_TAG']]],
   ['sleepto_6',['SleepTo',['../structJUNO__TIME__API__TAG.html#a2305cb5124263b7da31ba713926e3d37',1,'JUNO_TIME_API_TAG']]],
-  ['source_3a_20“hybrid”_20engines_7',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md62',1,'']]],
+  ['source_3a_20“hybrid”_20engines_7',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md72',1,'']]],
   ['spi_5fio_5fapi_2eh_8',['spi_io_api.h',['../spi__io__api_8h.html',1,'']]],
   ['started_9',['Getting Started',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md5',1,'']]],
   ['status_2eh_10',['status.h',['../status_8h.html',1,'']]],
@@ -23,6 +23,6 @@ var searchData=
   ['subscribe_20',['Subscribe',['../structJUNO__SUBSCRIBER__API__TAG.html#aa95cc55ebf328b975e063c79b0122d25',1,'JUNO_SUBSCRIBER_API_TAG']]],
   ['subscriber_5fapi_2eh_21',['subscriber_api.h',['../subscriber__api_8h.html',1,'']]],
   ['subtracttime_22',['SubtractTime',['../structJUNO__TIME__API__TAG.html#a6fbe3ef3579aa0f5c05fc446d26a8265',1,'JUNO_TIME_API_TAG']]],
-  ['system_3a_20an_20overview_23',['1. LibJuno’s Module System: An Overview',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md37',1,'']]],
-  ['systems_24',['8. Why Dependency Injection Matters in Embedded Systems',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md68',1,'']]]
+  ['system_3a_20an_20overview_23',['1. LibJuno’s Module System: An Overview',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md47',1,'']]],
+  ['systems_24',['8. Why Dependency Injection Matters in Embedded Systems',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md78',1,'']]]
 ];

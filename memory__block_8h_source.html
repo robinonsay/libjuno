@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.28.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.29.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('memory__block_8h_source.html',''); ini
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="memory__block_8h.html#aedb8dcf65a30cfeb601803caf159ae03">   38</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_MEMORY_ALLOC_BLOCK_TAG <a class="code hl_typedef" href="memory__block_8h.html#aedb8dcf65a30cfeb601803caf159ae03">JUNO_MEMORY_ALLOC_BLOCK_T</a>;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="memory__block_8h.html#a797460662c32d2e8a80a514b02ea9940">   40</a></span><span class="keyword">struct </span>JUNO_MEMORY_ALLOC_BLOCK_TAG <a class="code hl_define" href="module_8h.html#a1b3269e9e54ad60c7fd94ecad6550603">JUNO_MODULE_DERIVE</a>(<a class="code hl_typedef" href="memory__api_8h.html#aa94f75cec509d112d5de2e522bd7af25">JUNO_MEMORY_ALLOC_ROOT_T</a>,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="memory__block_8h.html#a797460662c32d2e8a80a514b02ea9940">   40</a></span><span class="keyword">struct </span>JUNO_MEMORY_ALLOC_BLOCK_TAG <a class="code hl_define" href="module_8h.html#a543c7a97bd77bbccec506297d92b5e8f">JUNO_MODULE_DERIVE</a>(<a class="code hl_typedef" href="memory__api_8h.html#aa94f75cec509d112d5de2e522bd7af25">JUNO_MEMORY_ALLOC_ROOT_T</a>,</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    uint8_t *pvMemory;                  </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <a class="code hl_struct" href="structJUNO__MEMORY__BLOCK__METADATA__TAG.html">JUNO_MEMORY_BLOCK_METADATA_T</a> *ptMetadata; </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">size_t</span> zTypeSize;                   </div>
@@ -169,7 +169,7 @@ $(document).ready(function(){initNavTree('memory__block_8h_source.html',''); ini
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#ifdef JUNO_MEMORY_DEFAULT</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">union </span>JUNO_MEMORY_ALLOC_TAG <a class="code hl_define" href="module_8h.html#a78ad112952b58e63424fa1d960f600a3">JUNO_MODULE</a>(<a class="code hl_struct" href="structJUNO__MEMORY__ALLOC__API__TAG.html">JUNO_MEMORY_ALLOC_API_T</a>, <a class="code hl_typedef" href="memory__api_8h.html#aa94f75cec509d112d5de2e522bd7af25">JUNO_MEMORY_ALLOC_ROOT_T</a>,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">union </span>JUNO_MEMORY_ALLOC_TAG <a class="code hl_define" href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a>(<a class="code hl_struct" href="structJUNO__MEMORY__ALLOC__API__TAG.html">JUNO_MEMORY_ALLOC_API_T</a>, <a class="code hl_typedef" href="memory__api_8h.html#aa94f75cec509d112d5de2e522bd7af25">JUNO_MEMORY_ALLOC_ROOT_T</a>,</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_typedef" href="memory__block_8h.html#aedb8dcf65a30cfeb601803caf159ae03">JUNO_MEMORY_ALLOC_BLOCK_T</a> tJunoMemoryBlock;</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#endif</span></div>
@@ -193,8 +193,8 @@ $(document).ready(function(){initNavTree('memory__block_8h_source.html',''); ini
 <div class="ttc" id="amemory__block_8h_html_a7eccfbcf51027f0607d2b137400c4145"><div class="ttname"><a href="memory__block_8h.html#a7eccfbcf51027f0607d2b137400c4145">JunoMemory_BlockApi</a></div><div class="ttdeci">JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_T *ptJunoMemory, void *pvMemory, JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata, size_t zTypeSize, size_t zLength, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)</div><div class="ttdoc">Initializes a memory block for allocation. Sets up a memory block with an associated free stack for m...</div><div class="ttdef"><b>Definition</b> juno_memory_block.c:194</div></div>
 <div class="ttc" id="amemory__block_8h_html_aedb8dcf65a30cfeb601803caf159ae03"><div class="ttname"><a href="memory__block_8h.html#aedb8dcf65a30cfeb601803caf159ae03">JUNO_MEMORY_ALLOC_BLOCK_T</a></div><div class="ttdeci">struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MEMORY_ALLOC_BLOCK_T</div><div class="ttdef"><b>Definition</b> memory_block.h:38</div></div>
 <div class="ttc" id="amodule_8h_html"><div class="ttname"><a href="module_8h.html">module.h</a></div></div>
-<div class="ttc" id="amodule_8h_html_a1b3269e9e54ad60c7fd94ecad6550603"><div class="ttname"><a href="module_8h.html#a1b3269e9e54ad60c7fd94ecad6550603">JUNO_MODULE_DERIVE</a></div><div class="ttdeci">#define JUNO_MODULE_DERIVE(root, members)</div><div class="ttdef"><b>Definition</b> module.h:94</div></div>
-<div class="ttc" id="amodule_8h_html_a78ad112952b58e63424fa1d960f600a3"><div class="ttname"><a href="module_8h.html#a78ad112952b58e63424fa1d960f600a3">JUNO_MODULE</a></div><div class="ttdeci">#define JUNO_MODULE(API, root, derived)</div><div class="ttdef"><b>Definition</b> module.h:67</div></div>
+<div class="ttc" id="amodule_8h_html_a543c7a97bd77bbccec506297d92b5e8f"><div class="ttname"><a href="module_8h.html#a543c7a97bd77bbccec506297d92b5e8f">JUNO_MODULE_DERIVE</a></div><div class="ttdeci">#define JUNO_MODULE_DERIVE(ROOT_T, members)</div><div class="ttdef"><b>Definition</b> module.h:196</div></div>
+<div class="ttc" id="amodule_8h_html_a838097554fddc892fc3e26329157ebc6"><div class="ttname"><a href="module_8h.html#a838097554fddc892fc3e26329157ebc6">JUNO_MODULE</a></div><div class="ttdeci">#define JUNO_MODULE(API_T, ROOT_T, derived)</div><div class="ttdef"><b>Definition</b> module.h:154</div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:44</div></div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
