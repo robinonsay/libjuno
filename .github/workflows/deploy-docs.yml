@@ -30,7 +30,12 @@ jobs:
           NEW_VER=$(python3 scripts/increase_version.py)
           echo "NEW_VERSION=$NEW_VER" >> $GITHUB_ENV
         shell: bash
-
+      - name: Extract Documentation
+        id: extract_docs
+        run: |
+          # Run the Python version‐bump script and capture its stdout
+          python3 scripts/extract_docs.py
+        shell: bash
       # 3) Install prerequisites (CMake + Doxygen)
       - name: Install CMake & Doxygen
         run: |
