@@ -42,6 +42,7 @@ def main(root_dir):
                     md_path = os.path.join(dirpath, md_filename)
                     with open(md_path, 'w', encoding='utf-8') as md_file:
                         # Join multiple doc blocks with two newlines
+                        md_file.write(f"# {base.capitalize()} Docs\n\n")
                         md_file.write('\n\n'.join(docs))
                     print(f"Extracted {len(docs)} DOC block(s) from {filename} -> {md_filename}")
 
