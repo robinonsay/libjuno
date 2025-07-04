@@ -15,7 +15,6 @@
     included in all copies or substantial portions of the Software.
 */
 #include "juno/crc/crc.h"
-#include <stdio.h>
 #include "zip.h"
 
 uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)

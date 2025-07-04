@@ -16,11 +16,11 @@
 */
 #ifndef JUNO_CRC_H
 #define JUNO_CRC_H
-#include <stdio.h>
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+#include <stddef.h>
 #include <stdint.h>
 #define M1_16 0xff
 #define M2_16 0xff00

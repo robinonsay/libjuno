@@ -16,7 +16,6 @@
 */
 #include "juno/crc/crc.h"
 #include <stdint.h>
-#include <stdio.h>
 #include "kermit.h"
 
 uint32_t Juno_CrcKermitUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)

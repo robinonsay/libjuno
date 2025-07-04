@@ -16,7 +16,6 @@
 */
 #include "juno/crc/crc.h"
 #include "ccitt32.h"
-#include <stdio.h>
 
 uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, const void *pcData, size_t zDataSize)
 {

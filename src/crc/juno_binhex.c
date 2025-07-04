@@ -16,7 +16,6 @@
 */
 #include "juno/crc/crc.h"
 #include <stdint.h>
-#include <stdio.h>
 #include "binhex.h"
 
 uint16_t Juno_CrcBinhexUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
