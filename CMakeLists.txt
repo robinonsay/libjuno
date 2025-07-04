@@ -5,6 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 option(JUNO_TESTS "Enable unit testing" OFF)
+option(JUNO_COVERAGE "Compile Juno with code coverage" ON)
 option(JUNO_POSIX "Enable posix" OFF)
 option(JUNO_DOCS "Enable doxygen docs" OFF)
 option(JUNO_PIC "Compile Juno with Position Independent Code" ON)
@@ -47,7 +48,13 @@ set(JUNO_COMPILE_OPTIONS
 if(JUNO_PIC)
     list(APPEND JUNO_COMPILE_OPTIONS -fPIC)
 endif()
-
+if(JUNO_COVERAGE)
+    list(APPEND JUNO_COMPILE_OPTIONS
+        --coverage
+        -g
+    )
+    link_libraries(gcov)
+endif()
 
 set(JUNO_LIBS ${PROJECT_NAME})
 foreach(file ${JUNO_SRCS})
@@ -101,21 +108,6 @@ install(
 
 if(JUNO_TESTS)
     set(CMAKE_BUILD_TYPE Debug)
-    link_libraries(
-        gcov
-    )
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        --coverage
-        -g
-        -O0
-    )
-    target_link_libraries(${PROJECT_NAME} PRIVATE gcov)
-    target_compile_options(${JUNO_SHARED_TARGET} PRIVATE
-        --coverage
-        -g
-        -O0
-    )
-    target_link_libraries(${JUNO_SHARED_TARGET} PRIVATE gcov)
     enable_testing()
     add_library(unity ${juno_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${juno_SOURCE_DIR}/deps/unity/src)
