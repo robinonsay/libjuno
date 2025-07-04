@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.30.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.31.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -147,11 +147,11 @@ $(document).ready(function(){initNavTree('crc_8h_source.html',''); initResizable
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifndef JUNO_CRC_H</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#define JUNO_CRC_H</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>{</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">   25</a></span><span class="preprocessor">#define M1_16 0xff</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="crc_8h.html#a095a7e7d946ff357f1c7a3de1fb5318e">   26</a></span><span class="preprocessor">#define M2_16 0xff00</span></div>
@@ -184,12 +184,12 @@ $(document).ready(function(){initNavTree('crc_8h_source.html',''); initResizable
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="acrc_8h_html_a0aa54f766ef152dc09579979a81d59da"><div class="ttname"><a href="crc_8h.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_zip.c:21</div></div>
-<div class="ttc" id="acrc_8h_html_a1f8424f662028c0a7a4e264d96b62ca7"><div class="ttname"><a href="crc_8h.html#a1f8424f662028c0a7a4e264d96b62ca7">Juno_CrcKermitUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcKermitUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_kermit.c:22</div></div>
-<div class="ttc" id="acrc_8h_html_a4e868dd96f542f42ecad980ad7e345ee"><div class="ttname"><a href="crc_8h.html#a4e868dd96f542f42ecad980ad7e345ee">Juno_CrcCcitt32Update</a></div><div class="ttdeci">uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_ccitt32.c:21</div></div>
-<div class="ttc" id="acrc_8h_html_a835d961b72a12364ef0530570e6ea8ef"><div class="ttname"><a href="crc_8h.html#a835d961b72a12364ef0530570e6ea8ef">Juno_CrcBinhexUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcBinhexUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_binhex.c:22</div></div>
-<div class="ttc" id="acrc_8h_html_a969509a6c7fec9019121f57b8b89e99f"><div class="ttname"><a href="crc_8h.html#a969509a6c7fec9019121f57b8b89e99f">Juno_CrcCcittUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcCcittUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_ccitt.c:22</div></div>
-<div class="ttc" id="acrc_8h_html_aab923f1b240886f9d39c82768c76c9cd"><div class="ttname"><a href="crc_8h.html#aab923f1b240886f9d39c82768c76c9cd">Juno_CrcArcUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcArcUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_arc.c:22</div></div>
+<div class="ttc" id="acrc_8h_html_a0aa54f766ef152dc09579979a81d59da"><div class="ttname"><a href="crc_8h.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_zip.c:20</div></div>
+<div class="ttc" id="acrc_8h_html_a1f8424f662028c0a7a4e264d96b62ca7"><div class="ttname"><a href="crc_8h.html#a1f8424f662028c0a7a4e264d96b62ca7">Juno_CrcKermitUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcKermitUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_kermit.c:21</div></div>
+<div class="ttc" id="acrc_8h_html_a4e868dd96f542f42ecad980ad7e345ee"><div class="ttname"><a href="crc_8h.html#a4e868dd96f542f42ecad980ad7e345ee">Juno_CrcCcitt32Update</a></div><div class="ttdeci">uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_ccitt32.c:20</div></div>
+<div class="ttc" id="acrc_8h_html_a835d961b72a12364ef0530570e6ea8ef"><div class="ttname"><a href="crc_8h.html#a835d961b72a12364ef0530570e6ea8ef">Juno_CrcBinhexUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcBinhexUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_binhex.c:21</div></div>
+<div class="ttc" id="acrc_8h_html_a969509a6c7fec9019121f57b8b89e99f"><div class="ttname"><a href="crc_8h.html#a969509a6c7fec9019121f57b8b89e99f">Juno_CrcCcittUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcCcittUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_ccitt.c:21</div></div>
+<div class="ttc" id="acrc_8h_html_aab923f1b240886f9d39c82768c76c9cd"><div class="ttname"><a href="crc_8h.html#aab923f1b240886f9d39c82768c76c9cd">Juno_CrcArcUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcArcUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_arc.c:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
