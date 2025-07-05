@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(juno VERSION 0.31.0 LANGUAGES C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 option(JUNO_TESTS "Enable unit testing" OFF)
 option(JUNO_COVERAGE "Compile Juno with code coverage" ON)
-option(JUNO_POSIX "Enable posix" OFF)
 option(JUNO_DOCS "Enable doxygen docs" OFF)
 option(JUNO_PIC "Compile Juno with Position Independent Code" ON)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
+
+project(juno VERSION 0.31.0 LANGUAGES C)
 
 if(JUNO_API)
     add_definitions(-DJUNO_API)
