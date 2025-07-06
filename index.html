@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.31.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.32.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -160,7 +160,7 @@ Dependencies</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Dependency Name   </th><th class="markdownTableHeadNone">Rationale    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>&lt;string.h&gt;</code>   </td><td class="markdownTableBodyNone"><code>string.h</code> is used for <code>memset</code> and <code>memcpy</code>.   </td></tr>
+<td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td></tr>
 </table>
 <h2><a class="anchor" id="autotoc_md88"></a>
 Building and Testing</h2>
@@ -184,9 +184,11 @@ Building and Testing</h2>
 <h3><a class="anchor" id="autotoc_md89"></a>
 CMake Build Option</h3>
 <ul>
-<li><code>-DJUNO_TESTS=ON</code>: Enables Unity unit tests</li>
-<li><code>-DJUNO_POSIX=ON</code>: Enables the posix library for OS-dependent modules</li>
-<li><code>-DJUNO_DOCS=ON</code>: Enables doxygen generation via <code>make -C build docs</code></li>
+<li><code>-DJUNO_TESTS=On</code> (Default <code>Off</code>): Enable unit testing</li>
+<li><code>-DJUNO_COVERAGE=On</code> (Default <code>On</code>): Compile Juno with code coverage</li>
+<li><code>-DJUNO_DOCS=On</code> (Default <code>Off</code>): Enable doxygen docs</li>
+<li><code>-DJUNO_PIC=On</code> (Default <code>On</code>): Compile Juno with Position Independent Code</li>
+<li><code>-DJUNO_SHARED=On</code> (Default <code>Off</code>): Compile the juno shared library</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md90"></a>
 Current Modules</h2>
