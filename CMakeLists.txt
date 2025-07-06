@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(juno VERSION 0.31.0 LANGUAGES C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 option(JUNO_TESTS "Enable unit testing" OFF)
 option(JUNO_COVERAGE "Compile Juno with code coverage" ON)
-option(JUNO_POSIX "Enable posix" OFF)
 option(JUNO_DOCS "Enable doxygen docs" OFF)
 option(JUNO_PIC "Compile Juno with Position Independent Code" ON)
+option(JUNO_SHARED "Compile the juno shared library" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
+
+project(juno VERSION 0.31.0 LANGUAGES C)
 
 if(JUNO_API)
     add_definitions(-DJUNO_API)
@@ -85,13 +86,14 @@ foreach(lib ${JUNO_LIBS})
     )
 endforeach()
 
-set(JUNO_SHARED_TARGET ${PROJECT_NAME}_shared)
-add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
-target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
-    $<BUILD_INTERFACE:${juno_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
-)
-
+if(JUNO_SHARED)
+    set(JUNO_SHARED_TARGET ${PROJECT_NAME}_shared)
+    add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
+    target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${juno_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    )
+endif()
 
 install(
   TARGETS ${JUNO_LIBS} ${JUNO_SHARED_TARGET} ${JUNO_POSIX_TARGET}

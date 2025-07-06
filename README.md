@@ -27,7 +27,7 @@
 
 | Dependency Name | Rationale                                      |
 |-----------------|------------------------------------------------|
-| `<string.h>`    | `string.h` is used for `memset` and `memcpy`.  |
+|                 |                                                |
 
 ## Building and Testing
 1. Generate build files:
@@ -41,9 +41,12 @@
    - `ctest`
 
 ### CMake Build Option
-* `-DJUNO_TESTS=ON`: Enables Unity unit tests
-* `-DJUNO_POSIX=ON`: Enables the posix library for OS-dependent modules
-* `-DJUNO_DOCS=ON`: Enables doxygen generation via `make -C build docs`
+
+* `-DJUNO_TESTS=On` (Default `Off`): Enable unit testing
+* `-DJUNO_COVERAGE=On` (Default `On`): Compile Juno with code coverage
+* `-DJUNO_DOCS=On` (Default `Off`): Enable doxygen docs
+* `-DJUNO_PIC=On` (Default `On`): Compile Juno with Position Independent Code
+* `-DJUNO_SHARED=On` (Default `Off`): Compile the juno shared library
 
 ## Current Modules
 - **Memory Management**: Provides block-based allocation, deallocation, and memory tracking.

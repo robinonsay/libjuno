@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(template_app VERSION 0.1.0 LANGUAGES C CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -8,7 +7,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("CPP Compiler: ${CMAKE_CXX_COMPILER}")
-aux_source_directory(${template_app_SOURCE_DIR}/src TEMPLATE_APP_SRCS)
+
+project(template_app VERSION 0.1.0 LANGUAGES C CXX)
+
+aux_source_directory(${${PROJECT_NAME}_SOURCE_DIR}/src ${PROJECT_NAME}_SRCS)
 
 set(JUNO_COMPILE_OPTIONS
     -Wall                           # Enable most warning messages
@@ -42,14 +44,14 @@ set(JUNO_COMPILE_C_OPTIONS
 find_library(
     JUNO_LIBRARY
     NAME juno
-    PATHS ${template_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${${PROJECT_NAME}_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES lib lib64
 )
 
 find_library(
     JUNO_SHARED_LIBRARY
     NAME juno_shared
-    PATHS ${template_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${${PROJECT_NAME}_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES lib lib64
 )
 
@@ -60,15 +62,15 @@ find_path(
     PATH_SUFFIXES include inc
 )
 
-add_library(${PROJECT_NAME} STATIC ${TEMPLATE_APP_SRCS})
+add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SRCS})
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    $<BUILD_INTERFACE:${template_app_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
     PRIVATE
     ${JUNO_INCLUDE}
-    ${template_app_SOURCE_DIR}/src
+    ${${PROJECT_NAME}_SOURCE_DIR}/src
 )
 
 
@@ -87,7 +89,7 @@ install(
 )
 
 install(
-  DIRECTORY ${template_app_SOURCE_DIR}/include/     # source directory
+  DIRECTORY ${${PROJECT_NAME}_SOURCE_DIR}/include/     # source directory
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include   # usually “include/juno”
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"  # only headers
 )
