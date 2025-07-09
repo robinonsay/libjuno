@@ -43,7 +43,7 @@
 ### CMake Build Option
 
 * `-DJUNO_TESTS=On` (Default `Off`): Enable unit testing
-* `-DJUNO_COVERAGE=On` (Default `On`): Compile Juno with code coverage
+* `-DJUNO_COVERAGE=On` (Default `Off`): Compile Juno with code coverage
 * `-DJUNO_DOCS=On` (Default `Off`): Enable doxygen docs
 * `-DJUNO_PIC=On` (Default `On`): Compile Juno with Position Independent Code
 * `-DJUNO_SHARED=On` (Default `Off`): Compile the juno shared library
