@@ -11,7 +11,7 @@ option(JUNO_SHARED "Compile the juno shared library" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
-project(juno VERSION 0.32.0 LANGUAGES C)
+project(juno VERSION 0.33.0 LANGUAGES C)
 
 if(JUNO_API)
     add_definitions(-DJUNO_API)
