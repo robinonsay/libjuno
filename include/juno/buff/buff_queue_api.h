@@ -68,7 +68,7 @@ static inline JUNO_STATUS_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueue, si
     }
     else
     {
-        FAIL(JUNO_STATUS_INVALID_SIZE_ERROR, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(JUNO_STATUS_INVALID_SIZE_ERROR, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
         return JUNO_STATUS_INVALID_SIZE_ERROR;
     }
     if(ptRetIndex)
@@ -91,7 +91,7 @@ static inline JUNO_STATUS_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueue, si
         }
         return JUNO_STATUS_SUCCESS;
     }
-    FAIL(JUNO_STATUS_ERR, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Queue is empty");
+    JUNO_FAIL(JUNO_STATUS_ERR, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Queue is empty");
     return JUNO_STATUS_ERR;
 }
 

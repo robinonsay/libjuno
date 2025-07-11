@@ -69,7 +69,7 @@ static inline JUNO_STATUS_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack, size_
     }
     else
     {
-        FAIL(JUNO_STATUS_INVALID_SIZE_ERROR, ptStack->_pfcnFailureHandler, ptStack->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(JUNO_STATUS_INVALID_SIZE_ERROR, ptStack->_pfcnFailureHandler, ptStack->_pvFailurUserData, "Failed to enqueue data");
         return JUNO_STATUS_INVALID_SIZE_ERROR;
     }
     return JUNO_STATUS_SUCCESS;

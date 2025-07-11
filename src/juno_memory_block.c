@@ -38,7 +38,7 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_T *ptJunoMemory)
     );
     if(ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi != &tJunoMemoryBlockApi)
     {
-        FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoMemoryBlock, "Module has invalid API");
+        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoMemoryBlock, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
     }
     return JUNO_STATUS_SUCCESS;
@@ -56,7 +56,7 @@ static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     }
     if(tStatus)
     {
-        FAIL_MODULE(tStatus, ptMemBlk,
+        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
         "Attempted to allocate memory with size 0");
         return tStatus;
     }
@@ -64,7 +64,7 @@ static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     if(zSize > ptMemBlk->zTypeSize)
     {
         tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-        FAIL_MODULE(tStatus, ptMemBlk,
+        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
             "Invalid size for block alloc"
         );
         return tStatus;
@@ -74,7 +74,7 @@ static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     {
         tStatus = JUNO_STATUS_MEMALLOC_ERROR;
         // Log error through the failure handler
-        FAIL_MODULE(tStatus, ptMemBlk,
+        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
             "Failed to allocate block memory. Memory is full"
         );
         return tStatus;
@@ -109,7 +109,7 @@ static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUN
     if(zNewSize > ptMem->zTypeSize)
     {
         tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-        FAIL_MODULE(tStatus, ptMem,
+        JUNO_FAIL_MODULE(tStatus, ptMem,
             "Failed to update memory, size is too big"
         );
     }
@@ -128,7 +128,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     {
         tStatus = JUNO_STATUS_REF_IN_USE_ERROR;
         // Log error if invalid address detected
-        FAIL_MODULE(tStatus, ptMemBlk,
+        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
             "Failed to free block memory. Memory in use"
         );
         return tStatus;
@@ -142,7 +142,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     {
         tStatus = JUNO_STATUS_MEMFREE_ERROR;
         // Log error if invalid address detected
-        FAIL_MODULE(tStatus, ptMemBlk,
+        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
             "Failed to free block memory. Invalid Address"
         );
         return tStatus;
@@ -155,7 +155,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
         {
             tStatus = JUNO_STATUS_MEMFREE_ERROR;
             // Log error for duplicate free attempt
-            FAIL_MODULE(tStatus, ptMemBlk,
+            JUNO_FAIL_MODULE(tStatus, ptMemBlk,
                 "Failed to free block memory. Memory already freed"
             );
             return tStatus;           

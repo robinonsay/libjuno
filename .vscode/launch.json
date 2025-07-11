@@ -51,6 +51,30 @@
                 "ignoreFailures": true
             }
         ]
+    },
+    {
+        "name": "Run Unit Test of Current File (OSX)",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/tests/${fileBasenameNoExtension}",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}/build/tests",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "lldb",
+        "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            },
+            {
+                "description": "Set Disassembly Flavor to Intel",
+                "text": "-gdb-set disassembly-flavor intel",
+                "ignoreFailures": true
+            }
+        ]
     }
     ]
 }
