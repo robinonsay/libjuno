@@ -1,13 +1,7 @@
 var searchData=
 [
-  ['thdr_0',['thdr',['../structJUNO__I2C__IO__MSG__R__TAG.html#aedc70cc38ba9b722a3a6a990ee9230cb',1,'JUNO_I2C_IO_MSG_R_TAG::tHdr'],['../structJUNO__I2C__IO__MSG__W__TAG.html#aa93dbab7cb6ba645b93e147b1744daa6',1,'JUNO_I2C_IO_MSG_W_TAG::tHdr'],['../unionJUNO__I2C__IO__MSG__TAG.html#ab071f161346bab44cde4544f81cb0e6b',1,'JUNO_I2C_IO_MSG_TAG::tHdr']]],
-  ['transaction_1',['Transaction',['../structJUNO__SPI__IO__API__TAG.html#ab889c94b4af968d99488e38725c05b5f',1,'JUNO_SPI_IO_API_TAG']]],
-  ['transfer_2',['Transfer',['../structJUNO__I2C__IO__API__TAG.html#a7ecc4bfa4758776e434e42d97fa7132c',1,'JUNO_I2C_IO_API_TAG']]],
-  ['tread_3',['tRead',['../unionJUNO__I2C__IO__MSG__TAG.html#ac39a359c632bc8c92452bb0a4232e8a2',1,'JUNO_I2C_IO_MSG_TAG']]],
-  ['tryread_4',['TryRead',['../structJUNO__ASYNC__IO__API__TAG.html#a641bda61680908a148ef1e4ea7aee271',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['tryreaduntil_5',['TryReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a1f35aec741089c9758c928b08d3078c0',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['tryrecv_6',['TryRecv',['../structJUNO__SUBSCRIBER__API__TAG.html#a34c16a0b77935706b258e10bccfe8c10',1,'JUNO_SUBSCRIBER_API_TAG']]],
-  ['trywrite_7',['TryWrite',['../structJUNO__ASYNC__IO__API__TAG.html#a04787d2bac7dd5995c9f4ab7f404e477',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['ttype_8',['tType',['../structJUNO__I2C__IO__MSG__HDR__TAG.html#a629188f1cd63d07ebf243f2daaa763b6',1,'JUNO_I2C_IO_MSG_HDR_TAG']]],
-  ['twrite_9',['tWrite',['../unionJUNO__I2C__IO__MSG__TAG.html#a4108ddd84e9e6f7c85d19716254efba6',1,'JUNO_I2C_IO_MSG_TAG']]]
+  ['read_0',['Read',['../structJUNO__ASYNC__IO__API__TAG.html#aa250cb7a33649deafcd4af7da633ccf8',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['readuntil_1',['ReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a464b5615d82b1ec7317875efcabd7316',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['recv_2',['Recv',['../structJUNO__SUBSCRIBER__API__TAG.html#ab2c12e62c12f83f0ebe8c4716ec42baa',1,'JUNO_SUBSCRIBER_API_TAG']]],
+  ['remove_3',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]]
 ];

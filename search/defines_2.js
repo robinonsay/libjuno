@@ -1,25 +1,7 @@
 var searchData=
 [
-  ['juno_5farc_5fcrc_5finit_0',['JUNO_ARC_CRC_INIT',['../crc_8h.html#a433468a6dfe3d9560452e392ec78bd51',1,'crc.h']]],
-  ['juno_5fbinhex_5fcrc_5finit_1',['JUNO_BINHEX_CRC_INIT',['../crc_8h.html#acb7baba5bdfd1077f9a380c1da6b9c9e',1,'crc.h']]],
-  ['juno_5fccitt32_5fcrc_5finit_2',['JUNO_CCITT32_CRC_INIT',['../crc_8h.html#a00959f2986e7a8e12863c70c718d920f',1,'crc.h']]],
-  ['juno_5fccitt_5fcrc_5finit_3',['JUNO_CCITT_CRC_INIT',['../crc_8h.html#a27394975e5ac30d10a40efcab948c4ab',1,'crc.h']]],
-  ['juno_5ffailure_5fhandler_4',['JUNO_FAILURE_HANDLER',['../module_8h.html#af2cc78723eab5f63af29ba0056fb2931',1,'module.h']]],
-  ['juno_5ffailure_5fuser_5fdata_5',['JUNO_FAILURE_USER_DATA',['../module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad',1,'module.h']]],
-  ['juno_5fi2c_5fio_5ftransfer_6',['JUNO_I2C_IO_TRANSFER',['../i2c__io__api_8h.html#a1ae0ee515e47e8f74838d7c675288679',1,'i2c_io_api.h']]],
-  ['juno_5fkermit_5fcrc_5finit_7',['JUNO_KERMIT_CRC_INIT',['../crc_8h.html#aebebe028705358ba9a347fc317f75c60',1,'crc.h']]],
-  ['juno_5fmemory_5fblock_8',['JUNO_MEMORY_BLOCK',['../memory__api_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b',1,'memory_api.h']]],
-  ['juno_5fmemory_5fblock_5fmetadata_9',['JUNO_MEMORY_BLOCK_METADATA',['../memory__api_8h.html#a8942ee7462829b506969cd42e66d2ad7',1,'memory_api.h']]],
-  ['juno_5fmodule_10',['JUNO_MODULE',['../module_8h.html#a838097554fddc892fc3e26329157ebc6',1,'module.h']]],
-  ['juno_5fmodule_5fdeclare_11',['JUNO_MODULE_DECLARE',['../module_8h.html#a0ecb577f51a5d8b065b5911389fff2d7',1,'module.h']]],
-  ['juno_5fmodule_5fderive_12',['JUNO_MODULE_DERIVE',['../module_8h.html#a543c7a97bd77bbccec506297d92b5e8f',1,'module.h']]],
-  ['juno_5fmodule_5fderive_5fdeclare_13',['JUNO_MODULE_DERIVE_DECLARE',['../module_8h.html#a319d8fd47f7c274e99e084625ae5749b',1,'module.h']]],
-  ['juno_5fmodule_5fempty_14',['JUNO_MODULE_EMPTY',['../module_8h.html#a6dc58e4cd075d0ef32588498500af9a0',1,'module.h']]],
-  ['juno_5fmodule_5fget_5fapi_15',['JUNO_MODULE_GET_API',['../module_8h.html#a47c6440bbc9d03756a4f35e1cb970591',1,'module.h']]],
-  ['juno_5fmodule_5froot_16',['JUNO_MODULE_ROOT',['../module_8h.html#add0b87e2c0a6d5a0eaff6eb95c94148d',1,'module.h']]],
-  ['juno_5fmodule_5froot_5fdeclare_17',['JUNO_MODULE_ROOT_DECLARE',['../module_8h.html#a0446375ade1958ae0eac0e071e7ff86b',1,'module.h']]],
-  ['juno_5fmodule_5fsuper_18',['JUNO_MODULE_SUPER',['../module_8h.html#af98d3f7fa92446d974d322bcfe55b284',1,'module.h']]],
-  ['juno_5fnew_5fref_19',['JUNO_NEW_REF',['../memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6',1,'memory_api.h']]],
-  ['juno_5fref_20',['JUNO_REF',['../memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_api.h']]],
-  ['juno_5fzip_5fcrc_5finit_21',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
+  ['m1_5f16_0',['M1_16',['../crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08',1,'crc.h']]],
+  ['m1_5f32_1',['M1_32',['../crc_8h.html#ada788445fe2084948f3ec0f5e10b2afe',1,'crc.h']]],
+  ['m2_5f16_2',['M2_16',['../crc_8h.html#a095a7e7d946ff357f1c7a3de1fb5318e',1,'crc.h']]],
+  ['m2_5f32_3',['M2_32',['../crc_8h.html#ac35ec6bd37c71fc6febc26afe5431252',1,'crc.h']]]
 ];

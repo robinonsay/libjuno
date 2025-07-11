@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.33.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.34.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -162,7 +162,7 @@ $(document).ready(function(){initNavTree('macros_8h_source.html',''); initResiza
 <div class="foldopen" id="foldopen00041" data-start="" data-end="">
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="macros_8h.html#a7d6f321ea5cc3cbc9066cf33a9c80c77">   41</a></span><span class="preprocessor">#define ASSERT_EXISTS_MODULE(ptr, ptMod, str) if(!(ptr)) \</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">{ \</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">    FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptMod, str); \</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">    JUNO_FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptMod, str); \</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">    return JUNO_STATUS_NULLPTR_ERROR; \</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">}</span></div>
 </div>

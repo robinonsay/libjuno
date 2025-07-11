@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.33.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.34.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -192,7 +192,7 @@ $(document).ready(function(){initNavTree('buff__queue__api_8h_source.html',''); 
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    }</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <a class="code hl_define" href="status_8h.html#a4add9a0b045bd7ca03a0f1c652240530">FAIL</a>(<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3">JUNO_STATUS_INVALID_SIZE_ERROR</a>, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Failed to enqueue data&quot;</span>);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <a class="code hl_define" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3">JUNO_STATUS_INVALID_SIZE_ERROR</a>, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Failed to enqueue data&quot;</span>);</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3">JUNO_STATUS_INVALID_SIZE_ERROR</a>;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">if</span>(ptRetIndex)</div>
@@ -215,7 +215,7 @@ $(document).ready(function(){initNavTree('buff__queue__api_8h_source.html',''); 
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        }</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    }</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <a class="code hl_define" href="status_8h.html#a4add9a0b045bd7ca03a0f1c652240530">FAIL</a>(<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238">JUNO_STATUS_ERR</a>, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Queue is empty&quot;</span>);</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <a class="code hl_define" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238">JUNO_STATUS_ERR</a>, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Queue is empty&quot;</span>);</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238">JUNO_STATUS_ERR</a>;</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
@@ -241,7 +241,7 @@ $(document).ready(function(){initNavTree('buff__queue__api_8h_source.html',''); 
 <div class="ttc" id="amodule_8h_html"><div class="ttname"><a href="module_8h.html">module.h</a></div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:44</div></div>
-<div class="ttc" id="astatus_8h_html_a4add9a0b045bd7ca03a0f1c652240530"><div class="ttname"><a href="status_8h.html#a4add9a0b045bd7ca03a0f1c652240530">FAIL</a></div><div class="ttdeci">#define FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)</div><div class="ttdef"><b>Definition</b> status.h:49</div></div>
+<div class="ttc" id="astatus_8h_html_a3dafe1f7315674337ee37dfd077c18d1"><div class="ttname"><a href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a></div><div class="ttdeci">#define JUNO_FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)</div><div class="ttdef"><b>Definition</b> status.h:49</div></div>
 <div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">@ JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:24</div></div>
 <div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238">JUNO_STATUS_ERR</a></div><div class="ttdeci">@ JUNO_STATUS_ERR</div><div class="ttdef"><b>Definition</b> status.h:25</div></div>
 <div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3">JUNO_STATUS_INVALID_SIZE_ERROR</a></div><div class="ttdeci">@ JUNO_STATUS_INVALID_SIZE_ERROR</div><div class="ttdef"><b>Definition</b> status.h:30</div></div>

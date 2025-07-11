@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.33.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.34.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -138,12 +138,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af8848982071962a8122475add8bc3e54" id="r_af8848982071962a8122475add8bc3e54"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#af8848982071962a8122475add8bc3e54">FAIL_MESSAGE_LEN</a>&#160;&#160;&#160;256</td></tr>
-<tr class="separator:af8848982071962a8122475add8bc3e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4add9a0b045bd7ca03a0f1c652240530" id="r_a4add9a0b045bd7ca03a0f1c652240530"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a4add9a0b045bd7ca03a0f1c652240530">FAIL</a>(tStatus,  pfcnFailureHandler,  pvFailureUserData,  pcMessage)&#160;&#160;&#160;if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}</td></tr>
-<tr class="separator:a4add9a0b045bd7ca03a0f1c652240530"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5d0cfd15953954d428cc546665003e6" id="r_aa5d0cfd15953954d428cc546665003e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#aa5d0cfd15953954d428cc546665003e6">FAIL_MODULE</a>(tStatus,  ptMod,  pcMessage)&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA</a>);}</td></tr>
-<tr class="separator:aa5d0cfd15953954d428cc546665003e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7f937d05d6c3595f49afb38c3d0777b" id="r_ad7f937d05d6c3595f49afb38c3d0777b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#ad7f937d05d6c3595f49afb38c3d0777b">JUNO_FAIL_MESSAGE_LEN</a>&#160;&#160;&#160;256</td></tr>
+<tr class="separator:ad7f937d05d6c3595f49afb38c3d0777b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dafe1f7315674337ee37dfd077c18d1" id="r_a3dafe1f7315674337ee37dfd077c18d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(tStatus,  pfcnFailureHandler,  pvFailureUserData,  pcMessage)&#160;&#160;&#160;if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}</td></tr>
+<tr class="separator:a3dafe1f7315674337ee37dfd077c18d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45c2dc85533ae2d7cb60ba543390afee" id="r_a45c2dc85533ae2d7cb60ba543390afee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE</a>(tStatus,  ptMod,  pcMessage)&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA</a>);}</td></tr>
+<tr class="separator:a45c2dc85533ae2d7cb60ba543390afee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4d65ea2d69a99959df5bfe8517b1ced" id="r_ae4d65ea2d69a99959df5bfe8517b1ced"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#ae4d65ea2d69a99959df5bfe8517b1ced">JUNO_FAIL_ROOT</a>(tStatus,  ptMod,  pcMessage)&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a>);}</td></tr>
+<tr class="separator:ae4d65ea2d69a99959df5bfe8517b1ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -183,14 +185,14 @@ Enumerations</h2></td></tr>
 <tr class="separator:a7be0a0a69c5086c083a713ecb7738664"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a4add9a0b045bd7ca03a0f1c652240530" name="a4add9a0b045bd7ca03a0f1c652240530"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4add9a0b045bd7ca03a0f1c652240530">&#9670;&#160;</a></span>FAIL</h2>
+<a id="a3dafe1f7315674337ee37dfd077c18d1" name="a3dafe1f7315674337ee37dfd077c18d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dafe1f7315674337ee37dfd077c18d1">&#9670;&#160;</a></span>JUNO_FAIL</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define FAIL</td>
+          <td class="memname">#define JUNO_FAIL</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">tStatus, </td>
@@ -223,28 +225,28 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
-<a id="af8848982071962a8122475add8bc3e54" name="af8848982071962a8122475add8bc3e54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8848982071962a8122475add8bc3e54">&#9670;&#160;</a></span>FAIL_MESSAGE_LEN</h2>
+<a id="ad7f937d05d6c3595f49afb38c3d0777b" name="ad7f937d05d6c3595f49afb38c3d0777b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7f937d05d6c3595f49afb38c3d0777b">&#9670;&#160;</a></span>JUNO_FAIL_MESSAGE_LEN</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define FAIL_MESSAGE_LEN&#160;&#160;&#160;256</td>
+          <td class="memname">#define JUNO_FAIL_MESSAGE_LEN&#160;&#160;&#160;256</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aa5d0cfd15953954d428cc546665003e6" name="aa5d0cfd15953954d428cc546665003e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5d0cfd15953954d428cc546665003e6">&#9670;&#160;</a></span>FAIL_MODULE</h2>
+<a id="a45c2dc85533ae2d7cb60ba543390afee" name="a45c2dc85533ae2d7cb60ba543390afee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45c2dc85533ae2d7cb60ba543390afee">&#9670;&#160;</a></span>JUNO_FAIL_MODULE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define FAIL_MODULE</td>
+          <td class="memname">#define JUNO_FAIL_MODULE</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">tStatus, </td>
@@ -265,6 +267,40 @@ Enumerations</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td>&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA</a>);}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4d65ea2d69a99959df5bfe8517b1ced" name="ae4d65ea2d69a99959df5bfe8517b1ced"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4d65ea2d69a99959df5bfe8517b1ced">&#9670;&#160;</a></span>JUNO_FAIL_ROOT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_FAIL_ROOT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">tStatus, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">ptMod, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">pcMessage&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;if(ptMod &amp;&amp; ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>){ptMod-&gt;<a class="el" href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a>(tStatus, pcMessage, ptMod-&gt;<a class="el" href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a>);}</td>
         </tr>
       </table>
 </div><div class="memdoc">

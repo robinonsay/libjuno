@@ -1,8 +1,9 @@
 var status_8h =
 [
-    [ "FAIL", "status_8h.html#a4add9a0b045bd7ca03a0f1c652240530", null ],
-    [ "FAIL_MESSAGE_LEN", "status_8h.html#af8848982071962a8122475add8bc3e54", null ],
-    [ "FAIL_MODULE", "status_8h.html#aa5d0cfd15953954d428cc546665003e6", null ],
+    [ "JUNO_FAIL", "status_8h.html#a3dafe1f7315674337ee37dfd077c18d1", null ],
+    [ "JUNO_FAIL_MESSAGE_LEN", "status_8h.html#ad7f937d05d6c3595f49afb38c3d0777b", null ],
+    [ "JUNO_FAIL_MODULE", "status_8h.html#a45c2dc85533ae2d7cb60ba543390afee", null ],
+    [ "JUNO_FAIL_ROOT", "status_8h.html#ae4d65ea2d69a99959df5bfe8517b1ced", null ],
     [ "JUNO_FAILURE_HANDLER_T", "status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc", null ],
     [ "JUNO_STATUS_T", "status_8h.html#aede45f0a23d8d5a902e6562474b1904b", null ],
     [ "JUNO_USER_DATA_T", "status_8h.html#af575dc984c80091757afe42a5d5c2b60", null ],

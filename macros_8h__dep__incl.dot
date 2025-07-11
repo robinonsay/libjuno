@@ -15,4 +15,6 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/macros.h"
   Node5 [id="Node000005",label="/home/runner/work/libjuno\l/libjuno/src/juno_map.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__map_8c.html",tooltip=" "];
   Node1 -> Node6 [id="edge5_Node000001_Node000006",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node6 [id="Node000006",label="/home/runner/work/libjuno\l/libjuno/src/juno_memory\l_block.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__memory__block_8c.html",tooltip=" "];
+  Node1 -> Node7 [id="edge6_Node000001_Node000007",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node7 [id="Node000007",label="/home/runner/work/libjuno\l/libjuno/src/juno_time.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__time_8c.html",tooltip=" "];
 }

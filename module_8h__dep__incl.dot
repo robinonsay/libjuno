@@ -72,4 +72,6 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/module.h"
   Node24 -> Node12 [id="edge42_Node000024_Node000012",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node24 -> Node13 [id="edge43_Node000024_Node000013",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node24 -> Node18 [id="edge44_Node000024_Node000018",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node24 -> Node25 [id="edge45_Node000024_Node000025",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node25 [id="Node000025",label="/home/runner/work/libjuno\l/libjuno/src/juno_time.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__time_8c.html",tooltip=" "];
 }
