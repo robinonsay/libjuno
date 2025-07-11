@@ -28,5 +28,6 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/memory/memory_api.h"
   Node10 -> Node12 [id="edge11_Node000010_Node000012",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node12 [id="Node000012",label="/home/runner/work/libjuno\l/libjuno/include/juno/string\l/string_impl.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$string__impl_8h.html",tooltip=" "];
   Node1 -> Node11 [id="edge12_Node000001_Node000011",dir="back",color="steelblue1",style="solid",tooltip=" "];
-  Node1 -> Node8 [id="edge13_Node000001_Node000008",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node6 [id="edge13_Node000001_Node000006",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node8 [id="edge14_Node000001_Node000008",dir="back",color="steelblue1",style="solid",tooltip=" "];
 }

@@ -36,9 +36,9 @@ digraph "/home/runner/work/libjuno/libjuno/src/juno_map.c"
   Node9 -> Node4 [id="edge20_Node000009_Node000004",color="steelblue1",style="solid",tooltip=" "];
   Node9 -> Node11 [id="edge21_Node000009_Node000011",color="steelblue1",style="solid",tooltip=" "];
   Node11 [id="Node000011",label="stdbool.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
-  Node1 -> Node3 [id="edge22_Node000001_Node000003",color="steelblue1",style="solid",tooltip=" "];
-  Node1 -> Node11 [id="edge23_Node000001_Node000011",color="steelblue1",style="solid",tooltip=" "];
-  Node1 -> Node5 [id="edge24_Node000001_Node000005",color="steelblue1",style="solid",tooltip=" "];
-  Node1 -> Node12 [id="edge25_Node000001_Node000012",color="steelblue1",style="solid",tooltip=" "];
-  Node12 [id="Node000012",label="string.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node1 -> Node10 [id="edge22_Node000001_Node000010",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node3 [id="edge23_Node000001_Node000003",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node11 [id="edge24_Node000001_Node000011",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node6 [id="edge25_Node000001_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node5 [id="edge26_Node000001_Node000005",color="steelblue1",style="solid",tooltip=" "];
 }
