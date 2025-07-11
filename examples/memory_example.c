@@ -96,7 +96,7 @@ static JUNO_STATUS_T Pop(JUNO_MEMORY_ALLOC_T *ptAlloc, SINGLE_LINKED_LIST_T *ptS
     {
         // Return data is null, call failure handler
         tStatus = JUNO_STATUS_NULLPTR_ERROR;
-        FAIL(tStatus, ptSll->pfcnFailureHandler, ptSll->pvFailureUserData, "Return data is null");
+        JUNO_FAIL(tStatus, ptSll->pfcnFailureHandler, ptSll->pvFailureUserData, "Return data is null");
         return tStatus;
     }
     // Initialize the current node with the start of the SLL

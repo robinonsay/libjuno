@@ -95,7 +95,7 @@ static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp)
     // Verify that this application is using the correct API
     if(ptTemplateApp->tBase.ptApi != &tTemplateAppApi)
     {
-        FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateApp, "Module has invalid API");
+        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateApp, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
     }
     return JUNO_STATUS_SUCCESS;

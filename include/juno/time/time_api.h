@@ -61,6 +61,9 @@ struct JUNO_TIME_API_TAG
     JUNO_STATUS_T (*TimestampToNanos)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_NANOS_T *piNanos);
     JUNO_STATUS_T (*TimestampToMicros)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MICROS_T *piMicros);
     JUNO_STATUS_T (*TimestampToMillis)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MILLIS_T *piMillis);
+    JUNO_STATUS_T (*NanosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos, JUNO_TIMESTAMP_T *ptRetTime);
+    JUNO_STATUS_T (*MicrosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros, JUNO_TIMESTAMP_T *ptRetTime);
+    JUNO_STATUS_T (*MillisToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis, JUNO_TIMESTAMP_T *ptRetTime);
 };
 
 JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
@@ -68,6 +71,9 @@ JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRet
 JUNO_STATUS_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_NANOS_T *piNanos);
 JUNO_STATUS_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MICROS_T *piMicros);
 JUNO_STATUS_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MILLIS_T *piMillis);
+JUNO_STATUS_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos, JUNO_TIMESTAMP_T *ptRetTime);
+JUNO_STATUS_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros, JUNO_TIMESTAMP_T *ptRetTime);
+JUNO_STATUS_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis, JUNO_TIMESTAMP_T *ptRetTime);
 
 #ifdef __cplusplus
 }

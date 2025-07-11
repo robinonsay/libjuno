@@ -42,7 +42,7 @@ static inline JUNO_STATUS_T Verify(JUNO_MAP_T *ptJunoMap)
     );
     if(ptJunoMapImpl->JUNO_MODULE_SUPER.ptApi != &tJunoMapImplApi)
     {
-        FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoMapImpl, "Module has invalid API");
+        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoMapImpl, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
     }
     return JUNO_STATUS_SUCCESS;
@@ -80,7 +80,7 @@ static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptJunoMap, JUNO_MEMORY_
     }
     if(tStatus != JUNO_STATUS_SUCCESS)
     {
-        FAIL_MODULE(tStatus, ptMap, "Map is full");
+        JUNO_FAIL_MODULE(tStatus, ptMap, "Map is full");
     }
     // Return the status
     return tStatus;
@@ -124,7 +124,7 @@ static JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptJunoMap, JUNO_MEMORY_T tKey, JUNO
     if(!ptMap->tRoot.ptMapKeys[zIndex].pvAddr)
     {
         tStatus = JUNO_STATUS_DNE_ERROR;
-        FAIL_MODULE(tStatus, ptMap, "Key Does not exist");
+        JUNO_FAIL_MODULE(tStatus, ptMap, "Key Does not exist");
         return tStatus;
     }
     *ptRetValue = ptMap->tRoot.ptMapValues[zIndex];

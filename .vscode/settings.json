@@ -3,5 +3,8 @@
         "--compile-commands-dir=${workspaceFolder}/build/"
     ],
     "vim.useSystemClipboard": true,
-    "clangd.path": "/usr/bin/clangd"
+    "clangd.path": "/usr/bin/clangd",
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/include",
+    ]
 }

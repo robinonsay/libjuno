@@ -43,14 +43,18 @@ typedef enum JUNO_STATUS_TAG
 typedef void JUNO_USER_DATA_T;
 typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData);
 
-#ifndef FAIL_MESSAGE_LEN
-#define FAIL_MESSAGE_LEN    256
+#ifndef JUNO_FAIL_MESSAGE_LEN
+#define JUNO_FAIL_MESSAGE_LEN    256
 #endif
-#define FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)\
+#define JUNO_FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)\
 if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}
 
-#define FAIL_MODULE(tStatus, ptMod, pcMessage)\
+#define JUNO_FAIL_MODULE(tStatus, ptMod, pcMessage)\
 if(ptMod && ptMod->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER){ptMod->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER(tStatus, pcMessage, ptMod->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA);}
+
+#define JUNO_FAIL_ROOT(tStatus, ptMod, pcMessage)\
+if(ptMod && ptMod->JUNO_FAILURE_HANDLER){ptMod->JUNO_FAILURE_HANDLER(tStatus, pcMessage, ptMod->JUNO_FAILURE_USER_DATA);}
+
 #ifdef __cplusplus
 }
 #endif
