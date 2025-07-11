@@ -20,7 +20,7 @@ jobs:
           submodules: true
 
       - name: Configure project with CMake
-        run: cmake -B build . -DJUNO_TESTS=On
+        run: cmake -B build . -DJUNO_TESTS=On -DJUNO_COVERAGE=On
 
       - name: Build project
         run: make -C build
@@ -40,36 +40,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage_report
-
-  build-and-test-posix:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-
-      - name: Configure project with CMake
-        run: cmake -B build . -DJUNO_TESTS=On -DJUNO_POSIX=ON
-
-      - name: Build project
-        run: make -C build
-
-      - name: Run CTest unit tests
-        run: cd build && ctest --output-on-failure
-
-      - name: Configure python
-        run: pip install -r requirements.txt
-      
-      - name: Generate the coverage report using gcovr
-        run: |
-          mkdir -p coverage_report
-          gcovr -r . --html --html-details -o coverage_report/coverage_posix.html
-
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report-posix
           path: coverage_report
