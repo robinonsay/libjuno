@@ -17,11 +17,12 @@
 #include "juno/hash/hash_api.h"
 #include "juno/macros.h"
 #include "juno/map/map_impl.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/macros.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
 static const JUNO_MAP_API_T tJunoMapImplApi;
 
@@ -162,7 +163,10 @@ JUNO_STATUS_T JunoMap_ImplApi(
     ptJunoMapImpl->JUNO_MODULE_SUPER.pfcnIsEqual = pfcnIsEqual;
     JUNO_STATUS_T tStatus = Verify(ptJunoMap);
     ASSERT_SUCCESS(tStatus, return tStatus);
-    memset(ptKeyTable, 0, sizeof(JUNO_MEMORY_T) * zCapacity);
-    memset(ptValueTable, 0, sizeof(JUNO_MEMORY_T) * zCapacity);
+    for(size_t i = 0; i < zCapacity; i++)
+    {
+        ptKeyTable[i] = (JUNO_MEMORY_T){0};
+        ptValueTable[i] = (JUNO_MEMORY_T){0};
+    }
     return tStatus;
 }
