@@ -18,7 +18,8 @@
 #include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/memory/memory_api.h"
-#include <string.h>
+#include <stddef.h>
+#include <stdint.h>
 
 static const JUNO_MEMORY_ALLOC_API_T tJunoMemoryBlockApi;
 
@@ -163,7 +164,11 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     }
     
     // Clear the block memory
-    memset(ptMemory->pvAddr, 0, ptMemBlk->zTypeSize);
+    for(size_t i = 0; i < ptMemBlk->zTypeSize; i++)
+    {
+        uint8_t *piAddr = (uint8_t *)(ptMemory->pvAddr);
+        piAddr[i] = 0;
+    }
     // Check if the block being freed is the last allocated block
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
     if(pvEndOfBlk == ptMemory->pvAddr)
