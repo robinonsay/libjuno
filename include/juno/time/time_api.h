@@ -63,7 +63,7 @@ struct JUNO_TIMESTAMP_TAG
     /// Seconds component of time
     JUNO_TIME_SECONDS_T iSeconds;
     /// Subseconds componenet of time.
-    // `1 second = sizeof(1 << JUNO_TIME_SUBSECONDS_T) - 1 subseconds`
+    /// `1 Second == 1 << sizeof(JUNO_TIME_SUBSECONDS_T) - 1 Subseconds`
     JUNO_TIME_SUBSECONDS_T iSubSeconds;
 };
 
