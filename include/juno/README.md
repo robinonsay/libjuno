@@ -76,7 +76,7 @@ struct name##_TAG                                    \
 4. **Failure Handling Macros**:
 
    * Every module gets a `JUNO_FAILURE_HANDLER` and `JUNO_FAILURE_USER_DATA` in its base.
-   * `FAIL_MODULE(status, ptMod, msg)` invokes the module’s failure handler if it exists, passing along a custom message.
+   * `JUNO_FAIL_MODULE(status, ptMod, msg)` invokes the module’s failure handler if it exists, passing along a custom message.
 
 These macros enforce a consistent layout and pattern for modules across your entire system. Now let’s see how they’re used in a concrete API.
 
@@ -211,7 +211,7 @@ JUNO_STATUS_T Gastank_ImplApi(
     return JUNO_STATUS_SUCCESS;
 }
 
-// ... Implementations for SetFuel/GetFuel that read/write pBase->iFuelLevel, call FAIL_MODULE if invalid, etc.
+// ... Implementations for SetFuel/GetFuel that read/write pBase->iFuelLevel, call JUNO_FAIL_MODULE if invalid, etc.
 ```
 
 By the end of this, any user of `GASTANK_T` can do:
@@ -383,7 +383,7 @@ JUNO_STATUS_T Engine_V6Api(
 // In EngineV6_GetFuel_Impl, you’d do something like:
 //   Retrieve `GASTANK_T *tank = pV6->ptGastank;`
 //   Return tank->ptApi->GetFuel(tank, piFuelLevel);
-//   or FAIL_MODULE if `ptGastank` is NULL, etc.
+//   or JUNO_FAIL_MODULE if `ptGastank` is NULL, etc.
 ```
 
 Notice how `ENGINE_T` is a union overlaying:
@@ -573,7 +573,7 @@ JUNO_STATUS_T Car_ImplApi(
 JUNO_STATUS_T Car_Go_Impl(CAR_T *ptCar, int iSpeed) {
     CAR_BASE_T *pBase = (CAR_BASE_T *)(ptCar);
     if (!pBase->ptEngine) {
-        FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptCar, "No engine injected");
+        JUNO_FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptCar, "No engine injected");
         return JUNO_STATUS_NULLPTR_ERROR;
     }
 
@@ -591,7 +591,7 @@ JUNO_STATUS_T Car_Go_Impl(CAR_T *ptCar, int iSpeed) {
 JUNO_STATUS_T Car_Stop_Impl(CAR_T *ptCar) {
     CAR_BASE_T *pBase = (CAR_BASE_T *)(ptCar);
     if (!pBase->ptEngine) {
-        FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptCar, "No engine injected");
+        JUNO_FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptCar, "No engine injected");
         return JUNO_STATUS_NULLPTR_ERROR;
     }
 
@@ -1046,7 +1046,7 @@ with instructions on implementation.
   Every `Foo_ImplApi(&instance, …)` returns a `JUNO_STATUS_T`. If it fails, you should call your failure handler immediately or abort.
 
 * **Implement Comprehensive Failure Handlers**
-  Pass a meaningful `JUNO_FAILURE_HANDLER_T` so you can trace what went wrong in the field. The macros `FAIL_MODULE()` let you attach custom messages.
+  Pass a meaningful `JUNO_FAILURE_HANDLER_T` so you can trace what went wrong in the field. The macros `JUNO_FAIL_MODULE()` let you attach custom messages.
 
 * **Keep Derived Structs Small**
   Since each derived struct is overlaid on the base in a `union`, the size of a module is the maximum size of any derived variant. If one variant has a large buffer, that buffer consumes memory even if other variants don’t use it. Structure your code so that modules that seldom co-exist don’t share the same union, or keep large buffers separate.

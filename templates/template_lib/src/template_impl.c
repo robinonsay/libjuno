@@ -58,7 +58,7 @@ static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
     );
     if(ptTemplateImpl->tRoot.ptApi != &tTemplateImplApi)
     {
-        FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateImpl, "Module has invalid API");
+        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateImpl, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
     }
     return JUNO_STATUS_SUCCESS;

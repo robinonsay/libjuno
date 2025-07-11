@@ -32,7 +32,7 @@ static inline JUNO_STATUS_T Verify(JUNO_HASH_T *ptJunoHash)
     );
     if(ptJunoHashDjb2->JUNO_MODULE_SUPER.ptApi != &tJunoHashDjb2Api)
     {
-        FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoHashDjb2, "Module has invalid API");
+        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoHashDjb2, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
     }
     return JUNO_STATUS_SUCCESS;
