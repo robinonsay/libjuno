@@ -40,46 +40,46 @@ set(JUNO_COMPILE_C_OPTIONS
 find_library(
     JUNO_LIBRARY
     NAME juno
-    PATHS ${template_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES lib lib64
 )
 
 find_library(
     JUNO_SHARED_LIBRARY
     NAME juno_shared
-    PATHS ${template_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES lib lib64
 )
 
 find_path(
     JUNO_INCLUDE
     NAME juno
-    PATHS ${template_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES include inc
 )
 
 
-aux_source_directory(${template_SOURCE_DIR}/src TEMPLATE_SRCS)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src ${PROJECT_NAME}_SRCS)
 
 set(TEMPLATE_SHARED_TARGET ${PROJECT_NAME}_shared)
-add_library(${TEMPLATE_SHARED_TARGET} SHARED ${TEMPLATE_SRCS})
-add_library(${PROJECT_NAME} STATIC ${TEMPLATE_SRCS})
+add_library(${TEMPLATE_SHARED_TARGET} SHARED ${${PROJECT_NAME}_SRCS})
+add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SRCS})
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    $<BUILD_INTERFACE:${template_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
     PRIVATE
     ${JUNO_INCLUDE}
-    ${template_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src
 )
 
 target_include_directories(${TEMPLATE_SHARED_TARGET} PUBLIC
-    $<BUILD_INTERFACE:${template_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
     PRIVATE
     ${JUNO_INCLUDE}
-    ${template_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${JUNO_LIBRARY})
@@ -105,7 +105,7 @@ install(
 )
 
 install(
-  DIRECTORY ${template_SOURCE_DIR}/include/     # source directory
+  DIRECTORY ${PROJECT_SOURCE_DIR}/include/     # source directory
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include   # usually “include/juno”
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"  # only headers
 )
