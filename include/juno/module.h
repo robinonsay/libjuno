@@ -17,7 +17,7 @@
 #ifndef JUNO_MODULE_H
 #define JUNO_MODULE_H
 
-#include "juno/status.h"
+#include "status.h"
 #include <stdint.h>
 
 /**DOC
@@ -206,6 +206,16 @@
 */
 #define JUNO_MODULE_GET_API(ptModule, ROOT_T) ((const ROOT_T *)ptModule)->ptApi
 
+#define JUNO_MODULE_RESULT(SUCCESS_T) \
+{ \
+    JUNO_STATUS_T tStatus; \
+    SUCCESS_T tSuccess; \
+}
 
+#define JUNO_MODULE_OPTION(SOME_T) \
+{ \
+    bool bIsSome; \
+    SOME_T tSome; \
+}
 
 #endif // JUNO_MODULE_H
