@@ -10,7 +10,7 @@ message("CPP Compiler: ${CMAKE_CXX_COMPILER}")
 
 project(template_app VERSION 0.1.0 LANGUAGES C CXX)
 
-aux_source_directory(${${PROJECT_NAME}_SOURCE_DIR}/src ${PROJECT_NAME}_SRCS)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src ${PROJECT_NAME}_SRCS)
 
 set(JUNO_COMPILE_OPTIONS
     -Wall                           # Enable most warning messages
@@ -44,21 +44,21 @@ set(JUNO_COMPILE_C_OPTIONS
 find_library(
     JUNO_LIBRARY
     NAME juno
-    PATHS ${${PROJECT_NAME}_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES lib lib64
 )
 
 find_library(
     JUNO_SHARED_LIBRARY
     NAME juno_shared
-    PATHS ${${PROJECT_NAME}_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES lib lib64
 )
 
 find_path(
     JUNO_INCLUDE
     NAME juno
-    PATHS ${template_SOURCE_DIR}/.local/ ENV JUNO_PATH
+    PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES include inc
 )
 
@@ -66,11 +66,11 @@ add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SRCS})
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
     PRIVATE
     ${JUNO_INCLUDE}
-    ${${PROJECT_NAME}_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src
 )
 
 
@@ -89,7 +89,7 @@ install(
 )
 
 install(
-  DIRECTORY ${${PROJECT_NAME}_SOURCE_DIR}/include/     # source directory
+  DIRECTORY ${PROJECT_SOURCE_DIR}/include/     # source directory
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include   # usually “include/juno”
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"  # only headers
 )
