@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['nanostotimestamp_0',['NanosToTimestamp',['../structJUNO__TIME__API__TAG.html#a360548c59e63e5fb97510103e3474e93',1,'JUNO_TIME_API_TAG']]],
-  ['now_1',['Now',['../structJUNO__TIME__API__TAG.html#a1b3834f9500422b26fb43785d9c8bd79',1,'JUNO_TIME_API_TAG']]]
+  ['microstotimestamp_0',['MicrosToTimestamp',['../structJUNO__TIME__API__TAG.html#af174e4812314c9dd6475bed33d403016',1,'JUNO_TIME_API_TAG']]],
+  ['millistotimestamp_1',['MillisToTimestamp',['../structJUNO__TIME__API__TAG.html#a84cb12a60005d5797a662e69cac90f34',1,'JUNO_TIME_API_TAG']]]
 ];

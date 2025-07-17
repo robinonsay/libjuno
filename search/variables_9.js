@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['onexit_0',['OnExit',['../structJUNO__APP__API__TAG.html#a7655d73591ea6f608422fa51f240eac0',1,'JUNO_APP_API_TAG']]],
-  ['oninit_1',['OnInit',['../structJUNO__APP__API__TAG.html#a90dcdac12b805f68ef8a5ad00653ff86',1,'JUNO_APP_API_TAG']]],
-  ['onprocess_2',['OnProcess',['../structJUNO__APP__API__TAG.html#aa0186207594727b023adfb84b8fd832e',1,'JUNO_APP_API_TAG']]]
+  ['nanostotimestamp_0',['NanosToTimestamp',['../structJUNO__TIME__API__TAG.html#a360548c59e63e5fb97510103e3474e93',1,'JUNO_TIME_API_TAG']]],
+  ['now_1',['Now',['../structJUNO__TIME__API__TAG.html#a1b3834f9500422b26fb43785d9c8bd79',1,'JUNO_TIME_API_TAG']]]
 ];

@@ -12,6 +12,7 @@ var annotated_dup =
     [ "JUNO_I2C_IO_MSG_W_TAG", "structJUNO__I2C__IO__MSG__W__TAG.html", "structJUNO__I2C__IO__MSG__W__TAG" ],
     [ "JUNO_LOG_API_TAG", "structJUNO__LOG__API__TAG.html", "structJUNO__LOG__API__TAG" ],
     [ "JUNO_MAP_API_TAG", "structJUNO__MAP__API__TAG.html", "structJUNO__MAP__API__TAG" ],
+    [ "JUNO_MATH_MAT_API_T", "structJUNO__MATH__MAT__API__T.html", "structJUNO__MATH__MAT__API__T" ],
     [ "JUNO_MEMORY_ALLOC_API_TAG", "structJUNO__MEMORY__ALLOC__API__TAG.html", "structJUNO__MEMORY__ALLOC__API__TAG" ],
     [ "JUNO_MEMORY_BLOCK_METADATA_TAG", "structJUNO__MEMORY__BLOCK__METADATA__TAG.html", "structJUNO__MEMORY__BLOCK__METADATA__TAG" ],
     [ "JUNO_MEMORY_TAG", "structJUNO__MEMORY__TAG.html", "structJUNO__MEMORY__TAG" ],
