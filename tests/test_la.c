@@ -1,4 +1,4 @@
-#include "juno/math/juno_narr.h"
+#include "juno/math/juno_math_types.h"
 #include "unity.h"
 #include "unity_internals.h"
 #include <math.h>
@@ -32,12 +32,11 @@ void tearDown(void)
 
 static void test_vec_index(void)
 {
-	float fData[] = {1, 2, 3};
-	JUNO_MATH_NARRF_T tMyVec = Juno_MathNarrf_New(fData, (JUNO_MATH_NARR_INDEX_T){3,1});
+	JUNO_MATH_VEC3F_T tMyVec = {1, 2, 3};
 	float tTruth[3] = {1, 2,3};
 	for(size_t j = 0; j < 3; j++)
 	{
-		TEST_ASSERT_EQUAL_FLOAT(tTruth[j], Juno_MathNarr_Get(tMyVec, j, 0));
+		TEST_ASSERT_EQUAL_FLOAT(tTruth[j], tMyVec.v[j]);
 	}
 }
 
