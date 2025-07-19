@@ -3,7 +3,8 @@
 
 #include "juno/module.h"
 #include "juno_math_types.h"
-#include "juno_la.h"
+#include "juno_math_constants.h"
+#include "juno_narr.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,7 +12,7 @@ extern "C" {
 
 struct JUNO_MATH_API_T
 {
-    const JUNO_MATH_LA_API_T *ptLaApi;
+    const JUNO_MATH_NARR_API_T *ptLaApi;
 };
 
 #ifdef __cplusplus
