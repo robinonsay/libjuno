@@ -91,18 +91,6 @@ typedef union JUNO_MATH_RQUATI_TAG
     JUNO_INT_T q[4];
 } JUNO_MATH_RQUATI_T;
 
-typedef union JUNO_MATH_LQUATF_TAG
-{
-    struct{JUNO_FLOAT_T s, i, j, k;};
-    JUNO_FLOAT_T q[4];
-} JUNO_MATH_LQUATF_T;
-
-typedef union JUNO_MATH_LQUATI_TAG
-{
-    struct{JUNO_INT_T s, i, j, k;};
-    JUNO_INT_T q[4];
-} JUNO_MATH_LQUATI_T;
-
 #ifdef __cplusplus
 }
 #endif

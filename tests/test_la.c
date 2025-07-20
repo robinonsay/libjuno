@@ -36,7 +36,7 @@ static void test_vec_index(void)
 	float tTruth[3] = {1, 2,3};
 	for(size_t j = 0; j < 3; j++)
 	{
-		TEST_ASSERT_EQUAL_FLOAT(tTruth[j], tMyVec.v[j]);
+		TEST_ASSERT_EQUAL_FLOAT(tTruth[j], tMyVec[j]);
 	}
 }
 
