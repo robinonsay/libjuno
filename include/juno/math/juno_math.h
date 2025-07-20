@@ -10,7 +10,7 @@ extern "C" {
 /**
     Add two vecf's together
 */
-static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2f_Add(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
+static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2_f64_Add(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
 {
     tVec0.i += tVec1.i;
     tVec0.j += tVec1.j;
@@ -23,7 +23,7 @@ static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2f_Add(JUNO_MATH_VEC2_F64_T tVec0
     @param tVec0 The vec to subtract from
     @param tVec1 The vec to subtract
 */
-static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2f_Sub(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
+static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2_f64_Sub(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
 {
     tVec0.i -= tVec1.i;
     tVec0.j -= tVec1.j;
@@ -33,7 +33,7 @@ static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2f_Sub(JUNO_MATH_VEC2_F64_T tVec0
 /**
     Dot product of two vec2f's
 */
-static inline double Juno_MathVec2f_Dot(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
+static inline double Juno_MathVec2_f64_Dot(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
 {
     return tVec0.i * tVec1.i + tVec0.j * tVec1.j;
 }
@@ -42,13 +42,13 @@ static inline double Juno_MathVec2f_Dot(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VE
     The cross product of two vec2f's.
     The result is a psedoscalar
 */
-static inline double Juno_MathVec2f_Cross(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
+static inline double Juno_MathVec2_f64_Cross(JUNO_MATH_VEC2_F64_T tVec0, JUNO_MATH_VEC2_F64_T tVec1)
 {
     return tVec0.i * tVec1.j - tVec0.j * tVec1.i;
 }
 
 /// Add two vec2i's
-static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2i_Add(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
+static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2_i32_Add(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
 {
     tVec0.i += tVec1.i;
     tVec0.j += tVec1.j;
@@ -61,7 +61,7 @@ static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2i_Add(JUNO_MATH_VEC2_I32_T tVec0
     @param tVec0 The vec to subtract from
     @param tVec1 The vec to subtract
 */
-static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2i_Sub(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
+static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2_i32_Sub(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
 {
     tVec0.i -= tVec1.i;
     tVec0.j -= tVec1.j;
@@ -71,7 +71,7 @@ static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2i_Sub(JUNO_MATH_VEC2_I32_T tVec0
 /**
     Dot product of two vec2i's
 */
-static inline int32_t Juno_MathVec2i_Dot(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
+static inline int32_t Juno_MathVec2_i32_Dot(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
 {
     return tVec0.i * tVec1.i + tVec0.j * tVec1.j;
 }
@@ -80,7 +80,7 @@ static inline int32_t Juno_MathVec2i_Dot(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_V
     The cross product of two vec2i's.
     The result is a psedoscalar
 */
-static inline int32_t Juno_MathVec2i_Cross(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
+static inline int32_t Juno_MathVec2_i32_Cross(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH_VEC2_I32_T tVec1)
 {
     return tVec0.i * tVec1.j - tVec0.j * tVec1.i;
 }
@@ -88,7 +88,7 @@ static inline int32_t Juno_MathVec2i_Cross(JUNO_MATH_VEC2_I32_T tVec0, JUNO_MATH
 /**
     Add two vecf's together
 */
-static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3f_Add(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
+static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3_f64_Add(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
 {
     tVec0.i += tVec1.i;
     tVec0.j += tVec1.j;
@@ -102,7 +102,7 @@ static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3f_Add(JUNO_MATH_VEC3_F64_T tVec0
     @param tVec0 The vec to subtract from
     @param tVec1 The vec to subtract
 */
-static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3f_Sub(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
+static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3_f64_Sub(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
 {
     tVec0.i -= tVec1.i;
     tVec0.j -= tVec1.j;
@@ -113,7 +113,7 @@ static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3f_Sub(JUNO_MATH_VEC3_F64_T tVec0
 /**
     Dot product of two vec2f's
 */
-static inline double Juno_MathVec3f_Dot(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
+static inline double Juno_MathVec3_f64_Dot(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
 {
     return tVec0.i * tVec1.i + tVec0.j * tVec1.j + tVec0.k * tVec1.k;
 }
@@ -122,7 +122,7 @@ static inline double Juno_MathVec3f_Dot(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VE
     The cross product of two vec2f's.
     The result is a psedoscalar
 */
-static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3f_Cross(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
+static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3_f64_Cross(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
 {
     JUNO_MATH_VEC3_F64_T tRes = {
         .i = tVec0.j * tVec1.k - tVec0.k * tVec1.j,
@@ -133,7 +133,7 @@ static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3f_Cross(JUNO_MATH_VEC3_F64_T tVe
 }
 
 /// Add two vec2i's
-static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3i_Add(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
+static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3_i32_Add(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
 {
     tVec0.i += tVec1.i;
     tVec0.j += tVec1.j;
@@ -147,7 +147,7 @@ static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3i_Add(JUNO_MATH_VEC3_I32_T tVec0
     @param tVec0 The vec to subtract from
     @param tVec1 The vec to subtract
 */
-static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3i_Sub(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
+static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3_i32_Sub(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
 {
     tVec0.i -= tVec1.i;
     tVec0.j -= tVec1.j;
@@ -158,7 +158,7 @@ static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3i_Sub(JUNO_MATH_VEC3_I32_T tVec0
 /**
     Dot product of two vec2i's
 */
-static inline int32_t Juno_MathVec3i_Dot(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
+static inline int32_t Juno_MathVec3_i32_Dot(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
 {
     return tVec0.i * tVec1.i + tVec0.j * tVec1.j + tVec0.k * tVec1.k;
 }
@@ -167,7 +167,7 @@ static inline int32_t Juno_MathVec3i_Dot(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_V
     The cross product of two vec2i's.
     The result is a psedoscalar
 */
-static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3i_Cross(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
+static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3_i32_Cross(JUNO_MATH_VEC3_I32_T tVec0, JUNO_MATH_VEC3_I32_T tVec1)
 {
     JUNO_MATH_VEC3_I32_T tRes = {
         .i = tVec0.j * tVec1.k - tVec0.k * tVec1.j,
