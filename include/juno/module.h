@@ -206,16 +206,18 @@
 */
 #define JUNO_MODULE_GET_API(ptModule, ROOT_T) ((const ROOT_T *)ptModule)->ptApi
 
-#define JUNO_MODULE_RESULT(SUCCESS_T) \
+#define JUNO_MODULE_RESULT(NAME_T, SUCCESS_T) \
+typedef struct NAME_T \
 { \
     JUNO_STATUS_T tStatus; \
     SUCCESS_T tSuccess; \
-}
+} NAME_T
 
-#define JUNO_MODULE_OPTION(SOME_T) \
+#define JUNO_MODULE_OPTION(NAME_T, SOME_T) \
+typedef struct NAME_T \
 { \
     bool bIsSome; \
     SOME_T tSome; \
-}
+} NAME_T;
 
 #endif // JUNO_MODULE_H

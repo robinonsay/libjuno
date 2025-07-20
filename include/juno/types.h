@@ -9,8 +9,8 @@ extern "C"
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct JUNO_RESULT_BOOL_TAG JUNO_MODULE_RESULT(bool) JUNO_RESULT_BOOL_T;
-typedef struct JUNO_RESULT_UINT32_TAG JUNO_MODULE_RESULT(uint32_t) JUNO_RESULT_UINT32_T;
+JUNO_MODULE_RESULT(JUNO_RESULT_BOOL_T, bool);
+JUNO_MODULE_RESULT(JUNO_RESULT_UINT32_T, uint32_t);
 
 #ifdef __cplusplus
 }

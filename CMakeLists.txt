@@ -111,6 +111,7 @@ install(
 )
 
 if(JUNO_TESTS)
+    add_definitions(-DUNITY_INCLUDE_DOUBLE)
     set(CMAKE_BUILD_TYPE Debug)
     enable_testing()
     add_library(unity ${juno_SOURCE_DIR}/deps/unity/src/unity.c)
