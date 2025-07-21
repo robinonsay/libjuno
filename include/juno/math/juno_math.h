@@ -2,6 +2,7 @@
 #define JUNO_MATH_H
 
 #include "juno_math_types.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +28,16 @@ static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2_f64_Sub(JUNO_MATH_VEC2_F64_T tV
 {
     tVec0.i -= tVec1.i;
     tVec0.j -= tVec1.j;
+    return tVec0;
+}
+
+/**
+    Multiply scalar with vec2f's
+*/
+static inline JUNO_MATH_VEC2_F64_T Juno_MathVec2_f64_Mult(JUNO_MATH_VEC2_F64_T tVec0, double dScalar)
+{
+    tVec0.i *= dScalar;
+    tVec0.j *= dScalar;
     return tVec0;
 }
 
@@ -65,6 +76,16 @@ static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2_i32_Sub(JUNO_MATH_VEC2_I32_T tV
 {
     tVec0.i -= tVec1.i;
     tVec0.j -= tVec1.j;
+    return tVec0;
+}
+
+/**
+    Multiply scalar with vec2f's
+*/
+static inline JUNO_MATH_VEC2_I32_T Juno_MathVec2_i32_Mult(JUNO_MATH_VEC2_I32_T tVec0, int32_t dScalar)
+{
+    tVec0.i *= dScalar;
+    tVec0.j *= dScalar;
     return tVec0;
 }
 
@@ -111,6 +132,17 @@ static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3_f64_Sub(JUNO_MATH_VEC3_F64_T tV
 }
 
 /**
+    Multiply scalar with vec2f's
+*/
+static inline JUNO_MATH_VEC3_F64_T Juno_MathVec3_f64_Mult(JUNO_MATH_VEC3_F64_T tVec0, double dScalar)
+{
+    tVec0.i *= dScalar;
+    tVec0.j *= dScalar;
+    tVec0.k *= dScalar;
+    return tVec0;
+}
+
+/**
     Dot product of two vec2f's
 */
 static inline double Juno_MathVec3_f64_Dot(JUNO_MATH_VEC3_F64_T tVec0, JUNO_MATH_VEC3_F64_T tVec1)
@@ -152,6 +184,17 @@ static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3_i32_Sub(JUNO_MATH_VEC3_I32_T tV
     tVec0.i -= tVec1.i;
     tVec0.j -= tVec1.j;
     tVec0.k -= tVec1.k;
+    return tVec0;
+}
+
+/**
+    Multiply scalar with vec2f's
+*/
+static inline JUNO_MATH_VEC3_I32_T Juno_MathVec3_i32_Mult(JUNO_MATH_VEC3_I32_T tVec0, int32_t dScalar)
+{
+    tVec0.i *= dScalar;
+    tVec0.j *= dScalar;
+    tVec0.k *= dScalar;
     return tVec0;
 }
 
