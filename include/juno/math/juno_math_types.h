@@ -242,7 +242,7 @@ typedef union JUNO_VEC3_F32_TAG
     JUNO_VEC3_F32_CART_T  tCart;   /**< Cartesian coordinates. */
     JUNO_VEC3_F32_SPH_T   tSph;  /**< Spherical coordinates. */
     float                 arr[3];  /**< Raw component array. */
-} JUNO_VEC3_F64_T;
+} JUNO_VEC3_F32_T;
 
 /**
  * @typedef JUNO_VEC3_F64_SPH_RESULT_T
