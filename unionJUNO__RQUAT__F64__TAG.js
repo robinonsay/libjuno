@@ -4,5 +4,6 @@ var unionJUNO__RQUAT__F64__TAG =
     [ "j", "unionJUNO__RQUAT__F64__TAG.html#ae15c2c0790c179e448ab2702ef1bbe2f", null ],
     [ "k", "unionJUNO__RQUAT__F64__TAG.html#a7110cbd738e0c3e334446721f7408173", null ],
     [ "quat", "unionJUNO__RQUAT__F64__TAG.html#a183278f1e6382ebb56854921f26b8d8d", null ],
-    [ "s", "unionJUNO__RQUAT__F64__TAG.html#ae6a5f73b9bc8652e27a880caa6f06c42", null ]
+    [ "s", "unionJUNO__RQUAT__F64__TAG.html#ae6a5f73b9bc8652e27a880caa6f06c42", null ],
+    [ "tQuat", "unionJUNO__RQUAT__F64__TAG.html#a7657014fee127ec32c7a48c4536d7605", null ]
 ];
