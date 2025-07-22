@@ -7,8 +7,10 @@ extern "C"
 #endif
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
-typedef struct JUNO_RESULT_BOOL_TAG JUNO_MODULE_RESULT(bool) JUNO_RESULT_BOOL_T;
+JUNO_MODULE_RESULT(JUNO_RESULT_BOOL_T, bool);
+JUNO_MODULE_RESULT(JUNO_RESULT_UINT32_T, uint32_t);
 
 #ifdef __cplusplus
 }
