@@ -206,6 +206,13 @@
 */
 #define JUNO_MODULE_GET_API(ptModule, ROOT_T) ((const ROOT_T *)ptModule)->ptApi
 
+
+/**
+ * @def JUNO_MODULE_RESULT(NAME_T, SUCCESS_T)
+ * @brief Defines a result type combining a status and a success payload.
+ * @param NAME_T Name of the result struct to define.
+ * @param SUCCESS_T Type of the success payload contained in the result.
+ */
 #define JUNO_MODULE_RESULT(NAME_T, SUCCESS_T) \
 typedef struct NAME_T \
 { \
@@ -213,6 +220,12 @@ typedef struct NAME_T \
     SUCCESS_T tSuccess; \
 } NAME_T
 
+/**
+ * @def JUNO_MODULE_OPTION(NAME_T, SUCCESS_T)
+ * @brief Defines an option type combining a flag to indicate some and a success payload.
+ * @param NAME_T Name of the result struct to define.
+ * @param SUCCESS_T Type of the success payload contained in the result.
+ */
 #define JUNO_MODULE_OPTION(NAME_T, SOME_T) \
 typedef struct NAME_T \
 { \
