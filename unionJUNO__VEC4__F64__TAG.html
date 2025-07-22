@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LibJuno: JUNO_MATH_MAT_API_T Struct Reference</title>
+<title>LibJuno: JUNO_VEC4_F64_TAG Union Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.36.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.37.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -95,7 +95,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structJUNO__MATH__MAT__API__T.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('unionJUNO__VEC4__F64__TAG.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,41 +123,91 @@ $(document).ready(function(){initNavTree('structJUNO__MATH__MAT__API__T.html',''
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
-  <div class="headertitle"><div class="title">JUNO_MATH_MAT_API_T Struct Reference</div></div>
+  <div class="headertitle"><div class="title">JUNO_VEC4_F64_TAG Union Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="juno__la_8h_source.html">juno_la.h</a>&gt;</code></p>
+<p>4D vector union supporting Cartesian, hyperspherical, and array access (double precision).  
+ <a href="unionJUNO__VEC4__F64__TAG.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="juno__math__types_8h_source.html">juno_math_types.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for JUNO_VEC4_F64_TAG:</div>
+<div class="dyncontent">
+<div class="center"><img src="unionJUNO__VEC4__F64__TAG__coll__graph.png" border="0" usemap="#aJUNO__VEC4__F64__TAG_coll__map" alt="Collaboration graph"/></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a2e363eaea4ab123309864d7a7681d38d" id="r_a2e363eaea4ab123309864d7a7681d38d"><td class="memItemLeft" align="right" valign="top">JUNO_RESULT_BOOL_T(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__MATH__MAT__API__T.html#a2e363eaea4ab123309864d7a7681d38d">Equals</a> )(JUNO_MATH_MAT_T *ptMat1, JUNO_MATH_MAT_T *ptMat2)</td></tr>
-<tr class="separator:a2e363eaea4ab123309864d7a7681d38d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec048ce4c792c55681b846557b01f56c" id="r_aec048ce4c792c55681b846557b01f56c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="juno__math__types_8h.html#a4974a232ff73f250b38951796b65caba">JUNO_VEC4_F64_CART_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC4__F64__TAG.html#aec048ce4c792c55681b846557b01f56c">tCart</a></td></tr>
+<tr class="separator:aec048ce4c792c55681b846557b01f56c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a638e32f399d825a9713f55abf01a1dc1" id="r_a638e32f399d825a9713f55abf01a1dc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="juno__math__types_8h.html#ab42d623af8aa09d4cdcc16933a09d668">JUNO_VEC4_F64_POLAR_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC4__F64__TAG.html#a638e32f399d825a9713f55abf01a1dc1">tPolar</a></td></tr>
+<tr class="separator:a638e32f399d825a9713f55abf01a1dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a927a562672a8634e3584d2e4fc619c17" id="r_a927a562672a8634e3584d2e4fc619c17"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC4__F64__TAG.html#a927a562672a8634e3584d2e4fc619c17">arr</a> [4]</td></tr>
+<tr class="separator:a927a562672a8634e3584d2e4fc619c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
-<a id="a2e363eaea4ab123309864d7a7681d38d" name="a2e363eaea4ab123309864d7a7681d38d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e363eaea4ab123309864d7a7681d38d">&#9670;&#160;</a></span>Equals</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>4D vector union supporting Cartesian, hyperspherical, and array access (double precision). </p>
+<ul>
+<li>tCart: Cartesian form.</li>
+<li>tPolar: Hyperspherical form.</li>
+<li>arr: Raw component array [0]=x/r, [1]=y/phi, [2]=z/theta, [3]=w/rho. </li>
+</ul>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a927a562672a8634e3584d2e4fc619c17" name="a927a562672a8634e3584d2e4fc619c17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a927a562672a8634e3584d2e4fc619c17">&#9670;&#160;</a></span>arr</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_RESULT_BOOL_T(* JUNO_MATH_MAT_API_T::Equals) (JUNO_MATH_MAT_T *ptMat1, JUNO_MATH_MAT_T *ptMat2)</td>
+          <td class="memname">double JUNO_VEC4_F64_TAG::arr[4]</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Raw component array. </p>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/runner/work/libjuno/libjuno/include/juno/math/<a class="el" href="juno__la_8h_source.html">juno_la.h</a></li>
+<a id="aec048ce4c792c55681b846557b01f56c" name="aec048ce4c792c55681b846557b01f56c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec048ce4c792c55681b846557b01f56c">&#9670;&#160;</a></span>tCart</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="juno__math__types_8h.html#a4974a232ff73f250b38951796b65caba">JUNO_VEC4_F64_CART_T</a> JUNO_VEC4_F64_TAG::tCart</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Cartesian coordinates. </p>
+
+</div>
+</div>
+<a id="a638e32f399d825a9713f55abf01a1dc1" name="a638e32f399d825a9713f55abf01a1dc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a638e32f399d825a9713f55abf01a1dc1">&#9670;&#160;</a></span>tPolar</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="juno__math__types_8h.html#ab42d623af8aa09d4cdcc16933a09d668">JUNO_VEC4_F64_POLAR_T</a> JUNO_VEC4_F64_TAG::tPolar</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Hyperspherical coordinates. </p>
+
+</div>
+</div>
+<hr/>The documentation for this union was generated from the following file:<ul>
+<li>/home/runner/work/libjuno/libjuno/include/juno/math/<a class="el" href="juno__math__types_8h_source.html">juno_math_types.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="structJUNO__MATH__MAT__API__T.html">JUNO_MATH_MAT_API_T</a></li>
+    <li class="navelem"><a class="el" href="unionJUNO__VEC4__F64__TAG.html">JUNO_VEC4_F64_TAG</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

@@ -1,5 +1,6 @@
 var dir_2c37035c1b62d409545a5c019526896e =
 [
-    [ "juno_la.h", "juno__la_8h.html", "juno__la_8h" ],
-    [ "juno_math.h", "juno__math_8h.html", null ]
+    [ "juno_math.h", "juno__math_8h.html", null ],
+    [ "juno_math_constants.h", "juno__math__constants_8h.html", "juno__math__constants_8h" ],
+    [ "juno_math_types.h", "juno__math__types_8h.html", "juno__math__types_8h" ]
 ];

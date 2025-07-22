@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.36.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.37.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -129,37 +129,73 @@ $(document).ready(function(){initNavTree('types_8h.html',''); initResizable(); }
 <div class="textblock"><code>#include &quot;<a class="el" href="module_8h_source.html">module.h</a>&quot;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for types.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="types_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2types_8h" alt=""/></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="types_8h__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2types_8hdep" alt=""/></div>
 </div>
 </div>
 <p><a href="types_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a673a344734b528af34b61cbb938aaae4" id="r_a673a344734b528af34b61cbb938aaae4"><td class="memItemLeft" align="right" valign="top">struct JUNO_RESULT_BOOL_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#a673a344734b528af34b61cbb938aaae4">JUNO_MODULE_RESULT</a> (bool) JUNO_RESULT_BOOL_T</td></tr>
-<tr class="separator:a673a344734b528af34b61cbb938aaae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84d87b6941bd409771bee41999d837c6" id="r_a84d87b6941bd409771bee41999d837c6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#a84d87b6941bd409771bee41999d837c6">JUNO_MODULE_RESULT</a> (JUNO_RESULT_BOOL_T, bool)</td></tr>
+<tr class="separator:a84d87b6941bd409771bee41999d837c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb8fbdaa455d2d6e3a80c59a7348ced9" id="r_adb8fbdaa455d2d6e3a80c59a7348ced9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#adb8fbdaa455d2d6e3a80c59a7348ced9">JUNO_MODULE_RESULT</a> (JUNO_RESULT_UINT32_T, uint32_t)</td></tr>
+<tr class="separator:adb8fbdaa455d2d6e3a80c59a7348ced9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a673a344734b528af34b61cbb938aaae4" name="a673a344734b528af34b61cbb938aaae4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a673a344734b528af34b61cbb938aaae4">&#9670;&#160;</a></span>JUNO_MODULE_RESULT()</h2>
+<a id="a84d87b6941bd409771bee41999d837c6" name="a84d87b6941bd409771bee41999d837c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84d87b6941bd409771bee41999d837c6">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct JUNO_RESULT_BOOL_TAG JUNO_MODULE_RESULT </td>
+          <td class="memname">JUNO_MODULE_RESULT </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">JUNO_RESULT_BOOL_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adb8fbdaa455d2d6e3a80c59a7348ced9" name="adb8fbdaa455d2d6e3a80c59a7348ced9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb8fbdaa455d2d6e3a80c59a7348ced9">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_RESULT_UINT32_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

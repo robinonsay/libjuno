@@ -1,4 +1,19 @@
 var searchData=
 [
-  ['update_0',['Update',['../structJUNO__MEMORY__ALLOC__API__TAG.html#a016cff55da0dced33033f7d647698ac4',1,'JUNO_MEMORY_ALLOC_API_TAG']]]
+  ['tcart_0',['tcart',['../unionJUNO__VEC2__I32__TAG.html#a0512017cd75af67e1e91238380fefc94',1,'JUNO_VEC2_I32_TAG::tCart'],['../unionJUNO__VEC3__F64__TAG.html#ab7060486110eebe4da48cdc90b2d60cb',1,'JUNO_VEC3_F64_TAG::tCart'],['../unionJUNO__VEC3__I32__TAG.html#a96d2ff1551abaad76b645336bf356371',1,'JUNO_VEC3_I32_TAG::tCart'],['../unionJUNO__VEC4__F64__TAG.html#aec048ce4c792c55681b846557b01f56c',1,'JUNO_VEC4_F64_TAG::tCart'],['../unionJUNO__VEC4__I32__TAG.html#a2673192b725d578bbc127d4160850496',1,'JUNO_VEC4_I32_TAG::tCart'],['../unionJUNO__VEC2__F64__TAG.html#ac0c9e5f3ea30163a7f056bf2eabe9cb7',1,'JUNO_VEC2_F64_TAG::tCart']]],
+  ['thdr_1',['thdr',['../structJUNO__I2C__IO__MSG__R__TAG.html#aedc70cc38ba9b722a3a6a990ee9230cb',1,'JUNO_I2C_IO_MSG_R_TAG::tHdr'],['../structJUNO__I2C__IO__MSG__W__TAG.html#aa93dbab7cb6ba645b93e147b1744daa6',1,'JUNO_I2C_IO_MSG_W_TAG::tHdr'],['../unionJUNO__I2C__IO__MSG__TAG.html#ab071f161346bab44cde4544f81cb0e6b',1,'JUNO_I2C_IO_MSG_TAG::tHdr']]],
+  ['theta_2',['theta',['../structJUNO__VEC3__F64__POLAR__TAG.html#a05173407105ee5150e1a998bb0c64005',1,'JUNO_VEC3_F64_POLAR_TAG::theta'],['../structJUNO__VEC3__I32__POLAR__TAG.html#a7f6a716b2af60f1cb40fcff78d56ff8e',1,'JUNO_VEC3_I32_POLAR_TAG::theta'],['../structJUNO__VEC4__F64__POLAR__TAG.html#a46401d4f86f12032dec2b126b715e3c3',1,'JUNO_VEC4_F64_POLAR_TAG::theta'],['../structJUNO__VEC4__I32__POLAR__TAG.html#a48b6243d6a952756998b1d6e183c5cf0',1,'JUNO_VEC4_I32_POLAR_TAG::theta']]],
+  ['timestamptomicros_3',['TimestampToMicros',['../structJUNO__TIME__API__TAG.html#a71f67d0d570e8dca9e814719c3b7ecab',1,'JUNO_TIME_API_TAG']]],
+  ['timestamptomillis_4',['TimestampToMillis',['../structJUNO__TIME__API__TAG.html#a25ab8e0006d3d06cbfeac1129fcb4fd8',1,'JUNO_TIME_API_TAG']]],
+  ['timestamptonanos_5',['TimestampToNanos',['../structJUNO__TIME__API__TAG.html#ad5b2a36351d98f3c4b4eea169531cf45',1,'JUNO_TIME_API_TAG']]],
+  ['tpolar_6',['tpolar',['../unionJUNO__VEC2__F64__TAG.html#a60ca4971734777213ce62d2ff6deded4',1,'JUNO_VEC2_F64_TAG::tPolar'],['../unionJUNO__VEC2__I32__TAG.html#ac65ea814a08b0f45abc00033cb71fcd5',1,'JUNO_VEC2_I32_TAG::tPolar'],['../unionJUNO__VEC3__F64__TAG.html#afbe8c6fc28c4f1659621f7f6b431e461',1,'JUNO_VEC3_F64_TAG::tPolar'],['../unionJUNO__VEC3__I32__TAG.html#ae79dc4f186dd35072495513136437dac',1,'JUNO_VEC3_I32_TAG::tPolar'],['../unionJUNO__VEC4__F64__TAG.html#a638e32f399d825a9713f55abf01a1dc1',1,'JUNO_VEC4_F64_TAG::tPolar'],['../unionJUNO__VEC4__I32__TAG.html#a5e40597f2ea125b01fd9b7e9e2ba716f',1,'JUNO_VEC4_I32_TAG::tPolar']]],
+  ['transaction_7',['Transaction',['../structJUNO__SPI__IO__API__TAG.html#ab889c94b4af968d99488e38725c05b5f',1,'JUNO_SPI_IO_API_TAG']]],
+  ['transfer_8',['Transfer',['../structJUNO__I2C__IO__API__TAG.html#a7ecc4bfa4758776e434e42d97fa7132c',1,'JUNO_I2C_IO_API_TAG']]],
+  ['tread_9',['tRead',['../unionJUNO__I2C__IO__MSG__TAG.html#ac39a359c632bc8c92452bb0a4232e8a2',1,'JUNO_I2C_IO_MSG_TAG']]],
+  ['tryread_10',['TryRead',['../structJUNO__ASYNC__IO__API__TAG.html#a641bda61680908a148ef1e4ea7aee271',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['tryreaduntil_11',['TryReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a1f35aec741089c9758c928b08d3078c0',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['tryrecv_12',['TryRecv',['../structJUNO__SUBSCRIBER__API__TAG.html#a34c16a0b77935706b258e10bccfe8c10',1,'JUNO_SUBSCRIBER_API_TAG']]],
+  ['trywrite_13',['TryWrite',['../structJUNO__ASYNC__IO__API__TAG.html#a04787d2bac7dd5995c9f4ab7f404e477',1,'JUNO_ASYNC_IO_API_TAG']]],
+  ['ttype_14',['tType',['../structJUNO__I2C__IO__MSG__HDR__TAG.html#a629188f1cd63d07ebf243f2daaa763b6',1,'JUNO_I2C_IO_MSG_HDR_TAG']]],
+  ['twrite_15',['tWrite',['../unionJUNO__I2C__IO__MSG__TAG.html#a4108ddd84e9e6f7c85d19716254efba6',1,'JUNO_I2C_IO_MSG_TAG']]]
 ];

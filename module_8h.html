@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.36.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.37.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -190,10 +190,12 @@ How to Define The Module Union</h3>
 <tr class="separator:a543c7a97bd77bbccec506297d92b5e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47c6440bbc9d03756a4f35e1cb970591" id="r_a47c6440bbc9d03756a4f35e1cb970591"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a47c6440bbc9d03756a4f35e1cb970591">JUNO_MODULE_GET_API</a>(ptModule,  ROOT_T)&#160;&#160;&#160;((const ROOT_T *)ptModule)-&gt;ptApi</td></tr>
 <tr class="separator:a47c6440bbc9d03756a4f35e1cb970591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af050619e7cdb3575ec53e71e436836a1" id="r_af050619e7cdb3575ec53e71e436836a1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#af050619e7cdb3575ec53e71e436836a1">JUNO_MODULE_RESULT</a>(SUCCESS_T)</td></tr>
-<tr class="separator:af050619e7cdb3575ec53e71e436836a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59c954d57283b950108d76a0fd147a77" id="r_a59c954d57283b950108d76a0fd147a77"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a59c954d57283b950108d76a0fd147a77">JUNO_MODULE_OPTION</a>(SOME_T)</td></tr>
-<tr class="separator:a59c954d57283b950108d76a0fd147a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ca1de8146f35c348dc9bd92fbc32d0d" id="r_a5ca1de8146f35c348dc9bd92fbc32d0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a5ca1de8146f35c348dc9bd92fbc32d0d">JUNO_MODULE_RESULT</a>(NAME_T,  SUCCESS_T)</td></tr>
+<tr class="memdesc:a5ca1de8146f35c348dc9bd92fbc32d0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a result type combining a status and a success payload.  <br /></td></tr>
+<tr class="separator:a5ca1de8146f35c348dc9bd92fbc32d0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf83dbb0b87a97d3cd09276898c7f573" id="r_adf83dbb0b87a97d3cd09276898c7f573"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#adf83dbb0b87a97d3cd09276898c7f573">JUNO_MODULE_OPTION</a>(NAME_T,  SOME_T)</td></tr>
+<tr class="memdesc:adf83dbb0b87a97d3cd09276898c7f573"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines an option type combining a flag to indicate some and a success payload.  <br /></td></tr>
+<tr class="separator:adf83dbb0b87a97d3cd09276898c7f573"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="af2cc78723eab5f63af29ba0056fb2931" name="af2cc78723eab5f63af29ba0056fb2931"></a>
@@ -417,8 +419,8 @@ How to Define The Module Union</h3>
 
 </div>
 </div>
-<a id="a59c954d57283b950108d76a0fd147a77" name="a59c954d57283b950108d76a0fd147a77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59c954d57283b950108d76a0fd147a77">&#9670;&#160;</a></span>JUNO_MODULE_OPTION</h2>
+<a id="adf83dbb0b87a97d3cd09276898c7f573" name="adf83dbb0b87a97d3cd09276898c7f573"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf83dbb0b87a97d3cd09276898c7f573">&#9670;&#160;</a></span>JUNO_MODULE_OPTION</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -427,20 +429,40 @@ How to Define The Module Union</h3>
           <td class="memname">#define JUNO_MODULE_OPTION</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">SOME_T</td><td>)</td>
+          <td class="paramname">NAME_T, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">SOME_T&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">{ \</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>NAME_T \</div>
+<div class="line">{ \</div>
 <div class="line">    <span class="keywordtype">bool</span> bIsSome; \</div>
 <div class="line">    SOME_T tSome; \</div>
-<div class="line">}</div>
+<div class="line">} NAME_T;</div>
 </div><!-- fragment -->
+<p>Defines an option type combining a flag to indicate some and a success payload. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">NAME_T</td><td>Name of the result struct to define. </td></tr>
+    <tr><td class="paramname">SUCCESS_T</td><td>Type of the success payload contained in the result. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a id="af050619e7cdb3575ec53e71e436836a1" name="af050619e7cdb3575ec53e71e436836a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af050619e7cdb3575ec53e71e436836a1">&#9670;&#160;</a></span>JUNO_MODULE_RESULT</h2>
+<a id="a5ca1de8146f35c348dc9bd92fbc32d0d" name="a5ca1de8146f35c348dc9bd92fbc32d0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ca1de8146f35c348dc9bd92fbc32d0d">&#9670;&#160;</a></span>JUNO_MODULE_RESULT</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -449,17 +471,37 @@ How to Define The Module Union</h3>
           <td class="memname">#define JUNO_MODULE_RESULT</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">SUCCESS_T</td><td>)</td>
+          <td class="paramname">NAME_T, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">SUCCESS_T&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">{ \</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>NAME_T \</div>
+<div class="line">{ \</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus; \</div>
 <div class="line">    SUCCESS_T tSuccess; \</div>
-<div class="line">}</div>
+<div class="line">} NAME_T</div>
 <div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
 </div><!-- fragment -->
+<p>Defines a result type combining a status and a success payload. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">NAME_T</td><td>Name of the result struct to define. </td></tr>
+    <tr><td class="paramname">SUCCESS_T</td><td>Type of the success payload contained in the result. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="add0b87e2c0a6d5a0eaff6eb95c94148d" name="add0b87e2c0a6d5a0eaff6eb95c94148d"></a>
