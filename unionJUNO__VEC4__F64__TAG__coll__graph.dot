@@ -7,6 +7,6 @@ digraph "JUNO_VEC4_F64_TAG"
   Node1 [id="Node000001",label="JUNO_VEC4_F64_TAG",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="4D vector union supporting Cartesian, hyperspherical, and array access (double precision)."];
   Node2 -> Node1 [id="edge1_Node000001_Node000002",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tCart",fontcolor="grey" ];
   Node2 [id="Node000002",label="JUNO_VEC4_F64_CART_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__VEC4__F64__CART__TAG.html",tooltip="4D vector in Cartesian coordinates (double precision)."];
-  Node3 -> Node1 [id="edge2_Node000001_Node000003",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tPolar",fontcolor="grey" ];
-  Node3 [id="Node000003",label="JUNO_VEC4_F64_POLAR_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__VEC4__F64__POLAR__TAG.html",tooltip="4D vector in hyperspherical coordinates (double precision)."];
+  Node3 -> Node1 [id="edge2_Node000001_Node000003",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tSph",fontcolor="grey" ];
+  Node3 [id="Node000003",label="JUNO_VEC4_F64_SPH_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__VEC4__F64__SPH__TAG.html",tooltip="4D vector in hyperspherical coordinates (double precision)."];
 }

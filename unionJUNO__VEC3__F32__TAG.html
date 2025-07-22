@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LibJuno: JUNO_VEC3_F64_POLAR_TAG Struct Reference</title>
+<title>LibJuno: JUNO_VEC3_F32_TAG Union Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.37.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.38.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -95,7 +95,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structJUNO__VEC3__F64__POLAR__TAG.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('unionJUNO__VEC3__F32__TAG.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,92 +123,83 @@ $(document).ready(function(){initNavTree('structJUNO__VEC3__F64__POLAR__TAG.html
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
-  <div class="headertitle"><div class="title">JUNO_VEC3_F64_POLAR_TAG Struct Reference</div></div>
+  <div class="headertitle"><div class="title">JUNO_VEC3_F32_TAG Union Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>3D vector in spherical coordinates (double precision).  
- <a href="structJUNO__VEC3__F64__POLAR__TAG.html#details">More...</a></p>
+<p>3D vector union supporting Cartesian, spherical, and array access (float32 precision).  
+ <a href="unionJUNO__VEC3__F32__TAG.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="juno__math__types_8h_source.html">juno_math_types.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for JUNO_VEC3_F32_TAG:</div>
+<div class="dyncontent">
+<div class="center"><img src="unionJUNO__VEC3__F32__TAG__coll__graph.png" border="0" usemap="#aJUNO__VEC3__F32__TAG_coll__map" alt="Collaboration graph"/></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a7b6adcccb86899338a01ab54964408ac" id="r_a7b6adcccb86899338a01ab54964408ac"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa24297bba2298e906090d2ac165cbcff" id="r_aa24297bba2298e906090d2ac165cbcff"><td class="memItemLeft" >&#160;&#160;&#160;double&#160;&#160;&#160;<a class="el" href="structJUNO__VEC3__F64__POLAR__TAG.html#a5906db9ab4097eccb435162866e18b10">r</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:aa24297bba2298e906090d2ac165cbcff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1d5f2cbabc45c8f573ba89e34cab9c4" id="r_ab1d5f2cbabc45c8f573ba89e34cab9c4"><td class="memItemLeft" >&#160;&#160;&#160;double&#160;&#160;&#160;<a class="el" href="structJUNO__VEC3__F64__POLAR__TAG.html#a9996d5720d78c8562ee603fe5defc81a">phi</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:ab1d5f2cbabc45c8f573ba89e34cab9c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a519254f4378112b13b898f023e7f59b9" id="r_a519254f4378112b13b898f023e7f59b9"><td class="memItemLeft" >&#160;&#160;&#160;double&#160;&#160;&#160;<a class="el" href="structJUNO__VEC3__F64__POLAR__TAG.html#a05173407105ee5150e1a998bb0c64005">theta</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:a519254f4378112b13b898f023e7f59b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b6adcccb86899338a01ab54964408ac" id="r_a7b6adcccb86899338a01ab54964408ac"><td class="memItemLeft" valign="top">};&#160;</td><td class="memItemRight" valign="bottom">&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:a7b6adcccb86899338a01ab54964408ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5afc33f97d58226a3aa8cc53b7c46bb" id="r_af5afc33f97d58226a3aa8cc53b7c46bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="juno__math__types_8h.html#a9a82d19b2fcbbb2ca1d3cf2e12204804">JUNO_VEC3_F32_CART_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC3__F32__TAG.html#af5afc33f97d58226a3aa8cc53b7c46bb">tCart</a></td></tr>
+<tr class="separator:af5afc33f97d58226a3aa8cc53b7c46bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cfb0ae91ee01ebef64b882eeefd9efa" id="r_a6cfb0ae91ee01ebef64b882eeefd9efa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="juno__math__types_8h.html#ae92e2a913478f16edf5c22cbe8f710fe">JUNO_VEC3_F32_SPH_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC3__F32__TAG.html#a6cfb0ae91ee01ebef64b882eeefd9efa">tSph</a></td></tr>
+<tr class="separator:a6cfb0ae91ee01ebef64b882eeefd9efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28452b71dcd24a5c2a9958065b35d5dc" id="r_a28452b71dcd24a5c2a9958065b35d5dc"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC3__F32__TAG.html#a28452b71dcd24a5c2a9958065b35d5dc">arr</a> [3]</td></tr>
+<tr class="separator:a28452b71dcd24a5c2a9958065b35d5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>3D vector in spherical coordinates (double precision). </p>
-<p>Contains radius, azimuthal angle (phi), and polar angle (theta). </p>
+<div class="textblock"><p>3D vector union supporting Cartesian, spherical, and array access (float32 precision). </p>
+<ul>
+<li>tCart: Cartesian form.</li>
+<li>tSph: Spherical form.</li>
+<li>arr: Raw component array [0]=x/r, [1]=y/phi, [2]=z/theta. </li>
+</ul>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="a7b6adcccb86899338a01ab54964408ac" name="a7b6adcccb86899338a01ab54964408ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b6adcccb86899338a01ab54964408ac">&#9670;&#160;</a></span>[struct]</h2>
+<a id="a28452b71dcd24a5c2a9958065b35d5dc" name="a28452b71dcd24a5c2a9958065b35d5dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28452b71dcd24a5c2a9958065b35d5dc">&#9670;&#160;</a></span>arr</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct  { ... }  <a class="el" href="structJUNO__VEC3__F64__POLAR__TAG.html">JUNO_VEC3_F64_POLAR_TAG</a></td>
+          <td class="memname">float JUNO_VEC3_F32_TAG::arr[3]</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Raw component array. </p>
 
 </div>
 </div>
-<a id="a9996d5720d78c8562ee603fe5defc81a" name="a9996d5720d78c8562ee603fe5defc81a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9996d5720d78c8562ee603fe5defc81a">&#9670;&#160;</a></span>phi</h2>
+<a id="af5afc33f97d58226a3aa8cc53b7c46bb" name="af5afc33f97d58226a3aa8cc53b7c46bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5afc33f97d58226a3aa8cc53b7c46bb">&#9670;&#160;</a></span>tCart</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double JUNO_VEC3_F64_POLAR_TAG::phi</td>
+          <td class="memname"><a class="el" href="juno__math__types_8h.html#a9a82d19b2fcbbb2ca1d3cf2e12204804">JUNO_VEC3_F32_CART_T</a> JUNO_VEC3_F32_TAG::tCart</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Azimuthal angle in radians. </p>
+<p>Cartesian coordinates. </p>
 
 </div>
 </div>
-<a id="a5906db9ab4097eccb435162866e18b10" name="a5906db9ab4097eccb435162866e18b10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5906db9ab4097eccb435162866e18b10">&#9670;&#160;</a></span>r</h2>
+<a id="a6cfb0ae91ee01ebef64b882eeefd9efa" name="a6cfb0ae91ee01ebef64b882eeefd9efa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cfb0ae91ee01ebef64b882eeefd9efa">&#9670;&#160;</a></span>tSph</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double JUNO_VEC3_F64_POLAR_TAG::r</td>
+          <td class="memname"><a class="el" href="juno__math__types_8h.html#ae92e2a913478f16edf5c22cbe8f710fe">JUNO_VEC3_F32_SPH_T</a> JUNO_VEC3_F32_TAG::tSph</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Radial distance from the origin. </p>
+<p>Spherical coordinates. </p>
 
 </div>
 </div>
-<a id="a05173407105ee5150e1a998bb0c64005" name="a05173407105ee5150e1a998bb0c64005"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05173407105ee5150e1a998bb0c64005">&#9670;&#160;</a></span>theta</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double JUNO_VEC3_F64_POLAR_TAG::theta</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Polar angle in radians. </p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<hr/>The documentation for this union was generated from the following file:<ul>
 <li>/home/runner/work/libjuno/libjuno/include/juno/math/<a class="el" href="juno__math__types_8h_source.html">juno_math_types.h</a></li>
 </ul>
 </div><!-- contents -->
@@ -216,7 +207,7 @@ Data Fields</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="structJUNO__VEC3__F64__POLAR__TAG.html">JUNO_VEC3_F64_POLAR_TAG</a></li>
+    <li class="navelem"><a class="el" href="unionJUNO__VEC3__F32__TAG.html">JUNO_VEC3_F32_TAG</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
