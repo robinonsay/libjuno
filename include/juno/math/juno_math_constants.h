@@ -1,5 +1,5 @@
-#ifndef JUNO_MATH_CONST_H
-#define JUNO_MATH_CONST_H
+#ifndef JUNO_CONST_H
+#define JUNO_CONST_H
 
 #include "juno/module.h"
 
@@ -7,10 +7,10 @@
 extern "C" {
 #endif
 
-#define JUNO_MATH_PI        3.141592653589793
-#define JUNO_MATH_HALF_PI   1.5707963267948966
-#define JUNO_MATH_QUART_PI  0.7853981633974483
-#define JUNO_MATH_E         2.718281828459045
+#define JUNO_PI        3.141592653589793
+#define JUNO_HALF_PI   1.5707963267948966
+#define JUNO_QUART_PI  0.7853981633974483
+#define JUNO_E         2.718281828459045
 
 #ifdef __cplusplus
 }
