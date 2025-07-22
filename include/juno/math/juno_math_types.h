@@ -22,10 +22,8 @@ extern "C" {
  */
 typedef struct JUNO_VEC2_F64_SPH_TAG
 {
-    struct {
-        double r;   /**< Radial distance from the origin. */ 
-        double phi; /**< Angle in radians from the x-axis. */ 
-    };
+    double r;   /**< Radial distance from the origin. */ 
+    double phi; /**< Angle in radians from the x-axis. */ 
 } JUNO_VEC2_F64_SPH_T;
 
 /**
@@ -36,10 +34,8 @@ typedef struct JUNO_VEC2_F64_SPH_TAG
  */
 typedef struct JUNO_VEC2_F64_CART_TAG
 {
-    struct {
-        double x; /**< X component. */
-        double y; /**< Y component. */
-    };
+    double x; /**< X component. */
+    double y; /**< Y component. */
 } JUNO_VEC2_F64_CART_T;
 
 /**
@@ -83,10 +79,8 @@ JUNO_MODULE_RESULT(JUNO_VEC2_F64_RESULT_T, JUNO_VEC2_F64_T);
  */
 typedef struct JUNO_VEC2_I32_SPH_TAG
 {
-    struct {
-        int32_t r;   /**< Radial distance from the origin. */
-        int32_t phi; /**< Angle unit (e.g., degrees or custom). */
-    };
+    int32_t r;   /**< Radial distance from the origin. */
+    int32_t phi; /**< Angle unit (e.g., degrees or custom). */
 } JUNO_VEC2_I32_SPH_T;
 
 /**
@@ -97,10 +91,8 @@ typedef struct JUNO_VEC2_I32_SPH_TAG
  */
 typedef struct JUNO_VEC2_I32_CART_TAG
 {
-    struct {
-        int32_t x; /**< X component. */
-        int32_t y; /**< Y component. */
-    };
+    int32_t x; /**< X component. */
+    int32_t y; /**< Y component. */
 } JUNO_VEC2_I32_CART_T;
 
 /**
@@ -144,11 +136,9 @@ JUNO_MODULE_RESULT(JUNO_VEC2_I32_RESULT_T, JUNO_VEC2_I32_T);
  */
 typedef struct JUNO_VEC3_F64_SPH_TAG
 {
-    struct {
-        double r;     /**< Radial distance from the origin. */
-        double phi;   /**< Azimuthal angle in radians. */
-        double theta; /**< Sph angle in radians. */
-    };
+    double r;     /**< Radial distance from the origin. */
+    double phi;   /**< Azimuthal angle in radians. */
+    double theta; /**< Sph angle in radians. */
 } JUNO_VEC3_F64_SPH_T;
 
 /**
@@ -159,11 +149,9 @@ typedef struct JUNO_VEC3_F64_SPH_TAG
  */
 typedef struct JUNO_VEC3_F64_CART_TAG
 {
-    struct {
-        double x; /**< X component. */
-        double y; /**< Y component. */
-        double z; /**< Z component. */
-    };
+    double x; /**< X component. */
+    double y; /**< Y component. */
+    double z; /**< Z component. */
 } JUNO_VEC3_F64_CART_T;
 
 /**
@@ -207,11 +195,9 @@ JUNO_MODULE_RESULT(JUNO_VEC3_F64_RESULT_T, JUNO_VEC3_F64_T);
  */
 typedef struct JUNO_VEC3_F32_SPH_TAG
 {
-    struct {
-        float r;     /**< Radial distance from the origin. */
-        float phi;   /**< Azimuthal angle in radians. */
-        float theta; /**< Sph angle in radians. */
-    };
+    float r;     /**< Radial distance from the origin. */
+    float phi;   /**< Azimuthal angle in radians. */
+    float theta; /**< Sph angle in radians. */
 } JUNO_VEC3_F32_SPH_T;
 
 /**
@@ -222,11 +208,9 @@ typedef struct JUNO_VEC3_F32_SPH_TAG
  */
 typedef struct JUNO_VEC3_F32_CART_TAG
 {
-    struct {
-        float x; /**< X component. */
-        float y; /**< Y component. */
-        float z; /**< Z component. */
-    };
+    float x; /**< X component. */
+    float y; /**< Y component. */
+    float z; /**< Z component. */
 } JUNO_VEC3_F32_CART_T;
 
 /**
@@ -270,11 +254,9 @@ JUNO_MODULE_RESULT(JUNO_VEC3_F32_RESULT_T, JUNO_VEC3_F32_T);
  */
 typedef struct JUNO_VEC3_I32_SPH_TAG
 {
-    struct {
-        int32_t r;     /**< Radial distance from the origin. */
-        int32_t phi;   /**< Azimuthal angle unit. */
-        int32_t theta; /**< Sph angle unit. */
-    };
+    int32_t r;     /**< Radial distance from the origin. */
+    int32_t phi;   /**< Azimuthal angle unit. */
+    int32_t theta; /**< Sph angle unit. */
 } JUNO_VEC3_I32_SPH_T;
 
 /**
@@ -285,11 +267,9 @@ typedef struct JUNO_VEC3_I32_SPH_TAG
  */
 typedef struct JUNO_VEC3_I32_CART_TAG
 {
-    struct {
-        int32_t x; /**< X component. */
-        int32_t y; /**< Y component. */
-        int32_t z; /**< Z component. */
-    };
+    int32_t x; /**< X component. */
+    int32_t y; /**< Y component. */
+    int32_t z; /**< Z component. */
 } JUNO_VEC3_I32_CART_T;
 
 /**
@@ -333,12 +313,10 @@ JUNO_MODULE_RESULT(JUNO_VEC3_I32_RESULT_T, JUNO_VEC3_I32_T);
  */
 typedef struct JUNO_VEC4_F64_SPH_TAG
 {
-    struct {
-        double r;     /**< Radial distance from the origin. */
-        double phi;   /**< First angular coordinate. */
-        double theta; /**< Second angular coordinate. */
-        double rho;   /**< Third angular coordinate. */
-    };
+    double r;     /**< Radial distance from the origin. */
+    double phi;   /**< First angular coordinate. */
+    double theta; /**< Second angular coordinate. */
+    double rho;   /**< Third angular coordinate. */
 } JUNO_VEC4_F64_SPH_T;
 
 /**
@@ -349,12 +327,10 @@ typedef struct JUNO_VEC4_F64_SPH_TAG
  */
 typedef struct JUNO_VEC4_F64_CART_TAG
 {
-    struct {
-        double x; /**< X component. */
-        double y; /**< Y component. */
-        double z; /**< Z component. */
-        double w; /**< W component. */
-    };
+    double x; /**< X component. */
+    double y; /**< Y component. */
+    double z; /**< Z component. */
+    double w; /**< W component. */
 } JUNO_VEC4_F64_CART_T;
 
 /**
@@ -386,12 +362,10 @@ JUNO_MODULE_RESULT(JUNO_VEC4F_RESULT_T, JUNO_VEC3_F64_T);
  */
 typedef struct JUNO_VEC4_I32_SPH_TAG
 {
-    struct {
-        int32_t r;     /**< Radial distance from the origin. */
-        int32_t phi;   /**< First angular coordinate. */
-        int32_t theta; /**< Second angular coordinate. */
-        int32_t rho;   /**< Third angular coordinate. */
-    };
+    int32_t r;     /**< Radial distance from the origin. */
+    int32_t phi;   /**< First angular coordinate. */
+    int32_t theta; /**< Second angular coordinate. */
+    int32_t rho;   /**< Third angular coordinate. */
 } JUNO_VEC4_I32_SPH_T;
 
 /**
@@ -402,12 +376,10 @@ typedef struct JUNO_VEC4_I32_SPH_TAG
  */
 typedef struct JUNO_VEC4_I32_CART_TAG
 {
-    struct {
-        int32_t x; /**< X component. */
-        int32_t y; /**< Y component. */
-        int32_t z; /**< Z component. */
-        int32_t w; /**< W component. */
-    };
+    int32_t x; /**< X component. */
+    int32_t y; /**< Y component. */
+    int32_t z; /**< Z component. */
+    int32_t w; /**< W component. */
 } JUNO_VEC4_I32_CART_T;
 
 /**
@@ -516,7 +488,7 @@ typedef union JUNO_RQUAT_F64_TAG
         double i; /**< First vector part. */
         double j; /**< Second vector part. */
         double k; /**< Third vector part. */
-    };
+    } tQuat;
     double quat[4]; /**< Raw quaternion array [s,i,j,k]. */
 } JUNO_RQUAT_F64_T;
 
@@ -539,7 +511,7 @@ typedef union JUNO_RQUAT_I32_TAG
         int32_t i; /**< First vector part. */
         int32_t j; /**< Second vector part. */
         int32_t k; /**< Third vector part. */
-    };
+    } tQuat;
     int32_t quat[4]; /**< Raw quaternion array [s,i,j,k]. */
 } JUNO_RQUAT_I32_T;
 
