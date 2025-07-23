@@ -238,11 +238,10 @@ static inline double Juno_Vec3_F64_Dot(JUNO_VEC3_F64_T tVec0, JUNO_VEC3_F64_T tV
 */
 static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Cross(JUNO_VEC3_F64_T tVec0, JUNO_VEC3_F64_T tVec1)
 {
-    JUNO_VEC3_F64_T tRes = {
-        .arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1],
-        .arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2],
-        .arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0]
-    };
+    JUNO_VEC3_F64_T tRes = {};
+    tRes.arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1];
+    tRes.arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2];
+    tRes.arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0];
     return tRes;
 }
 
@@ -305,11 +304,10 @@ static inline float Juno_Vec3_F32_Dot(JUNO_VEC3_F32_T tVec0, JUNO_VEC3_F32_T tVe
 */
 static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Cross(JUNO_VEC3_F32_T tVec0, JUNO_VEC3_F32_T tVec1)
 {
-    JUNO_VEC3_F32_T tRes = {
-        .arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1],
-        .arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2],
-        .arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0]
-    };
+    JUNO_VEC3_F32_T tRes = {};
+    tRes.arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1];
+    tRes.arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2];
+    tRes.arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0];
     return tRes;
 }
 
@@ -370,11 +368,10 @@ static inline int32_t Juno_Vec3_I32_Dot(JUNO_VEC3_I32_T tVec0, JUNO_VEC3_I32_T t
 */
 static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Cross(JUNO_VEC3_I32_T tVec0, JUNO_VEC3_I32_T tVec1)
 {
-    JUNO_VEC3_I32_T tRes = {
-        .arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1],
-        .arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2],
-        .arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0]
-    };
+    JUNO_VEC3_I32_T tRes = {};
+    tRes.arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1];
+    tRes.arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2];
+    tRes.arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0];
     return tRes;
 }
 
