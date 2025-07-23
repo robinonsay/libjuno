@@ -68,6 +68,59 @@ static void test_vec2_f64_cross(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+static void test_vec2_f32_add(void)
+{
+	JUNO_VEC2_F32_T tVec1 = {1, 2};
+	JUNO_VEC2_F32_T tVec2 = {4, 5};
+	JUNO_VEC2_F32_T tRes = Juno_Vec2_f32_Add(tVec1, tVec2);
+	JUNO_VEC2_F32_T tTruth = {5, 7};
+	for(uint8_t i = 0; i < 2; i++)
+	{
+		TEST_ASSERT_EQUAL_DOUBLE(tTruth.arr[i], tRes.arr[i]);
+	}
+}
+
+static void test_vec2_f32_sub(void)
+{
+	JUNO_VEC2_F32_T tVec1 = {1, 2};
+	JUNO_VEC2_F32_T tVec2 = {4, 5};
+	JUNO_VEC2_F32_T tRes = Juno_Vec2_f32_Sub(tVec1, tVec2);
+	JUNO_VEC2_F32_T tTruth = {-3, -3};
+	for(uint8_t i = 0; i < 2; i++)
+	{
+		TEST_ASSERT_EQUAL_DOUBLE(tTruth.arr[i], tRes.arr[i]);
+	}
+}
+
+static void test_vec2_f32_mult(void)
+{
+	JUNO_VEC2_F32_T tVec1 = {1, 2};
+	JUNO_VEC2_F32_T tRes = Juno_Vec2_f32_Mult(tVec1, 2);
+	JUNO_VEC2_F32_T tTruth = {2, 4};
+	for(uint8_t i = 0; i < 2; i++)
+	{
+		TEST_ASSERT_EQUAL_DOUBLE(tTruth.arr[i], tRes.arr[i]);
+	}
+}
+
+static void test_vec2_f32_dot(void)
+{
+	JUNO_VEC2_F32_T tVec1 = {1, 2};
+	JUNO_VEC2_F32_T tVec2 = {4, 5};
+	double tRes = Juno_Vec2_f32_Dot(tVec1, tVec2);
+	double tTruth = 14;
+	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
+}
+
+static void test_vec2_f32_cross(void)
+{
+	JUNO_VEC2_F32_T tVec1 = {1, 2};
+	JUNO_VEC2_F32_T tVec2 = {4, 5};
+	double tRes = Juno_Vec2_f32_Cross(tVec1, tVec2);
+	double tTruth = -3;
+	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
+}
+
 static void test_vec2_i32_add(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {1, 2};
@@ -178,6 +231,63 @@ static void test_vec3_f64_cross(void)
 	}
 }
 
+static void test_vec3_f32_add(void)
+{
+	JUNO_VEC3_F32_T tVec1 = {1, 2, 3};
+	JUNO_VEC3_F32_T tVec2 = {4, 5, 6};
+	JUNO_VEC3_F32_T tRes = Juno_Vec3_f32_Add(tVec1, tVec2);
+	JUNO_VEC3_F32_T tTruth = {5, 7, 9};
+	for(uint8_t i = 0; i < 3; i++)
+	{
+		TEST_ASSERT_EQUAL_DOUBLE(tTruth.arr[i], tRes.arr[i]);
+	}
+}
+
+static void test_vec3_f32_sub(void)
+{
+	JUNO_VEC3_F32_T tVec1 = {1, 2, 3};
+	JUNO_VEC3_F32_T tVec2 = {4, 5, 6};
+	JUNO_VEC3_F32_T tRes = Juno_Vec3_f32_Sub(tVec1, tVec2);
+	JUNO_VEC3_F32_T tTruth = {-3, -3, -3};
+	for(uint8_t i = 0; i < 3; i++)
+	{
+		TEST_ASSERT_EQUAL_DOUBLE(tTruth.arr[i], tRes.arr[i]);
+	}
+}
+
+static void test_vec3_f32_mult(void)
+{
+	JUNO_VEC3_F32_T tVec1 = {1, 2, 3};
+	JUNO_VEC3_F32_T tRes = Juno_Vec3_f32_Mult(tVec1, 2);
+	JUNO_VEC3_F32_T tTruth = {2, 4, 6};
+	for(uint8_t i = 0; i < 3; i++)
+	{
+		TEST_ASSERT_EQUAL_DOUBLE(tTruth.arr[i], tRes.arr[i]);
+	}
+}
+
+static void test_vec3_f32_dot(void)
+{
+	JUNO_VEC3_F32_T tVec1 = {1, 2, 3};
+	JUNO_VEC3_F32_T tVec2 = {4, 5, 6};
+	double tRes = Juno_Vec3_f32_Dot(tVec1, tVec2);
+	double tTruth = 32;
+	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
+}
+
+static void test_vec3_f32_cross(void)
+{
+	JUNO_VEC3_F32_T tVec1 = {1, 2, 3};
+	JUNO_VEC3_F32_T tVec2 = {4, 5, 6};
+	JUNO_VEC3_F32_T tRes = Juno_Vec3_f32_Cross(tVec1, tVec2);
+	JUNO_VEC3_F32_T tTruth = {-3, 6, -3};
+	for(uint8_t i = 0; i < 3; i++)
+	{
+		TEST_ASSERT_EQUAL_DOUBLE(tTruth.arr[i], tRes.arr[i]);
+	}
+}
+
+
 static void test_vec3_i32_add(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {1, 2, 3};
@@ -242,6 +352,11 @@ int main(void)
 	RUN_TEST(test_vec2_f64_mult);
 	RUN_TEST(test_vec2_f64_dot);
 	RUN_TEST(test_vec2_f64_cross);
+	RUN_TEST(test_vec2_f32_add);
+	RUN_TEST(test_vec2_f32_sub);
+	RUN_TEST(test_vec2_f32_mult);
+	RUN_TEST(test_vec2_f32_dot);
+	RUN_TEST(test_vec2_f32_cross);
 	RUN_TEST(test_vec2_i32_add);
 	RUN_TEST(test_vec2_i32_sub);
 	RUN_TEST(test_vec2_i32_mult);
@@ -252,6 +367,11 @@ int main(void)
 	RUN_TEST(test_vec3_f64_mult);
 	RUN_TEST(test_vec3_f64_dot);
 	RUN_TEST(test_vec3_f64_cross);
+	RUN_TEST(test_vec3_f32_add);
+	RUN_TEST(test_vec3_f32_sub);
+	RUN_TEST(test_vec3_f32_mult);
+	RUN_TEST(test_vec3_f32_dot);
+	RUN_TEST(test_vec3_f32_cross);
 	RUN_TEST(test_vec3_i32_add);
 	RUN_TEST(test_vec3_i32_sub);
 	RUN_TEST(test_vec3_i32_mult);

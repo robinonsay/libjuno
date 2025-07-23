@@ -2,6 +2,7 @@
 #define JUNO_TYPES_H
 
 #include "juno/module.h"
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -70,6 +71,63 @@ JUNO_MODULE_RESULT(JUNO_VEC2_F64_CART_RESULT_T, JUNO_VEC2_F64_CART_T);
  * @brief Result type for functions returning JUNO_VEC2_F64_T.
  */
 JUNO_MODULE_RESULT(JUNO_VEC2_F64_RESULT_T, JUNO_VEC2_F64_T);
+
+/**
+ * @struct JUNO_VEC3_F32_SPH_TAG
+ * @brief 3D vector in spherical coordinates (double precision).
+ *
+ * Contains radius, azimuthal angle (phi), and polar angle (theta).
+ */
+typedef struct JUNO_VEC2_F32_SPH_TAG
+{
+    float r;     /**< Radial distance from the origin. */
+    float phi;   /**< Azimuthal angle in radians. */
+} JUNO_VEC2_F32_SPH_T;
+
+/**
+ * @struct JUNO_VEC3_F32_CART_TAG
+ * @brief 3D vector in Cartesian coordinates (float precision).
+ *
+ * Contains x, y, and z components.
+ */
+typedef struct JUNO_VEC2_F32_CART_TAG
+{
+    float x; /**< X component. */
+    float y; /**< Y component. */
+} JUNO_VEC2_F32_CART_T;
+
+/**
+ * @union JUNO_VEC3_F32_TAG
+ * @brief 3D vector union supporting Cartesian, spherical, and array access (float32 precision).
+ *
+ * - tCart: Cartesian form.
+ * - tSph: Spherical form.
+ * - arr: Raw component array [0]=x/r, [1]=y/phi, [2]=z/theta.
+ */
+typedef union JUNO_VEC2_F32_TAG
+{
+    JUNO_VEC2_F32_CART_T  tCart;   /**< Cartesian coordinates. */
+    JUNO_VEC2_F32_SPH_T   tSph;  /**< Spherical coordinates. */
+    float                 arr[2];  /**< Raw component array. */
+} JUNO_VEC2_F32_T;
+
+/**
+ * @typedef JUNO_VEC3_F64_SPH_RESULT_T
+ * @brief Result type for functions returning JUNO_VEC3_F64_SPH_T.
+ */
+JUNO_MODULE_RESULT(JUNO_VEC2_F32_SPH_RESULT_T, JUNO_VEC2_F32_SPH_T);
+
+/**
+ * @typedef JUNO_VEC3_F64_CART_RESULT_T
+ * @brief Result type for functions returning JUNO_VEC3_F64_CART_T.
+ */
+JUNO_MODULE_RESULT(JUNO_VEC2_F32_CART_RESULT_T, JUNO_VEC2_F32_CART_T);
+
+/**
+ * @typedef JUNO_VEC3_F32_RESULT_T
+ * @brief Result type for functions returning JUNO_VEC3_F64_T.
+ */
+JUNO_MODULE_RESULT(JUNO_VEC2_F32_RESULT_T, JUNO_VEC2_F32_T);
 
 /**
  * @struct JUNO_VEC2_I32_SPH_TAG
@@ -355,6 +413,67 @@ typedef union JUNO_VEC4_F64_TAG
 JUNO_MODULE_RESULT(JUNO_VEC4F_RESULT_T, JUNO_VEC3_F64_T);
 
 /**
+ * @struct JUNO_VEC3_F32_SPH_TAG
+ * @brief 3D vector in spherical coordinates (double precision).
+ *
+ * Contains radius, azimuthal angle (phi), and polar angle (theta).
+ */
+typedef struct JUNO_VEC4_F32_SPH_TAG
+{
+    float r;     /**< Radial distance from the origin. */
+    float phi;   /**< Azimuthal angle in radians. */
+    float theta; /**< Sph angle in radians. */
+    float rho;   /**< Third angular coordinate. */
+} JUNO_VEC4_F32_SPH_T;
+
+/**
+ * @struct JUNO_VEC3_F32_CART_TAG
+ * @brief 3D vector in Cartesian coordinates (float precision).
+ *
+ * Contains x, y, and z components.
+ */
+typedef struct JUNO_VEC4_F32_CART_TAG
+{
+    float x; /**< X component. */
+    float y; /**< Y component. */
+    float z; /**< Z component. */
+    float w; /**< W component. */
+} JUNO_VEC4_F32_CART_T;
+
+/**
+ * @union JUNO_VEC3_F32_TAG
+ * @brief 3D vector union supporting Cartesian, spherical, and array access (float32 precision).
+ *
+ * - tCart: Cartesian form.
+ * - tSph: Spherical form.
+ * - arr: Raw component array [0]=x/r, [1]=y/phi, [2]=z/theta.
+ */
+typedef union JUNO_VEC4_F32_TAG
+{
+    JUNO_VEC4_F32_CART_T  tCart;   /**< Cartesian coordinates. */
+    JUNO_VEC4_F32_SPH_T   tSph;  /**< Spherical coordinates. */
+    float                 arr[4];  /**< Raw component array. */
+} JUNO_VEC4_F32_T;
+
+/**
+ * @typedef JUNO_VEC3_F64_SPH_RESULT_T
+ * @brief Result type for functions returning JUNO_VEC3_F64_SPH_T.
+ */
+JUNO_MODULE_RESULT(JUNO_VEC4_F32_SPH_RESULT_T, JUNO_VEC4_F32_SPH_T);
+
+/**
+ * @typedef JUNO_VEC3_F64_CART_RESULT_T
+ * @brief Result type for functions returning JUNO_VEC3_F64_CART_T.
+ */
+JUNO_MODULE_RESULT(JUNO_VEC4_F32_CART_RESULT_T, JUNO_VEC4_F32_CART_T);
+
+/**
+ * @typedef JUNO_VEC3_F32_RESULT_T
+ * @brief Result type for functions returning JUNO_VEC3_F64_T.
+ */
+JUNO_MODULE_RESULT(JUNO_VEC4_F32_RESULT_T, JUNO_VEC4_F32_T);
+
+/**
  * @struct JUNO_VEC4_I32_SPH_TAG
  * @brief 4D vector in hyperspherical coordinates (32-bit integer).
  *
@@ -397,6 +516,32 @@ typedef union JUNO_VEC4_I32_TAG
     int32_t               arr[4];  /**< Raw component array. */
 } JUNO_VEC4_I32_T;
 
+typedef struct JUNO_VECN_F64_TAG
+{
+    size_t N;
+    double arr[];
+} JUNO_VECN_F64_T;
+
+#define JUNO_VECN_F64_NEW(ptVecn, _N) \
+union tVecn##_U_TAG \
+{ \
+    JUNO_VECN_F64_T tHdr; \
+    unsigned char raw[sizeof(JUNO_VECN_F64_T) + _N * sizeof(double)]; \
+} u; u.tHdr.N = _N; \
+JUNO_VECN_F64_T *ptVecn = &u.tHdr;
+
+typedef struct JUNO_VECN_F32_TAG
+{
+    size_t N;
+    float arr[];
+} JUNO_VECN_F32_T;
+
+typedef struct JUNO_VECN_I32_TAG
+{
+    size_t N;
+    int32_t arr[];
+} JUNO_VECN_I32_T;
+
 /**
  * @typedef JUNO_VEC4_I32_SPH_RESULT_T
  * @brief Result type for functions returning JUNO_VEC4_I32_SPH_T.
@@ -428,7 +573,22 @@ typedef struct JUNO_M3X3_F64_TAG
  * @typedef JUNO_M3X3F_RESULT_T
  * @brief Result type for functions returning JUNO_M3X3_F64_T.
  */
-JUNO_MODULE_RESULT(JUNO_M3X3F_RESULT_T, JUNO_M3X3_F64_T);
+JUNO_MODULE_RESULT(JUNO_M3X3_F64_RESULT_T, JUNO_M3X3_F64_T);
+
+/**
+ * @struct JUNO_M3X3_F64_TAG
+ * @brief 3×3 matrix of float32-precision values.
+ */
+typedef struct JUNO_M3X3_F32_TAG
+{
+    float mat[3][3]; /**< Row-major 3×3 matrix. */
+} JUNO_M3X3_F32_T;
+
+/**
+ * @typedef JUNO_M3X3F_RESULT_T
+ * @brief Result type for functions returning JUNO_M3X3_F64_T.
+ */
+JUNO_MODULE_RESULT(JUNO_M3X3_F32_RESULT_T, JUNO_M3X3_F32_T);
 
 /**
  * @struct JUNO_M4X4_F64_TAG
@@ -444,6 +604,21 @@ typedef struct JUNO_M4X4_F64_TAG
  * @brief Result type for functions returning JUNO_M4X4_F64_T.
  */
 JUNO_MODULE_RESULT(JUNO_M4X4F_RESULT_T, JUNO_M4X4_F64_T);
+
+/**
+ * @struct JUNO_M3X3_F64_TAG
+ * @brief 3×3 matrix of float32-precision values.
+ */
+typedef struct JUNO_M4X4_F32_TAG
+{
+    float mat[4][4]; /**< Row-major 4×4 matrix. */
+} JUNO_M4X4_F32_T;
+
+/**
+ * @typedef JUNO_M3X3F_RESULT_T
+ * @brief Result type for functions returning JUNO_M3X3_F64_T.
+ */
+JUNO_MODULE_RESULT(JUNO_M4X4_F32_RESULT_T, JUNO_M4X4_F32_T);
 
 /**
  * @struct JUNO_M3X3_I32_TAG
@@ -491,6 +666,23 @@ typedef union JUNO_RQUAT_F64_TAG
     } tQuat;
     double quat[4]; /**< Raw quaternion array [s,i,j,k]. */
 } JUNO_RQUAT_F64_T;
+
+/**
+ * @union JUNO_RQUAT_F64_TAG
+ * @brief Right-handed quaternion (double precision).
+ *
+ * Can be accessed as individual components or raw array.
+ */
+typedef union JUNO_RQUAT_F32_TAG
+{
+    struct {
+        float s; /**< Scalar part. */
+        float i; /**< First vector part. */
+        float j; /**< Second vector part. */
+        float k; /**< Third vector part. */
+    } tQuat;
+    float quat[4]; /**< Raw quaternion array [s,i,j,k]. */
+} JUNO_RQUAT_F32_T;
 
 /**
  * @typedef JUNO_RQUATF_RESULT_T
