@@ -58,8 +58,5 @@ var searchData=
   ['juno_5fvec4_5ff64_5ftag_55',['JUNO_VEC4_F64_TAG',['../unionJUNO__VEC4__F64__TAG.html',1,'']]],
   ['juno_5fvec4_5fi32_5fcart_5ftag_56',['JUNO_VEC4_I32_CART_TAG',['../structJUNO__VEC4__I32__CART__TAG.html',1,'']]],
   ['juno_5fvec4_5fi32_5fsph_5ftag_57',['JUNO_VEC4_I32_SPH_TAG',['../structJUNO__VEC4__I32__SPH__TAG.html',1,'']]],
-  ['juno_5fvec4_5fi32_5ftag_58',['JUNO_VEC4_I32_TAG',['../unionJUNO__VEC4__I32__TAG.html',1,'']]],
-  ['juno_5fvecn_5ff32_5ftag_59',['JUNO_VECN_F32_TAG',['../structJUNO__VECN__F32__TAG.html',1,'']]],
-  ['juno_5fvecn_5ff64_5ftag_60',['JUNO_VECN_F64_TAG',['../structJUNO__VECN__F64__TAG.html',1,'']]],
-  ['juno_5fvecn_5fi32_5ftag_61',['JUNO_VECN_I32_TAG',['../structJUNO__VECN__I32__TAG.html',1,'']]]
+  ['juno_5fvec4_5fi32_5ftag_58',['JUNO_VEC4_I32_TAG',['../unionJUNO__VEC4__I32__TAG.html',1,'']]]
 ];

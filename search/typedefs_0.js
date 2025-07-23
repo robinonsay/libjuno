@@ -101,8 +101,5 @@ var searchData=
   ['juno_5fvec4_5ff64_5ft_98',['JUNO_VEC4_F64_T',['../juno__math__types_8h.html#adfacd6f75270309d15565129eee5bbb8',1,'juno_math_types.h']]],
   ['juno_5fvec4_5fi32_5fcart_5ft_99',['JUNO_VEC4_I32_CART_T',['../juno__math__types_8h.html#a008c3950ad234df9615d5e0643d91c4d',1,'juno_math_types.h']]],
   ['juno_5fvec4_5fi32_5fsph_5ft_100',['JUNO_VEC4_I32_SPH_T',['../juno__math__types_8h.html#a6fda234cd56a6dd9f72c9b66625903bc',1,'juno_math_types.h']]],
-  ['juno_5fvec4_5fi32_5ft_101',['JUNO_VEC4_I32_T',['../juno__math__types_8h.html#a0f652edb911268b4172394ff223d62f9',1,'juno_math_types.h']]],
-  ['juno_5fvecn_5ff32_5ft_102',['JUNO_VECN_F32_T',['../juno__math__types_8h.html#aaf1ce285f8e0633f4e9aef0c11ddc50b',1,'juno_math_types.h']]],
-  ['juno_5fvecn_5ff64_5ft_103',['JUNO_VECN_F64_T',['../juno__math__types_8h.html#a69aa22660f0d355e4f1012af6b891259',1,'juno_math_types.h']]],
-  ['juno_5fvecn_5fi32_5ft_104',['JUNO_VECN_I32_T',['../juno__math__types_8h.html#ad2dca622d9d37fea3ada93f714d0ac66',1,'juno_math_types.h']]]
+  ['juno_5fvec4_5fi32_5ft_101',['JUNO_VEC4_I32_T',['../juno__math__types_8h.html#a0f652edb911268b4172394ff223d62f9',1,'juno_math_types.h']]]
 ];

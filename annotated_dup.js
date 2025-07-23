@@ -58,8 +58,5 @@ var annotated_dup =
     [ "JUNO_VEC4_F64_TAG", "unionJUNO__VEC4__F64__TAG.html", "unionJUNO__VEC4__F64__TAG" ],
     [ "JUNO_VEC4_I32_CART_TAG", "structJUNO__VEC4__I32__CART__TAG.html", "structJUNO__VEC4__I32__CART__TAG" ],
     [ "JUNO_VEC4_I32_SPH_TAG", "structJUNO__VEC4__I32__SPH__TAG.html", "structJUNO__VEC4__I32__SPH__TAG" ],
-    [ "JUNO_VEC4_I32_TAG", "unionJUNO__VEC4__I32__TAG.html", "unionJUNO__VEC4__I32__TAG" ],
-    [ "JUNO_VECN_F32_TAG", "structJUNO__VECN__F32__TAG.html", "structJUNO__VECN__F32__TAG" ],
-    [ "JUNO_VECN_F64_TAG", "structJUNO__VECN__F64__TAG.html", "structJUNO__VECN__F64__TAG" ],
-    [ "JUNO_VECN_I32_TAG", "structJUNO__VECN__I32__TAG.html", "structJUNO__VECN__I32__TAG" ]
+    [ "JUNO_VEC4_I32_TAG", "unionJUNO__VEC4__I32__TAG.html", "unionJUNO__VEC4__I32__TAG" ]
 ];

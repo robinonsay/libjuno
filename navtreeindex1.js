@@ -1,9 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"macros_8h.html#abf729d00254f692443168dcdc098b5f1":[7,0,0,0,12,0],
-"macros_8h_source.html":[7,0,0,0,12],
-"map__api_8h.html":[7,0,0,0,6,0],
-"map__api_8h.html#a0a2a0fd0a6e060a0e5e00c947e956642":[7,0,0,0,6,0,5],
 "map__api_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27":[7,0,0,0,6,0,2],
 "map__api_8h.html#a91c31ed4effb59d959645fb13dc4bb0f":[7,0,0,0,6,0,1],
 "map__api_8h.html#aa6d1d29e288688f93f240ec104e9b92d":[7,0,0,0,6,0,4],
@@ -249,5 +245,9 @@ var NAVTREEINDEX1 =
 "structJUNO__MEMORY__ALLOC__API__TAG.html#afd2e5681c55ecd4df9571d760024502a":[6,0,18,1],
 "structJUNO__MEMORY__BLOCK__METADATA__TAG.html":[6,0,19],
 "structJUNO__MEMORY__BLOCK__METADATA__TAG.html#ae9c03435c5af618a1615d32f930376c3":[6,0,19,0],
-"structJUNO__MEMORY__TAG.html":[6,0,20]
+"structJUNO__MEMORY__TAG.html":[6,0,20],
+"structJUNO__MEMORY__TAG.html#a410362e1eb4aa6c8ace8c6f369c6fe2a":[6,0,20,1],
+"structJUNO__MEMORY__TAG.html#a6a3a86510e2ff84dadb57446ddbe16f2":[6,0,20,0],
+"structJUNO__MEMORY__TAG.html#a981c345c95eba1755f12eeb37a0ef724":[6,0,20,2],
+"structJUNO__MSG__API__TAG.html":[6,0,21]
 };
