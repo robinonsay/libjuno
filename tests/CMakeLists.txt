@@ -8,7 +8,7 @@ foreach(file ${JUNO_TEST_SRCS})
     # Get the file name without extension (NAME_WE stands for Name Without Extension)
     get_filename_component(test_name ${file} NAME_WE)
     add_executable(${test_name} ${file})
-    target_link_libraries(${test_name} ${PROJECT_NAME} ${JUNO_POSIX_TARGET} unity)
+    target_link_libraries(${test_name} ${PROJECT_NAME} ${JUNO_POSIX_TARGET} unity m)
     add_test(${test_name} ${test_name})
 endforeach()
 

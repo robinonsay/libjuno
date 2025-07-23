@@ -1,8 +1,6 @@
 #ifndef JUNO_CONST_H
 #define JUNO_CONST_H
 
-#include "juno/module.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
