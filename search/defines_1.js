@@ -31,7 +31,11 @@ var searchData=
   ['juno_5fmodule_5fsuper_28',['JUNO_MODULE_SUPER',['../module_8h.html#af98d3f7fa92446d974d322bcfe55b284',1,'module.h']]],
   ['juno_5fnew_5fref_29',['JUNO_NEW_REF',['../memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6',1,'memory_api.h']]],
   ['juno_5fpi_30',['JUNO_PI',['../juno__math__constants_8h.html#a9ed43157bb9cdb16c2a2ddb8b27404ae',1,'juno_math_constants.h']]],
-  ['juno_5fquart_5fpi_31',['JUNO_QUART_PI',['../juno__math__constants_8h.html#a29155b38331e7716e3325c13674dd6e7',1,'juno_math_constants.h']]],
-  ['juno_5fref_32',['JUNO_REF',['../memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_api.h']]],
-  ['juno_5fzip_5fcrc_5finit_33',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
+  ['juno_5fpow2_31',['Juno_Pow2',['../juno__math_8h.html#ae4133d215d5b3646d9d885d0dc209ee8',1,'juno_math.h']]],
+  ['juno_5fpow3_32',['Juno_Pow3',['../juno__math_8h.html#a17696ae9ffb819caad241756670f0d90',1,'juno_math.h']]],
+  ['juno_5fpow4_33',['Juno_Pow4',['../juno__math_8h.html#a5dc32a1fa1d7bed7872b17d8d08428a7',1,'juno_math.h']]],
+  ['juno_5fquart_5fpi_34',['JUNO_QUART_PI',['../juno__math__constants_8h.html#a29155b38331e7716e3325c13674dd6e7',1,'juno_math_constants.h']]],
+  ['juno_5fref_35',['JUNO_REF',['../memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_api.h']]],
+  ['juno_5fvecn_5ff64_5fnew_36',['JUNO_VECN_F64_NEW',['../juno__math__types_8h.html#a91daab6eb36dadbfc4c4e4fb986ee999',1,'juno_math_types.h']]],
+  ['juno_5fzip_5fcrc_5finit_37',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
 ];

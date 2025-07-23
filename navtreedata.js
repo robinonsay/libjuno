@@ -150,8 +150,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md52",
-"structJUNO__TIME__API__TAG.html"
+"macros_8h.html#abf729d00254f692443168dcdc098b5f1",
+"structJUNO__MEMORY__TAG.html#a410362e1eb4aa6c8ace8c6f369c6fe2a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

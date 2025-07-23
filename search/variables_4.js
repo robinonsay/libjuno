@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['i_0',['i',['../unionJUNO__RQUAT__F64__TAG.html#af89255593c89569f356f412d645681ea',1,'JUNO_RQUAT_F64_TAG::i'],['../unionJUNO__RQUAT__I32__TAG.html#a7259e53f404efdeb28e75bf80d4353ae',1,'JUNO_RQUAT_I32_TAG::i']]],
+  ['i_0',['i',['../unionJUNO__RQUAT__F64__TAG.html#af89255593c89569f356f412d645681ea',1,'JUNO_RQUAT_F64_TAG::i'],['../unionJUNO__RQUAT__F32__TAG.html#a77ea79f8a0587efc60f49ead63c5316c',1,'JUNO_RQUAT_F32_TAG::i'],['../unionJUNO__RQUAT__I32__TAG.html#a7259e53f404efdeb28e75bf80d4353ae',1,'JUNO_RQUAT_I32_TAG::i']]],
   ['iaddr_1',['iAddr',['../structJUNO__I2C__IO__MSG__HDR__TAG.html#a97665a31ee04f804c562a36de4663c94',1,'JUNO_I2C_IO_MSG_HDR_TAG']]],
   ['init_2',['Init',['../structJUNO__STRING__API__TAG.html#a41e18c7a3cb5dc08c7dda7624fdac50b',1,'JUNO_STRING_API_TAG']]],
   ['irefcount_3',['iRefCount',['../structJUNO__MEMORY__TAG.html#a6a3a86510e2ff84dadb57446ddbe16f2',1,'JUNO_MEMORY_TAG']]],

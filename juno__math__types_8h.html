@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.39.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.40.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -130,6 +130,7 @@ $(document).ready(function(){initNavTree('juno__math__types_8h.html',''); initRe
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
+<code>#include &lt;stddef.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for juno_math_types.h:</div>
@@ -154,6 +155,12 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC2__F64__TAG.html">JUNO_VEC2_F64_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D vector union supporting Cartesian, polar, and array access (double precision).  <a href="unionJUNO__VEC2__F64__TAG.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VEC2__F32__SPH__TAG.html">JUNO_VEC2_F32_SPH_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VEC2__F32__CART__TAG.html">JUNO_VEC2_F32_CART_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC2__F32__TAG.html">JUNO_VEC2_F32_TAG</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VEC2__I32__SPH__TAG.html">JUNO_VEC2_I32_SPH_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D vector in polar coordinates (32-bit integer).  <a href="structJUNO__VEC2__I32__SPH__TAG.html#details">More...</a><br /></td></tr>
@@ -200,6 +207,12 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC4__F64__TAG.html">JUNO_VEC4_F64_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">4D vector union supporting Cartesian, hyperspherical, and array access (double precision).  <a href="unionJUNO__VEC4__F64__TAG.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VEC4__F32__SPH__TAG.html">JUNO_VEC4_F32_SPH_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VEC4__F32__CART__TAG.html">JUNO_VEC4_F32_CART_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC4__F32__TAG.html">JUNO_VEC4_F32_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VEC4__I32__SPH__TAG.html">JUNO_VEC4_I32_SPH_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">4D vector in hyperspherical coordinates (32-bit integer).  <a href="structJUNO__VEC4__I32__SPH__TAG.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,11 +222,21 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC4__I32__TAG.html">JUNO_VEC4_I32_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">4D vector union supporting Cartesian, hyperspherical, and array access (32-bit integer).  <a href="unionJUNO__VEC4__I32__TAG.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VECN__F64__TAG.html">JUNO_VECN_F64_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VECN__F32__TAG.html">JUNO_VECN_F32_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__VECN__I32__TAG.html">JUNO_VECN_I32_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__M3X3__F64__TAG.html">JUNO_M3X3_F64_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">3×3 matrix of double-precision values.  <a href="structJUNO__M3X3__F64__TAG.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__M3X3__F32__TAG.html">JUNO_M3X3_F32_TAG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__M4X4__F64__TAG.html">JUNO_M4X4_F64_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">4×4 matrix of double-precision values.  <a href="structJUNO__M4X4__F64__TAG.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__M4X4__F32__TAG.html">JUNO_M4X4_F32_TAG</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__M3X3__I32__TAG.html">JUNO_M3X3_I32_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">3×3 matrix of 32-bit integers.  <a href="structJUNO__M3X3__I32__TAG.html#details">More...</a><br /></td></tr>
@@ -223,6 +246,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__RQUAT__F64__TAG.html">JUNO_RQUAT_F64_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right-handed quaternion (double precision).  <a href="unionJUNO__RQUAT__F64__TAG.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__RQUAT__F32__TAG.html">JUNO_RQUAT_F32_TAG</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__RQUAT__I32__TAG.html">JUNO_RQUAT_I32_TAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right-handed quaternion (32-bit integer).  <a href="unionJUNO__RQUAT__I32__TAG.html#details">More...</a><br /></td></tr>
@@ -234,6 +259,8 @@ Macros</h2></td></tr>
 <tr class="separator:abfafdf8a5f7e08cbc56b3592486435e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1a3af1c779411fdc4d474570c6c06ac" id="r_ae1a3af1c779411fdc4d474570c6c06ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#ae1a3af1c779411fdc4d474570c6c06ac">JUNO_FLOAT_TYPE</a>&#160;&#160;&#160;double</td></tr>
 <tr class="separator:ae1a3af1c779411fdc4d474570c6c06ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91daab6eb36dadbfc4c4e4fb986ee999" id="r_a91daab6eb36dadbfc4c4e4fb986ee999"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a91daab6eb36dadbfc4c4e4fb986ee999">JUNO_VECN_F64_NEW</a>(ptVecn,  _N)</td></tr>
+<tr class="separator:a91daab6eb36dadbfc4c4e4fb986ee999"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -243,6 +270,12 @@ Typedefs</h2></td></tr>
 <tr class="separator:a01656bf0ff40c168e401a5eb6a5b3bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4288c3bb6e4134c206e9b8ba02af227" id="r_ae4288c3bb6e4134c206e9b8ba02af227"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__VEC2__F64__TAG.html">JUNO_VEC2_F64_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a></td></tr>
 <tr class="separator:ae4288c3bb6e4134c206e9b8ba02af227"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ec0089da328e42df918b949b8db7939" id="r_a0ec0089da328e42df918b949b8db7939"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC2__F32__SPH__TAG.html">JUNO_VEC2_F32_SPH_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a0ec0089da328e42df918b949b8db7939">JUNO_VEC2_F32_SPH_T</a></td></tr>
+<tr class="separator:a0ec0089da328e42df918b949b8db7939"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a084add95bd18e4af52fe46db869fcbeb" id="r_a084add95bd18e4af52fe46db869fcbeb"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC2__F32__CART__TAG.html">JUNO_VEC2_F32_CART_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a084add95bd18e4af52fe46db869fcbeb">JUNO_VEC2_F32_CART_T</a></td></tr>
+<tr class="separator:a084add95bd18e4af52fe46db869fcbeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4770ec6ba6a807a32bada62bf294cf6" id="r_af4770ec6ba6a807a32bada62bf294cf6"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__VEC2__F32__TAG.html">JUNO_VEC2_F32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a></td></tr>
+<tr class="separator:af4770ec6ba6a807a32bada62bf294cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4066f5d873a511688a60d96f73a53be6" id="r_a4066f5d873a511688a60d96f73a53be6"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC2__I32__SPH__TAG.html">JUNO_VEC2_I32_SPH_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a4066f5d873a511688a60d96f73a53be6">JUNO_VEC2_I32_SPH_T</a></td></tr>
 <tr class="separator:a4066f5d873a511688a60d96f73a53be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e996a994d55f050d524d433ee88a599" id="r_a8e996a994d55f050d524d433ee88a599"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC2__I32__CART__TAG.html">JUNO_VEC2_I32_CART_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a8e996a994d55f050d524d433ee88a599">JUNO_VEC2_I32_CART_T</a></td></tr>
@@ -273,22 +306,40 @@ Typedefs</h2></td></tr>
 <tr class="separator:a4974a232ff73f250b38951796b65caba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfacd6f75270309d15565129eee5bbb8" id="r_adfacd6f75270309d15565129eee5bbb8"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__VEC4__F64__TAG.html">JUNO_VEC4_F64_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#adfacd6f75270309d15565129eee5bbb8">JUNO_VEC4_F64_T</a></td></tr>
 <tr class="separator:adfacd6f75270309d15565129eee5bbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb7925f5504f43ee24e06bbad7a68671" id="r_abb7925f5504f43ee24e06bbad7a68671"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC4__F32__SPH__TAG.html">JUNO_VEC4_F32_SPH_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#abb7925f5504f43ee24e06bbad7a68671">JUNO_VEC4_F32_SPH_T</a></td></tr>
+<tr class="separator:abb7925f5504f43ee24e06bbad7a68671"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45abfda09c6ad6da109a293ba9bc478a" id="r_a45abfda09c6ad6da109a293ba9bc478a"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC4__F32__CART__TAG.html">JUNO_VEC4_F32_CART_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a45abfda09c6ad6da109a293ba9bc478a">JUNO_VEC4_F32_CART_T</a></td></tr>
+<tr class="separator:a45abfda09c6ad6da109a293ba9bc478a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa0d824865a16233649ee457fe71c727" id="r_aaa0d824865a16233649ee457fe71c727"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__VEC4__F32__TAG.html">JUNO_VEC4_F32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#aaa0d824865a16233649ee457fe71c727">JUNO_VEC4_F32_T</a></td></tr>
+<tr class="separator:aaa0d824865a16233649ee457fe71c727"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fda234cd56a6dd9f72c9b66625903bc" id="r_a6fda234cd56a6dd9f72c9b66625903bc"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC4__I32__SPH__TAG.html">JUNO_VEC4_I32_SPH_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a6fda234cd56a6dd9f72c9b66625903bc">JUNO_VEC4_I32_SPH_T</a></td></tr>
 <tr class="separator:a6fda234cd56a6dd9f72c9b66625903bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a008c3950ad234df9615d5e0643d91c4d" id="r_a008c3950ad234df9615d5e0643d91c4d"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VEC4__I32__CART__TAG.html">JUNO_VEC4_I32_CART_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a008c3950ad234df9615d5e0643d91c4d">JUNO_VEC4_I32_CART_T</a></td></tr>
 <tr class="separator:a008c3950ad234df9615d5e0643d91c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f652edb911268b4172394ff223d62f9" id="r_a0f652edb911268b4172394ff223d62f9"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__VEC4__I32__TAG.html">JUNO_VEC4_I32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a0f652edb911268b4172394ff223d62f9">JUNO_VEC4_I32_T</a></td></tr>
 <tr class="separator:a0f652edb911268b4172394ff223d62f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69aa22660f0d355e4f1012af6b891259" id="r_a69aa22660f0d355e4f1012af6b891259"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VECN__F64__TAG.html">JUNO_VECN_F64_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a69aa22660f0d355e4f1012af6b891259">JUNO_VECN_F64_T</a></td></tr>
+<tr class="separator:a69aa22660f0d355e4f1012af6b891259"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf1ce285f8e0633f4e9aef0c11ddc50b" id="r_aaf1ce285f8e0633f4e9aef0c11ddc50b"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VECN__F32__TAG.html">JUNO_VECN_F32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#aaf1ce285f8e0633f4e9aef0c11ddc50b">JUNO_VECN_F32_T</a></td></tr>
+<tr class="separator:aaf1ce285f8e0633f4e9aef0c11ddc50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2dca622d9d37fea3ada93f714d0ac66" id="r_ad2dca622d9d37fea3ada93f714d0ac66"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__VECN__I32__TAG.html">JUNO_VECN_I32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#ad2dca622d9d37fea3ada93f714d0ac66">JUNO_VECN_I32_T</a></td></tr>
+<tr class="separator:ad2dca622d9d37fea3ada93f714d0ac66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7684d1e566938c80b400838c4c50a7c1" id="r_a7684d1e566938c80b400838c4c50a7c1"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__M3X3__F64__TAG.html">JUNO_M3X3_F64_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a7684d1e566938c80b400838c4c50a7c1">JUNO_M3X3_F64_T</a></td></tr>
 <tr class="separator:a7684d1e566938c80b400838c4c50a7c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ff30d7ee545902f39f11ea18743ee80" id="r_a3ff30d7ee545902f39f11ea18743ee80"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__M3X3__F32__TAG.html">JUNO_M3X3_F32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a3ff30d7ee545902f39f11ea18743ee80">JUNO_M3X3_F32_T</a></td></tr>
+<tr class="separator:a3ff30d7ee545902f39f11ea18743ee80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8aac8dbaac0cb1bb77b00350524a3b4" id="r_ac8aac8dbaac0cb1bb77b00350524a3b4"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__M4X4__F64__TAG.html">JUNO_M4X4_F64_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#ac8aac8dbaac0cb1bb77b00350524a3b4">JUNO_M4X4_F64_T</a></td></tr>
 <tr class="separator:ac8aac8dbaac0cb1bb77b00350524a3b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57e3eef457c92ef0149e80a7b9c16d67" id="r_a57e3eef457c92ef0149e80a7b9c16d67"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__M4X4__F32__TAG.html">JUNO_M4X4_F32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a57e3eef457c92ef0149e80a7b9c16d67">JUNO_M4X4_F32_T</a></td></tr>
+<tr class="separator:a57e3eef457c92ef0149e80a7b9c16d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fb33cb37f9d4579aae76647266c2b78" id="r_a3fb33cb37f9d4579aae76647266c2b78"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__M3X3__I32__TAG.html">JUNO_M3X3_I32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a3fb33cb37f9d4579aae76647266c2b78">JUNO_M3X3_I32_T</a></td></tr>
 <tr class="separator:a3fb33cb37f9d4579aae76647266c2b78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ba434af9cf9cba5ecf3cb465e001040" id="r_a3ba434af9cf9cba5ecf3cb465e001040"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__M4X4__I32__TAG.html">JUNO_M4X4_I32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a3ba434af9cf9cba5ecf3cb465e001040">JUNO_M4X4_I32_T</a></td></tr>
 <tr class="separator:a3ba434af9cf9cba5ecf3cb465e001040"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4965912e9eaf6e122916e3ea4c0fd25" id="r_af4965912e9eaf6e122916e3ea4c0fd25"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__RQUAT__F64__TAG.html">JUNO_RQUAT_F64_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a></td></tr>
 <tr class="separator:af4965912e9eaf6e122916e3ea4c0fd25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15de79ef9da2867b86236984ba43e79c" id="r_a15de79ef9da2867b86236984ba43e79c"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__RQUAT__F32__TAG.html">JUNO_RQUAT_F32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a15de79ef9da2867b86236984ba43e79c">JUNO_RQUAT_F32_T</a></td></tr>
+<tr class="separator:a15de79ef9da2867b86236984ba43e79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb3e26e1aac30b0a3c2787af4a8d5027" id="r_abb3e26e1aac30b0a3c2787af4a8d5027"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionJUNO__RQUAT__I32__TAG.html">JUNO_RQUAT_I32_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#abb3e26e1aac30b0a3c2787af4a8d5027">JUNO_RQUAT_I32_T</a></td></tr>
 <tr class="separator:abb3e26e1aac30b0a3c2787af4a8d5027"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -300,6 +351,12 @@ Functions</h2></td></tr>
 <tr class="separator:a3a945dfe33a68d05ac892322aa8845f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1db14da90ccf509363335a522d3a5103" id="r_a1db14da90ccf509363335a522d3a5103"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a1db14da90ccf509363335a522d3a5103">JUNO_MODULE_RESULT</a> (JUNO_VEC2_F64_RESULT_T, <a class="el" href="juno__math__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a>)</td></tr>
 <tr class="separator:a1db14da90ccf509363335a522d3a5103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19b4d5627087113173f678b5393f4132" id="r_a19b4d5627087113173f678b5393f4132"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a19b4d5627087113173f678b5393f4132">JUNO_MODULE_RESULT</a> (JUNO_VEC2_F32_SPH_RESULT_T, <a class="el" href="juno__math__types_8h.html#a0ec0089da328e42df918b949b8db7939">JUNO_VEC2_F32_SPH_T</a>)</td></tr>
+<tr class="separator:a19b4d5627087113173f678b5393f4132"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2079e464ad1c28777419254772802c01" id="r_a2079e464ad1c28777419254772802c01"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a2079e464ad1c28777419254772802c01">JUNO_MODULE_RESULT</a> (JUNO_VEC2_F32_CART_RESULT_T, <a class="el" href="juno__math__types_8h.html#a084add95bd18e4af52fe46db869fcbeb">JUNO_VEC2_F32_CART_T</a>)</td></tr>
+<tr class="separator:a2079e464ad1c28777419254772802c01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72148c02ff553de15ec21576a5041e78" id="r_a72148c02ff553de15ec21576a5041e78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a72148c02ff553de15ec21576a5041e78">JUNO_MODULE_RESULT</a> (JUNO_VEC2_F32_RESULT_T, <a class="el" href="juno__math__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a>)</td></tr>
+<tr class="separator:a72148c02ff553de15ec21576a5041e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd0ff6ca1b51bf9d3a9af9103dd7696" id="r_a5dd0ff6ca1b51bf9d3a9af9103dd7696"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a5dd0ff6ca1b51bf9d3a9af9103dd7696">JUNO_MODULE_RESULT</a> (JUNO_VEC2_I32_SPH_RESULT_T, <a class="el" href="juno__math__types_8h.html#a4066f5d873a511688a60d96f73a53be6">JUNO_VEC2_I32_SPH_T</a>)</td></tr>
 <tr class="separator:a5dd0ff6ca1b51bf9d3a9af9103dd7696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a03690cb76d65a73c05b4a401d83806" id="r_a8a03690cb76d65a73c05b4a401d83806"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a8a03690cb76d65a73c05b4a401d83806">JUNO_MODULE_RESULT</a> (JUNO_VEC2_I32_CART_RESULT_T, <a class="el" href="juno__math__types_8h.html#a8e996a994d55f050d524d433ee88a599">JUNO_VEC2_I32_CART_T</a>)</td></tr>
@@ -326,16 +383,26 @@ Functions</h2></td></tr>
 <tr class="separator:a1b5a2e061ed00a5d11ca052fe77e71e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca3227014d2de1a216e45133946b3807" id="r_aca3227014d2de1a216e45133946b3807"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#aca3227014d2de1a216e45133946b3807">JUNO_MODULE_RESULT</a> (JUNO_VEC4F_RESULT_T, <a class="el" href="juno__math__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a>)</td></tr>
 <tr class="separator:aca3227014d2de1a216e45133946b3807"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82c1fcc69557d9b223e166a5ebbe1a18" id="r_a82c1fcc69557d9b223e166a5ebbe1a18"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a82c1fcc69557d9b223e166a5ebbe1a18">JUNO_MODULE_RESULT</a> (JUNO_VEC4_F32_SPH_RESULT_T, <a class="el" href="juno__math__types_8h.html#abb7925f5504f43ee24e06bbad7a68671">JUNO_VEC4_F32_SPH_T</a>)</td></tr>
+<tr class="separator:a82c1fcc69557d9b223e166a5ebbe1a18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abddcd975c681600b2e4266e7da8dbafb" id="r_abddcd975c681600b2e4266e7da8dbafb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#abddcd975c681600b2e4266e7da8dbafb">JUNO_MODULE_RESULT</a> (JUNO_VEC4_F32_CART_RESULT_T, <a class="el" href="juno__math__types_8h.html#a45abfda09c6ad6da109a293ba9bc478a">JUNO_VEC4_F32_CART_T</a>)</td></tr>
+<tr class="separator:abddcd975c681600b2e4266e7da8dbafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b64ddd3fbe5f00d04a6e4ed33b57a2b" id="r_a3b64ddd3fbe5f00d04a6e4ed33b57a2b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a3b64ddd3fbe5f00d04a6e4ed33b57a2b">JUNO_MODULE_RESULT</a> (JUNO_VEC4_F32_RESULT_T, <a class="el" href="juno__math__types_8h.html#aaa0d824865a16233649ee457fe71c727">JUNO_VEC4_F32_T</a>)</td></tr>
+<tr class="separator:a3b64ddd3fbe5f00d04a6e4ed33b57a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea82f6b3c8490798211db773ad69e851" id="r_aea82f6b3c8490798211db773ad69e851"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#aea82f6b3c8490798211db773ad69e851">JUNO_MODULE_RESULT</a> (JUNO_VEC4_I32_SPH_RESULT_T, <a class="el" href="juno__math__types_8h.html#a6fda234cd56a6dd9f72c9b66625903bc">JUNO_VEC4_I32_SPH_T</a>)</td></tr>
 <tr class="separator:aea82f6b3c8490798211db773ad69e851"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2951938b223d0dd842d5c9650d8d5c2" id="r_aa2951938b223d0dd842d5c9650d8d5c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#aa2951938b223d0dd842d5c9650d8d5c2">JUNO_MODULE_RESULT</a> (JUNO_VEC4_I32_CART_RESULT_T, <a class="el" href="juno__math__types_8h.html#a008c3950ad234df9615d5e0643d91c4d">JUNO_VEC4_I32_CART_T</a>)</td></tr>
 <tr class="separator:aa2951938b223d0dd842d5c9650d8d5c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46d2f7503018a563633bee3cedc93a3f" id="r_a46d2f7503018a563633bee3cedc93a3f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a46d2f7503018a563633bee3cedc93a3f">JUNO_MODULE_RESULT</a> (JUNO_VEC4_I32_RESULT_T, <a class="el" href="juno__math__types_8h.html#a0f652edb911268b4172394ff223d62f9">JUNO_VEC4_I32_T</a>)</td></tr>
 <tr class="separator:a46d2f7503018a563633bee3cedc93a3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43783c4a34ef7c5edb37302a78a1a79d" id="r_a43783c4a34ef7c5edb37302a78a1a79d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a43783c4a34ef7c5edb37302a78a1a79d">JUNO_MODULE_RESULT</a> (JUNO_M3X3F_RESULT_T, <a class="el" href="juno__math__types_8h.html#a7684d1e566938c80b400838c4c50a7c1">JUNO_M3X3_F64_T</a>)</td></tr>
-<tr class="separator:a43783c4a34ef7c5edb37302a78a1a79d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77ae97fd35bab26f1d1f5d737c42810a" id="r_a77ae97fd35bab26f1d1f5d737c42810a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a77ae97fd35bab26f1d1f5d737c42810a">JUNO_MODULE_RESULT</a> (JUNO_M3X3_F64_RESULT_T, <a class="el" href="juno__math__types_8h.html#a7684d1e566938c80b400838c4c50a7c1">JUNO_M3X3_F64_T</a>)</td></tr>
+<tr class="separator:a77ae97fd35bab26f1d1f5d737c42810a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8b2aa924f8568202814125cf1c7680f" id="r_ac8b2aa924f8568202814125cf1c7680f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#ac8b2aa924f8568202814125cf1c7680f">JUNO_MODULE_RESULT</a> (JUNO_M3X3_F32_RESULT_T, <a class="el" href="juno__math__types_8h.html#a3ff30d7ee545902f39f11ea18743ee80">JUNO_M3X3_F32_T</a>)</td></tr>
+<tr class="separator:ac8b2aa924f8568202814125cf1c7680f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f1e8fd0c77dcece316d02f1185140e8" id="r_a2f1e8fd0c77dcece316d02f1185140e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a2f1e8fd0c77dcece316d02f1185140e8">JUNO_MODULE_RESULT</a> (JUNO_M4X4F_RESULT_T, <a class="el" href="juno__math__types_8h.html#ac8aac8dbaac0cb1bb77b00350524a3b4">JUNO_M4X4_F64_T</a>)</td></tr>
 <tr class="separator:a2f1e8fd0c77dcece316d02f1185140e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa357c48ba30d5d6c1719691fb70ff5b0" id="r_aa357c48ba30d5d6c1719691fb70ff5b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#aa357c48ba30d5d6c1719691fb70ff5b0">JUNO_MODULE_RESULT</a> (JUNO_M4X4_F32_RESULT_T, <a class="el" href="juno__math__types_8h.html#a57e3eef457c92ef0149e80a7b9c16d67">JUNO_M4X4_F32_T</a>)</td></tr>
+<tr class="separator:aa357c48ba30d5d6c1719691fb70ff5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3999b5381f5e1deb5fd28f0a464cf911" id="r_a3999b5381f5e1deb5fd28f0a464cf911"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a3999b5381f5e1deb5fd28f0a464cf911">JUNO_MODULE_RESULT</a> (JUNO_M3X3I_RESULT_T, <a class="el" href="juno__math__types_8h.html#a3fb33cb37f9d4579aae76647266c2b78">JUNO_M3X3_I32_T</a>)</td></tr>
 <tr class="separator:a3999b5381f5e1deb5fd28f0a464cf911"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68b243ef03f6e03958cdeedbc1782e6b" id="r_a68b243ef03f6e03958cdeedbc1782e6b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math__types_8h.html#a68b243ef03f6e03958cdeedbc1782e6b">JUNO_MODULE_RESULT</a> (JUNO_M4X4I_RESULT_T, <a class="el" href="juno__math__types_8h.html#a3ba434af9cf9cba5ecf3cb465e001040">JUNO_M4X4_I32_T</a>)</td></tr>
@@ -374,7 +441,58 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a91daab6eb36dadbfc4c4e4fb986ee999" name="a91daab6eb36dadbfc4c4e4fb986ee999"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91daab6eb36dadbfc4c4e4fb986ee999">&#9670;&#160;</a></span>JUNO_VECN_F64_NEW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_VECN_F64_NEW</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">ptVecn, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">_N&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">union </span>tVecn##_U_TAG \</div>
+<div class="line">{ \</div>
+<div class="line">    <a class="code hl_struct" href="structJUNO__VECN__F64__TAG.html">JUNO_VECN_F64_T</a> tHdr; \</div>
+<div class="line">    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> raw[<span class="keyword">sizeof</span>(<a class="code hl_typedef" href="juno__math__types_8h.html#a69aa22660f0d355e4f1012af6b891259">JUNO_VECN_F64_T</a>) + _N * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>)]; \</div>
+<div class="line">} u; u.tHdr.<a class="code hl_variable" href="structJUNO__VECN__F64__TAG.html#a098981006c8ca2734cc5e2bd458a4956">N</a> = _N; \</div>
+<div class="line"><a class="code hl_struct" href="structJUNO__VECN__F64__TAG.html">JUNO_VECN_F64_T</a> *ptVecn = &amp;u.tHdr;</div>
+<div class="ttc" id="ajuno__math__types_8h_html_a69aa22660f0d355e4f1012af6b891259"><div class="ttname"><a href="juno__math__types_8h.html#a69aa22660f0d355e4f1012af6b891259">JUNO_VECN_F64_T</a></div><div class="ttdeci">struct JUNO_VECN_F64_TAG JUNO_VECN_F64_T</div></div>
+<div class="ttc" id="astructJUNO__VECN__F64__TAG_html"><div class="ttname"><a href="structJUNO__VECN__F64__TAG.html">JUNO_VECN_F64_TAG</a></div><div class="ttdef"><b>Definition</b> juno_math_types.h:520</div></div>
+<div class="ttc" id="astructJUNO__VECN__F64__TAG_html_a098981006c8ca2734cc5e2bd458a4956"><div class="ttname"><a href="structJUNO__VECN__F64__TAG.html#a098981006c8ca2734cc5e2bd458a4956">JUNO_VECN_F64_TAG::N</a></div><div class="ttdeci">size_t N</div><div class="ttdef"><b>Definition</b> juno_math_types.h:521</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="a3ff30d7ee545902f39f11ea18743ee80" name="a3ff30d7ee545902f39f11ea18743ee80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ff30d7ee545902f39f11ea18743ee80">&#9670;&#160;</a></span>JUNO_M3X3_F32_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__M3X3__F32__TAG.html">JUNO_M3X3_F32_TAG</a> <a class="el" href="juno__math__types_8h.html#a3ff30d7ee545902f39f11ea18743ee80">JUNO_M3X3_F32_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7684d1e566938c80b400838c4c50a7c1" name="a7684d1e566938c80b400838c4c50a7c1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7684d1e566938c80b400838c4c50a7c1">&#9670;&#160;</a></span>JUNO_M3X3_F64_T</h2>
 
@@ -397,6 +515,20 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">typedef struct <a class="el" href="structJUNO__M3X3__I32__TAG.html">JUNO_M3X3_I32_TAG</a> <a class="el" href="juno__math__types_8h.html#a3fb33cb37f9d4579aae76647266c2b78">JUNO_M3X3_I32_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a57e3eef457c92ef0149e80a7b9c16d67" name="a57e3eef457c92ef0149e80a7b9c16d67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57e3eef457c92ef0149e80a7b9c16d67">&#9670;&#160;</a></span>JUNO_M4X4_F32_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__M4X4__F32__TAG.html">JUNO_M4X4_F32_TAG</a> <a class="el" href="juno__math__types_8h.html#a57e3eef457c92ef0149e80a7b9c16d67">JUNO_M4X4_F32_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -431,6 +563,20 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a15de79ef9da2867b86236984ba43e79c" name="a15de79ef9da2867b86236984ba43e79c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15de79ef9da2867b86236984ba43e79c">&#9670;&#160;</a></span>JUNO_RQUAT_F32_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef union <a class="el" href="unionJUNO__RQUAT__F32__TAG.html">JUNO_RQUAT_F32_TAG</a> <a class="el" href="juno__math__types_8h.html#a15de79ef9da2867b86236984ba43e79c">JUNO_RQUAT_F32_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af4965912e9eaf6e122916e3ea4c0fd25" name="af4965912e9eaf6e122916e3ea4c0fd25"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4965912e9eaf6e122916e3ea4c0fd25">&#9670;&#160;</a></span>JUNO_RQUAT_F64_T</h2>
 
@@ -453,6 +599,48 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">typedef union <a class="el" href="unionJUNO__RQUAT__I32__TAG.html">JUNO_RQUAT_I32_TAG</a> <a class="el" href="juno__math__types_8h.html#abb3e26e1aac30b0a3c2787af4a8d5027">JUNO_RQUAT_I32_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a084add95bd18e4af52fe46db869fcbeb" name="a084add95bd18e4af52fe46db869fcbeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a084add95bd18e4af52fe46db869fcbeb">&#9670;&#160;</a></span>JUNO_VEC2_F32_CART_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__VEC2__F32__CART__TAG.html">JUNO_VEC2_F32_CART_TAG</a> <a class="el" href="juno__math__types_8h.html#a084add95bd18e4af52fe46db869fcbeb">JUNO_VEC2_F32_CART_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ec0089da328e42df918b949b8db7939" name="a0ec0089da328e42df918b949b8db7939"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ec0089da328e42df918b949b8db7939">&#9670;&#160;</a></span>JUNO_VEC2_F32_SPH_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__VEC2__F32__SPH__TAG.html">JUNO_VEC2_F32_SPH_TAG</a> <a class="el" href="juno__math__types_8h.html#a0ec0089da328e42df918b949b8db7939">JUNO_VEC2_F32_SPH_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af4770ec6ba6a807a32bada62bf294cf6" name="af4770ec6ba6a807a32bada62bf294cf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4770ec6ba6a807a32bada62bf294cf6">&#9670;&#160;</a></span>JUNO_VEC2_F32_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef union <a class="el" href="unionJUNO__VEC2__F32__TAG.html">JUNO_VEC2_F32_TAG</a> <a class="el" href="juno__math__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -669,6 +857,48 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a45abfda09c6ad6da109a293ba9bc478a" name="a45abfda09c6ad6da109a293ba9bc478a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45abfda09c6ad6da109a293ba9bc478a">&#9670;&#160;</a></span>JUNO_VEC4_F32_CART_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__VEC4__F32__CART__TAG.html">JUNO_VEC4_F32_CART_TAG</a> <a class="el" href="juno__math__types_8h.html#a45abfda09c6ad6da109a293ba9bc478a">JUNO_VEC4_F32_CART_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb7925f5504f43ee24e06bbad7a68671" name="abb7925f5504f43ee24e06bbad7a68671"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb7925f5504f43ee24e06bbad7a68671">&#9670;&#160;</a></span>JUNO_VEC4_F32_SPH_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__VEC4__F32__SPH__TAG.html">JUNO_VEC4_F32_SPH_TAG</a> <a class="el" href="juno__math__types_8h.html#abb7925f5504f43ee24e06bbad7a68671">JUNO_VEC4_F32_SPH_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaa0d824865a16233649ee457fe71c727" name="aaa0d824865a16233649ee457fe71c727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa0d824865a16233649ee457fe71c727">&#9670;&#160;</a></span>JUNO_VEC4_F32_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef union <a class="el" href="unionJUNO__VEC4__F32__TAG.html">JUNO_VEC4_F32_TAG</a> <a class="el" href="juno__math__types_8h.html#aaa0d824865a16233649ee457fe71c727">JUNO_VEC4_F32_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4974a232ff73f250b38951796b65caba" name="a4974a232ff73f250b38951796b65caba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4974a232ff73f250b38951796b65caba">&#9670;&#160;</a></span>JUNO_VEC4_F64_CART_T</h2>
 
@@ -753,9 +983,51 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aaf1ce285f8e0633f4e9aef0c11ddc50b" name="aaf1ce285f8e0633f4e9aef0c11ddc50b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf1ce285f8e0633f4e9aef0c11ddc50b">&#9670;&#160;</a></span>JUNO_VECN_F32_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__VECN__F32__TAG.html">JUNO_VECN_F32_TAG</a> <a class="el" href="juno__math__types_8h.html#aaf1ce285f8e0633f4e9aef0c11ddc50b">JUNO_VECN_F32_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a69aa22660f0d355e4f1012af6b891259" name="a69aa22660f0d355e4f1012af6b891259"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69aa22660f0d355e4f1012af6b891259">&#9670;&#160;</a></span>JUNO_VECN_F64_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__VECN__F64__TAG.html">JUNO_VECN_F64_TAG</a> <a class="el" href="juno__math__types_8h.html#a69aa22660f0d355e4f1012af6b891259">JUNO_VECN_F64_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2dca622d9d37fea3ada93f714d0ac66" name="ad2dca622d9d37fea3ada93f714d0ac66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2dca622d9d37fea3ada93f714d0ac66">&#9670;&#160;</a></span>JUNO_VECN_I32_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structJUNO__VECN__I32__TAG.html">JUNO_VECN_I32_TAG</a> <a class="el" href="juno__math__types_8h.html#ad2dca622d9d37fea3ada93f714d0ac66">JUNO_VECN_I32_T</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a43783c4a34ef7c5edb37302a78a1a79d" name="a43783c4a34ef7c5edb37302a78a1a79d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43783c4a34ef7c5edb37302a78a1a79d">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[1/25]</span></h2>
+<a id="ac8b2aa924f8568202814125cf1c7680f" name="ac8b2aa924f8568202814125cf1c7680f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8b2aa924f8568202814125cf1c7680f">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[1/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -763,7 +1035,35 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">JUNO_MODULE_RESULT </td>
           <td>(</td>
-          <td class="paramtype">JUNO_M3X3F_RESULT_T&#160;</td>
+          <td class="paramtype">JUNO_M3X3_F32_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#a3ff30d7ee545902f39f11ea18743ee80">JUNO_M3X3_F32_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a77ae97fd35bab26f1d1f5d737c42810a" name="a77ae97fd35bab26f1d1f5d737c42810a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77ae97fd35bab26f1d1f5d737c42810a">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[2/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_M3X3_F64_RESULT_T&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -783,7 +1083,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a3999b5381f5e1deb5fd28f0a464cf911" name="a3999b5381f5e1deb5fd28f0a464cf911"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3999b5381f5e1deb5fd28f0a464cf911">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[2/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3999b5381f5e1deb5fd28f0a464cf911">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[3/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -810,8 +1110,36 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aa357c48ba30d5d6c1719691fb70ff5b0" name="aa357c48ba30d5d6c1719691fb70ff5b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa357c48ba30d5d6c1719691fb70ff5b0">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[4/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_M4X4_F32_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#a57e3eef457c92ef0149e80a7b9c16d67">JUNO_M4X4_F32_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2f1e8fd0c77dcece316d02f1185140e8" name="a2f1e8fd0c77dcece316d02f1185140e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f1e8fd0c77dcece316d02f1185140e8">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[3/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f1e8fd0c77dcece316d02f1185140e8">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[5/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -839,7 +1167,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a68b243ef03f6e03958cdeedbc1782e6b" name="a68b243ef03f6e03958cdeedbc1782e6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68b243ef03f6e03958cdeedbc1782e6b">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[4/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a68b243ef03f6e03958cdeedbc1782e6b">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[6/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -867,7 +1195,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a67c726da78e3e3839e9776823d35549a" name="a67c726da78e3e3839e9776823d35549a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67c726da78e3e3839e9776823d35549a">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[5/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a67c726da78e3e3839e9776823d35549a">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[7/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -895,7 +1223,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="af27286fe76f90ed2fc6ee527e6089c9e" name="af27286fe76f90ed2fc6ee527e6089c9e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af27286fe76f90ed2fc6ee527e6089c9e">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[6/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af27286fe76f90ed2fc6ee527e6089c9e">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[8/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -922,8 +1250,92 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a2079e464ad1c28777419254772802c01" name="a2079e464ad1c28777419254772802c01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2079e464ad1c28777419254772802c01">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[9/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_VEC2_F32_CART_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#a084add95bd18e4af52fe46db869fcbeb">JUNO_VEC2_F32_CART_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72148c02ff553de15ec21576a5041e78" name="a72148c02ff553de15ec21576a5041e78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72148c02ff553de15ec21576a5041e78">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[10/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_VEC2_F32_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a19b4d5627087113173f678b5393f4132" name="a19b4d5627087113173f678b5393f4132"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19b4d5627087113173f678b5393f4132">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[11/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_VEC2_F32_SPH_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#a0ec0089da328e42df918b949b8db7939">JUNO_VEC2_F32_SPH_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a3a945dfe33a68d05ac892322aa8845f9" name="a3a945dfe33a68d05ac892322aa8845f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a945dfe33a68d05ac892322aa8845f9">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[7/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a945dfe33a68d05ac892322aa8845f9">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[12/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -951,7 +1363,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a1db14da90ccf509363335a522d3a5103" name="a1db14da90ccf509363335a522d3a5103"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1db14da90ccf509363335a522d3a5103">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[8/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1db14da90ccf509363335a522d3a5103">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[13/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -979,7 +1391,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a71bd25b0ca8e35e9be2594ec570f9579" name="a71bd25b0ca8e35e9be2594ec570f9579"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71bd25b0ca8e35e9be2594ec570f9579">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[9/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a71bd25b0ca8e35e9be2594ec570f9579">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[14/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1007,7 +1419,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a8a03690cb76d65a73c05b4a401d83806" name="a8a03690cb76d65a73c05b4a401d83806"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a03690cb76d65a73c05b4a401d83806">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[10/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a03690cb76d65a73c05b4a401d83806">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[15/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1035,7 +1447,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aace4e00df36ae8cdd1e065911e1659a4" name="aace4e00df36ae8cdd1e065911e1659a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aace4e00df36ae8cdd1e065911e1659a4">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[11/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aace4e00df36ae8cdd1e065911e1659a4">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[16/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1063,7 +1475,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a5dd0ff6ca1b51bf9d3a9af9103dd7696" name="a5dd0ff6ca1b51bf9d3a9af9103dd7696"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5dd0ff6ca1b51bf9d3a9af9103dd7696">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[12/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dd0ff6ca1b51bf9d3a9af9103dd7696">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[17/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1091,7 +1503,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a9c3bf561e265503457862b30d762b6bd" name="a9c3bf561e265503457862b30d762b6bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c3bf561e265503457862b30d762b6bd">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[13/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c3bf561e265503457862b30d762b6bd">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[18/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1119,7 +1531,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aa48205ee98e210703a54ac700944d47d" name="aa48205ee98e210703a54ac700944d47d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa48205ee98e210703a54ac700944d47d">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[14/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa48205ee98e210703a54ac700944d47d">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[19/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1147,7 +1559,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a1181932183dc5d5e159be5f67b83eb83" name="a1181932183dc5d5e159be5f67b83eb83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1181932183dc5d5e159be5f67b83eb83">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[15/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1181932183dc5d5e159be5f67b83eb83">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[20/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1175,7 +1587,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a5a826351a795af93059452ee2c0b41ba" name="a5a826351a795af93059452ee2c0b41ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a826351a795af93059452ee2c0b41ba">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[16/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a826351a795af93059452ee2c0b41ba">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[21/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1203,7 +1615,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a3baa6467f41a51f4b0b35cd2123ed4d4" name="a3baa6467f41a51f4b0b35cd2123ed4d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3baa6467f41a51f4b0b35cd2123ed4d4">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[17/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3baa6467f41a51f4b0b35cd2123ed4d4">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[22/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1231,7 +1643,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a2d078a230fb3eed2bb1ce8cbba255047" name="a2d078a230fb3eed2bb1ce8cbba255047"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d078a230fb3eed2bb1ce8cbba255047">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[18/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d078a230fb3eed2bb1ce8cbba255047">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[23/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1259,7 +1671,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="af040d20958113367c46fe0864c83d756" name="af040d20958113367c46fe0864c83d756"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af040d20958113367c46fe0864c83d756">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[19/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af040d20958113367c46fe0864c83d756">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[24/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1287,7 +1699,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a1b5a2e061ed00a5d11ca052fe77e71e0" name="a1b5a2e061ed00a5d11ca052fe77e71e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b5a2e061ed00a5d11ca052fe77e71e0">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[20/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b5a2e061ed00a5d11ca052fe77e71e0">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[25/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1315,7 +1727,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a4862d0e680d77e1ffb014edb8b0ef002" name="a4862d0e680d77e1ffb014edb8b0ef002"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4862d0e680d77e1ffb014edb8b0ef002">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[21/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4862d0e680d77e1ffb014edb8b0ef002">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[26/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1342,8 +1754,92 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="abddcd975c681600b2e4266e7da8dbafb" name="abddcd975c681600b2e4266e7da8dbafb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abddcd975c681600b2e4266e7da8dbafb">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[27/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_VEC4_F32_CART_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#a45abfda09c6ad6da109a293ba9bc478a">JUNO_VEC4_F32_CART_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3b64ddd3fbe5f00d04a6e4ed33b57a2b" name="a3b64ddd3fbe5f00d04a6e4ed33b57a2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b64ddd3fbe5f00d04a6e4ed33b57a2b">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[28/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_VEC4_F32_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#aaa0d824865a16233649ee457fe71c727">JUNO_VEC4_F32_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a82c1fcc69557d9b223e166a5ebbe1a18" name="a82c1fcc69557d9b223e166a5ebbe1a18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82c1fcc69557d9b223e166a5ebbe1a18">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[29/33]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_MODULE_RESULT </td>
+          <td>(</td>
+          <td class="paramtype">JUNO_VEC4_F32_SPH_RESULT_T&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="juno__math__types_8h.html#abb7925f5504f43ee24e06bbad7a68671">JUNO_VEC4_F32_SPH_T</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa2951938b223d0dd842d5c9650d8d5c2" name="aa2951938b223d0dd842d5c9650d8d5c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2951938b223d0dd842d5c9650d8d5c2">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[22/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2951938b223d0dd842d5c9650d8d5c2">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[30/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1371,7 +1867,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a46d2f7503018a563633bee3cedc93a3f" name="a46d2f7503018a563633bee3cedc93a3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46d2f7503018a563633bee3cedc93a3f">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[23/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a46d2f7503018a563633bee3cedc93a3f">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[31/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1399,7 +1895,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aea82f6b3c8490798211db773ad69e851" name="aea82f6b3c8490798211db773ad69e851"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea82f6b3c8490798211db773ad69e851">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[24/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aea82f6b3c8490798211db773ad69e851">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[32/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1427,7 +1923,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aca3227014d2de1a216e45133946b3807" name="aca3227014d2de1a216e45133946b3807"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca3227014d2de1a216e45133946b3807">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[25/25]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aca3227014d2de1a216e45133946b3807">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[33/33]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
