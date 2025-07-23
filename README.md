@@ -27,7 +27,7 @@
 
 | Dependency Name | Rationale                                      |
 |-----------------|------------------------------------------------|
-|                 |                                                |
+|    <math.h>     | Math is required for math lib                  |
 
 ## Building and Testing
 1. Generate build files:
