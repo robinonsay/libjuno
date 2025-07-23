@@ -516,32 +516,6 @@ typedef union JUNO_VEC4_I32_TAG
     int32_t               arr[4];  /**< Raw component array. */
 } JUNO_VEC4_I32_T;
 
-typedef struct JUNO_VECN_F64_TAG
-{
-    size_t N;
-    double arr[];
-} JUNO_VECN_F64_T;
-
-#define JUNO_VECN_F64_NEW(ptVecn, _N) \
-union tVecn##_U_TAG \
-{ \
-    JUNO_VECN_F64_T tHdr; \
-    unsigned char raw[sizeof(JUNO_VECN_F64_T) + _N * sizeof(double)]; \
-} u; u.tHdr.N = _N; \
-JUNO_VECN_F64_T *ptVecn = &u.tHdr;
-
-typedef struct JUNO_VECN_F32_TAG
-{
-    size_t N;
-    float arr[];
-} JUNO_VECN_F32_T;
-
-typedef struct JUNO_VECN_I32_TAG
-{
-    size_t N;
-    int32_t arr[];
-} JUNO_VECN_I32_T;
-
 /**
  * @typedef JUNO_VEC4_I32_SPH_RESULT_T
  * @brief Result type for functions returning JUNO_VEC4_I32_SPH_T.
