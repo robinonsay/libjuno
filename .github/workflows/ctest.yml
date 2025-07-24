@@ -43,7 +43,7 @@ jobs:
 
       # Install compilers on Linux/macOS; skip on Windows (VS is pre‑installed)
       - name: Install compiler
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && matrix.cc != 'clang'
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends ${{ matrix.cc }} ${{ matrix.cxx }}
