@@ -11,14 +11,12 @@ permissions:
 
 jobs:
   build-and-test:
-    # matrix.job lets us run the same steps with different compilers
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        # you can add macos-latest and windows-latest here if desired
-        os: [ubuntu-latest]
         include:
+          # Linux: GCC & Clang
           - os: ubuntu-latest
             cc: gcc-9
             cxx: g++-9
@@ -32,38 +30,83 @@ jobs:
             cc: clang-14
             cxx: clang++-14
 
+          # macOS: system Clang + Homebrew GCC
+          - os: macos-latest
+            cc: clang
+            cxx: clang++
+            install_cmds: |
+              brew update
+              brew install gcc@11
+
+          # Windows: Visual Studio
+          - os: windows-latest
+            generator: "Visual Studio 17 2022"
+            config: "Release"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           submodules: true
 
-      - name: Install compiler ${{ matrix.cc }}
+      # Install compilers on Linux/macOS; skip on Windows (VS is pre‑installed)
+      - name: Install compiler
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
 
-      - name: Configure project with CMake
+      - name: Install compiler
+        if: matrix.os == 'macos-latest'
         run: |
-          # force CMake to pick our matrix compiler
-          CC=${{ matrix.cc }} CXX=${{ matrix.cxx }} \
-            cmake -B build . -DJUNO_TESTS=On -DJUNO_COVERAGE=On
+          # install Homebrew GCC alongside Apple Clang
+          ${{ matrix.install_cmds }}
 
+      # Configure with CMake
+      - name: Configure project
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            cmake -B build -G "${{ matrix.generator }}" -A x64 \
+                  -DJUNO_TESTS=On -DJUNO_COVERAGE=Off
+          elif [[ "${{ matrix.cc }}" == "clang" ||  "${{ matrix.cc }}" == "clang-10" ||  "${{ matrix.cc }}" == "clang-14" ]]
+            CC=${{ matrix.cc }} CXX=${{ matrix.cxx }} \
+              cmake -B build . -DJUNO_TESTS=On -DJUNO_COVERAGE=Off
+          else
+            CC=${{ matrix.cc }} CXX=${{ matrix.cxx }} \
+              cmake -B build . -DJUNO_TESTS=On -DJUNO_COVERAGE=On
+          fi
+
+      # Build
       - name: Build project
-        run: make -C build
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            cmake --build build --config ${{ matrix.config }}
+          else
+            make -C build
+          fi
 
+      # Test
       - name: Run CTest unit tests
-        run: cd build && ctest --output-on-failure
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            cd build && ctest -C ${{ matrix.config }} --output-on-failure
+          else
+            cd build && ctest --output-on-failure
+          fi
 
+      # Python setup (common)
       - name: Configure python
         run: pip install -r requirements.txt
 
+      # Coverage only on Linux
       - name: Generate the coverage report using gcovr
+        if: runner.os == 'Linux'
         run: |
           mkdir -p coverage_report
           gcovr -r . --html --html-details -o coverage_report/coverage.html
 
       - name: Upload Coverage Report
+        if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
