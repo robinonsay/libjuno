@@ -11,7 +11,26 @@ permissions:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    # matrix.job lets us run the same steps with different compilers
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # you can add macos-latest and windows-latest here if desired
+        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            cc: gcc-9
+            cxx: g++-9
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+          - os: ubuntu-latest
+            cc: clang-10
+            cxx: clang++-10
+          - os: ubuntu-latest
+            cc: clang-14
+            cxx: clang++-14
 
     steps:
       - name: Checkout repository
@@ -19,8 +38,16 @@ jobs:
         with:
           submodules: true
 
+      - name: Install compiler ${{ matrix.cc }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
+
       - name: Configure project with CMake
-        run: cmake -B build . -DJUNO_TESTS=On -DJUNO_COVERAGE=On
+        run: |
+          # force CMake to pick our matrix compiler
+          CC=${{ matrix.cc }} CXX=${{ matrix.cxx }} \
+            cmake -B build . -DJUNO_TESTS=On -DJUNO_COVERAGE=On
 
       - name: Build project
         run: make -C build
@@ -30,7 +57,7 @@ jobs:
 
       - name: Configure python
         run: pip install -r requirements.txt
-      
+
       - name: Generate the coverage report using gcovr
         run: |
           mkdir -p coverage_report
@@ -41,3 +68,4 @@ jobs:
         with:
           name: coverage-report
           path: coverage_report
+
