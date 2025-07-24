@@ -158,10 +158,10 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af0d3dee078bfb9d9aeaf19018245ad9b" id="r_af0d3dee078bfb9d9aeaf19018245ad9b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b">JUNO_MEMORY_BLOCK</a>(name,  type,  length)&#160;&#160;&#160;static type name[length] = {}</td></tr>
+<tr class="memitem:af0d3dee078bfb9d9aeaf19018245ad9b" id="r_af0d3dee078bfb9d9aeaf19018245ad9b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b">JUNO_MEMORY_BLOCK</a>(name,  type,  length)&#160;&#160;&#160;static type name[length] = {0}</td></tr>
 <tr class="memdesc:af0d3dee078bfb9d9aeaf19018245ad9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to declare a static memory block and its associated free stack.  <br /></td></tr>
 <tr class="separator:af0d3dee078bfb9d9aeaf19018245ad9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8942ee7462829b506969cd42e66d2ad7" id="r_a8942ee7462829b506969cd42e66d2ad7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#a8942ee7462829b506969cd42e66d2ad7">JUNO_MEMORY_BLOCK_METADATA</a>(name,  length)&#160;&#160;&#160;static <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> name[length] = {}</td></tr>
+<tr class="memitem:a8942ee7462829b506969cd42e66d2ad7" id="r_a8942ee7462829b506969cd42e66d2ad7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#a8942ee7462829b506969cd42e66d2ad7">JUNO_MEMORY_BLOCK_METADATA</a>(name,  length)&#160;&#160;&#160;static <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> name[length] = {0}</td></tr>
 <tr class="memdesc:a8942ee7462829b506969cd42e66d2ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to declare a static array for memory metadata.  <br /></td></tr>
 <tr class="separator:a8942ee7462829b506969cd42e66d2ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d3ef94c99154090eeddec26bd3d6bf2" id="r_a5d3ef94c99154090eeddec26bd3d6bf2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(name)&#160;&#160;&#160;REF##name</td></tr>
@@ -219,7 +219,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;static type name[length] = {}</td>
+          <td></td><td>&#160;&#160;&#160;static type name[length] = {0}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -258,7 +258,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;static <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> name[length] = {}</td>
+          <td></td><td>&#160;&#160;&#160;static <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> name[length] = {0}</td>
         </tr>
       </table>
 </div><div class="memdoc">
