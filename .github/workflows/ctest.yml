@@ -24,11 +24,8 @@ jobs:
             cc: gcc-11
             cxx: g++-11
           - os: ubuntu-latest
-            cc: clang-10
-            cxx: clang++-10
-          - os: ubuntu-latest
-            cc: clang-14
-            cxx: clang++-14
+            cc: clang
+            cxx: clang++
 
           # macOS: system Clang + Homebrew GCC
           - os: macos-latest
@@ -68,7 +65,7 @@ jobs:
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
             cmake -B build -G "${{ matrix.generator }}" -A x64 \
                   -DJUNO_TESTS=On -DJUNO_COVERAGE=Off
-          elif [[ "${{ matrix.cc }}" == "clang" ||  "${{ matrix.cc }}" == "clang-10" ||  "${{ matrix.cc }}" == "clang-14" ]]
+          elif [[ "${{ matrix.cc }}" == "clang" ]]; then
             CC=${{ matrix.cc }} CXX=${{ matrix.cxx }} \
               cmake -B build . -DJUNO_TESTS=On -DJUNO_COVERAGE=Off
           else
