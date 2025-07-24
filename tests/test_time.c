@@ -15,7 +15,7 @@ union JUNO_TIME_TAG JUNO_MODULE(JUNO_TIME_API_T, JUNO_TIME_ROOT_T,
 // Now implementation uses real clock; verify it returns reasonable values
 static JUNO_STATUS_T Now(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime)
 {
-    struct timespec tTimeNow = {};
+    struct timespec tTimeNow = {0};
     clock_gettime(CLOCK_REALTIME, &tTimeNow);
     JUNO_STATUS_T tStatus = JunoTime_NanosToTimestamp(ptTime, tTimeNow.tv_nsec, ptRetTime);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
@@ -54,19 +54,19 @@ const JUNO_TIME_API_T tTimeApi =
 };
 
 // Global module instance
-JUNO_TIME_T tTimeMod = {};
+JUNO_TIME_T tTimeMod = {0};
 
 void setUp(void)
 {
     // Initialize module with our API
-    tTimeMod = (JUNO_TIME_T){};
+    tTimeMod = (JUNO_TIME_T){0};
     tTimeMod.ptApi = &tTimeApi;
 }
 
 void tearDown(void)
 {
     // Reset module
-    tTimeMod = (JUNO_TIME_T){};
+    tTimeMod = (JUNO_TIME_T){0};
 }
 
 // Positive test: AddTime without subseconds overflow
