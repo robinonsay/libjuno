@@ -38,14 +38,22 @@ set(JUNO_COMPILE_OPTIONS
     -pedantic                       # Enforce ISO C standards
     -Wshadow                        # Warn when variable declarations shadow outer scope variables
     -Wcast-align                    # Warn for potential issues with pointer casts
-    -Wstrict-prototypes             # Warn if a function is declared without specifying argument types
-    -Wmissing-prototypes            # Warn if a global function is defined without a previous prototype declaration
     -Wundef                         # Warn if an undefined identifier is evaluated in an #if directive
     -Wswitch                        # Warn about missing cases in switch statements
     -Wswitch-default                # Warn whenever a switch statement does not have a default case
     -Wmissing-field-initializers    # Warn about missing fields in struct init
     -fno-common                     # Disallow multiple definitions of common symbols
     -fno-strict-aliasing            # Disable strict aliasing
+)
+
+set(JUNO_COMPILE_CXX_OPTIONS
+    -fno-rtti             # Warn if a function is declared without specifying argument types
+    -fno-exceptions       # Warn if a global function is defined without a previous prototype declaration
+)
+
+set(JUNO_COMPILE_C_OPTIONS
+    -Wstrict-prototypes             # Warn if a function is declared without specifying argument types
+    -Wmissing-prototypes            # Warn if a global function is defined without a previous prototype declaration
 )
 
 if(JUNO_PIC)
@@ -80,6 +88,8 @@ foreach(lib ${JUNO_LIBS})
     # Enable a comprehensive set of warnings
     target_compile_options(${lib} PRIVATE
         ${JUNO_COMPILE_OPTIONS}
+        $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+        $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
         -nostdlib
         -ffreestanding                  # Disable the hosted environment
     )

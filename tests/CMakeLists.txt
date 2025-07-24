@@ -9,7 +9,11 @@ foreach(file ${JUNO_TEST_SRCS})
     get_filename_component(test_name ${file} NAME_WE)
     add_executable(${test_name} ${file})
     target_link_libraries(${test_name} ${PROJECT_NAME} ${JUNO_POSIX_TARGET} unity)
-    target_compile_options(${test_name} PRIVATE ${JUNO_COMPILE_OPTIONS})
+    target_compile_options(${test_name} PRIVATE 
+      ${JUNO_COMPILE_OPTIONS}
+      $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+      $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
+    )
     add_test(${test_name} ${test_name})
 endforeach()
 
