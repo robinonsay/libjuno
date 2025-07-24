@@ -17,7 +17,7 @@ void tearDown(void)
 
 static void test_djb2_hash(void)
 {
-	JUNO_HASH_T tHash = {};
+	JUNO_HASH_T tHash = {0};
 	JUNO_STATUS_T tStatus = JunoHash_Djb2Api(&tHash, NULL, NULL);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	const JUNO_HASH_API_T *ptHashApi = tHash.ptApi;

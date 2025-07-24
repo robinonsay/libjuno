@@ -19,11 +19,11 @@ void tearDown(void)
 static void test_queue(void)
 {
 	uint8_t iTestQueue[10];
-	JUNO_BUFF_QUEUE_T tQueue = {};
+	JUNO_BUFF_QUEUE_T tQueue = {0};
 
 	JUNO_STATUS_T tStatus = JunoBuff_QueueInit(&tQueue, sizeof(iTestQueue), NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestQueue); i++)
+	for(size_t i = 0; i < sizeof(iTestQueue); i++)
 	{
 		size_t iIndex = 0;
 		tStatus = JunoBuff_QueueEnqueue(&tQueue, &iIndex);
@@ -33,18 +33,18 @@ static void test_queue(void)
 	size_t iIndex = 0;
 	tStatus = JunoBuff_QueueEnqueue(&tQueue, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestQueue); i++)
+	for(size_t i = 0; i < sizeof(iTestQueue); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_QueueDequeue(&tQueue, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		TEST_ASSERT_EQUAL(i+1, iTestQueue[iIndex]);
 	}
 	tStatus = JunoBuff_QueueDequeue(&tQueue, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestQueue); i++)
+	for(size_t i = 0; i < sizeof(iTestQueue); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_QueueEnqueue(&tQueue, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		iTestQueue[iIndex] = i+1;
@@ -52,18 +52,18 @@ static void test_queue(void)
 	iIndex = 0;
 	tStatus = JunoBuff_QueueEnqueue(&tQueue, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestQueue); i++)
+	for(size_t i = 0; i < sizeof(iTestQueue); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_QueueDequeue(&tQueue, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		TEST_ASSERT_EQUAL(i+1, iTestQueue[iIndex]);
 	}
 	tStatus = JunoBuff_QueueDequeue(&tQueue, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestQueue); i++)
+	for(size_t i = 0; i < sizeof(iTestQueue); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_QueueEnqueue(&tQueue, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		iTestQueue[iIndex] = i+1;
@@ -73,9 +73,9 @@ static void test_queue(void)
 	}
 	tStatus = JunoBuff_QueueDequeue(&tQueue, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestQueue); i++)
+	for(size_t i = 0; i < sizeof(iTestQueue); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_QueueEnqueue(&tQueue, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		iTestQueue[iIndex] = i+1;
@@ -83,9 +83,9 @@ static void test_queue(void)
 	iIndex = 0;
 	tStatus = JunoBuff_QueueEnqueue(&tQueue, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestQueue); i++)
+	for(size_t i = 0; i < sizeof(iTestQueue); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_QueueDequeue(&tQueue, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		TEST_ASSERT_EQUAL(i+1, iTestQueue[iIndex]);
@@ -97,11 +97,11 @@ static void test_queue(void)
 static void test_stack(void)
 {
 	uint8_t iTestStack[10];
-	JUNO_BUFF_STACK_T tStack = {};
+	JUNO_BUFF_STACK_T tStack = {0};
 
 	JUNO_STATUS_T tStatus = JunoBuff_StackInit(&tStack, sizeof(iTestStack), NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestStack); i++)
+	for(size_t i = 0; i < sizeof(iTestStack); i++)
 	{
 		size_t iIndex = 0;
 		tStatus = JunoBuff_StackPush(&tStack, &iIndex);
@@ -111,18 +111,18 @@ static void test_stack(void)
 	size_t iIndex = 0;
 	tStatus = JunoBuff_StackPush(&tStack, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestStack); i++)
+	for(size_t i = 0; i < sizeof(iTestStack); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_StackPop(&tStack, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		TEST_ASSERT_EQUAL(sizeof(iTestStack) - i, iTestStack[iIndex]);
 	}
 	tStatus = JunoBuff_StackPop(&tStack, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestStack); i++)
+	for(size_t i = 0; i < sizeof(iTestStack); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_StackPush(&tStack, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		iTestStack[iIndex] = i+1;
@@ -130,9 +130,9 @@ static void test_stack(void)
 	iIndex = 0;
 	tStatus = JunoBuff_StackPush(&tStack, &iIndex);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(int i = 0; i < sizeof(iTestStack); i++)
+	for(size_t i = 0; i < sizeof(iTestStack); i++)
 	{
-		size_t iIndex = 0;
+		iIndex = 0;
 		tStatus = JunoBuff_StackPop(&tStack, &iIndex);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 		TEST_ASSERT_EQUAL(sizeof(iTestStack) - i, iTestStack[iIndex]);

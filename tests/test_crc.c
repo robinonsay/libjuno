@@ -20,7 +20,7 @@ static void test_zip_crc(void)
 {
    char pcTestZipData[32] = "helloworld";
    size_t zTestDataLen = strlen(pcTestZipData);
-   char pcTruthZipData[32] = {};
+   char pcTruthZipData[32] = {0};
    FILE *ptTruthFile = fopen("test_zip_crc.bin", "r");
    TEST_ASSERT_NOT_NULL(ptTruthFile);
    ssize_t zFileSize = fread(pcTruthZipData, zTestDataLen + 4, 1, ptTruthFile);
