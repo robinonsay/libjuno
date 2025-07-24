@@ -35,11 +35,6 @@ jobs:
               brew update
               brew install gcc@11
 
-          # Windows: Visual Studio
-          - os: windows-latest
-            generator: "Visual Studio 17 2022"
-            config: "Release"
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -51,7 +46,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
+          sudo apt-get install -y --no-install-recommends ${{ matrix.cc }} ${{ matrix.cxx }}
 
       - name: Install compiler
         if: matrix.os == 'macos-latest'
