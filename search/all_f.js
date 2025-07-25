@@ -8,5 +8,6 @@ var searchData=
   ['getbuffer_5',['GetBuffer',['../structJUNO__MSG__API__TAG.html#a044f174e3fbe8269a8287be8b5e85753',1,'JUNO_MSG_API_TAG']]],
   ['getpublisherid_6',['GetPublisherId',['../structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f',1,'JUNO_PUBLISHER_API_TAG']]],
   ['getsize_7',['GetSize',['../structJUNO__STRING__API__TAG.html#a75d02b815e5225c87bfbaada096e2d1e',1,'JUNO_STRING_API_TAG']]],
-  ['getting_20started_8',['Getting Started',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md5',1,'']]]
+  ['getting_20started_8',['Getting Started',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md5',1,'']]],
+  ['gisubsecs_5fmax_9',['giSUBSECS_MAX',['../juno__time_8c.html#aa122a53fca584785c3b9cd2521307e06',1,'juno_time.c']]]
 ];

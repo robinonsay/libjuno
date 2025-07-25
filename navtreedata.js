@@ -138,6 +138,7 @@ var NAVTREE =
       [ "Globals", "globals.html", [
         [ "All", "globals.html", "globals_dup" ],
         [ "Functions", "globals_func.html", null ],
+        [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
         [ "Enumerator", "globals_eval.html", null ],
@@ -150,8 +151,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"map__api_8h.html#a7a30095ec65ed014c5db79d5ba6a0c27",
-"structJUNO__MSG__API__TAG.html#a044f174e3fbe8269a8287be8b5e85753"
+"juno__math__types_8h.html#a7684d1e566938c80b400838c4c50a7c1",
+"string__impl_8h.html",
+"unionJUNO__VEC3__F32__TAG.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -156,7 +156,7 @@ $(document).ready(function(){initNavTree('juno__zip_8c_source.html',''); initRes
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">register</span> <span class="keywordtype">size_t</span> cnt = zDataSize;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordflow">while</span>(cnt--) {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    crc=((crc&gt;&gt;8)&amp;<a class="code hl_define" href="crc_8h.html#ada788445fe2084948f3ec0f5e10b2afe">M1_32</a>)^zip_crctab[(crc&amp;0xff)^*cp++];</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    crc=((crc&gt;&gt;8)&amp;<a class="code hl_define" href="crc_8h.html#ada788445fe2084948f3ec0f5e10b2afe">M1_32</a>)^<a class="code hl_variable" href="zip_8h.html#ac624930a8b56123bd34f6f542cadfe3c">zip_crctab</a>[(crc&amp;0xff)^*cp++];</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    }</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordflow">return</span>(crc ^ 0xFFFFFFFF);</div>
@@ -166,6 +166,7 @@ $(document).ready(function(){initNavTree('juno__zip_8c_source.html',''); initRes
 <div class="ttc" id="acrc_8h_html_ada788445fe2084948f3ec0f5e10b2afe"><div class="ttname"><a href="crc_8h.html#ada788445fe2084948f3ec0f5e10b2afe">M1_32</a></div><div class="ttdeci">#define M1_32</div><div class="ttdef"><b>Definition</b> crc.h:27</div></div>
 <div class="ttc" id="ajuno__zip_8c_html_a0aa54f766ef152dc09579979a81d59da"><div class="ttname"><a href="juno__zip_8c.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_zip.c:20</div></div>
 <div class="ttc" id="azip_8h_html"><div class="ttname"><a href="zip_8h.html">zip.h</a></div></div>
+<div class="ttc" id="azip_8h_html_ac624930a8b56123bd34f6f542cadfe3c"><div class="ttname"><a href="zip_8h.html#ac624930a8b56123bd34f6f542cadfe3c">zip_crctab</a></div><div class="ttdeci">static const uint32_t zip_crctab[256]</div><div class="ttdef"><b>Definition</b> zip.h:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

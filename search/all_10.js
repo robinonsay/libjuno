@@ -4,7 +4,7 @@ var searchData=
   ['h_20engine_5fv8_20h_1',['3.2. Deriving a Gas-Powered Engine: engine_v6.h &amp; engine_v8.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
   ['h_3a_20the_20base_20engine_2',['3.1. engine_api.h: The Base Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md55',1,'']]],
   ['handling_3',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]],
-  ['hash_4',['Hash',['../structJUNO__HASH__API__TAG.html#a74dcf0b2de3f4f78fa19d9964119321d',1,'JUNO_HASH_API_TAG']]],
+  ['hash_4',['hash',['../structJUNO__HASH__API__TAG.html#a74dcf0b2de3f4f78fa19d9964119321d',1,'JUNO_HASH_API_TAG::Hash'],['../juno__hash_8c.html#a82c045950a61798c212d01c2058191b5',1,'Hash(JUNO_HASH_T *ptJunoHash, const uint8_t *pcBuff, size_t zBuffSize, size_t *pzRetHash):&#160;juno_hash.c']]],
   ['hash_20module_20beta_5',['Juno Hash Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'']]],
   ['hash_5fapi_2eh_6',['hash_api.h',['../hash__api_8h.html',1,'']]],
   ['hash_5fdjb2_2eh_7',['hash_djb2.h',['../hash__djb2_8h.html',1,'']]],

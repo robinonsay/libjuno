@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['free_0',['Free',['../structJUNO__STRING__API__TAG.html#ae69f1e7a38c89e794a65dfd6a4bddef1',1,'JUNO_STRING_API_TAG']]]
+  ['binhex_5fcrctab_0',['binhex_crctab',['../binhex_8h.html#ac2cd8edb073b1eb38372ba59445bb0ea',1,'binhex.h']]]
 ];

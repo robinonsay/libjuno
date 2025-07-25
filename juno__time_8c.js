@@ -7,5 +7,6 @@ var juno__time_8c =
     [ "JunoTime_SubtractTime", "juno__time_8c.html#a8ca112a59fa1b795531675dc402c47f3", null ],
     [ "JunoTime_TimestampToMicros", "juno__time_8c.html#a1db8798cc99177d28039bc0ea6b4b7c8", null ],
     [ "JunoTime_TimestampToMillis", "juno__time_8c.html#a542887a3407f8b8e04c38a37a54f7c8f", null ],
-    [ "JunoTime_TimestampToNanos", "juno__time_8c.html#a097ff95ac3bb3b13bdaf2ffc3bbf33f7", null ]
+    [ "JunoTime_TimestampToNanos", "juno__time_8c.html#a097ff95ac3bb3b13bdaf2ffc3bbf33f7", null ],
+    [ "giSUBSECS_MAX", "juno__time_8c.html#aa122a53fca584785c3b9cd2521307e06", null ]
 ];

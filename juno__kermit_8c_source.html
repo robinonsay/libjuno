@@ -157,7 +157,7 @@ $(document).ready(function(){initNavTree('juno__kermit_8c_source.html',''); init
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">register</span> <span class="keywordtype">size_t</span> cnt = zDataSize;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordflow">while</span>(cnt--) {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    crc=((crc&gt;&gt;8)&amp;<a class="code hl_define" href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">M1_16</a>)^kermit_crctab[(crc&amp;0xff)^*cp++];</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    crc=((crc&gt;&gt;8)&amp;<a class="code hl_define" href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">M1_16</a>)^<a class="code hl_variable" href="kermit_8h.html#ac265d198d02ab3d70521ce14fb2f9005">kermit_crctab</a>[(crc&amp;0xff)^*cp++];</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordflow">return</span>(crc);</div>
@@ -167,6 +167,7 @@ $(document).ready(function(){initNavTree('juno__kermit_8c_source.html',''); init
 <div class="ttc" id="acrc_8h_html_ab317f0d06f885fa845cdc2ece30c9c08"><div class="ttname"><a href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">M1_16</a></div><div class="ttdeci">#define M1_16</div><div class="ttdef"><b>Definition</b> crc.h:25</div></div>
 <div class="ttc" id="ajuno__kermit_8c_html_a1f8424f662028c0a7a4e264d96b62ca7"><div class="ttname"><a href="juno__kermit_8c.html#a1f8424f662028c0a7a4e264d96b62ca7">Juno_CrcKermitUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcKermitUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_kermit.c:21</div></div>
 <div class="ttc" id="akermit_8h_html"><div class="ttname"><a href="kermit_8h.html">kermit.h</a></div></div>
+<div class="ttc" id="akermit_8h_html_ac265d198d02ab3d70521ce14fb2f9005"><div class="ttname"><a href="kermit_8h.html#ac265d198d02ab3d70521ce14fb2f9005">kermit_crctab</a></div><div class="ttdeci">static const uint16_t kermit_crctab[256]</div><div class="ttdef"><b>Definition</b> kermit.h:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

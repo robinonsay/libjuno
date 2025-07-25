@@ -157,13 +157,14 @@ $(document).ready(function(){initNavTree('juno__arc_8c_source.html',''); initRes
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">register</span> <span class="keywordtype">size_t</span> cnt = zDataSize;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordflow">while</span>(cnt--) {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    crc=((crc&gt;&gt;8)&amp;<a class="code hl_define" href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">M1_16</a>)^arc_crctab[(crc&amp;0xff)^*cp++];</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    crc=((crc&gt;&gt;8)&amp;<a class="code hl_define" href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">M1_16</a>)^<a class="code hl_variable" href="arc_8h.html#a2b048f0bdd7d96c1bb4b56b7678f2d66">arc_crctab</a>[(crc&amp;0xff)^*cp++];</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordflow">return</span>(crc);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
 </div>
 <div class="ttc" id="aarc_8h_html"><div class="ttname"><a href="arc_8h.html">arc.h</a></div></div>
+<div class="ttc" id="aarc_8h_html_a2b048f0bdd7d96c1bb4b56b7678f2d66"><div class="ttname"><a href="arc_8h.html#a2b048f0bdd7d96c1bb4b56b7678f2d66">arc_crctab</a></div><div class="ttdeci">static const uint16_t arc_crctab[256]</div><div class="ttdef"><b>Definition</b> arc.h:18</div></div>
 <div class="ttc" id="acrc_8h_html"><div class="ttname"><a href="crc_8h.html">crc.h</a></div></div>
 <div class="ttc" id="acrc_8h_html_ab317f0d06f885fa845cdc2ece30c9c08"><div class="ttname"><a href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">M1_16</a></div><div class="ttdeci">#define M1_16</div><div class="ttdef"><b>Definition</b> crc.h:25</div></div>
 <div class="ttc" id="ajuno__arc_8c_html_aab923f1b240886f9d39c82768c76c9cd"><div class="ttname"><a href="juno__arc_8c.html#aab923f1b240886f9d39c82768c76c9cd">Juno_CrcArcUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcArcUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_arc.c:21</div></div>

@@ -236,10 +236,10 @@ Step 3: Allocate Memory</h2>
 Step 4: Share Memory with Reference Counting</h2>
 <p>Use reference counting to safely share memory:</p>
 <div class="fragment"><div class="line"><span class="comment">// Create a reference to the memory</span></div>
-<div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemoryRef = Juno_MemoryGetRef(&amp;tMemory);</div>
+<div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemoryRef = <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(&amp;tMemory);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Or using the helper macros for cleaner code</span></div>
-<div class="line"><a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(memoryRef) = Juno_MemoryGetRef(&amp;tMemory);</div>
+<div class="line"><a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(memoryRef) = <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(&amp;tMemory);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Now you can use the reference elsewhere</span></div>
 <div class="line">MY_DATA_T *ptSharedData = (MY_DATA_T *)<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(memoryRef)-&gt;pvAddr;</div>
@@ -248,12 +248,13 @@ Step 4: Share Memory with Reference Counting</h2>
 <div class="line">printf(<span class="stringliteral">&quot;Reference count: %zu\n&quot;</span>, tMemory.<a class="code hl_variable" href="structJUNO__MEMORY__TAG.html#a6a3a86510e2ff84dadb57446ddbe16f2">iRefCount</a>); <span class="comment">// Should be 2</span></div>
 <div class="ttc" id="amemory__api_8h_html_a17ee3efcb223e0831576875ebeebfee6"><div class="ttname"><a href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a></div><div class="ttdeci">#define JUNO_NEW_REF(name)</div><div class="ttdoc">Create a new reference for memory.</div><div class="ttdef"><b>Definition</b> memory_api.h:59</div></div>
 <div class="ttc" id="amemory__api_8h_html_a5d3ef94c99154090eeddec26bd3d6bf2"><div class="ttname"><a href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a></div><div class="ttdeci">#define JUNO_REF(name)</div><div class="ttdoc">Define a reference for memory.</div><div class="ttdef"><b>Definition</b> memory_api.h:57</div></div>
+<div class="ttc" id="amemory__api_8h_html_a6d8597200030d2db5584565009f24973"><div class="ttname"><a href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a></div><div class="ttdeci">static JUNO_MEMORY_T * Juno_MemoryGetRef(JUNO_MEMORY_T *ptMemory)</div><div class="ttdef"><b>Definition</b> memory_api.h:124</div></div>
 <div class="ttc" id="astructJUNO__MEMORY__TAG_html_a6a3a86510e2ff84dadb57446ddbe16f2"><div class="ttname"><a href="structJUNO__MEMORY__TAG.html#a6a3a86510e2ff84dadb57446ddbe16f2">JUNO_MEMORY_TAG::iRefCount</a></div><div class="ttdeci">size_t iRefCount</div><div class="ttdoc">The reference count for this memory.</div><div class="ttdef"><b>Definition</b> memory_api.h:80</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
 Step 5: Release Memory</h2>
 <p>Release memory when you're done with it:</p>
 <div class="fragment"><div class="line"><span class="comment">// First, release any references</span></div>
-<div class="line">Juno_MemoryPutRef(<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(memoryRef));</div>
+<div class="line"><a class="code hl_function" href="memory__api_8h.html#a8d410a3ee459e4960d7518d176649960">Juno_MemoryPutRef</a>(<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(memoryRef));</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Check that the reference was released</span></div>
 <div class="line">printf(<span class="stringliteral">&quot;Reference count: %zu\n&quot;</span>, tMemory.<a class="code hl_variable" href="structJUNO__MEMORY__TAG.html#a6a3a86510e2ff84dadb57446ddbe16f2">iRefCount</a>); <span class="comment">// Should be 1</span></div>
@@ -264,6 +265,7 @@ Step 5: Release Memory</h2>
 <div class="line">    <span class="comment">// Handle error (could be JUNO_STATUS_REF_IN_USE_ERROR if references exist)</span></div>
 <div class="line">    printf(<span class="stringliteral">&quot;Error: Cannot free memory with active references\n&quot;</span>);</div>
 <div class="line">}</div>
+<div class="ttc" id="amemory__api_8h_html_a8d410a3ee459e4960d7518d176649960"><div class="ttname"><a href="memory__api_8h.html#a8d410a3ee459e4960d7518d176649960">Juno_MemoryPutRef</a></div><div class="ttdeci">static void Juno_MemoryPutRef(JUNO_MEMORY_T *ptMemory)</div><div class="ttdef"><b>Definition</b> memory_api.h:140</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 Step 6: Using the Memory API (Alternative Approach)</h2>
 <p>For a more dynamic approach, you can use the Memory API interface:</p>
@@ -313,10 +315,10 @@ Memory Allocation</h2>
 Reference Counting</h2>
 <p>The module provides reference counting to safely share memory between different components:</p>
 <div class="fragment"><div class="line"><span class="comment">// Get a reference to existing memory</span></div>
-<div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemoryRef = Juno_MemoryGetRef(&amp;tExistingMemory);</div>
+<div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemoryRef = <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(&amp;tExistingMemory);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Release a reference when done</span></div>
-<div class="line">Juno_MemoryPutRef(ptMemoryRef);</div>
+<div class="line"><a class="code hl_function" href="memory__api_8h.html#a8d410a3ee459e4960d7518d176649960">Juno_MemoryPutRef</a>(ptMemoryRef);</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md18"></a>
 Memory Deallocation</h2>
 <p>Memory is returned to the allocator using the <code>Juno_MemoryPut</code> function when it's no longer needed:</p>
@@ -414,12 +416,12 @@ Memory Operations</h2>
 </ul>
 <h2><a class="anchor" id="autotoc_md26"></a>
 Reference Management</h2>
-<div class="fragment"><div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a>* Juno_MemoryGetRef(<a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemory);</div>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a>* <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(<a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemory);</div>
 </div><!-- fragment --><p>Gets a reference to memory, incrementing its reference count. Parameters:</p><ul>
 <li><code>ptMemory</code>: The memory to reference</li>
 <li>Returns: The same memory pointer with increased reference count</li>
 </ul>
-<div class="fragment"><div class="line"><span class="keywordtype">void</span> Juno_MemoryPutRef(<a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemory);</div>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="memory__api_8h.html#a8d410a3ee459e4960d7518d176649960">Juno_MemoryPutRef</a>(<a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *ptMemory);</div>
 </div><!-- fragment --><p>Releases a reference to memory, decrementing its reference count. Parameters:</p><ul>
 <li><code>ptMemory</code>: The memory reference to release</li>
 </ul>
@@ -508,7 +510,7 @@ Usage Example</h1>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Share the first node by reference</span></div>
 <div class="line">    <span class="keywordflow">if</span>(tList.ptHead) {</div>
-<div class="line">        <a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(nodeRef) = Juno_MemoryGetRef(&amp;tList.ptHead-&gt;tMemory);</div>
+<div class="line">        <a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(nodeRef) = <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(&amp;tList.ptHead-&gt;tMemory);</div>
 <div class="line">        tRefList.ptHead = (SINGLE_LINKED_LIST_NODE_T*)<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(nodeRef)-&gt;pvAddr;</div>
 <div class="line">        tRefList.zLength = tList.zLength;</div>
 <div class="line">    }</div>
@@ -538,7 +540,7 @@ Usage Example</h1>
 <div class="line">    <span class="comment">// Release reference and try again</span></div>
 <div class="line">    printf(<span class="stringliteral">&quot;\nReleasing reference and freeing memory:\n&quot;</span>);</div>
 <div class="line">    <span class="keywordflow">if</span>(tRefList.ptHead) {</div>
-<div class="line">        Juno_MemoryPutRef(&amp;tRefList.ptHead-&gt;tMemory);</div>
+<div class="line">        <a class="code hl_function" href="memory__api_8h.html#a8d410a3ee459e4960d7518d176649960">Juno_MemoryPutRef</a>(&amp;tRefList.ptHead-&gt;tMemory);</div>
 <div class="line">        tStatus = ptMemApi-&gt;Put(&amp;tMemAlloc, &amp;tRefList.ptHead-&gt;tMemory);</div>
 <div class="line">        <span class="keywordflow">if</span>(tStatus == <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>) {</div>
 <div class="line">            printf(<span class="stringliteral">&quot;Memory successfully freed\n&quot;</span>);</div>
@@ -579,9 +581,9 @@ Understanding Reference Counting Macros</h1>
 JUNO_NEW_REF Macro</h2>
 <p>The <code>JUNO_NEW_REF</code> macro creates a new pointer to hold a reference to a memory object:</p>
 <div class="fragment"><div class="line"><span class="comment">// This expands to: JUNO_MEMORY_T *REFmyMemoryRef</span></div>
-<div class="line"><a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(myMemoryRef) = Juno_MemoryGetRef(&amp;originalMemory);</div>
+<div class="line"><a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(myMemoryRef) = <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(&amp;originalMemory);</div>
 </div><!-- fragment --><p>This is equivalent to:</p>
-<div class="fragment"><div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *REFmyMemoryRef = Juno_MemoryGetRef(&amp;originalMemory);</div>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_T</a> *REFmyMemoryRef = <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(&amp;originalMemory);</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md32"></a>
 JUNO_REF Macro</h2>
 <p>The <code>JUNO_REF</code> macro is used to access the reference you created with <code>JUNO_NEW_REF</code>:</p>
@@ -597,7 +599,7 @@ Example Usage Pattern</h2>
 <div class="line">tStatus = ptApi-&gt;Get(&amp;tMemAlloc,  &amp;tMemory,  <span class="keyword">sizeof</span>(MY_DATA_T));</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Create a named reference using the macro</span></div>
-<div class="line"><a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(dataRef) = Juno_MemoryGetRef(&amp;tMemory);</div>
+<div class="line"><a class="code hl_define" href="memory__api_8h.html#a17ee3efcb223e0831576875ebeebfee6">JUNO_NEW_REF</a>(dataRef) = <a class="code hl_function" href="memory__api_8h.html#a6d8597200030d2db5584565009f24973">Juno_MemoryGetRef</a>(&amp;tMemory);</div>
 <div class="line"><span class="comment">// Now REFdataRef points to the same memory as tMemory, and the reference count is 2</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Access the reference using the convenience macro</span></div>
@@ -605,7 +607,7 @@ Example Usage Pattern</h2>
 <div class="line"><span class="comment">// This is equivalent to: MY_DATA_T *ptSharedData = (MY_DATA_T *)REFdataRef-&gt;pvAddr;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Release the reference when done</span></div>
-<div class="line">Juno_MemoryPutRef(<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(dataRef));</div>
+<div class="line"><a class="code hl_function" href="memory__api_8h.html#a8d410a3ee459e4960d7518d176649960">Juno_MemoryPutRef</a>(<a class="code hl_define" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(dataRef));</div>
 <div class="line"><span class="comment">// This is equivalent to: Juno_MemoryPutRef(REFdataRef);</span></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md34"></a>
 When to Use Reference Counting</h2>

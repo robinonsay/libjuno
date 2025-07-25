@@ -123,7 +123,8 @@ $(document).ready(function(){initNavTree('buff__stack__api_8h.html',''); initRes
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">buff_stack_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -150,6 +151,17 @@ Typedefs</h2></td></tr>
 <tr class="separator:aff6fe7e0b7fb5722fb7ee22a085ec1f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a797c41201de72ad202d7f95cd442075e" id="r_a797c41201de72ad202d7f95cd442075e"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__BUFF__STACK__TAG.html">JUNO_BUFF_STACK_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a></td></tr>
 <tr class="separator:a797c41201de72ad202d7f95cd442075e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a7dd2cd1a67c5c372185034dbff95ee40" id="r_a7dd2cd1a67c5c372185034dbff95ee40"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a7dd2cd1a67c5c372185034dbff95ee40">JunoBuff_StackInit</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t zCapacity, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHdlr, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="separator:a7dd2cd1a67c5c372185034dbff95ee40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa144362e22b8b4ec90caa95770645664" id="r_aa144362e22b8b4ec90caa95770645664"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#aa144362e22b8b4ec90caa95770645664">JunoBuff_StackPush</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t *ptRetIndex)</td></tr>
+<tr class="separator:aa144362e22b8b4ec90caa95770645664"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1662c8d39cf87a09193af1ff83a38c2b" id="r_a1662c8d39cf87a09193af1ff83a38c2b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a1662c8d39cf87a09193af1ff83a38c2b">JunoBuff_StackPop</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t *ptRetIndex)</td></tr>
+<tr class="separator:a1662c8d39cf87a09193af1ff83a38c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e48ab97c9b48a0af3aa299a5816e4d3" id="r_a9e48ab97c9b48a0af3aa299a5816e4d3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a9e48ab97c9b48a0af3aa299a5816e4d3">JunoBuff_StackPeek</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t *ptRetIndex)</td></tr>
+<tr class="separator:a9e48ab97c9b48a0af3aa299a5816e4d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="aff6fe7e0b7fb5722fb7ee22a085ec1f4" name="aff6fe7e0b7fb5722fb7ee22a085ec1f4"></a>
@@ -177,6 +189,163 @@ Typedefs</h2></td></tr>
           <td class="memname">typedef struct <a class="el" href="structJUNO__BUFF__STACK__TAG.html">JUNO_BUFF_STACK_TAG</a> <a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a7dd2cd1a67c5c372185034dbff95ee40" name="a7dd2cd1a67c5c372185034dbff95ee40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dd2cd1a67c5c372185034dbff95ee40">&#9670;&#160;</a></span>JunoBuff_StackInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_StackInit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *&#160;</td>
+          <td class="paramname"><em>ptStack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>zCapacity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td>
+          <td class="paramname"><em>pfcnFailureHdlr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td>
+          <td class="paramname"><em>pvFailureUserData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9e48ab97c9b48a0af3aa299a5816e4d3" name="a9e48ab97c9b48a0af3aa299a5816e4d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e48ab97c9b48a0af3aa299a5816e4d3">&#9670;&#160;</a></span>JunoBuff_StackPeek()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_StackPeek </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *&#160;</td>
+          <td class="paramname"><em>ptStack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>ptRetIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1662c8d39cf87a09193af1ff83a38c2b" name="a1662c8d39cf87a09193af1ff83a38c2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1662c8d39cf87a09193af1ff83a38c2b">&#9670;&#160;</a></span>JunoBuff_StackPop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_StackPop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *&#160;</td>
+          <td class="paramname"><em>ptStack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>ptRetIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa144362e22b8b4ec90caa95770645664" name="aa144362e22b8b4ec90caa95770645664"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa144362e22b8b4ec90caa95770645664">&#9670;&#160;</a></span>JunoBuff_StackPush()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_StackPush </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *&#160;</td>
+          <td class="paramname"><em>ptStack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>ptRetIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

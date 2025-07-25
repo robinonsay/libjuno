@@ -157,13 +157,14 @@ $(document).ready(function(){initNavTree('juno__ccitt_8c_source.html',''); initR
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">register</span> <span class="keywordtype">size_t</span> cnt = zDataSize;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordflow">while</span>(cnt--) {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    crc=((crc&lt;&lt;8)&amp;<a class="code hl_define" href="crc_8h.html#a095a7e7d946ff357f1c7a3de1fb5318e">M2_16</a>)^ccitt_crctab[((crc&gt;&gt;8)&amp;0xff)^*cp++];</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    crc=((crc&lt;&lt;8)&amp;<a class="code hl_define" href="crc_8h.html#a095a7e7d946ff357f1c7a3de1fb5318e">M2_16</a>)^<a class="code hl_variable" href="ccitt_8h.html#a2e7b36ec015747581fcb47444825cd31">ccitt_crctab</a>[((crc&gt;&gt;8)&amp;0xff)^*cp++];</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordflow">return</span>(crc);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
 </div>
 <div class="ttc" id="accitt_8h_html"><div class="ttname"><a href="ccitt_8h.html">ccitt.h</a></div></div>
+<div class="ttc" id="accitt_8h_html_a2e7b36ec015747581fcb47444825cd31"><div class="ttname"><a href="ccitt_8h.html#a2e7b36ec015747581fcb47444825cd31">ccitt_crctab</a></div><div class="ttdeci">static const uint16_t ccitt_crctab[256]</div><div class="ttdef"><b>Definition</b> ccitt.h:18</div></div>
 <div class="ttc" id="acrc_8h_html"><div class="ttname"><a href="crc_8h.html">crc.h</a></div></div>
 <div class="ttc" id="acrc_8h_html_a095a7e7d946ff357f1c7a3de1fb5318e"><div class="ttname"><a href="crc_8h.html#a095a7e7d946ff357f1c7a3de1fb5318e">M2_16</a></div><div class="ttdeci">#define M2_16</div><div class="ttdef"><b>Definition</b> crc.h:26</div></div>
 <div class="ttc" id="ajuno__ccitt_8c_html_a969509a6c7fec9019121f57b8b89e99f"><div class="ttname"><a href="juno__ccitt_8c.html#a969509a6c7fec9019121f57b8b89e99f">Juno_CrcCcittUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcCcittUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdef"><b>Definition</b> juno_ccitt.c:21</div></div>
