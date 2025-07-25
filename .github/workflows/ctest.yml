@@ -24,6 +24,9 @@ jobs:
             cc: gcc-11
             cxx: g++-11
           - os: ubuntu-latest
+            cc: gcc-13
+            cxx: g++-13
+          - os: ubuntu-latest
             cc: clang
             cxx: clang++
 
