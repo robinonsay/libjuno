@@ -19,6 +19,8 @@
 #define JUNO_TYPES_H
 
 #include "juno_vec_types.h"
+#include "juno_dyn_types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
