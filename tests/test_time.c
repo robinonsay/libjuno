@@ -13,14 +13,14 @@ union JUNO_TIME_TAG JUNO_MODULE(JUNO_TIME_API_T, JUNO_TIME_ROOT_T,
 );
 
 // Now implementation uses real clock; verify it returns reasonable values
-static JUNO_STATUS_T Now(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime)
+static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_T *ptTime)
 {
     struct timespec tTimeNow = {0};
     clock_gettime(CLOCK_REALTIME, &tTimeNow);
-    JUNO_STATUS_T tStatus = JunoTime_NanosToTimestamp(ptTime, tTimeNow.tv_nsec, ptRetTime);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-    ptRetTime->iSeconds = tTimeNow.tv_sec;
-    return tStatus;
+    JUNO_TIMESTAMP_RESULT_T tResult = JunoTime_NanosToTimestamp(ptTime, tTimeNow.tv_nsec);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    tResult.tSuccess.iSeconds = tTimeNow.tv_sec;
+    return tResult;
 }
 
 // Stub SleepTo always succeeds
@@ -144,10 +144,9 @@ static void test_SubtractTime_invalid_zero_seconds_insufficient_subseconds(void)
 static void test_TimestampToNanos_success_integer(void)
 {
     JUNO_TIMESTAMP_T t = { .iSeconds = 3, .iSubSeconds = 0 };
-    uint64_t nanos = 0xDEADBEEF;
-    JUNO_STATUS_T status = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t, &nanos);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
-    TEST_ASSERT_EQUAL_UINT64(3000000000ULL, nanos);
+    JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_EQUAL_UINT64(3000000000ULL, tResult.tSuccess);
 }
 
 // Positive test: TimestampToNanos fractional subseconds
@@ -155,10 +154,9 @@ static void test_TimestampToNanos_success_fractional(void)
 {
     const uint64_t max_sub = UINT64_MAX;
     JUNO_TIMESTAMP_T t = { .iSeconds = 0, .iSubSeconds = max_sub };
-    uint64_t nanos = 0;
-    JUNO_STATUS_T status = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t, &nanos);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
-    TEST_ASSERT_EQUAL_UINT64(1000000000ULL, nanos);
+    JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_EQUAL_UINT64(1000000000ULL, tResult.tSuccess);
 }
 
 // Negative test: TimestampToNanos overflow detection

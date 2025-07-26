@@ -67,10 +67,17 @@ struct JUNO_TIMESTAMP_TAG
     JUNO_TIME_SUBSECONDS_T iSubSeconds;
 };
 
+JUNO_MODULE_RESULT(JUNO_TIMESTAMP_RESULT_T, JUNO_TIMESTAMP_T);
+JUNO_MODULE_RESULT(JUNO_TIME_SECONDS_RESULT_T, JUNO_TIME_SECONDS_T);
+JUNO_MODULE_RESULT(JUNO_TIME_MILLIS_RESULT_T, JUNO_TIME_MILLIS_T);
+JUNO_MODULE_RESULT(JUNO_TIME_MICROS_RESULT_T, JUNO_TIME_MICROS_T);
+JUNO_MODULE_RESULT(JUNO_TIME_NANOS_RESULT_T, JUNO_TIME_NANOS_T);
+JUNO_MODULE_RESULT(JUNO_TIME_SUBSECONDS_RESULT_T, JUNO_TIME_SUBSECONDS_T);
+
 struct JUNO_TIME_API_TAG
 {
     /// Get the current time as specified by the implementation
-    JUNO_STATUS_T (*Now)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime);
+    JUNO_TIMESTAMP_RESULT_T (*Now)(JUNO_TIME_T *ptTime);
     /// Perform addition with time
     JUNO_STATUS_T (*AddTime)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
     /// Perform subtraction with time
@@ -80,27 +87,27 @@ struct JUNO_TIME_API_TAG
     /// Sleep this thread for a duration
     JUNO_STATUS_T (*Sleep)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tDuration);
     /// Convert a timestamp to nanoseconds
-    JUNO_STATUS_T (*TimestampToNanos)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_NANOS_T *piNanos);
+    JUNO_TIME_NANOS_RESULT_T (*TimestampToNanos)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
     /// Convert a timestamp to microsconds
-    JUNO_STATUS_T (*TimestampToMicros)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MICROS_T *piMicros);
+    JUNO_TIME_MICROS_RESULT_T (*TimestampToMicros)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
     /// Convert a timestamp to milliseconds
-    JUNO_STATUS_T (*TimestampToMillis)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MILLIS_T *piMillis);
+    JUNO_TIME_MILLIS_RESULT_T (*TimestampToMillis)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
     /// Convert nanoseconds to a timestamp
-    JUNO_STATUS_T (*NanosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos, JUNO_TIMESTAMP_T *ptRetTime);
+    JUNO_TIMESTAMP_RESULT_T (*NanosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos);
     /// Convert microseconds to a timestamp
-    JUNO_STATUS_T (*MicrosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros, JUNO_TIMESTAMP_T *ptRetTime);
+    JUNO_TIMESTAMP_RESULT_T (*MicrosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros);
     /// Convert milliseconds to a timestamp
-    JUNO_STATUS_T (*MillisToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis, JUNO_TIMESTAMP_T *ptRetTime);
+    JUNO_TIMESTAMP_RESULT_T (*MillisToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
 };
 
 JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
 JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract);
-JUNO_STATUS_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_NANOS_T *piNanos);
-JUNO_STATUS_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MICROS_T *piMicros);
-JUNO_STATUS_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MILLIS_T *piMillis);
-JUNO_STATUS_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos, JUNO_TIMESTAMP_T *ptRetTime);
-JUNO_STATUS_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros, JUNO_TIMESTAMP_T *ptRetTime);
-JUNO_STATUS_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis, JUNO_TIMESTAMP_T *ptRetTime);
+JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
+JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
+JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
+JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos);
+JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros);
+JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
 
 #ifdef __cplusplus
 }
