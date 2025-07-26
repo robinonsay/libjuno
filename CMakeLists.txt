@@ -22,12 +22,12 @@ endif(JUNO_API)
 
 
 # Create the library (update the source files as needed)
-aux_source_directory(${juno_SOURCE_DIR}/src JUNO_SRCS)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src JUNO_SRCS)
 add_library(${PROJECT_NAME} STATIC
     ${JUNO_SRCS}
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
-    $<BUILD_INTERFACE:${juno_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
 )
 
@@ -80,10 +80,10 @@ endforeach()
 # Specify the include directories for consumers of this library
 foreach(lib ${JUNO_LIBS})
     target_include_directories(${lib} PUBLIC
-        $<BUILD_INTERFACE:${juno_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
         PRIVATE
-        ${juno_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/src
     )
     # Enable a comprehensive set of warnings
     target_compile_options(${lib} PRIVATE
@@ -102,7 +102,7 @@ if(JUNO_SHARED)
     set(JUNO_SHARED_TARGET ${PROJECT_NAME}_shared)
     add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
     target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
-        $<BUILD_INTERFACE:${juno_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
     )
 endif()
@@ -115,7 +115,7 @@ install(
 )
 
 install(
-  DIRECTORY ${juno_SOURCE_DIR}/include/     # source directory
+  DIRECTORY ${PROJECT_SOURCE_DIR}/include/     # source directory
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include  # usually “include/juno”
   FILES_MATCHING PATTERN "*.h"               # only headers
 )
@@ -124,9 +124,9 @@ if(JUNO_TESTS)
     add_definitions(-DUNITY_INCLUDE_DOUBLE)
     set(CMAKE_BUILD_TYPE Debug)
     enable_testing()
-    add_library(unity ${juno_SOURCE_DIR}/deps/unity/src/unity.c)
-    target_include_directories(unity PUBLIC ${juno_SOURCE_DIR}/deps/unity/src)
-    add_subdirectory(${juno_SOURCE_DIR}/tests)
+    add_library(unity ${PROJECT_SOURCE_DIR}/deps/unity/src/unity.c)
+    target_include_directories(unity PUBLIC ${PROJECT_SOURCE_DIR}/deps/unity/src)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
 endif()
 
 

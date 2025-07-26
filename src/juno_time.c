@@ -54,90 +54,153 @@ JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRet
     return JUNO_STATUS_SUCCESS;
 }
 
-JUNO_STATUS_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_NANOS_T *piNanos)
+JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
-    ASSERT_EXISTS(ptTime && piNanos);
+    JUNO_TIME_NANOS_RESULT_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
     const JUNO_TIME_NANOS_T iMAX_NANOS = -1;
     const JUNO_TIME_NANOS_T iNANOS_PER_SEC = 1000 * 1000 * 1000;
-    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     // check if seconds -1 would overflow nanos
     if(tTime.iSeconds > iMAX_NANOS / iNANOS_PER_SEC - 1)
     {
-        tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
-        JUNO_FAIL_ROOT(tStatus, ptTimeRoot, "Overflow when converting nanos");
-        return tStatus;     
+        tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos");
+        return tResult;     
     }
-    *piNanos = tTime.iSeconds * iNANOS_PER_SEC;
-    *piNanos += tTime.iSubSeconds / giSUBSECS_MAX * iNANOS_PER_SEC;
-    return tStatus;
+    tResult.tSuccess = tTime.iSeconds * iNANOS_PER_SEC;
+    tResult.tSuccess += tTime.iSubSeconds / giSUBSECS_MAX * iNANOS_PER_SEC;
+    return tResult;
 }
 
-JUNO_STATUS_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MICROS_T *piMicros)
+JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
-    ASSERT_EXISTS(ptTime && piMicros);
+    JUNO_TIME_MICROS_RESULT_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
     const JUNO_TIME_MICROS_T iMAX_MICROS = -1;
     const JUNO_TIME_MICROS_T iMICROS_PER_SEC = 1000 * 1000;
-    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
     // check if seconds -1 would overflow nanos
     if(tTime.iSeconds > iMAX_MICROS / iMICROS_PER_SEC - 1)
     {
-        tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
-        JUNO_FAIL_ROOT(tStatus, ptTimeRoot, "Overflow when converting nanos");
-        return tStatus;     
+        tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos");
+        return tResult;     
     }
-    *piMicros = tTime.iSeconds * iMICROS_PER_SEC;
-    *piMicros +=  tTime.iSubSeconds / giSUBSECS_MAX * iMICROS_PER_SEC;
-    return tStatus;
+    tResult.tSuccess = tTime.iSeconds * iMICROS_PER_SEC;
+    tResult.tSuccess +=  tTime.iSubSeconds / giSUBSECS_MAX * iMICROS_PER_SEC;
+    return tResult;
 }
 
-JUNO_STATUS_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime, JUNO_TIME_MILLIS_T *piMillis)
+JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
-    ASSERT_EXISTS(ptTime && piMillis);
+    JUNO_TIME_MILLIS_RESULT_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
     const JUNO_TIME_MICROS_T iMAX_MILLIS = -1;
     const JUNO_TIME_MICROS_T iMILLIS_PER_SEC = 1000;
-    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
     // check if seconds -1 would overflow nanos
     if(tTime.iSeconds > iMAX_MILLIS / iMILLIS_PER_SEC - 1)
     {
-        tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
-        JUNO_FAIL_ROOT(tStatus, ptTimeRoot, "Overflow when converting nanos");
-        return tStatus;     
+        tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos");
+        return tResult;     
     }
-    *piMillis = tTime.iSeconds * iMILLIS_PER_SEC;
-    *piMillis += tTime.iSubSeconds / giSUBSECS_MAX * iMILLIS_PER_SEC;
-    return tStatus;
+    tResult.tSuccess = tTime.iSeconds * iMILLIS_PER_SEC;
+    tResult.tSuccess += tTime.iSubSeconds / giSUBSECS_MAX * iMILLIS_PER_SEC;
+    return tResult;
 }
 
-JUNO_STATUS_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos, JUNO_TIMESTAMP_T *ptRetTime)
+JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos)
 {
-    ASSERT_EXISTS(ptTime && ptRetTime);
+    JUNO_TIMESTAMP_RESULT_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
     const JUNO_TIME_NANOS_T iNANOS_PER_SEC = 1000 * 1000 * 1000;
     const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_NANO = giSUBSECS_MAX / iNANOS_PER_SEC;
-    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
-    ptRetTime->iSeconds = iNanos / iNANOS_PER_SEC;
-    ptRetTime->iSubSeconds = (iNanos % iNANOS_PER_SEC) * iSUBSECS_PER_NANO;
-    return tStatus;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tSuccess.iSeconds = iNanos / iNANOS_PER_SEC;
+    tResult.tSuccess.iSubSeconds = (iNanos % iNANOS_PER_SEC) * iSUBSECS_PER_NANO;
+    return tResult;
 }
-JUNO_STATUS_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros, JUNO_TIMESTAMP_T *ptRetTime)
+
+JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros)
 {
-    ASSERT_EXISTS(ptTime && ptRetTime);
+    JUNO_TIMESTAMP_RESULT_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
     const JUNO_TIME_NANOS_T iMICROS_PER_SEC = 1000 * 1000;
     const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_MICRO = giSUBSECS_MAX / iMICROS_PER_SEC;
-    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
-    ptRetTime->iSeconds = iMicros / iMICROS_PER_SEC;
-    ptRetTime->iSubSeconds = (iMicros % iMICROS_PER_SEC) * iSUBSECS_PER_MICRO;
-    return tStatus;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tSuccess.iSeconds = iMicros / iMICROS_PER_SEC;
+    tResult.tSuccess.iSubSeconds = (iMicros % iMICROS_PER_SEC) * iSUBSECS_PER_MICRO;
+    return tResult;
 }
-JUNO_STATUS_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis, JUNO_TIMESTAMP_T *ptRetTime)
+
+JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis)
 {
-    ASSERT_EXISTS(ptTime && ptRetTime);
+    JUNO_TIMESTAMP_RESULT_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
     const JUNO_TIME_NANOS_T iMILLIS_PER_SEC = 1000;
     const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_MILLI = giSUBSECS_MAX / iMILLIS_PER_SEC;
-    JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
-    ptRetTime->iSeconds = iMillis / iMILLIS_PER_SEC;
-    ptRetTime->iSubSeconds = (iMillis % iMILLIS_PER_SEC) * iSUBSECS_PER_MILLI;
-    return tStatus;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tSuccess.iSeconds = iMillis / iMILLIS_PER_SEC;
+    tResult.tSuccess.iSubSeconds = (iMillis % iMILLIS_PER_SEC) * iSUBSECS_PER_MILLI;
+    return tResult;
 }
+
+
+JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)
+{
+    JUNO_RESULT_F64_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tSuccess = tTimestamp.iSeconds;
+    tResult.tSuccess += (double)(tTimestamp.iSubSeconds) / giSUBSECS_MAX;
+    return tResult;
+}
+
+
+JUNO_TIME_API_T tJunoTimeApi = {
+    NULL,
+    JunoTime_AddTime,
+    JunoTime_SubtractTime,
+    NULL,
+    NULL,
+    JunoTime_TimestampToNanos,
+    JunoTime_TimestampToMicros,
+    JunoTime_TimestampToMillis,
+    JunoTime_NanosToTimestamp,
+    JunoTime_MicrosToTimestamp,
+    JunoTime_MillisToTimestamp,
+    JunoTime_TimestampToDouble,
+};
