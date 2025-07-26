@@ -449,7 +449,7 @@ static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Mult(JUNO_RQUAT_F64_T q0, double d
 /**
     The hamilton product of two rquaternions.
 */
-static inline JUNO_RQUAT_F64_T Juno_RQuat_HamProd(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
+static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_HamProd(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
 {
     JUNO_RQUAT_F64_T tRes = {{
         q0.tQuat.s * q1.tQuat.s + q0.tQuat.i * q1.tQuat.i + q0.tQuat.j * q1.tQuat.j + q0.tQuat.k * q1.tQuat.k,
