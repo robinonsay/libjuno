@@ -390,6 +390,88 @@ static void test_vec3_i32_L2(void)
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
+static void test_rquat_f64_add(void)
+{
+    JUNO_RQUAT_F64_T q0 = {{1.0,  2.0,  3.0,  4.0}};
+    JUNO_RQUAT_F64_T q1 = {{4.0,  3.0,  2.0,  1.0}};
+    JUNO_RQUAT_F64_T res = Juno_RQuat_F64_Add(q0, q1);
+    double truth[4] = {5.0, 5.0, 5.0, 5.0};
+    for(uint8_t i = 0; i < 4; i++) {
+        TEST_ASSERT_EQUAL_DOUBLE(truth[i], res.arr[i]);
+    }
+}
+
+static void test_rquat_f64_sub(void)
+{
+    JUNO_RQUAT_F64_T q0 = {{5.0, 6.0, 7.0, 8.0}};
+    JUNO_RQUAT_F64_T q1 = {{1.0, 2.0, 3.0, 4.0}};
+    JUNO_RQUAT_F64_T res = Juno_RQuat_F64_Sub(q0, q1);
+    double truth[4] = {4.0, 4.0, 4.0, 4.0};
+    for(uint8_t i = 0; i < 4; i++) {
+        TEST_ASSERT_EQUAL_DOUBLE(truth[i], res.arr[i]);
+    }
+}
+
+static void test_rquat_f64_mult_scalar(void)
+{
+    JUNO_RQUAT_F64_T q  = {{1.0, -2.0, 3.0, -4.0}};
+    double scalar    = 2.5;
+    JUNO_RQUAT_F64_T res = Juno_RQuat_F64_Mult(q, scalar);
+    double truth[4] = { 2.5, -5.0, 7.5, -10.0 };
+    for(uint8_t i = 0; i < 4; i++) {
+        TEST_ASSERT_EQUAL_DOUBLE(truth[i], res.arr[i]);
+    }
+}
+
+static void test_rquat_f64_hamprod(void)
+{
+    // use identity quaternion so q * identity == q
+    JUNO_RQUAT_F64_T qId = {{1.0, 0.0, 0.0, 0.0}};
+    JUNO_RQUAT_F64_T q   = {{2.0, -1.0,  3.0, -4.0}};
+    JUNO_RQUAT_F64_T res = Juno_RQuat_HamProd(qId, q);
+    double truth[4] = {2.0, -1.0, 3.0, -4.0};
+    for(uint8_t i = 0; i < 4; i++) {
+        TEST_ASSERT_EQUAL_DOUBLE(truth[i], res.arr[i]);
+    }
+}
+
+static void test_rquat_f64_conj(void)
+{
+    JUNO_RQUAT_F64_T q = {{1.0, 2.0, -3.0, 4.0}};
+    JUNO_RQUAT_F64_T res = Juno_RQuat_F64_Conj(q);
+    double truth[4] = {1.0, -2.0, 3.0, -4.0};
+    for(uint8_t i = 0; i < 4; i++) {
+        TEST_ASSERT_EQUAL_DOUBLE(truth[i], res.arr[i]);
+    }
+}
+
+static void test_rquat_f64_l2norm2(void)
+{
+    JUNO_RQUAT_F64_T q = {{1.0, 2.0, 3.0, 4.0}};
+    double n2 = Juno_RQuat_F64_L2Norm2(q);
+    // 1^2 + 2^2 + 3^2 + 4^2 = 30
+    TEST_ASSERT_EQUAL_DOUBLE(30.0, n2);
+}
+
+static void test_rquat_f64_l2norm(void)
+{
+    JUNO_RQUAT_F64_T q = {{1.0, 2.0, 3.0, 4.0}};
+    double n = Juno_RQuat_F64_L2Norm(q);
+    // sqrt(30) ≈ 5.477225575
+    TEST_ASSERT_DOUBLE_WITHIN(1e-12, sqrt(30.0), n);
+}
+
+static void test_rquat_f64_recip(void)
+{
+    JUNO_RQUAT_F64_T q = {{1.0, 2.0, 3.0, 4.0}};
+    JUNO_RQUAT_F64_T res = Juno_RQuat_F64_Recip(q);
+    double inv30 = 1.0 / 30.0;
+    double truth[4] = {  inv30, -2.0*inv30, -3.0*inv30, -4.0*inv30 };
+    for(uint8_t i = 0; i < 4; i++) {
+        TEST_ASSERT_DOUBLE_WITHIN(1e-12, truth[i], res.arr[i]);
+    }
+}
+
 int main(void)
 {
 	UNITY_BEGIN();
@@ -429,5 +511,13 @@ int main(void)
 	RUN_TEST(test_vec3_i32_dot);
 	RUN_TEST(test_vec3_i32_cross);
 	RUN_TEST(test_vec3_i32_L2);
+    RUN_TEST(test_rquat_f64_add);
+    RUN_TEST(test_rquat_f64_sub);
+    RUN_TEST(test_rquat_f64_mult_scalar);
+    RUN_TEST(test_rquat_f64_hamprod);
+    RUN_TEST(test_rquat_f64_conj);
+    RUN_TEST(test_rquat_f64_l2norm2);
+    RUN_TEST(test_rquat_f64_l2norm);
+    RUN_TEST(test_rquat_f64_recip);
 	return UNITY_END();
 }

@@ -655,7 +655,7 @@ typedef union JUNO_RQUAT_F64_TAG
         double j; /**< Second vector part. */
         double k; /**< Third vector part. */
     } tQuat;
-    double quat[4]; /**< Raw quaternion array [s,i,j,k]. */
+    double arr[4]; /**< Raw quaternion array [s,i,j,k]. */
 } JUNO_RQUAT_F64_T;
 
 /**
@@ -672,7 +672,7 @@ typedef union JUNO_RQUAT_F32_TAG
         float j; /**< Second vector part. */
         float k; /**< Third vector part. */
     } tQuat;
-    float quat[4]; /**< Raw quaternion array [s,i,j,k]. */
+    float arr[4]; /**< Raw quaternion array [s,i,j,k]. */
 } JUNO_RQUAT_F32_T;
 
 /**
@@ -695,7 +695,7 @@ typedef union JUNO_RQUAT_I32_TAG
         int32_t j; /**< Second vector part. */
         int32_t k; /**< Third vector part. */
     } tQuat;
-    int32_t quat[4]; /**< Raw quaternion array [s,i,j,k]. */
+    int32_t arr[4]; /**< Raw quaternion array [s,i,j,k]. */
 } JUNO_RQUAT_I32_T;
 
 /**

@@ -22,6 +22,7 @@
 #ifndef JUNO_VEC_H
 #define JUNO_VEC_H
 
+#include "juno/math/juno_vec_types.h"
 #include "juno_math_types.h"
 #include <stdint.h>
 #include <math.h>
@@ -406,6 +407,90 @@ static inline float Juno_Vec3_I32_L2Norm(JUNO_VEC3_I32_T tVec0)
 {
 
     return sqrtf(Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]) + Juno_Pow2(tVec0.arr[2]));
+}
+
+/// Add two rquaternions
+static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Add(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
+{
+    q0.arr[0] += q1.arr[0];
+    q0.arr[1] += q1.arr[1];
+    q0.arr[2] += q1.arr[2];
+    q0.arr[3] += q1.arr[3];
+    return q0;
+}
+
+
+/**
+    Subtract to rquaternions
+    @param q0 The rquat to subtract from
+    @param q1 The rquat to subtract
+*/
+static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Sub(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
+{
+    q0.arr[0] -= q1.arr[0];
+    q0.arr[1] -= q1.arr[1];
+    q0.arr[2] -= q1.arr[2];
+    q0.arr[3] -= q1.arr[3];
+    return q0;
+}
+
+/**
+    Multiply scalar with rquaternion
+*/
+static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Mult(JUNO_RQUAT_F64_T q0, double dScalar)
+{
+    q0.arr[0] *= dScalar;
+    q0.arr[1] *= dScalar;
+    q0.arr[2] *= dScalar;
+    q0.arr[3] *= dScalar;
+    return q0;
+}
+
+/**
+    The hamilton product of two rquaternions.
+*/
+static inline JUNO_RQUAT_F64_T Juno_RQuat_HamProd(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
+{
+    JUNO_RQUAT_F64_T tRes = {{
+        q0.tQuat.s * q1.tQuat.s + q0.tQuat.i * q1.tQuat.i + q0.tQuat.j * q1.tQuat.j + q0.tQuat.k * q1.tQuat.k,
+        q0.tQuat.s * q1.tQuat.i + q0.tQuat.i * q1.tQuat.s + q0.tQuat.j * q1.tQuat.k + q0.tQuat.k * q1.tQuat.i,
+        q0.tQuat.s * q1.tQuat.j + q0.tQuat.i * q1.tQuat.k + q0.tQuat.j * q1.tQuat.s + q0.tQuat.k * q1.tQuat.j,
+        q0.tQuat.s * q1.tQuat.k + q0.tQuat.i * q1.tQuat.j + q0.tQuat.j * q1.tQuat.j + q0.tQuat.k * q1.tQuat.s
+    }};
+    return tRes;
+}
+
+/**
+    The conjugate product of two rquaternions.
+*/
+static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Conj(JUNO_RQUAT_F64_T q0)
+{
+    q0.tQuat.i = -q0.tQuat.i;
+    q0.tQuat.j = -q0.tQuat.j;
+    q0.tQuat.k = -q0.tQuat.k;
+    return q0;
+}
+
+static inline double Juno_RQuat_F64_L2Norm2(JUNO_RQUAT_F64_T q0)
+{
+    return Juno_Pow2(q0.arr[0]) + Juno_Pow2(q0.arr[1]) + Juno_Pow2(q0.arr[2]) + Juno_Pow2(q0.arr[3]);
+}
+
+/**
+    Get L2 norm of rquaternions 
+*/
+static inline double Juno_RQuat_F64_L2Norm(JUNO_RQUAT_F64_T q0)
+{
+
+    return sqrt(Juno_RQuat_F64_L2Norm2(q0));
+}
+
+/**
+    Get L2 norm of rquaternions 
+*/
+static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Recip(JUNO_RQUAT_F64_T q0)
+{
+    return Juno_RQuat_F64_Mult(Juno_RQuat_F64_Conj(q0), 1/Juno_RQuat_F64_L2Norm2(q0));
 }
 
 #ifdef __cplusplus
