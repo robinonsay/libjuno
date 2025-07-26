@@ -15,8 +15,8 @@
     included in all copies or substantial portions of the Software.
 */
 
-#ifndef JUNO_TYPES_H
-#define JUNO_TYPES_H
+#ifndef JUNO_MATH_TYPES_H
+#define JUNO_MATH_TYPES_H
 
 #include "juno_vec_types.h"
 #include "juno_dyn_types.h"

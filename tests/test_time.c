@@ -51,6 +51,7 @@ const JUNO_TIME_API_T tTimeApi =
     .NanosToTimestamp  = JunoTime_NanosToTimestamp,
     .MicrosToTimestamp = JunoTime_MicrosToTimestamp,
     .MillisToTimestamp = JunoTime_MillisToTimestamp,
+    .TimestampToDouble = JunoTime_TimestampToDouble,
 };
 
 // Global module instance
@@ -317,6 +318,16 @@ static void test_Sleep_returns_success(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
 }
 
+// Test Sleep stub returns success
+static void test_timestamp_to_double(void)
+{
+    const uint64_t max_sub = UINT64_MAX;
+    JUNO_TIMESTAMP_T duration = { .iSeconds = 1, .iSubSeconds = max_sub };
+    JUNO_RESULT_F64_T tResult = tTimeMod.ptApi->TimestampToDouble(&tTimeMod, duration);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_EQUAL(2.0, tResult.tSuccess);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -344,5 +355,6 @@ int main(void)
     RUN_TEST(test_Now_returns_success);
     RUN_TEST(test_SleepTo_returns_success);
     RUN_TEST(test_Sleep_returns_success);
+    RUN_TEST(test_timestamp_to_double);
     return UNITY_END();
 }

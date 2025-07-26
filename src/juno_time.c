@@ -173,3 +173,18 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIM
     tResult.tSuccess.iSubSeconds = (iMillis % iMILLIS_PER_SEC) * iSUBSECS_PER_MILLI;
     return tResult;
 }
+
+
+JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)
+{
+    JUNO_RESULT_F64_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tSuccess = tTimestamp.iSeconds;
+    tResult.tSuccess += (double)(tTimestamp.iSubSeconds) / giSUBSECS_MAX;
+    return tResult;
+}

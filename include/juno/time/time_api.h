@@ -22,6 +22,7 @@
 #define JUNO_TIME_API_H
 #include "juno/status.h"
 #include "juno/module.h"
+#include "juno/types.h"
 #include <stddef.h>
 #include <stdint.h>
 #ifdef __cplusplus
@@ -98,6 +99,8 @@ struct JUNO_TIME_API_TAG
     JUNO_TIMESTAMP_RESULT_T (*MicrosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros);
     /// Convert milliseconds to a timestamp
     JUNO_TIMESTAMP_RESULT_T (*MillisToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
+    /// Convert a timestamp to a double
+    JUNO_RESULT_F64_T (*TimestampToDouble)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
 };
 
 JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
@@ -108,6 +111,7 @@ JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_T
 JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos);
 JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros);
 JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
+JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
 
 #ifdef __cplusplus
 }
