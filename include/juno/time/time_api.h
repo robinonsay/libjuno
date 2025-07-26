@@ -114,8 +114,21 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIM
 JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
 JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
 
-
-extern JUNO_TIME_API_T tJunoTimeApi;
+#define JUNO_TIME_NEW_API(Now, SleepTo, Sleep) \
+{ \
+    Now, \
+    JunoTime_AddTime, \
+    JunoTime_SubtractTime, \
+    SleepTo, \
+    Sleep, \
+    JunoTime_TimestampToNanos, \
+    JunoTime_TimestampToMicros, \
+    JunoTime_TimestampToMillis, \
+    JunoTime_NanosToTimestamp, \
+    JunoTime_MicrosToTimestamp, \
+    JunoTime_MillisToTimestamp, \
+    JunoTime_TimestampToDouble, \
+}
 
 #ifdef __cplusplus
 }
