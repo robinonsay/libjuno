@@ -1,13 +1,8 @@
 var searchData=
 [
-  ['understanding_20reference_20counting_20macros_0',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30',1,'']]],
-  ['union_1',['union',['../module_8h.html#autotoc_md39',1,'How to Define The Module Union'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2MODULE.html#autotoc_md45',1,'How to Define The Module Union']]],
-  ['update_2',['Update',['../structJUNO__MEMORY__ALLOC__API__TAG.html#a016cff55da0dced33033f7d647698ac4',1,'JUNO_MEMORY_ALLOC_API_TAG']]],
-  ['usage_20example_3',['Usage Example',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27',1,'']]],
-  ['usage_20pattern_4',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]],
-  ['use_20reference_20counting_5',['When to Use Reference Counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34',1,'']]],
-  ['use_20turbo_20v6_6',['5.3. Modify main.c to Use Turbo V6',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70',1,'']]],
-  ['using_20libjuno_7',['Using LibJuno',['../index.html#autotoc_md85',1,'']]],
-  ['using_20the_20hybrid_20engine_20in_20main_20c_8',['6.3. Using the Hybrid Engine in main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md76',1,'']]],
-  ['using_20the_20memory_20api_20alternative_20approach_9',['Step 6: Using the Memory API (Alternative Approach)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md11',1,'']]]
+  ['v6_0',['5.3. Modify main.c to Use Turbo V6',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70',1,'']]],
+  ['vel_1',['vel',['../structJUNO__KSTATE__F64__TAG.html#a92daa486523c8f3c3d352467d1be43d5',1,'JUNO_KSTATE_F64_TAG']]],
+  ['verify_2',['verify',['../juno__hash_8c.html#a77a9106bd91407610d2cac1a65eb83bc',1,'Verify(JUNO_HASH_T *ptJunoHash):&#160;juno_hash.c'],['../juno__map_8c.html#a83e17593034c310c582587469e9b6410',1,'Verify(JUNO_MAP_T *ptJunoMap):&#160;juno_map.c'],['../juno__memory__block_8c.html#a1ac188fd8a86e2ff37224be809fe95b6',1,'Verify(JUNO_MEMORY_ALLOC_T *ptJunoMemory):&#160;juno_memory_block.c']]],
+  ['verifymsg_3',['VerifyMsg',['../structJUNO__MSG__API__TAG.html#ab6360d91e5097ef236f8fe0c1dc1718c',1,'JUNO_MSG_API_TAG']]],
+  ['visualization_4',['Memory Block Visualization',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]]
 ];

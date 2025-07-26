@@ -151,9 +151,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"juno__math__types_8h.html#a7684d1e566938c80b400838c4c50a7c1",
-"string__impl_8h.html",
-"unionJUNO__VEC3__F32__TAG.html"
+"juno__vec_8h.html#af6aafc0b62d83d81714f75bc0680e4ef",
+"status_8h.html#a7be0a0a69c5086c083a713ecb7738664ac0c16796f6cf2b09b1bcc5da4a758f38",
+"types_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

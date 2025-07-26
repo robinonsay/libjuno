@@ -33,6 +33,13 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/sb/subscriber_api.h"
   Node10 [id="Node000010",label="juno/time/time_api.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$time__api_8h.html",tooltip=" "];
   Node10 -> Node3 [id="edge18_Node000010_Node000003",color="steelblue1",style="solid",tooltip=" "];
   Node10 -> Node4 [id="edge19_Node000010_Node000004",color="steelblue1",style="solid",tooltip=" "];
-  Node10 -> Node6 [id="edge20_Node000010_Node000006",color="steelblue1",style="solid",tooltip=" "];
-  Node10 -> Node5 [id="edge21_Node000010_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node10 -> Node11 [id="edge20_Node000010_Node000011",color="steelblue1",style="solid",tooltip=" "];
+  Node11 [id="Node000011",label="juno/types.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$types_8h.html",tooltip=" "];
+  Node11 -> Node4 [id="edge21_Node000011_Node000004",color="steelblue1",style="solid",tooltip=" "];
+  Node11 -> Node12 [id="edge22_Node000011_Node000012",color="steelblue1",style="solid",tooltip=" "];
+  Node12 [id="Node000012",label="stdbool.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node11 -> Node6 [id="edge23_Node000011_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node11 -> Node5 [id="edge24_Node000011_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node10 -> Node6 [id="edge25_Node000010_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node10 -> Node5 [id="edge26_Node000010_Node000005",color="steelblue1",style="solid",tooltip=" "];
 }

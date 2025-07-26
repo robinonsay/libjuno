@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['r_0',['r',['../structJUNO__VEC2__F64__SPH__TAG.html#ae500b6eabd26a69ebb4dfff0111e7fbe',1,'JUNO_VEC2_F64_SPH_TAG::r'],['../structJUNO__VEC2__F32__SPH__TAG.html#aefc013c9d756078321879787ef0054f7',1,'JUNO_VEC2_F32_SPH_TAG::r'],['../structJUNO__VEC2__I32__SPH__TAG.html#a6e102a522c83a9151739f8191525d84c',1,'JUNO_VEC2_I32_SPH_TAG::r'],['../structJUNO__VEC3__F64__SPH__TAG.html#a96981b56b880f5223b9d3f106489bf47',1,'JUNO_VEC3_F64_SPH_TAG::r'],['../structJUNO__VEC3__F32__SPH__TAG.html#a107d4565cf79132eeca19f89226e579b',1,'JUNO_VEC3_F32_SPH_TAG::r'],['../structJUNO__VEC3__I32__SPH__TAG.html#ab6c2550fa542700509dc21ab8e4c1b03',1,'JUNO_VEC3_I32_SPH_TAG::r'],['../structJUNO__VEC4__F64__SPH__TAG.html#a297d0432064cfdd66c204f1c755cf94c',1,'JUNO_VEC4_F64_SPH_TAG::r'],['../structJUNO__VEC4__F32__SPH__TAG.html#aef5977d6903a1b74559ccca922f69c9c',1,'JUNO_VEC4_F32_SPH_TAG::r'],['../structJUNO__VEC4__I32__SPH__TAG.html#a945d71d52b567ffbc13a15ca76404888',1,'JUNO_VEC4_I32_SPH_TAG::r']]],
-  ['read_1',['Read',['../structJUNO__ASYNC__IO__API__TAG.html#aa250cb7a33649deafcd4af7da633ccf8',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['readuntil_2',['ReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a464b5615d82b1ec7317875efcabd7316',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['recv_3',['Recv',['../structJUNO__SUBSCRIBER__API__TAG.html#ab2c12e62c12f83f0ebe8c4716ec42baa',1,'JUNO_SUBSCRIBER_API_TAG']]],
-  ['remove_4',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]],
-  ['rho_5',['rho',['../structJUNO__VEC4__F64__SPH__TAG.html#a37c31f9f8eb492ac822c0d6b38b8d7d4',1,'JUNO_VEC4_F64_SPH_TAG::rho'],['../structJUNO__VEC4__F32__SPH__TAG.html#ae246ee1f1d451d282f47ebf13c8d30af',1,'JUNO_VEC4_F32_SPH_TAG::rho'],['../structJUNO__VEC4__I32__SPH__TAG.html#a31d5a55f83306a85810c4f9e655493f9',1,'JUNO_VEC4_I32_SPH_TAG::rho']]]
+  ['s_0',['s',['../unionJUNO__RQUAT__F64__TAG.html#ae6a5f73b9bc8652e27a880caa6f06c42',1,'JUNO_RQUAT_F64_TAG::s'],['../unionJUNO__RQUAT__F32__TAG.html#a51da7d3a56261a7dd0eff4e273f969dc',1,'JUNO_RQUAT_F32_TAG::s'],['../unionJUNO__RQUAT__I32__TAG.html#ac31c28901627ff58a74bd56a292c97b3',1,'JUNO_RQUAT_I32_TAG::s']]],
+  ['set_1',['Set',['../structJUNO__MAP__API__TAG.html#a3ee272bb656ccad597b426aff2de0f68',1,'JUNO_MAP_API_TAG']]],
+  ['setbuffer_2',['SetBuffer',['../structJUNO__MSG__API__TAG.html#abffdc5283d77dc9632fc5e67e8cc8868',1,'JUNO_MSG_API_TAG']]],
+  ['sleep_3',['Sleep',['../structJUNO__TIME__API__TAG.html#aab086915d1eb70741db07bed31ffe874',1,'JUNO_TIME_API_TAG']]],
+  ['sleepto_4',['SleepTo',['../structJUNO__TIME__API__TAG.html#a2305cb5124263b7da31ba713926e3d37',1,'JUNO_TIME_API_TAG']]],
+  ['subscribe_5',['Subscribe',['../structJUNO__SUBSCRIBER__API__TAG.html#aa95cc55ebf328b975e063c79b0122d25',1,'JUNO_SUBSCRIBER_API_TAG']]],
+  ['subtracttime_6',['SubtractTime',['../structJUNO__TIME__API__TAG.html#a6fbe3ef3579aa0f5c05fc446d26a8265',1,'JUNO_TIME_API_TAG']]]
 ];
