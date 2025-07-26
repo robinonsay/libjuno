@@ -188,3 +188,19 @@ JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP
     tResult.tSuccess += (double)(tTimestamp.iSubSeconds) / giSUBSECS_MAX;
     return tResult;
 }
+
+
+JUNO_TIME_API_T tJunoTimeApi = {
+    NULL,
+    JunoTime_AddTime,
+    JunoTime_SubtractTime,
+    NULL,
+    NULL,
+    JunoTime_TimestampToNanos,
+    JunoTime_TimestampToMicros,
+    JunoTime_TimestampToMillis,
+    JunoTime_NanosToTimestamp,
+    JunoTime_MicrosToTimestamp,
+    JunoTime_MillisToTimestamp,
+    JunoTime_TimestampToDouble,
+};
