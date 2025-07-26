@@ -428,7 +428,7 @@ static void test_rquat_f64_hamprod(void)
     // use identity quaternion so q * identity == q
     JUNO_RQUAT_F64_T qId = {{1.0, 0.0, 0.0, 0.0}};
     JUNO_RQUAT_F64_T q   = {{2.0, -1.0,  3.0, -4.0}};
-    JUNO_RQUAT_F64_T res = Juno_RQuat_HamProd(qId, q);
+    JUNO_RQUAT_F64_T res = Juno_RQuat_F64_HamProd(qId, q);
     double truth[4] = {2.0, -1.0, 3.0, -4.0};
     for(uint8_t i = 0; i < 4; i++) {
         TEST_ASSERT_EQUAL_DOUBLE(truth[i], res.arr[i]);
