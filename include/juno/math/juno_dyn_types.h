@@ -32,7 +32,7 @@ typedef struct JUNO_KMAT_ROOT_TAG JUNO_MODULE_ROOT(JUNO_KMAT_API_T,
 struct JUNO_KMAT_API_TAG
 {
     /// Update the state of the kinematic system
-    JUNO_STATUS_T (*Update)(JUNO_KMAT_T *ptKmat, JUNO_VEC3_F64_T dVel, JUNO_VEC3_F64_T dPos, JUNO_RQUAT_F64_T dAng, JUNO_TIMESTAMP_T tTimestamp);
+    JUNO_STATUS_T (*UpdateWithDeltas)(JUNO_KMAT_T *ptKmat, JUNO_VEC3_F64_T dVel, JUNO_VEC3_F64_T dAng, JUNO_TIMESTAMP_T tTimestamp);
 };
 
 #ifdef __cplusplus
