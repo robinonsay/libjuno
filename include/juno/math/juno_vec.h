@@ -488,6 +488,14 @@ static inline double Juno_RQuat_F64_L2Norm(JUNO_RQUAT_F64_T q0)
 /**
     Get L2 norm of rquaternions 
 */
+static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Normalize(JUNO_RQUAT_F64_T q0)
+{
+    return Juno_RQuat_F64_Mult(q0, 1.0 / Juno_RQuat_F64_L2Norm(q0));
+}
+
+/**
+    Get L2 norm of rquaternions 
+*/
 static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Recip(JUNO_RQUAT_F64_T q0)
 {
     return Juno_RQuat_F64_Mult(Juno_RQuat_F64_Conj(q0), 1/Juno_RQuat_F64_L2Norm2(q0));
