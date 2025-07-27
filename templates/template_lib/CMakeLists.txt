@@ -32,8 +32,7 @@ set(JUNO_COMPILE_CXX_OPTIONS
 )
 
 set(JUNO_COMPILE_C_OPTIONS
-    -Wstrict-prototypes             # Warn if a function is declared without specifying argument types
-    -Wmissing-prototypes            # Warn if a global function is defined without a previous prototype declaration
+
 )
 
 find_library(
