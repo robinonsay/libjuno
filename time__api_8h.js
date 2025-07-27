@@ -2,6 +2,7 @@ var time__api_8h =
 [
     [ "JUNO_TIMESTAMP_TAG", "structJUNO__TIMESTAMP__TAG.html", "structJUNO__TIMESTAMP__TAG" ],
     [ "JUNO_TIME_API_TAG", "structJUNO__TIME__API__TAG.html", "structJUNO__TIME__API__TAG" ],
+    [ "JUNO_TIME_NEW_API", "time__api_8h.html#a6bdedd0daca2430506a739ab02eba994", null ],
     [ "JUNO_TIME_API_T", "time__api_8h.html#a076aada0c523de520d87145537969e4f", null ],
     [ "JUNO_TIME_MICROS_T", "time__api_8h.html#a157796cd447440f52c16b99d69f1e045", null ],
     [ "JUNO_TIME_MILLIS_T", "time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821", null ],
@@ -26,6 +27,5 @@ var time__api_8h =
     [ "JunoTime_TimestampToDouble", "time__api_8h.html#ae1da4608f7a7eac9394580c5ba1d6113", null ],
     [ "JunoTime_TimestampToMicros", "time__api_8h.html#a1395e0d31b9aeb31c6a755ba0bf84433", null ],
     [ "JunoTime_TimestampToMillis", "time__api_8h.html#aeac656ce8c7dab03ac3db1cebcb70f2b", null ],
-    [ "JunoTime_TimestampToNanos", "time__api_8h.html#a2a5f498657381dd193751024d97a0295", null ],
-    [ "tJunoTimeApi", "time__api_8h.html#a4a3db3e658ebab9b9c59787db48bf7be", null ]
+    [ "JunoTime_TimestampToNanos", "time__api_8h.html#a2a5f498657381dd193751024d97a0295", null ]
 ];
