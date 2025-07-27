@@ -130,6 +130,21 @@ JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP
     JunoTime_TimestampToDouble, \
 }
 
+static inline bool JunoTime_TimestampGreaterThan(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
+{
+    return (tLeft.iSeconds > tRight.iSeconds) || (tLeft.iSeconds == tRight.iSeconds && tLeft.iSubSeconds > tRight.iSubSeconds);
+}
+
+static inline bool JunoTime_TimestampLessThan(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
+{
+    return (tLeft.iSeconds < tRight.iSeconds) || (tLeft.iSeconds == tRight.iSeconds && tLeft.iSubSeconds < tRight.iSubSeconds);
+}
+
+static inline bool JunoTime_TimestampEquals(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
+{
+    return (tLeft.iSeconds == tRight.iSeconds) && (tLeft.iSeconds == tRight.iSeconds);
+}
+
 #ifdef __cplusplus
 }
 #endif
