@@ -17,7 +17,6 @@ set(JUNO_COMPILE_OPTIONS
     -pedantic                       # Enforce ISO C standards
     -Wshadow                        # Warn when variable declarations shadow outer scope variables
     -Wcast-align                    # Warn for potential issues with pointer casts
-    -Wundef                         # Warn if an undefined identifier is evaluated in an #if directive
     -Wswitch                        # Warn about missing cases in switch statements
     -Wswitch-default                # Warn whenever a switch statement does not have a default case
     -Wmissing-field-initializers    # Warn about missing fields in struct init
@@ -61,8 +60,6 @@ find_path(
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/src ${PROJECT_NAME}_SRCS)
 
-set(TEMPLATE_SHARED_TARGET ${PROJECT_NAME}_shared)
-add_library(${TEMPLATE_SHARED_TARGET} SHARED ${${PROJECT_NAME}_SRCS})
 add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SRCS})
 
 
@@ -74,22 +71,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/src
 )
 
-target_include_directories(${TEMPLATE_SHARED_TARGET} PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
-    PRIVATE
-    ${JUNO_INCLUDE}
-    ${PROJECT_SOURCE_DIR}/src
-)
-
 target_link_libraries(${PROJECT_NAME} PUBLIC ${JUNO_LIBRARY})
-target_link_libraries(${TEMPLATE_SHARED_TARGET} PUBLIC ${JUNO_SHARED_LIBRARY})
-
-target_compile_options(${TEMPLATE_SHARED_TARGET} PRIVATE
-    ${JUNO_COMPILE_OPTIONS}
-    $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
-    $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
-)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     ${JUNO_COMPILE_OPTIONS}
@@ -98,7 +80,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 )
 
 install(
-  TARGETS ${PROJECT_NAME} ${JUNO_SHARED_TARGET}
+  TARGETS ${PROJECT_NAME}
   EXPORT junoTargets                          # for later use in find_package()
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # usually “lib”
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
