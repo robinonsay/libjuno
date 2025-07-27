@@ -45,7 +45,7 @@ struct TEMPLATE_IMPL_TAG JUNO_MODULE_DERIVE(TEMPLATE_ROOT_T,
     */
 );
 
-#ifdef TEMPLATE_DEFAULT
+#ifndef TEMPLATE_CUSTOM
 /**
     This is the default implementation for `TEMPLATE_T`.
     If you want to use the default implementation for `TEMPLATE_T`
