@@ -39,7 +39,7 @@ typedef uint64_t JUNO_TIME_SECONDS_T;
 typedef uint64_t JUNO_TIME_MILLIS_T;
 typedef uint64_t JUNO_TIME_MICROS_T;
 typedef uint64_t JUNO_TIME_NANOS_T;
-typedef uint64_t JUNO_TIME_SUBSECONDS_T;
+typedef uint32_t JUNO_TIME_SUBSECONDS_T;
 
 /**
     @brief This is the Juno Time Module for all time time related
