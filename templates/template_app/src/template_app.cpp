@@ -34,7 +34,7 @@ static JUNO_STATUS_T OnInit(JUNO_APP_T *ptJunoApp)
     // Get the logger
     auto ptLogger = ptTemplateApp->ptLogger;
     // Get the logger api
-    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_ROOT_T *>(ptLogger)->ptApi;
     // Log that the app was intialized
     ptLoggerApi->LogInfo(ptLogger, "Template App Initialized");
     return tStatus;
@@ -50,7 +50,7 @@ static JUNO_STATUS_T OnProcess(JUNO_APP_T *ptJunoApp)
     // Get the logger
     auto ptLogger = ptTemplateApp->ptLogger;
     // Get the logger api
-    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_ROOT_T *>(ptLogger)->ptApi;
     // Log that the app is running
     ptLoggerApi->LogDebug(ptLogger, "Template App Running");
     return tStatus;
@@ -66,7 +66,7 @@ static JUNO_STATUS_T OnExit(JUNO_APP_T *ptJunoApp)
     // Get the logger
     auto ptLogger = ptTemplateApp->ptLogger;
     // Get the logger api
-    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_BASE_T *>(ptLogger)->ptApi;
+    auto ptLoggerApi = reinterpret_cast<JUNO_LOG_ROOT_T *>(ptLogger)->ptApi;
     // Log that the app is running
     ptLoggerApi->LogInfo(ptLogger, "Template App Exiting");
     return tStatus;
