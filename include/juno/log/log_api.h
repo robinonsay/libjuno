@@ -42,7 +42,6 @@ struct JUNO_LOG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_LOG_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_LOG_API_TAG
 {
-    /// TODO: Replace this example function with your own functions
     JUNO_STATUS_T (*LogDebug)(JUNO_LOG_T *ptJunoLog, const char *pcMsg, ...);
     JUNO_STATUS_T (*LogInfo)(JUNO_LOG_T *ptJunoLog, const char *pcMsg, ...);
     JUNO_STATUS_T (*LogWarning)(JUNO_LOG_T *ptJunoLog, const char *pcMsg, ...);

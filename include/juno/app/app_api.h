@@ -35,7 +35,7 @@ extern "C"
 
 typedef struct JUNO_APP_API_TAG JUNO_APP_API_T;
 
-typedef union JUNO_APP_TAG JUNO_APP_T;
+typedef union JUNO_APP_T JUNO_APP_T;
 typedef struct JUNO_APP_ROOT_TAG JUNO_APP_ROOT_T;
 
 struct JUNO_APP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_APP_API_T, JUNO_MODULE_EMPTY);

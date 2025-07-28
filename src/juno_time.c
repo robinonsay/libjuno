@@ -1,6 +1,7 @@
 #include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/time/time_api.h"
+#include <stdint.h>
 
 static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = -1;
 
@@ -74,7 +75,7 @@ JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIM
         return tResult;     
     }
     tResult.tSuccess = tTime.iSeconds * iNANOS_PER_SEC;
-    tResult.tSuccess += tTime.iSubSeconds / giSUBSECS_MAX * iNANOS_PER_SEC;
+    tResult.tSuccess += ((double)tTime.iSubSeconds) / giSUBSECS_MAX * iNANOS_PER_SEC ;
     return tResult;
 }
 
@@ -98,7 +99,7 @@ JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_T
         return tResult;     
     }
     tResult.tSuccess = tTime.iSeconds * iMICROS_PER_SEC;
-    tResult.tSuccess +=  tTime.iSubSeconds / giSUBSECS_MAX * iMICROS_PER_SEC;
+    tResult.tSuccess +=  (((double)tTime.iSubSeconds) * iMICROS_PER_SEC) / giSUBSECS_MAX;
     return tResult;
 }
 
@@ -122,7 +123,7 @@ JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_T
         return tResult;     
     }
     tResult.tSuccess = tTime.iSeconds * iMILLIS_PER_SEC;
-    tResult.tSuccess += tTime.iSubSeconds / giSUBSECS_MAX * iMILLIS_PER_SEC;
+    tResult.tSuccess += (((double)tTime.iSubSeconds) * iMILLIS_PER_SEC)/ giSUBSECS_MAX;
     return tResult;
 }
 
@@ -188,3 +189,18 @@ JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP
     tResult.tSuccess += (double)(tTimestamp.iSubSeconds) / giSUBSECS_MAX;
     return tResult;
 }
+
+JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_T *ptTime, double dTimestamp)
+{
+    JUNO_TIMESTAMP_RESULT_T tResult = {0};
+    tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+    if(!(ptTime))
+    {
+        return tResult;
+    }
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tSuccess.iSeconds = dTimestamp;
+    tResult.tSuccess.iSubSeconds = (dTimestamp - tResult.tSuccess.iSeconds) * giSUBSECS_MAX;
+    return tResult;
+}
+

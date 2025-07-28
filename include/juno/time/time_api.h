@@ -101,6 +101,8 @@ struct JUNO_TIME_API_TAG
     JUNO_TIMESTAMP_RESULT_T (*MillisToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
     /// Convert a timestamp to a double
     JUNO_RESULT_F64_T (*TimestampToDouble)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
+    /// Convert a double to a timestamp
+    JUNO_TIMESTAMP_RESULT_T (*DoubleToTimestamp)(JUNO_TIME_T *ptTime, double dTimestamp);
 };
 
 
@@ -113,6 +115,7 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME
 JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros);
 JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
 JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
+JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_T *ptTime, double dTimestamp);
 
 #define JUNO_TIME_NEW_API(Now, SleepTo, Sleep) \
 { \
@@ -128,6 +131,22 @@ JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP
     JunoTime_MicrosToTimestamp, \
     JunoTime_MillisToTimestamp, \
     JunoTime_TimestampToDouble, \
+    JunoTime_DoubleToTimestamp, \
+}
+
+static inline bool JunoTime_TimestampGreaterThan(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
+{
+    return (tLeft.iSeconds > tRight.iSeconds) || (tLeft.iSeconds == tRight.iSeconds && tLeft.iSubSeconds > tRight.iSubSeconds);
+}
+
+static inline bool JunoTime_TimestampLessThan(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
+{
+    return (tLeft.iSeconds < tRight.iSeconds) || (tLeft.iSeconds == tRight.iSeconds && tLeft.iSubSeconds < tRight.iSubSeconds);
+}
+
+static inline bool JunoTime_TimestampEquals(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
+{
+    return (tLeft.iSeconds == tRight.iSeconds) && (tLeft.iSeconds == tRight.iSeconds);
 }
 
 #ifdef __cplusplus
