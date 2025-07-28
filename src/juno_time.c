@@ -74,7 +74,7 @@ JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIM
         return tResult;     
     }
     tResult.tSuccess = tTime.iSeconds * iNANOS_PER_SEC;
-    tResult.tSuccess += tTime.iSubSeconds / giSUBSECS_MAX * iNANOS_PER_SEC;
+    tResult.tSuccess += ((double)tTime.iSubSeconds)/ giSUBSECS_MAX * iNANOS_PER_SEC;
     return tResult;
 }
 
@@ -98,7 +98,7 @@ JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_T
         return tResult;     
     }
     tResult.tSuccess = tTime.iSeconds * iMICROS_PER_SEC;
-    tResult.tSuccess +=  tTime.iSubSeconds / giSUBSECS_MAX * iMICROS_PER_SEC;
+    tResult.tSuccess +=  ((double)tTime.iSubSeconds) / giSUBSECS_MAX * iMICROS_PER_SEC;
     return tResult;
 }
 
@@ -122,7 +122,7 @@ JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_T
         return tResult;     
     }
     tResult.tSuccess = tTime.iSeconds * iMILLIS_PER_SEC;
-    tResult.tSuccess += tTime.iSubSeconds / giSUBSECS_MAX * iMILLIS_PER_SEC;
+    tResult.tSuccess += ((double)tTime.iSubSeconds) / giSUBSECS_MAX * iMILLIS_PER_SEC;
     return tResult;
 }
 
