@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['i_0',['i',['../unionJUNO__RQUAT__F64__TAG.html#af89255593c89569f356f412d645681ea',1,'JUNO_RQUAT_F64_TAG::i'],['../unionJUNO__RQUAT__F32__TAG.html#a77ea79f8a0587efc60f49ead63c5316c',1,'JUNO_RQUAT_F32_TAG::i'],['../unionJUNO__RQUAT__I32__TAG.html#a7259e53f404efdeb28e75bf80d4353ae',1,'JUNO_RQUAT_I32_TAG::i']]],
-  ['iaddr_1',['iAddr',['../structJUNO__I2C__IO__MSG__HDR__TAG.html#a97665a31ee04f804c562a36de4663c94',1,'JUNO_I2C_IO_MSG_HDR_TAG']]],
-  ['init_2',['Init',['../structJUNO__STRING__API__TAG.html#a41e18c7a3cb5dc08c7dda7624fdac50b',1,'JUNO_STRING_API_TAG']]],
-  ['irefcount_3',['iRefCount',['../structJUNO__MEMORY__TAG.html#a6a3a86510e2ff84dadb57446ddbe16f2',1,'JUNO_MEMORY_TAG']]],
-  ['iseconds_4',['iSeconds',['../structJUNO__TIMESTAMP__TAG.html#a485c4829775b4f8d6f31ead05fe7a1c0',1,'JUNO_TIMESTAMP_TAG']]],
-  ['istartindex_5',['iStartIndex',['../structJUNO__BUFF__QUEUE__TAG.html#afa6254403077743264b34b848ef66f2a',1,'JUNO_BUFF_QUEUE_TAG']]],
-  ['isubseconds_6',['iSubSeconds',['../structJUNO__TIMESTAMP__TAG.html#a9d988315177cec255012a31be9871d3a',1,'JUNO_TIMESTAMP_TAG']]]
+  ['get_0',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__ALLOC__API__TAG.html#a0ac4d16586e6e5ae36a13889bacc8ee7',1,'JUNO_MEMORY_ALLOC_API_TAG::Get']]],
+  ['getbuffer_1',['GetBuffer',['../structJUNO__MSG__API__TAG.html#a044f174e3fbe8269a8287be8b5e85753',1,'JUNO_MSG_API_TAG']]],
+  ['getmajorframeperiod_2',['GetMajorFramePeriod',['../structJUNO__SCH__API__TAG.html#a081aceb704219323d5ff1ed71330864b',1,'JUNO_SCH_API_TAG']]],
+  ['getminorframeperiod_3',['GetMinorFramePeriod',['../structJUNO__SCH__API__TAG.html#a1866c5537247a5337e8617362b848cb9',1,'JUNO_SCH_API_TAG']]],
+  ['getpublisherid_4',['GetPublisherId',['../structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f',1,'JUNO_PUBLISHER_API_TAG']]],
+  ['getsize_5',['GetSize',['../structJUNO__STRING__API__TAG.html#a75d02b815e5225c87bfbaada096e2d1e',1,'JUNO_STRING_API_TAG']]],
+  ['gisubsecs_5fmax_6',['giSUBSECS_MAX',['../juno__time_8c.html#aa122a53fca584785c3b9cd2521307e06',1,'juno_time.c']]]
 ];

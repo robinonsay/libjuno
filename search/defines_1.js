@@ -36,6 +36,7 @@ var searchData=
   ['juno_5fpow4_33',['Juno_Pow4',['../juno__vec_8h.html#a5dc32a1fa1d7bed7872b17d8d08428a7',1,'juno_vec.h']]],
   ['juno_5fquart_5fpi_34',['JUNO_QUART_PI',['../juno__math__constants_8h.html#a29155b38331e7716e3325c13674dd6e7',1,'juno_math_constants.h']]],
   ['juno_5fref_35',['JUNO_REF',['../memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2',1,'memory_api.h']]],
-  ['juno_5ftime_5fnew_5fapi_36',['JUNO_TIME_NEW_API',['../time__api_8h.html#a6bdedd0daca2430506a739ab02eba994',1,'time_api.h']]],
-  ['juno_5fzip_5fcrc_5finit_37',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
+  ['juno_5fsch_5ftable_5fnew_36',['JUNO_SCH_TABLE_NEW',['../juno__sch__api_8h.html#a9a7dc74eca0809ed9540ee23a2ab432f',1,'juno_sch_api.h']]],
+  ['juno_5ftime_5fnew_5fapi_37',['JUNO_TIME_NEW_API',['../time__api_8h.html#a6bdedd0daca2430506a739ab02eba994',1,'time_api.h']]],
+  ['juno_5fzip_5fcrc_5finit_38',['JUNO_ZIP_CRC_INIT',['../crc_8h.html#a898fcba043598d58c4e1801191e767cb',1,'crc.h']]]
 ];

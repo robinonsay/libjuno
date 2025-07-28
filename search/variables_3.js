@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['free_0',['Free',['../structJUNO__STRING__API__TAG.html#ae69f1e7a38c89e794a65dfd6a4bddef1',1,'JUNO_STRING_API_TAG']]]
+  ['doubletotimestamp_0',['DoubleToTimestamp',['../structJUNO__TIME__API__TAG.html#a2e457be3232f933ada5bfd4937066a00',1,'JUNO_TIME_API_TAG']]]
 ];

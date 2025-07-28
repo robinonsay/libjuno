@@ -1,6 +1,7 @@
 var structJUNO__TIME__API__TAG =
 [
     [ "AddTime", "structJUNO__TIME__API__TAG.html#a9330c1c761d1233113e0aba9a3507a7e", null ],
+    [ "DoubleToTimestamp", "structJUNO__TIME__API__TAG.html#a2e457be3232f933ada5bfd4937066a00", null ],
     [ "MicrosToTimestamp", "structJUNO__TIME__API__TAG.html#a8f140a05115e7cb0cc750fdd6f65c2b4", null ],
     [ "MillisToTimestamp", "structJUNO__TIME__API__TAG.html#a455831ba2fc865cee61e0b2df46c3dd7", null ],
     [ "NanosToTimestamp", "structJUNO__TIME__API__TAG.html#a1e9ebb9b3d1ff5ccf327e40d6c553043", null ],

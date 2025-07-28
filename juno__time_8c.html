@@ -130,6 +130,7 @@ $(document).ready(function(){initNavTree('juno__time_8c.html',''); initResizable
 <div class="textblock"><code>#include &quot;<a class="el" href="macros_8h_source.html">juno/macros.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="time__api_8h_source.html">juno/time/time_api.h</a>&quot;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for juno_time.c:</div>
 <div class="dyncontent">
@@ -156,6 +157,8 @@ Functions</h2></td></tr>
 <tr class="separator:a1fa00ba4237c7224b447261feac2871c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1da4608f7a7eac9394580c5ba1d6113" id="r_ae1da4608f7a7eac9394580c5ba1d6113"><td class="memItemLeft" align="right" valign="top">JUNO_RESULT_F64_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__time_8c.html#ae1da4608f7a7eac9394580c5ba1d6113">JunoTime_TimestampToDouble</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTimestamp)</td></tr>
 <tr class="separator:ae1da4608f7a7eac9394580c5ba1d6113"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab65793d840334a9269084eb936ee13d9" id="r_ab65793d840334a9269084eb936ee13d9"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__time_8c.html#ab65793d840334a9269084eb936ee13d9">JunoTime_DoubleToTimestamp</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, double dTimestamp)</td></tr>
+<tr class="separator:ab65793d840334a9269084eb936ee13d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -186,6 +189,34 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
           <td class="paramname"><em>tTimeToAdd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab65793d840334a9269084eb936ee13d9" name="ab65793d840334a9269084eb936ee13d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab65793d840334a9269084eb936ee13d9">&#9670;&#160;</a></span>JunoTime_DoubleToTimestamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
+          <td class="paramname"><em>ptTime</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>dTimestamp</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

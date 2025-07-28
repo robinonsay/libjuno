@@ -29,6 +29,7 @@ var annotated_dup =
     [ "JUNO_RQUAT_F32_TAG", "unionJUNO__RQUAT__F32__TAG.html", "unionJUNO__RQUAT__F32__TAG" ],
     [ "JUNO_RQUAT_F64_TAG", "unionJUNO__RQUAT__F64__TAG.html", "unionJUNO__RQUAT__F64__TAG" ],
     [ "JUNO_RQUAT_I32_TAG", "unionJUNO__RQUAT__I32__TAG.html", "unionJUNO__RQUAT__I32__TAG" ],
+    [ "JUNO_SCH_API_TAG", "structJUNO__SCH__API__TAG.html", "structJUNO__SCH__API__TAG" ],
     [ "JUNO_SPI_IO_API_TAG", "structJUNO__SPI__IO__API__TAG.html", "structJUNO__SPI__IO__API__TAG" ],
     [ "JUNO_STRING_API_TAG", "structJUNO__STRING__API__TAG.html", "structJUNO__STRING__API__TAG" ],
     [ "JUNO_SUBSCRIBER_API_TAG", "structJUNO__SUBSCRIBER__API__TAG.html", "structJUNO__SUBSCRIBER__API__TAG" ],
