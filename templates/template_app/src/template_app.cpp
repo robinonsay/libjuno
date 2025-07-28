@@ -88,12 +88,12 @@ static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp)
     ASSERT_EXISTS_MODULE(
         /* TODO: Assert other dependencies and members here using &&*/
         ptTemplateApp &&
-        ptTemplateApp->tBase.ptApi,
+        ptTemplateApp->tRoot.ptApi,
         ptTemplateApp,
         "Module does not have all dependencies"
     );
     // Verify that this application is using the correct API
-    if(ptTemplateApp->tBase.ptApi != &tTemplateAppApi)
+    if(ptTemplateApp->tRoot.ptApi != &tTemplateAppApi)
     {
         JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateApp, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
@@ -111,9 +111,9 @@ JUNO_STATUS_T TemplateApp(
 {
     ASSERT_EXISTS(ptJunoApp);
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
-    ptTemplateApp->tBase.ptApi = &tTemplateAppApi;
-    ptTemplateApp->tBase.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
-    ptTemplateApp->tBase.JUNO_FAILURE_USER_DATA = pvFailureUserData;
+    ptTemplateApp->tRoot.ptApi = &tTemplateAppApi;
+    ptTemplateApp->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
+    ptTemplateApp->tRoot.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptJunoApp);
     ASSERT_SUCCESS(tStatus, return tStatus);
     ptTemplateApp->ptLogger = ptLogger;
