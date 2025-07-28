@@ -146,7 +146,7 @@ static inline bool JunoTime_TimestampLessThan(JUNO_TIMESTAMP_T tLeft, JUNO_TIMES
 
 static inline bool JunoTime_TimestampEquals(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
 {
-    return (tLeft.iSeconds == tRight.iSeconds) && (tLeft.iSeconds == tRight.iSeconds);
+    return (tLeft.iSeconds == tRight.iSeconds) && (tLeft.iSubSeconds == tRight.iSubSeconds);
 }
 
 #ifdef __cplusplus
