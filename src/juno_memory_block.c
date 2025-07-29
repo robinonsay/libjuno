@@ -124,14 +124,20 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
     ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
+    ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
+    JUNO_MEMORY_T tMemory = *ptMemory;
+    ptMemory->pvAddr = NULL;
+    ptMemory->zSize = 0;
+    ptMemory->iRefCount = 0;
     // There are still valid references to this memory, end with success
-    if(ptMemory->iRefCount != 1)
+    if(tMemory.iRefCount != 1)
     {
         tStatus = JUNO_STATUS_REF_IN_USE_ERROR;
         // Log error if invalid address detected
         JUNO_FAIL_MODULE(tStatus, ptMemBlk,
             "Failed to free block memory. Memory in use"
         );
+        *ptMemory = tMemory;
         return tStatus;
     }
     // Calculate start and end addresses for the memory block area
@@ -139,26 +145,28 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * ptMemBlk->zLength];
     
     // Check if the address is outside the managed memory range or no block is in use
-    if(ptMemory->pvAddr < pvStartAddr || pvEndAddr < ptMemory->pvAddr || ptMemBlk->zUsed == 0)
+    if(tMemory.pvAddr < pvStartAddr || pvEndAddr < tMemory.pvAddr || ptMemBlk->zUsed == 0)
     {
         tStatus = JUNO_STATUS_MEMFREE_ERROR;
         // Log error if invalid address detected
         JUNO_FAIL_MODULE(tStatus, ptMemBlk,
             "Failed to free block memory. Invalid Address"
         );
+        *ptMemory = tMemory;
         return tStatus;
     }
     
     // Ensure the block has not already been freed
     for(size_t i = 0; i < ptMemBlk->zFreed; ++i)
     {
-        if(ptMemBlk->ptMetadata[i].ptFreeMem == ptMemory->pvAddr)
+        if(ptMemBlk->ptMetadata[i].ptFreeMem == tMemory.pvAddr)
         {
             tStatus = JUNO_STATUS_MEMFREE_ERROR;
             // Log error for duplicate free attempt
             JUNO_FAIL_MODULE(tStatus, ptMemBlk,
                 "Failed to free block memory. Memory already freed"
             );
+            *ptMemory = tMemory;
             return tStatus;           
         }
     }
@@ -166,12 +174,12 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     // Clear the block memory
     for(size_t i = 0; i < ptMemBlk->zTypeSize; i++)
     {
-        uint8_t *piAddr = (uint8_t *)(ptMemory->pvAddr);
+        uint8_t *piAddr = (uint8_t *)(tMemory.pvAddr);
         piAddr[i] = 0;
     }
     // Check if the block being freed is the last allocated block
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
-    if(pvEndOfBlk == ptMemory->pvAddr)
+    if(pvEndOfBlk == tMemory.pvAddr)
     {
         // Simply decrement used counter without adding to free stack.
         ptMemBlk->zUsed -= 1;
@@ -179,12 +187,10 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     else
     {
         // Otherwise, add the block back to the free stack.
-        ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = ptMemory->pvAddr;
+        ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = tMemory.pvAddr;
         ptMemBlk->zFreed += 1;
     }
-    ptMemory->pvAddr = NULL;
-    ptMemory->zSize = 0;
-    ptMemory->iRefCount = 0;
+
     return tStatus;
 }
 
