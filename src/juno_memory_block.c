@@ -125,10 +125,10 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
     ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
+    JUNO_MEMORY_T tMemory = *ptMemory;
     ptMemory->pvAddr = NULL;
     ptMemory->zSize = 0;
     ptMemory->iRefCount = 0;
-    JUNO_MEMORY_T tMemory = *ptMemory;
     // There are still valid references to this memory, end with success
     if(tMemory.iRefCount != 1)
     {
