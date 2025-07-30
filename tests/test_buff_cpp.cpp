@@ -23,7 +23,8 @@ void tearDown(void)
 static void test_queue(void)
 {
 	using BUFF_T = JUNO_BUFF_QUEUE_T<uint32_t, 10>;
-	auto tTestQueueResult = BUFF_T::New(NULL, NULL);
+	JUNO_ARRAY_T<uint32_t, 10> tArrBuff{};
+	auto tTestQueueResult = BUFF_T::New(tArrBuff, NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tTestQueueResult.tStatus);
 	auto tTestQueue = tTestQueueResult.tSuccess;
 	for(size_t i = 0; i < tTestQueue.tRoot.zCapacity; i++)
