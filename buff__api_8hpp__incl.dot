@@ -47,5 +47,11 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/buff/buff_api.hpp"
   Node11 -> Node5 [id="edge29_Node000011_Node000005",color="steelblue1",style="solid",tooltip=" "];
   Node11 -> Node7 [id="edge30_Node000011_Node000007",color="steelblue1",style="solid",tooltip=" "];
   Node1 -> Node13 [id="edge31_Node000001_Node000013",color="steelblue1",style="solid",tooltip=" "];
-  Node13 [id="Node000013",label="cstddef",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node13 [id="Node000013",label="juno/types.hpp",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$types_8hpp.html",tooltip=" "];
+  Node13 -> Node5 [id="edge32_Node000013_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node13 -> Node8 [id="edge33_Node000013_Node000008",color="steelblue1",style="solid",tooltip=" "];
+  Node13 -> Node9 [id="edge34_Node000013_Node000009",color="steelblue1",style="solid",tooltip=" "];
+  Node13 -> Node4 [id="edge35_Node000013_Node000004",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node14 [id="edge36_Node000001_Node000014",color="steelblue1",style="solid",tooltip=" "];
+  Node14 [id="Node000014",label="cstddef",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
 }

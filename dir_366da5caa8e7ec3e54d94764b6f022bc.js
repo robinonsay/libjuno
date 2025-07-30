@@ -17,5 +17,6 @@ var dir_366da5caa8e7ec3e54d94764b6f022bc =
     [ "module.h", "module_8h.html", "module_8h" ],
     [ "module.hpp", "module_8hpp.html", "module_8hpp" ],
     [ "status.h", "status_8h.html", "status_8h" ],
-    [ "types.h", "types_8h.html", "types_8h" ]
+    [ "types.h", "types_8h.html", "types_8h" ],
+    [ "types.hpp", "types_8hpp.html", "types_8hpp" ]
 ];
