@@ -35,6 +35,7 @@
 #include "buff_stack_api.h"
 #include <cstddef>
 
+
 template<typename T, const size_t N>
 struct JUNO_BUFF_QUEUE_IMPL_T JUNO_MODULE_DERIVE(JUNO_BUFF_QUEUE_ROOT_T,
 private:
@@ -60,14 +61,14 @@ public:
         tResult.tSuccess = tArrBuff[iIndexResult.tSuccess];
         return tResult;
     }
-    JUNO_STATUS_T Enqueue(T& tData)
+    JUNO_STATUS_T EnqueueByRef(T& tData)
     {
         auto iIndexResult = JunoBuff_QueueEnqueue(&tRoot);
         ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
         tArrBuff[iIndexResult.tSuccess] = tData;
         return JUNO_STATUS_SUCCESS;
     }
-    JUNO_STATUS_T Enqueue(T tData)
+    JUNO_STATUS_T EnqueueByCopy(T tData)
     {
         auto iIndexResult = JunoBuff_QueueEnqueue(&tRoot);
         ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
@@ -83,6 +84,40 @@ public:
         tResult.tSuccess = tArrBuff[iIndexResult.tSuccess];
         return tResult;
     }
+);
+
+template<typename T, const size_t N, typename Q = JUNO_BUFF_QUEUE_IMPL_T<T, N>>
+struct JUNO_BUFF_QUEUE_T JUNO_MODULE_DERIVE(JUNO_BUFF_QUEUE_ROOT_T,
+private:
+    Q tQueueImpl;
+public:
+    static JUNO_RESULT_T<JUNO_BUFF_QUEUE_T<T,N,Q>> New(JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+    {
+        JUNO_BUFF_QUEUE_T<T,N,Q> tNew{};
+        auto tResult = JUNO_RESULT_T<JUNO_BUFF_QUEUE_T<T,N,Q>>{JUNO_STATUS_SUCCESS, tNew};
+        JUNO_RESULT_T<Q> tQResult = Q::New(pfcnFailureHandler, pvFailureUserData);
+        ASSERT_SUCCESS(tQResult.tStatus, tResult.tStatus = tQResult.tStatus; return tResult);
+        tNew.tQueueImpl = tQResult.tSuccess;
+        return tResult;
+    }
+
+    JUNO_RESULT_T<T> Dequeue()
+    {
+        return tQueueImpl.Dequeue();
+    }
+    JUNO_STATUS_T Enqueue(T& tData)
+    {
+        return tQueueImpl.EnqueueByRef(tData);
+    }
+    JUNO_STATUS_T Enqueue(T tData)
+    {
+        return tQueueImpl.EnqueueByCopy(tData);
+    }
+    JUNO_RESULT_T<T&> Peek()
+    {
+        return tQueueImpl.Peek();   
+    }
+    
 );
 
 template<typename T, const size_t N>
@@ -109,14 +144,14 @@ public:
         tResult.tSuccess = tArrBuff[iIndexResult.tSuccess];
         return tResult;
     }
-    JUNO_STATUS_T Push(T& tData)
+    JUNO_STATUS_T PushByRef(T& tData)
     {
         auto iIndexResult = JunoBuff_StackPush(&tRoot);
         ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
         tArrBuff[iIndexResult.tSuccess] = tData;
         return JUNO_STATUS_SUCCESS;
     }
-    JUNO_STATUS_T Push(T tData)
+    JUNO_STATUS_T PushByCopy(T tData)
     {
         auto iIndexResult = JunoBuff_StackPush(&tRoot);
         ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
@@ -134,7 +169,39 @@ public:
     }
 );
 
-// template
-// struct JUNO_BUFF_QUEUE_API_TAG`
+template<typename T, const size_t N, typename S = JUNO_BUFF_STACK_IMPL_T<T, N>>
+struct JUNO_BUFF_STACK_T JUNO_MODULE_DERIVE(JUNO_BUFF_STACK_ROOT_T,
+private:
+    S tStackImpl;
+public:
+    static JUNO_RESULT_T<JUNO_BUFF_STACK_T<T, N>> New(JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+    {
+        JUNO_BUFF_STACK_T<T,N,S> tNew{};
+        auto tResult = JUNO_RESULT_T<JUNO_BUFF_STACK_T<T,N,S>>{JUNO_STATUS_SUCCESS, tNew};
+        JUNO_RESULT_T<S> tQResult = S::New(pfcnFailureHandler, pvFailureUserData);
+        ASSERT_SUCCESS(tQResult.tStatus, tResult.tStatus = tQResult.tStatus; return tResult);
+        tNew.tStackImpl = tQResult.tSuccess;
+        return tResult;
+    }
+
+    JUNO_RESULT_T<T> Pop()
+    {
+        return tStackImpl.Pop();
+    }
+    JUNO_STATUS_T Push(T& tData)
+    {
+        return tStackImpl.PushByRef(tData);
+    }
+    JUNO_STATUS_T Push(T tData)
+    {
+        return tStackImpl.PushByCopy(tData);
+
+    }
+    JUNO_RESULT_T<T&> Peek()
+    {
+        return tStackImpl.Peek;
+    }
+);
 
 #endif // JUNO_BUFF_QUEUE_API_H
+
