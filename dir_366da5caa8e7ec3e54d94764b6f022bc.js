@@ -15,6 +15,7 @@ var dir_366da5caa8e7ec3e54d94764b6f022bc =
     [ "time", "dir_f7826cb483c41652a57f47c29e86de5a.html", "dir_f7826cb483c41652a57f47c29e86de5a" ],
     [ "macros.h", "macros_8h.html", "macros_8h" ],
     [ "module.h", "module_8h.html", "module_8h" ],
+    [ "module.hpp", "module_8hpp.html", "module_8hpp" ],
     [ "status.h", "status_8h.html", "status_8h" ],
     [ "types.h", "types_8h.html", "types_8h" ]
 ];

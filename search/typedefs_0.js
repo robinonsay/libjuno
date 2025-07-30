@@ -7,7 +7,7 @@ var searchData=
   ['juno_5fasync_5fio_5froot_5ft_4',['JUNO_ASYNC_IO_ROOT_T',['../async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb',1,'async_io_api.h']]],
   ['juno_5fasync_5fio_5ft_5',['JUNO_ASYNC_IO_T',['../async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa',1,'async_io_api.h']]],
   ['juno_5fbuff_5fqueue_5fapi_5ft_6',['JUNO_BUFF_QUEUE_API_T',['../buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc',1,'buff_queue_api.h']]],
-  ['juno_5fbuff_5fqueue_5froot_5ft_7',['JUNO_BUFF_QUEUE_ROOT_T',['../buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4',1,'buff_queue_api.h']]],
+  ['juno_5fbuff_5fqueue_5froot_5ft_7',['JUNO_BUFF_QUEUE_ROOT_T',['../buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627',1,'buff_queue_api.h']]],
   ['juno_5fbuff_5fstack_5fapi_5ft_8',['JUNO_BUFF_STACK_API_T',['../buff__stack__api_8h.html#aff6fe7e0b7fb5722fb7ee22a085ec1f4',1,'buff_stack_api.h']]],
   ['juno_5fbuff_5fstack_5froot_5ft_9',['JUNO_BUFF_STACK_ROOT_T',['../buff__stack__api_8h.html#a613994d55ab07c5aba76473f8c208831',1,'buff_stack_api.h']]],
   ['juno_5ffailure_5fhandler_5ft_10',['JUNO_FAILURE_HANDLER_T',['../status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc',1,'status.h']]],

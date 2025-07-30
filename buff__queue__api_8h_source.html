@@ -149,115 +149,110 @@ $(document).ready(function(){initNavTree('buff__queue__api_8h_source.html',''); 
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#ifndef JUNO_BUFF_QUEUE_API_H</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define JUNO_BUFF_QUEUE_API_H</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8h.html">juno/macros.h</a>&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="memory__api_8h.html">juno/memory/memory_api.h</a>&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="module_8h.html">juno/module.h</a>&quot;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="types_8h.html">juno/types.h</a>&quot;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">   39</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_BUFF_QUEUE_API_TAG <a class="code hl_typedef" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a>;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">   40</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_BUFF_QUEUE_TAG <a class="code hl_typedef" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a5746e62a299e4d5f35ddaca7dac8c212">   42</a></span><a class="code hl_define" href="module_8h.html#a0ecb577f51a5d8b065b5911389fff2d7">JUNO_MODULE_DECLARE</a>(JUNO_BUFF_QUEUE_T);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a46475b40867ad5d3d419bcd7a1438c1f">   44</a></span><span class="keyword">struct </span>JUNO_BUFF_QUEUE_TAG <a class="code hl_define" href="module_8h.html#ad90d24375445f98866a7d7d7f99e684f">JUNO_MODULE_ROOT</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a>,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    size_t iStartIndex;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">size_t</span> zLength;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">size_t</span> zCapacity;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">   50</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> <a class="code hl_function" href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">JunoBuff_QueueInit</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue, <span class="keywordtype">size_t</span> zCapacity, <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHdlr, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_define" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a>(ptQueue);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    ptQueue-&gt;iStartIndex = 0;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    ptQueue-&gt;zLength = 0;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    ptQueue-&gt;zCapacity = zCapacity;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    ptQueue-&gt;_pfcnFailureHandler = pfcnFailureHdlr;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    ptQueue-&gt;_pvFailurUserData = pvFailureUserData;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="status_8h.html">juno/status.h</a>&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="module_8h.html">juno/module.h</a>&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="types_8h.html">juno/types.h</a>&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">   38</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_BUFF_QUEUE_API_TAG <a class="code hl_typedef" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">   39</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>JUNO_BUFF_QUEUE_ROOT_TAG <a class="code hl_typedef" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#ad27c5c166ac64a8d57899c7baf0ca917">   41</a></span><span class="keyword">struct </span>JUNO_BUFF_QUEUE_ROOT_TAG <a class="code hl_define" href="module_8h.html#ad90d24375445f98866a7d7d7f99e684f">JUNO_MODULE_ROOT</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a>,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    size_t iStartIndex;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">size_t</span> zLength;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">size_t</span> zCapacity;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">   47</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> <a class="code hl_function" href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">JunoBuff_QueueInit</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue, <span class="keywordtype">size_t</span> zCapacity, <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHdlr, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>{</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <a class="code hl_define" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a>(ptQueue);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    ptQueue-&gt;iStartIndex = 0;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    ptQueue-&gt;zLength = 0;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    ptQueue-&gt;zCapacity = zCapacity;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    ptQueue-&gt;_pfcnFailureHandler = pfcnFailureHdlr;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    ptQueue-&gt;_pvFailurUserData = pvFailureUserData;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
 </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="foldopen" id="foldopen00061" data-start="{" data-end="}">
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">   61</a></span><span class="keyword">static</span> <span class="keyword">inline</span> JUNO_RESULT_SIZE_T <a class="code hl_function" href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">JunoBuff_QueueEnqueue</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>{</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    JUNO_RESULT_SIZE_T tResult = {<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>,0};</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">if</span>(!ptQueue)</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    }</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">if</span>(ptQueue-&gt;zLength &lt; ptQueue-&gt;zCapacity)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        tResult.tSuccess = (ptQueue-&gt;iStartIndex + ptQueue-&gt;zLength) % ptQueue-&gt;zCapacity;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        ptQueue-&gt;zLength += 1;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3">JUNO_STATUS_INVALID_SIZE_ERROR</a>;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <a class="code hl_define" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(tResult.tStatus, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Failed to enqueue data&quot;</span>);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    }</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">   58</a></span><span class="keyword">static</span> <span class="keyword">inline</span> JUNO_RESULT_SIZE_T <a class="code hl_function" href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">JunoBuff_QueueEnqueue</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>{</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    JUNO_RESULT_SIZE_T tResult = {<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>,0};</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">if</span>(!ptQueue)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">if</span>(ptQueue-&gt;zLength &lt; ptQueue-&gt;zCapacity)</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        tResult.tSuccess = (ptQueue-&gt;iStartIndex + ptQueue-&gt;zLength) % ptQueue-&gt;zCapacity;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        ptQueue-&gt;zLength += 1;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3">JUNO_STATUS_INVALID_SIZE_ERROR</a>;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <a class="code hl_define" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(tResult.tStatus, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Failed to enqueue data&quot;</span>);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">   83</a></span><span class="keyword">static</span> <span class="keyword">inline</span> JUNO_RESULT_SIZE_T <a class="code hl_function" href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">JunoBuff_QueueDequeue</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>{</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    JUNO_RESULT_SIZE_T tResult = {<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>,0};</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">if</span>(!ptQueue)</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    }</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">if</span>(ptQueue-&gt;zLength &gt; 0)</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        tResult.tSuccess = ptQueue-&gt;iStartIndex;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        ptQueue-&gt;iStartIndex = (ptQueue-&gt;iStartIndex + 1) % ptQueue-&gt;zCapacity;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        ptQueue-&gt;zLength -= 1;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238">JUNO_STATUS_ERR</a>;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <a class="code hl_define" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(tResult.tStatus, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Queue is empty&quot;</span>);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="foldopen" id="foldopen00080" data-start="{" data-end="}">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">   80</a></span><span class="keyword">static</span> <span class="keyword">inline</span> JUNO_RESULT_SIZE_T <a class="code hl_function" href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">JunoBuff_QueueDequeue</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>{</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    JUNO_RESULT_SIZE_T tResult = {<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>,0};</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordflow">if</span>(!ptQueue)</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">if</span>(ptQueue-&gt;zLength &gt; 0)</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        tResult.tSuccess = ptQueue-&gt;iStartIndex;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        ptQueue-&gt;iStartIndex = (ptQueue-&gt;iStartIndex + 1) % ptQueue-&gt;zCapacity;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        ptQueue-&gt;zLength -= 1;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238">JUNO_STATUS_ERR</a>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <a class="code hl_define" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(tResult.tStatus, ptQueue-&gt;_pfcnFailureHandler, ptQueue-&gt;_pvFailurUserData, <span class="stringliteral">&quot;Queue is empty&quot;</span>);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}</div>
 </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="foldopen" id="foldopen00103" data-start="{" data-end="}">
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">  103</a></span><span class="keyword">static</span> <span class="keyword">inline</span> JUNO_RESULT_SIZE_T <a class="code hl_function" href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">JunoBuff_QueueGetIndex</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>{</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    JUNO_RESULT_SIZE_T tResult = {<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>,0};</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">if</span>(!ptQueue)</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    tResult.tSuccess = ptQueue-&gt;iStartIndex;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordflow">return</span> tResult;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="foldopen" id="foldopen00100" data-start="{" data-end="}">
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">  100</a></span><span class="keyword">static</span> <span class="keyword">inline</span> JUNO_RESULT_SIZE_T <a class="code hl_function" href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">JunoBuff_QueueGetIndex</a>(<a class="code hl_typedef" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>{</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    JUNO_RESULT_SIZE_T tResult = {<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>,0};</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">if</span>(!ptQueue)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        tResult.tStatus = <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    tResult.tSuccess = ptQueue-&gt;iStartIndex;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">return</span> tResult;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>}</div>
 </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>}</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_BUFF_QUEUE_API_H</span></div>
-<div class="ttc" id="abuff__queue__api_8h_html_a1ed7584df101292211be89a791a5d5e2"><div class="ttname"><a href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">JunoBuff_QueueGetIndex</a></div><div class="ttdeci">static JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:103</div></div>
-<div class="ttc" id="abuff__queue__api_8h_html_a7fd720460e9cb8dba9c35a0297c45f76"><div class="ttname"><a href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">JunoBuff_QueueInit</a></div><div class="ttdeci">static JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:50</div></div>
-<div class="ttc" id="abuff__queue__api_8h_html_a9aefe8468e2852c52bccb8a4c6607695"><div class="ttname"><a href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">JunoBuff_QueueEnqueue</a></div><div class="ttdeci">static JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:61</div></div>
-<div class="ttc" id="abuff__queue__api_8h_html_aa1810a86114151ce2a7e33a4058675dc"><div class="ttname"><a href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a></div><div class="ttdeci">struct JUNO_BUFF_QUEUE_API_TAG JUNO_BUFF_QUEUE_API_T</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:39</div></div>
-<div class="ttc" id="abuff__queue__api_8h_html_ab70a9d233e1a3b0445b3fb351040a738"><div class="ttname"><a href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">JunoBuff_QueueDequeue</a></div><div class="ttdeci">static JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:83</div></div>
-<div class="ttc" id="abuff__queue__api_8h_html_ab9ec5a3c5884aa7ffffba9e2a101dce4"><div class="ttname"><a href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a></div><div class="ttdeci">struct JUNO_BUFF_QUEUE_TAG JUNO_BUFF_QUEUE_ROOT_T</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:40</div></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">#endif </span><span class="comment">// JUNO_BUFF_QUEUE_API_H</span></div>
+<div class="ttc" id="abuff__queue__api_8h_html_a1ed7584df101292211be89a791a5d5e2"><div class="ttname"><a href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">JunoBuff_QueueGetIndex</a></div><div class="ttdeci">static JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:100</div></div>
+<div class="ttc" id="abuff__queue__api_8h_html_a7fd720460e9cb8dba9c35a0297c45f76"><div class="ttname"><a href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">JunoBuff_QueueInit</a></div><div class="ttdeci">static JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:47</div></div>
+<div class="ttc" id="abuff__queue__api_8h_html_a9aefe8468e2852c52bccb8a4c6607695"><div class="ttname"><a href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">JunoBuff_QueueEnqueue</a></div><div class="ttdeci">static JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:58</div></div>
+<div class="ttc" id="abuff__queue__api_8h_html_aa1810a86114151ce2a7e33a4058675dc"><div class="ttname"><a href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a></div><div class="ttdeci">struct JUNO_BUFF_QUEUE_API_TAG JUNO_BUFF_QUEUE_API_T</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:38</div></div>
+<div class="ttc" id="abuff__queue__api_8h_html_ab70a9d233e1a3b0445b3fb351040a738"><div class="ttname"><a href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">JunoBuff_QueueDequeue</a></div><div class="ttdeci">static JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:80</div></div>
+<div class="ttc" id="abuff__queue__api_8h_html_af4c3dfbb3ae615edc1911135eaf6e627"><div class="ttname"><a href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a></div><div class="ttdeci">struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_BUFF_QUEUE_ROOT_T</div><div class="ttdef"><b>Definition</b> buff_queue_api.h:39</div></div>
 <div class="ttc" id="amacros_8h_html"><div class="ttname"><a href="macros_8h.html">macros.h</a></div></div>
 <div class="ttc" id="amacros_8h_html_abf729d00254f692443168dcdc098b5f1"><div class="ttname"><a href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a></div><div class="ttdeci">#define ASSERT_EXISTS(ptr)</div><div class="ttdef"><b>Definition</b> macros.h:28</div></div>
-<div class="ttc" id="amemory__api_8h_html"><div class="ttname"><a href="memory__api_8h.html">memory_api.h</a></div></div>
 <div class="ttc" id="amodule_8h_html"><div class="ttname"><a href="module_8h.html">module.h</a></div></div>
-<div class="ttc" id="amodule_8h_html_a0ecb577f51a5d8b065b5911389fff2d7"><div class="ttname"><a href="module_8h.html#a0ecb577f51a5d8b065b5911389fff2d7">JUNO_MODULE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_DECLARE(NAME_T)</div><div class="ttdef"><b>Definition</b> module.h:102</div></div>
 <div class="ttc" id="amodule_8h_html_ad90d24375445f98866a7d7d7f99e684f"><div class="ttname"><a href="module_8h.html#ad90d24375445f98866a7d7d7f99e684f">JUNO_MODULE_ROOT</a></div><div class="ttdeci">#define JUNO_MODULE_ROOT(API_T,...)</div><div class="ttdef"><b>Definition</b> module.h:175</div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
 <div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:44</div></div>

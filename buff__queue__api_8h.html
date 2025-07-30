@@ -128,7 +128,6 @@ $(document).ready(function(){initNavTree('buff__queue__api_8h.html',''); initRes
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="macros_8h_source.html">juno/macros.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="memory__api_8h_source.html">juno/memory/memory_api.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">juno/types.h</a>&quot;</code><br />
@@ -137,6 +136,11 @@ Include dependency graph for buff_queue_api.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="buff__queue__api_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2buff_2buff__queue__api_8h" alt=""/></div>
 </div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="buff__queue__api_8h__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2buff_2buff__queue__api_8hdep" alt=""/></div>
+</div>
 </div>
 <p><a href="buff__queue__api_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -144,22 +148,20 @@ Include dependency graph for buff_queue_api.h:</div>
 Typedefs</h2></td></tr>
 <tr class="memitem:aa1810a86114151ce2a7e33a4058675dc" id="r_aa1810a86114151ce2a7e33a4058675dc"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_BUFF_QUEUE_API_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a></td></tr>
 <tr class="separator:aa1810a86114151ce2a7e33a4058675dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9ec5a3c5884aa7ffffba9e2a101dce4" id="r_ab9ec5a3c5884aa7ffffba9e2a101dce4"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_BUFF_QUEUE_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a></td></tr>
-<tr class="separator:ab9ec5a3c5884aa7ffffba9e2a101dce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4c3dfbb3ae615edc1911135eaf6e627" id="r_af4c3dfbb3ae615edc1911135eaf6e627"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_BUFF_QUEUE_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a></td></tr>
+<tr class="separator:af4c3dfbb3ae615edc1911135eaf6e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5746e62a299e4d5f35ddaca7dac8c212" id="r_a5746e62a299e4d5f35ddaca7dac8c212"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a5746e62a299e4d5f35ddaca7dac8c212">JUNO_MODULE_DECLARE</a> (JUNO_BUFF_QUEUE_T)</td></tr>
-<tr class="separator:a5746e62a299e4d5f35ddaca7dac8c212"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46475b40867ad5d3d419bcd7a1438c1f" id="r_a46475b40867ad5d3d419bcd7a1438c1f"><td class="memItemLeft" align="right" valign="top">struct JUNO_BUFF_QUEUE_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a46475b40867ad5d3d419bcd7a1438c1f">JUNO_MODULE_ROOT</a> (<a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a>, size_t iStartIndex;size_t zLength;size_t zCapacity;)</td></tr>
-<tr class="separator:a46475b40867ad5d3d419bcd7a1438c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fd720460e9cb8dba9c35a0297c45f76" id="r_a7fd720460e9cb8dba9c35a0297c45f76"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">JunoBuff_QueueInit</a> (<a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue, size_t zCapacity, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHdlr, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memitem:ad27c5c166ac64a8d57899c7baf0ca917" id="r_ad27c5c166ac64a8d57899c7baf0ca917"><td class="memItemLeft" align="right" valign="top">struct JUNO_BUFF_QUEUE_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#ad27c5c166ac64a8d57899c7baf0ca917">JUNO_MODULE_ROOT</a> (<a class="el" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a>, size_t iStartIndex;size_t zLength;size_t zCapacity;)</td></tr>
+<tr class="separator:ad27c5c166ac64a8d57899c7baf0ca917"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fd720460e9cb8dba9c35a0297c45f76" id="r_a7fd720460e9cb8dba9c35a0297c45f76"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a7fd720460e9cb8dba9c35a0297c45f76">JunoBuff_QueueInit</a> (<a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue, size_t zCapacity, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHdlr, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
 <tr class="separator:a7fd720460e9cb8dba9c35a0297c45f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9aefe8468e2852c52bccb8a4c6607695" id="r_a9aefe8468e2852c52bccb8a4c6607695"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">JunoBuff_QueueEnqueue</a> (<a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</td></tr>
+<tr class="memitem:a9aefe8468e2852c52bccb8a4c6607695" id="r_a9aefe8468e2852c52bccb8a4c6607695"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a9aefe8468e2852c52bccb8a4c6607695">JunoBuff_QueueEnqueue</a> (<a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</td></tr>
 <tr class="separator:a9aefe8468e2852c52bccb8a4c6607695"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab70a9d233e1a3b0445b3fb351040a738" id="r_ab70a9d233e1a3b0445b3fb351040a738"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">JunoBuff_QueueDequeue</a> (<a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</td></tr>
+<tr class="memitem:ab70a9d233e1a3b0445b3fb351040a738" id="r_ab70a9d233e1a3b0445b3fb351040a738"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#ab70a9d233e1a3b0445b3fb351040a738">JunoBuff_QueueDequeue</a> (<a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</td></tr>
 <tr class="separator:ab70a9d233e1a3b0445b3fb351040a738"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ed7584df101292211be89a791a5d5e2" id="r_a1ed7584df101292211be89a791a5d5e2"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">JunoBuff_QueueGetIndex</a> (<a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</td></tr>
+<tr class="memitem:a1ed7584df101292211be89a791a5d5e2" id="r_a1ed7584df101292211be89a791a5d5e2"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__queue__api_8h.html#a1ed7584df101292211be89a791a5d5e2">JunoBuff_QueueGetIndex</a> (<a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *ptQueue)</td></tr>
 <tr class="separator:a1ed7584df101292211be89a791a5d5e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
@@ -178,14 +180,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab9ec5a3c5884aa7ffffba9e2a101dce4" name="ab9ec5a3c5884aa7ffffba9e2a101dce4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9ec5a3c5884aa7ffffba9e2a101dce4">&#9670;&#160;</a></span>JUNO_BUFF_QUEUE_ROOT_T</h2>
+<a id="af4c3dfbb3ae615edc1911135eaf6e627" name="af4c3dfbb3ae615edc1911135eaf6e627"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4c3dfbb3ae615edc1911135eaf6e627">&#9670;&#160;</a></span>JUNO_BUFF_QUEUE_ROOT_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef struct JUNO_BUFF_QUEUE_TAG <a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a></td>
+          <td class="memname">typedef struct JUNO_BUFF_QUEUE_ROOT_TAG <a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -193,34 +195,16 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a5746e62a299e4d5f35ddaca7dac8c212" name="a5746e62a299e4d5f35ddaca7dac8c212"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5746e62a299e4d5f35ddaca7dac8c212">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE()</h2>
+<a id="ad27c5c166ac64a8d57899c7baf0ca917" name="ad27c5c166ac64a8d57899c7baf0ca917"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad27c5c166ac64a8d57899c7baf0ca917">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JUNO_MODULE_DECLARE </td>
+          <td class="memname">struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT </td>
           <td>(</td>
-          <td class="paramtype">JUNO_BUFF_QUEUE_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a46475b40867ad5d3d419bcd7a1438c1f" name="a46475b40867ad5d3d419bcd7a1438c1f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46475b40867ad5d3d419bcd7a1438c1f">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct JUNO_BUFF_QUEUE_TAG JUNO_MODULE_ROOT </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#aa1810a86114151ce2a7e33a4058675dc">JUNO_BUFF_QUEUE_API_T</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -251,7 +235,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">static JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptQueue</em></td><td>)</td>
           <td></td>
         </tr>
@@ -277,7 +261,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">static JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptQueue</em></td><td>)</td>
           <td></td>
         </tr>
@@ -303,7 +287,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">static JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptQueue</em></td><td>)</td>
           <td></td>
         </tr>
@@ -329,7 +313,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_QueueInit </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#ab9ec5a3c5884aa7ffffba9e2a101dce4">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="buff__queue__api_8h.html#af4c3dfbb3ae615edc1911135eaf6e627">JUNO_BUFF_QUEUE_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptQueue</em>, </td>
         </tr>
         <tr>

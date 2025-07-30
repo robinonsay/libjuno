@@ -193,9 +193,13 @@ How to Define The Module Union</h3>
 <tr class="memitem:a5ca1de8146f35c348dc9bd92fbc32d0d" id="r_a5ca1de8146f35c348dc9bd92fbc32d0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a5ca1de8146f35c348dc9bd92fbc32d0d">JUNO_MODULE_RESULT</a>(NAME_T,  SUCCESS_T)</td></tr>
 <tr class="memdesc:a5ca1de8146f35c348dc9bd92fbc32d0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a result type combining a status and a success payload.  <br /></td></tr>
 <tr class="separator:a5ca1de8146f35c348dc9bd92fbc32d0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37d558c41617cce4cb3968927e551a82" id="r_a37d558c41617cce4cb3968927e551a82"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a37d558c41617cce4cb3968927e551a82">JUNO_RESULT</a>(SUCCESS_T)</td></tr>
+<tr class="separator:a37d558c41617cce4cb3968927e551a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf83dbb0b87a97d3cd09276898c7f573" id="r_adf83dbb0b87a97d3cd09276898c7f573"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#adf83dbb0b87a97d3cd09276898c7f573">JUNO_MODULE_OPTION</a>(NAME_T,  SOME_T)</td></tr>
 <tr class="memdesc:adf83dbb0b87a97d3cd09276898c7f573"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines an option type combining a flag to indicate some and a success payload.  <br /></td></tr>
 <tr class="separator:adf83dbb0b87a97d3cd09276898c7f573"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bac45ef16a95f98f96b7ad81d5a07d6" id="r_a0bac45ef16a95f98f96b7ad81d5a07d6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="module_8h.html#a0bac45ef16a95f98f96b7ad81d5a07d6">JUNO_OPTION</a>(SOME_T)</td></tr>
+<tr class="separator:a0bac45ef16a95f98f96b7ad81d5a07d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="af2cc78723eab5f63af29ba0056fb2931" name="af2cc78723eab5f63af29ba0056fb2931"></a>
@@ -591,6 +595,50 @@ How to Define The Module Union</h3>
 </div><div class="memdoc">
 <p>Alias for the module root implementation. All modules can call <code>.tRoot</code> to access the module root. </p>
 
+</div>
+</div>
+<a id="a0bac45ef16a95f98f96b7ad81d5a07d6" name="a0bac45ef16a95f98f96b7ad81d5a07d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bac45ef16a95f98f96b7ad81d5a07d6">&#9670;&#160;</a></span>JUNO_OPTION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_OPTION</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">SOME_T</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{ \</div>
+<div class="line">    <span class="keywordtype">bool</span> bIsSome; \</div>
+<div class="line">    SOME_T tSome; \</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a37d558c41617cce4cb3968927e551a82" name="a37d558c41617cce4cb3968927e551a82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37d558c41617cce4cb3968927e551a82">&#9670;&#160;</a></span>JUNO_RESULT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_RESULT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">SUCCESS_T</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{ \</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus; \</div>
+<div class="line">    SUCCESS_T tSuccess; \</div>
+<div class="line">}</div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

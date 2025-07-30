@@ -12,5 +12,7 @@ var module_8h =
     [ "JUNO_MODULE_RESULT", "module_8h.html#a5ca1de8146f35c348dc9bd92fbc32d0d", null ],
     [ "JUNO_MODULE_ROOT", "module_8h.html#ad90d24375445f98866a7d7d7f99e684f", null ],
     [ "JUNO_MODULE_ROOT_DECLARE", "module_8h.html#a0446375ade1958ae0eac0e071e7ff86b", null ],
-    [ "JUNO_MODULE_SUPER", "module_8h.html#af98d3f7fa92446d974d322bcfe55b284", null ]
+    [ "JUNO_MODULE_SUPER", "module_8h.html#af98d3f7fa92446d974d322bcfe55b284", null ],
+    [ "JUNO_OPTION", "module_8h.html#a0bac45ef16a95f98f96b7ad81d5a07d6", null ],
+    [ "JUNO_RESULT", "module_8h.html#a37d558c41617cce4cb3968927e551a82", null ]
 ];

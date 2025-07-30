@@ -6,11 +6,13 @@ var searchData=
   ['beta_3',['beta',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'Juno Hash Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'Juno Map Module (Beta)']]],
   ['binhex_2eh_4',['binhex.h',['../binhex_8h.html',1,'']]],
   ['binhex_5fcrctab_5',['binhex_crctab',['../binhex_8h.html#ac2cd8edb073b1eb38372ba59445bb0ea',1,'binhex.h']]],
-  ['block_20visualization_6',['Memory Block Visualization',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]],
-  ['blocks_7',['blocks',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md15',1,'Memory Blocks'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'Step 1: Declare Memory Blocks']]],
-  ['buff_5fqueue_5fapi_2eh_8',['buff_queue_api.h',['../buff__queue__api_8h.html',1,'']]],
-  ['buff_5fstack_5fapi_2eh_9',['buff_stack_api.h',['../buff__stack__api_8h.html',1,'']]],
-  ['build_20option_10',['CMake Build Option',['../index.html#autotoc_md89',1,'']]],
-  ['building_20an_20engine_20module_3a_20deriving_20injecting_20dependencies_11',['3. Building an Engine Module: Deriving &amp; Injecting Dependencies',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md54',1,'']]],
-  ['building_20and_20testing_12',['Building and Testing',['../index.html#autotoc_md88',1,'']]]
+  ['bissome_6',['bIsSome',['../structJUNO__OPTION__T.html#ae789a9b2b7c31cd0e953537d3101d735',1,'JUNO_OPTION_T']]],
+  ['block_20visualization_7',['Memory Block Visualization',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]],
+  ['blocks_8',['blocks',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md15',1,'Memory Blocks'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'Step 1: Declare Memory Blocks']]],
+  ['buff_5fapi_2ehpp_9',['buff_api.hpp',['../buff__api_8hpp.html',1,'']]],
+  ['buff_5fqueue_5fapi_2eh_10',['buff_queue_api.h',['../buff__queue__api_8h.html',1,'']]],
+  ['buff_5fstack_5fapi_2eh_11',['buff_stack_api.h',['../buff__stack__api_8h.html',1,'']]],
+  ['build_20option_12',['CMake Build Option',['../index.html#autotoc_md89',1,'']]],
+  ['building_20an_20engine_20module_3a_20deriving_20injecting_20dependencies_13',['3. Building an Engine Module: Deriving &amp; Injecting Dependencies',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md54',1,'']]],
+  ['building_20and_20testing_14',['Building and Testing',['../index.html#autotoc_md88',1,'']]]
 ];

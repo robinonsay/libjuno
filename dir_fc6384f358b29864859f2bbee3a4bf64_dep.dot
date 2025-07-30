@@ -10,5 +10,5 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/buff"
   dir_0ab7105f8cccca84cc3ec63bc4b5970d [label="memory", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_0ab7105f8cccca84cc3ec63bc4b5970d.html",tooltip=""];
   dir_fc6384f358b29864859f2bbee3a4bf64 [label="buff", fillcolor="#edf0f7", color="grey25", style="filled,bold", URL="dir_fc6384f358b29864859f2bbee3a4bf64.html",tooltip=""];
   }
-  dir_fc6384f358b29864859f2bbee3a4bf64->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="2", labeldistance=1.5 headhref="dir_000001_000011.html" href="dir_000001_000011.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_fc6384f358b29864859f2bbee3a4bf64->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="1", labeldistance=1.5 headhref="dir_000001_000011.html" href="dir_000001_000011.html" color="steelblue1" fontcolor="steelblue1"];
 }
