@@ -90,13 +90,13 @@ struct JUNO_BUFF_QUEUE_T JUNO_MODULE_DERIVE(JUNO_BUFF_QUEUE_ROOT_T,
 private:
     Q tQueueImpl;
 public:
-    static JUNO_RESULT_T<JUNO_BUFF_QUEUE_T<T,N,Q> New(JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+    static JUNO_RESULT_T<JUNO_BUFF_QUEUE_T<T,N,Q>> New(JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
     {
         JUNO_RESULT_T<Q> tResult = Q::New(pfcnFailureHandler, pvFailureUserData);
         ASSERT_SUCCESS(tResult.tStatus, return tResult);
         JUNO_BUFF_QUEUE_T<T,N,Q> tNew{};
         tNew.tQueueImpl = tResult.tSuccess;
-        return JUNO_RESULT_T<JUNO_BUFF_QUEUE_T<T,N,Q>{JUNO_STATUS_SUCCESS, tNew};
+        return JUNO_RESULT_T<JUNO_BUFF_QUEUE_T<T,N,Q>>{JUNO_STATUS_SUCCESS, tNew};
     }
 
     JUNO_RESULT_T<T> Dequeue()
@@ -178,7 +178,7 @@ public:
         ASSERT_SUCCESS(tResult.tStatus, return tResult);
         JUNO_BUFF_STACK_T<T,N,S> tNew{};
         tNew.tStackImpl = tResult.tSuccess;
-        return JUNO_RESULT_T<JUNO_BUFF_STACK_T<T,N,S>{JUNO_STATUS_SUCCESS, tNew};
+        return JUNO_RESULT_T<JUNO_BUFF_STACK_T<T,N,S>>{JUNO_STATUS_SUCCESS, tNew};
     }
 
     JUNO_RESULT_T<T> Pop()
