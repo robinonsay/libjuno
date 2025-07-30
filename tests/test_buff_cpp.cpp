@@ -27,14 +27,14 @@ static void test_queue(void)
 	auto tTestQueueResult = BUFF_T::New(tArrBuff, NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tTestQueueResult.tStatus);
 	auto tTestQueue = tTestQueueResult.tSuccess;
-	for(size_t i = 0; i < tTestQueue.tRoot.zCapacity; i++)
+	for(size_t i = 0; i < tTestQueue.GetCapacity(); i++)
 	{
 		auto tStatus = tTestQueue.Enqueue(i+1);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	}
 	auto tStatus = tTestQueue.Enqueue(11);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(size_t i = 0; i < tTestQueue.tRoot.zCapacity; i++)
+	for(size_t i = 0; i < tTestQueue.GetCapacity(); i++)
 	{
 		auto tResult = tTestQueue.Dequeue();
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
@@ -48,18 +48,18 @@ static void test_stack(void)
 	auto tTestQueueResult = STACK_T::New(NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tTestQueueResult.tStatus);
 	auto tTestStack = tTestQueueResult.tSuccess;
-	for(size_t i = 0; i < tTestStack.tRoot.zCapacity; i++)
+	for(size_t i = 0; i < tTestStack.GetCapacity(); i++)
 	{
 		auto tStatus = tTestStack.Push(i+1);
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	}
 	auto tStatus = tTestStack.Push(11);
 	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	for(size_t i = 0; i < tTestStack.tRoot.zCapacity; i++)
+	for(size_t i = 0; i < tTestStack.GetCapacity(); i++)
 	{
 		auto tResult = tTestStack.Pop();
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-		TEST_ASSERT_EQUAL(tTestStack.tRoot.zCapacity - i, tResult.tSuccess);
+		TEST_ASSERT_EQUAL(tTestStack.GetCapacity() - i, tResult.tSuccess);
 	}
 }
 
