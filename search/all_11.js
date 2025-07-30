@@ -5,7 +5,7 @@ var searchData=
   ['iaddr_2',['iAddr',['../structJUNO__I2C__IO__MSG__HDR__TAG.html#a97665a31ee04f804c562a36de4663c94',1,'JUNO_I2C_IO_MSG_HDR_TAG']]],
   ['implement_20engine_5fturbov6_20c_3',['5.2. Implement engine_turbov6.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md69',1,'']]],
   ['implementation_20sketch_20in_20engine_5fv6_20c_4',['Implementation Sketch (in engine_v6.c)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md58',1,'']]],
-  ['implementing_20a_20module_3a_20derivations_5',['implementing a module: derivations',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2MODULE.html#autotoc_md43',1,'Implementing a Module: Derivations'],['../module_8h.html#autotoc_md37',1,'Implementing a Module: Derivations']]],
+  ['implementing_20a_20module_3a_20derivations_5',['implementing a module: derivations',['../module_8h.html#autotoc_md37',1,'Implementing a Module: Derivations'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2MODULE.html#autotoc_md43',1,'Implementing a Module: Derivations']]],
   ['in_20embedded_20systems_6',['8. Why Dependency Injection Matters in Embedded Systems',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md79',1,'']]],
   ['in_20engine_5fv6_20c_7',['Implementation Sketch (in engine_v6.c)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md58',1,'']]],
   ['in_20libjuno_8',['7. How to Write Your Own Modules in LibJuno',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md78',1,'']]],
@@ -24,7 +24,6 @@ var searchData=
   ['iseconds_21',['iSeconds',['../structJUNO__TIMESTAMP__TAG.html#a485c4829775b4f8d6f31ead05fe7a1c0',1,'JUNO_TIMESTAMP_TAG']]],
   ['isolated_22',['Why This Is Completely Isolated',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md71',1,'']]],
   ['isolation_20of_20changes_3a_20adding_20a_20turbocharged_20engine_23',['5. Demonstrating Isolation of Changes: Adding a Turbocharged Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67',1,'']]],
-  ['istartindex_24',['iStartIndex',['../structJUNO__BUFF__QUEUE__TAG.html#afa6254403077743264b34b848ef66f2a',1,'JUNO_BUFF_QUEUE_TAG']]],
-  ['isubseconds_25',['iSubSeconds',['../structJUNO__TIMESTAMP__TAG.html#a9d988315177cec255012a31be9871d3a',1,'JUNO_TIMESTAMP_TAG']]],
-  ['it_20all_20together_3a_20main_20c_26',['4.3. Putting It All Together: main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md64',1,'']]]
+  ['isubseconds_24',['iSubSeconds',['../structJUNO__TIMESTAMP__TAG.html#a9d988315177cec255012a31be9871d3a',1,'JUNO_TIMESTAMP_TAG']]],
+  ['it_20all_20together_3a_20main_20c_25',['4.3. Putting It All Together: main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md64',1,'']]]
 ];
