@@ -18,7 +18,7 @@ void tearDown(void)
 
 static void test_queue(void)
 {
-	uint8_t iTestQueue[10];
+	uint8_t iTestQueue[10] = {0};
 	JUNO_BUFF_QUEUE_T tQueue = {0};
 	JUNO_RESULT_SIZE_T tResult = {0};
 	tResult.tStatus = JunoBuff_QueueInit(&tQueue, sizeof(iTestQueue), NULL, NULL);

@@ -70,6 +70,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueu
     }
     if(ptQueue->zLength < ptQueue->zCapacity)
     {
+        tResult.tSuccess = ptQueue->zLength % ptQueue->zCapacity;
         ptQueue->zLength += 1;
     }
     else
@@ -78,7 +79,6 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueu
         JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
         return tResult;
     }
-    tResult.tSuccess = ptQueue->zLength % ptQueue->zCapacity;
     return tResult;
 }
 
@@ -92,9 +92,9 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueu
     }
     if(ptQueue->zLength > 0)
     {
+        tResult.tSuccess = ptQueue->iStartIndex;
         ptQueue->iStartIndex = (ptQueue->iStartIndex + 1) % ptQueue->zCapacity;
         ptQueue->zLength -= 1;
-        tResult.tSuccess = ptQueue->iStartIndex;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
