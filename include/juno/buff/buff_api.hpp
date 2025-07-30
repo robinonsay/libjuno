@@ -61,14 +61,7 @@ public:
         tResult.tSuccess = tArrBuff[iIndexResult.tSuccess];
         return tResult;
     }
-    JUNO_STATUS_T EnqueueByRef(T& tData)
-    {
-        auto iIndexResult = JunoBuff_QueueEnqueue(&tRoot);
-        ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
-        tArrBuff[iIndexResult.tSuccess] = tData;
-        return JUNO_STATUS_SUCCESS;
-    }
-    JUNO_STATUS_T EnqueueByCopy(T tData)
+    JUNO_STATUS_T Enqueue(T tData)
     {
         auto iIndexResult = JunoBuff_QueueEnqueue(&tRoot);
         ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
@@ -105,13 +98,9 @@ public:
     {
         return tQueueImpl.Dequeue();
     }
-    JUNO_STATUS_T Enqueue(T& tData)
-    {
-        return tQueueImpl.EnqueueByRef(tData);
-    }
     JUNO_STATUS_T Enqueue(T tData)
     {
-        return tQueueImpl.EnqueueByCopy(tData);
+        return tQueueImpl.Enqueue(tData);
     }
     JUNO_RESULT_T<T&> Peek()
     {
@@ -144,14 +133,7 @@ public:
         tResult.tSuccess = tArrBuff[iIndexResult.tSuccess];
         return tResult;
     }
-    JUNO_STATUS_T PushByRef(T& tData)
-    {
-        auto iIndexResult = JunoBuff_StackPush(&tRoot);
-        ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
-        tArrBuff[iIndexResult.tSuccess] = tData;
-        return JUNO_STATUS_SUCCESS;
-    }
-    JUNO_STATUS_T PushByCopy(T tData)
+    JUNO_STATUS_T Push(T tData)
     {
         auto iIndexResult = JunoBuff_StackPush(&tRoot);
         ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
@@ -188,13 +170,9 @@ public:
     {
         return tStackImpl.Pop();
     }
-    JUNO_STATUS_T Push(T& tData)
-    {
-        return tStackImpl.PushByRef(tData);
-    }
     JUNO_STATUS_T Push(T tData)
     {
-        return tStackImpl.PushByCopy(tData);
+        return tStackImpl.Push(tData);
 
     }
     JUNO_RESULT_T<T&> Peek()
