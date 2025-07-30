@@ -96,6 +96,8 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/module.h"
   Node31 [id="Node000031",label="/home/runner/work/libjuno\l/libjuno/src/juno_time.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__time_8c.html",tooltip=" "];
   Node1 -> Node32 [id="edge60_Node000001_Node000032",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node32 [id="Node000032",label="/home/runner/work/libjuno\l/libjuno/include/juno/types.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$types_8h.html",tooltip=" "];
-  Node32 -> Node3 [id="edge61_Node000032_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
-  Node32 -> Node30 [id="edge62_Node000032_Node000030",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node32 -> Node4 [id="edge61_Node000032_Node000004",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node32 -> Node5 [id="edge62_Node000032_Node000005",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node32 -> Node3 [id="edge63_Node000032_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node32 -> Node30 [id="edge64_Node000032_Node000030",dir="back",color="steelblue1",style="solid",tooltip=" "];
 }

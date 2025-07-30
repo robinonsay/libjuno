@@ -132,6 +132,7 @@ $(document).ready(function(){initNavTree('buff__stack__api_8h.html',''); initRes
 <code>#include &quot;<a class="el" href="memory__api_8h_source.html">juno/memory/memory_api.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="types_8h_source.html">juno/types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for buff_stack_api.h:</div>
 <div class="dyncontent">
@@ -156,12 +157,12 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a7dd2cd1a67c5c372185034dbff95ee40" id="r_a7dd2cd1a67c5c372185034dbff95ee40"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a7dd2cd1a67c5c372185034dbff95ee40">JunoBuff_StackInit</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t zCapacity, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHdlr, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
 <tr class="separator:a7dd2cd1a67c5c372185034dbff95ee40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa144362e22b8b4ec90caa95770645664" id="r_aa144362e22b8b4ec90caa95770645664"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#aa144362e22b8b4ec90caa95770645664">JunoBuff_StackPush</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t *ptRetIndex)</td></tr>
-<tr class="separator:aa144362e22b8b4ec90caa95770645664"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1662c8d39cf87a09193af1ff83a38c2b" id="r_a1662c8d39cf87a09193af1ff83a38c2b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a1662c8d39cf87a09193af1ff83a38c2b">JunoBuff_StackPop</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t *ptRetIndex)</td></tr>
-<tr class="separator:a1662c8d39cf87a09193af1ff83a38c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e48ab97c9b48a0af3aa299a5816e4d3" id="r_a9e48ab97c9b48a0af3aa299a5816e4d3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a9e48ab97c9b48a0af3aa299a5816e4d3">JunoBuff_StackPeek</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack, size_t *ptRetIndex)</td></tr>
-<tr class="separator:a9e48ab97c9b48a0af3aa299a5816e4d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a430c7930cd6aa8d968afc8b8db47346e" id="r_a430c7930cd6aa8d968afc8b8db47346e"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a430c7930cd6aa8d968afc8b8db47346e">JunoBuff_StackPush</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack)</td></tr>
+<tr class="separator:a430c7930cd6aa8d968afc8b8db47346e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad51cf710f0f65e29a0bffffcb6b7367f" id="r_ad51cf710f0f65e29a0bffffcb6b7367f"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#ad51cf710f0f65e29a0bffffcb6b7367f">JunoBuff_StackPop</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack)</td></tr>
+<tr class="separator:ad51cf710f0f65e29a0bffffcb6b7367f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33a85835f89a10e6c0cdc58279faaa95" id="r_a33a85835f89a10e6c0cdc58279faaa95"><td class="memItemLeft" align="right" valign="top">static JUNO_RESULT_SIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buff__stack__api_8h.html#a33a85835f89a10e6c0cdc58279faaa95">JunoBuff_StackPeek</a> (<a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *ptStack)</td></tr>
+<tr class="separator:a33a85835f89a10e6c0cdc58279faaa95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="aff6fe7e0b7fb5722fb7ee22a085ec1f4" name="aff6fe7e0b7fb5722fb7ee22a085ec1f4"></a>
@@ -242,8 +243,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9e48ab97c9b48a0af3aa299a5816e4d3" name="a9e48ab97c9b48a0af3aa299a5816e4d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e48ab97c9b48a0af3aa299a5816e4d3">&#9670;&#160;</a></span>JunoBuff_StackPeek()</h2>
+<a id="a33a85835f89a10e6c0cdc58279faaa95" name="a33a85835f89a10e6c0cdc58279faaa95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33a85835f89a10e6c0cdc58279faaa95">&#9670;&#160;</a></span>JunoBuff_StackPeek()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,21 +253,11 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_StackPeek </td>
+          <td class="memname">static JUNO_RESULT_SIZE_T JunoBuff_StackPeek </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *&#160;</td>
-          <td class="paramname"><em>ptStack</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>ptStack</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t *&#160;</td>
-          <td class="paramname"><em>ptRetIndex</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -278,8 +269,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1662c8d39cf87a09193af1ff83a38c2b" name="a1662c8d39cf87a09193af1ff83a38c2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1662c8d39cf87a09193af1ff83a38c2b">&#9670;&#160;</a></span>JunoBuff_StackPop()</h2>
+<a id="ad51cf710f0f65e29a0bffffcb6b7367f" name="ad51cf710f0f65e29a0bffffcb6b7367f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad51cf710f0f65e29a0bffffcb6b7367f">&#9670;&#160;</a></span>JunoBuff_StackPop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -288,21 +279,11 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_StackPop </td>
+          <td class="memname">static JUNO_RESULT_SIZE_T JunoBuff_StackPop </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *&#160;</td>
-          <td class="paramname"><em>ptStack</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>ptStack</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t *&#160;</td>
-          <td class="paramname"><em>ptRetIndex</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -314,8 +295,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa144362e22b8b4ec90caa95770645664" name="aa144362e22b8b4ec90caa95770645664"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa144362e22b8b4ec90caa95770645664">&#9670;&#160;</a></span>JunoBuff_StackPush()</h2>
+<a id="a430c7930cd6aa8d968afc8b8db47346e" name="a430c7930cd6aa8d968afc8b8db47346e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a430c7930cd6aa8d968afc8b8db47346e">&#9670;&#160;</a></span>JunoBuff_StackPush()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,21 +305,11 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> JunoBuff_StackPush </td>
+          <td class="memname">static JUNO_RESULT_SIZE_T JunoBuff_StackPush </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="buff__stack__api_8h.html#a797c41201de72ad202d7f95cd442075e">JUNO_BUFF_STACK_T</a> *&#160;</td>
-          <td class="paramname"><em>ptStack</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>ptStack</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t *&#160;</td>
-          <td class="paramname"><em>ptRetIndex</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
