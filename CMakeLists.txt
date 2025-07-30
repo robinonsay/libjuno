@@ -117,7 +117,9 @@ install(
 install(
   DIRECTORY ${PROJECT_SOURCE_DIR}/include/     # source directory
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include  # usually “include/juno”
-  FILES_MATCHING PATTERN "*.h"               # only headers
+  FILES_MATCHING
+  PATTERN "*.h"      # match .h files
+  PATTERN "*.hpp"    # match .hpp files
 )
 
 if(JUNO_TESTS)
