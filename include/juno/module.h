@@ -220,6 +220,12 @@ typedef struct NAME_T \
     SUCCESS_T tSuccess; \
 } NAME_T
 
+#define JUNO_RESULT(SUCCESS_T) \
+{ \
+    JUNO_STATUS_T tStatus; \
+    SUCCESS_T tSuccess; \
+}
+
 /**
  * @def JUNO_MODULE_OPTION(NAME_T, SUCCESS_T)
  * @brief Defines an option type combining a flag to indicate some and a success payload.
@@ -232,5 +238,11 @@ typedef struct NAME_T \
     bool bIsSome; \
     SOME_T tSome; \
 } NAME_T;
+
+#define JUNO_OPTION(SOME_T) \
+{ \
+    bool bIsSome; \
+    SOME_T tSome; \
+}
 
 #endif // JUNO_MODULE_H

@@ -141,6 +141,8 @@ static void test_queue(void)
 		TEST_ASSERT_EQUAL(iTruth, iTestQueue[iIndex]);
 		iTestQueue[iIndex] = 0;
 	}
+	tResult = JunoBuff_QueueDequeue(&tQueue);
+	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
 }
 
 static void test_stack(void)
