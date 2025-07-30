@@ -105,6 +105,12 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_ROOT_T *
         tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
         return tResult;
     }
+    if(ptQueue->zLength == 0)
+    {
+        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
+        return tResult;
+    }
     tResult.tSuccess = ptQueue->iStartIndex;
     return tResult;
 }
