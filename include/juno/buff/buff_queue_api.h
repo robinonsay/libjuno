@@ -27,7 +27,6 @@
 #ifndef JUNO_BUFF_QUEUE_API_H
 #define JUNO_BUFF_QUEUE_API_H
 #include "juno/macros.h"
-#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/types.h"
@@ -37,11 +36,11 @@ extern "C"
 #endif
 
 typedef struct JUNO_BUFF_QUEUE_API_TAG JUNO_BUFF_QUEUE_API_T;
-typedef struct JUNO_BUFF_QUEUE_TAG JUNO_BUFF_QUEUE_ROOT_T;
+typedef struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_BUFF_QUEUE_ROOT_T;
 
 JUNO_MODULE_DECLARE(JUNO_BUFF_QUEUE_T);
 
-struct JUNO_BUFF_QUEUE_TAG JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_ROOT_T,
+struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_ROOT_T,
     size_t iStartIndex;
     size_t zLength;
     size_t zCapacity;
