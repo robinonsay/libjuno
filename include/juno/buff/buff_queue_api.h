@@ -30,6 +30,7 @@
 #include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
+#include "juno/types.h"
 #ifdef __cplusplus
 extern "C"
 {
@@ -59,50 +60,58 @@ static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_STATUS_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueue, size_t *ptRetIndex)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueue)
 {
-    ASSERT_EXISTS(ptQueue);
+    JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
+    if(!ptQueue)
+    {
+        tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+        return tResult;
+    }
     if(ptQueue->zLength < ptQueue->zCapacity)
     {
         ptQueue->zLength += 1;
     }
     else
     {
-        JUNO_FAIL(JUNO_STATUS_INVALID_SIZE_ERROR, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
-        return JUNO_STATUS_INVALID_SIZE_ERROR;
+        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
+        return tResult;
     }
-    if(ptRetIndex)
-    {
-        *ptRetIndex = ptQueue->zLength % ptQueue->zCapacity;
-    }
-    return JUNO_STATUS_SUCCESS;
+    tResult.tSuccess = ptQueue->zLength % ptQueue->zCapacity;
+    return tResult;
 }
 
-static inline JUNO_STATUS_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueue, size_t *ptRetIndex)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueue)
 {
-    ASSERT_EXISTS(ptQueue);
+    JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
+    if(!ptQueue)
+    {
+        tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+        return tResult;
+    }
     if(ptQueue->zLength > 0)
     {
         ptQueue->iStartIndex = (ptQueue->iStartIndex + 1) % ptQueue->zCapacity;
         ptQueue->zLength -= 1;
-        if(ptRetIndex)
-        {
-            *ptRetIndex = ptQueue->iStartIndex;
-        }
-        return JUNO_STATUS_SUCCESS;
+        tResult.tSuccess = ptQueue->iStartIndex;
+        return tResult;
     }
-    JUNO_FAIL(JUNO_STATUS_ERR, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Queue is empty");
-    return JUNO_STATUS_ERR;
+    tResult.tStatus = JUNO_STATUS_ERR;
+    JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Queue is empty");
+    return tResult;
 }
 
-static inline JUNO_STATUS_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_T *ptQueue, size_t *ptRetIndex)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_T *ptQueue)
 {
-    ASSERT_EXISTS(ptQueue);
-    if(*ptRetIndex)
+    JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
+    if(!ptQueue)
     {
-        *ptRetIndex = ptQueue->iStartIndex;
+        tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+        return tResult;
     }
-    return JUNO_STATUS_SUCCESS;
+    tResult.tSuccess = ptQueue->iStartIndex;
+    return tResult;
 }
 
 
