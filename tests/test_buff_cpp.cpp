@@ -22,7 +22,7 @@ void tearDown(void)
 
 static void test_queue(void)
 {
-	using BUFF_T = JUNO_BUFF_QUEUE_IMPL_T<uint32_t, 10>;
+	using BUFF_T = JUNO_BUFF_QUEUE_T<uint32_t, 10>;
 	auto tTestQueueResult = BUFF_T::New(NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tTestQueueResult.tStatus);
 	auto tTestQueue = tTestQueueResult.tSuccess;
@@ -43,7 +43,7 @@ static void test_queue(void)
 
 static void test_stack(void)
 {
-	using STACK_T = JUNO_BUFF_STACK_IMPL_T<uint32_t, 10>;
+	using STACK_T = JUNO_BUFF_STACK_T<uint32_t, 10>;
 	auto tTestQueueResult = STACK_T::New(NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tTestQueueResult.tStatus);
 	auto tTestStack = tTestQueueResult.tSuccess;
