@@ -35,6 +35,7 @@
 #include "buff_stack_api.h"
 #include <cstddef>
 
+
 template<typename T, const size_t N>
 struct JUNO_BUFF_QUEUE_IMPL_T JUNO_MODULE_DERIVE(JUNO_BUFF_QUEUE_ROOT_T,
 private:
