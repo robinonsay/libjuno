@@ -81,7 +81,8 @@ public:
 );
 
 template<typename T, const size_t N, typename Q = JUNO_BUFF_QUEUE_IMPL_T<T, N>>
-struct JUNO_BUFF_QUEUE_T JUNO_MODULE_DERIVE(JUNO_BUFF_QUEUE_ROOT_T,
+struct JUNO_BUFF_QUEUE_T
+{
 private:
     Q tQueueImpl;
 public:
@@ -92,6 +93,7 @@ public:
         JUNO_RESULT_T<Q> tQResult = Q::New(tArr, pfcnFailureHandler, pvFailureUserData);
         ASSERT_SUCCESS(tQResult.tStatus, tResult.tStatus = tQResult.tStatus; return tResult);
         tNew.tQueueImpl = tQResult.tSuccess;
+        tResult.tSuccess = tNew;
         return tResult;
     }
 
@@ -107,8 +109,11 @@ public:
     {
         return tQueueImpl.Peek();   
     }
-    
-);
+    size_t GetCapacity()
+    {
+        return tQueueImpl.tRoot.zCapacity;
+    }
+};
 
 template<typename T, const size_t N>
 struct JUNO_BUFF_STACK_IMPL_T JUNO_MODULE_DERIVE(JUNO_BUFF_STACK_ROOT_T,
@@ -153,7 +158,8 @@ public:
 );
 
 template<typename T, const size_t N, typename S = JUNO_BUFF_STACK_IMPL_T<T, N>>
-struct JUNO_BUFF_STACK_T JUNO_MODULE_DERIVE(JUNO_BUFF_STACK_ROOT_T,
+struct JUNO_BUFF_STACK_T
+{
 private:
     S tStackImpl;
 public:
@@ -164,6 +170,7 @@ public:
         JUNO_RESULT_T<S> tQResult = S::New(pfcnFailureHandler, pvFailureUserData);
         ASSERT_SUCCESS(tQResult.tStatus, tResult.tStatus = tQResult.tStatus; return tResult);
         tNew.tStackImpl = tQResult.tSuccess;
+        tResult.tSuccess = tNew;
         return tResult;
     }
 
@@ -180,6 +187,10 @@ public:
     {
         return tStackImpl.Peek;
     }
-);
+    size_t GetCapacity()
+    {
+        return tStackImpl.tRoot.zCapacity;
+    }
+};
 
 #endif // JUNO_BUFF_QUEUE_API_H
