@@ -37,17 +37,16 @@ extern "C"
 #endif
 
 typedef struct JUNO_BUFF_STACK_API_TAG JUNO_BUFF_STACK_API_T;
-typedef struct JUNO_BUFF_STACK_TAG JUNO_BUFF_STACK_T;
+typedef struct JUNO_BUFF_STACK_ROOT_TAG JUNO_BUFF_STACK_ROOT_T;
 
-struct JUNO_BUFF_STACK_TAG
-{
+JUNO_MODULE_DECLARE(JUNO_BUFF_STACK_T);
+
+struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_STACK_API_T,
     size_t zLength;
     size_t zCapacity;
-    JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER;
-    JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA;
-};
+);
 
-static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     ASSERT_EXISTS(ptStack);
     ptStack->zLength = 0;
@@ -57,7 +56,7 @@ static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)
@@ -79,7 +78,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)
@@ -98,7 +97,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)

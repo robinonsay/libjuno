@@ -151,11 +151,11 @@
     @param derived The derived modules seperated by `;`
 
 */
-#define JUNO_MODULE(API_T, ROOT_T, derived) \
+#define JUNO_MODULE(API_T, ROOT_T, ...) \
 { \
     const API_T *ptApi; \
     ROOT_T JUNO_MODULE_SUPER; \
-    derived \
+    __VA_ARGS__ \
 }
 
 /**
@@ -172,10 +172,10 @@
     @param API The API type for the module
     @param members The member components of the module root implementation
 */
-#define JUNO_MODULE_ROOT(API_T, members) \
+#define JUNO_MODULE_ROOT(API_T, ...) \
 { \
     const API_T *ptApi; \
-    members \
+    __VA_ARGS__ \
     JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \
     JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \
 }
@@ -193,10 +193,10 @@
     @param root The name of the root implementation for the module as declared
     @param members The member components of the module derivation
 */
-#define JUNO_MODULE_DERIVE(ROOT_T, members) \
+#define JUNO_MODULE_DERIVE(ROOT_T, ...) \
 { \
     ROOT_T JUNO_MODULE_SUPER; \
-    members \
+    __VA_ARGS__ \
 }
 
 /**
