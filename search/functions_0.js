@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hash_0',['Hash',['../juno__hash_8c.html#a82c045950a61798c212d01c2058191b5',1,'juno_hash.c']]]
+  ['dequeue_0',['Dequeue',['../structJUNO__BUFF__QUEUE__T.html#a77f31af1a40f66dcabdc1ce22b8d3910',1,'JUNO_BUFF_QUEUE_T']]]
 ];

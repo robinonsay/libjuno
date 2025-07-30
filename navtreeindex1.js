@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"juno__vec_8h.html#aba145cea4733b6de325fca6e90310ed3":[7,0,0,0,7,4,8],
 "juno__vec_8h.html#abb6211a04e6abee01af4b0c8025eb743":[7,0,0,0,7,4,5],
 "juno__vec_8h.html#abcfeacf58eba2d6ba5ac2946e133345c":[7,0,0,0,7,4,17],
 "juno__vec_8h.html#ac6d35b6c963e9816d95a87c1e98e4294":[7,0,0,0,7,4,13],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "spi__io__api_8h.html":[7,0,0,0,4,2],
 "spi__io__api_8h.html#a525027ea101e7e04cc52c2ea2c95d71e":[7,0,0,0,4,2,1],
 "spi__io__api_8h.html#a52c8009bc228a35231efa3324a175751":[7,0,0,0,4,2,2],
-"spi__io__api_8h.html#a81f75c98c1fa982c8706228fe721b1b9":[7,0,0,0,4,2,3]
+"spi__io__api_8h.html#a81f75c98c1fa982c8706228fe721b1b9":[7,0,0,0,4,2,3],
+"spi__io__api_8h.html#ab3ba38c1d94e733ad38848c366867edb":[7,0,0,0,4,2,4]
 };

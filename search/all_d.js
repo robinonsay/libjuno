@@ -17,10 +17,11 @@ var searchData=
   ['engine_5fv6_20h_20engine_5fv8_20h_14',['3.2. Deriving a Gas-Powered Engine: engine_v6.h &amp; engine_v8.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
   ['engine_5fv8_20h_15',['3.2. Deriving a Gas-Powered Engine: engine_v6.h &amp; engine_v8.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
   ['engines_16',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md73',1,'']]],
-  ['entirely_20different_20fuel_20source_3a_20“hybrid”_20engines_17',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md73',1,'']]],
-  ['error_20handling_18',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]],
-  ['everything_20together_3a_20the_20car_20module_20main_20c_19',['4. Wiring Everything Together: The Car Module &amp; main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md61',1,'']]],
-  ['example_20',['Usage Example',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27',1,'']]],
-  ['example_20usage_20pattern_21',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]],
-  ['execute_22',['Execute',['../structJUNO__SCH__API__TAG.html#a73b0e9ee6a5989fcff6e7788b9dc6985',1,'JUNO_SCH_API_TAG']]]
+  ['enqueue_17',['Enqueue',['../structJUNO__BUFF__QUEUE__T.html#a08014974a811838adbc15afa6c0fd928',1,'JUNO_BUFF_QUEUE_T']]],
+  ['entirely_20different_20fuel_20source_3a_20“hybrid”_20engines_18',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md73',1,'']]],
+  ['error_20handling_19',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]],
+  ['everything_20together_3a_20the_20car_20module_20main_20c_20',['4. Wiring Everything Together: The Car Module &amp; main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md61',1,'']]],
+  ['example_21',['Usage Example',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md27',1,'']]],
+  ['example_20usage_20pattern_22',['Example Usage Pattern',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md33',1,'']]],
+  ['execute_23',['Execute',['../structJUNO__SCH__API__TAG.html#a73b0e9ee6a5989fcff6e7788b9dc6985',1,'JUNO_SCH_API_TAG']]]
 ];
