@@ -37,19 +37,16 @@ extern "C"
 #endif
 
 typedef struct JUNO_BUFF_QUEUE_API_TAG JUNO_BUFF_QUEUE_API_T;
-typedef struct JUNO_BUFF_QUEUE_TAG JUNO_BUFF_QUEUE_T;
+typedef struct JUNO_BUFF_QUEUE_TAG JUNO_BUFF_QUEUE_ROOT_T;
 
 
-struct JUNO_BUFF_QUEUE_TAG
-{
+struct JUNO_BUFF_QUEUE_TAG JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_ROOT_T,
     size_t iStartIndex;
     size_t zLength;
     size_t zCapacity;
-    JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER;
-    JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA;
-};
+);
 
-static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     ASSERT_EXISTS(ptQueue);
     ptQueue->iStartIndex = 0;
@@ -60,7 +57,7 @@ static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueue)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptQueue)
@@ -70,7 +67,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueu
     }
     if(ptQueue->zLength < ptQueue->zCapacity)
     {
-        tResult.tSuccess = ptQueue->zLength % ptQueue->zCapacity;
+        tResult.tSuccess = (ptQueue->iStartIndex + ptQueue->zLength) % ptQueue->zCapacity;
         ptQueue->zLength += 1;
     }
     else
@@ -82,7 +79,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueu
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueue)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptQueue)
@@ -102,7 +99,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueu
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_T *ptQueue)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptQueue)
