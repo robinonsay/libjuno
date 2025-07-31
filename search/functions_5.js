@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['new_0',['new',['../structJUNO__BUFF__QUEUE__T.html#aec8b9ccb74b139f038b70ab6d56dd04c',1,'JUNO_BUFF_QUEUE_T::New()'],['../structJUNO__BUFF__STACK__T.html#a52f5c3e1fb084a1484e05ef2504dba96',1,'JUNO_BUFF_STACK_T::New()']]]
+  ['pop_0',['Pop',['../namespacejuno_1_1buff.html#aeee7823037aa5e4417d0257134be7a7c',1,'juno::buff']]],
+  ['push_1',['Push',['../namespacejuno_1_1buff.html#a98eca69a6a189d91f31dfbbbe5d18201',1,'juno::buff']]]
 ];

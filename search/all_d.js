@@ -17,7 +17,7 @@ var searchData=
   ['engine_5fv6_20h_20engine_5fv8_20h_14',['3.2. Deriving a Gas-Powered Engine: engine_v6.h &amp; engine_v8.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
   ['engine_5fv8_20h_15',['3.2. Deriving a Gas-Powered Engine: engine_v6.h &amp; engine_v8.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
   ['engines_16',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md73',1,'']]],
-  ['enqueue_17',['Enqueue',['../structJUNO__BUFF__QUEUE__T.html#a08014974a811838adbc15afa6c0fd928',1,'JUNO_BUFF_QUEUE_T']]],
+  ['enqueue_17',['enqueue',['../structjuno_1_1buff_1_1QUEUE__API__T.html#a6236518602dba0dbbc2dffe76a927c07',1,'juno::buff::QUEUE_API_T::Enqueue'],['../namespacejuno_1_1buff.html#a41121c4c2d402b6ef2db350fa82a1140',1,'juno::buff::Enqueue()']]],
   ['entirely_20different_20fuel_20source_3a_20“hybrid”_20engines_18',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md73',1,'']]],
   ['error_20handling_19',['Error Handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md28',1,'']]],
   ['everything_20together_3a_20the_20car_20module_20main_20c_20',['4. Wiring Everything Together: The Car Module &amp; main.c',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md61',1,'']]],
