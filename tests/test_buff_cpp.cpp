@@ -7,6 +7,7 @@ extern "C" {
 
 #include "juno/buff/buff_api.hpp"
 
+using namespace juno;
 using namespace juno::buff;
 
 void setUp(void) {}
@@ -16,7 +17,7 @@ static void test_queue(void)
 {
     constexpr size_t N = 10;
     // Underlying buffer storage
-    JUNO_ARRAY_T<uint8_t, N> buffer{};
+    ARRAY_T<uint8_t, N> buffer{};
 
     // Initialize queue via API
     auto api_q     = NewQueueApi<uint8_t, N>();
@@ -79,7 +80,7 @@ static void test_stack(void)
 {
     constexpr size_t N = 10;
     // Underlying buffer storage
-    JUNO_ARRAY_T<uint8_t, N> buffer{};
+    ARRAY_T<uint8_t, N> buffer{};
 
     // Initialize stack via API
     auto api_s     = NewStackApi<uint8_t, N>();

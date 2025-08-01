@@ -23,11 +23,16 @@
 #include <stddef.h>
 #include <stdint.h>
 
+namespace juno
+{
+
 template<typename T, const size_t N>
-struct JUNO_ARRAY_T
+struct ARRAY_T
 {
     T tArr[N];
 };
+
+}
 
 
 #endif

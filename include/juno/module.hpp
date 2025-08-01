@@ -21,18 +21,23 @@
 #include <stdint.h>
 #include "module.h"
 
+namespace juno
+{
+
 template<typename T>
-struct JUNO_RESULT_T
+struct RESULT_T
 {
     JUNO_STATUS_T tStatus;
     T tSuccess;
 };
 
 template<typename T>
-struct JUNO_OPTION_T
+struct OPTION_T
 {
     bool bIsSome;
     T tSome;
 };
+
+}
 
 #endif // JUNO_MODULE_H

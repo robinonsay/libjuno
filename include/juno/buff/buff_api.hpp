@@ -26,13 +26,9 @@
 */
 #ifndef JUNO_BUFF_QUEUE_API_HPP
 #define JUNO_BUFF_QUEUE_API_HPP
-#include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/module.hpp"
-#include "juno/types.h"
-#include "buff_queue_api.h"
-#include "buff_stack_api.h"
 #include "juno/types.hpp"
 #include <cstddef>
 
@@ -48,22 +44,20 @@ struct QUEUE_API_T;
 
 template<typename T, const size_t N>
 struct QUEUE_ROOT_T JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_API_T_N,
-    JUNO_ARRAY_T<T,N>& tArrBuff;
+    ARRAY_T<T,N> *ptArrBuff;
     size_t iStartIndex;
     size_t zLength;
 
-    QUEUE_ROOT_T<T, N>(JUNO_ARRAY_T<T,N>& tArr): tArrBuff(tArr)
-    {}
-
-    static JUNO_RESULT_T<QUEUE_ROOT_T<T, N>> New(const QUEUE_API_T<T,N> *ptApi, JUNO_ARRAY_T<T,N>& tArr, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+    static RESULT_T<QUEUE_ROOT_T<T, N>> New(const QUEUE_API_T<T,N> *ptApi, ARRAY_T<T,N>& tArr, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
     {
-        QUEUE_ROOT_T<T, N>tNew{tArr};
+        QUEUE_ROOT_T<T, N>tNew{};
+        tNew.ptArrBuff = &tArr;
         tNew.ptApi = ptApi;
         tNew._pfcnFailureHandler = pfcnFailureHandler;
         tNew._pvFailurUserData = pvFailureUserData;
         tNew.iStartIndex = 0;
         tNew.zLength = 0;
-        return JUNO_RESULT_T<QUEUE_ROOT_T<T, N>>{JUNO_STATUS_SUCCESS, tNew};
+        return RESULT_T<QUEUE_ROOT_T<T, N>>{JUNO_STATUS_SUCCESS, tNew};
     }
 
 );
@@ -72,17 +66,17 @@ template<typename T, const size_t N>
 struct QUEUE_API_T
 {
     JUNO_STATUS_T (*Enqueue)(QUEUE_ROOT_T<T, N>& tQueue, T tData);
-    JUNO_RESULT_T<T> (*Dequeue)(QUEUE_ROOT_T<T, N>& tQueue);
-    JUNO_RESULT_T<T*> (*Peek)(QUEUE_ROOT_T<T, N>& tQueue);
+    RESULT_T<T> (*Dequeue)(QUEUE_ROOT_T<T, N>& tQueue);
+    RESULT_T<T*> (*Peek)(QUEUE_ROOT_T<T, N>& tQueue);
 };
 
 template<typename T, const size_t N>
-JUNO_RESULT_T<T> Dequeue(QUEUE_ROOT_T<T, N>& tQueue)
+RESULT_T<T> Dequeue(QUEUE_ROOT_T<T, N>& tQueue)
 {
-    JUNO_RESULT_T<T> tResult{JUNO_STATUS_SUCCESS, {}};
+    RESULT_T<T> tResult{JUNO_STATUS_SUCCESS, {}};
     if(tQueue.zLength > 0)
     {
-        tResult.tSuccess = tQueue.tArrBuff.tArr[tQueue.iStartIndex];
+        tResult.tSuccess = tQueue.ptArrBuff->tArr[tQueue.iStartIndex];
         tQueue.iStartIndex = (tQueue.iStartIndex + 1) % N;
         tQueue.zLength -= 1;
         return tResult;
@@ -97,7 +91,7 @@ JUNO_STATUS_T Enqueue(QUEUE_ROOT_T<T, N>& tQueue, T tData)
 {
     if(tQueue.zLength < N)
     {
-        tQueue.tArrBuff.tArr[(tQueue.iStartIndex + tQueue.zLength) % N] = tData;
+        tQueue.ptArrBuff->tArr[(tQueue.iStartIndex + tQueue.zLength) % N] = tData;
         tQueue.zLength += 1;
         return JUNO_STATUS_SUCCESS;
     }
@@ -106,12 +100,12 @@ JUNO_STATUS_T Enqueue(QUEUE_ROOT_T<T, N>& tQueue, T tData)
 }
 
 template<typename T, const size_t N>
-JUNO_RESULT_T<T*> QueuePeek(QUEUE_ROOT_T<T, N>& tQueue)
+RESULT_T<T*> QueuePeek(QUEUE_ROOT_T<T, N>& tQueue)
 {
-    JUNO_RESULT_T<T*> tResult{JUNO_STATUS_SUCCESS, {}};
+    RESULT_T<T*> tResult{JUNO_STATUS_SUCCESS, {}};
     if(tQueue.zLength > 0)
     {
-        tResult.tSuccess = &tQueue.tArrBuff.tArr[tQueue.iStartIndex];
+        tResult.tSuccess = &tQueue.ptArrBuff->tArr[tQueue.iStartIndex];
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
@@ -132,20 +126,18 @@ struct STACK_API_T;
 
 template<typename T, const size_t N>
 struct STACK_ROOT_T JUNO_MODULE_ROOT(JUNO_BUFF_STACK_API_T_N,
-    JUNO_ARRAY_T<T,N>& tArrBuff;
+    ARRAY_T<T,N> *ptArrBuff;
     size_t zLength;
 
-    STACK_ROOT_T<T, N>(JUNO_ARRAY_T<T,N>& tArr): tArrBuff(tArr)
-    {}
-
-    static JUNO_RESULT_T<STACK_ROOT_T<T, N>> New(const STACK_API_T<T,N> *ptApi, JUNO_ARRAY_T<T,N>& tArr, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+    static RESULT_T<STACK_ROOT_T<T, N>> New(const STACK_API_T<T,N> *ptApi, ARRAY_T<T,N>& tArr, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
     {
-        STACK_ROOT_T<T, N>tNew{tArr};
+        STACK_ROOT_T<T, N>tNew{};
+        tNew.ptArrBuff = &tArr;
         tNew.ptApi = ptApi;
         tNew._pfcnFailureHandler = pfcnFailureHandler;
         tNew._pvFailurUserData = pvFailureUserData;
         tNew.zLength = 0;
-        return JUNO_RESULT_T<STACK_ROOT_T<T, N>>{JUNO_STATUS_SUCCESS, tNew};
+        return RESULT_T<STACK_ROOT_T<T, N>>{JUNO_STATUS_SUCCESS, tNew};
     }
 
 );
@@ -154,18 +146,18 @@ template<typename T, const size_t N>
 struct STACK_API_T
 {
     JUNO_STATUS_T (*Push)(STACK_ROOT_T<T, N>& tStack, T tData);
-    JUNO_RESULT_T<T> (*Pop)(STACK_ROOT_T<T, N>& tStack);
-    JUNO_RESULT_T<T*> (*Peek)(STACK_ROOT_T<T, N>& tStack);
+    RESULT_T<T> (*Pop)(STACK_ROOT_T<T, N>& tStack);
+    RESULT_T<T*> (*Peek)(STACK_ROOT_T<T, N>& tStack);
 };
 
 template<typename T, const size_t N>
-JUNO_RESULT_T<T> Pop(STACK_ROOT_T<T, N>& tStack)
+RESULT_T<T> Pop(STACK_ROOT_T<T, N>& tStack)
 {
-    JUNO_RESULT_T<T> tResult{JUNO_STATUS_SUCCESS, {}};
+    RESULT_T<T> tResult{JUNO_STATUS_SUCCESS, {}};
     if(tStack.zLength > 0)
     {
         tStack.zLength -= 1;
-        tResult.tSuccess = tStack.tArrBuff.tArr[tStack.zLength];
+        tResult.tSuccess = tStack.ptArrBuff->tArr[tStack.zLength];
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
@@ -178,7 +170,7 @@ JUNO_STATUS_T Push(STACK_ROOT_T<T, N>& tStack, T tData)
 {
     if(tStack.zLength < N)
     {
-        tStack.tArrBuff.tArr[tStack.zLength] = tData;
+        tStack.ptArrBuff->tArr[tStack.zLength] = tData;
         tStack.zLength += 1;
         return JUNO_STATUS_SUCCESS;
     }
@@ -187,12 +179,12 @@ JUNO_STATUS_T Push(STACK_ROOT_T<T, N>& tStack, T tData)
 }
 
 template<typename T, const size_t N>
-JUNO_RESULT_T<T*> StackPeek(STACK_ROOT_T<T, N>& tStack)
+RESULT_T<T*> StackPeek(STACK_ROOT_T<T, N>& tStack)
 {
-    JUNO_RESULT_T<T*> tResult{JUNO_STATUS_SUCCESS, {}};
+    RESULT_T<T*> tResult{JUNO_STATUS_SUCCESS, {}};
     if(tStack.zLength > 0)
     {
-        tResult.tSuccess = &tStack.tArrBuff.tArr[tStack.zLength];
+        tResult.tSuccess = &tStack.ptArrBuff->tArr[tStack.zLength];
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
