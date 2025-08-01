@@ -26,13 +26,9 @@
 */
 #ifndef JUNO_BUFF_QUEUE_API_HPP
 #define JUNO_BUFF_QUEUE_API_HPP
-#include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/module.hpp"
-#include "juno/types.h"
-#include "buff_queue_api.h"
-#include "buff_stack_api.h"
 #include "juno/types.hpp"
 #include <cstddef>
 

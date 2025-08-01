@@ -27,7 +27,6 @@
 #ifndef JUNO_BUFF_STACK_API_H
 #define JUNO_BUFF_STACK_API_H
 #include "juno/macros.h"
-#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/types.h"
