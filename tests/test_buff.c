@@ -1,3 +1,4 @@
+#include "juno/module.h"
 #include "juno/status.h"
 #include "unity.h"
 #include "unity_internals.h"
@@ -17,11 +18,18 @@ void tearDown(void)
 
 }
 
+union JUNO_BUFF_QUEUE_T JUNO_MODULE(void, JUNO_BUFF_QUEUE_ROOT_T,
+);
+
+union JUNO_BUFF_STACK_T JUNO_MODULE(void, JUNO_BUFF_STACK_ROOT_T,
+);
+
 static void test_queue(void)
 {
 	uint8_t iTestQueue[10] = {0};
-	JUNO_BUFF_QUEUE_ROOT_T tQueue = {0};
+	JUNO_BUFF_QUEUE_ROOT_T tQueueRoot = {0};
 	JUNO_RESULT_SIZE_T tResult = {0};
+	JUNO_BUFF_QUEUE_T tQueue = {.tRoot = tQueueRoot};
 	tResult.tStatus = JunoBuff_QueueInit(&tQueue, sizeof(iTestQueue), NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
 	for(size_t i = 0; i < sizeof(iTestQueue); i++)
@@ -148,8 +156,9 @@ static void test_queue(void)
 static void test_stack(void)
 {
 	uint8_t iTestStack[10];
-	JUNO_BUFF_STACK_ROOT_T tStack = {0};
+	JUNO_BUFF_STACK_ROOT_T tStackRoot = {0};
 	JUNO_RESULT_SIZE_T tResult = {0};
+	JUNO_BUFF_STACK_T tStack = {.tRoot = tStackRoot};
 	tResult.tStatus = JunoBuff_StackInit(&tStack, sizeof(iTestStack), NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
 	for(size_t i = 0; i < sizeof(iTestStack); i++)
