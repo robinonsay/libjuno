@@ -52,7 +52,7 @@ static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_
     ptQueueRoot->zLength = 0;
     ptQueueRoot->zCapacity = zCapacity;
     ptQueueRoot->_pfcnFailureHandler = pfcnFailureHdlr;
-    ptQueueRoot->_pvFailurUserData = pvFailureUserData;
+    ptQueueRoot->_pvFailureUserData = pvFailureUserData;
     return JUNO_STATUS_SUCCESS;
 }
 
@@ -73,7 +73,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueu
     else
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Failed to enqueue data");
         return tResult;
     }
     return tResult;
@@ -96,7 +96,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueu
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
-    JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailurUserData, "Queue is empty");
+    JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Queue is empty");
     return tResult;
 }
 
@@ -112,7 +112,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_T *ptQue
     if(ptQueueRoot->zLength == 0)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Failed to enqueue data");
         return tResult;
     }
     tResult.tSuccess = ptQueueRoot->iStartIndex;

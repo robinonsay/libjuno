@@ -50,7 +50,7 @@ struct JUNO_QUEUE_T JUNO_MODULE_DERIVE(JUNO_MODULE_ARG(QUEUE_ROOT_T<T, N>),
         tNew.tRoot.ptArrBuff = &tArr;
         tNew.tRoot.ptApi = ptApi;
         tNew.tRoot._pfcnFailureHandler = pfcnFailureHandler;
-        tNew.tRoot._pvFailurUserData = pvFailureUserData;
+        tNew.tRoot._pvFailureUserData = pvFailureUserData;
         tNew.tRoot.iStartIndex = 0;
         tNew.tRoot.zLength = 0;
         return RESULT_T<JUNO_QUEUE_T<T, N>>{JUNO_STATUS_SUCCESS, tNew};
@@ -83,7 +83,7 @@ RESULT_T<T> Dequeue(QUEUE_T<T, N>& tQueue)
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
-    JUNO_FAIL_MODULE(tResult.tStatus, (&tJunoQueue), "Queue is empty");
+    JUNO_FAIL(tResult.tStatus, tJunoQueue.tRoot._pfcnFailureHandler, tJunoQueue.tRoot._pvFailureUserData, "Queue is empty");
     return tResult;
 }
 
@@ -97,7 +97,7 @@ JUNO_STATUS_T Enqueue(QUEUE_T<T, N>& tQueue, T tData)
         tJunoQueue.tRoot.zLength += 1;
         return JUNO_STATUS_SUCCESS;
     }
-    JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_SIZE_ERROR, (&tJunoQueue), "Queue is full");
+    JUNO_FAIL(JUNO_STATUS_INVALID_SIZE_ERROR, tJunoQueue.tRoot._pfcnFailureHandler, tJunoQueue.tRoot._pvFailureUserData, "Queue is full");
     return JUNO_STATUS_INVALID_SIZE_ERROR;
 }
 
@@ -112,7 +112,7 @@ RESULT_T<T*> QueuePeek(QUEUE_T<T, N>& tQueue)
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
-    JUNO_FAIL_MODULE(tResult.tStatus, (&tJunoQueue), "Queue is empty");
+    JUNO_FAIL(tResult.tStatus, tJunoQueue.tRoot._pfcnFailureHandler, tJunoQueue.tRoot._pvFailureUserData, "Queue is empty");
     return tResult;
 }
 
@@ -131,7 +131,7 @@ struct JUNO_STACK_T JUNO_MODULE_DERIVE(JUNO_MODULE_ARG(STACK_ROOT_T<T, N>),
         tNew.tRoot.ptArrBuff = &tArr;
         tNew.tRoot.ptApi = ptApi;
         tNew.tRoot._pfcnFailureHandler = pfcnFailureHandler;
-        tNew.tRoot._pvFailurUserData = pvFailureUserData;
+        tNew.tRoot._pvFailureUserData = pvFailureUserData;
         tNew.tRoot.zLength = 0;
         return RESULT_T<JUNO_STACK_T<T, N>>{JUNO_STATUS_SUCCESS, tNew};
     }
@@ -164,7 +164,7 @@ RESULT_T<T> Pop(STACK_T<T, N>& tStack)
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
-    JUNO_FAIL_MODULE(tResult.tStatus, (&tJunoStack), "Stack is empty");
+    JUNO_FAIL(tResult.tStatus, tJunoStack.tRoot._pfcnFailureHandler, tJunoStack.tRoot._pvFailureUserData, "Stack is empty");
     return tResult;
 }
 
@@ -178,7 +178,7 @@ JUNO_STATUS_T Push(STACK_T<T, N>& tStack, T tData)
         tJunoStack.tRoot.zLength += 1;
         return JUNO_STATUS_SUCCESS;
     }
-    JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_SIZE_ERROR, (&tJunoStack), "Stack is full");
+    JUNO_FAIL(JUNO_STATUS_INVALID_SIZE_ERROR, tJunoStack.tRoot._pfcnFailureHandler, tJunoStack.tRoot._pvFailureUserData, "Stack is full");
     return JUNO_STATUS_INVALID_SIZE_ERROR;
 }
 
@@ -193,7 +193,7 @@ RESULT_T<T*> StackPeek(STACK_T<T, N>& tStack)
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
-    JUNO_FAIL_MODULE(tResult.tStatus, (&tJunoStack), "Stack is empty");
+    JUNO_FAIL(tResult.tStatus, tJunoStack.tRoot._pfcnFailureHandler, tJunoStack.tRoot._pvFailureUserData, "Stack is empty");
     return tResult;
 }
 

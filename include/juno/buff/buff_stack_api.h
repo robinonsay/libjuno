@@ -50,7 +50,7 @@ static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_
     ptStackRoot->zLength = 0;
     ptStackRoot->zCapacity = zCapacity;
     ptStackRoot->_pfcnFailureHandler = pfcnFailureHdlr;
-    ptStackRoot->_pvFailurUserData = pvFailureUserData;
+    ptStackRoot->_pvFailureUserData = pvFailureUserData;
     return JUNO_STATUS_SUCCESS;
 }
 
@@ -71,7 +71,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
     else
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailureUserData, "Failed to enqueue data");
         return tResult;
     }
     return tResult;
@@ -93,7 +93,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-    JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailurUserData, "Failed to enqueue data");
+    JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailureUserData, "Failed to enqueue data");
     return tResult;
 }
 
