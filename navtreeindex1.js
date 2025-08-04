@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"juno__vec_8h.html#a896c5e4eafa49099dcaf1a94732343dc":[8,0,0,0,7,4,29],
+"juno__vec_8h.html#a8b6ae4d415f5b2d677ef77f1175d568d":[8,0,0,0,7,4,30],
 "juno__vec_8h.html#a8e724acb27c7335b1bbe88875c5a332f":[8,0,0,0,7,4,11],
 "juno__vec_8h.html#a8f7ab0ed9716d017fac06ec8fac80c43":[8,0,0,0,7,4,4],
 "juno__vec_8h.html#a91841111d58bcb69ec9c2bd2d664cac6":[8,0,0,0,7,4,20],
@@ -238,6 +240,7 @@ var NAVTREEINDEX1 =
 "module_8h.html#af98d3f7fa92446d974d322bcfe55b284":[8,0,0,0,14,12],
 "module_8h_source.html":[8,0,0,0,14],
 "module_8hpp.html":[8,0,0,0,15],
+"module_8hpp.html#a670bb1ff1cca3544d182e58fb5b9da14":[8,0,0,0,15,2],
 "module_8hpp_source.html":[8,0,0,0,15],
 "msg__api_8h.html":[8,0,0,0,9,0],
 "msg__api_8h.html#a53855c9ef5825ab6158f2177e2c9133a":[8,0,0,0,9,0,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX1 =
 "msg__api_8h.html#ad2e43b3cb2eb8efa151e3def24f52be1":[8,0,0,0,9,0,3],
 "msg__api_8h.html#afe7d078468bd606923109520baa8d7af":[8,0,0,0,9,0,5],
 "msg__api_8h_source.html":[8,0,0,0,9,0],
-"namespacejuno.html":[6,0,0],
-"namespacejuno_1_1buff.html":[6,0,0,0],
-"namespacejuno_1_1buff.html#a0886cdfa14bda66420863bc70338eda5":[6,0,0,0,5],
-"namespacejuno_1_1buff.html#a2f259a80bb920b33e430ef81897f723f":[6,0,0,0,7]
+"namespacejuno.html":[6,0,0]
 };

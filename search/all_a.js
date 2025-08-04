@@ -6,7 +6,7 @@ var searchData=
   ['beta_3',['beta',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'Juno Hash Module (Beta)'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'Juno Map Module (Beta)']]],
   ['binhex_2eh_4',['binhex.h',['../binhex_8h.html',1,'']]],
   ['binhex_5fcrctab_5',['binhex_crctab',['../binhex_8h.html#ac2cd8edb073b1eb38372ba59445bb0ea',1,'binhex.h']]],
-  ['bissome_6',['bIsSome',['../structJUNO__OPTION__T.html#ae789a9b2b7c31cd0e953537d3101d735',1,'JUNO_OPTION_T']]],
+  ['bissome_6',['bIsSome',['../structjuno_1_1OPTION__T.html#ad082fb1f6178d501260d2631ef2a55fa',1,'juno::OPTION_T']]],
   ['block_20visualization_7',['Memory Block Visualization',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]],
   ['blocks_8',['blocks',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md15',1,'Memory Blocks'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'Step 1: Declare Memory Blocks']]],
   ['buff_5fapi_2ehpp_9',['buff_api.hpp',['../buff__api_8hpp.html',1,'']]],

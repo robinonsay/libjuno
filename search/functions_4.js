@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['newqueueapi_0',['NewQueueApi',['../namespacejuno_1_1buff.html#af2dfcec19258256c89eff7bdb161ed52',1,'juno::buff']]],
-  ['newstackapi_1',['NewStackApi',['../namespacejuno_1_1buff.html#a2f259a80bb920b33e430ef81897f723f',1,'juno::buff']]]
+  ['pop_0',['Pop',['../namespacejuno_1_1buff.html#ab21dceec34890eec7680d858674b951e',1,'juno::buff']]],
+  ['push_1',['Push',['../namespacejuno_1_1buff.html#a34bea065cb89b753adba210e8b5ff457',1,'juno::buff']]]
 ];

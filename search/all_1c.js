@@ -1,7 +1,7 @@
 var searchData=
 [
   ['tank_0',['2. Defining a Simple Module API: The Gas Tank',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50',1,'']]],
-  ['tarr_1',['tArr',['../structJUNO__ARRAY__T.html#aba6dbab0b4df5408dd00de799e51c0a2',1,'JUNO_ARRAY_T']]],
+  ['tarr_1',['tArr',['../structjuno_1_1ARRAY__T.html#abd7cc5fd45494e0940ba9ca2e10a1248',1,'juno::ARRAY_T']]],
   ['tcart_2',['tcart',['../unionJUNO__VEC2__F64__TAG.html#ac0c9e5f3ea30163a7f056bf2eabe9cb7',1,'JUNO_VEC2_F64_TAG::tCart'],['../unionJUNO__VEC2__F32__TAG.html#a299c467c2073637a8831984c875e27cb',1,'JUNO_VEC2_F32_TAG::tCart'],['../unionJUNO__VEC2__I32__TAG.html#a0512017cd75af67e1e91238380fefc94',1,'JUNO_VEC2_I32_TAG::tCart'],['../unionJUNO__VEC3__F64__TAG.html#ab7060486110eebe4da48cdc90b2d60cb',1,'JUNO_VEC3_F64_TAG::tCart'],['../unionJUNO__VEC3__F32__TAG.html#af5afc33f97d58226a3aa8cc53b7c46bb',1,'JUNO_VEC3_F32_TAG::tCart'],['../unionJUNO__VEC3__I32__TAG.html#a96d2ff1551abaad76b645336bf356371',1,'JUNO_VEC3_I32_TAG::tCart'],['../unionJUNO__VEC4__F64__TAG.html#aec048ce4c792c55681b846557b01f56c',1,'JUNO_VEC4_F64_TAG::tCart'],['../unionJUNO__VEC4__F32__TAG.html#a9ea4b4c9e6d6768d1c30c244fb8baa29',1,'JUNO_VEC4_F32_TAG::tCart'],['../unionJUNO__VEC4__I32__TAG.html#a2673192b725d578bbc127d4160850496',1,'JUNO_VEC4_I32_TAG::tCart']]],
   ['testing_3',['Building and Testing',['../index.html#autotoc_md88',1,'']]],
   ['thdr_4',['thdr',['../structJUNO__I2C__IO__MSG__R__TAG.html#aedc70cc38ba9b722a3a6a990ee9230cb',1,'JUNO_I2C_IO_MSG_R_TAG::tHdr'],['../structJUNO__I2C__IO__MSG__W__TAG.html#aa93dbab7cb6ba645b93e147b1744daa6',1,'JUNO_I2C_IO_MSG_W_TAG::tHdr'],['../unionJUNO__I2C__IO__MSG__TAG.html#ab071f161346bab44cde4544f81cb0e6b',1,'JUNO_I2C_IO_MSG_TAG::tHdr']]],
@@ -43,10 +43,10 @@ var searchData=
   ['tryreaduntil_40',['TryReadUntil',['../structJUNO__ASYNC__IO__API__TAG.html#a1f35aec741089c9758c928b08d3078c0',1,'JUNO_ASYNC_IO_API_TAG']]],
   ['tryrecv_41',['TryRecv',['../structJUNO__SUBSCRIBER__API__TAG.html#a34c16a0b77935706b258e10bccfe8c10',1,'JUNO_SUBSCRIBER_API_TAG']]],
   ['trywrite_42',['TryWrite',['../structJUNO__ASYNC__IO__API__TAG.html#a04787d2bac7dd5995c9f4ab7f404e477',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['tsome_43',['tSome',['../structJUNO__OPTION__T.html#a427e8b50a5278cc4f93d7debc8616dba',1,'JUNO_OPTION_T']]],
+  ['tsome_43',['tSome',['../structjuno_1_1OPTION__T.html#a9be12eb5086621bcd7e0c8241b4aecef',1,'juno::OPTION_T']]],
   ['tsph_44',['tsph',['../unionJUNO__VEC3__I32__TAG.html#aac4bed069fbaae7490fa73aa81a7bbc3',1,'JUNO_VEC3_I32_TAG::tSph'],['../unionJUNO__VEC2__F64__TAG.html#ad174dd4bc176ffeb29785d1ac2571dc5',1,'JUNO_VEC2_F64_TAG::tSph'],['../unionJUNO__VEC4__I32__TAG.html#a8936f65c27c33d567a627c39ff1933ac',1,'JUNO_VEC4_I32_TAG::tSph'],['../unionJUNO__VEC4__F32__TAG.html#aca3ddcc811d508fe7a5d31bc0abedc05',1,'JUNO_VEC4_F32_TAG::tSph'],['../unionJUNO__VEC4__F64__TAG.html#a6ca4369e42732b2c205ab1e9c7f6c7bd',1,'JUNO_VEC4_F64_TAG::tSph'],['../unionJUNO__VEC3__F32__TAG.html#a6cfb0ae91ee01ebef64b882eeefd9efa',1,'JUNO_VEC3_F32_TAG::tSph'],['../unionJUNO__VEC3__F64__TAG.html#a9d15c330e1fa27de0adf3e9f1cc4fb9c',1,'JUNO_VEC3_F64_TAG::tSph'],['../unionJUNO__VEC2__I32__TAG.html#a5c289235b74e22c4080f724705276cca',1,'JUNO_VEC2_I32_TAG::tSph'],['../unionJUNO__VEC2__F32__TAG.html#a9ba1dcdc7f1f0ea9fc91aa1c0c06e3ae',1,'JUNO_VEC2_F32_TAG::tSph']]],
-  ['tstatus_45',['tStatus',['../structJUNO__RESULT__T.html#a02ecac2b4201d19130ce083734918609',1,'JUNO_RESULT_T']]],
-  ['tsuccess_46',['tSuccess',['../structJUNO__RESULT__T.html#a3bb8a4c581bdc6877630edb06d7fd6fd',1,'JUNO_RESULT_T']]],
+  ['tstatus_45',['tStatus',['../structjuno_1_1RESULT__T.html#a0241c8a8c527386e176a0a2b4e03b124',1,'juno::RESULT_T']]],
+  ['tsuccess_46',['tSuccess',['../structjuno_1_1RESULT__T.html#a13d699ed4e634bdca0479df78afa062f',1,'juno::RESULT_T']]],
   ['ttime_47',['tTime',['../structJUNO__KSTATE__F64__TAG.html#a6fbfca4323560b9412961cc104bf5f4b',1,'JUNO_KSTATE_F64_TAG']]],
   ['ttype_48',['tType',['../structJUNO__I2C__IO__MSG__HDR__TAG.html#a629188f1cd63d07ebf243f2daaa763b6',1,'JUNO_I2C_IO_MSG_HDR_TAG']]],
   ['turbo_20v6_49',['5.3. Modify main.c to Use Turbo V6',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md70',1,'']]],

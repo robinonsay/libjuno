@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['enqueue_0',['Enqueue',['../namespacejuno_1_1buff.html#a41121c4c2d402b6ef2db350fa82a1140',1,'juno::buff']]]
+  ['enqueue_0',['Enqueue',['../namespacejuno_1_1buff.html#a09ed0df09c6705cb3a8091eba519159e',1,'juno::buff']]]
 ];

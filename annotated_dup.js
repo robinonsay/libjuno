@@ -3,11 +3,15 @@ var annotated_dup =
     [ "juno", "namespacejuno.html", [
       [ "buff", "namespacejuno_1_1buff.html", [
         [ "QUEUE_API_T", "structjuno_1_1buff_1_1QUEUE__API__T.html", "structjuno_1_1buff_1_1QUEUE__API__T" ],
-        [ "STACK_API_T", "structjuno_1_1buff_1_1STACK__API__T.html", "structjuno_1_1buff_1_1STACK__API__T" ]
-      ] ]
+        [ "QUEUE_T", "unionjuno_1_1buff_1_1QUEUE__T.html", null ],
+        [ "STACK_API_T", "structjuno_1_1buff_1_1STACK__API__T.html", "structjuno_1_1buff_1_1STACK__API__T" ],
+        [ "STACK_T", "unionjuno_1_1buff_1_1STACK__T.html", null ]
+      ] ],
+      [ "ARRAY_T", "structjuno_1_1ARRAY__T.html", "structjuno_1_1ARRAY__T" ],
+      [ "OPTION_T", "structjuno_1_1OPTION__T.html", "structjuno_1_1OPTION__T" ],
+      [ "RESULT_T", "structjuno_1_1RESULT__T.html", "structjuno_1_1RESULT__T" ]
     ] ],
     [ "JUNO_APP_API_TAG", "structJUNO__APP__API__TAG.html", "structJUNO__APP__API__TAG" ],
-    [ "JUNO_ARRAY_T", "structJUNO__ARRAY__T.html", "structJUNO__ARRAY__T" ],
     [ "JUNO_ASYNC_IO_API_TAG", "structJUNO__ASYNC__IO__API__TAG.html", "structJUNO__ASYNC__IO__API__TAG" ],
     [ "JUNO_HASH_API_TAG", "structJUNO__HASH__API__TAG.html", "structJUNO__HASH__API__TAG" ],
     [ "JUNO_I2C_IO_API_TAG", "structJUNO__I2C__IO__API__TAG.html", "structJUNO__I2C__IO__API__TAG" ],
@@ -30,9 +34,7 @@ var annotated_dup =
     [ "JUNO_MEMORY_TAG", "structJUNO__MEMORY__TAG.html", "structJUNO__MEMORY__TAG" ],
     [ "JUNO_MSG_API_TAG", "structJUNO__MSG__API__TAG.html", "structJUNO__MSG__API__TAG" ],
     [ "JUNO_MSG_BUFFER_TAG", "structJUNO__MSG__BUFFER__TAG.html", "structJUNO__MSG__BUFFER__TAG" ],
-    [ "JUNO_OPTION_T", "structJUNO__OPTION__T.html", "structJUNO__OPTION__T" ],
     [ "JUNO_PUBLISHER_API_TAG", "structJUNO__PUBLISHER__API__TAG.html", "structJUNO__PUBLISHER__API__TAG" ],
-    [ "JUNO_RESULT_T", "structJUNO__RESULT__T.html", "structJUNO__RESULT__T" ],
     [ "JUNO_RQUAT_F32_TAG", "unionJUNO__RQUAT__F32__TAG.html", "unionJUNO__RQUAT__F32__TAG" ],
     [ "JUNO_RQUAT_F64_TAG", "unionJUNO__RQUAT__F64__TAG.html", "unionJUNO__RQUAT__F64__TAG" ],
     [ "JUNO_RQUAT_I32_TAG", "unionJUNO__RQUAT__I32__TAG.html", "unionJUNO__RQUAT__I32__TAG" ],

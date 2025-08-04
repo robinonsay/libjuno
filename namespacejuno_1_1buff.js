@@ -1,15 +1,19 @@
 var namespacejuno_1_1buff =
 [
     [ "QUEUE_API_T", "structjuno_1_1buff_1_1QUEUE__API__T.html", "structjuno_1_1buff_1_1QUEUE__API__T" ],
+    [ "QUEUE_T", "unionjuno_1_1buff_1_1QUEUE__T.html", null ],
     [ "STACK_API_T", "structjuno_1_1buff_1_1STACK__API__T.html", "structjuno_1_1buff_1_1STACK__API__T" ],
-    [ "Dequeue", "namespacejuno_1_1buff.html#acbcc9c382c903d80a7764f4024398156", null ],
-    [ "Enqueue", "namespacejuno_1_1buff.html#a41121c4c2d402b6ef2db350fa82a1140", null ],
-    [ "JUNO_MODULE_ROOT", "namespacejuno_1_1buff.html#aa9403707d86fdff5334c0205dcd62542", null ],
-    [ "JUNO_MODULE_ROOT", "namespacejuno_1_1buff.html#a0886cdfa14bda66420863bc70338eda5", null ],
-    [ "NewQueueApi", "namespacejuno_1_1buff.html#af2dfcec19258256c89eff7bdb161ed52", null ],
-    [ "NewStackApi", "namespacejuno_1_1buff.html#a2f259a80bb920b33e430ef81897f723f", null ],
-    [ "Pop", "namespacejuno_1_1buff.html#aeee7823037aa5e4417d0257134be7a7c", null ],
-    [ "Push", "namespacejuno_1_1buff.html#a98eca69a6a189d91f31dfbbbe5d18201", null ],
-    [ "QueuePeek", "namespacejuno_1_1buff.html#acef14223857d593d110905498b420069", null ],
-    [ "StackPeek", "namespacejuno_1_1buff.html#a61b651cf62c5c459823294ed19df5412", null ]
+    [ "STACK_T", "unionjuno_1_1buff_1_1STACK__T.html", null ],
+    [ "Dequeue", "namespacejuno_1_1buff.html#a3a176a29f9d5c200b062b87e4c374c33", null ],
+    [ "Enqueue", "namespacejuno_1_1buff.html#a09ed0df09c6705cb3a8091eba519159e", null ],
+    [ "JUNO_MODULE", "namespacejuno_1_1buff.html#a7f33cc33df6e92d31b15d25de5967765", null ],
+    [ "JUNO_MODULE", "namespacejuno_1_1buff.html#a0fba3aaf41a11d1bae5c6b304295b3af", null ],
+    [ "JUNO_MODULE_DERIVE", "namespacejuno_1_1buff.html#a77a3efd79e17cc8006b6e528a2c594c4", null ],
+    [ "JUNO_MODULE_DERIVE", "namespacejuno_1_1buff.html#a663c774360a0db1eda657cf4f8bc3286", null ],
+    [ "JUNO_MODULE_ROOT", "namespacejuno_1_1buff.html#a08e221f5d48ad3f456f59507d1a53e75", null ],
+    [ "JUNO_MODULE_ROOT", "namespacejuno_1_1buff.html#a6dbebea4407fcdd9e1f1b5aebf71e167", null ],
+    [ "Pop", "namespacejuno_1_1buff.html#ab21dceec34890eec7680d858674b951e", null ],
+    [ "Push", "namespacejuno_1_1buff.html#a34bea065cb89b753adba210e8b5ff457", null ],
+    [ "QueuePeek", "namespacejuno_1_1buff.html#ab15a2393fc5a2ef5ef896d015acec663", null ],
+    [ "StackPeek", "namespacejuno_1_1buff.html#ade40a21333652ded7eed09ade666118b", null ]
 ];

@@ -1,6 +1,6 @@
 var structjuno_1_1buff_1_1QUEUE__API__T =
 [
-    [ "Dequeue", "structjuno_1_1buff_1_1QUEUE__API__T.html#acd4aee79d3c74356229185d5cf395dff", null ],
-    [ "Enqueue", "structjuno_1_1buff_1_1QUEUE__API__T.html#a6236518602dba0dbbc2dffe76a927c07", null ],
-    [ "Peek", "structjuno_1_1buff_1_1QUEUE__API__T.html#aae914f29b67de0d3c2ff7f51d90b3a7a", null ]
+    [ "Dequeue", "structjuno_1_1buff_1_1QUEUE__API__T.html#ad0ad747538dd548b31425f43528befd8", null ],
+    [ "Enqueue", "structjuno_1_1buff_1_1QUEUE__API__T.html#a8727fcafe9578e51cd6bfddd92a21d43", null ],
+    [ "Peek", "structjuno_1_1buff_1_1QUEUE__API__T.html#a37f6be874bc376797a8ef876f7df87ae", null ]
 ];
