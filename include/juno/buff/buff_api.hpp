@@ -48,17 +48,6 @@ struct QUEUE_API_T;
 */
 template<typename T, const size_t N>
 union QUEUE_T;
-
-/**
-    The queue root implementation
-*/
-template<typename T, const size_t N>
-struct QUEUE_ROOT_T JUNO_MODULE_ROOT(JUNO_MODULE_ARG(QUEUE_API_T<T,N>),
-    ARRAY_T<T,N> *ptArrBuff;
-    size_t iStartIndex;
-    size_t zLength;
-);
-
 /**
     The queue buffer API
 */
@@ -81,13 +70,6 @@ struct STACK_API_T;
 /// The stack module
 template<typename T, const size_t N>
 union STACK_T;
-
-/// The stack root module
-template<typename T, const size_t N>
-struct STACK_ROOT_T JUNO_MODULE_ROOT(JUNO_MODULE_ARG(STACK_API_T<T,N>),
-    ARRAY_T<T,N> *ptArrBuff;
-    size_t zLength;
-);
 
 /// The stack API
 template<typename T, const size_t N>
