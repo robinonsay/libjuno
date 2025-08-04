@@ -35,27 +35,28 @@ extern "C"
 {
 #endif
 
-typedef struct JUNO_BUFF_QUEUE_API_TAG JUNO_BUFF_QUEUE_API_T;
 typedef struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_BUFF_QUEUE_ROOT_T;
+typedef union JUNO_BUFF_QUEUE_T JUNO_BUFF_QUEUE_T;
 
-struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_API_T,
+struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(void ,
     size_t iStartIndex;
     size_t zLength;
     size_t zCapacity;
 );
 
-static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     ASSERT_EXISTS(ptQueue);
-    ptQueue->iStartIndex = 0;
-    ptQueue->zLength = 0;
-    ptQueue->zCapacity = zCapacity;
-    ptQueue->_pfcnFailureHandler = pfcnFailureHdlr;
-    ptQueue->_pvFailurUserData = pvFailureUserData;
+    JUNO_BUFF_QUEUE_ROOT_T *ptQueueRoot = (JUNO_BUFF_QUEUE_ROOT_T *)(ptQueue);
+    ptQueueRoot->iStartIndex = 0;
+    ptQueueRoot->zLength = 0;
+    ptQueueRoot->zCapacity = zCapacity;
+    ptQueueRoot->_pfcnFailureHandler = pfcnFailureHdlr;
+    ptQueueRoot->_pvFailureUserData = pvFailureUserData;
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptQueue)
@@ -63,21 +64,22 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_ROOT_T *p
         tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
         return tResult;
     }
-    if(ptQueue->zLength < ptQueue->zCapacity)
+    JUNO_BUFF_QUEUE_ROOT_T *ptQueueRoot = (JUNO_BUFF_QUEUE_ROOT_T *)(ptQueue);
+    if(ptQueueRoot->zLength < ptQueueRoot->zCapacity)
     {
-        tResult.tSuccess = (ptQueue->iStartIndex + ptQueue->zLength) % ptQueue->zCapacity;
-        ptQueue->zLength += 1;
+        tResult.tSuccess = (ptQueueRoot->iStartIndex + ptQueueRoot->zLength) % ptQueueRoot->zCapacity;
+        ptQueueRoot->zLength += 1;
     }
     else
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Failed to enqueue data");
         return tResult;
     }
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptQueue)
@@ -85,19 +87,20 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *p
         tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
         return tResult;
     }
-    if(ptQueue->zLength > 0)
+    JUNO_BUFF_QUEUE_ROOT_T *ptQueueRoot = (JUNO_BUFF_QUEUE_ROOT_T *)(ptQueue);
+    if(ptQueueRoot->zLength > 0)
     {
-        tResult.tSuccess = ptQueue->iStartIndex;
-        ptQueue->iStartIndex = (ptQueue->iStartIndex + 1) % ptQueue->zCapacity;
-        ptQueue->zLength -= 1;
+        tResult.tSuccess = ptQueueRoot->iStartIndex;
+        ptQueueRoot->iStartIndex = (ptQueueRoot->iStartIndex + 1) % ptQueueRoot->zCapacity;
+        ptQueueRoot->zLength -= 1;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
-    JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Queue is empty");
+    JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Queue is empty");
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptQueue)
@@ -105,13 +108,14 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_ROOT_T *
         tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
         return tResult;
     }
-    if(ptQueue->zLength == 0)
+    JUNO_BUFF_QUEUE_ROOT_T *ptQueueRoot = (JUNO_BUFF_QUEUE_ROOT_T *)(ptQueue);
+    if(ptQueueRoot->zLength == 0)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Failed to enqueue data");
         return tResult;
     }
-    tResult.tSuccess = ptQueue->iStartIndex;
+    tResult.tSuccess = ptQueueRoot->iStartIndex;
     return tResult;
 }
 

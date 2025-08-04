@@ -118,7 +118,7 @@
 /**
     Alias for the failure handler user data for a module
 */
-#define JUNO_FAILURE_USER_DATA    _pvFailurUserData
+#define JUNO_FAILURE_USER_DATA    _pvFailureUserData
 /**
     Empty macro that indicates a module
     implementation has no additional members 

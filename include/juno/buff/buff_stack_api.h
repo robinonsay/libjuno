@@ -27,7 +27,6 @@
 #ifndef JUNO_BUFF_STACK_API_H
 #define JUNO_BUFF_STACK_API_H
 #include "juno/macros.h"
-#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/types.h"
@@ -36,25 +35,26 @@ extern "C"
 {
 #endif
 
-typedef struct JUNO_BUFF_STACK_API_TAG JUNO_BUFF_STACK_API_T;
 typedef struct JUNO_BUFF_STACK_ROOT_TAG JUNO_BUFF_STACK_ROOT_T;
+typedef union JUNO_BUFF_STACK_T JUNO_BUFF_STACK_T;
 
-struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_STACK_API_T,
+struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(void,
     size_t zLength;
     size_t zCapacity;
 );
 
-static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     ASSERT_EXISTS(ptStack);
-    ptStack->zLength = 0;
-    ptStack->zCapacity = zCapacity;
-    ptStack->_pfcnFailureHandler = pfcnFailureHdlr;
-    ptStack->_pvFailurUserData = pvFailureUserData;
+    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
+    ptStackRoot->zLength = 0;
+    ptStackRoot->zCapacity = zCapacity;
+    ptStackRoot->_pfcnFailureHandler = pfcnFailureHdlr;
+    ptStackRoot->_pvFailureUserData = pvFailureUserData;
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)
@@ -62,21 +62,22 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptSt
         tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
         return tResult;
     }
-    if(ptStack->zLength < ptStack->zCapacity)
+    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
+    if(ptStackRoot->zLength < ptStackRoot->zCapacity)
     {
-        tResult.tSuccess = ptStack->zLength;
-        ptStack->zLength += 1;
+        tResult.tSuccess = ptStackRoot->zLength;
+        ptStackRoot->zLength += 1;
     }
     else
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptStack->_pfcnFailureHandler, ptStack->_pvFailurUserData, "Failed to enqueue data");
+        JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailureUserData, "Failed to enqueue data");
         return tResult;
     }
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)
@@ -84,18 +85,19 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptSta
         tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
         return tResult;
     }
-    if(ptStack->zLength > 0)
+    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
+    if(ptStackRoot->zLength > 0)
     {
-        ptStack->zLength -= 1;
-        tResult.tSuccess = ptStack->zLength;
+        ptStackRoot->zLength -= 1;
+        tResult.tSuccess = ptStackRoot->zLength;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-    JUNO_FAIL(tResult.tStatus, ptStack->_pfcnFailureHandler, ptStack->_pvFailurUserData, "Failed to enqueue data");
+    JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailureUserData, "Failed to enqueue data");
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_ROOT_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)
@@ -103,7 +105,8 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_ROOT_T *ptSt
         tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
         return tResult;
     }
-    tResult.tSuccess = ptStack->zLength;
+    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
+    tResult.tSuccess = ptStackRoot->zLength;
     return tResult;
 }
 

@@ -5,8 +5,9 @@ extern "C" {
 #include "unity.h"
 }
 
-#include "juno/buff/buff_api.hpp"
+#include "juno/buff/juno_buff.hpp"
 
+using namespace juno;
 using namespace juno::buff;
 
 void setUp(void) {}
@@ -16,13 +17,14 @@ static void test_queue(void)
 {
     constexpr size_t N = 10;
     // Underlying buffer storage
-    JUNO_ARRAY_T<uint8_t, N> buffer{};
+    ARRAY_T<uint8_t, N> buffer{};
 
     // Initialize queue via API
-    auto api_q     = NewQueueApi<uint8_t, N>();
-    auto result_q  = QUEUE_ROOT_T<uint8_t, N>::New(&api_q, buffer, nullptr, nullptr);
+    auto api_q     = JUNO_QUEUE_T<uint8_t, N>::NewApi();
+    auto result_q  = JUNO_QUEUE_T<uint8_t, N>::New(&api_q, buffer, nullptr, nullptr);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, result_q.tStatus);
-    auto queueRoot = result_q.tSuccess;
+    QUEUE_T<uint8_t, N> queueRoot{};
+	queueRoot.tJunoQueue = result_q.tSuccess;
 
     // — fill to capacity
     for (uint8_t i = 1; i <= N; ++i) {
@@ -79,13 +81,14 @@ static void test_stack(void)
 {
     constexpr size_t N = 10;
     // Underlying buffer storage
-    JUNO_ARRAY_T<uint8_t, N> buffer{};
+    ARRAY_T<uint8_t, N> buffer{};
 
     // Initialize stack via API
-    auto api_s     = NewStackApi<uint8_t, N>();
-    auto result_s  = STACK_ROOT_T<uint8_t, N>::New(&api_s, buffer, nullptr, nullptr);
+    auto api_s     = JUNO_STACK_T<uint8_t, N>::NewApi();
+    auto result_s  = JUNO_STACK_T<uint8_t, N>::New(&api_s, buffer, nullptr, nullptr);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, result_s.tStatus);
-    auto stackRoot = result_s.tSuccess;
+    STACK_T<uint8_t, N> stackRoot{};
+    stackRoot.tJunoStack = result_s.tSuccess;
 
     // — fill to capacity
     for (uint8_t i = 1; i <= N; ++i) {
