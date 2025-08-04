@@ -35,15 +35,22 @@ extern "C"
 {
 #endif
 
+/// The Buffer queue root
 typedef struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_BUFF_QUEUE_ROOT_T;
+/// The Buffer queue module
 typedef union JUNO_BUFF_QUEUE_T JUNO_BUFF_QUEUE_T;
 
-struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(void ,
+/// The root buffee queue
+struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(void,
+    /// The start index of the buffer (ie the first element)
     size_t iStartIndex;
+    /// The current length of the buffer
     size_t zLength;
+    /// The capacity of the buffer
     size_t zCapacity;
 );
 
+/// Initialize a buffer queue with a capacity
 static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     ASSERT_EXISTS(ptQueue);
@@ -56,6 +63,8 @@ static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_
     return JUNO_STATUS_SUCCESS;
 }
 
+/// Enqueue an item into the buffer
+/// @returns The index to place the enqueued item
 static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
@@ -79,6 +88,8 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueu
     return tResult;
 }
 
+/// Dequeue an item from the buffer
+/// @returns The index to dequeue the item from
 static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
@@ -100,7 +111,9 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueu
     return tResult;
 }
 
-static inline JUNO_RESULT_SIZE_T JunoBuff_QueueGetIndex(JUNO_BUFF_QUEUE_T *ptQueue)
+/// Peek at the next item in the queue
+/// @returns the index of the next item in the queue
+static inline JUNO_RESULT_SIZE_T JunoBuff_QueuePeek(JUNO_BUFF_QUEUE_T *ptQueue)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptQueue)

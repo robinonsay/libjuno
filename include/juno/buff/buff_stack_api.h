@@ -35,14 +35,19 @@ extern "C"
 {
 #endif
 
+/// The buffer stack root module
 typedef struct JUNO_BUFF_STACK_ROOT_TAG JUNO_BUFF_STACK_ROOT_T;
+/// The buffer stack
 typedef union JUNO_BUFF_STACK_T JUNO_BUFF_STACK_T;
 
 struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(void,
+    /// The current length of the stack
     size_t zLength;
+    /// The capacity of the stack
     size_t zCapacity;
 );
 
+/// Initialize a buffer stack
 static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     ASSERT_EXISTS(ptStack);
@@ -54,6 +59,8 @@ static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_
     return JUNO_STATUS_SUCCESS;
 }
 
+/// Push an item onto the stack
+/// @returns an index to write the pushed item to
 static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
@@ -77,6 +84,8 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
     return tResult;
 }
 
+/// Pop an item from the stack
+/// @returns an index of the popped item
 static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
@@ -97,6 +106,8 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
     return tResult;
 }
 
+/// Peek at an item on the stack
+/// @returns The index of the next item
 static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
