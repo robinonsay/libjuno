@@ -127,12 +127,11 @@ struct JUNO_STACK_T JUNO_MODULE_DERIVE(JUNO_MODULE_ARG(STACK_ROOT_T<T, N>),
     static RESULT_T<JUNO_STACK_T<T, N>> New(STACK_T<T, N>& tStack, const STACK_API_T<T,N>& tApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
     {
         auto& tNew = reinterpret_cast<JUNO_STACK_T<T, N>&>(tStack);
-        tNew.tRoot.tArrBuff = &tArr;
         tNew.tRoot.ptApi = &tApi;
         tNew.tRoot._pfcnFailureHandler = pfcnFailureHandler;
         tNew.tRoot._pvFailureUserData = pvFailureUserData;
         tNew.tRoot.zLength = 0;
-        return RESULT_T<JUNO_STACK_T<T, N>>{JUNO_STATUS_SUCCESS, tNew};
+        return JUNO_STATUS_SUCCESS;
     }
 
     static constexpr STACK_API_T<T, N> NewApi()
