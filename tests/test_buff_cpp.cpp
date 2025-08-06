@@ -17,7 +17,6 @@ static void test_queue(void)
 {
     constexpr size_t N = 10;
     // Underlying buffer storage
-    ARRAY_T<uint8_t, N> buffer{};
 
     // Initialize queue via API
     auto api_q     = JUNO_QUEUE_T<uint8_t, N>::NewApi();
@@ -78,8 +77,6 @@ static void test_queue(void)
 static void test_stack(void)
 {
     constexpr size_t N = 10;
-    // Underlying buffer storage
-    ARRAY_T<uint8_t, N> buffer{};
 
     // Initialize stack via API
     auto api_s     = JUNO_STACK_T<uint8_t, N>::NewApi();
