@@ -124,7 +124,7 @@ RESULT_T<T*> StackPeek(STACK_T<T, N>& tStack);
 
 template<typename T, const size_t N>
 struct JUNO_STACK_T JUNO_MODULE_DERIVE(JUNO_MODULE_ARG(STACK_ROOT_T<T, N>),
-    static RESULT_T<JUNO_STACK_T<T, N>> New(STACK_T<T, N>& tStack, const STACK_API_T<T,N> &tApi, ARRAY_T<T,N>& tArr, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+    static RESULT_T<JUNO_STACK_T<T, N>> New(STACK_T<T, N>& tStack, const STACK_API_T<T,N>& tApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
     {
         auto& tNew = reinterpret_cast<JUNO_STACK_T<T, N>&>(tStack);
         tNew.tRoot.tArrBuff = &tArr;
