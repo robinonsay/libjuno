@@ -33,33 +33,11 @@
 extern "C"
 {
 #endif
-/// @brief Macro to declare a static memory block and its associated free stack.
-/// @param name Name of the memory block.
-/// @param type Data type of each block element.
-/// @param length Number of elements in the memory block.
-
-#ifdef __cplusplus
-#define JUNO_MEMORY_BLOCK(name, type, length) static type name[length] = {}
-#else
-#define JUNO_MEMORY_BLOCK(name, type, length) static type name[length] = {0}
-#endif
-
-/// @brief Macro to declare a static array for memory metadata.
-/// @param name Name of the metadata array.
-/// @param length Number of metadata entries.
-#ifdef __cplusplus
-#define JUNO_MEMORY_BLOCK_METADATA(name, length) static JUNO_MEMORY_BLOCK_METADATA_T name[length] = {}
-#else
-#define JUNO_MEMORY_BLOCK_METADATA(name, length) static JUNO_MEMORY_BLOCK_METADATA_T name[length] = {0}
-#endif
-
 /// Define a reference for memory
 #define JUNO_REF(name) REF##name
 /// Create a new reference for memory
 #define JUNO_NEW_REF(name) JUNO_MEMORY_T *JUNO_REF(name)
 
-typedef struct JUNO_MEMORY_BLOCK_METADATA_TAG JUNO_MEMORY_BLOCK_METADATA_T;
-typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
 typedef struct JUNO_MEMORY_TAG JUNO_MEMORY_T;
 
 /// The memory metadata

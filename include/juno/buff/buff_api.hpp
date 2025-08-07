@@ -54,7 +54,7 @@ union QUEUE_T;
 */
 template<typename T, const size_t N>
 struct QUEUE_ROOT_T JUNO_MODULE_ROOT(JUNO_MODULE_ARG(QUEUE_API_T<T,N>),
-    ARRAY_T<T,N> *ptArrBuff;
+    ARRAY_T<T,N> tArrBuff;
     size_t iStartIndex;
     size_t zLength;
 );
@@ -85,7 +85,7 @@ union STACK_T;
 /// The stack root module
 template<typename T, const size_t N>
 struct STACK_ROOT_T JUNO_MODULE_ROOT(JUNO_MODULE_ARG(STACK_API_T<T,N>),
-    ARRAY_T<T,N> *ptArrBuff;
+    ARRAY_T<T,N> tArrBuff;
     size_t zLength;
 );
 
