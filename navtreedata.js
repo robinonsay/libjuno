@@ -125,6 +125,7 @@ var NAVTREE =
       [ "9. Best Practices & Tips", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md81", null ],
       [ "10. Conclusion", "md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md83", null ]
     ] ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -158,9 +159,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"juno__map_8c.html#a8ae4512bb870a6decf39252b6e5b1e9a",
-"md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md3",
-"structJUNO__TIME__API__TAG.html#afef105d132aa68bc78a95fd48e262098"
+"juno__map_8c.html#a83e17593034c310c582587469e9b6410",
+"md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md29",
+"structJUNO__TIME__API__TAG.html#acccded7beb50bd38a82cc948292256b7"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

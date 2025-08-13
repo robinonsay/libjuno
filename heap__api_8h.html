@@ -123,11 +123,13 @@ $(document).ready(function(){initNavTree('heap__api_8h.html',''); initResizable(
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">heap_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A minimal, portable binary-heap abstraction using LibJuno modules.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="macros_8h_source.html">juno/macros.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
@@ -149,49 +151,78 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__DS__HEAP__API__TAG.html">JUNO_DS_HEAP_API_TAG</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">API vtable you must implement to adapt the heap to your storage.  <a href="structJUNO__DS__HEAP__API__TAG.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab67a168864dea2bfbf3c16306716b470" id="r_ab67a168864dea2bfbf3c16306716b470"><td class="memItemLeft" align="right" valign="top">struct JUNO_DS_HEAP_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#ab67a168864dea2bfbf3c16306716b470">JUNO_MODULE_ROOT</a> (<a class="el" href="heap__api_8h.html#ac0941facbb2cb5c815a1e743656877ec">JUNO_DS_HEAP_API_T</a>, size_t zCapacity;size_t zLength;)</td></tr>
+<tr class="memdesc:ab67a168864dea2bfbf3c16306716b470"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap root layout.  <br /></td></tr>
+<tr class="separator:ab67a168864dea2bfbf3c16306716b470"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50eedafe4a2e54a28407d3f4e6a465e8" id="r_a50eedafe4a2e54a28407d3f4e6a465e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a50eedafe4a2e54a28407d3f4e6a465e8">JunoDs_Heap_Update</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:a50eedafe4a2e54a28407d3f4e6a465e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bubble-up the last inserted element to restore the heap property.  <br /></td></tr>
+<tr class="separator:a50eedafe4a2e54a28407d3f4e6a465e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a017b8a58b71beb498cb344e077048f18" id="r_a017b8a58b71beb498cb344e077048f18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a017b8a58b71beb498cb344e077048f18">JunoDs_Heap_SiftDown</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iStart)</td></tr>
+<tr class="memdesc:a017b8a58b71beb498cb344e077048f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sift down from a starting index to restore the heap property.  <br /></td></tr>
+<tr class="separator:a017b8a58b71beb498cb344e077048f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d6ded6b0bce2507665ed722c1535f28" id="r_a1d6ded6b0bce2507665ed722c1535f28"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a1d6ded6b0bce2507665ed722c1535f28">JunoDs_Heap_Verify</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:a1d6ded6b0bce2507665ed722c1535f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify that the heap root has been initialized properly.  <br /></td></tr>
+<tr class="separator:a1d6ded6b0bce2507665ed722c1535f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbf69daeea63c0af429df1058748ddca" id="r_abbf69daeea63c0af429df1058748ddca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#abbf69daeea63c0af429df1058748ddca">JunoDs_Heap_Init</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, const <a class="el" href="heap__api_8h.html#ac0941facbb2cb5c815a1e743656877ec">JUNO_DS_HEAP_API_T</a> *ptApi, size_t zCapacity)</td></tr>
+<tr class="memdesc:abbf69daeea63c0af429df1058748ddca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a heap root with the given API and capacity.  <br /></td></tr>
+<tr class="separator:abbf69daeea63c0af429df1058748ddca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b279dca7e4e8d15cc4b8f03a61fa275" id="r_a2b279dca7e4e8d15cc4b8f03a61fa275"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_OPTION_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a2b279dca7e4e8d15cc4b8f03a61fa275">JunoDs_Heap_ChildGetLeft</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iIndex)</td></tr>
+<tr class="memdesc:a2b279dca7e4e8d15cc4b8f03a61fa275"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the left child index of iIndex.  <br /></td></tr>
+<tr class="separator:a2b279dca7e4e8d15cc4b8f03a61fa275"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e801828c3700f8c40e719246e1e6dea" id="r_a3e801828c3700f8c40e719246e1e6dea"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_OPTION_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a3e801828c3700f8c40e719246e1e6dea">JunoDs_Heap_ChildGetRight</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iIndex)</td></tr>
+<tr class="memdesc:a3e801828c3700f8c40e719246e1e6dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the right child index of iIndex.  <br /></td></tr>
+<tr class="separator:a3e801828c3700f8c40e719246e1e6dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a525474492e29a08742b61022495854b5" id="r_a525474492e29a08742b61022495854b5"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_OPTION_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a525474492e29a08742b61022495854b5">JunoDs_Heap_ChildGetParent</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iIndex)</td></tr>
+<tr class="memdesc:a525474492e29a08742b61022495854b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the parent index of iIndex.  <br /></td></tr>
+<tr class="separator:a525474492e29a08742b61022495854b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1128a9795489171d81ba8152c71eacb6" id="r_a1128a9795489171d81ba8152c71eacb6"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a1128a9795489171d81ba8152c71eacb6">JunoDs_Heap_Insert</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:a1128a9795489171d81ba8152c71eacb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserve a new slot at the end of the heap array and return its index.  <br /></td></tr>
+<tr class="separator:a1128a9795489171d81ba8152c71eacb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d9e77f6ba6a681b29fdc074d1b7f9c1" id="r_a3d9e77f6ba6a681b29fdc074d1b7f9c1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a3d9e77f6ba6a681b29fdc074d1b7f9c1">JunoDs_Heap_Heapify</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:a3d9e77f6ba6a681b29fdc074d1b7f9c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a heap in-place from the current array contents.  <br /></td></tr>
+<tr class="separator:a3d9e77f6ba6a681b29fdc074d1b7f9c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d42d073a39209ada6f4ae659242d30f" id="r_a5d42d073a39209ada6f4ae659242d30f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a5d42d073a39209ada6f4ae659242d30f">JunoDs_Heap_Delete</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:a5d42d073a39209ada6f4ae659242d30f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the root element and restore the heap property.  <br /></td></tr>
+<tr class="separator:a5d42d073a39209ada6f4ae659242d30f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Core types</h2></td></tr>
 <tr class="memitem:a4cb8218db00474101fe06d5db7472ae4" id="r_a4cb8218db00474101fe06d5db7472ae4"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_DS_HEAP_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a></td></tr>
 <tr class="separator:a4cb8218db00474101fe06d5db7472ae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0941facbb2cb5c815a1e743656877ec" id="r_ac0941facbb2cb5c815a1e743656877ec"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__DS__HEAP__API__TAG.html">JUNO_DS_HEAP_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#ac0941facbb2cb5c815a1e743656877ec">JUNO_DS_HEAP_API_T</a></td></tr>
 <tr class="separator:ac0941facbb2cb5c815a1e743656877ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
 <tr class="memitem:a4ff67d6ae6e4b948328b880bfc14a9ea" id="r_a4ff67d6ae6e4b948328b880bfc14a9ea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a4ff67d6ae6e4b948328b880bfc14a9ea">JUNO_MODULE_RESULT</a> (JUNO_DS_HEAP_INDEX_RESULT_T, size_t)</td></tr>
+<tr class="memdesc:a4ff67d6ae6e4b948328b880bfc14a9ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result type carrying an index on success. tStatus conveys success/error; tSuccess holds the index.  <br /></td></tr>
 <tr class="separator:a4ff67d6ae6e4b948328b880bfc14a9ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8fa9b68df7ed190366251509c96e656" id="r_ad8fa9b68df7ed190366251509c96e656"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#ad8fa9b68df7ed190366251509c96e656">JUNO_MODULE_OPTION</a> (JUNO_DS_HEAP_INDEX_OPTION_T, size_t)</td></tr>
+<tr class="memdesc:ad8fa9b68df7ed190366251509c96e656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Option type for an index. bIsSome indicates presence; tSome is the index.  <br /></td></tr>
 <tr class="separator:ad8fa9b68df7ed190366251509c96e656"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3308366f814d826aa1c0553b613c2ae3" id="r_a3308366f814d826aa1c0553b613c2ae3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a3308366f814d826aa1c0553b613c2ae3">JUNO_MODULE_RESULT</a> (JUNO_DS_HEAP_INDEX_OPTION_RESULT_T, JUNO_DS_HEAP_INDEX_OPTION_T)</td></tr>
+<tr class="memdesc:a3308366f814d826aa1c0553b613c2ae3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result that wraps an optional index.  <br /></td></tr>
 <tr class="separator:a3308366f814d826aa1c0553b613c2ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed2dd30fa81fc8e7c5151f5640b299ee" id="r_aed2dd30fa81fc8e7c5151f5640b299ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#aed2dd30fa81fc8e7c5151f5640b299ee">JUNO_MODULE_RESULT</a> (JUNO_DS_HEAP_COMPARE_RESULT_T, bool)</td></tr>
+<tr class="memdesc:aed2dd30fa81fc8e7c5151f5640b299ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result of a comparison: tSuccess=true means the heap property holds between the given parent and child indices; false means it does not.  <br /></td></tr>
 <tr class="separator:aed2dd30fa81fc8e7c5151f5640b299ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab67a168864dea2bfbf3c16306716b470" id="r_ab67a168864dea2bfbf3c16306716b470"><td class="memItemLeft" align="right" valign="top">struct JUNO_DS_HEAP_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#ab67a168864dea2bfbf3c16306716b470">JUNO_MODULE_ROOT</a> (<a class="el" href="heap__api_8h.html#ac0941facbb2cb5c815a1e743656877ec">JUNO_DS_HEAP_API_T</a>, size_t zCapacity;size_t zLength;)</td></tr>
-<tr class="separator:ab67a168864dea2bfbf3c16306716b470"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50eedafe4a2e54a28407d3f4e6a465e8" id="r_a50eedafe4a2e54a28407d3f4e6a465e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a50eedafe4a2e54a28407d3f4e6a465e8">JunoDs_Heap_Update</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
-<tr class="separator:a50eedafe4a2e54a28407d3f4e6a465e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a017b8a58b71beb498cb344e077048f18" id="r_a017b8a58b71beb498cb344e077048f18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a017b8a58b71beb498cb344e077048f18">JunoDs_Heap_SiftDown</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iStart)</td></tr>
-<tr class="separator:a017b8a58b71beb498cb344e077048f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d6ded6b0bce2507665ed722c1535f28" id="r_a1d6ded6b0bce2507665ed722c1535f28"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a1d6ded6b0bce2507665ed722c1535f28">JunoDs_Heap_Verify</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
-<tr class="separator:a1d6ded6b0bce2507665ed722c1535f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbf69daeea63c0af429df1058748ddca" id="r_abbf69daeea63c0af429df1058748ddca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#abbf69daeea63c0af429df1058748ddca">JunoDs_Heap_Init</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, const <a class="el" href="heap__api_8h.html#ac0941facbb2cb5c815a1e743656877ec">JUNO_DS_HEAP_API_T</a> *ptApi, size_t zCapacity)</td></tr>
-<tr class="separator:abbf69daeea63c0af429df1058748ddca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b279dca7e4e8d15cc4b8f03a61fa275" id="r_a2b279dca7e4e8d15cc4b8f03a61fa275"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_OPTION_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a2b279dca7e4e8d15cc4b8f03a61fa275">JunoDs_Heap_ChildGetLeft</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iIndex)</td></tr>
-<tr class="separator:a2b279dca7e4e8d15cc4b8f03a61fa275"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e801828c3700f8c40e719246e1e6dea" id="r_a3e801828c3700f8c40e719246e1e6dea"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_OPTION_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a3e801828c3700f8c40e719246e1e6dea">JunoDs_Heap_ChildGetRight</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iIndex)</td></tr>
-<tr class="separator:a3e801828c3700f8c40e719246e1e6dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a525474492e29a08742b61022495854b5" id="r_a525474492e29a08742b61022495854b5"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_OPTION_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a525474492e29a08742b61022495854b5">JunoDs_Heap_ChildGetParent</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iIndex)</td></tr>
-<tr class="separator:a525474492e29a08742b61022495854b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1128a9795489171d81ba8152c71eacb6" id="r_a1128a9795489171d81ba8152c71eacb6"><td class="memItemLeft" align="right" valign="top">static JUNO_DS_HEAP_INDEX_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a1128a9795489171d81ba8152c71eacb6">JunoDs_Heap_Insert</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
-<tr class="separator:a1128a9795489171d81ba8152c71eacb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d9e77f6ba6a681b29fdc074d1b7f9c1" id="r_a3d9e77f6ba6a681b29fdc074d1b7f9c1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a3d9e77f6ba6a681b29fdc074d1b7f9c1">JunoDs_Heap_Heapify</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
-<tr class="separator:a3d9e77f6ba6a681b29fdc074d1b7f9c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d42d073a39209ada6f4ae659242d30f" id="r_a5d42d073a39209ada6f4ae659242d30f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="heap__api_8h.html#a5d42d073a39209ada6f4ae659242d30f">JunoDs_Heap_Delete</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
-<tr class="separator:a5d42d073a39209ada6f4ae659242d30f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A minimal, portable binary-heap abstraction using LibJuno modules. </p>
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_ds library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
+<p>This header defines a binary-heap "root" and an API vtable that you implement to adapt the heap to your own storage and element type. The heap core works entirely on indices; it does not allocate memory or know your element type.</p>
+<p>Getting started (see tests/test_heap.c for a complete example): 1) Derive your own heap type from JUNO_DS_HEAP_ROOT_T and embed your storage. 2) Implement the three API callbacks: Compare, Swap, Reset. 3) Initialize the root with JunoDs_Heap_Init(...). 4) Use JunoDs_Heap_Insert(...) to get a free index, write your element, then call JunoDs_Heap_Update(...) to "bubble up" the new element. 5) Use JunoDs_Heap_Delete(...) to remove the root element (min/max depending on your comparator), or JunoDs_Heap_Heapify(...) to build a heap from an existing array.</p>
+<p>The helper index functions (ChildGetLeft/Right/Parent) and the result/option types let you write safe code that distinguishes between:</p><ul>
+<li>an error status (tStatus != JUNO_STATUS_SUCCESS),</li>
+<li>a successful call with a present index (bIsSome == true), and</li>
+<li>a successful call where the child/parent is out of current length (bIsSome == false).</li>
+</ul>
+<p>See also:</p><ul>
+<li><a class="el" href="juno__heap_8c.html">src/juno_heap.c</a> for core algorithm implementations of Update/SiftDown.</li>
+<li>tests/test_heap.c for usage patterns and expected behaviors. </li>
+</ul>
+</div><h2 class="groupheader">Typedef Documentation</h2>
 <a id="ac0941facbb2cb5c815a1e743656877ec" name="ac0941facbb2cb5c815a1e743656877ec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac0941facbb2cb5c815a1e743656877ec">&#9670;&#160;</a></span>JUNO_DS_HEAP_API_T</h2>
 
@@ -203,6 +234,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>API vtable you implement for your storage and element type. </p>
 
 </div>
 </div>
@@ -217,7 +249,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_ds library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
+<p>Opaque root that stores heap metadata and API pointer. </p>
 
 </div>
 </div>
@@ -248,6 +280,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Option type for an index. bIsSome indicates presence; tSome is the index. </p>
+
 </div>
 </div>
 <a id="aed2dd30fa81fc8e7c5151f5640b299ee" name="aed2dd30fa81fc8e7c5151f5640b299ee"></a>
@@ -275,6 +309,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Result of a comparison: tSuccess=true means the heap property holds between the given parent and child indices; false means it does not. </p>
 
 </div>
 </div>
@@ -304,6 +340,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Result that wraps an optional index. </p>
+
 </div>
 </div>
 <a id="a4ff67d6ae6e4b948328b880bfc14a9ea" name="a4ff67d6ae6e4b948328b880bfc14a9ea"></a>
@@ -332,6 +370,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Result type carrying an index on success. tStatus conveys success/error; tSuccess holds the index. </p>
+
 </div>
 </div>
 <a id="ab67a168864dea2bfbf3c16306716b470" name="ab67a168864dea2bfbf3c16306716b470"></a>
@@ -359,6 +399,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Heap root layout. </p>
+<p>Members (expanded from JUNO_MODULE_ROOT macro):</p><ul>
+<li>const JUNO_DS_HEAP_API_T* ptApi; API table for Compare/Swap/Reset.</li>
+<li>size_t zCapacity; Maximum number of elements supported.</li>
+<li>size_t zLength; Current number of elements (&lt;= zCapacity).</li>
+<li>JUNO_FAILURE_HANDLER_T _pfcnFailureHandler; Optional failure callback.</li>
+<li>JUNO_USER_DATA_T* _pvFailureUserData; Optional user data for the callback. </li>
+</ul>
 
 </div>
 </div>
@@ -396,6 +445,14 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Compute the left child index of iIndex. </p>
+<dl class="section return"><dt>Returns</dt><dd>A result wrapping an optional index:<ul>
+<li>tStatus = SUCCESS and bIsSome = true when the left child is within current length.</li>
+<li>tStatus = SUCCESS and bIsSome = false when the left child would be beyond zLength.</li>
+<li>tStatus = ERR when the computed index would exceed zCapacity. </li>
+</ul>
+</dd></dl>
+
 </div>
 </div>
 <a id="a525474492e29a08742b61022495854b5" name="a525474492e29a08742b61022495854b5"></a>
@@ -431,6 +488,14 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Compute the parent index of iIndex. </p>
+<dl class="section return"><dt>Returns</dt><dd>A result wrapping an optional index:<ul>
+<li>tStatus = SUCCESS and bIsSome = true when the left child is within current length.</li>
+<li>tStatus = SUCCESS and bIsSome = false when the left child would be beyond zLength.</li>
+<li>tStatus = ERR when the computed index would exceed zCapacity.   </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -468,6 +533,14 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Compute the right child index of iIndex. </p>
+<dl class="section return"><dt>Returns</dt><dd>A result wrapping an optional index:<ul>
+<li>tStatus = SUCCESS and bIsSome = true when the left child is within current length.</li>
+<li>tStatus = SUCCESS and bIsSome = false when the left child would be beyond zLength.</li>
+<li>tStatus = ERR when the computed index would exceed zCapacity.   </li>
+</ul>
+</dd></dl>
+
 </div>
 </div>
 <a id="a5d42d073a39209ada6f4ae659242d30f" name="a5d42d073a39209ada6f4ae659242d30f"></a>
@@ -494,6 +567,14 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Remove the root element and restore the heap property. </p>
+<p>Algorithm:</p><ul>
+<li>Swap the root and the last element.</li>
+<li>Call Reset on the last index (its return value is ignored by design).</li>
+<li>Decrement zLength and SiftDown from the root.</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if zLength == 0 or if Swap/SiftDown report an error. </dd></dl>
+
 </div>
 </div>
 <a id="a3d9e77f6ba6a681b29fdc074d1b7f9c1" name="a3d9e77f6ba6a681b29fdc074d1b7f9c1"></a>
@@ -519,6 +600,10 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Build a heap in-place from the current array contents. </p>
+<p>Set zLength to the number of initialized elements, then call Heapify.</p>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR when zLength == 0 or if SiftDown reports an error. </dd></dl>
 
 </div>
 </div>
@@ -562,6 +647,18 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Initialize a heap root with the given API and capacity. </p>
+<p>This does not allocate storage or touch your element array. It simply sets the API pointer, length, and capacity.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptHeap</td><td>Pointer to the heap root (first member of your derived type). </td></tr>
+    <tr><td class="paramname">ptApi</td><td>Pointer to your API implementation (Compare/Swap/Reset). </td></tr>
+    <tr><td class="paramname">zCapacity</td><td>Maximum number of elements this heap may contain. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_NULLPTR_ERROR otherwise. </dd></dl>
+
 </div>
 </div>
 <a id="a1128a9795489171d81ba8152c71eacb6" name="a1128a9795489171d81ba8152c71eacb6"></a>
@@ -587,6 +684,14 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reserve a new slot at the end of the heap array and return its index. </p>
+<p>After a successful insert, you must write the element to the returned index in your storage, then call JunoDs_Heap_Update(...) to bubble it up.</p>
+<dl class="section return"><dt>Returns</dt><dd>A result where:<ul>
+<li>tStatus = SUCCESS and tSuccess = new index when there is capacity.</li>
+<li>tStatus = ERR when zLength &gt;= zCapacity (no more space). </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -616,6 +721,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sift down from a starting index to restore the heap property. </p>
+<p>Typical usage:</p><ul>
+<li>Used internally by Delete and Heapify. You can also call it directly if you overwrite the root or another node and need to restore ordering.</li>
+</ul>
+<p>Returns:</p><ul>
+<li>JUNO_STATUS_SUCCESS on success.</li>
+<li>JUNO_STATUS_ERR if zLength == 0, if child indices exceed capacity, or if Compare/Swap report an error. </li>
+</ul>
+
 </div>
 </div>
 <a id="a50eedafe4a2e54a28407d3f4e6a465e8" name="a50eedafe4a2e54a28407d3f4e6a465e8"></a>
@@ -633,6 +747,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Bubble-up the last inserted element to restore the heap property. </p>
+<p>Typical usage:</p><ul>
+<li>After JunoDs_Heap_Insert(...), write your element to the returned index, then call Update to reposition it upward as needed.</li>
+</ul>
+<p>Returns:</p><ul>
+<li>JUNO_STATUS_SUCCESS on success.</li>
+<li>JUNO_STATUS_ERR if zLength == 0, if Compare fails, if Swap fails, or if the computed parent index would exceed zCapacity. See tests/test_heap.c. </li>
+</ul>
 
 </div>
 </div>
@@ -659,6 +782,9 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Verify that the heap root has been initialized properly. </p>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS if ptHeap != NULL, ptHeap-&gt;ptApi != NULL, and zCapacity &gt; 0; JUNO_STATUS_NULLPTR_ERROR otherwise. </dd></dl>
 
 </div>
 </div>

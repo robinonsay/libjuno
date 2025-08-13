@@ -127,6 +127,9 @@ $(document).ready(function(){initNavTree('structJUNO__DS__HEAP__API__TAG.html','
 </div><!--header-->
 <div class="contents">
 
+<p>API vtable you must implement to adapt the heap to your storage.  
+ <a href="structJUNO__DS__HEAP__API__TAG.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="heap__api_8h_source.html">heap_api.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -139,7 +142,14 @@ Data Fields</h2></td></tr>
 <tr class="memitem:ab154a3bb1b0600d9130856fae4efb810" id="r_ab154a3bb1b0600d9130856fae4efb810"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__DS__HEAP__API__TAG.html#ab154a3bb1b0600d9130856fae4efb810">Reset</a> )(<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iIndex)</td></tr>
 <tr class="separator:ab154a3bb1b0600d9130856fae4efb810"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>API vtable you must implement to adapt the heap to your storage. </p>
+<p>Contract:</p><ul>
+<li><a class="el" href="structJUNO__DS__HEAP__API__TAG.html#aca4817d64fd1732853031f18a7cac4f8" title="Compare two values to perform the heap operation.">Compare(parent, child)</a>: Return {SUCCESS, true} if the heap property holds between indices, or {SUCCESS, false} if a swap is needed.</li>
+<li><a class="el" href="structJUNO__DS__HEAP__API__TAG.html#aa3f594c730f17c7193ea678062e2edca">Swap(iFrom, iTo)</a>: Exchange elements at the given indices in your storage.</li>
+<li><a class="el" href="structJUNO__DS__HEAP__API__TAG.html#ab154a3bb1b0600d9130856fae4efb810">Reset(iIndex)</a>: Clear the element at iIndex when it leaves the heap (e.g., set to 0). </li>
+</ul>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a id="aca4817d64fd1732853031f18a7cac4f8" name="aca4817d64fd1732853031f18a7cac4f8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aca4817d64fd1732853031f18a7cac4f8">&#9670;&#160;</a></span>Compare</h2>
 

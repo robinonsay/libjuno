@@ -138,8 +138,10 @@ Include dependency graph for juno_heap.c:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a50eedafe4a2e54a28407d3f4e6a465e8" id="r_a50eedafe4a2e54a28407d3f4e6a465e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__heap_8c.html#a50eedafe4a2e54a28407d3f4e6a465e8">JunoDs_Heap_Update</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:a50eedafe4a2e54a28407d3f4e6a465e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bubble-up the last inserted element to restore the heap property.  <br /></td></tr>
 <tr class="separator:a50eedafe4a2e54a28407d3f4e6a465e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a017b8a58b71beb498cb344e077048f18" id="r_a017b8a58b71beb498cb344e077048f18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__heap_8c.html#a017b8a58b71beb498cb344e077048f18">JunoDs_Heap_SiftDown</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iStart)</td></tr>
+<tr class="memdesc:a017b8a58b71beb498cb344e077048f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sift down from a starting index to restore the heap property.  <br /></td></tr>
 <tr class="separator:a017b8a58b71beb498cb344e077048f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -169,6 +171,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sift down from a starting index to restore the heap property. </p>
+<p>Typical usage:</p><ul>
+<li>Used internally by Delete and Heapify. You can also call it directly if you overwrite the root or another node and need to restore ordering.</li>
+</ul>
+<p>Returns:</p><ul>
+<li>JUNO_STATUS_SUCCESS on success.</li>
+<li>JUNO_STATUS_ERR if zLength == 0, if child indices exceed capacity, or if Compare/Swap report an error. </li>
+</ul>
+
 </div>
 </div>
 <a id="a50eedafe4a2e54a28407d3f4e6a465e8" name="a50eedafe4a2e54a28407d3f4e6a465e8"></a>
@@ -186,6 +197,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Bubble-up the last inserted element to restore the heap property. </p>
+<p>Typical usage:</p><ul>
+<li>After JunoDs_Heap_Insert(...), write your element to the returned index, then call Update to reposition it upward as needed.</li>
+</ul>
+<p>Returns:</p><ul>
+<li>JUNO_STATUS_SUCCESS on success.</li>
+<li>JUNO_STATUS_ERR if zLength == 0, if Compare fails, if Swap fails, or if the computed parent index would exceed zCapacity. See tests/test_heap.c. </li>
+</ul>
 
 </div>
 </div>

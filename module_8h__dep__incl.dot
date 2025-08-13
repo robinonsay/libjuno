@@ -27,7 +27,7 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/module.h"
   Node1 -> Node11 [id="edge11_Node000001_Node000011",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node11 [id="Node000011",label="/home/runner/work/libjuno\l/libjuno/include/juno/ds\l/buff_stack_api.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$ds_2buff__stack__api_8h.html",tooltip=" "];
   Node1 -> Node12 [id="edge12_Node000001_Node000012",dir="back",color="steelblue1",style="solid",tooltip=" "];
-  Node12 [id="Node000012",label="/home/runner/work/libjuno\l/libjuno/include/juno/ds\l/heap_api.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$heap__api_8h.html",tooltip=" "];
+  Node12 [id="Node000012",label="/home/runner/work/libjuno\l/libjuno/include/juno/ds\l/heap_api.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$heap__api_8h.html",tooltip="A minimal, portable binary-heap abstraction using LibJuno modules."];
   Node12 -> Node13 [id="edge13_Node000012_Node000013",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node13 [id="Node000013",label="/home/runner/work/libjuno\l/libjuno/src/juno_heap.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__heap_8c.html",tooltip=" "];
   Node1 -> Node9 [id="edge14_Node000001_Node000009",dir="back",color="steelblue1",style="solid",tooltip=" "];
