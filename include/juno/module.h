@@ -244,7 +244,7 @@ typedef struct NAME_T \
 { \
     bool bIsSome; \
     SOME_T tSome; \
-} NAME_T;
+} NAME_T
 
 #define JUNO_OPTION(SOME_T) \
 { \

@@ -5,7 +5,7 @@ extern "C" {
 #include "unity.h"
 }
 
-#include "juno/buff/juno_buff.hpp"
+#include "juno/ds/juno_buff.hpp"
 
 using namespace juno;
 using namespace juno::buff;
