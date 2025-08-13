@@ -9,9 +9,9 @@ var searchData=
   ['bissome_6',['bIsSome',['../structjuno_1_1OPTION__T.html#ad082fb1f6178d501260d2631ef2a55fa',1,'juno::OPTION_T']]],
   ['block_20visualization_7',['Memory Block Visualization',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md4',1,'']]],
   ['blocks_8',['blocks',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md15',1,'Memory Blocks'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md6',1,'Step 1: Declare Memory Blocks']]],
-  ['buff_5fapi_2ehpp_9',['buff_api.hpp',['../buff__api_8hpp.html',1,'']]],
-  ['buff_5fqueue_5fapi_2eh_10',['buff_queue_api.h',['../buff__queue__api_8h.html',1,'']]],
-  ['buff_5fstack_5fapi_2eh_11',['buff_stack_api.h',['../buff__stack__api_8h.html',1,'']]],
+  ['buff_5fapi_2ehpp_9',['buff_api.hpp',['../ds_2buff__api_8hpp.html',1,'(Global Namespace)'],['../buff_2buff__api_8hpp.html',1,'(Global Namespace)']]],
+  ['buff_5fqueue_5fapi_2eh_10',['buff_queue_api.h',['../ds_2buff__queue__api_8h.html',1,'(Global Namespace)'],['../buff_2buff__queue__api_8h.html',1,'(Global Namespace)']]],
+  ['buff_5fstack_5fapi_2eh_11',['buff_stack_api.h',['../ds_2buff__stack__api_8h.html',1,'(Global Namespace)'],['../buff_2buff__stack__api_8h.html',1,'(Global Namespace)']]],
   ['build_20option_12',['CMake Build Option',['../index.html#autotoc_md89',1,'']]],
   ['building_20an_20engine_20module_3a_20deriving_20injecting_20dependencies_13',['3. Building an Engine Module: Deriving &amp; Injecting Dependencies',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md54',1,'']]],
   ['building_20and_20testing_14',['Building and Testing',['../index.html#autotoc_md88',1,'']]]

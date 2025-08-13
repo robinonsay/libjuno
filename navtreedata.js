@@ -144,7 +144,7 @@ var NAVTREE =
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [
         [ "All", "globals.html", "globals_dup" ],
-        [ "Functions", "globals_func.html", null ],
+        [ "Functions", "globals_func.html", "globals_func" ],
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
@@ -158,9 +158,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"juno__vec_8h.html#a896c5e4eafa49099dcaf1a94732343dc",
-"namespacejuno_1_1buff.html",
-"structJUNO__VEC4__I32__CART__TAG.html#aa478cc6a24146ec4694d04d21ae91209"
+"juno__map_8c.html#a8ae4512bb870a6decf39252b6e5b1e9a",
+"md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md3",
+"structJUNO__TIME__API__TAG.html#afef105d132aa68bc78a95fd48e262098"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

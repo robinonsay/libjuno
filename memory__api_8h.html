@@ -158,12 +158,6 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af0d3dee078bfb9d9aeaf19018245ad9b" id="r_af0d3dee078bfb9d9aeaf19018245ad9b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#af0d3dee078bfb9d9aeaf19018245ad9b">JUNO_MEMORY_BLOCK</a>(name,  type,  length)&#160;&#160;&#160;static type name[length] = {0}</td></tr>
-<tr class="memdesc:af0d3dee078bfb9d9aeaf19018245ad9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to declare a static memory block and its associated free stack.  <br /></td></tr>
-<tr class="separator:af0d3dee078bfb9d9aeaf19018245ad9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8942ee7462829b506969cd42e66d2ad7" id="r_a8942ee7462829b506969cd42e66d2ad7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#a8942ee7462829b506969cd42e66d2ad7">JUNO_MEMORY_BLOCK_METADATA</a>(name,  length)&#160;&#160;&#160;static <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> name[length] = {0}</td></tr>
-<tr class="memdesc:a8942ee7462829b506969cd42e66d2ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to declare a static array for memory metadata.  <br /></td></tr>
-<tr class="separator:a8942ee7462829b506969cd42e66d2ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d3ef94c99154090eeddec26bd3d6bf2" id="r_a5d3ef94c99154090eeddec26bd3d6bf2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#a5d3ef94c99154090eeddec26bd3d6bf2">JUNO_REF</a>(name)&#160;&#160;&#160;REF##name</td></tr>
 <tr class="memdesc:a5d3ef94c99154090eeddec26bd3d6bf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define a reference for memory.  <br /></td></tr>
 <tr class="separator:a5d3ef94c99154090eeddec26bd3d6bf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,10 +167,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ad81cca33023418640b33fcfc7bcf1334" id="r_ad81cca33023418640b33fcfc7bcf1334"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__MEMORY__BLOCK__METADATA__TAG.html">JUNO_MEMORY_BLOCK_METADATA_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a></td></tr>
-<tr class="separator:ad81cca33023418640b33fcfc7bcf1334"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4638233ae19853038fabd4275720d66e" id="r_a4638233ae19853038fabd4275720d66e"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_MEMORY_BLOCK_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a></td></tr>
-<tr class="separator:a4638233ae19853038fabd4275720d66e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81042a4a8d391bb212acd1e7dcc0476a" id="r_a81042a4a8d391bb212acd1e7dcc0476a"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__MEMORY__TAG.html">JUNO_MEMORY_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#a81042a4a8d391bb212acd1e7dcc0476a">JUNO_MEMORY_T</a></td></tr>
 <tr class="separator:a81042a4a8d391bb212acd1e7dcc0476a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad19e7308f94739bf71e58c18ab2eed89" id="r_ad19e7308f94739bf71e58c18ab2eed89"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__MEMORY__ALLOC__API__TAG.html">JUNO_MEMORY_ALLOC_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="memory__api_8h.html#ad19e7308f94739bf71e58c18ab2eed89">JUNO_MEMORY_ALLOC_API_T</a></td></tr>
@@ -196,88 +186,6 @@ Functions</h2></td></tr>
 <tr class="separator:a8d410a3ee459e4960d7518d176649960"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="af0d3dee078bfb9d9aeaf19018245ad9b" name="af0d3dee078bfb9d9aeaf19018245ad9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0d3dee078bfb9d9aeaf19018245ad9b">&#9670;&#160;</a></span>JUNO_MEMORY_BLOCK</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define JUNO_MEMORY_BLOCK</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">length&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;static type name[length] = {0}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Macro to declare a static memory block and its associated free stack. </p>
-<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_memory library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>Name of the memory block. </td></tr>
-    <tr><td class="paramname">type</td><td>Data type of each block element. </td></tr>
-    <tr><td class="paramname">length</td><td>Number of elements in the memory block. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a8942ee7462829b506969cd42e66d2ad7" name="a8942ee7462829b506969cd42e66d2ad7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8942ee7462829b506969cd42e66d2ad7">&#9670;&#160;</a></span>JUNO_MEMORY_BLOCK_METADATA</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define JUNO_MEMORY_BLOCK_METADATA</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">length&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;static <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a> name[length] = {0}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Macro to declare a static array for memory metadata. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>Name of the metadata array. </td></tr>
-    <tr><td class="paramname">length</td><td>Number of metadata entries. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a17ee3efcb223e0831576875ebeebfee6" name="a17ee3efcb223e0831576875ebeebfee6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17ee3efcb223e0831576875ebeebfee6">&#9670;&#160;</a></span>JUNO_NEW_REF</h2>
 
@@ -315,6 +223,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Define a reference for memory. </p>
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_memory library API </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -355,34 +264,6 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">typedef union JUNO_MEMORY_ALLOC_TAG <a class="el" href="memory__api_8h.html#a1683e1b3e5790ebeb2652b8c46f3cf78">JUNO_MEMORY_ALLOC_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad81cca33023418640b33fcfc7bcf1334" name="ad81cca33023418640b33fcfc7bcf1334"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad81cca33023418640b33fcfc7bcf1334">&#9670;&#160;</a></span>JUNO_MEMORY_BLOCK_METADATA_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct <a class="el" href="structJUNO__MEMORY__BLOCK__METADATA__TAG.html">JUNO_MEMORY_BLOCK_METADATA_TAG</a> <a class="el" href="memory__api_8h.html#ad81cca33023418640b33fcfc7bcf1334">JUNO_MEMORY_BLOCK_METADATA_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4638233ae19853038fabd4275720d66e" name="a4638233ae19853038fabd4275720d66e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4638233ae19853038fabd4275720d66e">&#9670;&#160;</a></span>JUNO_MEMORY_BLOCK_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct JUNO_MEMORY_BLOCK_TAG <a class="el" href="memory__api_8h.html#a4638233ae19853038fabd4275720d66e">JUNO_MEMORY_BLOCK_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">

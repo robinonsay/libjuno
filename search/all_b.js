@@ -12,12 +12,13 @@ var searchData=
   ['changes_3a_20adding_20a_20turbocharged_20engine_9',['5. Demonstrating Isolation of Changes: Adding a Turbocharged Engine',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md67',1,'']]],
   ['cmake_20build_20option_10',['CMake Build Option',['../index.html#autotoc_md89',1,'']]],
   ['common_20pitfalls_20to_20avoid_11',['Common Pitfalls to Avoid',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md12',1,'']]],
-  ['completely_20isolated_12',['Why This Is Completely Isolated',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md71',1,'']]],
-  ['concepts_13',['Core Concepts',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
-  ['conclusion_14',['10. Conclusion',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md83',1,'']]],
-  ['core_20concepts_15',['Core Concepts',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
-  ['counting_16',['counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'Step 4: Share Memory with Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34',1,'When to Use Reference Counting']]],
-  ['counting_20macros_17',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30',1,'']]],
-  ['crc_2eh_18',['crc.h',['../crc_8h.html',1,'']]],
-  ['current_20modules_19',['Current Modules',['../index.html#autotoc_md90',1,'']]]
+  ['compare_12',['Compare',['../structJUNO__DS__HEAP__API__TAG.html#aca4817d64fd1732853031f18a7cac4f8',1,'JUNO_DS_HEAP_API_TAG']]],
+  ['completely_20isolated_13',['Why This Is Completely Isolated',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md71',1,'']]],
+  ['concepts_14',['Core Concepts',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
+  ['conclusion_15',['10. Conclusion',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md83',1,'']]],
+  ['core_20concepts_16',['Core Concepts',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md14',1,'']]],
+  ['counting_17',['counting',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md9',1,'Step 4: Share Memory with Reference Counting'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md34',1,'When to Use Reference Counting']]],
+  ['counting_20macros_18',['Understanding Reference Counting Macros',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md30',1,'']]],
+  ['crc_2eh_19',['crc.h',['../crc_8h.html',1,'']]],
+  ['current_20modules_20',['Current Modules',['../index.html#autotoc_md90',1,'']]]
 ];

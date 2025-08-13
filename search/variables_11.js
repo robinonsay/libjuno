@@ -6,5 +6,6 @@ var searchData=
   ['sleep_3',['Sleep',['../structJUNO__TIME__API__TAG.html#aab086915d1eb70741db07bed31ffe874',1,'JUNO_TIME_API_TAG']]],
   ['sleepto_4',['SleepTo',['../structJUNO__TIME__API__TAG.html#a2305cb5124263b7da31ba713926e3d37',1,'JUNO_TIME_API_TAG']]],
   ['subscribe_5',['Subscribe',['../structJUNO__SUBSCRIBER__API__TAG.html#aa95cc55ebf328b975e063c79b0122d25',1,'JUNO_SUBSCRIBER_API_TAG']]],
-  ['subtracttime_6',['SubtractTime',['../structJUNO__TIME__API__TAG.html#a6fbe3ef3579aa0f5c05fc446d26a8265',1,'JUNO_TIME_API_TAG']]]
+  ['subtracttime_6',['SubtractTime',['../structJUNO__TIME__API__TAG.html#a6fbe3ef3579aa0f5c05fc446d26a8265',1,'JUNO_TIME_API_TAG']]],
+  ['swap_7',['Swap',['../structJUNO__DS__HEAP__API__TAG.html#aa3f594c730f17c7193ea678062e2edca',1,'JUNO_DS_HEAP_API_TAG']]]
 ];

@@ -12,8 +12,9 @@ var searchData=
   ['reference_20management_9',['Reference Management',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md26',1,'']]],
   ['release_20memory_10',['Step 5: Release Memory',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md10',1,'']]],
   ['remove_11',['Remove',['../structJUNO__MAP__API__TAG.html#a37a843ab8a19a61238754c0f3e85809d',1,'JUNO_MAP_API_TAG']]],
-  ['result_5ft_12',['RESULT_T',['../structjuno_1_1RESULT__T.html',1,'juno']]],
-  ['result_5ft_3c_20t_20_2a_20_3e_13',['RESULT_T&lt; T * &gt;',['../structjuno_1_1RESULT__T.html',1,'juno']]],
-  ['rho_14',['rho',['../structJUNO__VEC4__I32__SPH__TAG.html#a31d5a55f83306a85810c4f9e655493f9',1,'JUNO_VEC4_I32_SPH_TAG::rho'],['../structJUNO__VEC4__F32__SPH__TAG.html#ae246ee1f1d451d282f47ebf13c8d30af',1,'JUNO_VEC4_F32_SPH_TAG::rho'],['../structJUNO__VEC4__F64__SPH__TAG.html#a37c31f9f8eb492ac822c0d6b38b8d7d4',1,'JUNO_VEC4_F64_SPH_TAG::rho']]],
-  ['root_15',['root',['../module_8h.html#autotoc_md36',1,'The Module Root'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2MODULE.html#autotoc_md42',1,'The Module Root']]]
+  ['reset_12',['Reset',['../structJUNO__DS__HEAP__API__TAG.html#ab154a3bb1b0600d9130856fae4efb810',1,'JUNO_DS_HEAP_API_TAG']]],
+  ['result_5ft_13',['RESULT_T',['../structjuno_1_1RESULT__T.html',1,'juno']]],
+  ['result_5ft_3c_20t_20_2a_20_3e_14',['RESULT_T&lt; T * &gt;',['../structjuno_1_1RESULT__T.html',1,'juno']]],
+  ['rho_15',['rho',['../structJUNO__VEC4__I32__SPH__TAG.html#a31d5a55f83306a85810c4f9e655493f9',1,'JUNO_VEC4_I32_SPH_TAG::rho'],['../structJUNO__VEC4__F32__SPH__TAG.html#ae246ee1f1d451d282f47ebf13c8d30af',1,'JUNO_VEC4_F32_SPH_TAG::rho'],['../structJUNO__VEC4__F64__SPH__TAG.html#a37c31f9f8eb492ac822c0d6b38b8d7d4',1,'JUNO_VEC4_F64_SPH_TAG::rho']]],
+  ['root_16',['root',['../module_8h.html#autotoc_md36',1,'The Module Root'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2MODULE.html#autotoc_md42',1,'The Module Root']]]
 ];
