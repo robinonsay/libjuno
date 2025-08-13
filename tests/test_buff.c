@@ -2,8 +2,8 @@
 #include "juno/status.h"
 #include "unity.h"
 #include "unity_internals.h"
-#include "juno/buff/buff_queue_api.h"
-#include "juno/buff/buff_stack_api.h"
+#include "juno/ds/buff_queue_api.h"
+#include "juno/ds/buff_stack_api.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>

@@ -34,7 +34,29 @@ extern "C"
 {
 #endif
 
+/// @brief Macro to declare a static memory block and its associated free stack.
+/// @param name Name of the memory block.
+/// @param type Data type of each block element.
+/// @param length Number of elements in the memory block.
 
+#ifdef __cplusplus
+#define JUNO_MEMORY_BLOCK(name, type, length) static type name[length] = {}
+#else
+#define JUNO_MEMORY_BLOCK(name, type, length) static type name[length] = {0}
+#endif
+
+/// @brief Macro to declare a static array for memory metadata.
+/// @param name Name of the metadata array.
+/// @param length Number of metadata entries.
+#ifdef __cplusplus
+#define JUNO_MEMORY_BLOCK_METADATA(name, length) static JUNO_MEMORY_BLOCK_METADATA_T name[length] = {}
+#else
+#define JUNO_MEMORY_BLOCK_METADATA(name, length) static JUNO_MEMORY_BLOCK_METADATA_T name[length] = {0}
+#endif
+
+
+typedef struct JUNO_MEMORY_BLOCK_METADATA_TAG JUNO_MEMORY_BLOCK_METADATA_T;
+typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
 typedef struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MEMORY_ALLOC_BLOCK_T;
 
 struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
@@ -46,7 +68,7 @@ struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
     size_t zFreed;                      ///< Current count of freed blocks in the free stack.
 );
 
-#ifdef JUNO_MEMORY_DEFAULT
+#ifndef JUNO_MEMORY_CUSTOM
 /**
     This is the default blockementation for `JUNO_MEMORY_T`.
     If you want to derive new blockementations for `JUNO_MEMORY_T`

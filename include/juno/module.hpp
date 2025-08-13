@@ -21,8 +21,6 @@
 #include <stdint.h>
 #include "module.h"
 
-#define JUNO_MODULE_ARG(...)    __VA_ARGS__
-
 namespace juno
 {
 

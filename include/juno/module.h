@@ -124,6 +124,13 @@
     implementation has no additional members 
 */
 #define JUNO_MODULE_EMPTY
+
+/**
+    A macro to provide template types as arguments to
+    Juno module macros
+*/
+#define JUNO_MODULE_ARG(...)    __VA_ARGS__
+
 /**
     Alias for the module root implementation.
     All modules can call `.tRoot` to access the
@@ -237,7 +244,7 @@ typedef struct NAME_T \
 { \
     bool bIsSome; \
     SOME_T tSome; \
-} NAME_T;
+} NAME_T
 
 #define JUNO_OPTION(SOME_T) \
 { \
