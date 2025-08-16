@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_map impl implementation
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_MAP_IMPL_H
 #define JUNO_MAP_IMPL_H

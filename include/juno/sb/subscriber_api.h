@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_subscriber library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_SUBSCRIBER_API_H
 #define JUNO_SUBSCRIBER_API_H

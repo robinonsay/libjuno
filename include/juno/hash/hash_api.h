@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_hash library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_HASH_API_H
 #define JUNO_HASH_API_H

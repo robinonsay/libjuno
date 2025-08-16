@@ -16,7 +16,7 @@
 */
 /**
     This header contains the time library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_TIME_API_H
 #define JUNO_TIME_API_H

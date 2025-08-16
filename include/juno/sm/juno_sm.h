@@ -21,23 +21,23 @@
 */
 
 /**
-    This header contains the juno_string impl implementation
+    This header contains the juno_sm impl implementation
     @author Robin Onsay
 */
-#ifndef JUNO_STRING_IMPL_H
-#define JUNO_STRING_IMPL_H
+#ifndef JUNO_SM_IMPL_H
+#define JUNO_SM_IMPL_H
 #include "juno/module.h"
 #include "juno/status.h"
-#include "juno/string/string_api.h"
+#include "sm_api.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
 
-typedef struct JUNO_STRING_IMPL_TAG JUNO_STRING_IMPL_T;
+typedef struct JUNO_SM_IMPL_TAG JUNO_SM_IMPL_T;
 
-struct JUNO_STRING_IMPL_TAG JUNO_MODULE_DERIVE(JUNO_STRING_ROOT_T,
+struct JUNO_SM_IMPL_TAG JUNO_MODULE_DERIVE(JUNO_SM_ROOT_T,
     /*
     
     TODO: Include implementation specific members here
@@ -45,25 +45,25 @@ struct JUNO_STRING_IMPL_TAG JUNO_MODULE_DERIVE(JUNO_STRING_ROOT_T,
     */
 );
 
-#ifdef JUNO_STRING_DEFAULT
+#ifndef JUNO_SM_CUSTOM
 /**
-    This is the default implementation for `JUNO_STRING_T`.
-    If you want to use the default implementation for `JUNO_STRING_T`
-    use `#define JUNO_STRING_DEFAULT` prior to including
-    `#include "juno_string_impl.h"`
+    This is the default implementation for `JUNO_SM_T`.
+    If you want to use the default implementation for `JUNO_SM_T`
+    use `#define JUNO_SM_DEFAULT` prior to including
+    `#include "juno_sm_impl.h"`
 
     Note: If you are implementing a derived module you will need
-    to implement `JUNO_STRING_IMPL`.
+    to implement `JUNO_SM_IMPL`.
 */
-union JUNO_STRING_TAG JUNO_MODULE(JUNO_STRING_API_T, JUNO_STRING_ROOT_T,
-    JUNO_STRING_IMPL_T tJunoStringImpl;
+union JUNO_SM_TAG JUNO_MODULE(JUNO_SM_API_T, JUNO_SM_ROOT_T,
+    JUNO_SM_IMPL_T tJunoSmImpl;
 );
 #endif
 
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T JunoString_ImplApi(JUNO_STRING_T *ptJunoString, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T JunoSm_ImplApi(JUNO_SM_T *ptJunoSm, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_STRING_IMPL_H
+#endif // JUNO_SM_IMPL_H
 

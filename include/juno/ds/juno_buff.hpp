@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_buff_queue library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_BUFF_HPP
 #define JUNO_BUFF_HPP

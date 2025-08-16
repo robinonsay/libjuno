@@ -22,7 +22,7 @@
 
 /**
     This header contains the io library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_ASYNC_IO_API_H
 #define JUNO_ASYNC_IO_API_H

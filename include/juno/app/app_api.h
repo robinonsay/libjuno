@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_app library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_APP_API_H
 #define JUNO_APP_API_H

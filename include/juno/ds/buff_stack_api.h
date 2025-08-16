@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_buff_stack library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_BUFF_STACK_API_H
 #define JUNO_BUFF_STACK_API_H
