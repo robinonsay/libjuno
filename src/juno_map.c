@@ -28,9 +28,9 @@ static const JUNO_MAP_API_T tJunoMapImplApi;
 
 static inline JUNO_STATUS_T Verify(JUNO_MAP_T *ptJunoMap)
 {
-    ASSERT_EXISTS(ptJunoMap);
+    JUNO_ASSERT_EXISTS(ptJunoMap);
     JUNO_MAP_IMPL_T *ptJunoMapImpl = (JUNO_MAP_IMPL_T *)(ptJunoMap);
-    ASSERT_EXISTS_MODULE(
+    JUNO_JUNO_ASSERT_EXISTS_MODULE(
         ptJunoMap &&
         ptJunoMapImpl->JUNO_MODULE_SUPER.ptApi &&
         ptJunoMapImpl->JUNO_MODULE_SUPER.ptMapKeys &&
@@ -56,7 +56,7 @@ static inline JUNO_STATUS_T Juno_MapGetIndex(JUNO_MAP_T *ptJunoMap, JUNO_MEMORY_
     size_t zHash = 0;
     JUNO_HASH_ROOT_T *ptHash = (JUNO_HASH_ROOT_T *)(ptMap->tRoot.ptHash);
     JUNO_STATUS_T tStatus = ptHash->ptApi->Hash(ptMap->tRoot.ptHash, (const uint8_t *)(tKey.pvAddr), tKey.zSize, &zHash);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Get the capacity
     size_t zCapacity = ptMap->tRoot.zCapacity;
     tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
@@ -91,10 +91,10 @@ static JUNO_STATUS_T Juno_MapSet(JUNO_MAP_T *ptJunoMap, JUNO_MEMORY_T tKey, JUNO
 {
     JUNO_MAP_IMPL_T *ptMap = (JUNO_MAP_IMPL_T *)(ptJunoMap);
     JUNO_STATUS_T tStatus = Verify(ptJunoMap);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     size_t zIndex = 0;
     tStatus = Juno_MapGetIndex(ptJunoMap, tKey, &zIndex, false);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     ptMap->tRoot.ptMapKeys[zIndex] = tKey;
     ptMap->tRoot.ptMapValues[zIndex] = tValue;
     return tStatus;
@@ -104,10 +104,10 @@ static JUNO_STATUS_T Juno_MapRemove(JUNO_MAP_T *ptJunoMap, JUNO_MEMORY_T tKey)
 {
     JUNO_MAP_IMPL_T *ptMap = (JUNO_MAP_IMPL_T *)(ptJunoMap);
     JUNO_STATUS_T tStatus = Verify(ptJunoMap);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     size_t zIndex = 0;
     tStatus = Juno_MapGetIndex(ptJunoMap, tKey, &zIndex, true);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     ptMap->tRoot.ptMapKeys[zIndex] = (JUNO_MEMORY_T){0};
     ptMap->tRoot.ptMapValues[zIndex] = (JUNO_MEMORY_T){0};
     return tStatus;
@@ -118,10 +118,10 @@ static JUNO_STATUS_T Juno_MapGet(JUNO_MAP_T *ptJunoMap, JUNO_MEMORY_T tKey, JUNO
 {
     JUNO_MAP_IMPL_T *ptMap = (JUNO_MAP_IMPL_T *)(ptJunoMap);
     JUNO_STATUS_T tStatus = Verify(ptJunoMap);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     size_t zIndex = 0;
     tStatus = Juno_MapGetIndex(ptJunoMap, tKey, &zIndex, true);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     if(!ptMap->tRoot.ptMapKeys[zIndex].pvAddr)
     {
         tStatus = JUNO_STATUS_DNE_ERROR;
@@ -150,7 +150,7 @@ JUNO_STATUS_T JunoMap_ImplApi(
     JUNO_USER_DATA_T *pvFailureUserData
 )
 {
-    ASSERT_EXISTS(ptJunoMap);
+    JUNO_ASSERT_EXISTS(ptJunoMap);
     JUNO_MAP_IMPL_T *ptJunoMapImpl = (JUNO_MAP_IMPL_T *)(ptJunoMap);
     ptJunoMapImpl->JUNO_MODULE_SUPER.ptApi = &tJunoMapImplApi;
     ptJunoMapImpl->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
@@ -162,7 +162,7 @@ JUNO_STATUS_T JunoMap_ImplApi(
     ptJunoMapImpl->JUNO_MODULE_SUPER.zLenHashTable = 0;
     ptJunoMapImpl->JUNO_MODULE_SUPER.pfcnIsEqual = pfcnIsEqual;
     JUNO_STATUS_T tStatus = Verify(ptJunoMap);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     for(size_t i = 0; i < zCapacity; i++)
     {
         ptKeyTable[i] = (JUNO_MEMORY_T){0};

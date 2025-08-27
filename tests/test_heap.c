@@ -271,7 +271,7 @@ static void test_heapify_triggers_continue_when_children_exceed_capacity(void)
         h.data[i] = (int)(100 - i);
     }
 
-    // This should succeed; internal ASSERT_SUCCESS(...) uses 'continue' when children are > capacity.
+    // This should succeed; internal JUNO_ASSERT_SUCCESS(...) uses 'continue' when children are > capacity.
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, JunoDs_Heap_Heapify(&h.tRoot));
 }
 

@@ -53,7 +53,7 @@ struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(void,
 /// Initialize a buffer queue with a capacity
 static inline JUNO_STATUS_T JunoBuff_QueueInit(JUNO_BUFF_QUEUE_T *ptQueue, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
-    ASSERT_EXISTS(ptQueue);
+    JUNO_ASSERT_EXISTS(ptQueue);
     JUNO_BUFF_QUEUE_ROOT_T *ptQueueRoot = (JUNO_BUFF_QUEUE_ROOT_T *)(ptQueue);
     ptQueueRoot->iStartIndex = 0;
     ptQueueRoot->zLength = 0;

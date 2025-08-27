@@ -7,7 +7,7 @@ static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = -1;
 
 JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)
 {
-    ASSERT_EXISTS(ptTime && ptRetTime);
+    JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
     // Add seconds
     ptRetTime->iSeconds += tTimeToAdd.iSeconds;
     // Get the difference from the max value and the current subseconds
@@ -29,7 +29,7 @@ JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime,
 
 JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract)
 {
-    ASSERT_EXISTS(ptTime && ptRetTime);
+    JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
     // Check if we are going to result in negative time
     if(ptRetTime->iSeconds < tTimeToSubtract.iSeconds || (ptRetTime->iSeconds == 0 && ptRetTime->iSubSeconds < tTimeToSubtract.iSubSeconds))

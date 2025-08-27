@@ -50,7 +50,7 @@ struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(void,
 /// Initialize a buffer stack
 static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
-    ASSERT_EXISTS(ptStack);
+    JUNO_ASSERT_EXISTS(ptStack);
     JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
     ptStackRoot->zLength = 0;
     ptStackRoot->zCapacity = zCapacity;

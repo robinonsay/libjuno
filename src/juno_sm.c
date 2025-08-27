@@ -14,21 +14,21 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
-#include "template/template_impl.h"
+#include "juno/sm/juno_sm.h"
 #include "juno/macros.h"
 #include "juno/status.h"
-#include "template/template_api.h"
+#include "juno/sm/sm_api.h"
 
 
-static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate);
+static inline JUNO_STATUS_T Verify(JUNO_SM_T *ptJunoSm);
 
 
-static JUNO_STATUS_T ExampleFunction(TEMPLATE_T *ptTemplate)
+static JUNO_STATUS_T ExampleFunction(JUNO_SM_T *ptJunoSm)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
-    tStatus = Verify(ptTemplate);
+    tStatus = Verify(ptJunoSm);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus)
-    TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
+    // JUNO_SM_IMPL_T *ptJunoSmImpl = (JUNO_SM_IMPL_T *)(ptJunoSm);
     /*
     
     TODO: Initialize resources here
@@ -37,7 +37,7 @@ static JUNO_STATUS_T ExampleFunction(TEMPLATE_T *ptTemplate)
     return tStatus;
 }
 
-static const TEMPLATE_API_T tTemplateImplApi = {
+static const JUNO_SM_API_T tJunoSmImplApi = {
     .ExampleFunction = ExampleFunction,
     /*
         VERY IMPORTANT:
@@ -46,33 +46,33 @@ static const TEMPLATE_API_T tTemplateImplApi = {
     */
 };
 
-static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
+static inline JUNO_STATUS_T Verify(JUNO_SM_T *ptJunoSm)
 {
-    JUNO_ASSERT_EXISTS(ptTemplate);
-    TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
+    JUNO_ASSERT_EXISTS(ptJunoSm);
+    JUNO_SM_IMPL_T *ptJunoSmImpl = (JUNO_SM_IMPL_T *)(ptJunoSm);
     JUNO_JUNO_ASSERT_EXISTS_MODULE(
-        ptTemplate && ptTemplateImpl->JUNO_MODULE_SUPER.ptApi
+        ptJunoSm && ptJunoSmImpl->tRoot.ptApi
         /* TODO: Assert other dependencies and members here using &&*/,
-        ptTemplateImpl,
+        ptJunoSmImpl,
         "Module does not have all dependencies"
     );
-    if(ptTemplateImpl->JUNO_MODULE_SUPER.ptApi != &tTemplateImplApi)
+    if(ptJunoSmImpl->tRoot.ptApi != &tJunoSmImplApi)
     {
-        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateImpl, "Module has invalid API");
+        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoSmImpl, "Module has invalid API");
         return JUNO_STATUS_INVALID_TYPE_ERROR;
     }
     return JUNO_STATUS_SUCCESS;
 }
 
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T Template_ImplApi(TEMPLATE_T *ptTemplate, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+JUNO_STATUS_T JunoSm_ImplApi(JUNO_SM_T *ptJunoSm, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
-    JUNO_ASSERT_EXISTS(ptTemplate);
-    TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
-    ptTemplateImpl->JUNO_MODULE_SUPER.ptApi = &tTemplateImplApi;
-    ptTemplateImpl->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
-    ptTemplateImpl->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA = pvFailureUserData;
-    JUNO_STATUS_T tStatus = Verify(ptTemplate);
+    JUNO_ASSERT_EXISTS(ptJunoSm);
+    JUNO_SM_IMPL_T *ptJunoSmImpl = (JUNO_SM_IMPL_T *)(ptJunoSm);
+    ptJunoSmImpl->tRoot.ptApi = &tJunoSmImplApi;
+    ptJunoSmImpl->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
+    ptJunoSmImpl->tRoot.JUNO_FAILURE_USER_DATA = pvFailureUserData;
+    JUNO_STATUS_T tStatus = Verify(ptJunoSm);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     /*
     

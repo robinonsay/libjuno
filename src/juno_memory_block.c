@@ -25,9 +25,9 @@ static const JUNO_MEMORY_ALLOC_API_T tJunoMemoryBlockApi;
 
 static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_T *ptJunoMemory)
 {
-    ASSERT_EXISTS(ptJunoMemory);
+    JUNO_ASSERT_EXISTS(ptJunoMemory);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
-    ASSERT_EXISTS_MODULE(
+    JUNO_JUNO_ASSERT_EXISTS_MODULE(
         ptJunoMemory &&
         ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi &&
         ptJunoMemoryBlock->pvMemory &&
@@ -49,7 +49,7 @@ static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     if(!zSize)
     {
@@ -105,7 +105,7 @@ static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUN
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMem = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     if(zNewSize > ptMem->zTypeSize)
     {
@@ -122,9 +122,9 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
-    ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
+    JUNO_ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
     JUNO_MEMORY_T tMemory = *ptMemory;
     ptMemory->pvAddr = NULL;
     ptMemory->zSize = 0;
@@ -211,7 +211,7 @@ JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_T *ptJunoMemory,
     JUNO_USER_DATA_T *pvFailureUserData
 )
 {
-    ASSERT_EXISTS(ptJunoMemory);
+    JUNO_ASSERT_EXISTS(ptJunoMemory);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi = &tJunoMemoryBlockApi;
     ptJunoMemoryBlock->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
@@ -227,6 +227,6 @@ JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_T *ptJunoMemory,
     // Initially, no freed blocks are available
     ptJunoMemoryBlock->zFreed = 0;
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }

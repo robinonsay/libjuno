@@ -198,7 +198,7 @@ JUNO_STATUS_T Gastank_ImplApi(
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData)
 {
-    ASSERT_EXISTS(ptGastank);
+    JUNO_ASSERT_EXISTS(ptGastank);
     GASTANK_BASE_T *pBase = (GASTANK_BASE_T *)(ptGastank);
 
     // Assign the API pointer into the base
@@ -363,7 +363,7 @@ JUNO_STATUS_T Engine_V6Api(
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData
 ) {
-    ASSERT_EXISTS(ptEngine);
+    JUNO_ASSERT_EXISTS(ptEngine);
     ENGINE_V6_T *pV6 = (ENGINE_V6_T *)(ptEngine);
 
     // Assign the API pointer, failure handler, and user data
@@ -557,7 +557,7 @@ JUNO_STATUS_T Car_ImplApi(
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData
 ) {
-    ASSERT_EXISTS(ptCar);
+    JUNO_ASSERT_EXISTS(ptCar);
 
     CAR_BASE_T *pBase = (CAR_BASE_T *)(ptCar);
     pBase->ptApi = &tCarImplApi;
@@ -770,7 +770,7 @@ JUNO_STATUS_T Engine_TurboV6Api(
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData
 ) {
-    ASSERT_EXISTS(ptEngine);
+    JUNO_ASSERT_EXISTS(ptEngine);
     ENGINE_TURBOV6_T *pTurbo = &ptEngine->tEngineTurboV6;
     ENGINE_BASE_T *pBase = &pTurbo->tBase;
 
@@ -924,7 +924,7 @@ JUNO_STATUS_T Engine_HybridApi(
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData
 ) {
-    ASSERT_EXISTS(ptEngine);
+    JUNO_ASSERT_EXISTS(ptEngine);
     ENGINE_HYBRID_T *pHy = &ptEngine->tEngineHybrid;
     ENGINE_BASE_T *pBase = &pHy->tBase;
 
@@ -1054,8 +1054,8 @@ with instructions on implementation.
 * **Document Your API**
   In each `<module>_api.h`, comment what each function pointer does, what side effects it might have, and any limitations (e.g., “Start() must be called before SetRPM()”).
 
-* **Use `ASSERT_EXISTS` Liberally**
-  In each function implementation, call `ASSERT_EXISTS(ptModule);` at the top. This expands to check if `ptModule` is non‐NULL and if the module’s `ptApi` matches the expected API. It prevents accidental misuse.
+* **Use `JUNO_ASSERT_EXISTS` Liberally**
+  In each function implementation, call `JUNO_ASSERT_EXISTS(ptModule);` at the top. This expands to check if `ptModule` is non‐NULL and if the module’s `ptApi` matches the expected API. It prevents accidental misuse.
 
 * **Avoid Global Variables**
   Inject everything. Even if there’s “only one” gas tank, pass it as a parameter instead of reading from a global. You’ll thank yourself when portability or testability matters.
