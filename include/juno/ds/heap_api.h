@@ -116,7 +116,7 @@ typedef struct JUNO_DS_HEAP_API_TAG  JUNO_DS_HEAP_API_T;    /**< API vtable you 
 
 /**
  * @brief Result type carrying an index on success.
- * tStatus conveys success/error; tSuccess holds the index.
+ * tStatus conveys success/error; tOk holds the index.
  */
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_RESULT_T, size_t);
 
@@ -131,7 +131,7 @@ JUNO_MODULE_OPTION(JUNO_DS_HEAP_INDEX_OPTION_T, size_t);
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_OPTION_RESULT_T, JUNO_DS_HEAP_INDEX_OPTION_T);
 
 /**
- * @brief Result of a comparison: tSuccess=true means the heap property holds
+ * @brief Result of a comparison: tOk=true means the heap property holds
  * between the given parent and child indices; false means it does not.
  */
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_COMPARE_RESULT_T, bool);
@@ -256,12 +256,12 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_D
     if(iIndex >= ptHeap->zLength)
     {
         tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tSuccess.bIsSome = false;
+        tResult.tOk.bIsSome = false;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tSuccess.bIsSome = true;
-    tResult.tSuccess.tSome = iIndex;
+    tResult.tOk.bIsSome = true;
+    tResult.tOk.tSome = iIndex;
     return tResult;
 }
 
@@ -283,12 +283,12 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_
     if(iIndex >= ptHeap->zLength)
     {
         tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tSuccess.bIsSome = false;
+        tResult.tOk.bIsSome = false;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tSuccess.bIsSome = true;
-    tResult.tSuccess.tSome = iIndex;
+    tResult.tOk.bIsSome = true;
+    tResult.tOk.tSome = iIndex;
     return tResult;
 }
 
@@ -310,12 +310,12 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetParent(JUNO
     if(iIndex >= ptHeap->zLength)
     {
         tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tSuccess.bIsSome = false;
+        tResult.tOk.bIsSome = false;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tSuccess.bIsSome = true;
-    tResult.tSuccess.tSome = iIndex;
+    tResult.tOk.bIsSome = true;
+    tResult.tOk.tSome = iIndex;
     return tResult;
 }
 
@@ -326,7 +326,7 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetParent(JUNO
  * in your storage, then call JunoDs_Heap_Update(...) to bubble it up.
  *
  * @return A result where:
- *  - tStatus = SUCCESS and tSuccess = new index when there is capacity.
+ *  - tStatus = SUCCESS and tOk = new index when there is capacity.
  *  - tStatus = ERR when zLength >= zCapacity (no more space).
  */
 static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap)
@@ -339,7 +339,7 @@ static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T
         tResult.tStatus = JUNO_STATUS_ERR;
         return tResult;
     }
-    tResult.tSuccess = ptHeap->zLength;
+    tResult.tOk = ptHeap->zLength;
     ptHeap->zLength += 1;
     return tResult;
 }
@@ -364,11 +364,11 @@ static inline JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
     }
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T iIndexResult = JunoDs_Heap_ChildGetParent(ptHeap, ptHeap->zLength);
     ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
-    if(!iIndexResult.tSuccess.bIsSome)
+    if(!iIndexResult.tOk.bIsSome)
     {
         return tStatus;
     }
-    size_t iIndex = iIndexResult.tSuccess.tSome;
+    size_t iIndex = iIndexResult.tOk.tSome;
     for(size_t i = 0; i <= iIndex; ++i)
     {
         size_t iCurrentIndex = iIndex - i;

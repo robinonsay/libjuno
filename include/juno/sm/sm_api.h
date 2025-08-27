@@ -33,12 +33,12 @@ extern "C"
 {
 #endif
 
-typedef struct JUNO_SM_API_TAG JUNO_SM_API_T;
+typedef struct JUNO_SM_STATE_API_TAG JUNO_SM_STATE_API_T;
 
-typedef union JUNO_SM_TAG JUNO_SM_T;
-typedef struct JUNO_SM_ROOT_TAG JUNO_SM_ROOT_T;
+typedef union JUNO_SM_STATE_T JUNO_SM_STATE_T;
+typedef struct JUNO_SM_STATE_ROOT_TAG JUNO_SM_STATE_ROOT_T;
 
-struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SM_API_T,
+struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SM_STATE_API_T,
     /*
     
         TODO: Add implementation independent member variables here
@@ -48,8 +48,8 @@ struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SM_API_T,
 
 struct JUNO_SM_API_TAG
 {
-    /// TODO: Replace this example function with your own functions
-    JUNO_STATUS_T (*ExampleFunction)(JUNO_SM_T *ptJunoSm);
+    JUNO_STATUS_T (*ShouldExit)(JUNO_SM_STATE_T *ptJunoSm);
+    JUNO_STATUS_T (*StateAction)(JUNO_SM_STATE_T *ptJunoSm);
 };
 
 #ifdef __cplusplus

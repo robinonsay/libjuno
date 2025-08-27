@@ -72,7 +72,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
     JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
     if(ptStackRoot->zLength < ptStackRoot->zCapacity)
     {
-        tResult.tSuccess = ptStackRoot->zLength;
+        tResult.tOk = ptStackRoot->zLength;
         ptStackRoot->zLength += 1;
     }
     else
@@ -98,7 +98,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
     if(ptStackRoot->zLength > 0)
     {
         ptStackRoot->zLength -= 1;
-        tResult.tSuccess = ptStackRoot->zLength;
+        tResult.tOk = ptStackRoot->zLength;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
@@ -117,7 +117,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_T *ptStack)
         return tResult;
     }
     JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
-    tResult.tSuccess = ptStackRoot->zLength;
+    tResult.tOk = ptStackRoot->zLength;
     return tResult;
 }
 

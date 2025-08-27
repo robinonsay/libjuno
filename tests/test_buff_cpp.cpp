@@ -34,7 +34,7 @@ static void test_queue(void)
     for (uint8_t i = 1; i <= N; ++i) {
         auto r = api_q.Dequeue(queueRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-        TEST_ASSERT_EQUAL_UINT8(i, r.tSuccess);
+        TEST_ASSERT_EQUAL_UINT8(i, r.tOk);
     }
     // — underflow yields ERR
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, api_q.Dequeue(queueRoot).tStatus);
@@ -44,7 +44,7 @@ static void test_queue(void)
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, api_q.Enqueue(queueRoot, i));
         auto r = api_q.Dequeue(queueRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-        TEST_ASSERT_EQUAL_UINT8(i, r.tSuccess);
+        TEST_ASSERT_EQUAL_UINT8(i, r.tOk);
     }
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, api_q.Dequeue(queueRoot).tStatus);
 
@@ -57,7 +57,7 @@ static void test_queue(void)
     for (uint8_t i = 1; i <= N/2; ++i) {
         auto r = api_q.Dequeue(queueRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-        TEST_ASSERT_EQUAL_UINT8(i, r.tSuccess);
+        TEST_ASSERT_EQUAL_UINT8(i, r.tOk);
     }
     // now buffer is empty; enqueue N new items (values 6..15)
     for (uint8_t v = (N/2 + 1); v <= (N/2 + N); ++v) {
@@ -69,7 +69,7 @@ static void test_queue(void)
     for (uint8_t v = (N/2 + 1); v <= (N/2 + N); ++v) {
         auto r = api_q.Dequeue(queueRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-        TEST_ASSERT_EQUAL_UINT8(v, r.tSuccess);
+        TEST_ASSERT_EQUAL_UINT8(v, r.tOk);
     }
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, api_q.Dequeue(queueRoot).tStatus);
 }
@@ -94,7 +94,7 @@ static void test_stack(void)
     for (int i = static_cast<int>(N); i >= 1; --i) {
         auto r = api_s.Pop(stackRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS,   r.tStatus);
-        TEST_ASSERT_EQUAL_UINT8(static_cast<uint8_t>(i), r.tSuccess);
+        TEST_ASSERT_EQUAL_UINT8(static_cast<uint8_t>(i), r.tOk);
     }
     // — underflow yields ERR
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, api_s.Pop(stackRoot).tStatus);
@@ -104,7 +104,7 @@ static void test_stack(void)
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, api_s.Push(stackRoot, i));
         auto r = api_s.Pop(stackRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-        TEST_ASSERT_EQUAL_UINT8(i, r.tSuccess);
+        TEST_ASSERT_EQUAL_UINT8(i, r.tOk);
     }
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, api_s.Pop(stackRoot).tStatus);
 }

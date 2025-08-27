@@ -31,7 +31,7 @@ static JUNO_DS_HEAP_COMPARE_RESULT_T CompareMax(JUNO_DS_HEAP_ROOT_T *ptHeap, siz
         tResult.tStatus = JUNO_STATUS_ERR;
         return tResult;
     }
-    tResult.tSuccess = (h->data[parent] >= h->data[child]);
+    tResult.tOk = (h->data[parent] >= h->data[child]);
     return tResult;
 }
 
@@ -46,7 +46,7 @@ static JUNO_DS_HEAP_COMPARE_RESULT_T CompareMin(JUNO_DS_HEAP_ROOT_T *ptHeap, siz
         tResult.tStatus = JUNO_STATUS_ERR;
         return tResult;
     }
-    tResult.tSuccess = (h->data[parent] <= h->data[child]);
+    tResult.tOk = (h->data[parent] <= h->data[child]);
     return tResult;
 }
 
@@ -152,26 +152,26 @@ static void test_child_index_helpers_success_and_failure(void)
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T res;
     res = JunoDs_Heap_ChildGetLeft(&h.tRoot, 2);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, res.tStatus);
-    TEST_ASSERT_EQUAL_size_t(5, res.tSuccess.tSome);
+    TEST_ASSERT_EQUAL_size_t(5, res.tOk.tSome);
 
     res = JunoDs_Heap_ChildGetRight(&h.tRoot, 3);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, res.tStatus);
-    TEST_ASSERT_EQUAL_size_t(8, res.tSuccess.tSome);
+    TEST_ASSERT_EQUAL_size_t(8, res.tOk.tSome);
 
     res = JunoDs_Heap_ChildGetParent(&h.tRoot, 5);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, res.tStatus);
-    TEST_ASSERT_EQUAL_size_t(2, res.tSuccess.tSome);
+    TEST_ASSERT_EQUAL_size_t(2, res.tOk.tSome);
 
     // Failure cases (index > capacity checks)
     make_heap(&h, &kMaxApi, 2);
     res = JunoDs_Heap_ChildGetLeft(&h.tRoot, 3);  // 2*3+1 = 7 > 2 -> error
-    TEST_ASSERT_FALSE(res.tSuccess.bIsSome);
+    TEST_ASSERT_FALSE(res.tOk.bIsSome);
 
     res = JunoDs_Heap_ChildGetRight(&h.tRoot, 2); // 2*2+2 = 6 > 2 -> error
-    TEST_ASSERT_FALSE(res.tSuccess.bIsSome);
+    TEST_ASSERT_FALSE(res.tOk.bIsSome);
 
     res = JunoDs_Heap_ChildGetParent(&h.tRoot, 7); // (7-1)/2 = 3 > 2 -> error
-    TEST_ASSERT_FALSE(res.tSuccess.bIsSome);
+    TEST_ASSERT_FALSE(res.tOk.bIsSome);
 }
 
 static void test_init_insert_update_and_capacity_overflow_maxheap(void)
@@ -186,8 +186,8 @@ static void test_init_insert_update_and_capacity_overflow_maxheap(void)
     for (size_t i = 0; i < N; ++i) {
         JUNO_DS_HEAP_INDEX_RESULT_T ir = JunoDs_Heap_Insert(&h.tRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, ir.tStatus);
-        TEST_ASSERT_EQUAL_size_t(i, ir.tSuccess);
-        h.data[ir.tSuccess] = vals[i];
+        TEST_ASSERT_EQUAL_size_t(i, ir.tOk);
+        h.data[ir.tOk] = vals[i];
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
     }
 
@@ -201,7 +201,7 @@ static void test_init_insert_update_and_capacity_overflow_maxheap(void)
     while (h.tRoot.zLength < h.tRoot.zCapacity) {
         JUNO_DS_HEAP_INDEX_RESULT_T ir = JunoDs_Heap_Insert(&h.tRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, ir.tStatus);
-        h.data[ir.tSuccess] = (int)ir.tSuccess;
+        h.data[ir.tOk] = (int)ir.tOk;
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
     }
     // One more insert must fail
@@ -220,7 +220,7 @@ static void test_min_heap_behaviour_and_delete_sequence(void)
     for (size_t i = 0; i < N; ++i) {
         JUNO_DS_HEAP_INDEX_RESULT_T ir = JunoDs_Heap_Insert(&h.tRoot);
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, ir.tStatus);
-        h.data[ir.tSuccess] = vals[i];
+        h.data[ir.tOk] = vals[i];
         TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
     }
     assert_min_heap_property(&h);
@@ -310,11 +310,11 @@ static void test_update_and_siftdown_propagate_compare_errors(void)
 
     // Build a tiny heap of 2 elements
     JUNO_DS_HEAP_INDEX_RESULT_T ir = JunoDs_Heap_Insert(&h.tRoot);
-    h.data[ir.tSuccess] = 1;
+    h.data[ir.tOk] = 1;
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
 
     ir = JunoDs_Heap_Insert(&h.tRoot);
-    h.data[ir.tSuccess] = 2;
+    h.data[ir.tOk] = 2;
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
 
     // Force comparator failure for Update
@@ -365,8 +365,8 @@ static void test_delete_on_empty_and_delete_reset_behaviour(void)
     make_heap(&h, &kMaxApi, 8);
     JUNO_DS_HEAP_INDEX_RESULT_T ir;
 
-    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tSuccess] = 3; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
-    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tSuccess] = 1; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
+    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tOk] = 3; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
+    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tOk] = 1; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
 
     size_t last_index_before = h.tRoot.zLength - 1;
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Delete(&h.tRoot));
@@ -375,8 +375,8 @@ static void test_delete_on_empty_and_delete_reset_behaviour(void)
 
     // Now demonstrate that Delete ignores Reset errors (it still returns success)
     make_heap(&h, &kMaxApi, 8);
-    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tSuccess] = 5; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
-    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tSuccess] = 4; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
+    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tOk] = 5; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
+    ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tOk] = 4; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
     last_index_before = h.tRoot.zLength - 1;
 
     h.fail_reset = true; // Reset will return error, but Delete shouldn't propagate it

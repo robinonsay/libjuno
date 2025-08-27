@@ -28,7 +28,7 @@ template<typename T>
 struct RESULT_T
 {
     JUNO_STATUS_T tStatus;
-    T tSuccess;
+    T tOk;
 };
 
 template<typename T>

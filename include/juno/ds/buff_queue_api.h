@@ -76,7 +76,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueEnqueue(JUNO_BUFF_QUEUE_T *ptQueu
     JUNO_BUFF_QUEUE_ROOT_T *ptQueueRoot = (JUNO_BUFF_QUEUE_ROOT_T *)(ptQueue);
     if(ptQueueRoot->zLength < ptQueueRoot->zCapacity)
     {
-        tResult.tSuccess = (ptQueueRoot->iStartIndex + ptQueueRoot->zLength) % ptQueueRoot->zCapacity;
+        tResult.tOk = (ptQueueRoot->iStartIndex + ptQueueRoot->zLength) % ptQueueRoot->zCapacity;
         ptQueueRoot->zLength += 1;
     }
     else
@@ -101,7 +101,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueueDequeue(JUNO_BUFF_QUEUE_T *ptQueu
     JUNO_BUFF_QUEUE_ROOT_T *ptQueueRoot = (JUNO_BUFF_QUEUE_ROOT_T *)(ptQueue);
     if(ptQueueRoot->zLength > 0)
     {
-        tResult.tSuccess = ptQueueRoot->iStartIndex;
+        tResult.tOk = ptQueueRoot->iStartIndex;
         ptQueueRoot->iStartIndex = (ptQueueRoot->iStartIndex + 1) % ptQueueRoot->zCapacity;
         ptQueueRoot->zLength -= 1;
         return tResult;
@@ -128,7 +128,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueuePeek(JUNO_BUFF_QUEUE_T *ptQueue)
         JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Failed to enqueue data");
         return tResult;
     }
-    tResult.tSuccess = ptQueueRoot->iStartIndex;
+    tResult.tOk = ptQueueRoot->iStartIndex;
     return tResult;
 }
 

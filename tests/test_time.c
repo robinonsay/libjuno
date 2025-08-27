@@ -19,7 +19,7 @@ static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_T *ptTime)
     clock_gettime(CLOCK_REALTIME, &tTimeNow);
     JUNO_TIMESTAMP_RESULT_T tResult = JunoTime_NanosToTimestamp(ptTime, tTimeNow.tv_nsec);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    tResult.tSuccess.iSeconds = tTimeNow.tv_sec;
+    tResult.tOk.iSeconds = tTimeNow.tv_sec;
     return tResult;
 }
 
@@ -147,7 +147,7 @@ static void test_TimestampToNanos_success_integer(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = 3, .iSubSeconds = 0 };
     JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(3000000000ULL, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(3000000000ULL, tResult.tOk);
 }
 
 // Positive test: TimestampToNanos fractional subseconds
@@ -157,7 +157,7 @@ static void test_TimestampToNanos_success_fractional(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = 0, .iSubSeconds = max_sub };
     JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(1000000000ULL, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(1000000000ULL, tResult.tOk);
 }
 
 // Negative test: TimestampToNanos overflow detection
@@ -166,7 +166,7 @@ static void test_TimestampToNanos_overflow(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
     JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess); // unchanged on error
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk); // unchanged on error
 }
 
 // Positive test: TimestampToMicros integer seconds
@@ -175,7 +175,7 @@ static void test_TimestampToMicros_success_integer(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = 2, .iSubSeconds = 0 };
     JUNO_TIME_MICROS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMicros(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(2000000ULL, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(2000000ULL, tResult.tOk);
 }
 
 // Positive test: TimestampToMicros fractional subseconds
@@ -185,7 +185,7 @@ static void test_TimestampToMicros_success_fractional(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = 0, .iSubSeconds = max_sub };
     JUNO_TIME_MICROS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMicros(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(1000000ULL, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(1000000ULL, tResult.tOk);
 }
 
 // Negative test: TimestampToMicros overflow detection
@@ -194,7 +194,7 @@ static void test_TimestampToMicros_overflow(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
     JUNO_TIME_MICROS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMicros(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk);
 }
 
 // Positive test: TimestampToMillis integer seconds
@@ -203,7 +203,7 @@ static void test_TimestampToMillis_success_integer(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = 5, .iSubSeconds = 0 };
     JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(5000ULL, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(5000ULL, tResult.tOk);
 }
 
 // Positive test: TimestampToMillis fractional subseconds
@@ -213,7 +213,7 @@ static void test_TimestampToMillis_success_fractional(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = 0, .iSubSeconds = max_sub };
     JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(1000ULL, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(1000ULL, tResult.tOk);
 }
 
 // Negative test: TimestampToMillis overflow detection
@@ -222,7 +222,7 @@ static void test_TimestampToMillis_overflow(void)
     JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
     JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk);
 }
 
 // Positive test: NanosToTimestamp with zero input
@@ -231,8 +231,8 @@ static void test_NanosToTimestamp_zero(void)
     uint64_t input = 0;
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->NanosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: NanosToTimestamp integer and fractional parts
@@ -244,8 +244,8 @@ static void test_NanosToTimestamp_integer_and_fractional(void)
     uint64_t input = 1500000000ULL; // 1.5 seconds
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->NanosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(1, tResult.tSuccess.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64((input % NANO_PER_SEC) * subs_per_nano, tResult.tSuccess.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT64(1, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT64((input % NANO_PER_SEC) * subs_per_nano, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MicrosToTimestamp with zero input
@@ -254,8 +254,8 @@ static void test_MicrosToTimestamp_zero(void)
     uint64_t input = 0;
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MicrosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MicrosToTimestamp integer and fractional parts
@@ -267,8 +267,8 @@ static void test_MicrosToTimestamp_integer_and_fractional(void)
     uint64_t input = 2500000ULL; // 2.5 seconds
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MicrosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(2, tResult.tSuccess.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64((input % MICRO_PER_SEC) * subs_per_micro, tResult.tSuccess.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT64(2, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT64((input % MICRO_PER_SEC) * subs_per_micro, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MillisToTimestamp with zero input
@@ -277,8 +277,8 @@ static void test_MillisToTimestamp_zero(void)
     uint64_t input = 0;
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MillisToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tSuccess.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MillisToTimestamp integer and fractional parts
@@ -290,8 +290,8 @@ static void test_MillisToTimestamp_integer_and_fractional(void)
     uint64_t input = 4500ULL; // 4.5 seconds
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MillisToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(4, tResult.tSuccess.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64((input % MILLI_PER_SEC) * subs_per_milli, tResult.tSuccess.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT64(4, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT64((input % MILLI_PER_SEC) * subs_per_milli, tResult.tOk.iSubSeconds);
 }
 
 // Test Now function returns reasonable values
@@ -299,7 +299,7 @@ static void test_Now_returns_success(void)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->Now(&tTimeMod);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_TRUE(tResult.tSuccess.iSeconds > 0);      // Epoch time should be non-zero
+    TEST_ASSERT_TRUE(tResult.tOk.iSeconds > 0);      // Epoch time should be non-zero
 }
 
 // Test SleepTo stub returns success
@@ -325,7 +325,7 @@ static void test_timestamp_to_double(void)
     JUNO_TIMESTAMP_T duration = { .iSeconds = 1, .iSubSeconds = max_sub };
     JUNO_RESULT_F64_T tResult = tTimeMod.ptApi->TimestampToDouble(&tTimeMod, duration);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL(2.0, tResult.tSuccess);
+    TEST_ASSERT_EQUAL(2.0, tResult.tOk);
 }
 
 int main(void)
