@@ -39,8 +39,8 @@ extern "C"
 typedef struct JUNO_SM_ROOT_TAG JUNO_SM_ROOT_T;
 typedef struct JUNO_SM_STATE_API_TAG JUNO_SM_STATE_API_T;
 
-typedef union JUNO_SM_STATE_T JUNO_SM_STATE_T;
-typedef union JUNO_SM_T JUNO_SM_T;
+JUNO_MODULE_DECLARE(JUNO_SM_STATE_T);
+JUNO_MODULE_DECLARE(JUNO_SM_T);
 typedef struct JUNO_SM_STATE_ROOT_TAG JUNO_SM_STATE_ROOT_T;
 
 /// A result type for returning a SM state
@@ -50,6 +50,7 @@ JUNO_MODULE_RESULT(JUNO_SM_RESULT_OPTION_STATE_T, JUNO_SM_OPTION_STATE_T);
 
 /// A State Machine State
 struct JUNO_SM_STATE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SM_STATE_API_T,
+    JUNO_SM_T *ptSm;
     JUNO_SM_STATE_T *ptNextState;
 );
 
@@ -59,8 +60,8 @@ struct JUNO_SM_STATE_API_TAG
     JUNO_STATUS_T (*StateAction)(JUNO_SM_STATE_T *ptJunoSm);
     /// Returns a bool result whether the current state should exit
     JUNO_RESULT_BOOL_T (*ShouldExit)(JUNO_SM_STATE_T *ptJunoSm);
-    /// The next state following this state
-    JUNO_SM_RESULT_OPTION_STATE_T (*NextState)(JUNO_SM_STATE_T *ptJunoSm);
+    /// Reset the state
+    JUNO_STATUS_T (*ResetState)(JUNO_SM_STATE_T *ptJunoSm);
 };
 
 struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(void,
@@ -74,17 +75,38 @@ static inline JUNO_STATUS_T JunoSm_Verify(JUNO_SM_T *ptSm)
     JUNO_ASSERT_EXISTS(ptSm);
     JUNO_SM_ROOT_T *ptSmRoot = (JUNO_SM_ROOT_T *) ptSm;
     JUNO_ASSERT_EXISTS(ptSmRoot->ptCurrentState);
-    JUNO_SM_STATE_ROOT_T *ptCurrentStateRoot = (JUNO_SM_STATE_ROOT_T *) ptSmRoot->ptCurrentState;
-    JUNO_ASSERT_EXISTS(ptCurrentStateRoot->ptApi);
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_STATUS_T JunoSm_RootInit(JUNO_SM_T *ptSm, JUNO_SM_STATE_T *ptStartState)
+static inline JUNO_STATUS_T JunoSm_StateVerify(JUNO_SM_STATE_T *ptSmState)
 {
-    JUNO_STATUS_T tStatus = JunoSm_Verify(ptSm);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_EXISTS(ptSmState);
+    JUNO_SM_STATE_ROOT_T *ptSmRoot = (JUNO_SM_STATE_ROOT_T *) ptSmState;
+    JUNO_ASSERT_EXISTS(ptSmRoot->ptApi && ptSmRoot->ptSm);
+    return JUNO_STATUS_SUCCESS;
+}
+
+static inline JUNO_STATUS_T JunoSm_StateInit(JUNO_SM_T *ptSm, JUNO_SM_STATE_T *ptState, JUNO_SM_STATE_T *ptNextState, const JUNO_SM_STATE_API_T *ptStateApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+{
+    JUNO_ASSERT_EXISTS(ptState && ptStateApi && ptSm);
+    JUNO_SM_STATE_ROOT_T *ptStateRoot = (JUNO_SM_STATE_ROOT_T *) (ptState);
+    ptStateRoot->ptSm = ptSm;
+    ptStateRoot->_pfcnFailureHandler = pfcnFailureHandler;
+    ptStateRoot->_pvFailureUserData = pvFailureUserData;
+    ptStateRoot->ptApi = ptStateApi;
+    ptStateRoot->ptNextState = ptNextState;
+    return JunoSm_StateVerify(ptState);
+}
+
+static inline JUNO_STATUS_T JunoSm_Init(JUNO_SM_T *ptSm, JUNO_SM_STATE_T *ptStartState, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+{
+    JUNO_ASSERT_EXISTS(ptSm);
     JUNO_SM_ROOT_T *ptSmRoot = (JUNO_SM_ROOT_T *) ptSm;
     ptSmRoot->ptCurrentState = ptStartState;
+    ptSmRoot->_pfcnFailureHandler = pfcnFailureHandler;
+    ptSmRoot->_pvFailureUserData = pvFailureUserData;
+    JUNO_STATUS_T tStatus = JunoSm_Verify(ptSm);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }
 
@@ -95,6 +117,19 @@ static inline JUNO_SM_RESULT_STATE_T JunoSm_GetCurrentState(JUNO_SM_T *ptSm)
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     JUNO_SM_ROOT_T *ptSmRoot = (JUNO_SM_ROOT_T *) ptSm;
     tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tOk = ptSmRoot->ptCurrentState;
+    return tResult;
+}
+
+static inline JUNO_SM_RESULT_STATE_T JunoSm_TransitionState(JUNO_SM_T *ptSm)
+{
+    JUNO_SM_RESULT_STATE_T tResult = {JUNO_STATUS_ERR, NULL};
+    tResult.tStatus = JunoSm_Verify(ptSm);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_SM_ROOT_T *ptSmRoot = (JUNO_SM_ROOT_T *) ptSm;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    JUNO_SM_STATE_ROOT_T *ptCurrentStateRoot = (JUNO_SM_STATE_ROOT_T*) ptSmRoot->ptCurrentState;
+    ptSmRoot->ptCurrentState = ptCurrentStateRoot->ptNextState;
     tResult.tOk = ptSmRoot->ptCurrentState;
     return tResult;
 }
