@@ -19,10 +19,14 @@ typedef struct TRAFFIC_LIGHT_STATE_T JUNO_MODULE_DERIVE(JUNO_SM_STATE_ROOT_T,
     TRAFFIC_LIGHT_T tThisLight;
 ) TRAFFIC_LIGHT_STATE_T;
 
+union JUNO_SM_STATE_T JUNO_MODULE(JUNO_SM_STATE_API_T, JUNO_SM_STATE_ROOT_T,
+    TRAFFIC_LIGHT_STATE_T tTrafficLightState;
+);
+
 /// The action that should be executed in this state
-static JUNO_STATUS_T StateAction(JUNO_SM_STATE_ROOT_T *ptJunoSm)
+static JUNO_STATUS_T StateAction(JUNO_SM_STATE_T *ptJunoSm)
 {
-    JUNO_STATUS_T tStatus = JunoSm_StateVerify(ptJunoSm);
+    JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     printf("Current State: %u\n", ptTrafficLightState->tThisLight);
@@ -31,9 +35,9 @@ static JUNO_STATUS_T StateAction(JUNO_SM_STATE_ROOT_T *ptJunoSm)
     return JUNO_STATUS_SUCCESS;
 }
 /// Returns a bool result whether the current state should exit
-static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_ROOT_T *ptJunoSm)
+static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_T *ptJunoSm)
 {
-    JUNO_STATUS_T tStatus = JunoSm_StateVerify(ptJunoSm);
+    JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
     JUNO_RESULT_BOOL_T tResult = {0};
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     tResult.tStatus = tStatus;
@@ -43,9 +47,9 @@ static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_ROOT_T *ptJunoSm)
 }
 
 
-static JUNO_STATUS_T ResetState(JUNO_SM_STATE_ROOT_T *ptJunoSm)
+static JUNO_STATUS_T ResetState(JUNO_SM_STATE_T *ptJunoSm)
 {
-    JUNO_STATUS_T tStatus = JunoSm_StateVerify(ptJunoSm);
+    JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     ptTrafficLightState->iCounter = 0;
@@ -62,6 +66,10 @@ static const JUNO_SM_STATE_API_T tSmStateApi = {
 typedef struct TRAFFIC_LIGHT_SM_T JUNO_MODULE_DERIVE(JUNO_SM_ROOT_T,
     TRAFFIC_LIGHT_STATE_T tStates[TRAFFIC_COUNT];
 ) TRAFFIC_LIGHT_SM_T;
+
+union JUNO_SM_T JUNO_MODULE(void, JUNO_SM_ROOT_T,
+    TRAFFIC_LIGHT_SM_T tTrafficLightSm;
+);
 
 TRAFFIC_LIGHT_SM_T tSm = {
         .tStates[TRAFFIC_RED] = {
@@ -88,22 +96,22 @@ int main()
     }
     while(true)
     {
-        JUNO_SM_RESULT_STATE_ROOT_T tStateResult = JunoSm_GetCurrentState(&tSm.tRoot);
+        JUNO_SM_RESULT_STATE_T tStateResult = JunoSm_GetCurrentState(&tSm.tRoot);
         JUNO_ASSERT_SUCCESS(tStateResult.tStatus, break;);
-        JUNO_SM_STATE_ROOT_T *ptSmState = tStateResult.tOk;
+        JUNO_SM_STATE_ROOT_T *ptSmState = &tStateResult.tOk->tRoot;
         if(ptSmState)
         {
             const JUNO_SM_STATE_API_T *ptSmStateApi = ptSmState->ptApi;
-            JUNO_RESULT_BOOL_T tBoolResult = ptSmStateApi->ShouldExit(ptSmState);
+            JUNO_RESULT_BOOL_T tBoolResult = ptSmStateApi->ShouldExit((JUNO_SM_STATE_T *)ptSmState);
             JUNO_ASSERT_SUCCESS(tBoolResult.tStatus, break;);
             if(tBoolResult.tOk)
             {
-                ptSmStateApi->ResetState(ptSmState);
+                ptSmStateApi->ResetState((JUNO_SM_STATE_T *)ptSmState);
                 JunoSm_TransitionState(&tSm.tRoot);
             }
             else
             {
-                ptSmStateApi->StateAction(ptSmState);
+                ptSmStateApi->StateAction((JUNO_SM_STATE_T *)ptSmState);
             }
         }
     }
