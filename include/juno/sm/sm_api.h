@@ -143,7 +143,8 @@ static inline JUNO_SM_RESULT_OPTION_STATE_T JunoSm_TransitionState(JUNO_SM_ROOT_
     }
     else
     {
-        tResult.tOk = (JUNO_SM_OPTION_STATE_T){false, {}};
+        tResult.tOk.bIsSome = false;
+        tResult.tOk.tSome = NULL;
     }
     return tResult;
 }
