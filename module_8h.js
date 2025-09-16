@@ -10,10 +10,10 @@ var module_8h =
     [ "JUNO_MODULE_EMPTY", "module_8h.html#a6dc58e4cd075d0ef32588498500af9a0", null ],
     [ "JUNO_MODULE_GET_API", "module_8h.html#a47c6440bbc9d03756a4f35e1cb970591", null ],
     [ "JUNO_MODULE_OPTION", "module_8h.html#adf83dbb0b87a97d3cd09276898c7f573", null ],
-    [ "JUNO_MODULE_RESULT", "module_8h.html#a5ca1de8146f35c348dc9bd92fbc32d0d", null ],
+    [ "JUNO_MODULE_RESULT", "module_8h.html#abd12764bf37b42d460ce41d8ed89ea33", null ],
     [ "JUNO_MODULE_ROOT", "module_8h.html#ad90d24375445f98866a7d7d7f99e684f", null ],
     [ "JUNO_MODULE_ROOT_DECLARE", "module_8h.html#a0446375ade1958ae0eac0e071e7ff86b", null ],
     [ "JUNO_MODULE_SUPER", "module_8h.html#af98d3f7fa92446d974d322bcfe55b284", null ],
     [ "JUNO_OPTION", "module_8h.html#a0bac45ef16a95f98f96b7ad81d5a07d6", null ],
-    [ "JUNO_RESULT", "module_8h.html#a37d558c41617cce4cb3968927e551a82", null ]
+    [ "JUNO_RESULT", "module_8h.html#a5cd536f5c313af45798efc221d8bcf05", null ]
 ];

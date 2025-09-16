@@ -2,7 +2,7 @@ var searchData=
 [
   ['juno_5farc_2ec_0',['juno_arc.c',['../juno__arc_8c.html',1,'']]],
   ['juno_5fbinhex_2ec_1',['juno_binhex.c',['../juno__binhex_8c.html',1,'']]],
-  ['juno_5fbuff_2ehpp_2',['juno_buff.hpp',['../ds_2juno__buff_8hpp.html',1,'(Global Namespace)'],['../buff_2juno__buff_8hpp.html',1,'(Global Namespace)']]],
+  ['juno_5fbuff_2ehpp_2',['juno_buff.hpp',['../juno__buff_8hpp.html',1,'']]],
   ['juno_5fccitt_2ec_3',['juno_ccitt.c',['../juno__ccitt_8c.html',1,'']]],
   ['juno_5fccitt32_2ec_4',['juno_ccitt32.c',['../juno__ccitt32_8c.html',1,'']]],
   ['juno_5fcrc_2ec_5',['juno_crc.c',['../juno__crc_8c.html',1,'']]],

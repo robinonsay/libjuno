@@ -236,8 +236,8 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>GASTANK_API_TAG</div>
 <div class="line">{</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*SetFuel)(GASTANK_T *ptGastank, <span class="keywordtype">int</span> iFuelLevel);</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*GetFuel)(GASTANK_T *ptGastank, <span class="keywordtype">int</span> *piFuelLevel);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*SetFuel)(GASTANK_T *ptGastank, <span class="keywordtype">int</span> iFuelLevel);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*GetFuel)(GASTANK_T *ptGastank, <span class="keywordtype">int</span> *piFuelLevel);</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#ifdef __cplusplus</span></div>
@@ -247,7 +247,7 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 <div class="ttc" id="amodule_8h_html"><div class="ttname"><a href="module_8h.html">module.h</a></div></div>
 <div class="ttc" id="amodule_8h_html_a0ecb577f51a5d8b065b5911389fff2d7"><div class="ttname"><a href="module_8h.html#a0ecb577f51a5d8b065b5911389fff2d7">JUNO_MODULE_DECLARE</a></div><div class="ttdeci">#define JUNO_MODULE_DECLARE(NAME_T)</div><div class="ttdef"><b>Definition</b> module.h:102</div></div>
 <div class="ttc" id="astatus_8h_html"><div class="ttname"><a href="status_8h.html">status.h</a></div></div>
-<div class="ttc" id="astatus_8h_html_aede45f0a23d8d5a902e6562474b1904b"><div class="ttname"><a href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></div><div class="ttdeci">enum JUNO_STATUS_TAG JUNO_STATUS_T</div></div>
+<div class="ttc" id="astatus_8h_html_a37f8e6b135f0c1a21a3a34b19d1772aa"><div class="ttname"><a href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></div><div class="ttdeci">int32_t JUNO_STATUS_T</div><div class="ttdef"><b>Definition</b> status.h:23</div></div>
 </div><!-- fragment --><p><b>Key points</b>:</p>
 <ul>
 <li><p class="startli">We use <code><a class="el" href="module_8h.html#a0ecb577f51a5d8b065b5911389fff2d7">JUNO_MODULE_DECLARE(GASTANK_T)</a></code> to create:</p>
@@ -263,8 +263,8 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 <div class="line">};</div>
 <div class="ttc" id="amodule_8h_html_a1da37e9e5393f35ceabb24ce0374c5ad"><div class="ttname"><a href="module_8h.html#a1da37e9e5393f35ceabb24ce0374c5ad">JUNO_FAILURE_USER_DATA</a></div><div class="ttdeci">#define JUNO_FAILURE_USER_DATA</div><div class="ttdef"><b>Definition</b> module.h:121</div></div>
 <div class="ttc" id="amodule_8h_html_af2cc78723eab5f63af29ba0056fb2931"><div class="ttname"><a href="module_8h.html#af2cc78723eab5f63af29ba0056fb2931">JUNO_FAILURE_HANDLER</a></div><div class="ttdeci">#define JUNO_FAILURE_HANDLER</div><div class="ttdef"><b>Definition</b> module.h:117</div></div>
-<div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:44</div></div>
-<div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:43</div></div>
+<div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:43</div></div>
+<div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:42</div></div>
 </div><!-- fragment --></li>
 <li>Finally, <code>GASTANK_API_T</code> is a struct with two function pointers, one to set fuel, one to get it.</li>
 </ul>
@@ -290,7 +290,7 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 <div class="line"><span class="comment">// This function initializes a default GasTank instance.</span></div>
 <div class="line"><span class="comment">// The caller must pass a pointer to uninitialized `GASTANK_T`,</span></div>
 <div class="line"><span class="comment">// a failure handler, and optional user data.</span></div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Gastank_ImplApi(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Gastank_ImplApi(</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData);</div>
@@ -306,12 +306,12 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 <div class="line">    .GetFuel = Gastank_GetFuel_Impl</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Gastank_ImplApi(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Gastank_ImplApi(</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</div>
 <div class="line">{</div>
-<div class="line">    <a class="code hl_define" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a>(ptGastank);</div>
+<div class="line">    <a class="code hl_define" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a>(ptGastank);</div>
 <div class="line">    GASTANK_BASE_T *pBase = (GASTANK_BASE_T *)(ptGastank);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Assign the API pointer into the base</span></div>
@@ -321,12 +321,12 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Initialize default internal fuel level (e.g., 0 liters)</span></div>
 <div class="line">    pBase-&gt;iFuelLevel = 0;</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ... Implementations for SetFuel/GetFuel that read/write pBase-&gt;iFuelLevel, call JUNO_FAIL_MODULE if invalid, etc.</span></div>
-<div class="ttc" id="amacros_8h_html_abf729d00254f692443168dcdc098b5f1"><div class="ttname"><a href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a></div><div class="ttdeci">#define ASSERT_EXISTS(ptr)</div><div class="ttdef"><b>Definition</b> macros.h:28</div></div>
-<div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">@ JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:24</div></div>
+<div class="ttc" id="amacros_8h_html_a30286e0b0863a08e3a9c0151c698acc4"><div class="ttname"><a href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a></div><div class="ttdeci">#define JUNO_ASSERT_EXISTS(ptr)</div><div class="ttdef"><b>Definition</b> macros.h:28</div></div>
+<div class="ttc" id="astatus_8h_html_ad89a3ea5be5fc21a4b97e2b1e761c084"><div class="ttname"><a href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">#define JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:24</div></div>
 </div><!-- fragment --><p>By the end of this, any user of <code>GASTANK_T</code> can do:</p>
 <div class="fragment"><div class="line">GASTANK_T myTank;</div>
 <div class="line">Gastank_ImplApi(&amp;myTank, MyFailureHandler, NULL);</div>
@@ -365,10 +365,10 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>ENGINE_API_TAG</div>
 <div class="line">{</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*Start)(ENGINE_T *ptEngine);</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*SetRPM)(ENGINE_T *ptEngine, <span class="keywordtype">int</span> iRpm);</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*GetFuel)(ENGINE_T *ptEngine, <span class="keywordtype">int</span> *piFuel);</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*Stop)(ENGINE_T *ptEngine);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*Start)(ENGINE_T *ptEngine);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*SetRPM)(ENGINE_T *ptEngine, <span class="keywordtype">int</span> iRpm);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*GetFuel)(ENGINE_T *ptEngine, <span class="keywordtype">int</span> *piFuel);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*Stop)(ENGINE_T *ptEngine);</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#ifdef __cplusplus</span></div>
@@ -424,7 +424,7 @@ What This Means</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Initialization function: takes the un‐initialized ENGINE_T,</span></div>
 <div class="line"><span class="comment">// a pointer to an existing GASTANK_T module, a failure handler, and user data.</span></div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Engine_V6Api(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Engine_V6Api(</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
@@ -447,13 +447,13 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line">    .Stop = EngineV6_Stop_Impl</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Engine_V6Api(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Engine_V6Api(</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData</div>
 <div class="line">) {</div>
-<div class="line">    <a class="code hl_define" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a>(ptEngine);</div>
+<div class="line">    <a class="code hl_define" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a>(ptEngine);</div>
 <div class="line">    ENGINE_V6_T *pV6 = (ENGINE_V6_T *)(ptEngine);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Assign the API pointer, failure handler, and user data</span></div>
@@ -467,7 +467,7 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line">    <span class="comment">// Optionally initialize iRpm = 0, etc.</span></div>
 <div class="line">    pBase-&gt;iRpm = 0;</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// In EngineV6_GetFuel_Impl, you’d do something like:</span></div>
@@ -515,7 +515,7 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Initialization function takes an existing BATTERY_T*</span></div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Engine_ElectricApi(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Engine_ElectricApi(</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    BATTERY_T *ptBattery,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
@@ -567,9 +567,9 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line"><span class="keyword">struct </span>CAR_API_TAG</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">// Make the car go at some speed</span></div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*Go)(CAR_T *ptCar, <span class="keywordtype">int</span> iSpeed);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*Go)(CAR_T *ptCar, <span class="keywordtype">int</span> iSpeed);</div>
 <div class="line">    <span class="comment">// Stop the car</span></div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> (*Stop)(CAR_T *ptCar);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*Stop)(CAR_T *ptCar);</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#ifdef __cplusplus</span></div>
@@ -599,7 +599,7 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Initialization: inject a pre-initialized ENGINE_T*</span></div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Car_ImplApi(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Car_ImplApi(</div>
 <div class="line">    CAR_T *ptCar,</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
@@ -616,13 +616,13 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line">    .Stop = Car_Stop_Impl</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Car_ImplApi(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Car_ImplApi(</div>
 <div class="line">    CAR_T *ptCar,</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData</div>
 <div class="line">) {</div>
-<div class="line">    <a class="code hl_define" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a>(ptCar);</div>
+<div class="line">    <a class="code hl_define" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a>(ptCar);</div>
 <div class="line"> </div>
 <div class="line">    CAR_BASE_T *pBase = (CAR_BASE_T *)(ptCar);</div>
 <div class="line">    pBase-&gt;ptApi = &amp;tCarImplApi;</div>
@@ -632,14 +632,14 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line">    <span class="comment">// Inject the engine pointer</span></div>
 <div class="line">    pBase-&gt;ptEngine = ptEngine;</div>
 <div class="line">    pBase-&gt;iSpeed = 0;</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Car_Go_Impl(CAR_T *ptCar, <span class="keywordtype">int</span> iSpeed) {</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Car_Go_Impl(CAR_T *ptCar, <span class="keywordtype">int</span> iSpeed) {</div>
 <div class="line">    CAR_BASE_T *pBase = (CAR_BASE_T *)(ptCar);</div>
 <div class="line">    <span class="keywordflow">if</span> (!pBase-&gt;ptEngine) {</div>
-<div class="line">        <a class="code hl_define" href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE</a>(<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>, ptCar, <span class="stringliteral">&quot;No engine injected&quot;</span>);</div>
-<div class="line">        <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
+<div class="line">        <a class="code hl_define" href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE</a>(<a class="code hl_define" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>, ptCar, <span class="stringliteral">&quot;No engine injected&quot;</span>);</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Call engine-&gt;Start(), engine-&gt;SetRPM(), etc., based on speed</span></div>
@@ -650,22 +650,22 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Store iSpeed internally</span></div>
 <div class="line">    pBase-&gt;iSpeed = iSpeed;</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Car_Stop_Impl(CAR_T *ptCar) {</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Car_Stop_Impl(CAR_T *ptCar) {</div>
 <div class="line">    CAR_BASE_T *pBase = (CAR_BASE_T *)(ptCar);</div>
 <div class="line">    <span class="keywordflow">if</span> (!pBase-&gt;ptEngine) {</div>
-<div class="line">        <a class="code hl_define" href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE</a>(<a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>, ptCar, <span class="stringliteral">&quot;No engine injected&quot;</span>);</div>
-<div class="line">        <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
+<div class="line">        <a class="code hl_define" href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE</a>(<a class="code hl_define" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>, ptCar, <span class="stringliteral">&quot;No engine injected&quot;</span>);</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    pBase-&gt;ptEngine-&gt;ptApi-&gt;Stop(pBase-&gt;ptEngine);</div>
 <div class="line">    pBase-&gt;iSpeed = 0;</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
-<div class="ttc" id="astatus_8h_html_a45c2dc85533ae2d7cb60ba543390afee"><div class="ttname"><a href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE</a></div><div class="ttdeci">#define JUNO_FAIL_MODULE(tStatus, ptMod, pcMessage)</div><div class="ttdef"><b>Definition</b> status.h:52</div></div>
-<div class="ttc" id="astatus_8h_html_a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda"><div class="ttname"><a href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a></div><div class="ttdeci">@ JUNO_STATUS_NULLPTR_ERROR</div><div class="ttdef"><b>Definition</b> status.h:26</div></div>
+<div class="ttc" id="astatus_8h_html_a45c2dc85533ae2d7cb60ba543390afee"><div class="ttname"><a href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE</a></div><div class="ttdeci">#define JUNO_FAIL_MODULE(tStatus, ptMod, pcMessage)</div><div class="ttdef"><b>Definition</b> status.h:51</div></div>
+<div class="ttc" id="astatus_8h_html_a4ae7478f0e9875995d1e1430c39752ff"><div class="ttname"><a href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a></div><div class="ttdeci">#define JUNO_STATUS_NULLPTR_ERROR</div><div class="ttdef"><b>Definition</b> status.h:26</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md64"></a>
 4.3. Putting It All Together: main.c</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;battery_api.h&quot;</span></div>
@@ -695,14 +695,14 @@ Implementation Sketch (in engine_v6.c)</h3>
 <div class="line">    ENGINE_V8_T tV8;</div>
 <div class="line">);</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> JunoFailureHandler(<a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData) {</div>
+<div class="line"><span class="keywordtype">void</span> JunoFailureHandler(<a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData) {</div>
 <div class="line">    printf(<span class="stringliteral">&quot;Failed: %s\n&quot;</span>, pcMessage);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div>
 <div class="line">    <span class="comment">// 1) Create and initialize a Battery</span></div>
 <div class="line">    BATTERY_T tBattery = {};</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus = Battery_ImplApi(&amp;tBattery, JunoFailureHandler, NULL);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus = Battery_ImplApi(&amp;tBattery, JunoFailureHandler, NULL);</div>
 <div class="line">    <span class="keywordflow">if</span>(tStatus) <span class="keywordflow">return</span> -1;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 2) Create and initialize a GasTank (we’ll use it for both V6 &amp; V8, by copying)</span></div>
@@ -801,7 +801,7 @@ Why This Is Modular</h3>
 <div class="line">);</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Engine_TurboV6Api(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Engine_TurboV6Api(</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
@@ -821,13 +821,13 @@ Why This Is Modular</h3>
 <div class="line">    .Stop = EngineTurboV6_Stop_Impl</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Engine_TurboV6Api(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Engine_TurboV6Api(</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData</div>
 <div class="line">) {</div>
-<div class="line">    <a class="code hl_define" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a>(ptEngine);</div>
+<div class="line">    <a class="code hl_define" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a>(ptEngine);</div>
 <div class="line">    ENGINE_TURBOV6_T *pTurbo = &amp;ptEngine-&gt;tEngineTurboV6;</div>
 <div class="line">    ENGINE_BASE_T *pBase = &amp;pTurbo-&gt;tBase;</div>
 <div class="line"> </div>
@@ -843,7 +843,7 @@ Why This Is Modular</h3>
 <div class="line">    pBase-&gt;iRpm = 0;</div>
 <div class="line">    pTurbo-&gt;iBoostPressure = 0;</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Implementation details: e.g., when Start() is called, spin up the turbo, check boost, etc.</span></div>
@@ -876,7 +876,7 @@ Why This Is Modular</h3>
 <div class="line">    ENGINE_TURBOV6_T tTurboV6;   <span class="comment">// &lt;-- add here</span></div>
 <div class="line">);</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> JunoFailureHandler(<a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData) {</div>
+<div class="line"><span class="keywordtype">void</span> JunoFailureHandler(<a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData) {</div>
 <div class="line">    printf(<span class="stringliteral">&quot;Failed: %s\n&quot;</span>, pcMessage);</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -943,7 +943,7 @@ Why This Is Completely Isolated</h3>
 <div class="line">);</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Engine_HybridApi(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Engine_HybridApi(</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    BATTERY_T *ptBattery,</div>
@@ -964,14 +964,14 @@ Why This Is Completely Isolated</h3>
 <div class="line">    .Stop     = EngineHybrid_Stop_Impl</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> Engine_HybridApi(</div>
+<div class="line"><a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> Engine_HybridApi(</div>
 <div class="line">    ENGINE_T *ptEngine,</div>
 <div class="line">    GASTANK_T *ptGastank,</div>
 <div class="line">    BATTERY_T *ptBattery,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler,</div>
 <div class="line">    <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData</div>
 <div class="line">) {</div>
-<div class="line">    <a class="code hl_define" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS</a>(ptEngine);</div>
+<div class="line">    <a class="code hl_define" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a>(ptEngine);</div>
 <div class="line">    ENGINE_HYBRID_T *pHy = &amp;ptEngine-&gt;tEngineHybrid;</div>
 <div class="line">    ENGINE_BASE_T *pBase = &amp;pHy-&gt;tBase;</div>
 <div class="line"> </div>
@@ -984,7 +984,7 @@ Why This Is Completely Isolated</h3>
 <div class="line">    pHy-&gt;iHybridMode = 0; <span class="comment">// default to electric mode</span></div>
 <div class="line"> </div>
 <div class="line">    pBase-&gt;iRpm = 0;</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a>;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">/* In EngineHybrid_GetFuel_Impl:</span></div>
@@ -1014,14 +1014,14 @@ Why This Is Completely Isolated</h3>
 <div class="line">    <span class="comment">// Optionally: other engine types...</span></div>
 <div class="line">);</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> JunoFailureHandler(<a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData) {</div>
+<div class="line"><span class="keywordtype">void</span> JunoFailureHandler(<a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData) {</div>
 <div class="line">    printf(<span class="stringliteral">&quot;Failed: %s\n&quot;</span>, pcMessage);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div>
 <div class="line">    <span class="comment">// Initialize a GasTank &amp; Battery (as before)</span></div>
 <div class="line">    GASTANK_T myTank = {};</div>
-<div class="line">    <a class="code hl_typedef" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus = Gastank_ImplApi(&amp;myTank, JunoFailureHandler, NULL);</div>
+<div class="line">    <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus = Gastank_ImplApi(&amp;myTank, JunoFailureHandler, NULL);</div>
 <div class="line">    <span class="keywordflow">if</span>(tStatus) <span class="keywordflow">return</span> -1;</div>
 <div class="line"> </div>
 <div class="line">    BATTERY_T myBattery = {};</div>
@@ -1086,7 +1086,7 @@ Why This Is Completely Isolated</h3>
 <li><b>Implement Comprehensive Failure Handlers</b> Pass a meaningful <code>JUNO_FAILURE_HANDLER_T</code> so you can trace what went wrong in the field. The macros <code><a class="el" href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">JUNO_FAIL_MODULE()</a></code> let you attach custom messages.</li>
 <li><b>Keep Derived Structs Small</b> Since each derived struct is overlaid on the base in a <code>union</code>, the size of a module is the maximum size of any derived variant. If one variant has a large buffer, that buffer consumes memory even if other variants don’t use it. Structure your code so that modules that seldom co-exist don’t share the same union, or keep large buffers separate.</li>
 <li><b>Document Your API</b> In each <code>&lt;module&gt;_api.h</code>, comment what each function pointer does, what side effects it might have, and any limitations (e.g., “Start() must be called before SetRPM()”).</li>
-<li><b>Use <code>ASSERT_EXISTS</code> Liberally</b> In each function implementation, call <code><a class="el" href="macros_8h.html#abf729d00254f692443168dcdc098b5f1">ASSERT_EXISTS(ptModule)</a>;</code> at the top. This expands to check if <code>ptModule</code> is non‐NULL and if the module’s <code>ptApi</code> matches the expected API. It prevents accidental misuse.</li>
+<li><b>Use <code>JUNO_ASSERT_EXISTS</code> Liberally</b> In each function implementation, call <code><a class="el" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS(ptModule)</a>;</code> at the top. This expands to check if <code>ptModule</code> is non‐NULL and if the module’s <code>ptApi</code> matches the expected API. It prevents accidental misuse.</li>
 <li><b>Avoid Global Variables</b> Inject everything. Even if there’s “only one” gas tank, pass it as a parameter instead of reading from a global. You’ll thank yourself when portability or testability matters.</li>
 <li><b>Group Related Modules</b> If you have multiple variations of the same abstraction (e.g., several engine types), keep them in the same directory, name headers consistently (e.g., <code>engine_v6.h</code>, <code>engine_v8.h</code>, <code>engine_hybrid.h</code>), and avoid circular dependencies.</li>
 <li><b>Be Wary of Deep Inheritance</b> While LibJuno allows multiple levels of derivation (<code><a class="el" href="module_8h.html#ad75a2500587693c7790d082005932ffc">JUNO_MODULE_DERIVE(Child, ParentBase, members)</a></code>), deep chains can become confusing. Prefer composition over inheritance when possible (e.g., have a <code>Turbocharger_T</code> module that wraps a base engine rather than deriving a new engine type).</li>

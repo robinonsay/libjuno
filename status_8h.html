@@ -123,12 +123,17 @@ $(document).ready(function(){initNavTree('status_8h.html',''); initResizable(); 
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">status.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for status.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="status_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2status_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="status_8h__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2status_8hdep" alt=""/></div>
@@ -138,6 +143,40 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:ad89a3ea5be5fc21a4b97e2b1e761c084" id="r_ad89a3ea5be5fc21a4b97e2b1e761c084"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ad89a3ea5be5fc21a4b97e2b1e761c084"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07ec979dfc10514575e99ff44bb0c074" id="r_a07ec979dfc10514575e99ff44bb0c074"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a07ec979dfc10514575e99ff44bb0c074">JUNO_STATUS_ERR</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a07ec979dfc10514575e99ff44bb0c074"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ae7478f0e9875995d1e1430c39752ff" id="r_a4ae7478f0e9875995d1e1430c39752ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a4ae7478f0e9875995d1e1430c39752ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5800687dfa1f01988ac8740fc1cb1121" id="r_a5800687dfa1f01988ac8740fc1cb1121"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a5800687dfa1f01988ac8740fc1cb1121">JUNO_STATUS_MEMALLOC_ERROR</a>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:a5800687dfa1f01988ac8740fc1cb1121"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae396a6adc9c70494bf15a1ffc33565dc" id="r_ae396a6adc9c70494bf15a1ffc33565dc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#ae396a6adc9c70494bf15a1ffc33565dc">JUNO_STATUS_MEMFREE_ERROR</a>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:ae396a6adc9c70494bf15a1ffc33565dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3da532852cd9b246326d832e3ae265a1" id="r_a3da532852cd9b246326d832e3ae265a1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a3da532852cd9b246326d832e3ae265a1">JUNO_STATUS_INVALID_TYPE_ERROR</a>&#160;&#160;&#160;5</td></tr>
+<tr class="separator:a3da532852cd9b246326d832e3ae265a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b197e90ef890ed7401f334f897ca007" id="r_a9b197e90ef890ed7401f334f897ca007"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a9b197e90ef890ed7401f334f897ca007">JUNO_STATUS_INVALID_SIZE_ERROR</a>&#160;&#160;&#160;6</td></tr>
+<tr class="separator:a9b197e90ef890ed7401f334f897ca007"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33787f11cbb460dff93b43022629c900" id="r_a33787f11cbb460dff93b43022629c900"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a33787f11cbb460dff93b43022629c900">JUNO_STATUS_TABLE_FULL_ERROR</a>&#160;&#160;&#160;7</td></tr>
+<tr class="separator:a33787f11cbb460dff93b43022629c900"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07fa62e4e2f3ce807233b7acc9d06039" id="r_a07fa62e4e2f3ce807233b7acc9d06039"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a07fa62e4e2f3ce807233b7acc9d06039">JUNO_STATUS_DNE_ERROR</a>&#160;&#160;&#160;8</td></tr>
+<tr class="separator:a07fa62e4e2f3ce807233b7acc9d06039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c47d741d50c36723478ae465ee56f6c" id="r_a4c47d741d50c36723478ae465ee56f6c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a4c47d741d50c36723478ae465ee56f6c">JUNO_STATUS_FILE_ERROR</a>&#160;&#160;&#160;9</td></tr>
+<tr class="separator:a4c47d741d50c36723478ae465ee56f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadd03e9716bee770daf8354e4f3b4c45" id="r_aadd03e9716bee770daf8354e4f3b4c45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#aadd03e9716bee770daf8354e4f3b4c45">JUNO_STATUS_READ_ERROR</a>&#160;&#160;&#160;10</td></tr>
+<tr class="separator:aadd03e9716bee770daf8354e4f3b4c45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e50e1bd0fe5f0fcd3e96ac962d69aa4" id="r_a5e50e1bd0fe5f0fcd3e96ac962d69aa4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a5e50e1bd0fe5f0fcd3e96ac962d69aa4">JUNO_STATUS_WRITE_ERROR</a>&#160;&#160;&#160;11</td></tr>
+<tr class="separator:a5e50e1bd0fe5f0fcd3e96ac962d69aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf882ada02e2ec41ba4f36637e428d85" id="r_acf882ada02e2ec41ba4f36637e428d85"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#acf882ada02e2ec41ba4f36637e428d85">JUNO_STATUS_CRC_ERROR</a>&#160;&#160;&#160;12</td></tr>
+<tr class="separator:acf882ada02e2ec41ba4f36637e428d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae749aa5b7fe2239870653ede604b8454" id="r_ae749aa5b7fe2239870653ede604b8454"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#ae749aa5b7fe2239870653ede604b8454">JUNO_STATUS_INVALID_REF_ERROR</a>&#160;&#160;&#160;13</td></tr>
+<tr class="separator:ae749aa5b7fe2239870653ede604b8454"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80c4d7e2489fc0a31f4f912cc47b39fc" id="r_a80c4d7e2489fc0a31f4f912cc47b39fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a80c4d7e2489fc0a31f4f912cc47b39fc">JUNO_STATUS_REF_IN_USE_ERROR</a>&#160;&#160;&#160;14</td></tr>
+<tr class="separator:a80c4d7e2489fc0a31f4f912cc47b39fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe7ccc12aa36bcd25aa8ac849915b5d8" id="r_afe7ccc12aa36bcd25aa8ac849915b5d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#afe7ccc12aa36bcd25aa8ac849915b5d8">JUNO_STATUS_INVALID_DATA_ERROR</a>&#160;&#160;&#160;15</td></tr>
+<tr class="separator:afe7ccc12aa36bcd25aa8ac849915b5d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee0ae2477ea802ba303bf857d076a208" id="r_aee0ae2477ea802ba303bf857d076a208"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#aee0ae2477ea802ba303bf857d076a208">JUNO_STATUS_TIMEOUT_ERROR</a>&#160;&#160;&#160;16</td></tr>
+<tr class="separator:aee0ae2477ea802ba303bf857d076a208"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7f937d05d6c3595f49afb38c3d0777b" id="r_ad7f937d05d6c3595f49afb38c3d0777b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#ad7f937d05d6c3595f49afb38c3d0777b">JUNO_FAIL_MESSAGE_LEN</a>&#160;&#160;&#160;256</td></tr>
 <tr class="separator:ad7f937d05d6c3595f49afb38c3d0777b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3dafe1f7315674337ee37dfd077c18d1" id="r_a3dafe1f7315674337ee37dfd077c18d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">JUNO_FAIL</a>(tStatus,  pfcnFailureHandler,  pvFailureUserData,  pcMessage)&#160;&#160;&#160;if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}</td></tr>
@@ -149,40 +188,12 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aede45f0a23d8d5a902e6562474b1904b" id="r_aede45f0a23d8d5a902e6562474b1904b"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664">JUNO_STATUS_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></td></tr>
-<tr class="separator:aede45f0a23d8d5a902e6562474b1904b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37f8e6b135f0c1a21a3a34b19d1772aa" id="r_a37f8e6b135f0c1a21a3a34b19d1772aa"><td class="memItemLeft" align="right" valign="top">typedef int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></td></tr>
+<tr class="separator:a37f8e6b135f0c1a21a3a34b19d1772aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af575dc984c80091757afe42a5d5c2b60" id="r_af575dc984c80091757afe42a5d5c2b60"><td class="memItemLeft" align="right" valign="top">typedef void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></td></tr>
 <tr class="separator:af575dc984c80091757afe42a5d5c2b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fbff8c7db15c2f4d01e82b8a863dbbc" id="r_a0fbff8c7db15c2f4d01e82b8a863dbbc"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>) (<a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus, const char *pcCustomMessage, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
+<tr class="memitem:a0fbff8c7db15c2f4d01e82b8a863dbbc" id="r_a0fbff8c7db15c2f4d01e82b8a863dbbc"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>) (<a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus, const char *pcCustomMessage, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
 <tr class="separator:a0fbff8c7db15c2f4d01e82b8a863dbbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a7be0a0a69c5086c083a713ecb7738664" id="r_a7be0a0a69c5086c083a713ecb7738664"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664">JUNO_STATUS_TAG</a> { <br />
-&#160;&#160;<a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710">JUNO_STATUS_SUCCESS</a> = 0
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238">JUNO_STATUS_ERR</a> = 1
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda">JUNO_STATUS_NULLPTR_ERROR</a> = 2
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ab3a365b29351f0ef0aa562514c981aaf">JUNO_STATUS_MEMALLOC_ERROR</a> = 3
-, <br />
-&#160;&#160;<a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ac0c16796f6cf2b09b1bcc5da4a758f38">JUNO_STATUS_MEMFREE_ERROR</a> = 4
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a9cdd319dcdfd9d445fe00ef8bc36d1e5">JUNO_STATUS_INVALID_TYPE_ERROR</a> = 5
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3">JUNO_STATUS_INVALID_SIZE_ERROR</a> = 6
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a484bc40388f9acf5d6e3a9d6c700ee4d">JUNO_STATUS_TABLE_FULL_ERROR</a> = 7
-, <br />
-&#160;&#160;<a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a482545204a69e26fab4e6b520fa1cbe9">JUNO_STATUS_DNE_ERROR</a> = 8
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a9704948643262a848c89e08bc088f3de">JUNO_STATUS_FILE_ERROR</a> = 9
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a691551daf0782c49e043b1cdcfdd5cb6">JUNO_STATUS_READ_ERROR</a> = 10
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a25ae03ece1fe1f5c19232855f1aef3d4">JUNO_STATUS_WRITE_ERROR</a> = 11
-, <br />
-&#160;&#160;<a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664ae164e215722d72961a66382501edd54a">JUNO_STATUS_CRC_ERROR</a> = 12
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a7c36e4300890a40c246be1b2458397eb">JUNO_STATUS_INVALID_REF_ERROR</a> = 13
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688">JUNO_STATUS_REF_IN_USE_ERROR</a> = 14
-, <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664aa44cf1bd3032747152dbbae6a45b2405">JUNO_STATUS_INVALID_DATA_ERROR</a> = 15
-, <br />
-&#160;&#160;<a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664a05216abdb91689a763ce70bac18a1677">JUNO_STATUS_TIMEOUT_ERROR</a> = 16
-<br />
- }</td></tr>
-<tr class="separator:a7be0a0a69c5086c083a713ecb7738664"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a3dafe1f7315674337ee37dfd077c18d1" name="a3dafe1f7315674337ee37dfd077c18d1"></a>
@@ -307,6 +318,244 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
+<a id="acf882ada02e2ec41ba4f36637e428d85" name="acf882ada02e2ec41ba4f36637e428d85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf882ada02e2ec41ba4f36637e428d85">&#9670;&#160;</a></span>JUNO_STATUS_CRC_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_CRC_ERROR&#160;&#160;&#160;12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a07fa62e4e2f3ce807233b7acc9d06039" name="a07fa62e4e2f3ce807233b7acc9d06039"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07fa62e4e2f3ce807233b7acc9d06039">&#9670;&#160;</a></span>JUNO_STATUS_DNE_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_DNE_ERROR&#160;&#160;&#160;8</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a07ec979dfc10514575e99ff44bb0c074" name="a07ec979dfc10514575e99ff44bb0c074"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07ec979dfc10514575e99ff44bb0c074">&#9670;&#160;</a></span>JUNO_STATUS_ERR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_ERR&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4c47d741d50c36723478ae465ee56f6c" name="a4c47d741d50c36723478ae465ee56f6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c47d741d50c36723478ae465ee56f6c">&#9670;&#160;</a></span>JUNO_STATUS_FILE_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_FILE_ERROR&#160;&#160;&#160;9</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afe7ccc12aa36bcd25aa8ac849915b5d8" name="afe7ccc12aa36bcd25aa8ac849915b5d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe7ccc12aa36bcd25aa8ac849915b5d8">&#9670;&#160;</a></span>JUNO_STATUS_INVALID_DATA_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_INVALID_DATA_ERROR&#160;&#160;&#160;15</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae749aa5b7fe2239870653ede604b8454" name="ae749aa5b7fe2239870653ede604b8454"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae749aa5b7fe2239870653ede604b8454">&#9670;&#160;</a></span>JUNO_STATUS_INVALID_REF_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_INVALID_REF_ERROR&#160;&#160;&#160;13</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b197e90ef890ed7401f334f897ca007" name="a9b197e90ef890ed7401f334f897ca007"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b197e90ef890ed7401f334f897ca007">&#9670;&#160;</a></span>JUNO_STATUS_INVALID_SIZE_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_INVALID_SIZE_ERROR&#160;&#160;&#160;6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3da532852cd9b246326d832e3ae265a1" name="a3da532852cd9b246326d832e3ae265a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3da532852cd9b246326d832e3ae265a1">&#9670;&#160;</a></span>JUNO_STATUS_INVALID_TYPE_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_INVALID_TYPE_ERROR&#160;&#160;&#160;5</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5800687dfa1f01988ac8740fc1cb1121" name="a5800687dfa1f01988ac8740fc1cb1121"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5800687dfa1f01988ac8740fc1cb1121">&#9670;&#160;</a></span>JUNO_STATUS_MEMALLOC_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_MEMALLOC_ERROR&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae396a6adc9c70494bf15a1ffc33565dc" name="ae396a6adc9c70494bf15a1ffc33565dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae396a6adc9c70494bf15a1ffc33565dc">&#9670;&#160;</a></span>JUNO_STATUS_MEMFREE_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_MEMFREE_ERROR&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4ae7478f0e9875995d1e1430c39752ff" name="a4ae7478f0e9875995d1e1430c39752ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ae7478f0e9875995d1e1430c39752ff">&#9670;&#160;</a></span>JUNO_STATUS_NULLPTR_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_NULLPTR_ERROR&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aadd03e9716bee770daf8354e4f3b4c45" name="aadd03e9716bee770daf8354e4f3b4c45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadd03e9716bee770daf8354e4f3b4c45">&#9670;&#160;</a></span>JUNO_STATUS_READ_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_READ_ERROR&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a80c4d7e2489fc0a31f4f912cc47b39fc" name="a80c4d7e2489fc0a31f4f912cc47b39fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80c4d7e2489fc0a31f4f912cc47b39fc">&#9670;&#160;</a></span>JUNO_STATUS_REF_IN_USE_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_REF_IN_USE_ERROR&#160;&#160;&#160;14</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad89a3ea5be5fc21a4b97e2b1e761c084" name="ad89a3ea5be5fc21a4b97e2b1e761c084"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad89a3ea5be5fc21a4b97e2b1e761c084">&#9670;&#160;</a></span>JUNO_STATUS_SUCCESS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_SUCCESS&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a33787f11cbb460dff93b43022629c900" name="a33787f11cbb460dff93b43022629c900"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33787f11cbb460dff93b43022629c900">&#9670;&#160;</a></span>JUNO_STATUS_TABLE_FULL_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_TABLE_FULL_ERROR&#160;&#160;&#160;7</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aee0ae2477ea802ba303bf857d076a208" name="aee0ae2477ea802ba303bf857d076a208"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee0ae2477ea802ba303bf857d076a208">&#9670;&#160;</a></span>JUNO_STATUS_TIMEOUT_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_TIMEOUT_ERROR&#160;&#160;&#160;16</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5e50e1bd0fe5f0fcd3e96ac962d69aa4" name="a5e50e1bd0fe5f0fcd3e96ac962d69aa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e50e1bd0fe5f0fcd3e96ac962d69aa4">&#9670;&#160;</a></span>JUNO_STATUS_WRITE_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JUNO_STATUS_WRITE_ERROR&#160;&#160;&#160;11</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a0fbff8c7db15c2f4d01e82b8a863dbbc" name="a0fbff8c7db15c2f4d01e82b8a863dbbc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0fbff8c7db15c2f4d01e82b8a863dbbc">&#9670;&#160;</a></span>JUNO_FAILURE_HANDLER_T</h2>
@@ -315,21 +564,21 @@ Enumerations</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* JUNO_FAILURE_HANDLER_T) (<a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a> tStatus, const char *pcCustomMessage, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td>
+          <td class="memname">typedef void(* JUNO_FAILURE_HANDLER_T) (<a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus, const char *pcCustomMessage, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aede45f0a23d8d5a902e6562474b1904b" name="aede45f0a23d8d5a902e6562474b1904b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aede45f0a23d8d5a902e6562474b1904b">&#9670;&#160;</a></span>JUNO_STATUS_T</h2>
+<a id="a37f8e6b135f0c1a21a3a34b19d1772aa" name="a37f8e6b135f0c1a21a3a34b19d1772aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37f8e6b135f0c1a21a3a34b19d1772aa">&#9670;&#160;</a></span>JUNO_STATUS_T</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef enum <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664">JUNO_STATUS_TAG</a> <a class="el" href="status_8h.html#aede45f0a23d8d5a902e6562474b1904b">JUNO_STATUS_T</a></td>
+          <td class="memname">typedef int32_t <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -347,40 +596,6 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a7be0a0a69c5086c083a713ecb7738664" name="a7be0a0a69c5086c083a713ecb7738664"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7be0a0a69c5086c083a713ecb7738664">&#9670;&#160;</a></span>JUNO_STATUS_TAG</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="status_8h.html#a7be0a0a69c5086c083a713ecb7738664">JUNO_STATUS_TAG</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710" name="a7be0a0a69c5086c083a713ecb7738664a34a4563164313520bc4e1ead7d1c1710"></a>JUNO_STATUS_SUCCESS&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238" name="a7be0a0a69c5086c083a713ecb7738664acbe46a9e7b2727be8920c698afee5238"></a>JUNO_STATUS_ERR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda" name="a7be0a0a69c5086c083a713ecb7738664a33f1c802bd5419cff9ac79f852db4eda"></a>JUNO_STATUS_NULLPTR_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664ab3a365b29351f0ef0aa562514c981aaf" name="a7be0a0a69c5086c083a713ecb7738664ab3a365b29351f0ef0aa562514c981aaf"></a>JUNO_STATUS_MEMALLOC_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664ac0c16796f6cf2b09b1bcc5da4a758f38" name="a7be0a0a69c5086c083a713ecb7738664ac0c16796f6cf2b09b1bcc5da4a758f38"></a>JUNO_STATUS_MEMFREE_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a9cdd319dcdfd9d445fe00ef8bc36d1e5" name="a7be0a0a69c5086c083a713ecb7738664a9cdd319dcdfd9d445fe00ef8bc36d1e5"></a>JUNO_STATUS_INVALID_TYPE_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3" name="a7be0a0a69c5086c083a713ecb7738664ad4d550b7347730aaded62cbbe0966af3"></a>JUNO_STATUS_INVALID_SIZE_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a484bc40388f9acf5d6e3a9d6c700ee4d" name="a7be0a0a69c5086c083a713ecb7738664a484bc40388f9acf5d6e3a9d6c700ee4d"></a>JUNO_STATUS_TABLE_FULL_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a482545204a69e26fab4e6b520fa1cbe9" name="a7be0a0a69c5086c083a713ecb7738664a482545204a69e26fab4e6b520fa1cbe9"></a>JUNO_STATUS_DNE_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a9704948643262a848c89e08bc088f3de" name="a7be0a0a69c5086c083a713ecb7738664a9704948643262a848c89e08bc088f3de"></a>JUNO_STATUS_FILE_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a691551daf0782c49e043b1cdcfdd5cb6" name="a7be0a0a69c5086c083a713ecb7738664a691551daf0782c49e043b1cdcfdd5cb6"></a>JUNO_STATUS_READ_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a25ae03ece1fe1f5c19232855f1aef3d4" name="a7be0a0a69c5086c083a713ecb7738664a25ae03ece1fe1f5c19232855f1aef3d4"></a>JUNO_STATUS_WRITE_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664ae164e215722d72961a66382501edd54a" name="a7be0a0a69c5086c083a713ecb7738664ae164e215722d72961a66382501edd54a"></a>JUNO_STATUS_CRC_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a7c36e4300890a40c246be1b2458397eb" name="a7be0a0a69c5086c083a713ecb7738664a7c36e4300890a40c246be1b2458397eb"></a>JUNO_STATUS_INVALID_REF_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688" name="a7be0a0a69c5086c083a713ecb7738664a28ac29e246afb7eec7e2540895f83688"></a>JUNO_STATUS_REF_IN_USE_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664aa44cf1bd3032747152dbbae6a45b2405" name="a7be0a0a69c5086c083a713ecb7738664aa44cf1bd3032747152dbbae6a45b2405"></a>JUNO_STATUS_INVALID_DATA_ERROR&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a7be0a0a69c5086c083a713ecb7738664a05216abdb91689a763ce70bac18a1677" name="a7be0a0a69c5086c083a713ecb7738664a05216abdb91689a763ce70bac18a1677"></a>JUNO_STATUS_TIMEOUT_ERROR&#160;</td><td class="fielddoc"></td></tr>
-</table>
 
 </div>
 </div>
