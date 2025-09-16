@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_publisher library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_PUBLISHER_API_H
 #define JUNO_PUBLISHER_API_H

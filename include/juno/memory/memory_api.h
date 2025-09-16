@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_memory library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_MEMORY_API_H
 #define JUNO_MEMORY_API_H

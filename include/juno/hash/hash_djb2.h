@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_hash djb2 djb2ementation
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_HASH_DJB2_H
 #define JUNO_HASH_DJB2_H

@@ -22,7 +22,7 @@
 
 /**
     This header contains the template impl implementation
-    @author
+    @author Robin Onsay
 */
 #ifndef TEMPLATE_IMPL_H
 #define TEMPLATE_IMPL_H

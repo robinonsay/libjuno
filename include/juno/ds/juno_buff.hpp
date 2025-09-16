@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_buff_queue library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_BUFF_HPP
 #define JUNO_BUFF_HPP
@@ -76,7 +76,7 @@ RESULT_T<T> Dequeue(QUEUE_T<T, N>& tQueue)
     RESULT_T<T> tResult{JUNO_STATUS_SUCCESS, {}};
     if(tJunoQueue.tRoot.zLength > 0)
     {
-        tResult.tSuccess = tJunoQueue.tRoot.tArrBuff.tArr[tJunoQueue.tRoot.iStartIndex];
+        tResult.tOk = tJunoQueue.tRoot.tArrBuff.tArr[tJunoQueue.tRoot.iStartIndex];
         tJunoQueue.tRoot.iStartIndex = (tJunoQueue.tRoot.iStartIndex + 1) % N;
         tJunoQueue.tRoot.zLength -= 1;
         return tResult;
@@ -107,7 +107,7 @@ RESULT_T<T*> QueuePeek(QUEUE_T<T, N>& tQueue)
     RESULT_T<T*> tResult{JUNO_STATUS_SUCCESS, {}};
     if(tJunoQueue.tRoot.zLength > 0)
     {
-        tResult.tSuccess = &tJunoQueue.tRoot.tArrBuff.tArr[tJunoQueue.tRoot.iStartIndex];
+        tResult.tOk = &tJunoQueue.tRoot.tArrBuff.tArr[tJunoQueue.tRoot.iStartIndex];
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
@@ -158,7 +158,7 @@ RESULT_T<T> Pop(STACK_T<T, N>& tStack)
     if(tJunoStack.tRoot.zLength > 0)
     {
         tJunoStack.tRoot.zLength -= 1;
-        tResult.tSuccess = tJunoStack.tRoot.tArrBuff.tArr[tJunoStack.tRoot.zLength];
+        tResult.tOk = tJunoStack.tRoot.tArrBuff.tArr[tJunoStack.tRoot.zLength];
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;
@@ -187,7 +187,7 @@ RESULT_T<T*> StackPeek(STACK_T<T, N>& tStack)
     RESULT_T<T*> tResult{JUNO_STATUS_SUCCESS, {}};
     if(tJunoStack.tRoot.zLength > 0)
     {
-        tResult.tSuccess = &tJunoStack.tRoot.tArrBuff.tArr[tJunoStack.tRoot.zLength];
+        tResult.tOk = &tJunoStack.tRoot.tArrBuff.tArr[tJunoStack.tRoot.zLength];
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_ERR;

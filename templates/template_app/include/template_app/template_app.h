@@ -22,7 +22,7 @@
 
 /**
     This header contains the template_app library API
-    @author
+    @author Robin Onsay
 */
 #ifndef TEMPLATE_APP_API_H
 #define TEMPLATE_APP_API_H

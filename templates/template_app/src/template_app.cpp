@@ -28,7 +28,7 @@ static JUNO_STATUS_T OnInit(JUNO_APP_T *ptJunoApp)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
-    ASSERT_SUCCESS(tStatus, return tStatus)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus)
     // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
     // Get the logger
@@ -44,7 +44,7 @@ static JUNO_STATUS_T OnProcess(JUNO_APP_T *ptJunoApp)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
-    ASSERT_SUCCESS(tStatus, return tStatus)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus)
     // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
     // Get the logger
@@ -60,7 +60,7 @@ static JUNO_STATUS_T OnExit(JUNO_APP_T *ptJunoApp)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
-    ASSERT_SUCCESS(tStatus, return tStatus)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus)
     // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
     // Get the logger
@@ -81,11 +81,11 @@ static const JUNO_APP_API_T tTemplateAppApi{
 static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp)
 {
     // Assert the pointer is not null
-    ASSERT_EXISTS(ptJunoApp);
+    JUNO_ASSERT_EXISTS(ptJunoApp);
     // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
     // Assert the module dependencies are present
-    ASSERT_EXISTS_MODULE(
+    JUNO_JUNO_ASSERT_EXISTS_MODULE(
         /* TODO: Assert other dependencies and members here using &&*/
         ptTemplateApp &&
         ptTemplateApp->tRoot.ptApi,
@@ -109,13 +109,13 @@ JUNO_STATUS_T TemplateApp(
     JUNO_USER_DATA_T *pvFailureUserData
 )
 {
-    ASSERT_EXISTS(ptJunoApp);
+    JUNO_ASSERT_EXISTS(ptJunoApp);
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
     ptTemplateApp->tRoot.ptApi = &tTemplateAppApi;
     ptTemplateApp->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     ptTemplateApp->tRoot.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptJunoApp);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     ptTemplateApp->ptLogger = ptLogger;
     return tStatus;
 }

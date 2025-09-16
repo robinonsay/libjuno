@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_memory block blockementation
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_MEMORY_BLOCK_H
 #define JUNO_MEMORY_BLOCK_H

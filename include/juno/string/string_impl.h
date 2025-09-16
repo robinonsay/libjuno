@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_string impl implementation
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_STRING_IMPL_H
 #define JUNO_STRING_IMPL_H

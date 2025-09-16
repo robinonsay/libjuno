@@ -27,7 +27,7 @@ static JUNO_STATUS_T ExampleFunction(TEMPLATE_T *ptTemplate)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptTemplate);
-    ASSERT_SUCCESS(tStatus, return tStatus)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus)
     TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
     /*
     
@@ -48,9 +48,9 @@ static const TEMPLATE_API_T tTemplateImplApi = {
 
 static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
 {
-    ASSERT_EXISTS(ptTemplate);
+    JUNO_ASSERT_EXISTS(ptTemplate);
     TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
-    ASSERT_EXISTS_MODULE(
+    JUNO_JUNO_ASSERT_EXISTS_MODULE(
         ptTemplate && ptTemplateImpl->tRoot.ptApi
         /* TODO: Assert other dependencies and members here using &&*/,
         ptTemplateImpl,
@@ -67,13 +67,13 @@ static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
 /* TODO: Insert initialization arguments for module members here*/
 JUNO_STATUS_T Template_ImplApi(TEMPLATE_T *ptTemplate, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
-    ASSERT_EXISTS(ptTemplate);
+    JUNO_ASSERT_EXISTS(ptTemplate);
     TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
     ptTemplateImpl->tRoot.ptApi = &tTemplateImplApi;
     ptTemplateImpl->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     ptTemplateImpl->tRoot.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptTemplate);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     /*
     
     TODO: Assign private members here

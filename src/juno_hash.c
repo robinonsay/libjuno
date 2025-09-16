@@ -22,9 +22,9 @@ static const JUNO_HASH_API_T tJunoHashDjb2Api;
 
 static inline JUNO_STATUS_T Verify(JUNO_HASH_T *ptJunoHash)
 {
-    ASSERT_EXISTS(ptJunoHash);
+    JUNO_ASSERT_EXISTS(ptJunoHash);
     JUNO_HASH_DJB2_T *ptJunoHashDjb2 = (JUNO_HASH_DJB2_T *)(ptJunoHash);
-    ASSERT_EXISTS_MODULE(
+    JUNO_JUNO_ASSERT_EXISTS_MODULE(
         ptJunoHash && ptJunoHashDjb2->JUNO_MODULE_SUPER.ptApi
         /* TODO: Assert other dependencies and members here using &&*/,
         ptJunoHashDjb2,
@@ -42,7 +42,7 @@ static JUNO_STATUS_T Hash(JUNO_HASH_T *ptJunoHash, const uint8_t *pcBuff, size_t
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoHash);
-    ASSERT_SUCCESS(tStatus, return tStatus)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus)
     size_t zHash = 5381;
     for(size_t i = 0; i < zBuffSize; i++)
     {
@@ -59,12 +59,12 @@ static const JUNO_HASH_API_T tJunoHashDjb2Api = {
 
 JUNO_STATUS_T JunoHash_Djb2Api(JUNO_HASH_T *ptJunoHash, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
-    ASSERT_EXISTS(ptJunoHash);
+    JUNO_ASSERT_EXISTS(ptJunoHash);
     JUNO_HASH_DJB2_T *ptJunoHashDjb2 = (JUNO_HASH_DJB2_T *)(ptJunoHash);
     ptJunoHashDjb2->JUNO_MODULE_SUPER.ptApi = &tJunoHashDjb2Api;
     ptJunoHashDjb2->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     ptJunoHashDjb2->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptJunoHash);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }

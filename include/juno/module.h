@@ -215,29 +215,29 @@
 
 
 /**
- * @def JUNO_MODULE_RESULT(NAME_T, SUCCESS_T)
+ * @def JUNO_MODULE_RESULT(NAME_T, OK_T)
  * @brief Defines a result type combining a status and a success payload.
  * @param NAME_T Name of the result struct to define.
- * @param SUCCESS_T Type of the success payload contained in the result.
+ * @param OK_T Type of the success payload contained in the result.
  */
-#define JUNO_MODULE_RESULT(NAME_T, SUCCESS_T) \
+#define JUNO_MODULE_RESULT(NAME_T, OK_T) \
 typedef struct NAME_T \
 { \
     JUNO_STATUS_T tStatus; \
-    SUCCESS_T tSuccess; \
+    OK_T tOk; \
 } NAME_T
 
-#define JUNO_RESULT(SUCCESS_T) \
+#define JUNO_RESULT(OK_T) \
 { \
     JUNO_STATUS_T tStatus; \
-    SUCCESS_T tSuccess; \
+    OK_T tOk; \
 }
 
 /**
- * @def JUNO_MODULE_OPTION(NAME_T, SUCCESS_T)
+ * @def JUNO_MODULE_OPTION(NAME_T, OK_T)
  * @brief Defines an option type combining a flag to indicate some and a success payload.
  * @param NAME_T Name of the result struct to define.
- * @param SUCCESS_T Type of the success payload contained in the result.
+ * @param OK_T Type of the success payload contained in the result.
  */
 #define JUNO_MODULE_OPTION(NAME_T, SOME_T) \
 typedef struct NAME_T \

@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_msg library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_MSG_API_H
 #define JUNO_MSG_API_H

@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_ds library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_DS_API_H
 #define JUNO_DS_API_H
@@ -116,7 +116,7 @@ typedef struct JUNO_DS_HEAP_API_TAG  JUNO_DS_HEAP_API_T;    /**< API vtable you 
 
 /**
  * @brief Result type carrying an index on success.
- * tStatus conveys success/error; tSuccess holds the index.
+ * tStatus conveys success/error; tOk holds the index.
  */
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_RESULT_T, size_t);
 
@@ -131,7 +131,7 @@ JUNO_MODULE_OPTION(JUNO_DS_HEAP_INDEX_OPTION_T, size_t);
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_OPTION_RESULT_T, JUNO_DS_HEAP_INDEX_OPTION_T);
 
 /**
- * @brief Result of a comparison: tSuccess=true means the heap property holds
+ * @brief Result of a comparison: tOk=true means the heap property holds
  * between the given parent and child indices; false means it does not.
  */
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_COMPARE_RESULT_T, bool);
@@ -227,7 +227,7 @@ static inline JUNO_STATUS_T JunoDs_Heap_Verify(JUNO_DS_HEAP_ROOT_T *ptHeap)
  */
 static inline JUNO_STATUS_T JunoDs_Heap_Init(JUNO_DS_HEAP_ROOT_T *ptHeap, const JUNO_DS_HEAP_API_T *ptApi, size_t zCapacity)
 {
-    ASSERT_EXISTS(ptHeap);
+    JUNO_ASSERT_EXISTS(ptHeap);
     ptHeap->ptApi = ptApi;
     ptHeap->zCapacity = zCapacity;
     ptHeap->zLength = 0;
@@ -246,7 +246,7 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_D
 {
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     iIndex = 2 * iIndex + 1;
     if(iIndex > ptHeap->zCapacity || ptHeap->zLength > ptHeap->zCapacity)
     {
@@ -256,12 +256,12 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_D
     if(iIndex >= ptHeap->zLength)
     {
         tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tSuccess.bIsSome = false;
+        tResult.tOk.bIsSome = false;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tSuccess.bIsSome = true;
-    tResult.tSuccess.tSome = iIndex;
+    tResult.tOk.bIsSome = true;
+    tResult.tOk.tSome = iIndex;
     return tResult;
 }
 
@@ -273,7 +273,7 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_
 {
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     iIndex = 2 * iIndex + 2;
     if(iIndex > ptHeap->zCapacity || ptHeap->zLength > ptHeap->zCapacity)
     {
@@ -283,12 +283,12 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_
     if(iIndex >= ptHeap->zLength)
     {
         tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tSuccess.bIsSome = false;
+        tResult.tOk.bIsSome = false;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tSuccess.bIsSome = true;
-    tResult.tSuccess.tSome = iIndex;
+    tResult.tOk.bIsSome = true;
+    tResult.tOk.tSome = iIndex;
     return tResult;
 }
 
@@ -300,7 +300,7 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetParent(JUNO
 {
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     iIndex = (iIndex - 1)/2;
     if(iIndex > ptHeap->zCapacity || ptHeap->zLength > ptHeap->zCapacity)
     {
@@ -310,12 +310,12 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetParent(JUNO
     if(iIndex >= ptHeap->zLength)
     {
         tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tSuccess.bIsSome = false;
+        tResult.tOk.bIsSome = false;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tSuccess.bIsSome = true;
-    tResult.tSuccess.tSome = iIndex;
+    tResult.tOk.bIsSome = true;
+    tResult.tOk.tSome = iIndex;
     return tResult;
 }
 
@@ -326,20 +326,20 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetParent(JUNO
  * in your storage, then call JunoDs_Heap_Update(...) to bubble it up.
  *
  * @return A result where:
- *  - tStatus = SUCCESS and tSuccess = new index when there is capacity.
+ *  - tStatus = SUCCESS and tOk = new index when there is capacity.
  *  - tStatus = ERR when zLength >= zCapacity (no more space).
  */
 static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_DS_HEAP_INDEX_RESULT_T tResult = {JUNO_STATUS_SUCCESS, 0};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     if(ptHeap->zLength >= ptHeap->zCapacity)
     {
         tResult.tStatus = JUNO_STATUS_ERR;
         return tResult;
     }
-    tResult.tSuccess = ptHeap->zLength;
+    tResult.tOk = ptHeap->zLength;
     ptHeap->zLength += 1;
     return tResult;
 }
@@ -356,24 +356,24 @@ static inline JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = JunoDs_Heap_Verify(ptHeap);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     if(ptHeap->zLength <= 0)
     {
         tStatus = JUNO_STATUS_ERR;
         return tStatus;
     }
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T iIndexResult = JunoDs_Heap_ChildGetParent(ptHeap, ptHeap->zLength);
-    ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
-    if(!iIndexResult.tSuccess.bIsSome)
+    JUNO_ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
+    if(!iIndexResult.tOk.bIsSome)
     {
         return tStatus;
     }
-    size_t iIndex = iIndexResult.tSuccess.tSome;
+    size_t iIndex = iIndexResult.tOk.tSome;
     for(size_t i = 0; i <= iIndex; ++i)
     {
         size_t iCurrentIndex = iIndex - i;
         tStatus = JunoDs_Heap_SiftDown(ptHeap, iCurrentIndex);
-        ASSERT_SUCCESS(tStatus, continue);
+        JUNO_ASSERT_SUCCESS(tStatus, continue);
     }
     return tStatus;
 }
@@ -393,16 +393,16 @@ static inline JUNO_STATUS_T JunoDs_Heap_Delete(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;;
     tStatus = JunoDs_Heap_Verify(ptHeap);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     if(ptHeap->zLength <= 0)
     {
         tStatus = JUNO_STATUS_ERR;
         return tStatus;
     }
     tStatus = ptHeap->ptApi->Swap(ptHeap, ptHeap->zLength-1, 0);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     ptHeap->ptApi->Reset(ptHeap, ptHeap->zLength-1);
-    ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     ptHeap->zLength -= 1;
     return JunoDs_Heap_SiftDown(ptHeap, 0);
 }

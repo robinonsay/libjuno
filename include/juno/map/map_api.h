@@ -22,7 +22,7 @@
 
 /**
     This header contains the juno_map library API
-    @author
+    @author Robin Onsay
 */
 #ifndef JUNO_MAP_API_H
 #define JUNO_MAP_API_H
