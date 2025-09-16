@@ -85,6 +85,10 @@ static inline JUNO_STATUS_T JunoSm_StateVerify(JUNO_SM_STATE_ROOT_T *ptSmState)
 {
     JUNO_ASSERT_EXISTS(ptSmState);
     JUNO_ASSERT_EXISTS(ptSmState->ptApi && ptSmState->ptSm);
+    if(ptSmState->tOptionNextState.bIsSome)
+    {
+        JUNO_ASSERT_EXISTS(ptSmState->tOptionNextState.tSome);
+    }
     return JUNO_STATUS_SUCCESS;
 }
 
@@ -126,7 +130,7 @@ static inline JUNO_SM_RESULT_STATE_T JunoSm_GetCurrentState(JUNO_SM_ROOT_T *ptSm
 
 static inline JUNO_SM_RESULT_OPTION_STATE_T JunoSm_TransitionState(JUNO_SM_ROOT_T *ptSmRoot)
 {
-    JUNO_SM_RESULT_OPTION_STATE_T tResult = {JUNO_STATUS_ERR, NULL};
+    JUNO_SM_RESULT_OPTION_STATE_T tResult = {JUNO_STATUS_ERR, {}};
     tResult.tStatus = JunoSm_Verify(ptSmRoot);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     tResult.tStatus = JUNO_STATUS_SUCCESS;
