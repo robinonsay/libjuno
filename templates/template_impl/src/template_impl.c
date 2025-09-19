@@ -50,7 +50,7 @@ static inline JUNO_STATUS_T Verify(TEMPLATE_T *ptTemplate)
 {
     JUNO_ASSERT_EXISTS(ptTemplate);
     TEMPLATE_IMPL_T *ptTemplateImpl = (TEMPLATE_IMPL_T *)(ptTemplate);
-    JUNO_JUNO_ASSERT_EXISTS_MODULE(
+    JUNO_ASSERT_EXISTS_MODULE(
         ptTemplate && ptTemplateImpl->JUNO_MODULE_SUPER.ptApi
         /* TODO: Assert other dependencies and members here using &&*/,
         ptTemplateImpl,

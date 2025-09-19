@@ -38,7 +38,7 @@ if(!(ptr)) \
     @param ptMod The module
     @param str The error message if `ptr` fails assertion
 */
-#define JUNO_JUNO_ASSERT_EXISTS_MODULE(ptr, ptMod, str) if(!(ptr)) \
+#define JUNO_ASSERT_EXISTS_MODULE(ptr, ptMod, str) if(!(ptr)) \
 { \
     JUNO_FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptMod, str); \
     return JUNO_STATUS_NULLPTR_ERROR; \

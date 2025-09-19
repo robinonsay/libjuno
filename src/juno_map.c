@@ -30,7 +30,7 @@ static inline JUNO_STATUS_T Verify(JUNO_MAP_T *ptJunoMap)
 {
     JUNO_ASSERT_EXISTS(ptJunoMap);
     JUNO_MAP_IMPL_T *ptJunoMapImpl = (JUNO_MAP_IMPL_T *)(ptJunoMap);
-    JUNO_JUNO_ASSERT_EXISTS_MODULE(
+    JUNO_ASSERT_EXISTS_MODULE(
         ptJunoMap &&
         ptJunoMapImpl->JUNO_MODULE_SUPER.ptApi &&
         ptJunoMapImpl->JUNO_MODULE_SUPER.ptMapKeys &&

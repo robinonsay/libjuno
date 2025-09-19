@@ -85,7 +85,7 @@ static inline JUNO_STATUS_T Verify(JUNO_APP_T *ptJunoApp)
     // Cast to the template app
     TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
     // Assert the module dependencies are present
-    JUNO_JUNO_ASSERT_EXISTS_MODULE(
+    JUNO_ASSERT_EXISTS_MODULE(
         /* TODO: Assert other dependencies and members here using &&*/
         ptTemplateApp &&
         ptTemplateApp->tRoot.ptApi,

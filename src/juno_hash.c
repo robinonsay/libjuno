@@ -24,7 +24,7 @@ static inline JUNO_STATUS_T Verify(JUNO_HASH_T *ptJunoHash)
 {
     JUNO_ASSERT_EXISTS(ptJunoHash);
     JUNO_HASH_DJB2_T *ptJunoHashDjb2 = (JUNO_HASH_DJB2_T *)(ptJunoHash);
-    JUNO_JUNO_ASSERT_EXISTS_MODULE(
+    JUNO_ASSERT_EXISTS_MODULE(
         ptJunoHash && ptJunoHashDjb2->JUNO_MODULE_SUPER.ptApi
         /* TODO: Assert other dependencies and members here using &&*/,
         ptJunoHashDjb2,

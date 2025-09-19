@@ -27,7 +27,7 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_T *ptJunoMemory)
 {
     JUNO_ASSERT_EXISTS(ptJunoMemory);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
-    JUNO_JUNO_ASSERT_EXISTS_MODULE(
+    JUNO_ASSERT_EXISTS_MODULE(
         ptJunoMemory &&
         ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi &&
         ptJunoMemoryBlock->pvMemory &&
