@@ -24,8 +24,9 @@
     This header contains the juno_msg library API
     @author Robin Onsay
 */
-#ifndef JUNO_MSG_API_H
-#define JUNO_MSG_API_H
+#ifndef JUNO_BROKER_API_H
+#define JUNO_BROKER_API_H
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include <stdio.h>
@@ -34,33 +35,36 @@ extern "C"
 {
 #endif
 
-typedef struct JUNO_MSG_API_TAG JUNO_MSG_API_T;
-typedef struct JUNO_MSG_BUFFER_HDR_TAG JUNO_MSG_BUFFER_T;
+typedef struct JUNO_BROKER_API_TAG JUNO_BROKER_API_T;
+typedef struct JUNO_MSG_BUFFER_HDR_TAG JUNO_MSG_BUFFER_HDR_T;
 
 typedef union JUNO_MSG_TAG JUNO_MSG_T;
 typedef struct JUNO_MSG_ROOT_TAG JUNO_MSG_ROOT_T;
 
 struct JUNO_MSG_BUFFER_HDR_TAG
 {
-    void *pvBuffer;
+    JUNO_MSG_BUFFER_HDR_T *ptNext;
     size_t zBufferSize;
 };
 
-struct JUNO_MSG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MSG_API_T,
-    const JUNO_MSG_BUFFER_T *ptBuffer;
+/// Creates a new buffer
+#define JunoMsg_NewBuffer(BUFFER_T, ...)  {{NULL, sizeof(BUFFER_T)}, __VA_ARGS__}
+
+struct JUNO_MSG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BROKER_API_T,
+    JUNO_MEMORY_ALLOC_T *ptAlloc;
 );
 
-struct JUNO_MSG_API_TAG
+struct JUNO_BROKER_API_TAG
 {
     /// Verify the message
     JUNO_STATUS_T (*VerifyMsg)(JUNO_MSG_T *ptJunoMsg);
     /// Get the message buffer
-    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T *ptRetBuffer);
+    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_HDR_T *ptRetBuffer);
     /// Set the message buffer
-    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T tRetBuffer);
+    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_HDR_T tRetBuffer);
 };
 
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_MSG_API_H
+#endif // JUNO_BROKER_API_H
