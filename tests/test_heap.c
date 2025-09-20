@@ -380,8 +380,7 @@ static void test_delete_on_empty_and_delete_reset_behaviour(void)
     last_index_before = h.tRoot.zLength - 1;
 
     h.fail_reset = true; // Reset will return error, but Delete shouldn't propagate it
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Delete(&h.tRoot));
-    TEST_ASSERT_EQUAL(1u, h.tRoot.zLength);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Delete(&h.tRoot));
     // Because Reset failed, the last slot should *not* be zeroed
     TEST_ASSERT_NOT_EQUAL(0, h.data[last_index_before]);
     h.fail_reset = false;

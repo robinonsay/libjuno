@@ -10,6 +10,9 @@ option(JUNO_COVERAGE "Compile Juno with code coverage" OFF)
 option(JUNO_DOCS "Enable doxygen docs" OFF)
 option(JUNO_PIC "Compile Juno with Position Independent Code" ON)
 option(JUNO_SHARED "Compile the juno shared library" OFF)
+option(JUNO_FREESTANDING "Compile as a freestanding library" OFF)
+option(JUNO_ASAN "Compile ASAN" OFF)
+option(JUNO_UBSAN "Compile with UBSAN" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
@@ -83,17 +86,38 @@ foreach(lib ${JUNO_LIBS})
         PRIVATE
         ${PROJECT_SOURCE_DIR}/src
     )
+    if(JUNO_FREESTANDING)
+        list(APPEND JUNO_COMPILE_C_OPTIONS
+            -nostdlib
+            -ffreestanding
+        )
+        target_link_options(${lib} PRIVATE
+            -nostdlib
+        )
+    endif()
+    if(JUNO_ASAN)
+        add_compile_options(
+            -fsanitize=address
+        )
+        add_link_options(
+            -fsanitize=address
+        )
+    endif()
+    if(JUNO_UBSAN)
+        add_compile_options( 
+            -fsanitize=undefined
+        )
+        add_link_options(
+            -fsanitize=undefined
+        )
+    endif()
     # Enable a comprehensive set of warnings
     target_compile_options(${lib} PRIVATE
         ${JUNO_COMPILE_OPTIONS}
         $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
         $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
-        -nostdlib
-        -ffreestanding                  # Disable the hosted environment
     )
-    target_link_options(${lib} PRIVATE
-        -nostdlib
-    )
+
 endforeach()
 
 if(JUNO_SHARED)

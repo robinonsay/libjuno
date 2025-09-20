@@ -104,6 +104,11 @@ static inline JUNO_STATUS_T JunoSm_StateInit(JUNO_SM_ROOT_T *ptSm, JUNO_SM_STATE
         ptStateRoot->tOptionNextState.bIsSome = true;
         ptStateRoot->tOptionNextState.tSome = (JUNO_SM_STATE_T *) ptNextState;
     }
+    else
+    {
+        ptStateRoot->tOptionNextState.bIsSome = false;
+        ptStateRoot->tOptionNextState.tSome = NULL;
+    }
     return JunoSm_StateVerify(ptStateRoot);
 }
 
@@ -114,7 +119,7 @@ static inline JUNO_STATUS_T JunoSm_Init(JUNO_SM_ROOT_T *ptSmRoot, JUNO_SM_STATE_
     ptSmRoot->_pfcnFailureHandler = pfcnFailureHandler;
     ptSmRoot->_pvFailureUserData = pvFailureUserData;
     JUNO_STATUS_T tStatus = JunoSm_Verify(ptSmRoot);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     return tStatus;
 }
 
@@ -122,7 +127,7 @@ static inline JUNO_SM_RESULT_STATE_T JunoSm_GetCurrentState(JUNO_SM_ROOT_T *ptSm
 {
     JUNO_SM_RESULT_STATE_T tResult = {JUNO_STATUS_ERR, NULL};
     tResult.tStatus = JunoSm_Verify(ptSmRoot);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk = ptSmRoot->ptCurrentState;
     return tResult;
@@ -130,9 +135,11 @@ static inline JUNO_SM_RESULT_STATE_T JunoSm_GetCurrentState(JUNO_SM_ROOT_T *ptSm
 
 static inline JUNO_SM_RESULT_OPTION_STATE_T JunoSm_TransitionState(JUNO_SM_ROOT_T *ptSmRoot)
 {
-    JUNO_SM_RESULT_OPTION_STATE_T tResult = {JUNO_STATUS_ERR, {}};
+    JUNO_SM_RESULT_OPTION_STATE_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR,
+        JUNO_NONE_OPTION(NULL)
+    ); 
     tResult.tStatus = JunoSm_Verify(ptSmRoot);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     JUNO_SM_STATE_ROOT_T *ptCurrentStateRoot = (JUNO_SM_STATE_ROOT_T*) ptSmRoot->ptCurrentState;
     if(ptCurrentStateRoot->tOptionNextState.bIsSome)

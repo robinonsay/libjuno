@@ -125,7 +125,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_QueuePeek(JUNO_BUFF_QUEUE_T *ptQueue)
     if(ptQueueRoot->zLength == 0)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Failed to enqueue data");
+        JUNO_FAIL(tResult.tStatus, ptQueueRoot->_pfcnFailureHandler, ptQueueRoot->_pvFailureUserData, "Queue is empty");
         return tResult;
     }
     tResult.tOk = ptQueueRoot->iStartIndex;

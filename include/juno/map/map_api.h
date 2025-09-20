@@ -90,7 +90,7 @@ static inline JUNO_STATUS_T JunoMap_Verify(JUNO_MAP_ROOT_T *ptMap)
 {
     JUNO_ASSERT_EXISTS(ptMap);
     JUNO_STATUS_T tStatus = JunoMap_VerifyApi(ptMap->ptApi);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     JUNO_ASSERT_EXISTS(ptMap->zCapacity);
     return tStatus;
 }
@@ -103,17 +103,17 @@ static inline JUNO_STATUS_T JunoMap_Set(JUNO_MAP_ROOT_T *ptJunoMap, void *ptKey,
 {
     // verify the map
     JUNO_STATUS_T tStatus = JunoMap_Verify(ptJunoMap);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     // Get the index for the key
     JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, ptKey);
     tStatus = tSizeResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     // Set the key for the index
     tStatus = ptJunoMap->ptApi->SetKey(tSizeResult.tOk, ptKey);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     // Set the value for the index
     tStatus = ptJunoMap->ptApi->SetValue(tSizeResult.tOk, ptValue);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     return tStatus;
 }
 
@@ -122,15 +122,15 @@ static inline JUNO_RESULT_VOID_PTR_T JunoMap_Get(JUNO_MAP_ROOT_T *ptJunoMap, voi
 {
     JUNO_RESULT_VOID_PTR_T tResult = {0, NULL};
     tResult.tStatus = JunoMap_Verify(ptJunoMap);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     // Get the index for the key
     JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, ptKey);
     tResult.tStatus = tSizeResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     // Check if the value at the index is empty
     JUNO_RESULT_BOOL_T tBoolResult = ptJunoMap->ptApi->IsEmpty(tSizeResult.tOk);
     tResult.tStatus = tBoolResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     bool bIsEmpty = tBoolResult.tOk;
     if(bIsEmpty)
     {
@@ -146,15 +146,15 @@ static inline JUNO_RESULT_VOID_PTR_T JunoMap_Get(JUNO_MAP_ROOT_T *ptJunoMap, voi
 static inline JUNO_STATUS_T JunoMap_Remove(JUNO_MAP_ROOT_T *ptJunoMap, void *ptKey)
 {
     JUNO_STATUS_T tStatus = JunoMap_Verify(ptJunoMap);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     // Get the index for the given key
     JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, ptKey);
     tStatus = tSizeResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     // Check if the key is empty
     JUNO_RESULT_BOOL_T tBoolResult = ptJunoMap->ptApi->IsEmpty(tSizeResult.tOk);
     tStatus = tBoolResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     bool bIsEmpty = tBoolResult.tOk;
     if(bIsEmpty)
     {
@@ -163,7 +163,7 @@ static inline JUNO_STATUS_T JunoMap_Remove(JUNO_MAP_ROOT_T *ptJunoMap, void *ptK
     }
     //  Remove the key, value at the index
     tStatus = ptJunoMap->ptApi->Remove(tSizeResult.tOk);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     return tStatus;
 }
 

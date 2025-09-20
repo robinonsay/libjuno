@@ -17,7 +17,7 @@
 
 #ifndef JUNO_TYPES_H
 #define JUNO_TYPES_H
-#include "module.h"
+#include "juno/module.h"
 #ifdef __cplusplus
 extern "C"
 {

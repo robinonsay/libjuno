@@ -21,7 +21,7 @@
 */
 
 /**
-    This header contains the juno_memory block blockementation
+    This header contains the juno_memory block implementation
     @author Robin Onsay
 */
 #ifndef JUNO_MEMORY_BLOCK_H
@@ -70,8 +70,8 @@ struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
 
 #ifndef JUNO_MEMORY_CUSTOM
 /**
-    This is the default blockementation for `JUNO_MEMORY_T`.
-    If you want to derive new blockementations for `JUNO_MEMORY_T`
+    This is the default implementation for `JUNO_MEMORY_T`.
+    If you want to derive new implementations for `JUNO_MEMORY_T`
     use `#define JUNO_MEMORY_DERIVED` prior to including
     `#include "juno_memory_block.h"`
 

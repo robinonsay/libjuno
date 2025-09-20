@@ -73,7 +73,7 @@ JUNO_STATUS_T Template_ImplApi(TEMPLATE_T *ptTemplate, JUNO_FAILURE_HANDLER_T pf
     ptTemplateImpl->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     ptTemplateImpl->tRoot.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptTemplate);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     /*
     
     TODO: Assign private members here

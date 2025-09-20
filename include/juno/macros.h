@@ -49,9 +49,9 @@ if(!(ptr)) \
     @param tStatus The status to assert
     @param failOp The failure operation
 */
-#define JUNO_ASSERT_SUCCESS(tStatus, failOp) if(tStatus != JUNO_STATUS_SUCCESS) \
+#define JUNO_ASSERT_SUCCESS(tStatus, ...) if(tStatus != JUNO_STATUS_SUCCESS) \
 { \
-    failOp; \
+    __VA_ARGS__ \
 }
 
 

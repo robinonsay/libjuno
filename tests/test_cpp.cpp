@@ -15,6 +15,7 @@
 #include "juno/sb/publisher_api.h"
 #include "juno/sb/subscriber_api.h"
 #include "juno/string/string_api.h"
+#include "juno/sm/sm_api.h"
 
 int main()
 {

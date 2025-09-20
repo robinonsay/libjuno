@@ -21,7 +21,7 @@
 */
 
 /**
-    This header contains the juno_hash djb2 djb2ementation
+    This header contains the juno_hash djb2 implementation
     @author Robin Onsay
 */
 #ifndef JUNO_HASH_DJB2_H

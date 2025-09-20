@@ -115,7 +115,7 @@ JUNO_STATUS_T TemplateApp(
     ptTemplateApp->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     ptTemplateApp->tRoot.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     JUNO_STATUS_T tStatus = Verify(ptJunoApp);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     ptTemplateApp->ptLogger = ptLogger;
     return tStatus;
 }

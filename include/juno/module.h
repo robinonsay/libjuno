@@ -17,9 +17,9 @@
 #ifndef JUNO_MODULE_H
 #define JUNO_MODULE_H
 
-#include "status.h"
+#include "juno/status.h"
 #include <stdint.h>
-
+#include <stdbool.h>
 /**DOC
     ## Overview
     LibJuno implements dependency injection through modules
@@ -227,12 +227,10 @@ typedef struct NAME_T \
     OK_T tOk; \
 } NAME_T
 
-#define JUNO_RESULT(OK_T) \
-{ \
-    JUNO_STATUS_T tStatus; \
-    OK_T tOk; \
-}
-
+#define JUNO_OK(result, ...) result.tOk
+#define JUNO_ASSERT_OK(result, ...) JUNO_ASSERT_SUCCESS(result.tStatus, __VA_ARGS__)
+#define JUNO_OK_RESULT(value) {JUNO_STATUS_SUCCESS, value}
+#define JUNO_ERR_RESULT(err, value) {err, value}
 /**
  * @def JUNO_MODULE_OPTION(NAME_T, OK_T)
  * @brief Defines an option type combining a flag to indicate some and a success payload.
@@ -246,10 +244,11 @@ typedef struct NAME_T \
     SOME_T tSome; \
 } NAME_T
 
-#define JUNO_OPTION(SOME_T) \
-{ \
-    bool bIsSome; \
-    SOME_T tSome; \
+#define JUNO_SOME(result, ...) result.tSome
+#define JUNO_ASSERT_SOME(result, ...) if(!result.bIsSome){ \
+    __VA_ARGS__  \
 }
+#define JUNO_SOME_OPTION(value) {true, value}
+#define JUNO_NONE_OPTION(default_value) {false, default_value}
 
 #endif // JUNO_MODULE_H

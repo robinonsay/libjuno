@@ -15,17 +15,17 @@
     included in all copies or substantial portions of the Software.
 */
 #include "juno/crc/crc.h"
-#include <stdint.h>
-#include "arc.h"
+#include "crc/ccitt32.h"
 
-uint16_t Juno_CrcArcUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
+uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, const void *pcData, size_t zDataSize)
 {
-    register uint16_t crc = iCrc;
+
+    register uint32_t crc = iCrc;
     register const uint8_t *cp = pcData;
     register size_t cnt = zDataSize;
 
     while(cnt--) {
-	crc=((crc>>8)&M1_16)^arc_crctab[(crc&0xff)^*cp++];
+	crc=((crc<<8)&M2_32)^ccitt32_crctab[((crc>>24)&0xff)^*cp++];
     }
 
     return(crc);

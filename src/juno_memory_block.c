@@ -49,7 +49,7 @@ static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     if(!zSize)
     {
@@ -105,7 +105,7 @@ static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUN
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMem = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     if(zNewSize > ptMem->zTypeSize)
     {
@@ -122,7 +122,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_T *ptJunoMemory, JUNO_M
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     JUNO_ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
     JUNO_MEMORY_T tMemory = *ptMemory;
@@ -227,6 +227,6 @@ JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_T *ptJunoMemory,
     // Initially, no freed blocks are available
     ptJunoMemoryBlock->zFreed = 0;
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     return tStatus;
 }

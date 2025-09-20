@@ -246,7 +246,7 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_D
 {
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     iIndex = 2 * iIndex + 1;
     if(iIndex > ptHeap->zCapacity || ptHeap->zLength > ptHeap->zCapacity)
     {
@@ -273,7 +273,7 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_
 {
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     iIndex = 2 * iIndex + 2;
     if(iIndex > ptHeap->zCapacity || ptHeap->zLength > ptHeap->zCapacity)
     {
@@ -300,7 +300,7 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetParent(JUNO
 {
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     iIndex = (iIndex - 1)/2;
     if(iIndex > ptHeap->zCapacity || ptHeap->zLength > ptHeap->zCapacity)
     {
@@ -333,7 +333,7 @@ static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T
 {
     JUNO_DS_HEAP_INDEX_RESULT_T tResult = {JUNO_STATUS_SUCCESS, 0};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult;)
     if(ptHeap->zLength >= ptHeap->zCapacity)
     {
         tResult.tStatus = JUNO_STATUS_ERR;
@@ -356,14 +356,18 @@ static inline JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = JunoDs_Heap_Verify(ptHeap);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    if(ptHeap->zLength <= 0)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
+    if(ptHeap->zLength < 0)
     {
         tStatus = JUNO_STATUS_ERR;
         return tStatus;
     }
+    if(ptHeap->zLength < 0)
+    {
+        return tStatus;
+    }
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T iIndexResult = JunoDs_Heap_ChildGetParent(ptHeap, ptHeap->zLength);
-    JUNO_ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
+    JUNO_ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus;)
     if(!iIndexResult.tOk.bIsSome)
     {
         return tStatus;
@@ -373,7 +377,7 @@ static inline JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
     {
         size_t iCurrentIndex = iIndex - i;
         tStatus = JunoDs_Heap_SiftDown(ptHeap, iCurrentIndex);
-        JUNO_ASSERT_SUCCESS(tStatus, continue);
+        JUNO_ASSERT_SUCCESS(tStatus, continue;)
     }
     return tStatus;
 }
@@ -393,16 +397,16 @@ static inline JUNO_STATUS_T JunoDs_Heap_Delete(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;;
     tStatus = JunoDs_Heap_Verify(ptHeap);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     if(ptHeap->zLength <= 0)
     {
         tStatus = JUNO_STATUS_ERR;
         return tStatus;
     }
     tStatus = ptHeap->ptApi->Swap(ptHeap, ptHeap->zLength-1, 0);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    ptHeap->ptApi->Reset(ptHeap, ptHeap->zLength-1);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
+    tStatus = ptHeap->ptApi->Reset(ptHeap, ptHeap->zLength-1);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
     ptHeap->zLength -= 1;
     return JunoDs_Heap_SiftDown(ptHeap, 0);
 }
