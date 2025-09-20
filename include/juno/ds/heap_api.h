@@ -357,14 +357,9 @@ static inline JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = JunoDs_Heap_Verify(ptHeap);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
-    if(ptHeap->zLength < 0)
+    if(ptHeap->zLength == 0)
     {
-        tStatus = JUNO_STATUS_ERR;
-        return tStatus;
-    }
-    if(ptHeap->zLength < 0)
-    {
-        return tStatus;
+        return JUNO_STATUS_ERR;
     }
     JUNO_DS_HEAP_INDEX_OPTION_RESULT_T iIndexResult = JunoDs_Heap_ChildGetParent(ptHeap, ptHeap->zLength);
     JUNO_ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus;)
@@ -387,11 +382,15 @@ static inline JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
  *
  * Algorithm:
  *  - Swap the root and the last element.
- *  - Call Reset on the last index (its return value is ignored by design).
+ *  - Call Reset on the last index.
  *  - Decrement zLength and SiftDown from the root.
  *
+ * Error propagation:
+ *  - If Reset returns an error, the delete operation returns that error (it is
+ *    not ignored).
+ *
  * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if zLength == 0 or
- *         if Swap/SiftDown report an error.
+ *         if Swap/Reset/SiftDown report an error.
  */
 static inline JUNO_STATUS_T JunoDs_Heap_Delete(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {

@@ -21,9 +21,15 @@
 */
 
 /**
-    This header contains the juno_msg library API
-    @author Robin Onsay
-*/
+ * @file include/juno/sb/broker_api.h
+ * @brief Juno broker API.
+ *
+ * Defines a broker interface that may work with JUNO_MSG_T messages.
+ * Note: This header intentionally uses a broker-specific buffer header
+ * type (JUNO_BROKER_BUFFER_HDR_T) to avoid conflicts with msg_api.h.
+ *
+ * @author Robin Onsay
+ */
 #ifndef JUNO_BROKER_API_H
 #define JUNO_BROKER_API_H
 #include "juno/memory/memory_api.h"
@@ -36,19 +42,19 @@ extern "C"
 #endif
 
 typedef struct JUNO_BROKER_API_TAG JUNO_BROKER_API_T;
-typedef struct JUNO_MSG_BUFFER_HDR_TAG JUNO_MSG_BUFFER_HDR_T;
+typedef struct JUNO_BROKER_BUFFER_HDR_TAG JUNO_BROKER_BUFFER_HDR_T;
 
 typedef union JUNO_MSG_TAG JUNO_MSG_T;
 typedef struct JUNO_MSG_ROOT_TAG JUNO_MSG_ROOT_T;
 
-struct JUNO_MSG_BUFFER_HDR_TAG
+struct JUNO_BROKER_BUFFER_HDR_TAG
 {
-    JUNO_MSG_BUFFER_HDR_T *ptNext;
+    JUNO_BROKER_BUFFER_HDR_T *ptNext;
     size_t zBufferSize;
 };
 
 /// Creates a new buffer
-#define JunoMsg_NewBuffer(BUFFER_T, ...)  {{NULL, sizeof(BUFFER_T)}, __VA_ARGS__}
+#define JunoBroker_NewBuffer(BUFFER_T, ...)  {{NULL, sizeof(BUFFER_T)}, __VA_ARGS__}
 
 struct JUNO_MSG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BROKER_API_T,
     JUNO_MEMORY_ALLOC_T *ptAlloc;
@@ -58,10 +64,10 @@ struct JUNO_BROKER_API_TAG
 {
     /// Verify the message
     JUNO_STATUS_T (*VerifyMsg)(JUNO_MSG_T *ptJunoMsg);
-    /// Get the message buffer
-    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_HDR_T *ptRetBuffer);
-    /// Set the message buffer
-    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_HDR_T tRetBuffer);
+    /// Get the message buffer header (out parameter)
+    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, JUNO_BROKER_BUFFER_HDR_T *ptRetBuffer);
+    /// Set the message buffer header (by value)
+    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_BROKER_BUFFER_HDR_T tBuffer);
 };
 
 #ifdef __cplusplus

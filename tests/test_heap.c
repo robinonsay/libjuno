@@ -373,7 +373,7 @@ static void test_delete_on_empty_and_delete_reset_behaviour(void)
     TEST_ASSERT_EQUAL(1u, h.tRoot.zLength);
     TEST_ASSERT_EQUAL(0, h.data[last_index_before]); // Reset should have zeroed this
 
-    // Now demonstrate that Delete ignores Reset errors (it still returns success)
+    // Now demonstrate that Delete propagates Reset errors (it should return an error)
     make_heap(&h, &kMaxApi, 8);
     ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tOk] = 5; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));
     ir = JunoDs_Heap_Insert(&h.tRoot); h.data[ir.tOk] = 4; TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoDs_Heap_Update(&h.tRoot));

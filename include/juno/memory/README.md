@@ -159,10 +159,14 @@ if(tStatus != JUNO_STATUS_SUCCESS) {
 For a more dynamic approach, you can use the Memory API interface:
 
 ```c
+#include "juno/memory/memory_api.h"
+#include "juno/memory/memory_block.h"
 
-// Use the API for operations
+// Access the allocator API vtable through the union's ptApi field
+const JUNO_MEMORY_ALLOC_API_T *ptMemApi = tMemAlloc.ptApi;
+
 JUNO_MEMORY_T tMemory = {0};
-tStatus = ptMemApi->Get(&tMemAlloc, &tMemory, sizeof(MY_DATA_T));
+JUNO_STATUS_T tStatus = ptMemApi->Get(&tMemAlloc, &tMemory, sizeof(MY_DATA_T));
 
 // ... use the memory ...
 
@@ -282,13 +286,13 @@ union JUNO_MEMORY_ALLOC_TAG
 
 ```c
 JUNO_STATUS_T JunoMemory_BlockApi(
-    JUNO_MEMORY_BLOCK_T *ptMemBlk,
+    JUNO_MEMORY_ALLOC_T *ptJunoMemory,
     void *pvMemory,
-    JUNO_MEMORY_BLOCK_METADATA_T *pvMetadata,
+    JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvUserData
+    JUNO_USER_DATA_T *pvFailureUserData
 );
 ```
 
@@ -301,44 +305,21 @@ Initializes a memory block for allocation. Parameters:
 - `pfcnFailureHandler`: Optional callback function to handle failures
 - `pvUserData`: Optional user data passed to the failure handler
 
-### Memory Operations
+### Memory Operations (via API vtable)
 
 ```c
-JUNO_STATUS_T Juno_MemoryGet(
-    JUNO_MEMORY_ALLOC_T *ptMem,
-    JUNO_MEMORY_T *ptMemory,
-    size_t zSize
-);
+// Allocate
+JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zSize);
+
+// Resize (cannot exceed element size in block allocator)
+JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
+
+// Free
+JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory);
 ```
 
-Allocates memory from the specified allocator. Parameters:
-- `ptMem`: Pointer to the memory allocation structure
-- `ptMemory`: Pointer to store allocation details
-- `zSize`: Size of memory to allocate in bytes
-
-```c
-JUNO_STATUS_T Juno_MemoryUpdate(
-    JUNO_MEMORY_ALLOC_T *ptMem,
-    JUNO_MEMORY_T *ptMemory,
-    size_t zNewSize
-);
-```
-
-Updates an existing memory allocation to a new size. Parameters:
-- `ptMem`: Pointer to the memory allocator
-- `ptMemory`: The memory to update
-- `zNewSize`: The new size for the memory
-
-```c
-JUNO_STATUS_T Juno_MemoryPut(
-    JUNO_MEMORY_ALLOC_T *ptMem,
-    JUNO_MEMORY_T *ptMemory
-);
-```
-
-Releases memory back to the allocator. Parameters:
-- `ptMem`: Pointer to the memory allocation structure
-- `ptMemory`: Pointer to the memory to free
+Access these through `const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.ptApi;` then
+call `ptApi->Get(...)`, etc.
 
 ### Reference Management
 
@@ -362,9 +343,8 @@ Releases a reference to memory, decrementing its reference count. Parameters:
 The following example demonstrates how to use the Juno Memory Module to implement a simple single linked list with reference counting:
 
 ```c
-#include "juno/memory/memory.h"
 #include "juno/memory/memory_api.h"
-#include "juno/memory/memory_types.h"
+#include "juno/memory/memory_block.h"
 #include "juno/status.h"
 #include <stdio.h>
 
@@ -410,7 +390,7 @@ int main() {
     if(tStatus != JUNO_STATUS_SUCCESS) {
         return -1;
     }
-    const JUNO_MEMORY_API_T *ptMemApi = tMemAlloc.tBase.ptApi;
+    const JUNO_MEMORY_ALLOC_API_T *ptMemApi = tMemAlloc.ptApi;
 
     // Create a linked list
     SINGLE_LINKED_LIST_T tList = {

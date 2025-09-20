@@ -21,9 +21,18 @@
 */
 
 /**
-    This header contains the juno_msg library API
-    @author Robin Onsay
-*/
+ * @file include/juno/sb/msg_api.h
+ * @brief Juno message abstraction API.
+ *
+ * Provides a generic message type (JUNO_MSG_T) and buffer accessor API. The
+ * buffer is described by a pointer and a size. Implementations should set the
+ * buffer using SetBuffer and return it via GetBuffer.
+ *
+ * GetBuffer uses an out-parameter (non-const) to return the current buffer
+ * descriptor. SetBuffer accepts a buffer descriptor by value.
+ *
+ * @author Robin Onsay
+ */
 #ifndef JUNO_MSG_API_H
 #define JUNO_MSG_API_H
 #include "juno/status.h"
@@ -54,10 +63,10 @@ struct JUNO_MSG_API_TAG
 {
     /// Verify the message
     JUNO_STATUS_T (*VerifyMsg)(JUNO_MSG_T *ptJunoMsg);
-    /// Get the message buffer
-    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T *ptRetBuffer);
-    /// Set the message buffer
-    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T tRetBuffer);
+    /// Get the message buffer (out parameter)
+    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, JUNO_MSG_BUFFER_T *ptRetBuffer);
+    /// Set the message buffer (by value)
+    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T tBuffer);
 };
 
 #ifdef __cplusplus
