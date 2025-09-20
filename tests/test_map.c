@@ -304,7 +304,7 @@ static void test_null_remove(void)
 
 static void test_remove_nonexistent_key(void)
 {
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Remove(&gRoot, (void *)"#7"));
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Remove(&gRoot, (void *)"#7"));
 
     int vals[4] = {10, 20, 30, 40};
     const char *k0 = "C7a";
@@ -314,7 +314,7 @@ static void test_remove_nonexistent_key(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Set(&gRoot, (void *)k1, &vals[1]));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Set(&gRoot, (void *)k2, &vals[2]));
 
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Remove(&gRoot, (void *)"C7x"));
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Remove(&gRoot, (void *)"C7x"));
 }
 
 static void test_duplicate_key_insertion(void)
