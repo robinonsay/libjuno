@@ -26,36 +26,31 @@
 */
 #ifndef JUNO_HASH_DJB2_H
 #define JUNO_HASH_DJB2_H
-#include "juno/module.h"
 #include "juno/status.h"
-#include "juno/hash/hash_api.h"
+#include "juno/types.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
 
-typedef struct JUNO_HASH_DJB2_TAG JUNO_HASH_DJB2_T;
-
-struct JUNO_HASH_DJB2_TAG JUNO_MODULE_DERIVE(JUNO_HASH_ROOT_T, JUNO_MODULE_EMPTY);
-
-#ifdef JUNO_HASH_DEFAULT
-/**
-    This is the default djb2ementation for `JUNO_HASH_T`.
-    If you want to use the default djb2ementation for `JUNO_HASH_T`
-    use `#define JUNO_HASH_DEFAULT` prior to including
-    `#include "juno_hash_djb2.h"`
-
-    Note: If you are djb2ementing a derived module you will need
-    to djb2ement `JUNO_HASH_DJB2`.
-*/
-union JUNO_HASH_TAG JUNO_MODULE(JUNO_HASH_API_T, JUNO_HASH_ROOT_T,
-    JUNO_HASH_DJB2_T tJunoHashDjb2;
-);
-#endif
-
-/* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T JunoHash_Djb2Api(JUNO_HASH_T *ptJunoHash, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
+static inline JUNO_RESULT_SIZE_T JunoHash_Djb2(const uint8_t *pcBuff, size_t zBuffSize)
+{
+    JUNO_RESULT_SIZE_T tResult = {0, 0};
+    if(!(pcBuff))
+    {
+        tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
+        return tResult;
+    }
+    size_t zHash = 5381;
+    for(size_t i = 0; i < zBuffSize; i++)
+    {
+        zHash = ((zHash << 5) + zHash) + pcBuff[i];
+    }
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    tResult.tOk = zHash;
+    return tResult;
+}
 #ifdef __cplusplus
 }
 #endif

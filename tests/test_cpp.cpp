@@ -3,7 +3,6 @@
 #include "juno/ds/buff_stack_api.h"
 #include "juno/ds/heap_api.h"
 #include "juno/crc/crc.h"
-#include "juno/hash/hash_api.h"
 #include "juno/io/async_io_api.h"
 #include "juno/io/i2c_io_api.h"
 #include "juno/io/spi_io_api.h"
