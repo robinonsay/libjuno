@@ -51,7 +51,7 @@ if(!(ptr)) \
 */
 #define JUNO_ASSERT_SUCCESS(tStatus, ...) if(tStatus != JUNO_STATUS_SUCCESS) \
 { \
-    __VA_ARGS__ \
+    __VA_ARGS__; \
 }
 
 

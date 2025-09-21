@@ -27,7 +27,7 @@ union JUNO_SM_STATE_T JUNO_MODULE(JUNO_SM_STATE_API_T, JUNO_SM_STATE_ROOT_T,
 static JUNO_STATUS_T StateAction(JUNO_SM_STATE_T *ptJunoSm)
 {
     JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     printf("Current State: %u\n", ptTrafficLightState->tThisLight);
     sleep(1);
@@ -41,7 +41,7 @@ static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_T *ptJunoSm)
     JUNO_RESULT_BOOL_T tResult = {0};
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     tResult.tStatus = tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tResult;)
+    JUNO_ASSERT_SUCCESS(tStatus, return tResult);
     tResult.tOk = ptTrafficLightState->iCounter == 10;
     return tResult;
 }
@@ -50,7 +50,7 @@ static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_T *ptJunoSm)
 static JUNO_STATUS_T ResetState(JUNO_SM_STATE_T *ptJunoSm)
 {
     JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     ptTrafficLightState->iCounter = 0;
     return JUNO_STATUS_SUCCESS;
@@ -97,13 +97,13 @@ int main()
     while(true)
     {
         JUNO_SM_RESULT_STATE_T tStateResult = JunoSm_GetCurrentState(&tSm.tRoot);
-        JUNO_ASSERT_SUCCESS(tStateResult.tStatus, break;);
+        JUNO_ASSERT_SUCCESS(tStateResult.tStatus, break);
         JUNO_SM_STATE_ROOT_T *ptSmState = &tStateResult.tOk->tRoot;
         if(ptSmState)
         {
             const JUNO_SM_STATE_API_T *ptSmStateApi = ptSmState->ptApi;
             JUNO_RESULT_BOOL_T tBoolResult = ptSmStateApi->ShouldExit((JUNO_SM_STATE_T *)ptSmState);
-            JUNO_ASSERT_SUCCESS(tBoolResult.tStatus, break;);
+            JUNO_ASSERT_SUCCESS(tBoolResult.tStatus, break);
             if(tBoolResult.tOk)
             {
                 ptSmStateApi->ResetState((JUNO_SM_STATE_T *)ptSmState);
