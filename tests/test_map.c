@@ -337,12 +337,15 @@ static void test_duplicate_key_insertion(void)
 static void test_overflow_map(void)
 {
     int vals[TEST_MAP_CAPACITY];
-    char keybuf[32];
+    char keys[TEST_MAP_CAPACITY][8];
     for (size_t i = 0; i < TEST_MAP_CAPACITY; i++)
     {
         vals[i] = (int)i + 1;
-        snprintf(keybuf, sizeof(keybuf), "#%u", (unsigned)i);
-        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Set(&gRoot, keybuf, &vals[i]));
+        snprintf(keys[i], sizeof(keys[i]), "#%u", (unsigned)i);
+    }
+    for (size_t i = 0; i < TEST_MAP_CAPACITY; i++)
+    {
+        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Set(&gRoot, keys[i], &vals[i]));
     }
     TEST_ASSERT_EQUAL(TEST_MAP_CAPACITY, TestMap_CountOccupied());
 
