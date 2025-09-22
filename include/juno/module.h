@@ -227,7 +227,7 @@ typedef struct NAME_T \
     OK_T tOk; \
 } NAME_T
 
-#define JUNO_OK(result, ...) result.tOk
+#define JUNO_OK(result) result.tOk
 #define JUNO_ASSERT_OK(result, ...) JUNO_ASSERT_SUCCESS(result.tStatus, __VA_ARGS__)
 #define JUNO_OK_RESULT(value) {JUNO_STATUS_SUCCESS, value}
 #define JUNO_ERR_RESULT(err, value) {err, value}
