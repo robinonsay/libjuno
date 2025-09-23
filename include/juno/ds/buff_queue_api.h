@@ -66,7 +66,8 @@ static inline JUNO_STATUS_T JunoDs_Buff_QueueVerify(JUNO_BUFF_QUEUE_ROOT_T *ptQu
         ptQueue->zCapacity && 
         ptQueue->ptApi->GetAt &&
         ptQueue->ptApi->SetAt &&
-        ptQueue->ptApi->RemoveAt
+        ptQueue->ptApi->RemoveAt &&
+        ptQueue->ptApi->Copy
     );
     return JUNO_STATUS_SUCCESS;
 }
