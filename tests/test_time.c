@@ -7,13 +7,8 @@
 #include <time.h>
 #include <stdint.h>  // For UINT64_MAX
 
-// Bind the time API into a module for testing
-union JUNO_TIME_TAG JUNO_MODULE(JUNO_TIME_API_T, JUNO_TIME_ROOT_T,
-    JUNO_MODULE_EMPTY
-);
-
 // Now implementation uses real clock; verify it returns reasonable values
-static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_T *ptTime)
+static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_ROOT_T *ptTime)
 {
     struct timespec tTimeNow = {0};
     clock_gettime(CLOCK_REALTIME, &tTimeNow);
@@ -24,14 +19,14 @@ static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_T *ptTime)
 }
 
 // Stub SleepTo always succeeds
-static JUNO_STATUS_T SleepTo(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup)
+static JUNO_STATUS_T SleepTo(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup)
 {
     (void)ptTime; (void)tTimeToWakeup;
     return JUNO_STATUS_SUCCESS;
 }
 
 // Stub Sleep always succeeds
-static JUNO_STATUS_T Sleep(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tDuration)
+static JUNO_STATUS_T Sleep(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDuration)
 {
     (void)ptTime; (void)tDuration;
     return JUNO_STATUS_SUCCESS;
@@ -55,19 +50,19 @@ const JUNO_TIME_API_T tTimeApi =
 };
 
 // Global module instance
-JUNO_TIME_T tTimeMod = {0};
+JUNO_TIME_ROOT_T tTimeMod = {0};
 
 void setUp(void)
 {
     // Initialize module with our API
-    tTimeMod = (JUNO_TIME_T){0};
+    tTimeMod = (JUNO_TIME_ROOT_T){0};
     tTimeMod.ptApi = &tTimeApi;
 }
 
 void tearDown(void)
 {
     // Reset module
-    tTimeMod = (JUNO_TIME_T){0};
+    tTimeMod = (JUNO_TIME_ROOT_T){0};
 }
 
 // Positive test: AddTime without subseconds overflow

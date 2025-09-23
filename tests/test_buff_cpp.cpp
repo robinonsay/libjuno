@@ -20,7 +20,7 @@ static void test_queue(void)
 
     // Initialize queue via API
     auto api_q     = JUNO_QUEUE_T<uint8_t, N>::NewApi();
-    QUEUE_T<uint8_t, N> queueRoot{};
+    QUEUE_ROOT_T<uint8_t, N> queueRoot{};
     auto tStatus = JUNO_QUEUE_T<uint8_t, N>::New(queueRoot, api_q, nullptr, nullptr);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     // — fill to capacity
@@ -80,7 +80,7 @@ static void test_stack(void)
 
     // Initialize stack via API
     auto api_s     = JUNO_STACK_T<uint8_t, N>::NewApi();
-    STACK_T<uint8_t, N> stackRoot{};
+    STACK_ROOT_T<uint8_t, N> stackRoot{};
     auto tStatus = JUNO_STACK_T<uint8_t, N>::New(stackRoot, api_s, nullptr, nullptr);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     // — fill to capacity

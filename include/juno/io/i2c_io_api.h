@@ -41,7 +41,6 @@ typedef struct JUNO_I2C_IO_MSG_R_TAG JUNO_I2C_IO_MSG_R_T;
 typedef struct JUNO_I2C_IO_MSG_W_TAG JUNO_I2C_IO_MSG_W_T;
 typedef struct JUNO_I2C_IO_MSG_HDR_TAG JUNO_I2C_IO_MSG_HDR_T;
 typedef union JUNO_I2C_IO_MSG_TAG JUNO_I2C_IO_MSG_T;
-JUNO_MODULE_DECLARE(JUNO_I2C_IO_T);
 JUNO_MODULE_ROOT_DECLARE(JUNO_I2C_IO_ROOT_T);
 
 typedef enum JUNO_I2C_IO_MSG_TYPE_TAG
@@ -128,7 +127,7 @@ struct JUNO_I2C_IO_API_TAG
         @param zMsgArrLen Number of messages in the array.
         @return JUNO_STATUS_SUCCESS on success, error code otherwise.
     */
-    JUNO_STATUS_T (*Transfer)(JUNO_I2C_IO_T *ptI2c, const JUNO_I2C_IO_MSG_T *ptArrMsgs, size_t zMsgArrLen);
+    JUNO_STATUS_T (*Transfer)(JUNO_I2C_IO_ROOT_T *ptI2c, const JUNO_I2C_IO_MSG_T *ptArrMsgs, size_t zMsgArrLen);
 };
 
 #ifdef __cplusplus

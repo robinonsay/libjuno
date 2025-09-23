@@ -25,7 +25,7 @@ typedef union JUNO_KMAT_TAG JUNO_KMAT_T;
 typedef struct JUNO_KMAT_API_TAG JUNO_KMAT_API_T;
 
 typedef struct JUNO_KMAT_ROOT_TAG JUNO_MODULE_ROOT(JUNO_KMAT_API_T,
-    JUNO_TIME_T *ptTime;
+    JUNO_TIME_ROOT_T *ptTime;
     JUNO_KSTATE_F64_T tState;
 )JUNO_KMAT_ROOT_T;
 

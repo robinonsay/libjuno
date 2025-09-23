@@ -44,12 +44,6 @@ template<typename T, const size_t N>
 struct QUEUE_API_T;
 
 /**
-    The queue buffer module
-*/
-template<typename T, const size_t N>
-union QUEUE_T;
-
-/**
     The queue root implementation
 */
 template<typename T, const size_t N>
@@ -66,21 +60,17 @@ template<typename T, const size_t N>
 struct QUEUE_API_T
 {
     /// Enqueue data into the queue buffer
-    JUNO_STATUS_T (*Enqueue)(QUEUE_T<T, N>& tQueue, T tData);
+    JUNO_STATUS_T (*Enqueue)(QUEUE_ROOT_T<T, N>& tQueue, T tData);
     /// Dequeue data from the queue buffer
-    RESULT_T<T> (*Dequeue)(QUEUE_T<T, N>& tQueue);
+    RESULT_T<T> (*Dequeue)(QUEUE_ROOT_T<T, N>& tQueue);
     /// Peek at the next data item in the queue buffer. Calling Dequeue would dequeue this
-    RESULT_T<T*> (*Peek)(QUEUE_T<T, N>& tQueue);
+    RESULT_T<T*> (*Peek)(QUEUE_ROOT_T<T, N>& tQueue);
 };
 
 
 /// The stack buffer api
 template<typename T, const size_t N>
 struct STACK_API_T;
-
-/// The stack module
-template<typename T, const size_t N>
-union STACK_T;
 
 /// The stack root module
 template<typename T, const size_t N>
@@ -94,11 +84,11 @@ template<typename T, const size_t N>
 struct STACK_API_T
 {
     /// Push data onto the stack buffer
-    JUNO_STATUS_T (*Push)(STACK_T<T, N>& tStack, T tData);
+    JUNO_STATUS_T (*Push)(STACK_ROOT_T<T, N>& tStack, T tData);
     /// Pop data from the stack buffer
-    RESULT_T<T> (*Pop)(STACK_T<T, N>& tStack);
+    RESULT_T<T> (*Pop)(STACK_ROOT_T<T, N>& tStack);
     /// Peek into data on the stack buffer
-    RESULT_T<T*> (*Peek)(STACK_T<T, N>& tStack);
+    RESULT_T<T*> (*Peek)(STACK_ROOT_T<T, N>& tStack);
 };
 
 }

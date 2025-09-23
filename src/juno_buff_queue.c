@@ -22,7 +22,7 @@ JUNO_STATUS_T JunoDs_Buff_QueueEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *pt
     if(ptQueue->zLength < ptQueue->zCapacity)
     {
         size_t iIndex = (ptQueue->iStartIndex + ptQueue->zLength) % ptQueue->zCapacity;
-        tStatus = ptQueue->ptApi->SetAt((JUNO_BUFF_QUEUE_T *) ptQueue, ptItem, iIndex);
+        tStatus = ptQueue->ptApi->SetAt((JUNO_BUFF_QUEUE_ROOT_T *) ptQueue, ptItem, iIndex);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
         ptQueue->zLength += 1;
     }
@@ -46,11 +46,11 @@ JUNO_STATUS_T JunoDs_Buff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *pt
     {
         const JUNO_BUFF_QUEUE_API_T *ptApi = ptQueue->ptApi;
         size_t iDequeueIndex = ptQueue->iStartIndex;
-        JUNO_RESULT_VOID_PTR_T tPtrResult = ptApi->GetAt((JUNO_BUFF_QUEUE_T *) ptQueue, iDequeueIndex);
+        JUNO_RESULT_VOID_PTR_T tPtrResult = ptApi->GetAt((JUNO_BUFF_QUEUE_ROOT_T *) ptQueue, iDequeueIndex);
         JUNO_ASSERT_SUCCESS(tPtrResult.tStatus, return tPtrResult.tStatus);
         tStatus = ptApi->Copy(ptReturn, JUNO_OK(tPtrResult));
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-        tStatus = ptApi->RemoveAt((JUNO_BUFF_QUEUE_T *) ptQueue, iDequeueIndex);
+        tStatus = ptApi->RemoveAt((JUNO_BUFF_QUEUE_ROOT_T *) ptQueue, iDequeueIndex);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
         ptQueue->iStartIndex = (ptQueue->iStartIndex + 1) % ptQueue->zCapacity;
         ptQueue->zLength -= 1;
@@ -74,6 +74,6 @@ JUNO_RESULT_VOID_PTR_T JunoBuff_QueuePeek(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
         JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailureUserData, "Queue is empty");
         return tResult;
     }
-    tResult = ptQueue->ptApi->GetAt((JUNO_BUFF_QUEUE_T *) ptQueue, ptQueue->iStartIndex);
+    tResult = ptQueue->ptApi->GetAt((JUNO_BUFF_QUEUE_ROOT_T *) ptQueue, ptQueue->iStartIndex);
     return tResult;
 }

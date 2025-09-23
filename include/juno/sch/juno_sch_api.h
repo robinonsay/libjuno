@@ -38,15 +38,14 @@ extern "C"
 
 typedef struct JUNO_SCH_API_TAG JUNO_SCH_API_T;
 
-typedef union JUNO_SCH_TAG JUNO_SCH_T;
 typedef struct JUNO_SCH_ROOT_TAG JUNO_SCH_ROOT_T;
 
 #define JUNO_SCH_TABLE_NEW(ptArrName, zAppsPerMinorFrame, zNumMinorFrames, ...) \
 JUNO_APP_T *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}
 
 struct JUNO_SCH_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SCH_API_T,
-    JUNO_TIME_T *ptTime;
-    JUNO_APP_T **ptArrSchTable;
+    JUNO_TIME_ROOT_T *ptTime;
+    JUNO_APP_ROOT_T **ptArrSchTable;
     size_t zAppsPerMinorFrame;
     size_t zNumMinorFrames;
     JUNO_TIMESTAMP_T tMinorFramePeriod;
@@ -54,9 +53,9 @@ struct JUNO_SCH_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SCH_API_T,
 
 struct JUNO_SCH_API_TAG
 {
-    JUNO_STATUS_T (*Execute)(JUNO_SCH_T *ptJunoSch);
-    JUNO_TIMESTAMP_RESULT_T (*GetMinorFramePeriod)(JUNO_SCH_T *ptJunoSch);
-    JUNO_TIMESTAMP_RESULT_T (*GetMajorFramePeriod)(JUNO_SCH_T *ptJunoSch);
+    JUNO_STATUS_T (*Execute)(JUNO_SCH_ROOT_T *ptJunoSch);
+    JUNO_TIMESTAMP_RESULT_T (*GetMinorFramePeriod)(JUNO_SCH_ROOT_T *ptJunoSch);
+    JUNO_TIMESTAMP_RESULT_T (*GetMajorFramePeriod)(JUNO_SCH_ROOT_T *ptJunoSch);
 };
 
 #ifdef __cplusplus

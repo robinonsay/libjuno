@@ -39,7 +39,6 @@ extern "C"
 
 typedef struct JUNO_MAP_API_TAG JUNO_MAP_API_T;
 
-typedef union JUNO_MAP_TAG JUNO_MAP_T;
 typedef struct JUNO_MAP_ROOT_TAG JUNO_MAP_ROOT_T;
 
 struct JUNO_MAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MAP_API_T,

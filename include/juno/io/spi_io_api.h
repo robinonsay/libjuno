@@ -37,7 +37,6 @@ extern "C"
 #endif
 
 typedef struct JUNO_SPI_IO_API_TAG JUNO_SPI_IO_API_T;
-typedef union JUNO_SPI_IO_TAG JUNO_SPI_IO_T;
 typedef struct JUNO_SPI_IO_ROOT_TAG JUNO_SPI_IO_ROOT_T;
 
 struct JUNO_SPI_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SPI_IO_API_T, JUNO_MODULE_EMPTY);
@@ -46,7 +45,7 @@ struct JUNO_SPI_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SPI_IO_API_T, JUNO_MODULE_EMPT
 struct JUNO_SPI_IO_API_TAG
 {
     /// Perform an SPI transaction
-    JUNO_STATUS_T (*Transaction)(JUNO_SPI_IO_T *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize);
+    JUNO_STATUS_T (*Transaction)(JUNO_SPI_IO_ROOT_T *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize);
 };
 
 #ifdef __cplusplus

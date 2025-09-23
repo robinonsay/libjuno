@@ -40,37 +40,35 @@ extern "C"
 typedef struct JUNO_SM_ROOT_TAG JUNO_SM_ROOT_T;
 typedef struct JUNO_SM_STATE_API_TAG JUNO_SM_STATE_API_T;
 
-JUNO_MODULE_DECLARE(JUNO_SM_STATE_T);
-JUNO_MODULE_DECLARE(JUNO_SM_T);
 typedef struct JUNO_SM_STATE_ROOT_TAG JUNO_SM_STATE_ROOT_T;
 
 /// A result type for returning a SM state
 JUNO_MODULE_RESULT(JUNO_SM_RESULT_STATE_ROOT_T, JUNO_SM_STATE_ROOT_T *);
-JUNO_MODULE_RESULT(JUNO_SM_RESULT_STATE_T, JUNO_SM_STATE_T *);
+JUNO_MODULE_RESULT(JUNO_SM_RESULT_STATE_T, JUNO_SM_STATE_ROOT_T *);
 JUNO_MODULE_OPTION(JUNO_SM_OPTION_STATE_ROOT_T, JUNO_SM_STATE_ROOT_T *);
-JUNO_MODULE_OPTION(JUNO_SM_OPTION_STATE_T, JUNO_SM_STATE_T *);
+JUNO_MODULE_OPTION(JUNO_SM_OPTION_STATE_T, JUNO_SM_STATE_ROOT_T *);
 JUNO_MODULE_RESULT(JUNO_SM_RESULT_OPTION_STATE_ROOT_T, JUNO_SM_OPTION_STATE_ROOT_T);
 JUNO_MODULE_RESULT(JUNO_SM_RESULT_OPTION_STATE_T, JUNO_SM_OPTION_STATE_T);
 
 /// A State Machine State
 struct JUNO_SM_STATE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SM_STATE_API_T,
-    JUNO_SM_T *ptSm;
+    JUNO_SM_ROOT_T *ptSm;
     JUNO_SM_OPTION_STATE_T tOptionNextState;
 );
 
 struct JUNO_SM_STATE_API_TAG
 {
     /// The action that should be executed in this state
-    JUNO_STATUS_T (*StateAction)(JUNO_SM_STATE_T *ptJunoSm);
+    JUNO_STATUS_T (*StateAction)(JUNO_SM_STATE_ROOT_T *ptJunoSm);
     /// Returns a bool result whether the current state should exit
-    JUNO_RESULT_BOOL_T (*ShouldExit)(JUNO_SM_STATE_T *ptJunoSm);
+    JUNO_RESULT_BOOL_T (*ShouldExit)(JUNO_SM_STATE_ROOT_T *ptJunoSm);
     /// Reset the state
-    JUNO_STATUS_T (*ResetState)(JUNO_SM_STATE_T *ptJunoSm);
+    JUNO_STATUS_T (*ResetState)(JUNO_SM_STATE_ROOT_T *ptJunoSm);
 };
 
 struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(void,
     /// The current state
-    JUNO_SM_STATE_T *ptCurrentState;
+    JUNO_SM_STATE_ROOT_T *ptCurrentState;
 );
 
 /// Verify if this is a valid state machine
@@ -95,14 +93,14 @@ static inline JUNO_STATUS_T JunoSm_StateVerify(JUNO_SM_STATE_ROOT_T *ptSmState)
 static inline JUNO_STATUS_T JunoSm_StateInit(JUNO_SM_ROOT_T *ptSm, JUNO_SM_STATE_ROOT_T *ptStateRoot, JUNO_SM_STATE_ROOT_T *ptNextState, const JUNO_SM_STATE_API_T *ptStateApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptStateRoot && ptStateApi && ptSm);
-    ptStateRoot->ptSm = (JUNO_SM_T *) ptSm;
+    ptStateRoot->ptSm = (JUNO_SM_ROOT_T *) ptSm;
     ptStateRoot->_pfcnFailureHandler = pfcnFailureHandler;
     ptStateRoot->_pvFailureUserData = pvFailureUserData;
     ptStateRoot->ptApi = ptStateApi;
     if(ptNextState)
     {
         ptStateRoot->tOptionNextState.bIsSome = true;
-        ptStateRoot->tOptionNextState.tSome = (JUNO_SM_STATE_T *) ptNextState;
+        ptStateRoot->tOptionNextState.tSome = (JUNO_SM_STATE_ROOT_T *) ptNextState;
     }
     else
     {
@@ -115,7 +113,7 @@ static inline JUNO_STATUS_T JunoSm_StateInit(JUNO_SM_ROOT_T *ptSm, JUNO_SM_STATE
 static inline JUNO_STATUS_T JunoSm_Init(JUNO_SM_ROOT_T *ptSmRoot, JUNO_SM_STATE_ROOT_T *ptStartState, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptSmRoot);
-    ptSmRoot->ptCurrentState = (JUNO_SM_STATE_T *) ptStartState;
+    ptSmRoot->ptCurrentState = (JUNO_SM_STATE_ROOT_T *) ptStartState;
     ptSmRoot->_pfcnFailureHandler = pfcnFailureHandler;
     ptSmRoot->_pvFailureUserData = pvFailureUserData;
     JUNO_STATUS_T tStatus = JunoSm_Verify(ptSmRoot);

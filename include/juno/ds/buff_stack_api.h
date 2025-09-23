@@ -37,8 +37,6 @@ extern "C"
 
 /// The buffer stack root module
 typedef struct JUNO_BUFF_STACK_ROOT_TAG JUNO_BUFF_STACK_ROOT_T;
-/// The buffer stack
-typedef union JUNO_BUFF_STACK_T JUNO_BUFF_STACK_T;
 
 struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(void,
     /// The current length of the stack
@@ -48,7 +46,7 @@ struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(void,
 );
 
 /// Initialize a buffer stack
-static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptStack);
     JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
@@ -61,7 +59,7 @@ static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_T *ptStack, size_
 
 /// Push an item onto the stack
 /// @returns an index to write the pushed item to
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)
@@ -86,7 +84,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_T *ptStack)
 
 /// Pop an item from the stack
 /// @returns an index of the popped item
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)
@@ -108,7 +106,7 @@ static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_T *ptStack)
 
 /// Peek at an item on the stack
 /// @returns The index of the next item
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_T *ptStack)
+static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
     if(!ptStack)

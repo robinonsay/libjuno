@@ -35,16 +35,15 @@ extern "C"
 
 typedef struct JUNO_APP_API_TAG JUNO_APP_API_T;
 
-typedef union JUNO_APP_T JUNO_APP_T;
 typedef struct JUNO_APP_ROOT_TAG JUNO_APP_ROOT_T;
 
 struct JUNO_APP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_APP_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_APP_API_TAG
 {
-    JUNO_STATUS_T (*OnInit)(JUNO_APP_T *ptJunoApp);
-    JUNO_STATUS_T (*OnProcess)(JUNO_APP_T *ptJunoApp);
-    JUNO_STATUS_T (*OnExit)(JUNO_APP_T *ptJunoApp);
+    JUNO_STATUS_T (*OnInit)(JUNO_APP_ROOT_T *ptJunoApp);
+    JUNO_STATUS_T (*OnProcess)(JUNO_APP_ROOT_T *ptJunoApp);
+    JUNO_STATUS_T (*OnExit)(JUNO_APP_ROOT_T *ptJunoApp);
 };
 
 #ifdef __cplusplus

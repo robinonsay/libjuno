@@ -39,8 +39,6 @@ extern "C"
 /// The Buffer queue root
 typedef struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_BUFF_QUEUE_ROOT_T;
 typedef struct JUNO_BUFF_QUEUE_API_TAG  JUNO_BUFF_QUEUE_API_T;
-/// The Buffer queue module
-typedef union JUNO_BUFF_QUEUE_T JUNO_BUFF_QUEUE_T;
 
 /// The root buffee queue
 struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_API_T,
@@ -54,9 +52,9 @@ struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_API_T,
 
 struct JUNO_BUFF_QUEUE_API_TAG
 {
-    JUNO_STATUS_T (*SetAt)(JUNO_BUFF_QUEUE_T *ptQueue, void *ptItem, size_t iIndex);
-    JUNO_RESULT_VOID_PTR_T (*GetAt)(JUNO_BUFF_QUEUE_T *ptQueue, size_t iIndex);
-    JUNO_STATUS_T (*RemoveAt)(JUNO_BUFF_QUEUE_T *ptQueue, size_t iIndex);
+    JUNO_STATUS_T (*SetAt)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *ptItem, size_t iIndex);
+    JUNO_RESULT_VOID_PTR_T (*GetAt)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex);
+    JUNO_STATUS_T (*RemoveAt)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex);
     JUNO_STATUS_T (*Copy)(void *ptDest, void *ptSrc);
 };
 

@@ -60,7 +60,6 @@ struct JUNO_MEMORY_TAG
 
 typedef struct JUNO_MEMORY_ALLOC_API_TAG JUNO_MEMORY_ALLOC_API_T;
 
-typedef union JUNO_MEMORY_ALLOC_TAG JUNO_MEMORY_ALLOC_T;
 typedef struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MEMORY_ALLOC_ROOT_T;
 
 struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T, JUNO_MODULE_EMPTY);
@@ -73,7 +72,7 @@ struct JUNO_MEMORY_ALLOC_API_TAG
     /// @param pvRetAddr Pointer to a memory descriptor where allocation details will be stored.
     /// @param zSize Size of the memory block to allocate in bytes.
     /// @return JUNO_STATUS_T Status of the allocation operation.
-    JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvRetAddr, size_t zSize);
+    JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_MEMORY_T *pvRetAddr, size_t zSize);
 
     /// @brief Updates an existing memory allocation to a new size.
     /// 
@@ -81,14 +80,14 @@ struct JUNO_MEMORY_ALLOC_API_TAG
     /// @param ptMemory Pointer to the memory descriptor to update.
     /// @param zNewSize The new size for the memory block.
     /// @return JUNO_STATUS_T Status of the update operation.
-    JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
+    JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
 
     /// @brief Frees an allocated memory block.
     /// 
     /// @param ptMem Pointer to the memory allocation structure.
     /// @param pvAddr Pointer to the memory block to free.
     /// @return JUNO_STATUS_T Status of the free operation.
-    JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvAddr);
+    JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_MEMORY_T *pvAddr);
 };
 
 

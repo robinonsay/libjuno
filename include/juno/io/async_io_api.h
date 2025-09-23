@@ -37,7 +37,6 @@ extern "C"
 
 typedef struct JUNO_ASYNC_IO_API_TAG JUNO_ASYNC_IO_API_T;
 
-typedef union JUNO_ASYNC_IO_TAG JUNO_ASYNC_IO_T;
 typedef struct JUNO_ASYNC_IO_ROOT_TAG JUNO_ASYNC_IO_ROOT_T;
 
 struct JUNO_ASYNC_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ASYNC_IO_API_T, JUNO_MODULE_EMPTY);
@@ -45,19 +44,19 @@ struct JUNO_ASYNC_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ASYNC_IO_API_T, JUNO_MODULE_
 struct JUNO_ASYNC_IO_API_TAG
 {
     /// Read the specified number of bytes from the IO
-    JUNO_STATUS_T (*Read)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize);
+    JUNO_STATUS_T (*Read)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize);
     /// Try to read from the IO until timeout expires
-    JUNO_STATUS_T (*TryRead)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*TryRead)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
     /// Read from the IO until the set of characters is recieved
-    JUNO_STATUS_T (*ReadUntil)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars);
+    JUNO_STATUS_T (*ReadUntil)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars);
     /// Try to read from the IO until the set of characters is recieved
-    JUNO_STATUS_T (*TryReadUntil)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*TryReadUntil)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, JUNO_TIME_MICROS_T iTimeoutUs);
     /// Write the specified number of bytes to the IO
-    JUNO_STATUS_T (*Write)(JUNO_ASYNC_IO_T *ptIo, const void *pvBuff, size_t *pzBuffSize);
+    JUNO_STATUS_T (*Write)(JUNO_ASYNC_IO_ROOT_T *ptIo, const void *pvBuff, size_t *pzBuffSize);
     /// Try to write the specified number of bytes to the IO
-    JUNO_STATUS_T (*TryWrite)(JUNO_ASYNC_IO_T *ptIo, const void *pvBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
+    JUNO_STATUS_T (*TryWrite)(JUNO_ASYNC_IO_ROOT_T *ptIo, const void *pvBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
     /// Poll the IO
-    JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs, bool *pbHasData);
+    JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_ROOT_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs, bool *pbHasData);
 };
 
 #ifdef __cplusplus

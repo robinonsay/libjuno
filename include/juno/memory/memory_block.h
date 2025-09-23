@@ -56,7 +56,6 @@ extern "C"
 
 
 typedef struct JUNO_MEMORY_BLOCK_METADATA_TAG JUNO_MEMORY_BLOCK_METADATA_T;
-typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
 typedef struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MEMORY_ALLOC_BLOCK_T;
 
 struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
@@ -68,20 +67,7 @@ struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
     size_t zFreed;                      ///< Current count of freed blocks in the free stack.
 );
 
-#ifndef JUNO_MEMORY_CUSTOM
-/**
-    This is the default implementation for `JUNO_MEMORY_T`.
-    If you want to derive new implementations for `JUNO_MEMORY_T`
-    use `#define JUNO_MEMORY_DERIVED` prior to including
-    `#include "juno_memory_block.h"`
 
-    Note: If you are blockementing a derived module you will need
-    to blockement `JUNO_MEMORY_BLOCK`.
-*/
-union JUNO_MEMORY_ALLOC_TAG JUNO_MODULE(JUNO_MEMORY_ALLOC_API_T, JUNO_MEMORY_ALLOC_ROOT_T,
-    JUNO_MEMORY_ALLOC_BLOCK_T tJunoMemoryBlock;
-);
-#endif
 
 /// @brief Initializes a memory block for allocation.
 /// Sets up a memory block with an associated free stack for managing fixed-size allocations.
@@ -93,7 +79,7 @@ union JUNO_MEMORY_ALLOC_TAG JUNO_MODULE(JUNO_MEMORY_ALLOC_API_T, JUNO_MEMORY_ALL
 /// @param pfcnFailureHandler Callback function to handle failures.
 /// @param pvUserData User data passed to the failure handler.
 /// @return JUNO_STATUS_T Status of the initialization.
-JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_T *ptJunoMemory,
+JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemory,
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
