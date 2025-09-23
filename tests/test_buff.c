@@ -23,9 +23,9 @@ typedef struct TEST_QUEUE JUNO_MODULE_DERIVE(JUNO_BUFF_QUEUE_ROOT_T,
 ) TEST_QUEUE;
 
 
-static inline JUNO_STATUS_T Queue_SetAt(JUNO_BUFF_QUEUE_T *ptQueue, void *ptItem, size_t iIndex);
-static inline JUNO_RESULT_VOID_PTR_T Queue_GetAt(JUNO_BUFF_QUEUE_T *ptQueue, size_t iIndex);
-static inline JUNO_STATUS_T Queue_RemoveAt(JUNO_BUFF_QUEUE_T *ptQueue, size_t iIndex);
+static inline JUNO_STATUS_T Queue_SetAt(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *ptItem, size_t iIndex);
+static inline JUNO_RESULT_VOID_PTR_T Queue_GetAt(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex);
+static inline JUNO_STATUS_T Queue_RemoveAt(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex);
 static inline JUNO_STATUS_T Queue_Copy(void *ptDest, void *ptSrc);
 
 const JUNO_BUFF_QUEUE_API_T gtQueueApi = {
@@ -35,7 +35,7 @@ const JUNO_BUFF_QUEUE_API_T gtQueueApi = {
 	Queue_Copy
 };
 
-union JUNO_BUFF_QUEUE_T JUNO_MODULE(void, JUNO_BUFF_QUEUE_ROOT_T,
+union JUNO_BUFF_QUEUE_ROOT_T JUNO_MODULE(void, JUNO_BUFF_QUEUE_ROOT_T,
 	TEST_QUEUE tTestQueue;
 );
 
@@ -47,7 +47,7 @@ static void test_queue(void)
 	TEST_QUEUE tTestQueue = {0};
 	JUNO_STATUS_T tStatus = JunoDs_Buff_QueueInit(&tTestQueue.tRoot, &gtQueueApi, 10, NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	JUNO_BUFF_QUEUE_T tQueue = {.tTestQueue = tTestQueue};
+	TEST_QUEUE tQueue = tTestQueue;
 	uint8_t iValue = 0;
 	for(size_t i = 0; i < sizeof(tTestQueue.iTestQueue); i++)
 	{
@@ -144,7 +144,7 @@ static void test_stack(void)
 	uint8_t iTestStack[10];
 	JUNO_BUFF_STACK_ROOT_T tStackRoot = {0};
 	JUNO_RESULT_SIZE_T tResult = {0};
-	JUNO_BUFF_STACK_T tStack = {.tRoot = tStackRoot};
+	JUNO_BUFF_STACK_ROOT_T tStack = tStackRoot;
 	tResult.tStatus = JunoBuff_StackInit(&tStack, sizeof(iTestStack), NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
 	for(size_t i = 0; i < sizeof(iTestStack); i++)
@@ -200,22 +200,25 @@ int main(void)
 	return UNITY_END();
 }
 
-static inline JUNO_STATUS_T Queue_SetAt(JUNO_BUFF_QUEUE_T *ptQueue, void *ptItem, size_t iIndex)
+static inline JUNO_STATUS_T Queue_SetAt(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *ptItem, size_t iIndex)
 {
 	uint8_t *iItem = (void *) ptItem;
-	ptQueue->tTestQueue.iTestQueue[iIndex] = *iItem;
+	TEST_QUEUE *ptTestQueue = (TEST_QUEUE *) ptQueue;
+	ptTestQueue->iTestQueue[iIndex] = *iItem;
 	return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_RESULT_VOID_PTR_T Queue_GetAt(JUNO_BUFF_QUEUE_T *ptQueue, size_t iIndex)
+static inline JUNO_RESULT_VOID_PTR_T Queue_GetAt(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex)
 {
-	JUNO_RESULT_VOID_PTR_T tResult = JUNO_OK_RESULT(&ptQueue->tTestQueue.iTestQueue[iIndex]);
+	TEST_QUEUE *ptTestQueue = (TEST_QUEUE *) ptQueue;
+	JUNO_RESULT_VOID_PTR_T tResult = JUNO_OK_RESULT(&ptTestQueue->iTestQueue[iIndex]);
 	return tResult;
 }
 
-static inline JUNO_STATUS_T Queue_RemoveAt(JUNO_BUFF_QUEUE_T *ptQueue, size_t iIndex)
+static inline JUNO_STATUS_T Queue_RemoveAt(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex)
 {
-	ptQueue->tTestQueue.iTestQueue[iIndex] = 0;
+	TEST_QUEUE *ptTestQueue = (TEST_QUEUE *) ptQueue;
+	ptTestQueue->iTestQueue[iIndex] = 0;
 	return JUNO_STATUS_SUCCESS;
 }
 
