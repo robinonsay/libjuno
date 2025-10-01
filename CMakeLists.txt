@@ -32,6 +32,8 @@ add_library(${PROJECT_NAME} STATIC
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/src
 )
 
 set(JUNO_COMPILE_OPTIONS
@@ -68,57 +70,39 @@ if(JUNO_COVERAGE)
     link_libraries(gcov)
 endif()
 
-set(JUNO_LIBS ${PROJECT_NAME})
-foreach(file ${JUNO_SRCS})
-    # Get the file name without extension (NAME_WE stands for Name Without Extension)
-    get_filename_component(lib_name ${file} NAME_WE)
-    add_library(${lib_name} STATIC
-        ${file}
-    )
-    list(APPEND JUNO_LIBS ${lib_name})
-endforeach()
 
-# Specify the include directories for consumers of this library
-foreach(lib ${JUNO_LIBS})
-    target_include_directories(${lib} PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
-        PRIVATE
-        ${PROJECT_SOURCE_DIR}/src
+if(JUNO_FREESTANDING)
+    list(APPEND JUNO_COMPILE_C_OPTIONS
+        -nostdlib
+        -ffreestanding
     )
-    if(JUNO_FREESTANDING)
-        list(APPEND JUNO_COMPILE_C_OPTIONS
-            -nostdlib
-            -ffreestanding
-        )
-        target_link_options(${lib} PRIVATE
-            -nostdlib
-        )
-    endif()
-    if(JUNO_ASAN)
-        add_compile_options(
-            -fsanitize=address
-        )
-        add_link_options(
-            -fsanitize=address
-        )
-    endif()
-    if(JUNO_UBSAN)
-        add_compile_options( 
-            -fsanitize=undefined
-        )
-        add_link_options(
-            -fsanitize=undefined
-        )
-    endif()
-    # Enable a comprehensive set of warnings
-    target_compile_options(${lib} PRIVATE
-        ${JUNO_COMPILE_OPTIONS}
-        $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
-        $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
+    target_link_options(${lib} PRIVATE
+        -nostdlib
     )
+endif()
+if(JUNO_ASAN)
+    add_compile_options(
+        -fsanitize=address
+    )
+    add_link_options(
+        -fsanitize=address
+    )
+endif()
+if(JUNO_UBSAN)
+    add_compile_options( 
+        -fsanitize=undefined
+    )
+    add_link_options(
+        -fsanitize=undefined
+    )
+endif()
+# Enable a comprehensive set of warnings
+target_compile_options(${PROJECT_NAME} PRIVATE
+    ${JUNO_COMPILE_OPTIONS}
+    $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+    $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
 
-endforeach()
+)
 
 if(JUNO_SHARED)
     set(JUNO_SHARED_TARGET ${PROJECT_NAME}_shared)
@@ -126,6 +110,8 @@ if(JUNO_SHARED)
     target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
     )
 endif()
 
