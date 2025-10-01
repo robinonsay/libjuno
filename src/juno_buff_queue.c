@@ -63,7 +63,7 @@ JUNO_STATUS_T JunoDs_Buff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *pt
 
 /// Peek at the next item in the queue
 /// @returns the index of the next item in the queue
-JUNO_RESULT_VOID_PTR_T JunoBuff_QueuePeek(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
+JUNO_RESULT_VOID_PTR_T JunoDs_Buff_QueuePeek(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_RESULT_VOID_PTR_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR, NULL);
     tResult.tStatus = JunoDs_Buff_QueueVerify(ptQueue);

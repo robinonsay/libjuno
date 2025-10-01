@@ -37,88 +37,53 @@ extern "C"
 
 /// The buffer stack root module
 typedef struct JUNO_BUFF_STACK_ROOT_TAG JUNO_BUFF_STACK_ROOT_T;
+typedef struct JUNO_BUFF_STACK_API_TAG JUNO_BUFF_STACK_API_T;
 
-struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(void,
+struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_STACK_API_T,
     /// The current length of the stack
     size_t zLength;
     /// The capacity of the stack
     size_t zCapacity;
 );
 
-/// Initialize a buffer stack
-static inline JUNO_STATUS_T JunoBuff_StackInit(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+struct JUNO_BUFF_STACK_API_TAG
+{
+    JUNO_STATUS_T (*SetAt)(JUNO_BUFF_STACK_ROOT_T *ptStack, void *ptItem, size_t iIndex);
+    JUNO_RESULT_VOID_PTR_T (*GetAt)(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex);
+    JUNO_STATUS_T (*RemoveAt)(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex);
+    JUNO_STATUS_T (*Copy)(void *ptDest, void *ptSrc);
+};
+
+static inline JUNO_STATUS_T JunoDs_Buff_StackVerify(JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_ASSERT_EXISTS(ptStack);
-    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
-    ptStackRoot->zLength = 0;
-    ptStackRoot->zCapacity = zCapacity;
-    ptStackRoot->_pfcnFailureHandler = pfcnFailureHdlr;
-    ptStackRoot->_pvFailureUserData = pvFailureUserData;
+    JUNO_ASSERT_EXISTS(
+        ptStack->ptApi &&
+        ptStack->zCapacity && 
+        ptStack->ptApi->GetAt &&
+        ptStack->ptApi->SetAt &&
+        ptStack->ptApi->RemoveAt &&
+        ptStack->ptApi->Copy
+    );
     return JUNO_STATUS_SUCCESS;
 }
 
-/// Push an item onto the stack
-/// @returns an index to write the pushed item to
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptStack)
-{
-    JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
-    if(!ptStack)
-    {
-        tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
-        return tResult;
-    }
-    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
-    if(ptStackRoot->zLength < ptStackRoot->zCapacity)
-    {
-        tResult.tOk = ptStackRoot->zLength;
-        ptStackRoot->zLength += 1;
-    }
-    else
-    {
-        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailureUserData, "Failed to enqueue data");
-        return tResult;
-    }
-    return tResult;
-}
+/// Initialize a buffer queue with a capacity
+JUNO_STATUS_T JunoDs_Buff_StackInit(JUNO_BUFF_STACK_ROOT_T *ptQueue, const JUNO_BUFF_STACK_API_T *ptApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
-/// Pop an item from the stack
-/// @returns an index of the popped item
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptStack)
-{
-    JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
-    if(!ptStack)
-    {
-        tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
-        return tResult;
-    }
-    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
-    if(ptStackRoot->zLength > 0)
-    {
-        ptStackRoot->zLength -= 1;
-        tResult.tOk = ptStackRoot->zLength;
-        return tResult;
-    }
-    tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-    JUNO_FAIL(tResult.tStatus, ptStackRoot->_pfcnFailureHandler, ptStackRoot->_pvFailureUserData, "Failed to enqueue data");
-    return tResult;
-}
+/// Enqueue an item into the buffer
+/// @returns The index to place the enqueued item
+JUNO_STATUS_T JunoDs_Buff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptQueue, void *ptItem);
 
-/// Peek at an item on the stack
-/// @returns The index of the next item
-static inline JUNO_RESULT_SIZE_T JunoBuff_StackPeek(JUNO_BUFF_STACK_ROOT_T *ptStack)
-{
-    JUNO_RESULT_SIZE_T tResult = {JUNO_STATUS_SUCCESS,0};
-    if(!ptStack)
-    {
-        tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
-        return tResult;
-    }
-    JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
-    tResult.tOk = ptStackRoot->zLength;
-    return tResult;
-}
 
+/// Dequeue an item from the buffer
+/// @returns The index to dequeue the item from
+JUNO_STATUS_T JunoDs_Buff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptQueue, void *ptReturn);
+
+
+/// Peek at the next item in the queue
+/// @returns the index of the next item in the queue
+JUNO_RESULT_VOID_PTR_T JunoDs_Buff_StackPeek(JUNO_BUFF_STACK_ROOT_T *ptQueue);
 
 #ifdef __cplusplus
 }

@@ -39,7 +39,24 @@ union JUNO_BUFF_QUEUE_ROOT_T JUNO_MODULE(void, JUNO_BUFF_QUEUE_ROOT_T,
 	TEST_QUEUE tTestQueue;
 );
 
-union JUNO_BUFF_STACK_T JUNO_MODULE(void, JUNO_BUFF_STACK_ROOT_T,
+typedef struct TEST_STACK JUNO_MODULE_DERIVE(JUNO_BUFF_STACK_ROOT_T,
+	uint8_t iTestStack[10];
+) TEST_STACK;
+
+static inline JUNO_STATUS_T Stack_SetAt(JUNO_BUFF_STACK_ROOT_T *ptStack, void *ptItem, size_t iIndex);
+static inline JUNO_RESULT_VOID_PTR_T Stack_GetAt(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex);
+static inline JUNO_STATUS_T Stack_RemoveAt(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex);
+static inline JUNO_STATUS_T Stack_Copy(void *ptDest, void *ptSrc);
+
+const JUNO_BUFF_STACK_API_T gtStackApi = {
+	Stack_SetAt,
+	Stack_GetAt,
+	Stack_RemoveAt,
+	Stack_Copy
+};
+
+union JUNO_BUFF_STACK_ROOT_T JUNO_MODULE(void, JUNO_BUFF_STACK_ROOT_T,
+	TEST_STACK tTestStack;
 );
 
 static void test_queue(void)
@@ -141,55 +158,45 @@ static void test_queue(void)
 
 static void test_stack(void)
 {
-	uint8_t iTestStack[10];
-	JUNO_BUFF_STACK_ROOT_T tStackRoot = {0};
-	JUNO_RESULT_SIZE_T tResult = {0};
-	JUNO_BUFF_STACK_ROOT_T tStack = tStackRoot;
-	tResult.tStatus = JunoBuff_StackInit(&tStack, sizeof(iTestStack), NULL, NULL);
-	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-	for(size_t i = 0; i < sizeof(iTestStack); i++)
+	TEST_STACK tTestStack = (TEST_STACK){0};
+	JUNO_STATUS_T tStatus = JunoDs_Buff_StackInit(&tTestStack.tRoot, &gtStackApi, 10, NULL, NULL);
+	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+	TEST_STACK tStack = tTestStack;
+	uint8_t iValue = 0;
+	for(size_t i = 0; i < sizeof(tTestStack.iTestStack); i++)
 	{
-		size_t iIndex = 0;
-		tResult = JunoBuff_StackPush(&tStack);
-		iIndex = tResult.tOk;
-		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-		iTestStack[iIndex] = i+1;
+		iValue = i + 1;
+		tStatus = JunoDs_Buff_StackPush(&tStack.tRoot, &iValue);
+		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	}
-	size_t iIndex = 0;
-	tResult = JunoBuff_StackPush(&tStack);
-	iIndex = tResult.tOk;
-	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-	for(size_t i = 0; i < sizeof(iTestStack); i++)
+	tStatus = JunoDs_Buff_StackPush(&tStack.tRoot, &iValue);
+	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+	for(size_t i = 0; i < sizeof(tTestStack.iTestStack); i++)
 	{
-		iIndex = 0;
-		tResult = JunoBuff_StackPop(&tStack);
-		iIndex = tResult.tOk;
-		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-		TEST_ASSERT_EQUAL(sizeof(iTestStack) - i, iTestStack[iIndex]);
+		iValue = 0;
+		tStatus = JunoDs_Buff_StackPop(&tStack.tRoot, &iValue);
+		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+		TEST_ASSERT_EQUAL(sizeof(tTestStack.iTestStack) - i, iValue);
 	}
-	tResult = JunoBuff_StackPop(&tStack);
-	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-	for(size_t i = 0; i < sizeof(iTestStack); i++)
+	tStatus = JunoDs_Buff_StackPop(&tStack.tRoot, &iValue);
+	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+	for(size_t i = 0; i < sizeof(tTestStack.iTestStack); i++)
 	{
-		iIndex = 0;
-		tResult = JunoBuff_StackPush(&tStack);
-		iIndex = tResult.tOk;
-		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-		iTestStack[iIndex] = i+1;
+		iValue = i + 1;
+		tStatus = JunoDs_Buff_StackPush(&tStack.tRoot, &iValue);
+		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	}
-	iIndex = 0;
-	tResult = JunoBuff_StackPush(&tStack);
-	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-	for(size_t i = 0; i < sizeof(iTestStack); i++)
+	tStatus = JunoDs_Buff_StackPush(&tStack.tRoot, &iValue);
+	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+	for(size_t i = 0; i < sizeof(tTestStack.iTestStack); i++)
 	{
-		iIndex = 0;
-		tResult = JunoBuff_StackPop(&tStack);
-		iIndex = tResult.tOk;
-		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-		TEST_ASSERT_EQUAL(sizeof(iTestStack) - i, iTestStack[iIndex]);
+		iValue = 0;
+		tStatus = JunoDs_Buff_StackPop(&tStack.tRoot, &iValue);
+		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+		TEST_ASSERT_EQUAL(sizeof(tTestStack.iTestStack) - i, iValue);
 	}
-	tResult = JunoBuff_StackPop(&tStack);
-	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+	tStatus = JunoDs_Buff_StackPop(&tStack.tRoot, &iValue);
+	TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
 int main(void)
@@ -223,6 +230,36 @@ static inline JUNO_STATUS_T Queue_RemoveAt(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size
 }
 
 static inline JUNO_STATUS_T Queue_Copy(void *ptDest, void *ptSrc)
+{
+	uint8_t *iDest = (void *) ptDest;
+	uint8_t *iSrc= (void *) ptSrc;
+	*iDest = *iSrc;
+	return JUNO_STATUS_SUCCESS;
+}
+
+static inline JUNO_STATUS_T Stack_SetAt(JUNO_BUFF_STACK_ROOT_T *ptStack, void *ptItem, size_t iIndex)
+{
+	uint8_t *iItem = (void *) ptItem;
+	TEST_STACK *ptTestStack = (TEST_STACK *) ptStack;
+	ptTestStack->iTestStack[iIndex] = *iItem;
+	return JUNO_STATUS_SUCCESS;
+}
+
+static inline JUNO_RESULT_VOID_PTR_T Stack_GetAt(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex)
+{
+	TEST_STACK *ptTestStack = (TEST_STACK *) ptStack;
+	JUNO_RESULT_VOID_PTR_T tResult = JUNO_OK_RESULT(&ptTestStack->iTestStack[iIndex]);
+	return tResult;
+}
+
+static inline JUNO_STATUS_T Stack_RemoveAt(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex)
+{
+	TEST_STACK *ptTestStack = (TEST_STACK *) ptStack;
+	ptTestStack->iTestStack[iIndex] = 0;
+	return JUNO_STATUS_SUCCESS;
+}
+
+static inline JUNO_STATUS_T Stack_Copy(void *ptDest, void *ptSrc)
 {
 	uint8_t *iDest = (void *) ptDest;
 	uint8_t *iSrc= (void *) ptSrc;
