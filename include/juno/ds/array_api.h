@@ -24,8 +24,8 @@
     This header contains the juno_buff_queue library API
     @author Robin Onsay
 */
-#ifndef JUNO_BUFF_API_H
-#define JUNO_BUFF_API_H
+#ifndef JUNO_ARRAY_API_H
+#define JUNO_ARRAY_API_H
 #include "juno/macros.h"
 #include "juno/memory/memory_api.h"
 #include "juno/status.h"
@@ -86,5 +86,5 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_ARRAY_ROOT_T *ptArray)
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_BUFF_QUEUE_API_H
+#endif // JUNO_ARRAY_API_H
 

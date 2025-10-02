@@ -80,7 +80,7 @@ int main(void) {
     const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.tRoot.ptApi;
     JUNO_RESULT_POINTER_T tPointerResult = ptApi->Get(&tMemAlloc.tRoot, sizeof(USER_DATA_T));
     JUNO_ASSERT_SUCCESS(tPointerResult.tStatus, return -1);
-    
+    tMemory = tPointerResult.tOk;
     printf("Memory allocated successfully\n");
     
     // Step 3: Use the memory

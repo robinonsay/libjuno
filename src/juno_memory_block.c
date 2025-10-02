@@ -117,13 +117,6 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
         ptMemBlk->zUsed += 1;
     }
     tResult.tOk.ptApi = ptMemBlk->tRoot.ptPointerApi;
-    // Retrieve the latest free block and update free stack
-    if(ptMemBlk->zFreed == 0)
-    {
-        tResult.tStatus = JUNO_STATUS_ERR;
-        JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk, "Free list underflow");
-        return tResult;
-    }
     tResult.tOk.pvAddr = ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem;
     tResult.tOk.zSize = ptMemBlk->zTypeSize;
     ptMemBlk->zFreed -= 1;
