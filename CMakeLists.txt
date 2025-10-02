@@ -117,7 +117,7 @@ if(JUNO_SHARED)
 endif()
 
 install(
-  TARGETS ${JUNO_LIBS} ${JUNO_SHARED_TARGET} ${JUNO_POSIX_TARGET}
+  TARGETS ${PROJECT_NAME} ${JUNO_SHARED_TARGET} ${JUNO_POSIX_TARGET}
   EXPORT junoTargets                          # for later use in find_package()
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # usually “lib”
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
