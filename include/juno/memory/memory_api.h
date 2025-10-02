@@ -62,7 +62,7 @@ struct JUNO_POINTER_TAG JUNO_MODULE_LITE_ROOT(JUNO_POINTER_API_T,
 );
 
 #define Juno_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type), alignof(type)}
-#define JUNO_CHECK_POINTER_TYPE(pointer, type) (pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR
+#define JUNO_CHECK_POINTER_TYPE(pointer, type) ((pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
 
 struct JUNO_POINTER_API_TAG
 {

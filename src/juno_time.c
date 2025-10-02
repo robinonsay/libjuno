@@ -3,7 +3,7 @@
 #include "juno/time/time_api.h"
 #include <stdint.h>
 
-static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = ((JUNO_TIME_SUBSECONDS_T)~(JUNO_TIME_SUBSECONDS_T)0);
+static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = (~(JUNO_TIME_SUBSECONDS_T)0);
 
 JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)
 {

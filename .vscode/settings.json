@@ -56,6 +56,9 @@
         "algorithm": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "memory_api.h": "c"
+        "memory_api.h": "c",
+        "compare": "c",
+        "functional": "c",
+        "tuple": "c"
     }
 }

@@ -126,6 +126,12 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
     tResult.tStatus = JunoMemory_PointerVerify(&tResult.tOk);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     tResult.tStatus = tResult.tOk.ptApi->Reset(tResult.tOk);
+    if (tResult.tStatus != JUNO_STATUS_SUCCESS) {
+        // Clean up: mark the block as unused and clear the pointer
+        ptMemBlk->zFreed += 1;
+        ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem = tResult.tOk.pvAddr;
+        tResult.tOk.pvAddr = NULL;
+    }
     return tResult;
 }
 
