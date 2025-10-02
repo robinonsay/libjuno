@@ -79,7 +79,9 @@ struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
 /// @param pfcnFailureHandler Callback function to handle failures.
 /// @param pvUserData User data passed to the failure handler.
 /// @return JUNO_STATUS_T Status of the initialization.
-JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemory,
+JUNO_STATUS_T JunoMemory_BlockApi(
+    JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemory,
+    const JUNO_POINTER_API_T *ptPointerApi,
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,

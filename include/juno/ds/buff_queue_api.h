@@ -26,10 +26,11 @@
 */
 #ifndef JUNO_BUFF_QUEUE_API_H
 #define JUNO_BUFF_QUEUE_API_H
+#include "juno/ds/array_api.h"
 #include "juno/macros.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
-#include "juno/types.h"
 #include <stddef.h>
 #ifdef __cplusplus
 extern "C"
@@ -42,52 +43,37 @@ typedef struct JUNO_BUFF_QUEUE_API_TAG  JUNO_BUFF_QUEUE_API_T;
 
 /// The root buffee queue
 struct JUNO_BUFF_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_QUEUE_API_T,
+    JUNO_ARRAY_ROOT_T *ptBuffer;
     /// The start index of the buffer (ie the first element)
     size_t iStartIndex;
-    /// The current length of the buffer
-    size_t zLength;
-    /// The capacity of the buffer
-    size_t zCapacity;
 );
 
 struct JUNO_BUFF_QUEUE_API_TAG
 {
-    JUNO_STATUS_T (*SetAt)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *ptItem, size_t iIndex);
-    JUNO_RESULT_VOID_PTR_T (*GetAt)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex);
-    JUNO_STATUS_T (*RemoveAt)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, size_t iIndex);
-    JUNO_STATUS_T (*Copy)(void *ptDest, void *ptSrc);
+    /// Enqueue an item on the queue
+    JUNO_STATUS_T (*Enqueue)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
+    /// Dequeue an item from the queue
+    JUNO_STATUS_T (*Dequeue)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
+    /// Peek at the next item in the queue
+    JUNO_RESULT_POINTER_T (*Peek)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue);
 };
 
 static inline JUNO_STATUS_T JunoDs_Buff_QueueVerify(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptQueue->ptBuffer);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_ASSERT_EXISTS(
         ptQueue->ptApi &&
-        ptQueue->zCapacity && 
-        ptQueue->ptApi->GetAt &&
-        ptQueue->ptApi->SetAt &&
-        ptQueue->ptApi->RemoveAt &&
-        ptQueue->ptApi->Copy
+        ptQueue->ptApi->Enqueue &&
+        ptQueue->ptApi->Dequeue &&
+        ptQueue->ptApi->Peek
     );
     return JUNO_STATUS_SUCCESS;
 }
 
 /// Initialize a buffer queue with a capacity
 JUNO_STATUS_T JunoDs_Buff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, const JUNO_BUFF_QUEUE_API_T *ptApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
-
-/// Enqueue an item into the buffer
-/// @returns The index to place the enqueued item
-JUNO_STATUS_T JunoDs_Buff_QueueEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *ptItem);
-
-
-/// Dequeue an item from the buffer
-/// @returns The index to dequeue the item from
-JUNO_STATUS_T JunoDs_Buff_QueueDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, void *ptReturn);
-
-
-/// Peek at the next item in the queue
-/// @returns the index of the next item in the queue
-JUNO_RESULT_VOID_PTR_T JunoBuff_QueuePeek(JUNO_BUFF_QUEUE_ROOT_T *ptQueue);
 
 #ifdef __cplusplus
 }

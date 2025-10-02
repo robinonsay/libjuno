@@ -30,3 +30,7 @@ In this tutorial, we’ll walk through:
 We’ll use the example code provided in the “gastank\_api.h”, “engine\_api.h”, “battery\_api.h”, “car\_api.h” files, plus their implementations, to illustrate these concepts. By the end, you’ll see how a modular, DI-driven design can keep your embedded software clean, testable, and maintainable.
 */
 
+int main(void)
+{
+    return 0;
+}

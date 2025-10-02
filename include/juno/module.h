@@ -182,9 +182,21 @@
 #define JUNO_MODULE_ROOT(API_T, ...) \
 { \
     const API_T *ptApi; \
-    __VA_ARGS__ \
     JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \
     JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \
+    __VA_ARGS__ \
+}
+
+#define JUNO_MODULE_LITE_ROOT(API_T, ...) \
+{ \
+    const API_T *ptApi; \
+    __VA_ARGS__ \
+}
+
+#define JUNO_MODULE_API_DERIVE(API_T, ...) \
+{ \
+    API_T JUNO_MODULE_SUPER; \
+    __VA_ARGS__ \
 }
 
 /**

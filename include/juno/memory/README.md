@@ -102,7 +102,7 @@ Allocate memory for your data type:
 
 ```c
 // Declare a memory descriptor
-JUNO_MEMORY_T tMemory = {0};
+JUNO_POINTER_T tMemory = {0};
 
 // Allocate memory
 tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_DATA_T));
@@ -123,7 +123,7 @@ Use reference counting to safely share memory:
 
 ```c
 // Create a reference to the memory
-JUNO_MEMORY_T *ptMemoryRef = Juno_MemoryGetRef(&tMemory);
+JUNO_POINTER_T *ptMemoryRef = Juno_MemoryGetRef(&tMemory);
 
 // Or using the helper macros for cleaner code
 JUNO_NEW_REF(memoryRef) = Juno_MemoryGetRef(&tMemory);
@@ -165,7 +165,7 @@ For a more dynamic approach, you can use the Memory API interface:
 // Access the allocator API vtable through the union's ptApi field
 const JUNO_MEMORY_ALLOC_API_T *ptMemApi = tMemAlloc.ptApi;
 
-JUNO_MEMORY_T tMemory = {0};
+JUNO_POINTER_T tMemory = {0};
 JUNO_STATUS_T tStatus = ptMemApi->Get(&tMemAlloc, &tMemory, sizeof(MY_DATA_T));
 
 // ... use the memory ...
@@ -178,7 +178,7 @@ tStatus = ptMemApi->Put(&tMemAlloc, &tMemory);
 
 1. **Not checking status codes**: Always check return values for errors.
 2. **Freeing memory with active references**: This will fail with `JUNO_STATUS_REF_IN_USE_ERROR`.
-3. **Not initializing memory structures**: Always initialize `JUNO_MEMORY_T` with `{}` before passing to functions.
+3. **Not initializing memory structures**: Always initialize `JUNO_POINTER_T` with `{}` before passing to functions.
 4. **Using the wrong size**: Always pass the correct size for your data type.
 
 ## Features
@@ -210,7 +210,7 @@ Memory is allocated from a pre-defined block using the `Juno_MemoryGet` function
 
 ```c
 // Allocate memory
-JUNO_MEMORY_T tMemory = {0};
+JUNO_POINTER_T tMemory = {0};
 JUNO_STATUS_T tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_STRUCT_T));
 ```
 
@@ -220,7 +220,7 @@ The module provides reference counting to safely share memory between different 
 
 ```c
 // Get a reference to existing memory
-JUNO_MEMORY_T *ptMemoryRef = Juno_MemoryGetRef(&tExistingMemory);
+JUNO_POINTER_T *ptMemoryRef = Juno_MemoryGetRef(&tExistingMemory);
 
 // Release a reference when done
 Juno_MemoryPutRef(ptMemoryRef);
@@ -237,12 +237,12 @@ JUNO_STATUS_T tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
 
 ## Data Types
 
-### JUNO_MEMORY_T
+### JUNO_POINTER_T
 
 The fundamental structure representing an allocated memory segment:
 
 ```c
-struct JUNO_MEMORY_TAG
+struct JUNO_POINTER_TAG
 {
     void *pvAddr;      // Pointer to the allocated memory
     size_t zSize;      // Size of the allocated memory in bytes
@@ -309,13 +309,13 @@ Initializes a memory block for allocation. Parameters:
 
 ```c
 // Allocate
-JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zSize);
+JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zSize);
 
 // Resize (cannot exceed element size in block allocator)
-JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
+JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);
 
 // Free
-JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory);
+JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_POINTER_T *ptMemory);
 ```
 
 Access these through `const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.ptApi;` then
@@ -324,7 +324,7 @@ call `ptApi->Get(...)`, etc.
 ### Reference Management
 
 ```c
-JUNO_MEMORY_T* Juno_MemoryGetRef(JUNO_MEMORY_T *ptMemory);
+JUNO_POINTER_T* Juno_MemoryGetRef(JUNO_POINTER_T *ptMemory);
 ```
 
 Gets a reference to memory, incrementing its reference count. Parameters:
@@ -332,7 +332,7 @@ Gets a reference to memory, incrementing its reference count. Parameters:
 - Returns: The same memory pointer with increased reference count
 
 ```c
-void Juno_MemoryPutRef(JUNO_MEMORY_T *ptMemory);
+void Juno_MemoryPutRef(JUNO_POINTER_T *ptMemory);
 ```
 
 Releases a reference to memory, decrementing its reference count. Parameters:
@@ -351,7 +351,7 @@ The following example demonstrates how to use the Juno Memory Module to implemen
 // Define linked list node structure
 typedef struct SINGLE_LINKED_LIST_NODE_TAG {
     struct SINGLE_LINKED_LIST_NODE_TAG *ptNext;
-    JUNO_MEMORY_T tMemory;
+    JUNO_POINTER_T tMemory;
     int iData;
 } SINGLE_LINKED_LIST_NODE_T;
 
@@ -400,7 +400,7 @@ int main() {
     // Add some nodes
     for(int i = 0; i < 5; i++) {
         // Allocate memory for new node
-        JUNO_MEMORY_T tNodeMem = {};
+        JUNO_POINTER_T tNodeMem = {};
         tStatus = ptMemApi->Get(&tMemAlloc, &tNodeMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
         if(tStatus != JUNO_STATUS_SUCCESS) {
             break;
@@ -495,14 +495,14 @@ The reference counting macros (`JUNO_REF` and `JUNO_NEW_REF`) can be confusing a
 The `JUNO_NEW_REF` macro creates a new pointer to hold a reference to a memory object:
 
 ```c
-// This expands to: JUNO_MEMORY_T *REFmyMemoryRef
+// This expands to: JUNO_POINTER_T *REFmyMemoryRef
 JUNO_NEW_REF(myMemoryRef) = Juno_MemoryGetRef(&originalMemory);
 ```
 
 This is equivalent to:
 
 ```c
-JUNO_MEMORY_T *REFmyMemoryRef = Juno_MemoryGetRef(&originalMemory);
+JUNO_POINTER_T *REFmyMemoryRef = Juno_MemoryGetRef(&originalMemory);
 ```
 
 ### JUNO_REF Macro
@@ -526,7 +526,7 @@ Here's a complete example of using these macros:
 
 ```c
 // Original memory allocation
-JUNO_MEMORY_T tMemory = {0};
+JUNO_POINTER_T tMemory = {0};
 tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_DATA_T));
 
 // Create a named reference using the macro

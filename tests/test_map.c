@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include "juno/map/map_api.h"
+#include "juno/ds/map_api.h"
 
 #ifndef TEST_MAP_CAPACITY
 #define TEST_MAP_CAPACITY 16
