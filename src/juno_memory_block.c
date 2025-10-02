@@ -48,7 +48,7 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory)
             "Invalid memory block configuration: size overflow");
         return JUNO_STATUS_ERR;
     }
-    if (((uintptr_t)ptJunoMemoryBlock->pvMemory) % ptJunoMemoryBlock->zTypeSize != 0)
+    if (((uintptr_t)ptJunoMemoryBlock->pvMemory) % ptJunoMemoryBlock->zAlignment != 0)
     {
         JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock,
             "Invalid memory alignment for block base pointer");
