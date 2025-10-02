@@ -26,7 +26,9 @@
 */
 #ifndef JUNO_BUFF_STACK_API_H
 #define JUNO_BUFF_STACK_API_H
+#include "juno/ds/array_api.h"
 #include "juno/macros.h"
+#include "juno/memory/memory_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/types.h"
@@ -40,50 +42,40 @@ typedef struct JUNO_BUFF_STACK_ROOT_TAG JUNO_BUFF_STACK_ROOT_T;
 typedef struct JUNO_BUFF_STACK_API_TAG JUNO_BUFF_STACK_API_T;
 
 struct JUNO_BUFF_STACK_ROOT_TAG JUNO_MODULE_ROOT(JUNO_BUFF_STACK_API_T,
-    /// The current length of the stack
-    size_t zLength;
-    /// The capacity of the stack
-    size_t zCapacity;
+    JUNO_ARRAY_ROOT_T *ptBuffer;
 );
 
 struct JUNO_BUFF_STACK_API_TAG
 {
-    JUNO_STATUS_T (*SetAt)(JUNO_BUFF_STACK_ROOT_T *ptStack, void *ptItem, size_t iIndex);
-    JUNO_RESULT_VOID_PTR_T (*GetAt)(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex);
-    JUNO_STATUS_T (*RemoveAt)(JUNO_BUFF_STACK_ROOT_T *ptStack, size_t iIndex);
-    JUNO_STATUS_T (*Copy)(void *ptDest, void *ptSrc);
+    /// Enqueue an item into the buffer
+    /// @returns The index to place the enqueued item
+    JUNO_STATUS_T (*Push)(JUNO_BUFF_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
+    /// Dequeue an item from the buffer
+    /// @returns The index to dequeue the item from
+    JUNO_STATUS_T (*Pop)(JUNO_BUFF_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
+    /// Peek at the next item in the queue
+    /// @returns the index of the next item in the queue
+    JUNO_RESULT_POINTER_T (*Peek)(JUNO_BUFF_STACK_ROOT_T *ptQueue);
 };
 
-static inline JUNO_STATUS_T JunoDs_Buff_StackVerify(JUNO_BUFF_STACK_ROOT_T *ptStack)
+
+static inline JUNO_STATUS_T JunoDs_Buff_StackVerify(const JUNO_BUFF_STACK_ROOT_T *ptStack)
 {
     JUNO_ASSERT_EXISTS(ptStack);
     JUNO_ASSERT_EXISTS(
         ptStack->ptApi &&
-        ptStack->zCapacity && 
-        ptStack->ptApi->GetAt &&
-        ptStack->ptApi->SetAt &&
-        ptStack->ptApi->RemoveAt &&
-        ptStack->ptApi->Copy
+        ptStack->ptApi->Push &&
+        ptStack->ptApi->Pop &&
+        ptStack->ptApi->Peek &&
+        ptStack->ptBuffer
     );
-    return JUNO_STATUS_SUCCESS;
+    return JunoDs_ArrayVerify(ptStack->ptBuffer);
 }
 
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_Buff_StackInit(JUNO_BUFF_STACK_ROOT_T *ptQueue, const JUNO_BUFF_STACK_API_T *ptApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
-
-/// Enqueue an item into the buffer
-/// @returns The index to place the enqueued item
-JUNO_STATUS_T JunoDs_Buff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptQueue, void *ptItem);
+JUNO_STATUS_T JunoDs_Buff_StackInit(JUNO_BUFF_STACK_ROOT_T *ptQueue, JUNO_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 
-/// Dequeue an item from the buffer
-/// @returns The index to dequeue the item from
-JUNO_STATUS_T JunoDs_Buff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptQueue, void *ptReturn);
-
-
-/// Peek at the next item in the queue
-/// @returns the index of the next item in the queue
-JUNO_RESULT_VOID_PTR_T JunoDs_Buff_StackPeek(JUNO_BUFF_STACK_ROOT_T *ptQueue);
 
 #ifdef __cplusplus
 }

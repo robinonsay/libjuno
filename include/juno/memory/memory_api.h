@@ -26,6 +26,7 @@
 */
 #ifndef JUNO_MEMORY_API_H
 #define JUNO_MEMORY_API_H
+#include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include <stddef.h>
@@ -36,9 +37,12 @@ extern "C"
 /// Define a reference for memory
 #define JUNO_REF(name) REF##name
 /// Create a new reference for memory
-#define JUNO_NEW_REF(name) JUNO_MEMORY_T *JUNO_REF(name)
+#define JUNO_NEW_REF(name) JUNO_POINTER_T *JUNO_REF(name)
 
-typedef struct JUNO_MEMORY_TAG JUNO_MEMORY_T;
+typedef struct JUNO_POINTER_TAG JUNO_POINTER_T;
+typedef struct JUNO_POINTER_API_TAG JUNO_POINTER_API_T;
+typedef struct JUNO_MEMORY_ALLOC_API_TAG JUNO_MEMORY_ALLOC_API_T;
+typedef struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MEMORY_ALLOC_ROOT_T;
 
 /// The memory metadata
 struct JUNO_MEMORY_BLOCK_METADATA_TAG
@@ -48,21 +52,29 @@ struct JUNO_MEMORY_BLOCK_METADATA_TAG
 
 /// @brief Structure for an allocated memory segment.
 /// Describes the allocated memory with a pointer to the start and its size.
-struct JUNO_MEMORY_TAG
-{
+struct JUNO_POINTER_TAG JUNO_MODULE_LITE_ROOT(JUNO_POINTER_API_T,
     /// Pointer to the allocated memory.
     void *pvAddr;
     /// Size of the allocated memory, in bytes.
     size_t zSize;
-    /// The reference count for this memory
-    size_t iRefCount;
+);
+
+#define Juno_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type)}
+#define JUNO_ASSERT_POINTER_TYPE(pointer, type) (pointer.zSize == sizeof(type))?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR
+
+struct JUNO_POINTER_API_TAG
+{
+    /// Copy memory from one pointer to another
+    JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);
+    /// Reset the memory at the pointer. This could mean zero-initialization
+    JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);
 };
 
-typedef struct JUNO_MEMORY_ALLOC_API_TAG JUNO_MEMORY_ALLOC_API_T;
+JUNO_MODULE_RESULT(JUNO_RESULT_POINTER_T, JUNO_POINTER_T);
 
-typedef struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MEMORY_ALLOC_ROOT_T;
-
-struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T, JUNO_MODULE_EMPTY);
+struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
+    const JUNO_POINTER_API_T *ptPointerApi;
+);
 
 struct JUNO_MEMORY_ALLOC_API_TAG
 {
@@ -72,7 +84,7 @@ struct JUNO_MEMORY_ALLOC_API_TAG
     /// @param pvRetAddr Pointer to a memory descriptor where allocation details will be stored.
     /// @param zSize Size of the memory block to allocate in bytes.
     /// @return JUNO_STATUS_T Status of the allocation operation.
-    JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_MEMORY_T *pvRetAddr, size_t zSize);
+    JUNO_RESULT_POINTER_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, size_t zSize);
 
     /// @brief Updates an existing memory allocation to a new size.
     /// 
@@ -80,49 +92,63 @@ struct JUNO_MEMORY_ALLOC_API_TAG
     /// @param ptMemory Pointer to the memory descriptor to update.
     /// @param zNewSize The new size for the memory block.
     /// @return JUNO_STATUS_T Status of the update operation.
-    JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
+    JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);
 
     /// @brief Frees an allocated memory block.
     /// 
     /// @param ptMem Pointer to the memory allocation structure.
     /// @param pvAddr Pointer to the memory block to free.
     /// @return JUNO_STATUS_T Status of the free operation.
-    JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_MEMORY_T *pvAddr);
+    JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *pvAddr);
 };
 
-
-/// Get the reference to this juno memory
-/// - This function will track the reference count to this memory
-/// - The reference count is used to prevent freeing of used memory
-/// - When using `JUNO_MEMORY_T` it is recommended to pass memory
-///   around using this function to increment/decrement the reference count
-/// @param ptMemory The memory to get the reference to
-/// @return The reference to the memory
-static inline JUNO_MEMORY_T * Juno_MemoryGetRef(JUNO_MEMORY_T *ptMemory)
+static inline JUNO_STATUS_T JunoMemory_AllocApiVerify(const JUNO_MEMORY_ALLOC_API_T *ptAllocApi)
 {
-    if(ptMemory->iRefCount)
-    {
-        ptMemory->iRefCount += 1;
-    }
-    return ptMemory;
+    JUNO_ASSERT_EXISTS(
+        ptAllocApi &&
+        ptAllocApi->Get &&
+        ptAllocApi->Put &&
+        ptAllocApi->Update
+    );
+    return JUNO_STATUS_SUCCESS;
 }
 
-/// Put the reference to this juno memory
-/// - This function will track the reference count to this memory
-/// - The reference count is used to prevent freeing of used memory
-/// - When using `JUNO_MEMORY_T` it is recommended to pass memory
-///   around using this function to increment /decrement the reference count
-/// @param ptMemory The memory to put the reference away
-/// @return The reference to the memory
-static inline void Juno_MemoryPutRef(JUNO_MEMORY_T *ptMemory)
+static inline JUNO_STATUS_T JunoMemory_PointerApiVerify(const JUNO_POINTER_API_T *ptPointerApi)
 {
-    if(ptMemory->iRefCount)
-    {
-        ptMemory->iRefCount -= 1;
-    }
+    JUNO_ASSERT_EXISTS(
+        ptPointerApi &&
+        ptPointerApi->Copy &&
+        ptPointerApi->Reset
+    );
+    return JUNO_STATUS_SUCCESS;
 }
 
+static inline JUNO_STATUS_T JunoMemory_AllocVerify(const JUNO_MEMORY_ALLOC_ROOT_T *ptAlloc)
+{
+    JUNO_ASSERT_EXISTS(
+        ptAlloc &&
+        ptAlloc->ptApi &&
+        ptAlloc->ptPointerApi
+    );
+    JUNO_STATUS_T tStatus = JunoMemory_AllocApiVerify(ptAlloc->ptApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoMemory_PointerApiVerify(ptAlloc->ptPointerApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return tStatus;
+}
 
+static inline JUNO_STATUS_T JunoMemory_PointerVerify(const JUNO_POINTER_T *ptPointer)
+{
+    JUNO_ASSERT_EXISTS(
+        ptPointer &&
+        ptPointer->ptApi &&
+        ptPointer->pvAddr &&
+        ptPointer->zSize
+    );
+    JUNO_STATUS_T tStatus = JunoMemory_PointerApiVerify(ptPointer->ptApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return tStatus;
+}
 
 #ifdef __cplusplus
 }

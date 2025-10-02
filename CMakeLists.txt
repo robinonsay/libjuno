@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,6 +13,7 @@ option(JUNO_SHARED "Compile the juno shared library" OFF)
 option(JUNO_FREESTANDING "Compile as a freestanding library" OFF)
 option(JUNO_ASAN "Compile ASAN" OFF)
 option(JUNO_UBSAN "Compile with UBSAN" OFF)
+option(JUNO_EXAMPLES "Compile Juno Examples" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
@@ -137,6 +138,11 @@ if(JUNO_TESTS)
     add_library(unity ${PROJECT_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${PROJECT_SOURCE_DIR}/deps/unity/src)
     add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
+endif()
+
+if(JUNO_EXAMPLES)
+    set(CMAKE_BUILD_TYPE Debug)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/examples)
 endif()
 
 

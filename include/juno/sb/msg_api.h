@@ -23,51 +23,29 @@
 /**
  * @file include/juno/sb/msg_api.h
  * @brief Juno message abstraction API.
- *
- * Provides a generic message type (JUNO_MSG_T) and buffer accessor API. The
- * buffer is described by a pointer and a size. Implementations should set the
- * buffer using SetBuffer and return it via GetBuffer.
- *
- * GetBuffer uses an out-parameter (non-const) to return the current buffer
- * descriptor. SetBuffer accepts a buffer descriptor by value.
- *
  * @author Robin Onsay
  */
 #ifndef JUNO_MSG_API_H
 #define JUNO_MSG_API_H
 #include "juno/status.h"
 #include "juno/module.h"
+#include "juno/ds/buff_queue_api.h"
 #include <stdio.h>
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct JUNO_MSG_API_TAG JUNO_MSG_API_T;
-typedef struct JUNO_MSG_BUFFER_HDR_TAG JUNO_MSG_BUFFER_T;
+typedef struct JUNO_MSG_QUEUE_API_TAG JUNO_MSG_QUEUE_API_T;
+typedef struct JUNO_MSG_QUEUE_ROOT_TAG JUNO_MSG_QUEUE_ROOT_T;
 
-typedef union JUNO_MSG_TAG JUNO_MSG_T;
-typedef struct JUNO_MSG_ROOT_TAG JUNO_MSG_ROOT_T;
-
-struct JUNO_MSG_BUFFER_HDR_TAG
-{
-    void *pvBuffer;
-    size_t zBufferSize;
-};
-
-struct JUNO_MSG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MSG_API_T,
-    const JUNO_MSG_BUFFER_T *ptBuffer;
+struct JUNO_MSG_QUEUE_ROOT_TAG JUNO_MODULE_DERIVE(JUNO_BUFF_QUEUE_ROOT_T,
 );
 
-struct JUNO_MSG_API_TAG
-{
-    /// Verify the message
-    JUNO_STATUS_T (*VerifyMsg)(JUNO_MSG_T *ptJunoMsg);
-    /// Get the message buffer (out parameter)
-    JUNO_STATUS_T (*GetBuffer)(JUNO_MSG_T *ptJunoMsg, JUNO_MSG_BUFFER_T *ptRetBuffer);
-    /// Set the message buffer (by value)
-    JUNO_STATUS_T (*SetBuffer)(JUNO_MSG_T *ptJunoMsg, const JUNO_MSG_BUFFER_T tBuffer);
-};
+struct JUNO_MSG_QUEUE_API_TAG JUNO_MODULE_API_DERIVE(JUNO_BUFF_QUEUE_API_T,
+    /// Gets the unique id of this msg type
+    JUNO_RESULT_VOID_PTR_T (*GetMsgQueueUid)(JUNO_MSG_QUEUE_ROOT_T *ptJunoMsg);
+);
 
 #ifdef __cplusplus
 }

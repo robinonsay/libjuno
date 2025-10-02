@@ -27,6 +27,8 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory)
 {
     JUNO_ASSERT_EXISTS(ptJunoMemory);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
+    JUNO_STATUS_T tStatus = JunoMemory_AllocVerify(ptJunoMemory);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_ASSERT_EXISTS_MODULE(
         ptJunoMemory &&
         ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi &&
@@ -37,6 +39,20 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory)
         ptJunoMemoryBlock,
         "Module does not have all dependencies"
     );
+    // Guard overflow of zTypeSize * zLength and ensure base alignment
+    if (ptJunoMemoryBlock->zTypeSize != 0 &&
+        ptJunoMemoryBlock->zLength > (SIZE_MAX / ptJunoMemoryBlock->zTypeSize))
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock,
+            "Invalid memory block configuration: size overflow");
+        return JUNO_STATUS_ERR;
+    }
+    if (((uintptr_t)ptJunoMemoryBlock->pvMemory) % ptJunoMemoryBlock->zTypeSize != 0)
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock,
+            "Invalid memory alignment for block base pointer");
+        return JUNO_STATUS_ERR;
+    }
     if(ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi != &tJunoMemoryBlockApi)
     {
         JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoMemoryBlock, "Module has invalid API");
@@ -45,40 +61,48 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory)
     return JUNO_STATUS_SUCCESS;
 }
 
-static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, JUNO_MEMORY_T *ptMemory, size_t zSize)
+static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, size_t zSize)
 {
+    JUNO_RESULT_POINTER_T tResult = {0};
     // Validate the memory block structure
-    JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tResult.tStatus = Verify(ptJunoMemory);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     if(!zSize)
     {
-        tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
     }
-    if(tStatus)
+    if(tResult.tStatus)
     {
-        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
+        JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk,
         "Attempted to allocate memory with size 0");
-        return tStatus;
+        return tResult;
     }
     // Delegate to block allocation getter
     if(zSize > ptMemBlk->zTypeSize)
     {
-        tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
+        tResult.tStatus = JUNO_STATUS_MEMALLOC_ERROR;
+        JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk,
             "Invalid size for block alloc"
         );
-        return tStatus;
+        return tResult;
     }
     // Check if there is room for allocation (either new or from freed list)
     if(!(ptMemBlk->zUsed < ptMemBlk->zLength || ptMemBlk->zFreed))
     {
-        tStatus = JUNO_STATUS_MEMALLOC_ERROR;
+        tResult.tStatus = JUNO_STATUS_MEMALLOC_ERROR;
         // Log error through the failure handler
-        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
+        JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk,
             "Failed to allocate block memory. Memory is full"
         );
-        return tStatus;
+        return tResult;
+    }
+    // Sanity invariants
+    if(ptMemBlk->zUsed > ptMemBlk->zLength || ptMemBlk->zFreed > ptMemBlk->zLength)
+    {
+        tResult.tStatus = JUNO_STATUS_ERR;
+        JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk, "Corrupt allocator counters");
+        return tResult;
     }
     
     // If no freed block is available, allocate a new block
@@ -92,16 +116,18 @@ static JUNO_STATUS_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
         // Increment the used block counter
         ptMemBlk->zUsed += 1;
     }
-    // Retrieve the latest free block and update free stack
-    ptMemory->pvAddr = ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem;
-    ptMemory->zSize = ptMemBlk->zTypeSize;
-    ptMemory->iRefCount = 1;
+    tResult.tOk.ptApi = ptMemBlk->tRoot.ptPointerApi;
+    tResult.tOk.pvAddr = ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem;
+    tResult.tOk.zSize = ptMemBlk->zTypeSize;
     ptMemBlk->zFreed -= 1;
     ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = NULL;
-    return tStatus;
+    tResult.tStatus = JunoMemory_PointerVerify(&tResult.tOk);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    tResult.tStatus = tResult.tOk.ptApi->Reset(tResult.tOk);
+    return tResult;
 }
 
-static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, JUNO_MEMORY_T *ptMemory, size_t zNewSize)
+static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, JUNO_POINTER_T *ptMemory, size_t zNewSize)
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
@@ -113,33 +139,24 @@ static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory
         JUNO_FAIL_MODULE(tStatus, ptMem,
             "Failed to update memory, size is too big"
         );
+        return tStatus;
     }
     ptMemory->zSize = zNewSize;
     return tStatus;
 }
 
-static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, JUNO_MEMORY_T *ptMemory)
+static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, JUNO_POINTER_T *ptMemory)
 {
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoMemory_PointerVerify(ptMemory);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     JUNO_ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
-    JUNO_MEMORY_T tMemory = *ptMemory;
+    JUNO_POINTER_T tMemory = *ptMemory;
     ptMemory->pvAddr = NULL;
     ptMemory->zSize = 0;
-    ptMemory->iRefCount = 0;
-    // There are still valid references to this memory, end with success
-    if(tMemory.iRefCount != 1)
-    {
-        tStatus = JUNO_STATUS_REF_IN_USE_ERROR;
-        // Log error if invalid address detected
-        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
-            "Failed to free block memory. Memory in use"
-        );
-        *ptMemory = tMemory;
-        return tStatus;
-    }
     // Calculate start and end addresses for the memory block area
     void *pvStartAddr = ptMemBlk->pvMemory;
     void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * ptMemBlk->zLength];
@@ -170,13 +187,8 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
             return tStatus;           
         }
     }
-    
-    // Clear the block memory
-    for(size_t i = 0; i < ptMemBlk->zTypeSize; i++)
-    {
-        uint8_t *piAddr = (uint8_t *)(tMemory.pvAddr);
-        piAddr[i] = 0;
-    }
+    tStatus = tMemory.ptApi->Reset(tMemory);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Check if the block being freed is the last allocated block
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
     if(pvEndOfBlk == tMemory.pvAddr)
@@ -187,13 +199,20 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
     else
     {
         // Otherwise, add the block back to the free stack.
+        if (ptMemBlk->zFreed >= ptMemBlk->zLength)
+        {
+            // Free stack overflow (should be impossible with correct invariants)
+            tStatus = JUNO_STATUS_MEMFREE_ERROR;
+            JUNO_FAIL_MODULE(tStatus, ptMemBlk, "Free list overflow");
+            *ptMemory = tMemory;
+            return tStatus;
+        }
         ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = tMemory.pvAddr;
         ptMemBlk->zFreed += 1;
     }
 
     return tStatus;
 }
-
 
 static const JUNO_MEMORY_ALLOC_API_T tJunoMemoryBlockApi = {
     .Get = Juno_MemoryBlkGet,
@@ -202,7 +221,9 @@ static const JUNO_MEMORY_ALLOC_API_T tJunoMemoryBlockApi = {
 };
 
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock,
+JUNO_STATUS_T JunoMemory_BlockInit(
+    JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock,
+    const JUNO_POINTER_API_T *ptPointerApi,
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
@@ -215,6 +236,7 @@ JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock,
     ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi = &tJunoMemoryBlockApi;
     ptJunoMemoryBlock->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     ptJunoMemoryBlock->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA = pvFailureUserData;
+    ptJunoMemoryBlock->tRoot.ptPointerApi = ptPointerApi;
     // Initialize memory area and free stack pointer
     ptJunoMemoryBlock->pvMemory = (uint8_t *) pvMemory;
     ptJunoMemoryBlock->ptMetadata = ptMetadata;
@@ -225,6 +247,22 @@ JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock,
     ptJunoMemoryBlock->zUsed = 0;
     // Initially, no freed blocks are available
     ptJunoMemoryBlock->zFreed = 0;
+    // Early validation before Verify performs module checks
+    if (!ptPointerApi || !pvMemory || !ptMetadata || zTypeSize == 0 || zLength == 0)
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Invalid init parameters");
+        return JUNO_STATUS_ERR;
+    }
+    if (zTypeSize != 0 && zLength > (SIZE_MAX / zTypeSize))
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Init size overflow");
+        return JUNO_STATUS_ERR;
+    }
+    if (((uintptr_t)pvMemory) % zTypeSize != 0)
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Init memory pointer misaligned");
+        return JUNO_STATUS_ERR;
+    }
     JUNO_STATUS_T tStatus = Verify((JUNO_MEMORY_ALLOC_ROOT_T *) ptJunoMemoryBlock);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;

@@ -15,7 +15,7 @@
     included in all copies or substantial portions of the Software.
 */
 #include "juno/macros.h"
-#include "juno/map/map_api.h"
+#include "juno/ds/map_api.h"
 #include "juno/status.h"
 #include "juno/macros.h"
 #include <stdbool.h>
