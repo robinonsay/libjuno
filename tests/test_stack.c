@@ -1,4 +1,4 @@
-// Updated to latest API: use JUNO_ARRAY_ROOT_T as backing storage and JUNO_POINTER_API
+// Updated to latest API: use JUNO_ARRAY_ROOT_T as backing storage and JUNO_POINTER_API_T
 #include "juno/memory/memory_api.h"
 #include "juno/module.h"
 #include "juno/status.h"
