@@ -176,7 +176,7 @@ int main(void)
 
 static inline JUNO_STATUS_T Queue_SetAt(JUNO_ARRAY_ROOT_T *ptQueue, JUNO_POINTER_T tItem, size_t iIndex)
 {
-	uint8_t *iItem = (void *) tItem.pvAddr;
+	uint8_t *iItem = (uint8_t *) tItem.pvAddr;
 	TEST_ARRAY *ptTestQueue = (TEST_ARRAY *) ptQueue;
 	ptTestQueue->iTestQueue[iIndex] = *iItem;
 	return JUNO_STATUS_SUCCESS;
