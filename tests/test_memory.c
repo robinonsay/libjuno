@@ -61,7 +61,7 @@ void tearDown(void)
 static void test_nominal_single_alloc_and_free(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -99,7 +99,7 @@ static void test_nominal_single_alloc_and_free(void)
 static void test_nominal_multiple_alloc_and_free(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -159,7 +159,7 @@ static void test_nominal_multiple_alloc_and_free(void)
 static void test_negative_memory_empty(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -206,7 +206,7 @@ static void test_negative_memory_empty(void)
 static void test_negative_memory_full(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -242,7 +242,7 @@ static void test_negative_memory_full(void)
 static void test_invalid_init_parameters(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         NULL,
         NULL,
@@ -258,7 +258,7 @@ static void test_invalid_init_parameters(void)
 static void test_double_free(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -285,7 +285,7 @@ static void test_double_free(void)
 static void test_free_unallocated(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -305,7 +305,7 @@ static void test_free_unallocated(void)
 static void test_update_memory(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -335,7 +335,7 @@ static void test_update_memory(void)
 static void test_generic_memory_get_put(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -366,7 +366,7 @@ static void test_generic_memory_get_put(void)
 static void test_zero_size_allocation(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -386,7 +386,7 @@ static void test_zero_size_allocation(void)
 static void test_bad_api(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,
@@ -420,7 +420,7 @@ static void test_bad_api(void)
 static void test_invalid_size_and_addr(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMem,
         &gtTestBlockApi,
         ptTestBlock,

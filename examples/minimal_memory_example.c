@@ -57,7 +57,7 @@ int main(void) {
     
     // Step 1: Initialize the memory allocator
     JUNO_MEMORY_ALLOC_BLOCK_T tMemAlloc = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMemAlloc,
         &gtUserDataPointerApi,
         gUserDataMemory,

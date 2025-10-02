@@ -42,7 +42,7 @@ To help understand how memory blocks work in Juno, here's a visualization of the
      Block Control Structure
 ```
 
-When calling `JunoMemory_BlockApi()`:
+When calling `JunoMemory_BlockInit()`:
 1. You pass in a pre-allocated memory array (`JUNO_MEMORY_BLOCK`)
 2. You pass in a pre-allocated metadata array (`JUNO_MEMORY_BLOCK_METADATA`)
 3. The function initializes the control structure that tracks:
@@ -79,7 +79,7 @@ Create and initialize a memory allocator to manage the block:
 JUNO_MEMORY_ALLOC_T tMemAlloc = {0};
 
 // Initialize the block allocator
-JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
     &tMemAlloc,        // Pointer to memory block structure
     gptMyMemoryBlock,            // Memory block array
     gptMyMemoryMetadata,         // Metadata array
@@ -285,7 +285,7 @@ union JUNO_MEMORY_ALLOC_TAG
 ### Initialization
 
 ```c
-JUNO_STATUS_T JunoMemory_BlockApi(
+JUNO_STATUS_T JunoMemory_BlockInit(
     JUNO_MEMORY_ALLOC_T *ptJunoMemory,
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
@@ -377,7 +377,7 @@ int main() {
     
     // Initialize the memory allocator
     JUNO_MEMORY_ALLOC_T tMemAlloc = {};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMemAlloc,
         nodeMemory,
         nodeMetadata,

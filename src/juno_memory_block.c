@@ -39,6 +39,20 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory)
         ptJunoMemoryBlock,
         "Module does not have all dependencies"
     );
+    // Guard overflow of zTypeSize * zLength and ensure base alignment
+    if (ptJunoMemoryBlock->zTypeSize != 0 &&
+        ptJunoMemoryBlock->zLength > (SIZE_MAX / ptJunoMemoryBlock->zTypeSize))
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock,
+            "Invalid memory block configuration: size overflow");
+        return JUNO_STATUS_ERR;
+    }
+    if (((uintptr_t)ptJunoMemoryBlock->pvMemory) % ptJunoMemoryBlock->zTypeSize != 0)
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock,
+            "Invalid memory alignment for block base pointer");
+        return JUNO_STATUS_ERR;
+    }
     if(ptJunoMemoryBlock->JUNO_MODULE_SUPER.ptApi != &tJunoMemoryBlockApi)
     {
         JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptJunoMemoryBlock, "Module has invalid API");
@@ -83,10 +97,23 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
         );
         return tResult;
     }
+    // Sanity invariants
+    if(ptMemBlk->zUsed > ptMemBlk->zLength || ptMemBlk->zFreed > ptMemBlk->zLength)
+    {
+        tResult.tStatus = JUNO_STATUS_ERR;
+        JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk, "Corrupt allocator counters");
+        return tResult;
+    }
     
     // If no freed block is available, allocate a new block
     if(ptMemBlk->zFreed == 0)
     {
+        if(ptMemBlk->zUsed >= ptMemBlk->zLength)
+        {
+            tResult.tStatus = JUNO_STATUS_MEMALLOC_ERROR;
+            JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk, "Allocator full");
+            return tResult;
+        }
         // Compute the offset for the next available block
         size_t zNextFreeBlock = ptMemBlk->zUsed * ptMemBlk->zTypeSize;
         // Place the new block on the free stack
@@ -97,6 +124,12 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
     }
     tResult.tOk.ptApi = ptMemBlk->tRoot.ptPointerApi;
     // Retrieve the latest free block and update free stack
+    if(ptMemBlk->zFreed == 0)
+    {
+        tResult.tStatus = JUNO_STATUS_ERR;
+        JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk, "Free list underflow");
+        return tResult;
+    }
     tResult.tOk.pvAddr = ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem;
     tResult.tOk.zSize = ptMemBlk->zTypeSize;
     ptMemBlk->zFreed -= 1;
@@ -179,6 +212,14 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
     else
     {
         // Otherwise, add the block back to the free stack.
+        if (ptMemBlk->zFreed >= ptMemBlk->zLength)
+        {
+            // Free stack overflow (should be impossible with correct invariants)
+            tStatus = JUNO_STATUS_MEMFREE_ERROR;
+            JUNO_FAIL_MODULE(tStatus, ptMemBlk, "Free list overflow");
+            *ptMemory = tMemory;
+            return tStatus;
+        }
         ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = tMemory.pvAddr;
         ptMemBlk->zFreed += 1;
     }
@@ -193,7 +234,7 @@ static const JUNO_MEMORY_ALLOC_API_T tJunoMemoryBlockApi = {
 };
 
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T JunoMemory_BlockApi(
+JUNO_STATUS_T JunoMemory_BlockInit(
     JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock,
     const JUNO_POINTER_API_T *ptPointerApi,
     void *pvMemory,
@@ -219,6 +260,22 @@ JUNO_STATUS_T JunoMemory_BlockApi(
     ptJunoMemoryBlock->zUsed = 0;
     // Initially, no freed blocks are available
     ptJunoMemoryBlock->zFreed = 0;
+    // Early validation before Verify performs module checks
+    if (!ptPointerApi || !pvMemory || !ptMetadata || zTypeSize == 0 || zLength == 0)
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Invalid init parameters");
+        return JUNO_STATUS_ERR;
+    }
+    if (zTypeSize != 0 && zLength > (SIZE_MAX / zTypeSize))
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Init size overflow");
+        return JUNO_STATUS_ERR;
+    }
+    if (((uintptr_t)pvMemory) % zTypeSize != 0)
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Init memory pointer misaligned");
+        return JUNO_STATUS_ERR;
+    }
     JUNO_STATUS_T tStatus = Verify((JUNO_MEMORY_ALLOC_ROOT_T *) ptJunoMemoryBlock);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
