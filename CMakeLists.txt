@@ -77,7 +77,7 @@ if(JUNO_FREESTANDING)
         -nostdlib
         -ffreestanding
     )
-    target_link_options(${lib} PRIVATE
+    target_link_options(${PROJECT_NAME} PRIVATE
         -nostdlib
     )
 endif()
