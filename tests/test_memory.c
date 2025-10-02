@@ -22,9 +22,9 @@ JUNO_MEMORY_BLOCK_METADATA(ptTestMetadata, 10);
 /// Copy memory from one pointer to another
 static JUNO_STATUS_T Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 {
-    JUNO_STATUS_T tStatus = JUNO_ASSERT_POINTER_TYPE(tDest, TEST_BLOCK_T);
+    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tDest, TEST_BLOCK_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JUNO_ASSERT_POINTER_TYPE(tSrc, TEST_BLOCK_T);
+    tStatus = JUNO_CHECK_POINTER_TYPE(tSrc, TEST_BLOCK_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TEST_BLOCK_T *ptDest = (TEST_BLOCK_T *)tDest.pvAddr;
     TEST_BLOCK_T *ptSrc = (TEST_BLOCK_T *)tSrc.pvAddr;
@@ -35,7 +35,7 @@ static JUNO_STATUS_T Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 /// Reset the memory at the pointer. This could mean zero-initialization
 static JUNO_STATUS_T Reset(JUNO_POINTER_T tPointer)
 {
-    JUNO_STATUS_T tStatus = JUNO_ASSERT_POINTER_TYPE(tPointer, TEST_BLOCK_T);
+    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tPointer, TEST_BLOCK_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TEST_BLOCK_T *ptBlock = (TEST_BLOCK_T *)tPointer.pvAddr;
     *ptBlock = (TEST_BLOCK_T){0};

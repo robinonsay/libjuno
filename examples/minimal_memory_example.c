@@ -15,9 +15,9 @@ typedef struct {
 // Define the pointer api for this type
 static JUNO_STATUS_T UserDataCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 {
-    JUNO_STATUS_T tStatus = JUNO_ASSERT_POINTER_TYPE(tDest, USER_DATA_T);
+    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tDest, USER_DATA_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JUNO_ASSERT_POINTER_TYPE(tSrc, USER_DATA_T);
+    tStatus = JUNO_CHECK_POINTER_TYPE(tSrc, USER_DATA_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     USER_DATA_T *ptDest = (USER_DATA_T *)tDest.pvAddr;
     USER_DATA_T *ptSrc = (USER_DATA_T *)tSrc.pvAddr;
@@ -28,7 +28,7 @@ static JUNO_STATUS_T UserDataCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 /// Reset the memory at the pointer. This could mean zero-initialization
 static JUNO_STATUS_T UserDataReset(JUNO_POINTER_T tPointer)
 {
-    JUNO_STATUS_T tStatus = JUNO_ASSERT_POINTER_TYPE(tPointer, USER_DATA_T);
+    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tPointer, USER_DATA_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     USER_DATA_T *ptBlock = (USER_DATA_T *)tPointer.pvAddr;
     *ptBlock = (USER_DATA_T){0};
