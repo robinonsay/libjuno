@@ -58,22 +58,27 @@ struct JUNO_BUFF_QUEUE_API_TAG
     JUNO_RESULT_POINTER_T (*Peek)(JUNO_BUFF_QUEUE_ROOT_T *ptQueue);
 };
 
-static inline JUNO_STATUS_T JunoDs_Buff_QueueVerify(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
+static inline JUNO_STATUS_T JunoDs_Buff_QueueApiVerify(const JUNO_BUFF_QUEUE_API_T *ptQueueApi)
+{
+     JUNO_ASSERT_EXISTS(
+        ptQueueApi &&
+        ptQueueApi->Enqueue &&
+        ptQueueApi->Dequeue &&
+        ptQueueApi->Peek
+    );
+    return JUNO_STATUS_SUCCESS;   
+}
+
+static inline JUNO_STATUS_T JunoDs_Buff_QueueVerify(const JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
     JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptQueue->ptBuffer);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    JUNO_ASSERT_EXISTS(
-        ptQueue->ptApi &&
-        ptQueue->ptApi->Enqueue &&
-        ptQueue->ptApi->Dequeue &&
-        ptQueue->ptApi->Peek
-    );
-    return JUNO_STATUS_SUCCESS;
+    return JunoDs_Buff_QueueApiVerify(ptQueue->ptApi);
 }
 
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_Buff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, const JUNO_BUFF_QUEUE_API_T *ptApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T JunoDs_Buff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 #ifdef __cplusplus
 }

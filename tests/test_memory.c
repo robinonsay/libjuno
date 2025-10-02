@@ -328,7 +328,6 @@ static void test_update_memory(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     tStatus = ptApi->Update(&tMem.tRoot, &tMemory, sizeof(TEST_BLOCK_T) + 1);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-    
     tStatus = ptApi->Put(&tMem.tRoot,  &tMemory);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }

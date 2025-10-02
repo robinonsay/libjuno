@@ -119,6 +119,7 @@ static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory
         JUNO_FAIL_MODULE(tStatus, ptMem,
             "Failed to update memory, size is too big"
         );
+        return tStatus;
     }
     ptMemory->zSize = zNewSize;
     return tStatus;

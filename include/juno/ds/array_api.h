@@ -43,8 +43,11 @@ typedef struct JUNO_ARRAY_API_TAG  JUNO_ARRAY_API_T;
 
 /// The root buffee queue
 struct JUNO_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ARRAY_API_T,
+    /// The pointer api for this array
+    const JUNO_POINTER_API_T *ptPointerApi;
     /// The current length of the buffer
     size_t zLength;
+    /// The capacity of this array
     size_t zCapacity;
 );
 
@@ -55,17 +58,29 @@ struct JUNO_ARRAY_API_TAG
     JUNO_STATUS_T (*RemoveAt)(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
 };
 
-static inline JUNO_STATUS_T JunoDs_ArrayVerify(JUNO_ARRAY_ROOT_T *ptArray)
+static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_ARRAY_API_T *ptArrayApi)
+{
+    JUNO_ASSERT_EXISTS(ptArrayApi);
+    JUNO_ASSERT_EXISTS(
+        ptArrayApi &&
+        ptArrayApi->GetAt &&
+        ptArrayApi->SetAt &&
+        ptArrayApi->RemoveAt
+    );
+    return JUNO_STATUS_SUCCESS;
+}
+static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_ARRAY_ROOT_T *ptArray)
 {
     JUNO_ASSERT_EXISTS(ptArray);
     JUNO_ASSERT_EXISTS(
-        ptArray->ptApi &&
-        ptArray->zCapacity && 
-        ptArray->ptApi->GetAt &&
-        ptArray->ptApi->SetAt &&
-        ptArray->ptApi->RemoveAt
+        ptArray->zCapacity &&
+        ptArray->ptPointerApi
     );
-    return JUNO_STATUS_SUCCESS;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayApiVerify(ptArray->ptApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoMemory_PointerApiVerify(ptArray->ptPointerApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return tStatus;
 }
 
 #ifdef __cplusplus
