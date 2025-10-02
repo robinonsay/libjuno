@@ -17,7 +17,7 @@ option(JUNO_EXAMPLES "Compile Juno Examples" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
-project(juno VERSION 0.42.0 LANGUAGES C CXX)
+project(juno VERSION 1.0.0 LANGUAGES C CXX)
 
 if(JUNO_API)
     add_definitions(-DJUNO_API)
