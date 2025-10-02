@@ -108,12 +108,6 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
     // If no freed block is available, allocate a new block
     if(ptMemBlk->zFreed == 0)
     {
-        if(ptMemBlk->zUsed >= ptMemBlk->zLength)
-        {
-            tResult.tStatus = JUNO_STATUS_MEMALLOC_ERROR;
-            JUNO_FAIL_MODULE(tResult.tStatus, ptMemBlk, "Allocator full");
-            return tResult;
-        }
         // Compute the offset for the next available block
         size_t zNextFreeBlock = ptMemBlk->zUsed * ptMemBlk->zTypeSize;
         // Place the new block on the free stack
