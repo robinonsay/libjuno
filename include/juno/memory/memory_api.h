@@ -30,6 +30,7 @@
 #include "juno/status.h"
 #include "juno/module.h"
 #include <stddef.h>
+#include <stdalign.h>
 #ifdef __cplusplus
 extern "C"
 {
@@ -57,10 +58,11 @@ struct JUNO_POINTER_TAG JUNO_MODULE_LITE_ROOT(JUNO_POINTER_API_T,
     void *pvAddr;
     /// Size of the allocated memory, in bytes.
     size_t zSize;
+    size_t zAlignment;
 );
 
-#define Juno_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type)}
-#define JUNO_CHECK_POINTER_TYPE(pointer, type) (pointer.zSize == sizeof(type) && pointer.zSize % (size_t) pointer.pvAddr == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR
+#define Juno_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type), alignof(type)}
+#define JUNO_CHECK_POINTER_TYPE(pointer, type) (pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR
 
 struct JUNO_POINTER_API_TAG
 {

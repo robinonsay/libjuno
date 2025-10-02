@@ -55,6 +55,7 @@
         "variant": "cpp",
         "algorithm": "cpp",
         "type_traits": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "memory_api.h": "c"
     }
 }

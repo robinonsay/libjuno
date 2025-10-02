@@ -35,7 +35,8 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory)
         ptJunoMemoryBlock->pvMemory &&
         ptJunoMemoryBlock->ptMetadata &&
         ptJunoMemoryBlock->zLength &&
-        ptJunoMemoryBlock->zTypeSize,
+        ptJunoMemoryBlock->zTypeSize &&
+        ptJunoMemoryBlock->zAlignment,
         ptJunoMemoryBlock,
         "Module does not have all dependencies"
     );
@@ -119,6 +120,7 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
     tResult.tOk.ptApi = ptMemBlk->tRoot.ptPointerApi;
     tResult.tOk.pvAddr = ptMemBlk->ptMetadata[ptMemBlk->zFreed-1].ptFreeMem;
     tResult.tOk.zSize = ptMemBlk->zTypeSize;
+    tResult.tOk.zAlignment = ptMemBlk->zAlignment;
     ptMemBlk->zFreed -= 1;
     ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = NULL;
     tResult.tStatus = JunoMemory_PointerVerify(&tResult.tOk);
@@ -157,6 +159,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
     JUNO_POINTER_T tMemory = *ptMemory;
     ptMemory->pvAddr = NULL;
     ptMemory->zSize = 0;
+    ptMemory->zAlignment = 0;
     // Calculate start and end addresses for the memory block area
     void *pvStartAddr = ptMemBlk->pvMemory;
     void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * ptMemBlk->zLength];
@@ -227,6 +230,7 @@ JUNO_STATUS_T JunoMemory_BlockInit(
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
+    size_t zAlignment,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData
@@ -242,13 +246,14 @@ JUNO_STATUS_T JunoMemory_BlockInit(
     ptJunoMemoryBlock->ptMetadata = ptMetadata;
     // Set type size and total number of blocks
     ptJunoMemoryBlock->zTypeSize = zTypeSize;
+    ptJunoMemoryBlock->zAlignment = zAlignment;
     ptJunoMemoryBlock->zLength = zLength;
     // No block is in use yet
     ptJunoMemoryBlock->zUsed = 0;
     // Initially, no freed blocks are available
     ptJunoMemoryBlock->zFreed = 0;
     // Early validation before Verify performs module checks
-    if (!ptPointerApi || !pvMemory || !ptMetadata || zTypeSize == 0 || zLength == 0)
+    if (!ptPointerApi || !pvMemory || !ptMetadata || zTypeSize == 0 || zLength == 0 || zAlignment == 0)
     {
         JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Invalid init parameters");
         return JUNO_STATUS_ERR;
@@ -258,7 +263,7 @@ JUNO_STATUS_T JunoMemory_BlockInit(
         JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Init size overflow");
         return JUNO_STATUS_ERR;
     }
-    if (((uintptr_t)pvMemory) % zTypeSize != 0)
+    if (((uintptr_t)pvMemory) % zAlignment != 0)
     {
         JUNO_FAIL_MODULE(JUNO_STATUS_ERR, ptJunoMemoryBlock, "Init memory pointer misaligned");
         return JUNO_STATUS_ERR;

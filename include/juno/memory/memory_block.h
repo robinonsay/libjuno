@@ -62,6 +62,7 @@ struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
     uint8_t *pvMemory;                  ///< Pointer to the allocated memory area.
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata; ///< Array of metadata for each block.
     size_t zTypeSize;                   ///< Size of each block element.
+    size_t zAlignment;
     size_t zLength;                     ///< Total number of blocks available.
     size_t zUsed;                       ///< Current count of allocated blocks.
     size_t zFreed;                      ///< Current count of freed blocks in the free stack.
@@ -85,6 +86,7 @@ JUNO_STATUS_T JunoMemory_BlockInit(
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
+    size_t zAlignment,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData

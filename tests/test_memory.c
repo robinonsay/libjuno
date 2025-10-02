@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdalign.h>
 
 typedef struct TEST_BLOCK_TAG
 {
@@ -67,6 +68,7 @@ static void test_nominal_single_alloc_and_free(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -105,6 +107,7 @@ static void test_nominal_multiple_alloc_and_free(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -165,6 +168,7 @@ static void test_negative_memory_empty(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -212,6 +216,7 @@ static void test_negative_memory_full(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -248,6 +253,7 @@ static void test_invalid_init_parameters(void)
         NULL,
         NULL,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -264,6 +270,7 @@ static void test_double_free(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -291,6 +298,7 @@ static void test_free_unallocated(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -311,6 +319,7 @@ static void test_update_memory(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -341,6 +350,7 @@ static void test_generic_memory_get_put(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -372,6 +382,7 @@ static void test_zero_size_allocation(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -392,6 +403,7 @@ static void test_bad_api(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL
@@ -426,6 +438,7 @@ static void test_invalid_size_and_addr(void)
         ptTestBlock,
         ptTestMetadata,
         sizeof(TEST_BLOCK_T),
+        alignof(TEST_BLOCK_T),
         10,
         NULL,
         NULL

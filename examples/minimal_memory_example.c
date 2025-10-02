@@ -4,9 +4,10 @@
 #include "juno/memory/memory_block.h"
 #include "juno/status.h"
 #include <stdio.h>
+#include <stdalign.h>
 
 // Define a simple data structure
-typedef struct {
+typedef struct USER_DATA_T {
     int id;
     char name[32];
     float value;
@@ -63,6 +64,7 @@ int main(void) {
         gUserDataMemory,
         gUserDataMetadata,
         sizeof(USER_DATA_T),
+        alignof(USER_DATA_T),
         5,
         ErrorHandler,
         NULL
