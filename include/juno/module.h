@@ -218,6 +218,15 @@
     __VA_ARGS__ \
 }
 
+#define JUNO_MODULE_DERIVE_WITH_API(ROOT_T, API_T, ...) \
+{ \
+    union { \
+        ROOT_T JUNO_MODULE_SUPER; \
+        const API_T  *ptApi; \
+    }; \
+    __VA_ARGS__ \
+}
+
 /**
     Get the API pointer from the module
     @param ptModule The module pointer
