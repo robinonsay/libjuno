@@ -28,59 +28,26 @@ At its core, LibJuno provides a set of macros to declare:
 * A way to **derive** a new module from an existing one (i.e., to create a subtype).
 * A consistent pattern for **failure handling** in every module.
 
-Below is a quick breakdown of the key macros (all defined in `juno/module.h`):
+Below is a quick breakdown of the key macros (all defined in `juno/module.h`). The list below reflects the *actual* macro names present in the current header (no `*_BASE` variants exist — earlier drafts of this document used different names):
 
 ```c
-// Forward-declare helpers (optional)
-#define JUNO_MODULE_DECLARE(NAME_T)         typedef union NAME_T NAME_T
-#define JUNO_MODULE_ROOT_DECLARE(NAME_T)    typedef struct NAME_T NAME_T
-#define JUNO_MODULE_DERIVE_DECLARE(NAME_T)  JUNO_MODULE_ROOT_DECLARE(NAME_T)
+// Forward declaration helpers (select exactly one form per type you need):
+#define JUNO_MODULE_DECLARE(NAME_T)        typedef union NAME_T NAME_T
+#define JUNO_MODULE_ROOT_DECLARE(NAME_T)   typedef struct NAME_T NAME_T
+#define JUNO_MODULE_DERIVE_DECLARE(NAME_T) JUNO_MODULE_ROOT_DECLARE(NAME_T) // alias
 
-// Alias for accessing the embedded root inside derived types
-#define JUNO_MODULE_SUPER   tRoot
-
-// Define a module union (used with: union NAME_T JUNO_MODULE(API_T, ROOT_T, <derived-members>);)
-#define JUNO_MODULE(API_T, ROOT_T, ...) \
-{ \
-    const API_T *ptApi; \
-    ROOT_T JUNO_MODULE_SUPER; \
-    __VA_ARGS__ \
-}
-
-// Define the module root (used with: struct ROOT_T JUNO_MODULE_ROOT(API_T, <root-members>);)
-#define JUNO_MODULE_ROOT(API_T, ...) \
-{ \
-    const API_T *ptApi; \
-    JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \
-    JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \
-    __VA_ARGS__ \
-}
-
-// Define a derived type (used with: struct DERIVED_T JUNO_MODULE_DERIVE(ROOT_T, <derived-members>);)
-#define JUNO_MODULE_DERIVE(ROOT_T, ...) \
-{ \
-    ROOT_T JUNO_MODULE_SUPER; \
-    __VA_ARGS__ \
-}
+// Inside struct/union bodies these layout helpers expand fields (see below)
+// JUNO_MODULE(API_T, ROOT_T, <derived members as struct declarations;>)
+// JUNO_MODULE_ROOT(API_T, <root member declarations;>)
+// JUNO_MODULE_DERIVE(ROOT_T, <derived member declarations;>)
+// JUNO_MODULE_SUPER is the name used to access the embedded root (tRoot)
 ```
 
-1. **`JUNO_MODULE_ROOT(...)`**: Defines the root layout for a module. Every module will have:
-
-   * A pointer to an API struct (`ptApi`) that contains function pointers.
-   * Any “base members” needed (e.g., local state fields).
-    * A failure handler function pointer (`JUNO_FAILURE_HANDLER`) and user data (`JUNO_FAILURE_USER_DATA`). Note: In the actual macro expansion, the failure handler fields appear before the user-specified root members.
-
-2. **`JUNO_MODULE(...)`**: Creates a *union* type where:
-
-    * The first member is the root struct (aliased via `JUNO_MODULE_SUPER`).
-   * The other members are “derived” sub-structs you specify. Because it’s a union, all derived sub-structures overlay the same memory as the base.
-
-3. **`JUNO_MODULE_DERIVE(...)`**: Defines a *derived* struct that contains the root (aliased as `tRoot` via `JUNO_MODULE_SUPER`) plus any extra members needed by the derived type.
-
-4. **Failure Handling Macros**:
-
-   * Every module gets a `JUNO_FAILURE_HANDLER` and `JUNO_FAILURE_USER_DATA` in its base.
-   * `JUNO_FAIL_MODULE(status, ptMod, msg)` invokes the module’s failure handler if it exists, passing along a custom message.
+1. **`JUNO_MODULE_ROOT(API_T, members...)`**: Expands to a struct body containing (in order) `const API_T *ptApi;`, failure handler pointer, failure handler user data pointer, then your member declarations.
+2. **`JUNO_MODULE(API_T, ROOT_T, derived...)`**: Expands to a union body whose first member is `ROOT_T tRoot;` (accessible via the alias `JUNO_MODULE_SUPER`), followed by each of the derived struct members you list (terminated with semicolons in the invocation).
+3. **`JUNO_MODULE_DERIVE(ROOT_T, members...)`**: Expands to a struct body beginning with `ROOT_T tRoot;` (alias `JUNO_MODULE_SUPER`), then your derived-only members.
+4. **Failure handling fields**: Always present in a root created with `JUNO_MODULE_ROOT`. Access them using the aliases `JUNO_FAILURE_HANDLER` and `JUNO_FAILURE_USER_DATA` (which map to `_pfcnFailureHandler` and `_pvFailureUserData`).
+5. **API retrieval**: Prefer the helper macro `JUNO_MODULE_GET_API(ptr, ROOT_T)` if you want compile‑time clarity.
 
 These macros enforce a consistent layout and pattern for modules across your entire system. Now let’s see how they’re used in a concrete API.
 
@@ -93,7 +60,7 @@ Imagine we need a “gas tank” module that allows setting and getting fuel lev
 * **`gastank_api.h`**: Declares the `GASTANK_T` module and its API.
 * **`gastank_impl.h` / `gastank_impl.c`**: (Not shown in full) provides the implementation for our default gas-tank.
 
-### 2.1. gastank_api.h
+### 2.1. gastank_api.h (Correct, Minimal Example)
 
 ```c
 #ifndef GASTANK_API_H
@@ -103,27 +70,23 @@ Imagine we need a “gas tank” module that allows setting and getting fuel lev
 #include "juno/module.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C" { 
 #endif
 
-// Forward declarations (project style prefers NAME_TAG + NAME_T)
-typedef struct GASTANK_API_TAG  GASTANK_API_T;
-typedef union  GASTANK_T_TAG    GASTANK_T;
-typedef struct GASTANK_BASE_T_TAG GASTANK_BASE_T;
+// Forward declarations
+typedef struct GASTANK_API_TAG  GASTANK_API_T;   // API vtable type
+typedef union  GASTANK_T_TAG    GASTANK_T;       // Opaque module union
+typedef struct GASTANK_ROOT_T   GASTANK_ROOT_T;  // Root implementation
 
-// Define the root for the GasTank module:
-//  - `ptApi` points to GASTANK_API_T
-//  - failure handler fields are provided by the macro
-//  - `int iFuelLevel;` is internal state
-struct GASTANK_BASE_T_TAG JUNO_MODULE_ROOT(
+// Root: holds API pointer, failure handler fields, then user state
+struct GASTANK_ROOT_T JUNO_MODULE_ROOT(
     GASTANK_API_T,
-    int iFuelLevel;
+    int iFuelLevel; // user state
 );
 
-struct GASTANK_API_TAG
-{
-    JUNO_STATUS_T (*SetFuel)(GASTANK_T *ptGastank, int iFuelLevel);
-    JUNO_STATUS_T (*GetFuel)(GASTANK_T *ptGastank, int *piFuelLevel);
+struct GASTANK_API_TAG {
+    JUNO_STATUS_T (*SetFuel)(GASTANK_T *ptTank, int iFuelLevel);
+    JUNO_STATUS_T (*GetFuel)(GASTANK_T *ptTank, int *piOutFuelLevel);
 };
 
 #ifdef __cplusplus
@@ -132,55 +95,36 @@ struct GASTANK_API_TAG
 #endif // GASTANK_API_H
 ```
 
-**Key points**:
+Key points:
+* `GASTANK_T` is forward‑declared as a union; the concrete union body appears where you choose implementations (see below).
+* The root struct body is produced by `JUNO_MODULE_ROOT` — note the order: API pointer, failure handler, failure handler user data, then `int iFuelLevel`.
+* No `*_BASE` macro is needed; the actual name here is arbitrary (`GASTANK_ROOT_T`).
 
-* We use `JUNO_MODULE_DECLARE(GASTANK_T)` to create:
-
-  ```c
-  typedef union GASTANK_T_TAG GASTANK_T;
-  ```
-
-  which means `GASTANK_T` is an opaque union type (details come from the base or any derived form).
-* We use `JUNO_MODULE_BASE(GASTANK_BASE_T, GASTANK_API_T, int iFuelLevel;)` to define:
-
-  ```c
-  struct GASTANK_BASE_T_TAG {
-      const GASTANK_API_T *ptApi;
-      int iFuelLevel;
-      JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER;
-      JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA;
-  };
-  ```
-* Finally, `GASTANK_API_T` is a struct with two function pointers, one to set fuel, one to get it.
-
-### 2.2. gastank_impl.h
+### 2.2. gastank_impl.h (Default Implementation)
 
 ```c
 #ifndef GASTANK_IMPL_H
 #define GASTANK_IMPL_H
 
-#include "juno/module.h"
-#include "juno/status.h"
 #include "gastank_api.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C" { 
 #endif
 
 #ifdef GASTANK_DEFAULT
-// Define the module union using only the root (no additional derived members)
+// Provide the concrete union with only the root (no derived variants yet)
 union GASTANK_T_TAG JUNO_MODULE(
     GASTANK_API_T,
-    GASTANK_BASE_T,
-    JUNO_MODULE_EMPTY
+    GASTANK_ROOT_T,
+    /* no derived members */
 );
 #endif
 
-// Initialize a default GasTank instance
-JUNO_STATUS_T Gastank_ImplApi(
-    GASTANK_T *ptGastank,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T Gastank_ImplInit(
+    GASTANK_T *ptTank,
+    JUNO_FAILURE_HANDLER_T pfFailure,
+    JUNO_USER_DATA_T *pvUserData);
 
 #ifdef __cplusplus
 }
@@ -188,46 +132,61 @@ JUNO_STATUS_T Gastank_ImplApi(
 #endif // GASTANK_IMPL_H
 ```
 
-Inside the `.c` file (not shown in detail here), you’d do something like:
+Inside the `.c` file you would implement the API table and init:
 
 ```c
-static const GASTANK_API_T tGastankImplApi = {
-    .SetFuel = Gastank_SetFuel_Impl,
-    .GetFuel = Gastank_GetFuel_Impl
+static JUNO_STATUS_T Tank_SetFuel(GASTANK_T *ptTank, int lvl);
+static JUNO_STATUS_T Tank_GetFuel(GASTANK_T *ptTank, int *piOut);
+
+static const GASTANK_API_T g_tTankApi = {
+    .SetFuel = Tank_SetFuel,
+    .GetFuel = Tank_GetFuel,
 };
 
-JUNO_STATUS_T Gastank_ImplApi(
-    GASTANK_T *ptGastank,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvFailureUserData)
+JUNO_STATUS_T Gastank_ImplInit(
+    GASTANK_T *ptTank,
+    JUNO_FAILURE_HANDLER_T pfFailure,
+    JUNO_USER_DATA_T *pvUserData)
 {
-    JUNO_ASSERT_EXISTS(ptGastank);
-    GASTANK_BASE_T *pBase = (GASTANK_BASE_T *)(ptGastank);
-
-    // Assign the API pointer into the root
-    pBase->ptApi = &tGastankImplApi;
-    pBase->JUNO_FAILURE_HANDLER = pfcnFailureHandler;
-    pBase->JUNO_FAILURE_USER_DATA = pvFailureUserData;
-
-    // Initialize default internal fuel level (e.g., 0 liters)
-    pBase->iFuelLevel = 0;
+    JUNO_ASSERT_EXISTS(ptTank);
+    GASTANK_ROOT_T *pRoot = (GASTANK_ROOT_T *)ptTank; // safe: root first
+    pRoot->ptApi = &g_tTankApi;
+    pRoot->JUNO_FAILURE_HANDLER = pfFailure;
+    pRoot->JUNO_FAILURE_USER_DATA = pvUserData;
+    pRoot->iFuelLevel = 0;
     return JUNO_STATUS_SUCCESS;
 }
 
-// ... Implementations for SetFuel/GetFuel that read/write pBase->iFuelLevel, call JUNO_FAIL_MODULE if invalid, etc.
+static JUNO_STATUS_T Tank_SetFuel(GASTANK_T *ptTank, int lvl) {
+    GASTANK_ROOT_T *pRoot = (GASTANK_ROOT_T *)ptTank;
+    if(lvl < 0) {
+        if(pRoot->JUNO_FAILURE_HANDLER) {
+            pRoot->JUNO_FAILURE_HANDLER(JUNO_STATUS_VALIDATION_ERROR, "fuel<0", pRoot->JUNO_FAILURE_USER_DATA);
+        }
+        return JUNO_STATUS_VALIDATION_ERROR;
+    }
+    pRoot->iFuelLevel = lvl;
+    return JUNO_STATUS_SUCCESS;
+}
+
+static JUNO_STATUS_T Tank_GetFuel(GASTANK_T *ptTank, int *piOut) {
+    JUNO_ASSERT_EXISTS(piOut);
+    GASTANK_ROOT_T *pRoot = (GASTANK_ROOT_T *)ptTank;
+    *piOut = pRoot->iFuelLevel;
+    return JUNO_STATUS_SUCCESS;
+}
 ```
 
-By the end of this, any user of `GASTANK_T` can do:
+By the end of this, any user can:
 
 ```c
-GASTANK_T myTank;
-Gastank_ImplApi(&myTank, MyFailureHandler, NULL);
+GASTANK_T myTank = {0};
+Gastank_ImplInit(&myTank, MyFailureHandler, NULL);
 
-// Prefer accessing API via a base view cast
-GASTANK_BASE_T *pBase = (GASTANK_BASE_T*)&myTank;
-pBase->ptApi->SetFuel(&myTank, 50);
+GASTANK_ROOT_T *pRoot = (GASTANK_ROOT_T*)&myTank; // up-cast
+pRoot->ptApi->SetFuel(&myTank, 50);
 int level;
-pBase->ptApi->GetFuel(&myTank, &level);
+pRoot->ptApi->GetFuel(&myTank, &level);
 ```
 
 All interactions go through `ptBase->ptApi->FunctionName`, which hides implementation details behind the API struct.
@@ -238,7 +197,7 @@ All interactions go through `ptBase->ptApi->FunctionName`, which hides implement
 
 Now let’s build an **Engine** module that depends on a gas tank (for V6/V8 engines) or on a battery (for electric engines). We’ll see how LibJuno supports deriving from a “base engine” and injecting the appropriate sub-module.
 
-### 3.1. engine_api.h: The Engine Root
+### 3.1. engine_api.h: The Engine Root (Updated Terminology)
 
 ```c
 #ifndef ENGINE_API_H
@@ -251,14 +210,14 @@ Now let’s build an **Engine** module that depends on a gas tank (for V6/V8 eng
 extern "C" {
 #endif
 
-typedef struct ENGINE_API_TAG ENGINE_API_T;
-typedef union  ENGINE_T_TAG   ENGINE_T;
-typedef struct ENGINE_BASE_T_TAG ENGINE_BASE_T;
+typedef struct ENGINE_API_TAG  ENGINE_API_T;
+typedef union  ENGINE_T_TAG    ENGINE_T;
+typedef struct ENGINE_ROOT_T   ENGINE_ROOT_T;
 
 // The root engine holds its API pointer (via macro) plus a rotor-speed field:
-struct ENGINE_BASE_T_TAG JUNO_MODULE_ROOT(
+struct ENGINE_ROOT_T JUNO_MODULE_ROOT(
     ENGINE_API_T,
-    int iRpm;
+    int iRpm; /* engine speed */
 );
 
 struct ENGINE_API_TAG
@@ -281,19 +240,15 @@ struct ENGINE_API_TAG
 
 #### What This Means
 
-* `ENGINE_T` is an opaque union defined via `JUNO_MODULE_DECLARE`.
-* `ENGINE_BASE_T` has:
-
-  * `const ENGINE_API_T *ptApi;`
-  * `int iRpm;`
-  * A failure handler pointer and user data.
-* `ENGINE_API_T` is the set of function pointers that every engine implementation must provide, e.g. `Start()`, `SetRPM()`, `GetFuel()`, `Stop()`.
+* `ENGINE_T` becomes a concrete union where you enumerate variants (V6, V8, Electric, etc.).
+* The root (`ENGINE_ROOT_T`) holds canonical shared state (rpm) and failure handling.
+* Each variant derives from the root using `JUNO_MODULE_DERIVE`.
 
 ### 3.2. Deriving a Gas-Powered Engine: engine_v6.h & engine_v8.h
 
 For a gas engine, we need to store a pointer to a `GASTANK_T` so that when someone calls `GetFuel()`, we’ll delegate to the gas tank. We do this by “deriving” from `ENGINE_BASE_T`.
 
-Example: **`engine_v6.h`**
+Example: **`engine_v6.h`** (Corrected)
 
 ```c
 #ifndef ENGINE_V6_H
@@ -309,29 +264,27 @@ extern "C" {
 #endif
 
 // Define the derived type from ENGINE_BASE_T and add a GASTANK_T* member
-typedef struct ENGINE_V6_T_TAG ENGINE_V6_T;
-struct ENGINE_V6_T_TAG JUNO_MODULE_DERIVE(
-    ENGINE_BASE_T,
-    GASTANK_T *ptGastank;
+typedef struct ENGINE_V6_T ENGINE_V6_T;
+struct ENGINE_V6_T JUNO_MODULE_DERIVE(
+    ENGINE_ROOT_T,
+    GASTANK_T *ptGastank; /* injected dependency */
 );
 
-#ifdef ENGINE_DEFAULT
-/** Default V6 implementation for ENGINE_T */
+#ifdef ENGINE_V6_DEFAULT
 union ENGINE_T_TAG JUNO_MODULE(
     ENGINE_API_T,
-    ENGINE_BASE_T,
-    ENGINE_V6_T tEngineV6;
+    ENGINE_ROOT_T,
+    ENGINE_V6_T tV6;
 );
-#endif
+#endif /* ENGINE_V6_DEFAULT */
 
 // Initialization function: takes the uninitialized ENGINE_T,
 // a pointer to an existing GASTANK_T module, a failure handler, and user data.
-JUNO_STATUS_T Engine_V6Api(
+JUNO_STATUS_T Engine_V6Init(
     ENGINE_T *ptEngine,
     GASTANK_T *ptGastank,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvFailureUserData
-);
+    JUNO_FAILURE_HANDLER_T pfFailure,
+    JUNO_USER_DATA_T *pvUserData);
 
 #ifdef __cplusplus
 }
@@ -441,9 +394,7 @@ JUNO_STATUS_T Engine_ElectricApi(
 #endif // ENGINE_ELECTRIC_H
 ```
 
-Implementation notes:
-
-* The API function pointers (in `tEngineElectricImplApi`) implement `GetFuel()` by calling `Battery_GetVoltage()` (or similarly named). They might return an error if the battery is not sufficiently charged.
+Implementation notes: Each variant initializer stores its API vtable into the root (`tRoot.ptApi`) and captures injected dependencies in its derived struct segment.
 
 ---
 
@@ -451,7 +402,7 @@ Implementation notes:
 
 Now let’s see how a **`Car`** module consumes an `ENGINE_T`, but doesn’t care whether it’s V6, V8, or Electric—this is classic polymorphism via DI.
 
-### 4.1. car_api.h
+### 4.1. car_api.h (Adjusted to Root Naming)
 
 ```c
 #ifndef CAR_API_H
@@ -467,16 +418,11 @@ extern "C" {
 
 typedef struct CAR_API_TAG CAR_API_T;
 
-JUNO_MODULE_DECLARE(CAR_T);
-JUNO_MODULE_BASE_DECLARE(CAR_BASE_T);
+JUNO_MODULE_DECLARE(CAR_T);      // union forward decl
+JUNO_MODULE_ROOT_DECLARE(CAR_ROOT_T); // struct forward decl
 
-// The Car’s base has:
-//  - ptApi: pointer to CAR_API_T
-//  - ENGINE_T *ptEngine: our dependency
-//  - int iSpeed: internal state
-//  - plus failure handler & data
-JUNO_MODULE_BASE(
-    CAR_BASE_T,
+// Root holds shared state and pointer to injected engine
+struct CAR_ROOT_T JUNO_MODULE_ROOT(
     CAR_API_T,
     ENGINE_T *ptEngine;
     int iSpeed;
@@ -511,24 +457,19 @@ extern "C" {
 #endif
 
 #ifdef CAR_DEFAULT
-/**
-    Default Car implementation uses only the base—no derived fields here.
-*/
-JUNO_MODULE(
-    CAR_T,
+union CAR_T_TAG JUNO_MODULE(
     CAR_API_T,
-    CAR_BASE_T,
-    // No extra derived members
+    CAR_ROOT_T,
+    /* no derived variants */
 );
 #endif
 
 // Initialization: inject a pre-initialized ENGINE_T*
-JUNO_STATUS_T Car_ImplApi(
+JUNO_STATUS_T Car_Init(
     CAR_T *ptCar,
     ENGINE_T *ptEngine,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvFailureUserData
-);
+    JUNO_FAILURE_HANDLER_T pfFailure,
+    JUNO_USER_DATA_T *pvUserData);
 
 #ifdef __cplusplus
 }
@@ -655,29 +596,29 @@ int main(void) {
     if(tStatus) return -1;
 
     // 4) Create & initialize three Cars, each with its own engine
-    CAR_T tElectricCar = {};
-    tStatus = Car_ImplApi(&tElectricCar, &tElectricEngine, JunoFailureHandler, NULL);
+    CAR_T tElectricCar = {0};
+    tStatus = Car_Init(&tElectricCar, &tElectricEngine, JunoFailureHandler, NULL);
     if(tStatus) return -1;
 
-    CAR_T tV6Car = {};
-    tStatus = Car_ImplApi(&tV6Car, &tV6Engine, JunoFailureHandler, NULL);
+    CAR_T tV6Car = {0};
+    tStatus = Car_Init(&tV6Car, &tV6Engine, JunoFailureHandler, NULL);
     if(tStatus) return -1;
 
-    CAR_T tV8Car = {};
-    tStatus = Car_ImplApi(&tV8Car, &tV8Engine, JunoFailureHandler, NULL);
+    CAR_T tV8Car = {0};
+    tStatus = Car_Init(&tV8Car, &tV8Engine, JunoFailureHandler, NULL);
     if(tStatus) return -1;
 
     // 5) Drive each car at 100 mph
-    tElectricCar.ptApi->Go(&tElectricCar, 100);
-    tV6Car.ptApi->Go(&tV6Car, 100);
-    tV8Car.ptApi->Go(&tV8Car, 100);
+    ((CAR_ROOT_T*)&tElectricCar)->ptApi->Go(&tElectricCar, 100);
+    ((CAR_ROOT_T*)&tV6Car)->ptApi->Go(&tV6Car, 100);
+    ((CAR_ROOT_T*)&tV8Car)->ptApi->Go(&tV8Car, 100);
 
     // … do other operations …
 
     // 6) Stop each car
-    tElectricCar.ptApi->Stop(&tElectricCar);
-    tV6Car.ptApi->Stop(&tV6Car);
-    tV8Car.ptApi->Stop(&tV8Car);
+    ((CAR_ROOT_T*)&tElectricCar)->ptApi->Stop(&tElectricCar);
+    ((CAR_ROOT_T*)&tV6Car)->ptApi->Stop(&tV6Car);
+    ((CAR_ROOT_T*)&tV8Car)->ptApi->Stop(&tV8Car);
 
     return 0;
 }

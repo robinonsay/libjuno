@@ -44,7 +44,7 @@ uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, const void *pcData, size_t zDataSi
 
 
 #define JUNO_KERMIT_CRC_INIT (0)
-uint32_t Juno_CrcKermitUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize);
+uint16_t Juno_CrcKermitUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize);
 
 #define JUNO_ZIP_CRC_INIT (-1)
 uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize);

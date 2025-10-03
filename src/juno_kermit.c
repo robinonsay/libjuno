@@ -18,9 +18,9 @@
 #include <stdint.h>
 #include "crc/kermit.h"
 
-uint32_t Juno_CrcKermitUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)
+uint16_t Juno_CrcKermitUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
-    register uint32_t crc = iCrc;
+    register uint16_t crc = iCrc;
     register const uint8_t *cp = pcData;
     register size_t cnt = zDataSize;
 
