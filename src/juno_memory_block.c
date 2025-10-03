@@ -178,7 +178,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
     ptMemory->zAlignment = 0;
     // Calculate start and end addresses for the memory block area
     void *pvStartAddr = ptMemBlk->pvMemory;
-    void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * (ptMemBlk->zLength - 1)] + ptMemBlk->zTypeSize;
+    void *pvEndAddr = (char*)ptMemBlk->pvMemory + (ptMemBlk->zTypeSize * ptMemBlk->zLength);
     // Check if the address is outside the managed memory range or no block is in use
     if(tMemory.pvAddr < pvStartAddr || pvEndAddr <= tMemory.pvAddr || ptMemBlk->zUsed == 0)
     {
