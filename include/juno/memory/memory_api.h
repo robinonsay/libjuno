@@ -139,15 +139,14 @@ static inline JUNO_STATUS_T JunoMemory_AllocVerify(const JUNO_MEMORY_ALLOC_ROOT_
     return tStatus;
 }
 
-static inline JUNO_STATUS_T JunoMemory_PointerVerify(const JUNO_POINTER_T *ptPointer)
+static inline JUNO_STATUS_T JunoMemory_PointerVerify(const JUNO_POINTER_T tPointer)
 {
     JUNO_ASSERT_EXISTS(
-        ptPointer &&
-        ptPointer->ptApi &&
-        ptPointer->pvAddr &&
-        ptPointer->zSize
+        tPointer.ptApi &&
+        tPointer.pvAddr &&
+        tPointer.zSize
     );
-    JUNO_STATUS_T tStatus = JunoMemory_PointerApiVerify(ptPointer->ptApi);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerApiVerify(tPointer.ptApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }

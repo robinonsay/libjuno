@@ -32,43 +32,54 @@
 #include <stddef.h>
 #include "juno/status.h"
 #include "juno/types.h"
+#include "juno/memory/memory_api.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+typedef struct JUNO_MAP_BUFFER_API_TAG JUNO_MAP_BUFFER_API_T;
 typedef struct JUNO_MAP_API_TAG JUNO_MAP_API_T;
 
 typedef struct JUNO_MAP_ROOT_TAG JUNO_MAP_ROOT_T;
 
 struct JUNO_MAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MAP_API_T,
     /// The capacity of the hash map
+    const JUNO_MAP_BUFFER_API_T *ptBufferApi;
     size_t zCapacity;
 );
 
 
-struct JUNO_MAP_API_TAG
+struct JUNO_MAP_BUFFER_API_TAG
 {
     /// Calculate the hash for the given key
-    JUNO_RESULT_SIZE_T (*Hash)(void *ptKey);
+    JUNO_RESULT_SIZE_T (*Hash)(JUNO_POINTER_T tKey);
     /// Return true if the left and right are equal
-    JUNO_RESULT_BOOL_T (*KeyIsEqual)(void *ptLeft, void *ptRight);
+    JUNO_RESULT_BOOL_T (*KeyIsEqual)(JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
     /// Get the value at the given index
-    JUNO_RESULT_VOID_PTR_T (*GetValue)(size_t iIndex);
+    JUNO_RESULT_POINTER_T (*GetValue)(size_t iIndex);
     /// Get the key at the given index
-    JUNO_RESULT_VOID_PTR_T (*GetKey)(size_t iIndex);
+    JUNO_RESULT_POINTER_T (*GetKey)(size_t iIndex);
     /// Set the value at the given index
-    JUNO_STATUS_T (*SetValue)(size_t iIndex, void *ptValue);
+    JUNO_STATUS_T (*SetValue)(size_t iIndex, JUNO_POINTER_T tValue);
     /// Set the key at the given index
-    JUNO_STATUS_T (*SetKey)(size_t iIndex, void *ptKey);
+    JUNO_STATUS_T (*SetKey)(size_t iIndex, JUNO_POINTER_T tKey);
     /// Remove the key and value at the given index
     JUNO_STATUS_T (*Remove)(size_t iIndex);
     /// Check if the given index is empty
     JUNO_RESULT_BOOL_T (*IsEmpty)(size_t zIndex);
 };
 
+struct JUNO_MAP_API_TAG
+{
+
+    JUNO_RESULT_POINTER_T (*Get)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
+    JUNO_STATUS_T (*Set)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey, JUNO_POINTER_T tValue);
+    JUNO_STATUS_T (*Remove)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
+};
+
 /// Check if the api has all members
-static inline JUNO_STATUS_T JunoMap_VerifyApi(const JUNO_MAP_API_T *ptApi)
+static inline JUNO_STATUS_T JunoMap_BufferApiVerify(const JUNO_MAP_BUFFER_API_T *ptApi)
 {
     JUNO_ASSERT_EXISTS(
         ptApi &&
@@ -84,88 +95,34 @@ static inline JUNO_STATUS_T JunoMap_VerifyApi(const JUNO_MAP_API_T *ptApi)
     return JUNO_STATUS_SUCCESS;
 }
 
+static inline JUNO_STATUS_T JunoMap_ApiVerify(const JUNO_MAP_API_T *ptApi)
+{
+    JUNO_ASSERT_EXISTS(
+        ptApi &&
+        ptApi->Get &&
+        ptApi->Remove &&
+        ptApi->Set
+    );
+    return JUNO_STATUS_SUCCESS;
+}
+
 /// Verify the map has all members
 static inline JUNO_STATUS_T JunoMap_Verify(JUNO_MAP_ROOT_T *ptMap)
 {
     JUNO_ASSERT_EXISTS(ptMap);
-    JUNO_STATUS_T tStatus = JunoMap_VerifyApi(ptMap->ptApi);
+    JUNO_STATUS_T tStatus = JunoMap_BufferApiVerify(ptMap->ptBufferApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoMap_ApiVerify(ptMap->ptApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_ASSERT_EXISTS(ptMap->zCapacity);
     return tStatus;
 }
 
 /// Get the index for a given key
-JUNO_RESULT_SIZE_T JunoMap_GetIndex(JUNO_MAP_ROOT_T *ptJunoMap, void *ptKey);
+JUNO_RESULT_SIZE_T JunoMap_GetIndex(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
 
-/// Set the value at a given key
-static inline JUNO_STATUS_T JunoMap_Set(JUNO_MAP_ROOT_T *ptJunoMap, void *ptKey, void *ptValue)
-{
-    // verify the map
-    JUNO_STATUS_T tStatus = JunoMap_Verify(ptJunoMap);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Get the index for the key
-    JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, ptKey);
-    tStatus = tSizeResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Set the key for the index
-    tStatus = ptJunoMap->ptApi->SetKey(tSizeResult.tOk, ptKey);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Set the value for the index
-    tStatus = ptJunoMap->ptApi->SetValue(tSizeResult.tOk, ptValue);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    return tStatus;
-}
-
-/// Get the value for a given key
-static inline JUNO_RESULT_VOID_PTR_T JunoMap_Get(JUNO_MAP_ROOT_T *ptJunoMap, void *ptKey)
-{
-    JUNO_RESULT_VOID_PTR_T tResult = {0, NULL};
-    tResult.tStatus = JunoMap_Verify(ptJunoMap);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    // Get the index for the key
-    JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, ptKey);
-    tResult.tStatus = tSizeResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    // Check if the value at the index is empty
-    JUNO_RESULT_BOOL_T tBoolResult = ptJunoMap->ptApi->IsEmpty(tSizeResult.tOk);
-    tResult.tStatus = tBoolResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    bool bIsEmpty = tBoolResult.tOk;
-    if(bIsEmpty)
-    {
-        // Its empty so return DNE error
-        tResult.tStatus = JUNO_STATUS_DNE_ERROR;
-        return tResult;
-    }
-    // Get the value
-    return ptJunoMap->ptApi->GetValue(tSizeResult.tOk);
-}
-
-/// Remove the key and value ata given key
-static inline JUNO_STATUS_T JunoMap_Remove(JUNO_MAP_ROOT_T *ptJunoMap, void *ptKey)
-{
-    JUNO_STATUS_T tStatus = JunoMap_Verify(ptJunoMap);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Get the index for the given key
-    JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, ptKey);
-    tStatus = tSizeResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Check if the key is empty
-    JUNO_RESULT_BOOL_T tBoolResult = ptJunoMap->ptApi->IsEmpty(tSizeResult.tOk);
-    tStatus = tBoolResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    bool bIsEmpty = tBoolResult.tOk;
-    if(bIsEmpty)
-    {
-        // Its empty so fail silently
-        return tStatus;
-    }
-    //  Remove the key, value at the index
-    tStatus = ptJunoMap->ptApi->Remove(tSizeResult.tOk);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    return tStatus;
-}
-
+/// Init the juno map module
+JUNO_STATUS_T JunoMap_Init(JUNO_MAP_ROOT_T *ptMapRoot, const JUNO_MAP_BUFFER_API_T *ptBufferApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData);
 #ifdef __cplusplus
 }
 #endif

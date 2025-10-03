@@ -1,6 +1,6 @@
 # Dependency Injection
 
-In embedded systems, code often grows into tightly coupled, monolithic blocks where a change in one component ripples through the entire system. This makes maintenance and reuse difficult, especially as projects scale or requirements evolve. **LibJuno** offers a lightweight, C99-compatible approach to achieve modularity and dependency injection (DI) in embedded projects. By using LibJuno’s macros and a clear pattern for defining “modules” (essentially self-contained components with defined APIs), you can:
+In embedded systems, code often grows into tightly coupled, monolithic blocks where a change in one component ripples through the entire system. This makes maintenance and reuse difficult, especially as projects scale or requirements evolve. **LibJuno** offers a lightweight, C11-friendly approach to achieve modularity and dependency injection (DI) in embedded projects. By using LibJuno’s macros and a clear pattern for defining “modules” (essentially self-contained components with defined APIs), you can:
 
 * **Decouple** implementation details from consumers.
 * **Enforce** clear contracts (via function pointers in an API struct).
@@ -23,7 +23,7 @@ We’ll use the example code provided in the “gastank\_api.h”, “engine\_ap
 
 At its core, LibJuno provides a set of macros to declare:
 
-* A **module base type** (the “base” struct that holds an API pointer, failure-handler, and user data).
+* A **module root type** (the “root” struct that holds an API pointer, failure-handler, and user data).
 * A **module type** (which may be a union of a base plus derived “substructures”).
 * A way to **derive** a new module from an existing one (i.e., to create a subtype).
 * A consistent pattern for **failure handling** in every module.
@@ -31,47 +31,51 @@ At its core, LibJuno provides a set of macros to declare:
 Below is a quick breakdown of the key macros (all defined in `juno/module.h`):
 
 ```c
-#define JUNO_MODULE_DECLARE(name)        typedef union name##_TAG name
-#define JUNO_MODULE_BASE_DECLARE(name)   typedef struct name##_TAG name
-#define JUNO_MODULE_DERIVE_DECLARE(name) JUNO_MODULE_BASE_DECLARE(name)
+// Forward-declare helpers (optional)
+#define JUNO_MODULE_DECLARE(NAME_T)         typedef union NAME_T NAME_T
+#define JUNO_MODULE_ROOT_DECLARE(NAME_T)    typedef struct NAME_T NAME_T
+#define JUNO_MODULE_DERIVE_DECLARE(NAME_T)  JUNO_MODULE_ROOT_DECLARE(NAME_T)
 
-#define JUNO_MODULE_SUPER   tBase
-#define JUNO_MODULE(name, API, base, derived) \
-union name##_TAG                                     \
-{                                                    \
-    base JUNO_MODULE_SUPER;                          \
-    derived                                          \
+// Alias for accessing the embedded root inside derived types
+#define JUNO_MODULE_SUPER   tRoot
+
+// Define a module union (used with: union NAME_T JUNO_MODULE(API_T, ROOT_T, <derived-members>);)
+#define JUNO_MODULE(API_T, ROOT_T, ...) \
+{ \
+    const API_T *ptApi; \
+    ROOT_T JUNO_MODULE_SUPER; \
+    __VA_ARGS__ \
 }
 
-#define JUNO_MODULE_BASE(name, API, members)        \
-struct name##_TAG                                    \
-{                                                    \
-    const API *ptApi;                                \
-    members                                          \
-    JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER;     \
-    JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA;        \
+// Define the module root (used with: struct ROOT_T JUNO_MODULE_ROOT(API_T, <root-members>);)
+#define JUNO_MODULE_ROOT(API_T, ...) \
+{ \
+    const API_T *ptApi; \
+    JUNO_FAILURE_HANDLER_T JUNO_FAILURE_HANDLER; \
+    JUNO_USER_DATA_T *JUNO_FAILURE_USER_DATA; \
+    __VA_ARGS__ \
 }
 
-#define JUNO_MODULE_DERIVE(name, base, members)     \
-struct name##_TAG                                    \
-{                                                    \
-    base JUNO_MODULE_SUPER;                          \
-    members                                          \
+// Define a derived type (used with: struct DERIVED_T JUNO_MODULE_DERIVE(ROOT_T, <derived-members>);)
+#define JUNO_MODULE_DERIVE(ROOT_T, ...) \
+{ \
+    ROOT_T JUNO_MODULE_SUPER; \
+    __VA_ARGS__ \
 }
 ```
 
-1. **`JUNO_MODULE_BASE(...)`**: Defines the *base* layout for a module. Every module will have:
+1. **`JUNO_MODULE_ROOT(...)`**: Defines the root layout for a module. Every module will have:
 
    * A pointer to an API struct (`ptApi`) that contains function pointers.
    * Any “base members” needed (e.g., local state fields).
-   * A failure handler function pointer (`JUNO_FAILURE_HANDLER`) and user data (`JUNO_FAILURE_USER_DATA`).
+    * A failure handler function pointer (`JUNO_FAILURE_HANDLER`) and user data (`JUNO_FAILURE_USER_DATA`). Note: In the actual macro expansion, the failure handler fields appear before the user-specified root members.
 
 2. **`JUNO_MODULE(...)`**: Creates a *union* type where:
 
-   * The first member is the base struct (aliased via `JUNO_MODULE_SUPER`).
+    * The first member is the root struct (aliased via `JUNO_MODULE_SUPER`).
    * The other members are “derived” sub-structs you specify. Because it’s a union, all derived sub-structures overlay the same memory as the base.
 
-3. **`JUNO_MODULE_DERIVE(...)`**: Defines a *derived* struct that contains a copy of the base (aliased as `tBase`) plus any extra members needed by the derived type.
+3. **`JUNO_MODULE_DERIVE(...)`**: Defines a *derived* struct that contains the root (aliased as `tRoot` via `JUNO_MODULE_SUPER`) plus any extra members needed by the derived type.
 
 4. **Failure Handling Macros**:
 
@@ -102,18 +106,16 @@ Imagine we need a “gas tank” module that allows setting and getting fuel lev
 extern "C" {
 #endif
 
-typedef struct GASTANK_API_TAG GASTANK_API_T;
+// Forward declarations (project style prefers NAME_TAG + NAME_T)
+typedef struct GASTANK_API_TAG  GASTANK_API_T;
+typedef union  GASTANK_T_TAG    GASTANK_T;
+typedef struct GASTANK_BASE_T_TAG GASTANK_BASE_T;
 
-// Declare a `GASTANK_T` module type
-JUNO_MODULE_DECLARE(GASTANK_T);
-JUNO_MODULE_BASE_DECLARE(GASTANK_BASE_T);
-
-// Define the _base_ of the GasTank module:
-//  - `ptApi` will point to GASTANK_API_T
-//  - `int iFuelLevel;` is our internal state
-//  - `JUNO_FAILURE_HANDLER_T` + `JUNO_USER_DATA_T *` follow
-JUNO_MODULE_BASE(
-    GASTANK_BASE_T,
+// Define the root for the GasTank module:
+//  - `ptApi` points to GASTANK_API_T
+//  - failure handler fields are provided by the macro
+//  - `int iFuelLevel;` is internal state
+struct GASTANK_BASE_T_TAG JUNO_MODULE_ROOT(
     GASTANK_API_T,
     int iFuelLevel;
 );
@@ -166,14 +168,15 @@ extern "C" {
 #endif
 
 #ifdef GASTANK_DEFAULT
-JUNO_MODULE(GASTANK_T, GASTANK_API_T, GASTANK_BASE_T,
-    // No extra “derived” members here—just use the base
+// Define the module union using only the root (no additional derived members)
+union GASTANK_T_TAG JUNO_MODULE(
+    GASTANK_API_T,
+    GASTANK_BASE_T,
+    JUNO_MODULE_EMPTY
 );
 #endif
 
-// This function initializes a default GasTank instance.
-// The caller must pass a pointer to uninitialized `GASTANK_T`,
-// a failure handler, and optional user data.
+// Initialize a default GasTank instance
 JUNO_STATUS_T Gastank_ImplApi(
     GASTANK_T *ptGastank,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
@@ -201,7 +204,7 @@ JUNO_STATUS_T Gastank_ImplApi(
     JUNO_ASSERT_EXISTS(ptGastank);
     GASTANK_BASE_T *pBase = (GASTANK_BASE_T *)(ptGastank);
 
-    // Assign the API pointer into the base
+    // Assign the API pointer into the root
     pBase->ptApi = &tGastankImplApi;
     pBase->JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     pBase->JUNO_FAILURE_USER_DATA = pvFailureUserData;
@@ -220,9 +223,11 @@ By the end of this, any user of `GASTANK_T` can do:
 GASTANK_T myTank;
 Gastank_ImplApi(&myTank, MyFailureHandler, NULL);
 
-myTank.ptApi->SetFuel(&myTank, 50);
+// Prefer accessing API via a base view cast
+GASTANK_BASE_T *pBase = (GASTANK_BASE_T*)&myTank;
+pBase->ptApi->SetFuel(&myTank, 50);
 int level;
-myTank.ptApi->GetFuel(&myTank, &level);
+pBase->ptApi->GetFuel(&myTank, &level);
 ```
 
 All interactions go through `ptBase->ptApi->FunctionName`, which hides implementation details behind the API struct.
@@ -233,7 +238,7 @@ All interactions go through `ptBase->ptApi->FunctionName`, which hides implement
 
 Now let’s build an **Engine** module that depends on a gas tank (for V6/V8 engines) or on a battery (for electric engines). We’ll see how LibJuno supports deriving from a “base engine” and injecting the appropriate sub-module.
 
-### 3.1. engine_api.h: The Base Engine
+### 3.1. engine_api.h: The Engine Root
 
 ```c
 #ifndef ENGINE_API_H
@@ -247,13 +252,11 @@ extern "C" {
 #endif
 
 typedef struct ENGINE_API_TAG ENGINE_API_T;
+typedef union  ENGINE_T_TAG   ENGINE_T;
+typedef struct ENGINE_BASE_T_TAG ENGINE_BASE_T;
 
-JUNO_MODULE_DECLARE(ENGINE_T);
-JUNO_MODULE_BASE_DECLARE(ENGINE_BASE_T);
-
-// The base engine holds its API pointer, plus a rotor-speed field:
-JUNO_MODULE_BASE(
-    ENGINE_BASE_T,
+// The root engine holds its API pointer (via macro) plus a rotor-speed field:
+struct ENGINE_BASE_T_TAG JUNO_MODULE_ROOT(
     ENGINE_API_T,
     int iRpm;
 );
@@ -305,32 +308,23 @@ Example: **`engine_v6.h`**
 extern "C" {
 #endif
 
-// Declare a new derived module type: ENGINE_V6_T
-JUNO_MODULE_DERIVE_DECLARE(ENGINE_V6_T);
-
-// Derive from ENGINE_BASE_T and add a GASTANK_T* member
-JUNO_MODULE_DERIVE(
-    ENGINE_V6_T,
+// Define the derived type from ENGINE_BASE_T and add a GASTANK_T* member
+typedef struct ENGINE_V6_T_TAG ENGINE_V6_T;
+struct ENGINE_V6_T_TAG JUNO_MODULE_DERIVE(
     ENGINE_BASE_T,
     GASTANK_T *ptGastank;
 );
 
 #ifdef ENGINE_DEFAULT
-/**
-    This is the “default” v6 implementation for ENGINE_T.
-    When you do:
-      JUNO_MODULE(ENGINE_t, ENGINE_API_T, ENGINE_BASE_T, ENGINE_V6_T tEngineV6;)
-    the union will overlay ENGINE_BASE_T (as tBase) with ENGINE_V6_T (with a ptGastank).
-*/
-JUNO_MODULE(
-    ENGINE_T,
+/** Default V6 implementation for ENGINE_T */
+union ENGINE_T_TAG JUNO_MODULE(
     ENGINE_API_T,
     ENGINE_BASE_T,
     ENGINE_V6_T tEngineV6;
 );
 #endif
 
-// Initialization function: takes the un‐initialized ENGINE_T,
+// Initialization function: takes the uninitialized ENGINE_T,
 // a pointer to an existing GASTANK_T module, a failure handler, and user data.
 JUNO_STATUS_T Engine_V6Api(
     ENGINE_T *ptEngine,
@@ -366,36 +360,35 @@ JUNO_STATUS_T Engine_V6Api(
     JUNO_ASSERT_EXISTS(ptEngine);
     ENGINE_V6_T *pV6 = (ENGINE_V6_T *)(ptEngine);
 
-    // Assign the API pointer, failure handler, and user data
+    // Assign the API pointer, failure handler, and user data via the root view
     pV6->JUNO_MODULE_SUPER.ptApi = &tEngineV6ImplApi;
     pV6->JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     pV6->JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA = pvFailureUserData;
 
-    // Store our dependency
+    // Store our dependency and initialize state
     pV6->ptGastank = ptGastank;
-
-    // Optionally initialize iRpm = 0, etc.
-    pBase->iRpm = 0;
+    pV6->JUNO_MODULE_SUPER.iRpm = 0;
 
     return JUNO_STATUS_SUCCESS;
 }
 
 // In EngineV6_GetFuel_Impl, you’d do something like:
 //   Retrieve `GASTANK_T *tank = pV6->ptGastank;`
-//   Return tank->ptApi->GetFuel(tank, piFuelLevel);
+//   Return ((GASTANK_BASE_T*)tank)->ptApi->GetFuel(tank, piFuelLevel);
 //   or JUNO_FAIL_MODULE if `ptGastank` is NULL, etc.
 ```
 
 Notice how `ENGINE_T` is a union overlaying:
 
 ```c
-union ENGINE_T_TAG {
-    ENGINE_BASE_T tBase;
-    ENGINE_V6_T tEngineV6;
-};
+union ENGINE_T_TAG JUNO_MODULE(
+    ENGINE_API_T,
+    ENGINE_BASE_T,
+    ENGINE_V6_T tEngineV6
+);
 ```
 
-* When you call `Engine_V6Api(&myEngine, &myTank, handler, NULL)`, you choose the “V6” variant, which means `ptEngine->ptApi` now points to `tEngineV6ImplApi`, and `ptEngine->tEngineV6.ptGastank` holds the injected `GASTANK_T *`.
+* When you call `Engine_V6Api(&myEngine, &myTank, handler, NULL)`, you choose the “V6” variant, which means the root’s `ptApi` now points to `tEngineV6ImplApi`, and via the derived view `((ENGINE_V6_T*)&myEngine)->ptGastank` holds the injected `GASTANK_T *`.
 
 A consumer only ever sees `ENGINE_T *ptEngine`, but under the hood, the memory contains either an `ENGINE_V6_T` or `ENGINE_V8_T` (depending on how you initialize it). The `ptApi` function pointers implement `GetFuel()` by delegating to `ptGastank`.
 

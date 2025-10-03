@@ -160,7 +160,6 @@
 */
 #define JUNO_MODULE(API_T, ROOT_T, ...) \
 { \
-    const API_T *ptApi; \
     ROOT_T JUNO_MODULE_SUPER; \
     __VA_ARGS__ \
 }

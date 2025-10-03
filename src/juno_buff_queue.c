@@ -9,7 +9,7 @@ static JUNO_STATUS_T JunoEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T
     JUNO_ASSERT_EXISTS(ptQueue);
     JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(&tItem);
+    tStatus = JunoMemory_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
     if(ptBuffer->zLength < ptBuffer->zCapacity)
@@ -33,7 +33,7 @@ static JUNO_STATUS_T JunoDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T
 {
     JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(&tReturn);
+    tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
     if(ptBuffer->zLength > 0)

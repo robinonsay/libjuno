@@ -1,469 +1,227 @@
 # Juno Memory Module
 
-The Juno Memory Module provides a deterministic, efficient memory management solution for embedded systems, designed to operate without dynamic memory allocation. This module is a core component of the LibJuno library, focused on memory safety and deterministic behavior in resource-constrained environments.
+Deterministic, static, block-based memory management for embedded systems. This module avoids dynamic allocation and favors predictable behavior and explicit error paths.
+
+This document reflects the current APIs in `juno/memory/memory_api.h` and `juno/memory/memory_block.h` and matches the unit tests in `tests/test_memory.c`.
 
 ## Overview
 
-The memory module implements a block-based memory allocation system with reference counting support, allowing for safe and controlled memory management. It is particularly suitable for embedded systems where dynamic memory allocation is undesirable due to fragmentation concerns, indeterministic behavior, or resource limitations.
+The memory module provides a fixed-size block allocator. You supply:
+- A statically allocated memory array for elements of a single type
+- A metadata array for the allocator’s free list
+- A pointer API (Copy/Reset) that defines how to copy and reset one element
 
-## Memory Block Visualization
+The allocator exposes an API vtable with Get/Update/Put. Get returns a result containing both a status and a pointer payload.
 
-To help understand how memory blocks work in Juno, here's a visualization of the memory structure:
+No reference counting is implemented in the current design.
 
-```
-┌─────────────────────────────────────────┐
-│            JUNO_MEMORY_BLOCK            │
-│ ┌─────────┬─────────┬─────────┬───────┐ │
-│ │ Block 0 │ Block 1 │ Block 2 │  ...  │ │
-│ └─────────┴─────────┴─────────┴───────┘ │
-└─────────────────────────────────────────┘
-               Memory Array
+## Core types (public headers)
 
-┌─────────────────────────────────────────┐
-│        JUNO_MEMORY_BLOCK_METADATA       │
-│ ┌─────────┬─────────┬─────────┬───────┐ │
-│ │ Meta 0  │ Meta 1  │ Meta 2  │  ...  │ │
-│ └─────────┴─────────┴─────────┴───────┘ │
-└─────────────────────────────────────────┘
-              Metadata Array
+- `JUNO_MEMORY_BLOCK_METADATA_T`
+  - Per-block metadata used by the allocator’s free list. This is a simple public struct (currently contains a `uint8_t *ptFreeMem` field) used internally by the allocator. Treat it as allocator-managed storage: declare arrays with `JUNO_MEMORY_BLOCK_METADATA(...)` but avoid reading/modifying fields directly. The layout may evolve; consumers should not rely on specific members.
 
-┌───────────────────────────┐
-│    JUNO_MEMORY_BLOCK_T    │
-│                           │
-│ - Type header             │
-│ - Pointer to memory array │
-│ - Pointer to metadata     │
-│ - Type size               │
-│ - Length                  │
-│ - Used blocks counter     │
-│ - Freed blocks counter    │
-│ - Failure handler         │
-└───────────────────────────┘
-     Block Control Structure
-```
+- `JUNO_POINTER_T`
+  - Describes a block of memory the allocator returned:
+    - `void *pvAddr;` — block address
+    - `size_t zSize;` — block size in bytes
+    - `size_t zAlignment;` — required alignment for the block
+    - plus an internal `ptApi` member (via lite root) used by the pointer API
 
-When calling `JunoMemory_BlockInit()`:
-1. You pass in a pre-allocated memory array (`JUNO_MEMORY_BLOCK`)
-2. You pass in a pre-allocated metadata array (`JUNO_MEMORY_BLOCK_METADATA`)
-3. The function initializes the control structure that tracks:
-   - Which blocks are in use
-   - Which blocks were freed and can be reused
-   - How to handle errors
+- `JUNO_POINTER_API_T`
+  - Functions that the allocator calls per element type:
+    - `JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);`
+    - `JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);`
 
-## Getting Started
+- `JUNO_MEMORY_ALLOC_API_T`
+  - Allocator vtable:
+    - `JUNO_RESULT_POINTER_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, size_t zSize);`
+    - `JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);`
+    - `JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory);`
 
-This quick-start guide will help you understand and use the Juno Memory Module in a few simple steps:
+- `JUNO_MEMORY_ALLOC_ROOT_T` and `JUNO_MEMORY_ALLOC_BLOCK_T`
+  - The concrete block allocator type is `JUNO_MEMORY_ALLOC_BLOCK_T` (derived). Its first member is a root (`tRoot`) that carries the API pointer and the pointer API.
 
-### Step 1: Declare Memory Blocks
+## Declaring memory and metadata
 
-First, declare a memory block and its metadata for your data type:
+Use the provided macros to declare storage:
 
 ```c
-// Define your data structure
+// For C: initializes to {0}; for C++: {}
+JUNO_MEMORY_BLOCK(myBlock, MY_TYPE_T, 10);
+JUNO_MEMORY_BLOCK_METADATA(myMeta, 10);
+```
+
+These create:
+- `static MY_TYPE_T myBlock[10];`
+- `static JUNO_MEMORY_BLOCK_METADATA_T myMeta[10];`
+
+## Pointer API (Copy and Reset)
+
+You must provide a `JUNO_POINTER_API_T` for your element type. For trivially copyable POD structs, Copy can assign and Reset can zero or reinitialize.
+
+```c
+#include <stdalign.h>
+#include "juno/memory/memory_api.h"
+
 typedef struct {
     int id;
-    float value;
-} MY_DATA_T;
+    bool flag;
+} MY_TYPE_T;
 
-// Declare a memory block with space for 10 MY_DATA_T objects
-JUNO_MEMORY_BLOCK(gptMyMemoryBlock, MY_DATA_T, 10);
-JUNO_MEMORY_BLOCK_METADATA(gptMyMemoryMetadata, 10);
-```
-
-### Step 2: Initialize the Memory Allocator
-
-Create and initialize a memory allocator to manage the block:
-
-```c
-// Create the memory allocator structure
-JUNO_MEMORY_ALLOC_T tMemAlloc = {0};
-
-// Initialize the block allocator
-JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
-    &tMemAlloc,        // Pointer to memory block structure
-    gptMyMemoryBlock,            // Memory block array
-    gptMyMemoryMetadata,         // Metadata array
-    sizeof(MY_DATA_T),        // Size of each element
-    10,                       // Number of elements
-    pfcnErrorHandler,         // Optional error handler function
-    NULL                      // Optional user data for error handler
-);
-
-// Always check the status
-if(tStatus != JUNO_STATUS_SUCCESS) {
-    // Handle initialization error
-    return -1;
-}
-```
-
-### Step 3: Allocate Memory
-
-Allocate memory for your data type:
-
-```c
-// Declare a memory descriptor
-JUNO_POINTER_T tMemory = {0};
-
-// Allocate memory
-tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_DATA_T));
-if(tStatus != JUNO_STATUS_SUCCESS) {
-    // Handle allocation error
-    return -1;
+static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
+{
+    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tDest, MY_TYPE_T);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JUNO_CHECK_POINTER_TYPE(tSrc, MY_TYPE_T);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    *(MY_TYPE_T *)tDest.pvAddr = *(MY_TYPE_T *)tSrc.pvAddr;
+    return JUNO_STATUS_SUCCESS;
 }
 
-// Use the allocated memory
-MY_DATA_T *ptData = (MY_DATA_T*)tMemory.pvAddr;
-ptData->id = 1;
-ptData->value = 3.14f;
-```
-
-### Step 4: Share Memory with Reference Counting
-
-Use reference counting to safely share memory:
-
-```c
-// Create a reference to the memory
-JUNO_POINTER_T *ptMemoryRef = Juno_MemoryGetRef(&tMemory);
-
-// Or using the helper macros for cleaner code
-JUNO_NEW_REF(memoryRef) = Juno_MemoryGetRef(&tMemory);
-
-// Now you can use the reference elsewhere
-MY_DATA_T *ptSharedData = (MY_DATA_T *)JUNO_REF(memoryRef)->pvAddr;
-
-// Check reference count
-printf("Reference count: %zu\n", tMemory.iRefCount); // Should be 2
-```
-
-### Step 5: Release Memory
-
-Release memory when you're done with it:
-
-```c
-// First, release any references
-Juno_MemoryPutRef(JUNO_REF(memoryRef));
-
-// Check that the reference was released
-printf("Reference count: %zu\n", tMemory.iRefCount); // Should be 1
-
-// Now free the original memory
-tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
-if(tStatus != JUNO_STATUS_SUCCESS) {
-    // Handle error (could be JUNO_STATUS_REF_IN_USE_ERROR if references exist)
-    printf("Error: Cannot free memory with active references\n");
+static JUNO_STATUS_T MyReset(JUNO_POINTER_T tPointer)
+{
+    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tPointer, MY_TYPE_T);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    *(MY_TYPE_T *)tPointer.pvAddr = (MY_TYPE_T){0};
+    return JUNO_STATUS_SUCCESS;
 }
+
+static const JUNO_POINTER_API_T gMyPtrApi = { MyCopy, MyReset };
 ```
 
-### Step 6: Using the Memory API (Alternative Approach)
+Helpers provided by the API:
+- `JUNO_CHECK_POINTER_TYPE(pointer, TYPE)` validates size and alignment
+- `Juno_PointerInit(api, TYPE, addr)` constructs a typed pointer descriptor (rarely needed by users)
 
-For a more dynamic approach, you can use the Memory API interface:
+## Initializing the block allocator
 
-```c
-#include "juno/memory/memory_api.h"
-#include "juno/memory/memory_block.h"
-
-// Access the allocator API vtable through the union's ptApi field
-const JUNO_MEMORY_ALLOC_API_T *ptMemApi = tMemAlloc.ptApi;
-
-JUNO_POINTER_T tMemory = {0};
-JUNO_STATUS_T tStatus = ptMemApi->Get(&tMemAlloc, &tMemory, sizeof(MY_DATA_T));
-
-// ... use the memory ...
-
-// Release using the API
-tStatus = ptMemApi->Put(&tMemAlloc, &tMemory);
-```
-
-### Common Pitfalls to Avoid
-
-1. **Not checking status codes**: Always check return values for errors.
-2. **Freeing memory with active references**: This will fail with `JUNO_STATUS_REF_IN_USE_ERROR`.
-3. **Not initializing memory structures**: Always initialize `JUNO_POINTER_T` with `{}` before passing to functions.
-4. **Using the wrong size**: Always pass the correct size for your data type.
-
-## Features
-
-- **Block-based memory allocation**: Pre-allocated memory blocks for deterministic behavior
-- **Reference counting**: Prevents premature deallocation of shared memory resources
-- **Type-safe allocation**: Memory blocks are typed for better memory safety
-- **Failure handling**: Comprehensive error reporting through configurable failure handlers
-- **No heap fragmentation**: All memory is pre-allocated, eliminating fragmentation concerns
-- **Minimal dependencies**: Designed to work without the standard C library when necessary
-
-## Core Concepts
-
-### Memory Blocks
-
-Memory blocks are the foundation of Juno's memory management. These are statically allocated arrays of a specific type and size, declared using macros:
-
-```c
-// Declare a memory block for up to 100 elements of type MY_STRUCT_T
-JUNO_MEMORY_BLOCK(gptMyMemoryBlock, MY_STRUCT_T, 100);
-
-// Declare metadata for tracking freed memory blocks
-JUNO_MEMORY_BLOCK_METADATA(gptMyMemoryMetadata, 100);
-```
-
-### Memory Allocation
-
-Memory is allocated from a pre-defined block using the `Juno_MemoryGet` function or through the memory API:
-
-```c
-// Allocate memory
-JUNO_POINTER_T tMemory = {0};
-JUNO_STATUS_T tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_STRUCT_T));
-```
-
-### Reference Counting
-
-The module provides reference counting to safely share memory between different components:
-
-```c
-// Get a reference to existing memory
-JUNO_POINTER_T *ptMemoryRef = Juno_MemoryGetRef(&tExistingMemory);
-
-// Release a reference when done
-Juno_MemoryPutRef(ptMemoryRef);
-```
-
-### Memory Deallocation
-
-Memory is returned to the allocator using the `Juno_MemoryPut` function when it's no longer needed:
-
-```c
-// Free memory
-JUNO_STATUS_T tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
-```
-
-## Data Types
-
-### JUNO_POINTER_T
-
-The fundamental structure representing an allocated memory segment:
-
-```c
-struct JUNO_POINTER_TAG
-{
-    void *pvAddr;      // Pointer to the allocated memory
-    size_t zSize;      // Size of the allocated memory in bytes
-    size_t iRefCount;  // Reference count for this memory
-};
-```
-
-### JUNO_MEMORY_BLOCK_T
-
-Structure representing a block-based memory allocator:
-
-```c
-struct JUNO_MEMORY_BLOCK_TAG
-{
-    JUNO_MEMORY_ALLOC_HDR_T tHdr;               // Allocation type header
-    uint8_t *pvMemory;                         // Pointer to the memory area
-    JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata;  // Metadata for block tracking
-    size_t zTypeSize;                          // Size of each block element
-    size_t zLength;                            // Total number of blocks
-    size_t zUsed;                              // Count of allocated blocks
-    size_t zFreed;                             // Count of freed blocks
-    // Failure handler function pointer and user data
-};
-```
-
-### JUNO_MEMORY_ALLOC_T
-
-Union for a generic memory allocation that currently supports block-based allocation:
-
-```c
-union JUNO_MEMORY_ALLOC_TAG
-{
-    JUNO_MEMORY_ALLOC_HDR_T tHdr;  // Common header
-    JUNO_MEMORY_BLOCK_T tBlock;    // Block-based allocation structure
-};
-```
-
-## API Reference
-
-### Initialization
+Signature (from `memory_block.h`):
 
 ```c
 JUNO_STATUS_T JunoMemory_BlockInit(
-    JUNO_MEMORY_ALLOC_T *ptJunoMemory,
+    JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock,
+    const JUNO_POINTER_API_T *ptPointerApi,
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
+    size_t zAlignment,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData
 );
 ```
 
-Initializes a memory block for allocation. Parameters:
-- `ptMemBlk`: Pointer to the memory block structure to initialize
-- `pvMemory`: Pointer to the pre-allocated memory used for allocations
-- `pvMetadata`: Pointer to the metadata array for tracking memory blocks
-- `zTypeSize`: Size in bytes of each element in the block
-- `zLength`: Total number of elements in the block
-- `pfcnFailureHandler`: Optional callback function to handle failures
-- `pvUserData`: Optional user data passed to the failure handler
-
-### Memory Operations (via API vtable)
+Usage:
 
 ```c
-// Allocate
-JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zSize);
+#include "juno/memory/memory_block.h"
 
-// Resize (cannot exceed element size in block allocator)
-JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);
+JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
+JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
+    &tMem,
+    &gMyPtrApi,
+    myBlock,
+    myMeta,
+    sizeof(MY_TYPE_T),
+    alignof(MY_TYPE_T),
+    10,
+    /* failure handler */ NULL,
+    /* user data */ NULL
+);
+if (tStatus != JUNO_STATUS_SUCCESS) { /* handle error */ }
+```
+
+Notes:
+- `ptPointerApi` and `zAlignment` are required and validated.
+- `pvMemory` must be aligned to `zAlignment`.
+- Failure handler and user data are optional.
+
+## Allocating, updating, and freeing
+
+Obtain the allocator API via the root member (`tRoot`), then call through it. Get returns a result struct; check `tStatus` before using `tOk`.
+
+```c
+const JUNO_MEMORY_ALLOC_API_T *ptApi = tMem.tRoot.ptApi;
+
+// Allocate
+JUNO_RESULT_POINTER_T r = ptApi->Get(&tMem.tRoot, sizeof(MY_TYPE_T));
+if (r.tStatus != JUNO_STATUS_SUCCESS) { /* handle full/invalid size */ }
+JUNO_POINTER_T tPtr = r.tOk;
+MY_TYPE_T *p = (MY_TYPE_T *)tPtr.pvAddr;
+
+// Update size (must not exceed element size)
+(void)ptApi->Update(&tMem.tRoot, &tPtr, sizeof(MY_TYPE_T));
 
 // Free
-JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_POINTER_T *ptMemory);
+(void)ptApi->Put(&tMem.tRoot, &tPtr);
 ```
 
-Access these through `const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.ptApi;` then
-call `ptApi->Get(...)`, etc.
+### Typed convenience macros
 
-### Reference Management
+`memory_block.h` provides small wrappers:
 
 ```c
-JUNO_POINTER_T* Juno_MemoryGetRef(JUNO_POINTER_T *ptMemory);
+// Get a block for a type; returns JUNO_RESULT_POINTER_T
+JunoMemory_BlockGetT(&tMem, MY_TYPE_T);
+
+// Put a previously acquired JUNO_POINTER_T*
+JunoMemory_BlockPutT(&tMem, &tPtr);
 ```
 
-Gets a reference to memory, incrementing its reference count. Parameters:
-- `ptMemory`: The memory to reference
-- Returns: The same memory pointer with increased reference count
+## Common pitfalls
+
+- Always check `tStatus` on results from `Get`; don’t use `tOk` unless success.
+- Request sizes must be > 0 and <= element size (`zTypeSize`).
+- Freeing the same pointer twice is rejected.
+- Passing an address outside the managed block range is rejected.
+- Ensure `pvMemory` is correctly aligned; pass `alignof(TYPE)` at init.
+
+## Minimal end-to-end example (compiles like the tests)
 
 ```c
-void Juno_MemoryPutRef(JUNO_POINTER_T *ptMemory);
-```
-
-Releases a reference to memory, decrementing its reference count. Parameters:
-- `ptMemory`: The memory reference to release
-
-## Usage Example
-
-The following example demonstrates how to use the Juno Memory Module to implement a simple single linked list with reference counting:
-
-```c
+#include <stdalign.h>
+#include <stdbool.h>
 #include "juno/memory/memory_api.h"
 #include "juno/memory/memory_block.h"
-#include "juno/status.h"
-#include <stdio.h>
 
-// Define linked list node structure
-typedef struct SINGLE_LINKED_LIST_NODE_TAG {
-    struct SINGLE_LINKED_LIST_NODE_TAG *ptNext;
-    JUNO_POINTER_T tMemory;
-    int iData;
-} SINGLE_LINKED_LIST_NODE_T;
+typedef struct { int id; bool flag; } MY_TYPE_T;
 
-// Define linked list structure
-typedef struct {
-    SINGLE_LINKED_LIST_NODE_T *ptHead;
-    size_t zLength;
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler;
-    JUNO_USER_DATA_T *pvUserData;
-} SINGLE_LINKED_LIST_T;
+JUNO_MEMORY_BLOCK(gMem, MY_TYPE_T, 10);
+JUNO_MEMORY_BLOCK_METADATA(gMeta, 10);
 
-// Declare memory blocks for our linked list nodes (max 100)
-JUNO_MEMORY_BLOCK(nodeMemory, SINGLE_LINKED_LIST_NODE_T, 100);
-JUNO_MEMORY_BLOCK_METADATA(nodeMetadata, 100);
-
-// Custom failure handler
-void FailureHandler(JUNO_STATUS_T tStatus, const char *pcMsg, JUNO_USER_DATA_T *pvUserData) {
-    printf("Error: %s\n", pcMsg);
+static JUNO_STATUS_T Copy(JUNO_POINTER_T d, JUNO_POINTER_T s) {
+    JUNO_STATUS_T st = JUNO_CHECK_POINTER_TYPE(d, MY_TYPE_T);
+    JUNO_ASSERT_SUCCESS(st, return st);
+    st = JUNO_CHECK_POINTER_TYPE(s, MY_TYPE_T);
+    JUNO_ASSERT_SUCCESS(st, return st);
+    *(MY_TYPE_T*)d.pvAddr = *(MY_TYPE_T*)s.pvAddr; return JUNO_STATUS_SUCCESS;
 }
+static JUNO_STATUS_T Reset(JUNO_POINTER_T p) {
+    JUNO_STATUS_T st = JUNO_CHECK_POINTER_TYPE(p, MY_TYPE_T);
+    JUNO_ASSERT_SUCCESS(st, return st);
+    *(MY_TYPE_T*)p.pvAddr = (MY_TYPE_T){0}; return JUNO_STATUS_SUCCESS;
+}
+static const JUNO_POINTER_API_T gPtrApi = { Copy, Reset };
 
-int main() {
-    // Get the memory API
-    
-    // Initialize the memory allocator
-    JUNO_MEMORY_ALLOC_T tMemAlloc = {};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
-        &tMemAlloc,
-        nodeMemory,
-        nodeMetadata,
-        sizeof(SINGLE_LINKED_LIST_NODE_T),
-        100,
-        FailureHandler,
-        NULL
-    );
-    
-    if(tStatus != JUNO_STATUS_SUCCESS) {
-        return -1;
-    }
-    const JUNO_MEMORY_ALLOC_API_T *ptMemApi = tMemAlloc.ptApi;
+void example(void) {
+    JUNO_MEMORY_ALLOC_BLOCK_T mem = {0};
+    JUNO_STATUS_T st = JunoMemory_BlockInit(&mem, &gPtrApi, gMem, gMeta,
+                                            sizeof(MY_TYPE_T), alignof(MY_TYPE_T), 10,
+                                            NULL, NULL);
+    if (st != JUNO_STATUS_SUCCESS) return;
+    const JUNO_MEMORY_ALLOC_API_T *api = mem.tRoot.ptApi;
 
-    // Create a linked list
-    SINGLE_LINKED_LIST_T tList = {
-        .pfcnFailureHandler = FailureHandler
-    };
-    
-    // Add some nodes
-    for(int i = 0; i < 5; i++) {
-        // Allocate memory for new node
-        JUNO_POINTER_T tNodeMem = {};
-        tStatus = ptMemApi->Get(&tMemAlloc, &tNodeMem, sizeof(SINGLE_LINKED_LIST_NODE_T));
-        if(tStatus != JUNO_STATUS_SUCCESS) {
-            break;
-        }
-        
-        // Cast memory to node type and initialize
-        SINGLE_LINKED_LIST_NODE_T *ptNewNode = (SINGLE_LINKED_LIST_NODE_T*)tNodeMem.pvAddr;
-        ptNewNode->iData = i;
-        ptNewNode->tMemory = tNodeMem;
-        
-        // Insert at head
-        ptNewNode->ptNext = tList.ptHead;
-        tList.ptHead = ptNewNode;
-        tList.zLength++;
-    }
-    
-    // Create a second list that shares nodes by reference
-    SINGLE_LINKED_LIST_T tRefList = {
-        .pfcnFailureHandler = FailureHandler
-    };
-    
-    // Share the first node by reference
-    if(tList.ptHead) {
-        JUNO_NEW_REF(nodeRef) = Juno_MemoryGetRef(&tList.ptHead->tMemory);
-        tRefList.ptHead = (SINGLE_LINKED_LIST_NODE_T*)JUNO_REF(nodeRef)->pvAddr;
-        tRefList.zLength = tList.zLength;
-    }
-    
-    // Print both lists
-    printf("Original list:\n");
-    SINGLE_LINKED_LIST_NODE_T *ptCurrentNode = tList.ptHead;
-    while(ptCurrentNode) {
-        printf("Node data: %d (ref count: %lu)\n", 
-               ptCurrentNode->iData, 
-               ptCurrentNode->tMemory.iRefCount);
-        ptCurrentNode = ptCurrentNode->ptNext;
-    }
-    
-    // Clean up - this will fail for the first node due to reference counting
-    printf("\nAttempting to free the original list:\n");
-    while(tList.ptHead) {
-        SINGLE_LINKED_LIST_NODE_T *ptTemp = tList.ptHead;
-        tList.ptHead = tList.ptHead->ptNext;
-        
-        tStatus = ptMemApi->Put(&tMemAlloc, &ptTemp->tMemory);
-        if(tStatus == JUNO_STATUS_REF_IN_USE_ERROR) {
-            printf("Node still has references, can't free yet\n");
-        }
-    }
-    
-    // Release reference and try again
-    printf("\nReleasing reference and freeing memory:\n");
-    if(tRefList.ptHead) {
-        Juno_MemoryPutRef(&tRefList.ptHead->tMemory);
-        tStatus = ptMemApi->Put(&tMemAlloc, &tRefList.ptHead->tMemory);
-        if(tStatus == JUNO_STATUS_SUCCESS) {
-            printf("Memory successfully freed\n");
-        }
-    }
-    
-    return 0;
+    JUNO_RESULT_POINTER_T r = api->Get(&mem.tRoot, sizeof(MY_TYPE_T));
+    if (r.tStatus != JUNO_STATUS_SUCCESS) return;
+    JUNO_POINTER_T ptr = r.tOk;
+    ((MY_TYPE_T*)ptr.pvAddr)->id = 42;
+    (void)api->Put(&mem.tRoot, &ptr);
 }
 ```
+
+## Freestanding notes
+
+The module is suitable for freestanding builds. Avoid hosted headers in your Copy/Reset implementations; prefer simple assignment/zeroing for POD types. In freestanding mode, enable the CMake option `-DJUNO_FREESTANDING=ON` and ensure your `pvMemory` buffer is properly aligned for the element type.
 
 ## Error Handling
 
@@ -473,80 +231,15 @@ The memory module reports errors through status codes of type `JUNO_STATUS_T`:
 - `JUNO_STATUS_MEMALLOC_ERROR`: Failed to allocate memory (block is full)
 - `JUNO_STATUS_MEMFREE_ERROR`: Failed to free memory (invalid address or double free)
 - `JUNO_STATUS_NULLPTR_ERROR`: Null pointer provided to function
-- `JUNO_STATUS_INVALID_REF_ERROR`: Invalid memory reference
-- `JUNO_STATUS_REF_IN_USE_ERROR`: Memory cannot be freed because references exist
 - `JUNO_STATUS_INVALID_TYPE_ERROR`: Invalid memory allocator type
 - `JUNO_STATUS_INVALID_SIZE_ERROR`: Invalid size parameter (e.g., zero size)
 
 ## Best Practices
 
 1. **Always check status codes**: Memory operations can fail, especially in resource-constrained environments.
-2. **Use reference counting**: When sharing memory between components, use the reference counting API.
-3. **Define appropriate block sizes**: Size your memory blocks based on your application's needs to avoid waste.
-4. **Implement failure handlers**: Use failure handlers to catch memory issues early.
-5. **Clear returned memory**: Although the allocator zeros memory blocks, initialize your data structures explicitly.
+2. **Define appropriate block sizes**: Size your memory blocks based on your application's needs to avoid waste.
+3. **Implement failure handlers**: Use failure handlers to catch memory issues early.
+4. **Initialize your data**: Even if memory is zeroed, initialize your data structures explicitly to intent-reveal.
+## Future work
 
-## Understanding Reference Counting Macros
-
-The reference counting macros (`JUNO_REF` and `JUNO_NEW_REF`) can be confusing at first. Here's a detailed explanation of how they work:
-
-### JUNO_NEW_REF Macro
-
-The `JUNO_NEW_REF` macro creates a new pointer to hold a reference to a memory object:
-
-```c
-// This expands to: JUNO_POINTER_T *REFmyMemoryRef
-JUNO_NEW_REF(myMemoryRef) = Juno_MemoryGetRef(&originalMemory);
-```
-
-This is equivalent to:
-
-```c
-JUNO_POINTER_T *REFmyMemoryRef = Juno_MemoryGetRef(&originalMemory);
-```
-
-### JUNO_REF Macro
-
-The `JUNO_REF` macro is used to access the reference you created with `JUNO_NEW_REF`:
-
-```c
-// This expands to: REFmyMemoryRef
-MY_DATA_T *data = (MY_DATA_T *)JUNO_REF(myMemoryRef)->pvAddr;
-```
-
-This is equivalent to:
-
-```c
-MY_DATA_T *data = (MY_DATA_T *)REFmyMemoryRef->pvAddr;
-```
-
-### Example Usage Pattern
-
-Here's a complete example of using these macros:
-
-```c
-// Original memory allocation
-JUNO_POINTER_T tMemory = {0};
-tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(MY_DATA_T));
-
-// Create a named reference using the macro
-JUNO_NEW_REF(dataRef) = Juno_MemoryGetRef(&tMemory);
-// Now REFdataRef points to the same memory as tMemory, and the reference count is 2
-
-// Access the reference using the convenience macro
-MY_DATA_T *ptSharedData = (MY_DATA_T *)JUNO_REF(dataRef)->pvAddr;
-// This is equivalent to: MY_DATA_T *ptSharedData = (MY_DATA_T *)REFdataRef->pvAddr;
-
-// Release the reference when done
-Juno_MemoryPutRef(JUNO_REF(dataRef));
-// This is equivalent to: Juno_MemoryPutRef(REFdataRef);
-```
-
-### When to Use Reference Counting
-
-Use reference counting when:
-1. Sharing memory between multiple components
-2. Passing memory to a function that does not need ownership
-3. Storing memory in a data structure outside the original allocation scope
-
-Reference counting prevents memory from being freed while it's still in use, avoiding a common class of memory errors.
+Reference counting is planned but not implemented in the current allocator. The macros `JUNO_REF` and `JUNO_NEW_REF` are reserved for a future reference-counting extension and should not be used yet. Status codes such as `JUNO_STATUS_INVALID_REF_ERROR` and `JUNO_STATUS_REF_IN_USE_ERROR` are defined globally but are not produced by the block allocator at this time.
