@@ -18,7 +18,7 @@ No reference counting is implemented in the current design.
 ## Core types (public headers)
 
 - `JUNO_MEMORY_BLOCK_METADATA_T`
-  - Per-block metadata used by the allocator’s free list (internals hidden, exposed as a type).
+  - Per-block metadata used by the allocator’s free list. This is a simple public struct (currently contains a `uint8_t *ptFreeMem` field) used internally by the allocator. Treat it as allocator-managed storage: declare arrays with `JUNO_MEMORY_BLOCK_METADATA(...)` but avoid reading/modifying fields directly. The layout may evolve; consumers should not rely on specific members.
 
 - `JUNO_POINTER_T`
   - Describes a block of memory the allocator returned:

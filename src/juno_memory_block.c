@@ -123,7 +123,7 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
     tResult.tOk.zAlignment = ptMemBlk->zAlignment;
     ptMemBlk->zFreed -= 1;
     ptMemBlk->ptMetadata[ptMemBlk->zFreed].ptFreeMem = NULL;
-    tResult.tStatus = JunoMemory_PointerVerify(&tResult.tOk);
+    tResult.tStatus = JunoMemory_PointerVerify(tResult.tOk);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     tResult.tStatus = tResult.tOk.ptApi->Reset(tResult.tOk);
     if (tResult.tStatus != JUNO_STATUS_SUCCESS) {
@@ -158,20 +158,29 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
     // Validate the memory block structure
     JUNO_STATUS_T tStatus = Verify(ptJunoMemory);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(ptMemory);
+    JUNO_ASSERT_EXISTS(ptMemory);
+    tStatus = JunoMemory_PointerVerify(*ptMemory);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     JUNO_ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
+    if((uintptr_t) ptMemory->pvAddr % (uintptr_t)ptMemBlk->zAlignment != 0)
+    {
+        tStatus = JUNO_STATUS_MEMFREE_ERROR;
+        // Log error if invalid address detected
+        JUNO_FAIL_MODULE(tStatus, ptMemBlk,
+            "Failed to free block memory. Invalid Address with Unaligned Memory"
+        );
+        return tStatus;
+    }
     JUNO_POINTER_T tMemory = *ptMemory;
     ptMemory->pvAddr = NULL;
     ptMemory->zSize = 0;
     ptMemory->zAlignment = 0;
     // Calculate start and end addresses for the memory block area
     void *pvStartAddr = ptMemBlk->pvMemory;
-    void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * ptMemBlk->zLength];
-    
+    void *pvEndAddr = &ptMemBlk->pvMemory[ptMemBlk->zTypeSize * (ptMemBlk->zLength - 1)] + ptMemBlk->zTypeSize;
     // Check if the address is outside the managed memory range or no block is in use
-    if(tMemory.pvAddr < pvStartAddr || pvEndAddr < tMemory.pvAddr || ptMemBlk->zUsed == 0)
+    if(tMemory.pvAddr < pvStartAddr || pvEndAddr <= tMemory.pvAddr || ptMemBlk->zUsed == 0)
     {
         tStatus = JUNO_STATUS_MEMFREE_ERROR;
         // Log error if invalid address detected
@@ -197,7 +206,10 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
         }
     }
     tStatus = tMemory.ptApi->Reset(tMemory);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tStatus,
+        *ptMemory = tMemory;
+        return tStatus;
+    );
     // Check if the block being freed is the last allocated block
     void *pvEndOfBlk = &ptMemBlk->pvMemory[(ptMemBlk->zUsed - 1) * ptMemBlk->zTypeSize];
     if(pvEndOfBlk == tMemory.pvAddr)

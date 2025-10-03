@@ -11,7 +11,7 @@ static JUNO_STATUS_T JunoDs_Buff_StackPush(JUNO_BUFF_STACK_ROOT_T *ptStack, JUNO
 {
     JUNO_STATUS_T tStatus = JunoDs_Buff_StackVerify(ptStack);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(&tItem);
+    tStatus = JunoMemory_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
     JUNO_ARRAY_ROOT_T *ptBuffer = ptStack->ptBuffer;
@@ -36,7 +36,7 @@ static JUNO_STATUS_T JunoDs_Buff_StackPop(JUNO_BUFF_STACK_ROOT_T *ptStack, JUNO_
 {
     JUNO_STATUS_T tStatus = JunoDs_Buff_StackVerify(ptStack);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(&tReturn);
+    tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_BUFF_STACK_ROOT_T *ptStackRoot = (JUNO_BUFF_STACK_ROOT_T *)(ptStack);
     JUNO_ARRAY_ROOT_T *ptBuffer = ptStack->ptBuffer;

@@ -19,6 +19,10 @@ message("Testing: ${JUNO_TESTS}")
 
 project(juno VERSION 1.0.0 LANGUAGES C CXX)
 
+# Package config helpers for installing CMake package files
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
 if(JUNO_API)
     add_definitions(-DJUNO_API)
 endif(JUNO_API)
@@ -32,7 +36,7 @@ add_library(${PROJECT_NAME} STATIC
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PRIVATE
     ${PROJECT_SOURCE_DIR}/src
 )
@@ -110,22 +114,31 @@ if(JUNO_SHARED)
     add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
     target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
         PRIVATE
         ${PROJECT_SOURCE_DIR}/src
     )
 endif()
 
 install(
-  TARGETS ${PROJECT_NAME} ${JUNO_SHARED_TARGET} ${JUNO_POSIX_TARGET}
-  EXPORT junoTargets                          # for later use in find_package()
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # usually “lib”
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    TARGETS ${PROJECT_NAME}
+    EXPORT junoTargets                          # for later use in find_package()
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # usually “lib”
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+
+if(JUNO_SHARED)
+    install(
+        TARGETS ${JUNO_SHARED_TARGET}
+        EXPORT junoTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+endif()
 
 install(
   DIRECTORY ${PROJECT_SOURCE_DIR}/include/     # source directory
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include  # usually “include/juno”
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}      # usually “include/”
   FILES_MATCHING
   PATTERN "*.h"      # match .h files
   PATTERN "*.hpp"    # match .hpp files
@@ -170,3 +183,37 @@ else()
   message(WARNING "Doxygen not found—'make docs' target will be unavailable.")
 endif()
 endif()
+
+# -----------------------------
+# CMake package export and config
+# -----------------------------
+
+# Configure the package config file
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/junoConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/junoConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
+)
+
+# Generate a version file for find_package compatibility checks
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/junoConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+# Export the targets for find_package consumers
+install(
+    EXPORT junoTargets
+    FILE junoTargets.cmake
+    NAMESPACE juno::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
+)
+
+# Install the configured config and version files
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/junoConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/junoConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
+)

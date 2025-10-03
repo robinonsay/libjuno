@@ -47,10 +47,26 @@
 * `-DJUNO_PIC=On` (Default `On`): Compile Juno with Position Independent Code
 * `-DJUNO_SHARED=On` (Default `Off`): Compile the juno shared library
 * `-DJUNO_FREESTANDING=On` (Default `Off`): Build in freestanding mode (adds `-ffreestanding -nostdlib` and avoids hosted libc)
+* `-DJUNO_ASAN=On` (Default `Off`): Enable AddressSanitizer (host debugging)
+* `-DJUNO_UBSAN=On` (Default `Off`): Enable UndefinedBehaviorSanitizer (host debugging)
+* `-DJUNO_EXAMPLES=On` (Default `Off`): Build examples in `examples/`
+
+#### Sanitizers and host debug builds (optional)
+
+For a quick host review with sanitizers and tests enabled:
+
+```sh
+cmake -S . -B build -DJUNO_TESTS=ON -DJUNO_ASAN=ON -DJUNO_UBSAN=ON -DCMAKE_BUILD_TYPE=Debug
+cmake --build build -j
+ctest --test-dir build --output-on-failure
+```
 
 ## Current Modules
-- **Memory Management**: Provides block-based allocation, deallocation, and memory tracking.
-- **String Operations**: Handles string initialization, manipulation, concatenation, and cleanup.
+- **Memory**: Block-based allocator with typed pointer API (no malloc required). See `include/juno/memory/` and `src/juno_memory_block.c`.
+- **CRCs**: CCITT, CCITT32, Kermit, ZIP. See `include/juno/crc/crc.h` and `src/juno_ccitt*.c`, `src/juno_kermit.c`, `src/juno_zip.c`.
+- **Data Structures**: Buffers, queues, stacks, heap, map. See `include/juno/ds/*` and corresponding sources in `src/`.
+- **Time Utilities**: Basic time helpers. See `include/juno/time/time_api.h` and `src/juno_time.c`.
+- **BinHex/ARC helpers**: Utility encoders/decoders. See `src/juno_binhex.c`, `src/juno_arc.c`.
 
 ## Future Modules
 - Filesystem interactions

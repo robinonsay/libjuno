@@ -36,9 +36,14 @@
  *
  * Conversion/rounding behavior:
  * - Conversions from timestamp to integer nanos/micros/millis truncate the
- *   fractional part toward zero (flooring). Conversions from double to
- *   timestamp also truncate the integer seconds and fractional part (no
- *   rounding). Negative inputs are not supported.
+ *   fractional part toward zero (flooring).
+ * - Conversions from double to timestamp use truncation for the integer
+ *   seconds and for the fractional-to-subseconds mapping, except for the
+ *   maximal fractional bucket: when the fractional part is within one
+ *   subseconds unit of 1.0 (i.e., frac >= 1 - 1/giSUBSECS_MAX), the result is
+ *   rounded up to the next whole second with subseconds set to 0. Negative
+ *   inputs are not supported. Inputs must satisfy
+ *   0.0 <= seconds < max(JUNO_TIME_SECONDS_T).
  *
  * Error handling:
  * - Subtraction that would result in negative time returns
@@ -69,7 +74,7 @@ typedef uint64_t JUNO_TIME_SECONDS_T;
 typedef uint64_t JUNO_TIME_MILLIS_T;
 typedef uint64_t JUNO_TIME_MICROS_T;
 typedef uint64_t JUNO_TIME_NANOS_T;
-typedef uint64_t JUNO_TIME_SUBSECONDS_T;
+typedef uint32_t JUNO_TIME_SUBSECONDS_T;
 
 /**
     @brief This is the Juno Time Module for all time time related
@@ -132,6 +137,13 @@ struct JUNO_TIME_API_TAG
     /// Convert a timestamp to a double
     JUNO_RESULT_F64_T (*TimestampToDouble)(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
     /// Convert a double to a timestamp
+    /// Behavior:
+    /// - Returns JUNO_STATUS_INVALID_DATA_ERROR if dTimestamp < 0.0 or
+    ///   dTimestamp is not representable (>= max(JUNO_TIME_SECONDS_T)).
+    /// - Otherwise, seconds are truncated from dTimestamp and the fractional
+    ///   part is mapped to subseconds by truncation, except when the fraction
+    ///   is within one subseconds unit of 1.0 (>= 1 - 1/giSUBSECS_MAX), in
+    ///   which case the result rounds up to the next second with subseconds=0.
     JUNO_TIMESTAMP_RESULT_T (*DoubleToTimestamp)(JUNO_TIME_ROOT_T *ptTime, double dTimestamp);
 };
 
