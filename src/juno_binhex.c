@@ -20,6 +20,10 @@
 
 uint16_t Juno_CrcBinhexUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
+    if(!(pcData && zDataSize))
+    {
+        return 0;
+    }
     register uint16_t crc = iCrc;
     register const uint8_t *cp = pcData;
     register size_t cnt = zDataSize;
