@@ -31,17 +31,12 @@
 #include "juno/module.h"
 #include <stddef.h>
 #include <stdalign.h>
+#include "juno/memory/pointer_api.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-/// Define a reference for memory
-#define JUNO_REF(name) REF##name
-/// Create a new reference for memory
-#define JUNO_NEW_REF(name) JUNO_POINTER_T *JUNO_REF(name)
 
-typedef struct JUNO_POINTER_TAG JUNO_POINTER_T;
-typedef struct JUNO_POINTER_API_TAG JUNO_POINTER_API_T;
 typedef struct JUNO_MEMORY_ALLOC_API_TAG JUNO_MEMORY_ALLOC_API_T;
 typedef struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MEMORY_ALLOC_ROOT_T;
 
@@ -50,29 +45,6 @@ struct JUNO_MEMORY_BLOCK_METADATA_TAG
 {
     uint8_t *ptFreeMem;
 };
-
-/// @brief Structure for an allocated memory segment.
-/// Describes the allocated memory with a pointer to the start and its size.
-struct JUNO_POINTER_TAG JUNO_MODULE_LITE_ROOT(JUNO_POINTER_API_T,
-    /// Pointer to the allocated memory.
-    void *pvAddr;
-    /// Size of the allocated memory, in bytes.
-    size_t zSize;
-    size_t zAlignment;
-);
-
-#define Juno_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type), alignof(type)}
-#define JUNO_CHECK_POINTER_TYPE(pointer, type) ((pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
-
-struct JUNO_POINTER_API_TAG
-{
-    /// Copy memory from one pointer to another
-    JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);
-    /// Reset the memory at the pointer. This could mean zero-initialization
-    JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);
-};
-
-JUNO_MODULE_RESULT(JUNO_RESULT_POINTER_T, JUNO_POINTER_T);
 
 struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
     const JUNO_POINTER_API_T *ptPointerApi;
@@ -115,16 +87,6 @@ static inline JUNO_STATUS_T JunoMemory_AllocApiVerify(const JUNO_MEMORY_ALLOC_AP
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_STATUS_T JunoMemory_PointerApiVerify(const JUNO_POINTER_API_T *ptPointerApi)
-{
-    JUNO_ASSERT_EXISTS(
-        ptPointerApi &&
-        ptPointerApi->Copy &&
-        ptPointerApi->Reset
-    );
-    return JUNO_STATUS_SUCCESS;
-}
-
 static inline JUNO_STATUS_T JunoMemory_AllocVerify(const JUNO_MEMORY_ALLOC_ROOT_T *ptAlloc)
 {
     JUNO_ASSERT_EXISTS(
@@ -135,18 +97,6 @@ static inline JUNO_STATUS_T JunoMemory_AllocVerify(const JUNO_MEMORY_ALLOC_ROOT_
     JUNO_STATUS_T tStatus = JunoMemory_AllocApiVerify(ptAlloc->ptApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerApiVerify(ptAlloc->ptPointerApi);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    return tStatus;
-}
-
-static inline JUNO_STATUS_T JunoMemory_PointerVerify(const JUNO_POINTER_T tPointer)
-{
-    JUNO_ASSERT_EXISTS(
-        tPointer.ptApi &&
-        tPointer.pvAddr &&
-        tPointer.zSize
-    );
-    JUNO_STATUS_T tStatus = JunoMemory_PointerApiVerify(tPointer.ptApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }

@@ -186,7 +186,7 @@
     __VA_ARGS__ \
 }
 
-#define JUNO_MODULE_LITE_ROOT(API_T, ...) \
+#define JUNO_TRAIT_ROOT(API_T, ...) \
 { \
     const API_T *ptApi; \
     __VA_ARGS__ \
