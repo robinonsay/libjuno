@@ -11,7 +11,7 @@
 #include "juno/math/juno_math.h"
 #include "juno/memory/memory_api.h"
 #include "juno/time/time_api.h"
-#include "juno/sb/msg_api.h"
+#include "juno/sb/sb_api.h"
 #include "juno/sm/sm_api.h"
 
 int main()

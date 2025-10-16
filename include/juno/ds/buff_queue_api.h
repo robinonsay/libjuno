@@ -28,7 +28,7 @@
 #define JUNO_BUFF_QUEUE_API_H
 #include "juno/ds/array_api.h"
 #include "juno/macros.h"
-#include "juno/memory/memory_api.h"
+#include "juno/memory/pointer_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include <stddef.h>

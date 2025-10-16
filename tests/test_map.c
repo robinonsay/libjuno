@@ -244,8 +244,8 @@ void tearDown(void)
 }
 
 // Convenience builders for test pointers
-#define K(strlit) (Juno_PointerInit(&gPointerApi, char, (void*)(strlit)))
-#define V_int(pint) (Juno_PointerInit(&gPointerApi, int, (void*)(pint)))
+#define K(strlit) (JunoMemory_PointerInit(&gPointerApi, char, (void*)(strlit)))
+#define V_int(pint) (JunoMemory_PointerInit(&gPointerApi, int, (void*)(pint)))
 
 // Tests
 static void test_nominal_map(void)

@@ -28,6 +28,7 @@
 #define JUNO_ARRAY_API_H
 #include "juno/macros.h"
 #include "juno/memory/memory_api.h"
+#include "juno/memory/pointer_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/types.h"
@@ -43,8 +44,6 @@ typedef struct JUNO_ARRAY_API_TAG  JUNO_ARRAY_API_T;
 
 /// The root buffee queue
 struct JUNO_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ARRAY_API_T,
-    /// The pointer api for this array
-    const JUNO_POINTER_API_T *ptPointerApi;
     /// The current length of the buffer
     size_t zLength;
     /// The capacity of this array
@@ -53,8 +52,11 @@ struct JUNO_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ARRAY_API_T,
 
 struct JUNO_ARRAY_API_TAG
 {
+    /// Set the value at an index
     JUNO_STATUS_T (*SetAt)(JUNO_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
+    /// Get the value at an index
     JUNO_RESULT_POINTER_T (*GetAt)(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
+    /// Remove a value at an index
     JUNO_STATUS_T (*RemoveAt)(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
 };
 
@@ -73,12 +75,9 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_ARRAY_ROOT_T *ptArray)
 {
     JUNO_ASSERT_EXISTS(ptArray);
     JUNO_ASSERT_EXISTS(
-        ptArray->zCapacity &&
-        ptArray->ptPointerApi
+        ptArray->zCapacity
     );
     JUNO_STATUS_T tStatus = JunoDs_ArrayApiVerify(ptArray->ptApi);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerApiVerify(ptArray->ptPointerApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }

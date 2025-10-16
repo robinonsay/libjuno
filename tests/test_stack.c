@@ -49,7 +49,6 @@ static void test_stack(void)
 
 	// Initialize the array root fields
 	ptArray->ptApi        = &gtArrayApi;
-	ptArray->ptPointerApi = &gtPointerApi;
 	ptArray->zCapacity    = sizeof(tBuffer.iTestStack);
 	ptArray->zLength      = 0;
 
@@ -59,7 +58,7 @@ static void test_stack(void)
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 
 	uint8_t iValue = 0;
-	JUNO_POINTER_T tValPtr = Juno_PointerInit(&gtPointerApi, uint8_t, &iValue);
+	JUNO_POINTER_T tValPtr = JunoMemory_PointerInit(&gtPointerApi, uint8_t, &iValue);
 
 	// Fill the stack
 	for (size_t i = 0; i < sizeof(tBuffer.iTestStack); i++)
@@ -122,7 +121,7 @@ static inline JUNO_STATUS_T Stack_SetAt(JUNO_ARRAY_ROOT_T *ptArray, JUNO_POINTER
 static inline JUNO_RESULT_POINTER_T Stack_GetAt(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex)
 {
 	TEST_ARRAY *ptTestArray = (TEST_ARRAY *)ptArray;
-	JUNO_RESULT_POINTER_T tResult = JUNO_OK_RESULT(Juno_PointerInit(&gtPointerApi, uint8_t, &ptTestArray->iTestStack[iIndex]));
+	JUNO_RESULT_POINTER_T tResult = JUNO_OK_RESULT(JunoMemory_PointerInit(&gtPointerApi, uint8_t, &ptTestArray->iTestStack[iIndex]));
 	return tResult;
 }
 

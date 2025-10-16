@@ -56,7 +56,7 @@ struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
 struct JUNO_POINTER_API_TAG
 {
     /// Copy memory from one pointer to another
-    JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);
+    JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc);
     /// Reset the memory at the pointer. This could mean zero-initialization
     JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);
 };
@@ -67,21 +67,19 @@ struct JUNO_VALUE_POINTER_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_POINTER_T, JUNO_V
 
 struct JUNO_VALUE_POINTER_API_TAG JUNO_MODULE_API_DERIVE(JUNO_POINTER_API_T,
     /// Left == Right
-    JUNO_RESULT_BOOL_T (*Equals)(JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
-    /// Left < Right
-    JUNO_RESULT_BOOL_T (*Lt)(JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
-    /// Left <= Right
-    JUNO_RESULT_BOOL_T (*Lte)(JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
-    /// Left > Right
-    JUNO_RESULT_BOOL_T (*Gt)(JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
-    /// Left >= Right
-    JUNO_RESULT_BOOL_T (*Gte)(JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
+    JUNO_RESULT_BOOL_T (*Equals)(const JUNO_VALUE_POINTER_T tLeft, const JUNO_VALUE_POINTER_T tRight);
 );
 
 JUNO_MODULE_RESULT(JUNO_RESULT_POINTER_T, JUNO_POINTER_T);
+JUNO_MODULE_RESULT(JUNO_RESULT_VALUE_POINTER_T, JUNO_VALUE_POINTER_T);
 
-#define Juno_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type), alignof(type)}
-#define JUNO_CHECK_POINTER_TYPE(pointer, type) ((pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
+#define JunoMemory_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type), alignof(type)}
+#define JUNO_CHECK_POINTER_TYPE(pointer, type, tApi) ((pointer.ptApi == &tApi, pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
+#define JUNO_ASSERT_POINTER_COPY(tDest, tSrc, tApi) \
+if(!(tDest.ptApi == tSrc.ptApi && tDest.ptApi == &tApi && tDest.pvAddr && tSrc.pvAddr && tDest.zAlignment == tSrc.zAlignment && tDest.zSize == tSrc.zSize)) \
+{ \
+    return JUNO_STATUS_ERR; \
+}
 
 static inline JUNO_STATUS_T JunoMemory_PointerApiVerify(const JUNO_POINTER_API_T *ptPointerApi)
 {
@@ -97,11 +95,7 @@ static inline JUNO_STATUS_T JunoMemory_ValuePointerApiVerify(const JUNO_VALUE_PO
 {
     JUNO_ASSERT_EXISTS(
         ptPointerApi &&
-        ptPointerApi->Equals &&
-        ptPointerApi->Lt &&
-        ptPointerApi->Lte &&
-        ptPointerApi->Gt &&
-        ptPointerApi->Gte
+        ptPointerApi->Equals
     );
     return JunoMemory_PointerApiVerify(&ptPointerApi->tRoot);
 }
@@ -114,6 +108,18 @@ static inline JUNO_STATUS_T JunoMemory_PointerVerify(const JUNO_POINTER_T tPoint
         tPointer.zSize
     );
     JUNO_STATUS_T tStatus = JunoMemory_PointerApiVerify(tPointer.ptApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return tStatus;
+}
+
+static inline JUNO_STATUS_T JunoMemory_ValuePointerVerify(const JUNO_VALUE_POINTER_T tPointer)
+{
+    JUNO_ASSERT_EXISTS(
+        tPointer.ptApi
+    );
+    JUNO_STATUS_T tStatus = JunoMemory_ValuePointerApiVerify(tPointer.ptApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoMemory_PointerVerify(tPointer.tRoot);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }

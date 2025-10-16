@@ -22,7 +22,7 @@ uint16_t Juno_CrcCcittUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize
 {
     if(!(pcData && zDataSize))
     {
-        return 0;
+        return iCrc;
     }
     register uint16_t crc = iCrc;
     register const uint8_t *cp = pcData;

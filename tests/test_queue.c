@@ -32,16 +32,18 @@ static inline JUNO_STATUS_T Queue_RemoveAt(JUNO_ARRAY_ROOT_T *ptQueue, size_t iI
 static inline JUNO_STATUS_T Queue_Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);
 static inline JUNO_STATUS_T Queue_Reset(JUNO_POINTER_T tDest);
 
+const JUNO_POINTER_API_T gtPointerApi = {
+	.Copy = Queue_Copy,
+	.Reset = Queue_Reset,
+};
+
 const JUNO_ARRAY_API_T gtQueueApi = {
 	Queue_SetAt,
 	Queue_GetAt,
 	Queue_RemoveAt,
 };
 
-const JUNO_POINTER_API_T gtPointerApi = {
-	.Copy = Queue_Copy,
-	.Reset = Queue_Reset,
-};
+
 
 union JUNO_ARRAY_ROOT_T JUNO_MODULE(void, JUNO_ARRAY_ROOT_T,
 	TEST_ARRAY tTestQueue;
@@ -55,7 +57,6 @@ static void test_queue(void)
 
 	// Initialize the array root fields
 	ptArray->ptApi        = &gtQueueApi;
-	ptArray->ptPointerApi = &gtPointerApi;
 	ptArray->zCapacity    = sizeof(tBuffer.iTestQueue);
 	ptArray->zLength      = 0;
 
@@ -64,7 +65,7 @@ static void test_queue(void)
 	JUNO_STATUS_T tStatus = JunoDs_Buff_QueueInit(&tQueue, ptArray, NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	uint8_t iValue = 0;
-	JUNO_POINTER_T tValPtr = Juno_PointerInit(&gtPointerApi, uint8_t, &iValue);
+	JUNO_POINTER_T tValPtr = JunoMemory_PointerInit(&gtPointerApi, uint8_t, &iValue);
 
 	// Fill the queue
 	for (size_t i = 0; i < sizeof(tBuffer.iTestQueue); i++)
@@ -185,7 +186,7 @@ static inline JUNO_STATUS_T Queue_SetAt(JUNO_ARRAY_ROOT_T *ptQueue, JUNO_POINTER
 static inline JUNO_RESULT_POINTER_T Queue_GetAt(JUNO_ARRAY_ROOT_T *ptQueue, size_t iIndex)
 {
 	TEST_ARRAY *ptTestQueue = (TEST_ARRAY *) ptQueue;
-	JUNO_RESULT_POINTER_T tResult = JUNO_OK_RESULT(Juno_PointerInit(&gtPointerApi, uint8_t, &ptTestQueue->iTestQueue[iIndex]));
+	JUNO_RESULT_POINTER_T tResult = JUNO_OK_RESULT(JunoMemory_PointerInit(&gtPointerApi, uint8_t, &ptTestQueue->iTestQueue[iIndex]));
 	return tResult;
 }
 

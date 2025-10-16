@@ -1,4 +1,4 @@
-#include "juno/sb/msg_api.h"
+#include "juno/sb/sb_api.h"
 
 int main(void)
 {

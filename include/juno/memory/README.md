@@ -91,7 +91,7 @@ static const JUNO_POINTER_API_T gMyPtrApi = { MyCopy, MyReset };
 
 Helpers provided by the API:
 - `JUNO_CHECK_POINTER_TYPE(pointer, TYPE)` validates size and alignment
-- `Juno_PointerInit(api, TYPE, addr)` constructs a typed pointer descriptor (rarely needed by users)
+- `JunoMemory_PointerInit(api, TYPE, addr)` constructs a typed pointer descriptor (rarely needed by users)
 
 ## Initializing the block allocator
 
