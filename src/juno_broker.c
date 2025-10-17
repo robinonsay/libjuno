@@ -130,7 +130,7 @@ static JUNO_STATUS_T RegistrySetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T
         JUNO_FAIL_ROOT(tStatus, ptArray, "Invalid type. Not Pipe Registry");
         return tStatus;
     }
-    // cast tthe registry
+    // cast the registry
     JUNO_SB_PIPE_REGISTRY_T *ptRegistry = (JUNO_SB_PIPE_REGISTRY_T *) ptArray;
     // verify the registry
     tStatus = JunoSb_RegistryVerify(ptRegistry);
