@@ -30,7 +30,6 @@
 #include "juno/ds/array_api.h"
 #include "juno/macros.h"
 #include "juno/memory/pointer_api.h"
-#include "juno/mp/mtx_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/ds/buff_queue_api.h"
