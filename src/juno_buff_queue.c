@@ -4,14 +4,14 @@
 #include "juno/memory/memory_api.h"
 
 /// Enqueue an item on the queue
-static JUNO_STATUS_T JunoEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem)
+static JUNO_STATUS_T JunoEnqueue(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
     JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
+    JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
     if(ptBuffer->zLength < ptBuffer->zCapacity)
     {
         size_t iIndex = (ptQueue->iStartIndex + ptBuffer->zLength) % ptBuffer->zCapacity;
@@ -29,16 +29,16 @@ static JUNO_STATUS_T JunoEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T
 }
 
 /// Dequeue an item from the queue
-static JUNO_STATUS_T JunoDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn)
+static JUNO_STATUS_T JunoDequeue(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn)
 {
     JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
+    JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
     if(ptBuffer->zLength > 0)
     {
-        const JUNO_ARRAY_API_T *ptApi = ptBuffer->ptApi;
+        const JUNO_DS_ARRAY_API_T *ptApi = ptBuffer->ptApi;
         size_t iDequeueIndex = ptQueue->iStartIndex;
         JUNO_RESULT_POINTER_T tPtrResult = ptApi->GetAt(ptBuffer, iDequeueIndex);
         JUNO_ASSERT_SUCCESS(tPtrResult.tStatus, return tPtrResult.tStatus);
@@ -56,12 +56,12 @@ static JUNO_STATUS_T JunoDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T
 }
 
 /// Peek at the next item in the queue
-static JUNO_RESULT_POINTER_T JunoPeek(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
+static JUNO_RESULT_POINTER_T JunoPeek(JUNO_DS_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_RESULT_POINTER_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR, {0});
     tResult.tStatus = JunoDs_Buff_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
+    JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
     if(ptBuffer->zLength == 0)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
@@ -72,7 +72,7 @@ static JUNO_RESULT_POINTER_T JunoPeek(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
     return tResult;
 }
 
-static const JUNO_BUFF_QUEUE_API_T gtBuffQueueApi =
+static const JUNO_DS_QUEUE_API_T gtBuffQueueApi =
 {
     JunoEnqueue,
     JunoDequeue,
@@ -80,7 +80,7 @@ static const JUNO_BUFF_QUEUE_API_T gtBuffQueueApi =
 };
 
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_Buff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+JUNO_STATUS_T JunoDs_Buff_QueueInit(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_DS_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
     ptQueue->ptApi = &gtBuffQueueApi;

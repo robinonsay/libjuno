@@ -21,11 +21,11 @@
 */
 
 /**
-    This header contains the juno_buff_queue library API
+    This header contains the juno_ds_queue library API
     @author Robin Onsay
 */
-#ifndef JUNO_ARRAY_API_H
-#define JUNO_ARRAY_API_H
+#ifndef JUNO_DS_ARRAY_API_H
+#define JUNO_DS_ARRAY_API_H
 #include "juno/macros.h"
 #include "juno/memory/memory_api.h"
 #include "juno/memory/pointer_api.h"
@@ -39,28 +39,28 @@ extern "C"
 #endif
 
 /// The Buffer queue root
-typedef struct JUNO_ARRAY_ROOT_TAG JUNO_ARRAY_ROOT_T;
-typedef struct JUNO_ARRAY_API_TAG  JUNO_ARRAY_API_T;
+typedef struct JUNO_DS_ARRAY_ROOT_TAG JUNO_DS_ARRAY_ROOT_T;
+typedef struct JUNO_DS_ARRAY_API_TAG  JUNO_DS_ARRAY_API_T;
 
 /// The root buffee queue
-struct JUNO_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ARRAY_API_T,
+struct JUNO_DS_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_ARRAY_API_T,
     /// The current length of the buffer
     size_t zLength;
     /// The capacity of this array
     size_t zCapacity;
 );
 
-struct JUNO_ARRAY_API_TAG
+struct JUNO_DS_ARRAY_API_TAG
 {
     /// Set the value at an index
-    JUNO_STATUS_T (*SetAt)(JUNO_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
+    JUNO_STATUS_T (*SetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
     /// Get the value at an index
-    JUNO_RESULT_POINTER_T (*GetAt)(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
+    JUNO_RESULT_POINTER_T (*GetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
     /// Remove a value at an index
-    JUNO_STATUS_T (*RemoveAt)(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
+    JUNO_STATUS_T (*RemoveAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 };
 
-static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_ARRAY_API_T *ptArrayApi)
+static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_DS_ARRAY_API_T *ptArrayApi)
 {
     JUNO_ASSERT_EXISTS(ptArrayApi);
     JUNO_ASSERT_EXISTS(
@@ -71,7 +71,7 @@ static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_ARRAY_API_T *ptArra
     );
     return JUNO_STATUS_SUCCESS;
 }
-static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_ARRAY_ROOT_T *ptArray)
+static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_DS_ARRAY_ROOT_T *ptArray)
 {
     JUNO_ASSERT_EXISTS(ptArray);
     JUNO_ASSERT_EXISTS(
@@ -85,5 +85,5 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_ARRAY_ROOT_T *ptArray)
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_ARRAY_API_H
+#endif // JUNO_DS_ARRAY_API_H
 

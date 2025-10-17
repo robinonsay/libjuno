@@ -70,9 +70,9 @@ typedef struct {
 
 static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 {
-    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tDest, MY_TYPE_T);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerCheckType(tDest, MY_TYPE_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JUNO_CHECK_POINTER_TYPE(tSrc, MY_TYPE_T);
+    tStatus = JunoMemory_PointerCheckType(tSrc, MY_TYPE_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     *(MY_TYPE_T *)tDest.pvAddr = *(MY_TYPE_T *)tSrc.pvAddr;
     return JUNO_STATUS_SUCCESS;
@@ -80,7 +80,7 @@ static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 
 static JUNO_STATUS_T MyReset(JUNO_POINTER_T tPointer)
 {
-    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tPointer, MY_TYPE_T);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerCheckType(tPointer, MY_TYPE_T);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     *(MY_TYPE_T *)tPointer.pvAddr = (MY_TYPE_T){0};
     return JUNO_STATUS_SUCCESS;
@@ -90,7 +90,7 @@ static const JUNO_POINTER_API_T gMyPtrApi = { MyCopy, MyReset };
 ```
 
 Helpers provided by the API:
-- `JUNO_CHECK_POINTER_TYPE(pointer, TYPE)` validates size and alignment
+- `JunoMemory_PointerCheckType(pointer, TYPE)` validates size and alignment
 - `JunoMemory_PointerInit(api, TYPE, addr)` constructs a typed pointer descriptor (rarely needed by users)
 
 ## Initializing the block allocator
@@ -190,14 +190,14 @@ JUNO_MEMORY_BLOCK(gMem, MY_TYPE_T, 10);
 JUNO_MEMORY_BLOCK_METADATA(gMeta, 10);
 
 static JUNO_STATUS_T Copy(JUNO_POINTER_T d, JUNO_POINTER_T s) {
-    JUNO_STATUS_T st = JUNO_CHECK_POINTER_TYPE(d, MY_TYPE_T);
+    JUNO_STATUS_T st = JunoMemory_PointerCheckType(d, MY_TYPE_T);
     JUNO_ASSERT_SUCCESS(st, return st);
-    st = JUNO_CHECK_POINTER_TYPE(s, MY_TYPE_T);
+    st = JunoMemory_PointerCheckType(s, MY_TYPE_T);
     JUNO_ASSERT_SUCCESS(st, return st);
     *(MY_TYPE_T*)d.pvAddr = *(MY_TYPE_T*)s.pvAddr; return JUNO_STATUS_SUCCESS;
 }
 static JUNO_STATUS_T Reset(JUNO_POINTER_T p) {
-    JUNO_STATUS_T st = JUNO_CHECK_POINTER_TYPE(p, MY_TYPE_T);
+    JUNO_STATUS_T st = JunoMemory_PointerCheckType(p, MY_TYPE_T);
     JUNO_ASSERT_SUCCESS(st, return st);
     *(MY_TYPE_T*)p.pvAddr = (MY_TYPE_T){0}; return JUNO_STATUS_SUCCESS;
 }

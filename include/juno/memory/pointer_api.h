@@ -74,7 +74,7 @@ JUNO_MODULE_RESULT(JUNO_RESULT_POINTER_T, JUNO_POINTER_T);
 JUNO_MODULE_RESULT(JUNO_RESULT_VALUE_POINTER_T, JUNO_VALUE_POINTER_T);
 
 #define JunoMemory_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type), alignof(type)}
-#define JUNO_CHECK_POINTER_TYPE(pointer, type, tApi) ((pointer.ptApi == &tApi && pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
+#define JunoMemory_PointerCheckType(pointer, type, tApi) ((pointer.ptApi == &tApi && pointer.zSize == sizeof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
 #define JUNO_ASSERT_POINTER_COPY(tDest, tSrc, tApi) \
 if(!(tDest.ptApi == tSrc.ptApi && tDest.ptApi == &tApi && tDest.pvAddr && tSrc.pvAddr && tDest.zAlignment == tSrc.zAlignment && tDest.zSize == tSrc.zSize)) \
 { \

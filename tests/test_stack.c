@@ -1,4 +1,4 @@
-// Updated to latest API: use JUNO_ARRAY_ROOT_T as backing storage and JUNO_POINTER_API_T
+// Updated to latest API: use JUNO_DS_ARRAY_ROOT_T as backing storage and JUNO_POINTER_API_T
 #include "juno/memory/memory_api.h"
 #include "juno/module.h"
 #include "juno/status.h"
@@ -14,19 +14,19 @@ void setUp(void) {}
 void tearDown(void) {}
 
 // Backing array for the stack (10 bytes)
-typedef struct TEST_ARRAY JUNO_MODULE_DERIVE(JUNO_ARRAY_ROOT_T,
+typedef struct TEST_ARRAY JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
 	uint8_t iTestStack[10];
 ) TEST_ARRAY;
 
 // Array API implementations over TEST_ARRAY
-static inline JUNO_STATUS_T Stack_SetAt(JUNO_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
-static inline JUNO_RESULT_POINTER_T Stack_GetAt(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
-static inline JUNO_STATUS_T Stack_RemoveAt(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
+static inline JUNO_STATUS_T Stack_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
+static inline JUNO_RESULT_POINTER_T Stack_GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
+static inline JUNO_STATUS_T Stack_RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 // Pointer API implementations for uint8_t
 static inline JUNO_STATUS_T Stack_Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);
 static inline JUNO_STATUS_T Stack_Reset(JUNO_POINTER_T tDest);
 
-const JUNO_ARRAY_API_T gtArrayApi = {
+const JUNO_DS_ARRAY_API_T gtArrayApi = {
 	Stack_SetAt,
 	Stack_GetAt,
 	Stack_RemoveAt,
@@ -37,7 +37,7 @@ const JUNO_POINTER_API_T gtPointerApi = {
 	.Reset = Stack_Reset,
 };
 
-union JUNO_ARRAY_ROOT_T JUNO_MODULE(void, JUNO_ARRAY_ROOT_T,
+union JUNO_DS_ARRAY_ROOT_T JUNO_MODULE(void, JUNO_DS_ARRAY_ROOT_T,
 	TEST_ARRAY tTestArray;
 );
 
@@ -45,7 +45,7 @@ static void test_stack(void)
 {
 	// Prepare the backing array (buffer)
 	TEST_ARRAY tBuffer = (TEST_ARRAY){0};
-	JUNO_ARRAY_ROOT_T *ptArray = (JUNO_ARRAY_ROOT_T *)&tBuffer;
+	JUNO_DS_ARRAY_ROOT_T *ptArray = (JUNO_DS_ARRAY_ROOT_T *)&tBuffer;
 
 	// Initialize the array root fields
 	ptArray->ptApi        = &gtArrayApi;
@@ -53,7 +53,7 @@ static void test_stack(void)
 	ptArray->zLength      = 0;
 
 	// Initialize the stack with the backing array
-	JUNO_BUFF_STACK_ROOT_T tStack = (JUNO_BUFF_STACK_ROOT_T){0};
+	JUNO_DS_STACK_ROOT_T tStack = (JUNO_DS_STACK_ROOT_T){0};
 	JUNO_STATUS_T tStatus = JunoDs_Buff_StackInit(&tStack, ptArray, NULL, NULL);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 
@@ -110,7 +110,7 @@ int main(void)
 	return UNITY_END();
 }
 
-static inline JUNO_STATUS_T Stack_SetAt(JUNO_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex)
+static inline JUNO_STATUS_T Stack_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex)
 {
 	uint8_t *iItem = (uint8_t *)tItem.pvAddr;
 	TEST_ARRAY *ptTestArray = (TEST_ARRAY *)ptArray;
@@ -118,14 +118,14 @@ static inline JUNO_STATUS_T Stack_SetAt(JUNO_ARRAY_ROOT_T *ptArray, JUNO_POINTER
 	return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_RESULT_POINTER_T Stack_GetAt(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex)
+static inline JUNO_RESULT_POINTER_T Stack_GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
 {
 	TEST_ARRAY *ptTestArray = (TEST_ARRAY *)ptArray;
 	JUNO_RESULT_POINTER_T tResult = JUNO_OK_RESULT(JunoMemory_PointerInit(&gtPointerApi, uint8_t, &ptTestArray->iTestStack[iIndex]));
 	return tResult;
 }
 
-static inline JUNO_STATUS_T Stack_RemoveAt(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex)
+static inline JUNO_STATUS_T Stack_RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
 {
 	TEST_ARRAY *ptTestArray = (TEST_ARRAY *)ptArray;
 	ptTestArray->iTestStack[iIndex] = 0;

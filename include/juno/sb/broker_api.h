@@ -53,7 +53,7 @@ struct JUNO_SB_PIPE_TAG
 };
 
 struct JUNO_SB_PIPE_REGISTRY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
-    /// Array of receive queue buffer pointers
+    /// Arrray of recieve queue buffer pointers
     JUNO_SB_PIPE_T *ptArrItems;
 );
 
