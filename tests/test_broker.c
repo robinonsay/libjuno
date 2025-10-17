@@ -624,7 +624,7 @@ static JUNO_STATUS_T MsgReset(JUNO_POINTER_T tPointer)
 {
 	JUNO_STATUS_T tStatus = JunoMemory_PointerVerify(tPointer);
 	JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-	tStatus = JunoMemory_PointerCheckType(tPointer, TEST_MID, gtMidValuePointerApi.tRoot);
+	tStatus = JunoMemory_PointerCheckType(tPointer, TEST_MSG_T, gtMsgPointerApi.tRoot);
 	JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
 	*(TEST_MSG_T *) tPointer.pvAddr = (TEST_MSG_T){0};
 	return tStatus;
