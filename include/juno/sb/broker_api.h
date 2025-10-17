@@ -60,8 +60,6 @@ struct JUNO_SB_PIPE_REGISTRY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
 struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
     /// Pointer to the broker registry
     JUNO_SB_PIPE_REGISTRY_T *ptRegistry;
-    /// Pointer to the mutex
-    JUNO_MP_MTX_ROOT_T *ptMtx;
 );
 
 struct JUNO_SB_BROKER_API_TAG
@@ -96,10 +94,8 @@ static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptB
     JUNO_ASSERT_EXISTS(ptBroker);
     tStatus = JunoSb_BrokerApiVerify(ptBroker->ptApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    JUNO_ASSERT_EXISTS(ptBroker->ptRegistry && ptBroker->ptMtx);
+    JUNO_ASSERT_EXISTS(ptBroker->ptRegistry);
     tStatus = JunoSb_RegistryVerify(ptBroker->ptRegistry);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMp_MtxVerify(ptBroker->ptMtx);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }
@@ -115,7 +111,7 @@ static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 }
 
 JUNO_STATUS_T JunoSb_RegistryInit(JUNO_SB_PIPE_REGISTRY_T *ptRegistry, JUNO_SB_PIPE_T *ptArrRecvQueues, const size_t iCapacity);
-JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_REGISTRY_T *ptRegistry, JUNO_MP_MTX_ROOT_T *ptMtx);
+JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_REGISTRY_T *ptRegistry);
 
 
 #ifdef __cplusplus

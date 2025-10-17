@@ -51,12 +51,11 @@ JUNO_STATUS_T JunoSb_RegistryInit(JUNO_SB_PIPE_REGISTRY_T *ptRegistry, JUNO_SB_P
     return tStatus;
 }
 
-JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_REGISTRY_T *ptRegistry, JUNO_MP_MTX_ROOT_T *ptMtx)
+JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_REGISTRY_T *ptRegistry)
 {
-    JUNO_ASSERT_EXISTS(ptBroker && ptRegistry && ptMtx);
+    JUNO_ASSERT_EXISTS(ptBroker && ptRegistry);
     ptBroker->ptApi = &gtBrokerApi;
     ptBroker->ptRegistry = ptRegistry;
-    ptBroker->ptMtx = ptMtx;
     JUNO_STATUS_T tStatus = JunoSb_BrokerVerify(ptBroker);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
