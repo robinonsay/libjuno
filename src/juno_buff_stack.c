@@ -15,11 +15,11 @@ static JUNO_STATUS_T JunoDs_Buff_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_P
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_DS_STACK_ROOT_T *ptStackRoot = (JUNO_DS_STACK_ROOT_T *)(ptStack);
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptStack->ptBuffer;
-    if(ptBuffer->zLength < ptBuffer->zCapacity)
+    if(ptStack->zLength < ptBuffer->zCapacity)
     {
-        tStatus = ptBuffer->ptApi->SetAt(ptBuffer, tItem, ptBuffer->zLength);
+        tStatus = ptBuffer->ptApi->SetAt(ptBuffer, tItem, ptStack->zLength);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-        ptBuffer->zLength += 1;
+        ptStack->zLength += 1;
     }
     else
     {
@@ -40,10 +40,10 @@ static JUNO_STATUS_T JunoDs_Buff_StackPop(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_PO
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_DS_STACK_ROOT_T *ptStackRoot = (JUNO_DS_STACK_ROOT_T *)(ptStack);
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptStack->ptBuffer;
-    if(ptBuffer->zLength > 0)
+    if(ptStack->zLength > 0)
     {
-        ptBuffer->zLength -= 1;
-        JUNO_RESULT_POINTER_T tResult = ptBuffer->ptApi->GetAt(ptBuffer, ptBuffer->zLength);
+        ptStack->zLength -= 1;
+        JUNO_RESULT_POINTER_T tResult = ptBuffer->ptApi->GetAt(ptBuffer, ptStack->zLength);
         JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult.tStatus);
         tStatus = tReturn.ptApi->Copy(tReturn, tResult.tOk);
         return tStatus;
@@ -62,7 +62,7 @@ static JUNO_RESULT_POINTER_T JunoDs_Buff_StackPeek(JUNO_DS_STACK_ROOT_T *ptStack
     tResult.tStatus = JunoDs_Buff_StackVerify(ptStack);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptStack->ptBuffer;
-    if(ptBuffer->zLength == 0)
+    if(ptStack->zLength == 0)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
         JUNO_FAIL(tResult.tStatus, ptStack->_pfcnFailureHandler, ptStack->_pvFailureUserData, "Queue is empty");

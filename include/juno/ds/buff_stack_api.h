@@ -43,6 +43,8 @@ typedef struct JUNO_DS_STACK_API_TAG JUNO_DS_STACK_API_T;
 
 struct JUNO_DS_STACK_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_STACK_API_T,
     JUNO_DS_ARRAY_ROOT_T *ptBuffer;
+    /// The current length of the buffer
+    size_t zLength;
 );
 
 struct JUNO_DS_STACK_API_TAG

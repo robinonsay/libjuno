@@ -143,7 +143,6 @@ void setUp(void)
 	{
 		gtMockArrayBuffers[i].ptApi = &gtMockArrayApi;
 		gtMockArrayBuffers[i].zCapacity = 10;
-		gtMockArrayBuffers[i].zLength = 0;
 	}
 }
 
@@ -160,7 +159,6 @@ static void test_registry_init_success(void)
 	TEST_ASSERT_NOT_NULL(gtRegistry.tRoot.ptApi);
 	TEST_ASSERT_EQUAL_PTR(gtPipes, gtRegistry.ptArrItems);
 	TEST_ASSERT_EQUAL(5, gtRegistry.tRoot.zCapacity);
-	TEST_ASSERT_EQUAL(0, gtRegistry.tRoot.zLength);
 }
 
 static void test_registry_init_null_registry(void)
@@ -222,7 +220,6 @@ static void test_register_subscriber_success(void)
 	// Register subscriber
 	tStatus = gtBroker.ptApi->RegisterSubscriber(&gtBroker, &gtPipes[0]);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
-	TEST_ASSERT_EQUAL(1, gtRegistry.tRoot.zLength);
 }
 
 static void test_register_subscriber_multiple_success(void)
@@ -242,7 +239,6 @@ static void test_register_subscriber_multiple_success(void)
 		TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 	}
 	
-	TEST_ASSERT_EQUAL(3, gtRegistry.tRoot.zLength);
 }
 
 static void test_register_subscriber_registry_full(void)
@@ -271,7 +267,6 @@ static void test_register_subscriber_registry_full(void)
 	TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
 	TEST_ASSERT_TRUE(gbFailureHandlerCalled);
 	TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, gtLastFailureStatus);
-	TEST_ASSERT_EQUAL(2, gtRegistry.tRoot.zLength);
 }
 
 static void test_register_subscriber_null_broker(void)

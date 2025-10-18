@@ -21,9 +21,20 @@
 */
 
 /**
- * @file include/juno/sb/sb_api.h
- * @brief Juno message abstraction API.
- * @author Robin Onsay
+    @file include/juno/broker/broker_api.h
+    @brief This file contains the implementation of the Software Bus (SB) Broker.
+    The main purpose of the broker is to distribute software bus messages between
+    various applications **within a single thread**. Various applications could be
+    running on a processor within a thread and the broker offers a methodology
+    of distributing the messages to the applications.
+
+    The broker **IS NOT** thread safe by design. The rationale for this design decision
+    is to encourage the handling of IPC to be on the software architect. It's up to them
+    to determine how multiple threads will communicate with each other since they are the
+    experts of their software system. This design paradigm encourages
+    "share data not memory" and gives software architects the option to implement
+    whichever IPC mechanism they would like (i.e. UDP/TCP, POSIX queues, In-memory buffers, etc).
+    @author Robin Onsay
  */
 #ifndef JUNO_SB_API_H
 #define JUNO_SB_API_H
@@ -33,6 +44,7 @@
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/ds/buff_queue_api.h"
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C"
 {
@@ -54,6 +66,7 @@ struct JUNO_SB_PIPE_TAG
 struct JUNO_SB_PIPE_REGISTRY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
     /// Array of receive queue buffer pointers
     JUNO_SB_PIPE_T *ptArrItems;
+    size_t zLength;
 );
 
 struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,

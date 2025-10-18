@@ -46,6 +46,8 @@ struct JUNO_DS_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_QUEUE_API_T,
     JUNO_DS_ARRAY_ROOT_T *ptBuffer;
     /// The start index of the buffer (ie the first element)
     size_t iStartIndex;
+    /// The current length of the buffer
+    size_t zLength;
 );
 
 struct JUNO_DS_QUEUE_API_TAG

@@ -44,8 +44,6 @@ typedef struct JUNO_DS_ARRAY_API_TAG  JUNO_DS_ARRAY_API_T;
 
 /// The root buffee queue
 struct JUNO_DS_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_ARRAY_API_T,
-    /// The current length of the buffer
-    size_t zLength;
     /// The capacity of this array
     size_t zCapacity;
 );

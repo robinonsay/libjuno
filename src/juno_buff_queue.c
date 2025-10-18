@@ -12,12 +12,12 @@ static JUNO_STATUS_T JunoEnqueue(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T t
     tStatus = JunoMemory_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
-    if(ptBuffer->zLength < ptBuffer->zCapacity)
+    if(ptQueue->zLength < ptBuffer->zCapacity)
     {
-        size_t iIndex = (ptQueue->iStartIndex + ptBuffer->zLength) % ptBuffer->zCapacity;
+        size_t iIndex = (ptQueue->iStartIndex + ptQueue->zLength) % ptBuffer->zCapacity;
         tStatus = ptBuffer->ptApi->SetAt(ptBuffer, tItem, iIndex);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-        ptBuffer->zLength += 1;
+        ptQueue->zLength += 1;
     }
     else
     {
@@ -36,7 +36,7 @@ static JUNO_STATUS_T JunoDequeue(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T t
     tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
-    if(ptBuffer->zLength > 0)
+    if(ptQueue->zLength > 0)
     {
         const JUNO_DS_ARRAY_API_T *ptApi = ptBuffer->ptApi;
         size_t iDequeueIndex = ptQueue->iStartIndex;
@@ -47,7 +47,7 @@ static JUNO_STATUS_T JunoDequeue(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T t
         tStatus = ptApi->RemoveAt(ptBuffer, iDequeueIndex);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
         ptQueue->iStartIndex = (ptQueue->iStartIndex + 1) % ptBuffer->zCapacity;
-        ptBuffer->zLength -= 1;
+        ptQueue->zLength -= 1;
         return tStatus;
     }
     tStatus = JUNO_STATUS_ERR;
@@ -62,7 +62,7 @@ static JUNO_RESULT_POINTER_T JunoPeek(JUNO_DS_QUEUE_ROOT_T *ptQueue)
     tResult.tStatus = JunoDs_Buff_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
-    if(ptBuffer->zLength == 0)
+    if(ptQueue->zLength == 0)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
         JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailureUserData, "Queue is empty");

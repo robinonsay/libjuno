@@ -70,7 +70,7 @@ typedef struct JUNO_TIME_API_TAG JUNO_TIME_API_T;
 typedef struct JUNO_TIME_ROOT_TAG JUNO_TIME_ROOT_T;
 typedef struct JUNO_TIMESTAMP_TAG JUNO_TIMESTAMP_T;
 
-typedef uint64_t JUNO_TIME_SECONDS_T;
+typedef uint32_t JUNO_TIME_SECONDS_T;
 typedef uint64_t JUNO_TIME_MILLIS_T;
 typedef uint64_t JUNO_TIME_MICROS_T;
 typedef uint64_t JUNO_TIME_NANOS_T;

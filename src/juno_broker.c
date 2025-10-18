@@ -46,6 +46,7 @@ JUNO_STATUS_T JunoSb_RegistryInit(JUNO_SB_PIPE_REGISTRY_T *ptRegistry, JUNO_SB_P
     ptRegistry->tRoot.ptApi = &gtRegistryApi;
     ptRegistry->ptArrItems = ptArrRecvQueues;
     ptRegistry->tRoot.zCapacity = iCapacity;
+    ptRegistry->zLength = 0;
     JUNO_STATUS_T tStatus = JunoSb_RegistryVerify(ptRegistry);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
@@ -70,8 +71,7 @@ static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_VALUE_POINTER
     // Verify the value pointer api
     tStatus = JunoMemory_ValuePointerVerify(tMid);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Set flag indicating a publish occured
-    for(size_t i = 0; i < ptBroker->ptRegistry->tRoot.zLength; i++)
+    for(size_t i = 0; i < ptBroker->ptRegistry->zLength; i++)
     {
         // Get the current item
         JUNO_SB_PIPE_T *ptCurrentItem = &ptBroker->ptRegistry->ptArrItems[i];
@@ -101,7 +101,7 @@ static JUNO_STATUS_T RegisterSubscriber(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB
     const JUNO_DS_ARRAY_API_T *ptArrayApi = ptBroker->ptRegistry->tRoot.ptApi;
     JUNO_DS_ARRAY_ROOT_T *ptRegistryRoot = &ptBroker->ptRegistry->tRoot;
     // Check if the broker registry is full
-    if(ptRegistryRoot->zLength >= ptRegistryRoot->zCapacity)
+    if(ptBroker->ptRegistry->zLength >= ptRegistryRoot->zCapacity)
     {
         // Registry is full, return an error
         tStatus = JUNO_STATUS_ERR;
@@ -111,10 +111,10 @@ static JUNO_STATUS_T RegisterSubscriber(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB
     // Initialize the pointer
     JUNO_POINTER_T tPipePointer = JunoMemory_PointerInit(&gtPipePointerApi, JUNO_SB_PIPE_T, ptPipe);
     // Set the pipe at the end of the registry
-    tStatus = ptArrayApi->SetAt(ptRegistryRoot, tPipePointer, ptRegistryRoot->zLength);
+    tStatus = ptArrayApi->SetAt(ptRegistryRoot, tPipePointer, ptBroker->ptRegistry->zLength);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Increase the length of the registry
-    ptRegistryRoot->zLength += 1;
+    ptBroker->ptRegistry->zLength += 1;
     return tStatus;
 }
 

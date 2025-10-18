@@ -58,7 +58,6 @@ static void test_queue(void)
 	// Initialize the array root fields
 	ptArray->ptApi        = &gtQueueApi;
 	ptArray->zCapacity    = sizeof(tBuffer.iTestQueue);
-	ptArray->zLength      = 0;
 
 	// Initialize the queue with the backing array
 	JUNO_DS_QUEUE_ROOT_T tQueue = (JUNO_DS_QUEUE_ROOT_T){0};

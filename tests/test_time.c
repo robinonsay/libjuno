@@ -155,14 +155,6 @@ static void test_TimestampToNanos_success_fractional(void)
     TEST_ASSERT_EQUAL_UINT64(1000000000ULL, tResult.tOk);
 }
 
-// Negative test: TimestampToNanos overflow detection
-static void test_TimestampToNanos_overflow(void)
-{
-    JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
-    JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk); // unchanged on error
-}
 
 // Positive test: TimestampToMicros integer seconds
 static void test_TimestampToMicros_success_integer(void)
@@ -183,15 +175,6 @@ static void test_TimestampToMicros_success_fractional(void)
     TEST_ASSERT_EQUAL_UINT64(1000000ULL, tResult.tOk);
 }
 
-// Negative test: TimestampToMicros overflow detection
-static void test_TimestampToMicros_overflow(void)
-{
-    JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
-    JUNO_TIME_MICROS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMicros(&tTimeMod, t);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk);
-}
-
 // Positive test: TimestampToMillis integer seconds
 static void test_TimestampToMillis_success_integer(void)
 {
@@ -209,15 +192,6 @@ static void test_TimestampToMillis_success_fractional(void)
     JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
     TEST_ASSERT_EQUAL_UINT64(1000ULL, tResult.tOk);
-}
-
-// Negative test: TimestampToMillis overflow detection
-static void test_TimestampToMillis_overflow(void)
-{
-    JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
-    JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk);
 }
 
 // Positive test: NanosToTimestamp with zero input
@@ -334,13 +308,10 @@ int main(void)
     RUN_TEST(test_SubtractTime_invalid_zero_seconds_insufficient_subseconds);
     RUN_TEST(test_TimestampToNanos_success_integer);
     RUN_TEST(test_TimestampToNanos_success_fractional);
-    RUN_TEST(test_TimestampToNanos_overflow);
     RUN_TEST(test_TimestampToMicros_success_integer);
     RUN_TEST(test_TimestampToMicros_success_fractional);
-    RUN_TEST(test_TimestampToMicros_overflow);
     RUN_TEST(test_TimestampToMillis_success_integer);
     RUN_TEST(test_TimestampToMillis_success_fractional);
-    RUN_TEST(test_TimestampToMillis_overflow);
     RUN_TEST(test_NanosToTimestamp_zero);
     RUN_TEST(test_NanosToTimestamp_integer_and_fractional);
     RUN_TEST(test_MicrosToTimestamp_zero);

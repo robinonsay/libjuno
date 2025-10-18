@@ -50,7 +50,6 @@ static void test_stack(void)
 	// Initialize the array root fields
 	ptArray->ptApi        = &gtArrayApi;
 	ptArray->zCapacity    = sizeof(tBuffer.iTestStack);
-	ptArray->zLength      = 0;
 
 	// Initialize the stack with the backing array
 	JUNO_DS_STACK_ROOT_T tStack = (JUNO_DS_STACK_ROOT_T){0};
