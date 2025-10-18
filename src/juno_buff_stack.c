@@ -1,5 +1,5 @@
 #include "juno/ds/array_api.h"
-#include "juno/ds/buff_stack_api.h"
+#include "juno/ds/stack_api.h"
 #include "juno/macros.h"
 #include "juno/memory/memory_api.h"
 #include "juno/status.h"

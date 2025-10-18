@@ -43,8 +43,9 @@
 #include "juno/memory/pointer_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
-#include "juno/ds/buff_queue_api.h"
+#include "juno/ds/queue_api.h"
 #include <stddef.h>
+#include <stdint.h>
 #ifdef __cplusplus
 extern "C"
 {
@@ -52,32 +53,26 @@ extern "C"
 
 typedef struct JUNO_SB_BROKER_ROOT_TAG JUNO_SB_BROKER_ROOT_T;
 typedef struct JUNO_SB_BROKER_API_TAG JUNO_SB_BROKER_API_T;
-typedef struct JUNO_SB_PIPE_REGISTRY_TAG JUNO_SB_PIPE_REGISTRY_T;
 typedef struct JUNO_SB_PIPE_TAG JUNO_SB_PIPE_T;
+typedef uint32_t JUNO_SB_MSG_ID_T;
 
-struct JUNO_SB_PIPE_TAG
-{
-    /// The recv queue of the pipe
-    JUNO_DS_QUEUE_ROOT_T *ptRecvQueue;
-    /// The mid the pipe is subscribed to
-    JUNO_VALUE_POINTER_T tMid;
-};
-
-struct JUNO_SB_PIPE_REGISTRY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
-    /// Array of receive queue buffer pointers
-    JUNO_SB_PIPE_T *ptArrItems;
-    size_t zLength;
+struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE(JUNO_DS_QUEUE_ROOT_T,
+    /// The pipe Id
+    JUNO_SB_MSG_ID_T iMsgId;
 );
 
 struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
-    /// Pointer to the broker registry
-    JUNO_SB_PIPE_REGISTRY_T *ptRegistry;
+    /// The pipe registry
+    JUNO_SB_PIPE_T **ptPipeRegistry;
+    /// The length of the pipe registry
+    size_t zRegistryLength;
+    size_t zRegistryCapacity;
 );
 
 struct JUNO_SB_BROKER_API_TAG
 {
     /// Publish a message using the broker
-    JUNO_STATUS_T (*Publish)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_VALUE_POINTER_T tMid, JUNO_POINTER_T tMsg);
+    JUNO_STATUS_T (*Publish)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MSG_ID_T tMid, JUNO_POINTER_T tMsg);
     /// Subscribe to a message through the broker
     JUNO_STATUS_T (*RegisterSubscriber)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T *ptPipe);
 };
@@ -92,38 +87,25 @@ static inline JUNO_STATUS_T JunoSb_BrokerApiVerify(const JUNO_SB_BROKER_API_T *p
     return JUNO_STATUS_SUCCESS;
 }
 
-static inline JUNO_STATUS_T JunoSb_RegistryVerify(const JUNO_SB_PIPE_REGISTRY_T *ptRegistry)
-{
-    JUNO_ASSERT_EXISTS(ptRegistry && ptRegistry->ptArrItems);
-    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(&ptRegistry->tRoot);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    return tStatus;
-}
-
 static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptBroker)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     JUNO_ASSERT_EXISTS(ptBroker);
     tStatus = JunoSb_BrokerApiVerify(ptBroker->ptApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    JUNO_ASSERT_EXISTS(ptBroker->ptRegistry);
-    tStatus = JunoSb_RegistryVerify(ptBroker->ptRegistry);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_EXISTS(ptBroker->ptPipeRegistry && ptBroker->zRegistryCapacity);
     return tStatus;
 }
 
 static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 {
     JUNO_ASSERT_EXISTS(ptPipe);
-    JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(ptPipe->ptRecvQueue);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_ValuePointerApiVerify(ptPipe->tMid.ptApi);
+    JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(&ptPipe->tRoot);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }
 
-JUNO_STATUS_T JunoSb_RegistryInit(JUNO_SB_PIPE_REGISTRY_T *ptRegistry, JUNO_SB_PIPE_T *ptArrRecvQueues, const size_t iCapacity);
-JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_REGISTRY_T *ptRegistry);
+JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T **ptPipeRegistry, size_t iRegistryCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 
 #ifdef __cplusplus

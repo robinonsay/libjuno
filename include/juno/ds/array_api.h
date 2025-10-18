@@ -80,6 +80,18 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_DS_ARRAY_ROOT_T *ptArr
     return tStatus;
 }
 
+static inline JUNO_STATUS_T JunoDs_ArrayCheckIndex(const JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
+{
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    if(iIndex >= ptArray->zCapacity)
+    {
+        tStatus = JUNO_STATUS_OOB;
+        JUNO_FAIL_ROOT(tStatus, ptArray, "Index is OOB");
+    }
+    return tStatus;
+}
+
 #ifdef __cplusplus
 }
 #endif
