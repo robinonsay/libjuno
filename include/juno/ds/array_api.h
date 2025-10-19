@@ -92,6 +92,17 @@ static inline JUNO_STATUS_T JunoDs_ArrayCheckIndex(const JUNO_DS_ARRAY_ROOT_T *p
     return tStatus;
 }
 
+static inline JUNO_STATUS_T JunoDs_ArrayInit(JUNO_DS_ARRAY_ROOT_T *ptArray, const JUNO_DS_ARRAY_API_T *ptArrayApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+{
+    JUNO_ASSERT_EXISTS(ptArray && iCapacity && ptArrayApi);
+    ptArray->ptApi = ptArrayApi;
+    ptArray->zCapacity = iCapacity;
+    ptArray->_pfcnFailureHandler = pfcnFailureHdlr;
+    ptArray->_pvFailureUserData = pvUserData;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
+    return tStatus;
+}
+
 #ifdef __cplusplus
 }
 #endif

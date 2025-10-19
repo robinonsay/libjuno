@@ -7,9 +7,9 @@
 
 /// Enqueue an item into the buffer
 /// @returns The index to place the enqueued item
-static JUNO_STATUS_T JunoDs_Buff_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tItem)
+static JUNO_STATUS_T JunoDs_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tItem)
 {
-    JUNO_STATUS_T tStatus = JunoDs_Buff_StackVerify(ptStack);
+    JUNO_STATUS_T tStatus = JunoDs_StackVerify(ptStack);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
@@ -32,9 +32,9 @@ static JUNO_STATUS_T JunoDs_Buff_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_P
 
 /// Dequeue an item from the buffer
 /// @returns The index to dequeue the item from
-static JUNO_STATUS_T JunoDs_Buff_StackPop(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tReturn)
+static JUNO_STATUS_T JunoDs_StackPop(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tReturn)
 {
-    JUNO_STATUS_T tStatus = JunoDs_Buff_StackVerify(ptStack);
+    JUNO_STATUS_T tStatus = JunoDs_StackVerify(ptStack);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
@@ -56,10 +56,10 @@ static JUNO_STATUS_T JunoDs_Buff_StackPop(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_PO
 
 /// Peek at the next item in the queue
 /// @returns the index of the next item in the queue
-static JUNO_RESULT_POINTER_T JunoDs_Buff_StackPeek(JUNO_DS_STACK_ROOT_T *ptStack)
+static JUNO_RESULT_POINTER_T JunoDs_StackPeek(JUNO_DS_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_POINTER_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR, {0});
-    tResult.tStatus = JunoDs_Buff_StackVerify(ptStack);
+    tResult.tStatus = JunoDs_StackVerify(ptStack);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptStack->ptBuffer;
     if(ptStack->zLength == 0)
@@ -73,13 +73,13 @@ static JUNO_RESULT_POINTER_T JunoDs_Buff_StackPeek(JUNO_DS_STACK_ROOT_T *ptStack
 }
 
 static const JUNO_DS_STACK_API_T tStackApi = {
-    JunoDs_Buff_StackPush,
-    JunoDs_Buff_StackPop,
-    JunoDs_Buff_StackPeek,
+    JunoDs_StackPush,
+    JunoDs_StackPop,
+    JunoDs_StackPeek,
 };
 
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_Buff_StackInit(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_DS_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+JUNO_STATUS_T JunoDs_StackInit(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_DS_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptStack);
     JUNO_DS_STACK_ROOT_T *ptStackRoot = (JUNO_DS_STACK_ROOT_T *)(ptStack);
@@ -87,5 +87,5 @@ JUNO_STATUS_T JunoDs_Buff_StackInit(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_DS_ARRAY
     ptStackRoot->_pfcnFailureHandler = pfcnFailureHdlr;
     ptStackRoot->_pvFailureUserData = pvFailureUserData;
     ptStackRoot->ptApi = &tStackApi;
-    return JunoDs_Buff_StackVerify(ptStack);
+    return JunoDs_StackVerify(ptStack);
 }

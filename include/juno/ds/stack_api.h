@@ -61,7 +61,7 @@ struct JUNO_DS_STACK_API_TAG
 };
 
 
-static inline JUNO_STATUS_T JunoDs_Buff_StackVerify(const JUNO_DS_STACK_ROOT_T *ptStack)
+static inline JUNO_STATUS_T JunoDs_StackVerify(const JUNO_DS_STACK_ROOT_T *ptStack)
 {
     JUNO_ASSERT_EXISTS(ptStack);
     JUNO_ASSERT_EXISTS(
@@ -75,7 +75,7 @@ static inline JUNO_STATUS_T JunoDs_Buff_StackVerify(const JUNO_DS_STACK_ROOT_T *
 }
 
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_Buff_StackInit(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_DS_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T JunoDs_StackInit(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_DS_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 
 

@@ -58,7 +58,7 @@ struct JUNO_DS_QUEUE_API_TAG JUNO_MODULE_API_DERIVE(JUNO_DS_ARRAY_API_T,
     JUNO_RESULT_POINTER_T (*Peek)(JUNO_DS_QUEUE_ROOT_T *ptQueue);
 );
 
-static inline JUNO_STATUS_T JunoDs_Buff_QueueApiVerify(const JUNO_DS_QUEUE_API_T *ptQueueApi)
+static inline JUNO_STATUS_T JunoDs_QueueApiVerify(const JUNO_DS_QUEUE_API_T *ptQueueApi)
 {
      JUNO_ASSERT_EXISTS(
         ptQueueApi &&
@@ -69,30 +69,30 @@ static inline JUNO_STATUS_T JunoDs_Buff_QueueApiVerify(const JUNO_DS_QUEUE_API_T
     return JUNO_STATUS_SUCCESS;   
 }
 
-static inline JUNO_STATUS_T JunoDs_Buff_QueueVerify(const JUNO_DS_QUEUE_ROOT_T *ptQueue)
+static inline JUNO_STATUS_T JunoDs_QueueVerify(const JUNO_DS_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
     JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(&ptQueue->tRoot);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    return JunoDs_Buff_QueueApiVerify(ptQueue->ptApi);
+    return JunoDs_QueueApiVerify(ptQueue->ptApi);
 }
 
 /// Enqueue an item on the queue
-JUNO_STATUS_T JunoDs_Buff_Enqueue(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
+JUNO_STATUS_T JunoDs_QueuePush(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
 /// Dequeue an item from the queue
-JUNO_STATUS_T JunoDs_Buff_Dequeue(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
+JUNO_STATUS_T JunoDs_QueuePop(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
 /// Peek at the next item in the queue
-JUNO_RESULT_POINTER_T JunoDs_BuffPeek(JUNO_DS_QUEUE_ROOT_T *ptQueue);
+JUNO_RESULT_POINTER_T JunoDs_QueuePeek(JUNO_DS_QUEUE_ROOT_T *ptQueue);
 
-#define JunoDs_Buff_QueueApiInit(...) (JUNO_DS_QUEUE_API_T) { \
-    __VA_ARGS__, \
-    JunoDs_Buff_Enqueue, \
-    JunoDs_Buff_Dequeue, \
-    JunoDs_BuffPeek, \
+#define JunoDs_QueueApiInit(...) (JUNO_DS_QUEUE_API_T) { \
+    {__VA_ARGS__}, \
+    JunoDs_QueuePush, \
+    JunoDs_QueuePop, \
+    JunoDs_QueuePeek, \
 }
 
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_Buff_QueueInit(JUNO_DS_QUEUE_ROOT_T *ptQueue, const JUNO_DS_QUEUE_API_T *ptQueueApi, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T JunoDs_QueueInit(JUNO_DS_QUEUE_ROOT_T *ptQueue, const JUNO_DS_QUEUE_API_T *ptQueueApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 #ifdef __cplusplus
 }

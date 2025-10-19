@@ -24,6 +24,19 @@ receive a maximum of 10 commands during an execution cycle, and
 the car's main computer will recveive a maximum of 5 telemetry messages.
 */
 
+typedef struct ENGINE_RPM_CMD_TAG
+{
+    float fRpm;
+} ENGINE_RPM_CMD_T;
+JUNO_SB_MID_T RpmCmdMid = 1;
+
+typedef struct ENGINE_RPM_TLM_TAG
+{
+    float fRpm;
+    JUNO_TIMESTAMP_T tTimestamp;
+} ENGINE_RPM_TLM_T;
+JUNO_SB_MID_T RpmTlmMid = 2;
+
 int main(void)
 {
     return 0;

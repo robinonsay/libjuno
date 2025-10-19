@@ -54,11 +54,11 @@ extern "C"
 typedef struct JUNO_SB_BROKER_ROOT_TAG JUNO_SB_BROKER_ROOT_T;
 typedef struct JUNO_SB_BROKER_API_TAG JUNO_SB_BROKER_API_T;
 typedef struct JUNO_SB_PIPE_TAG JUNO_SB_PIPE_T;
-typedef uint32_t JUNO_SB_MSG_ID_T;
+typedef uint32_t JUNO_SB_MID_T;
 
-struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE(JUNO_DS_QUEUE_ROOT_T,
+struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_QUEUE_ROOT_T, JUNO_DS_QUEUE_API_T,
     /// The pipe Id
-    JUNO_SB_MSG_ID_T iMsgId;
+    JUNO_SB_MID_T iMsgId;
 );
 
 struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
@@ -72,7 +72,7 @@ struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
 struct JUNO_SB_BROKER_API_TAG
 {
     /// Publish a message using the broker
-    JUNO_STATUS_T (*Publish)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MSG_ID_T tMid, JUNO_POINTER_T tMsg);
+    JUNO_STATUS_T (*Publish)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MID_T tMid, JUNO_POINTER_T tMsg);
     /// Subscribe to a message through the broker
     JUNO_STATUS_T (*RegisterSubscriber)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T *ptPipe);
 };
@@ -100,13 +100,19 @@ static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptB
 static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 {
     JUNO_ASSERT_EXISTS(ptPipe);
-    JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(&ptPipe->tRoot);
+    JUNO_STATUS_T tStatus = JunoDs_QueueVerify(&ptPipe->tRoot);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }
 
 JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T **ptPipeRegistry, size_t iRegistryCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
+static inline JUNO_STATUS_T JunoSb_PipeInit(JUNO_SB_PIPE_T *ptPipe, const JUNO_DS_QUEUE_API_T *ptApi, JUNO_SB_MID_T iMid, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
+{
+    JUNO_ASSERT_EXISTS(ptPipe);
+    ptPipe->iMsgId = iMid;
+    return JunoDs_QueueInit(&ptPipe->tRoot, ptApi, iCapacity, pfcnFailureHandler, pvUserData);
+}
 
 #ifdef __cplusplus
 }

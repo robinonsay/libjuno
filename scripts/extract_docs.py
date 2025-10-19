@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import re
+import json
 import argparse
 
 def extract_docs_from_file(filepath):
@@ -57,11 +58,72 @@ def extract_docs_from_file(filepath):
     return docs
 
 
+def process_tutorial(tutorial_path, base_dir):
+    """
+    Process a tutorial.json file and generate a combined markdown file
+    from the specified source files in order.
+    """
+    with open(tutorial_path, 'r', encoding='utf-8') as f:
+        tutorial_config = json.load(f)
+    
+    title = tutorial_config.get('title', 'Tutorial')
+    files = tutorial_config.get('files', [])
+    
+    if not files:
+        print(f"Warning: No files specified in {tutorial_path}")
+        return
+    
+    all_docs = []
+    
+    # Process each file in order
+    for file_entry in files:
+        file_path = file_entry.get('path')
+        if not file_path:
+            continue
+        
+        # Resolve path relative to the tutorial.json location
+        full_path = os.path.join(base_dir, file_path)
+        
+        if not os.path.exists(full_path):
+            print(f"Warning: File not found: {full_path}")
+            continue
+        
+        print(f"  Processing: {file_path}")
+        docs = extract_docs_from_file(full_path)
+        
+        if docs:
+            # Add a section header for this file
+            file_section = f"## {os.path.basename(file_path)}\n\n" + '\n\n'.join(docs)
+            all_docs.append(file_section)
+    
+    if all_docs:
+        # Write combined markdown file
+        md_filename = f"{title}.md"
+        md_path = os.path.join(base_dir, md_filename)
+        
+        with open(md_path, 'w', encoding='utf-8') as md_file:
+            md_file.write(f"# {title}\n\n")
+            md_file.write('\n\n'.join(all_docs))
+        
+        print(f"Created tutorial: {md_filename} with {len(files)} source file(s)")
+    else:
+        print(f"Warning: No documentation found in specified files for {tutorial_path}")
+
+
 def main(root_dir):
     """
-    Walk the project directory, find .c and .h files, extract docs, and write .md files.
+    Walk the project directory, find tutorial.json files or .c/.h files, 
+    extract docs, and write .md files.
     """
     for dirpath, _, filenames in os.walk(root_dir):
+        # Check for tutorial.json first
+        if 'tutorial.json' in filenames:
+            tutorial_path = os.path.join(dirpath, 'tutorial.json')
+            print(f"Found tutorial configuration: {tutorial_path}")
+            process_tutorial(tutorial_path, dirpath)
+            continue  # Skip individual file processing in this directory
+        
+        # Otherwise, process individual files
         for filename in filenames:
             if filename.endswith(('.c', '.h', '.cpp', '.hpp')):
                 filepath = os.path.join(dirpath, filename)

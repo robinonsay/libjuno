@@ -84,6 +84,7 @@ struct JUNO_VALUE_POINTER_API_TAG JUNO_MODULE_API_DERIVE(JUNO_POINTER_API_T,
 
 JUNO_MODULE_RESULT(JUNO_RESULT_POINTER_T, JUNO_POINTER_T);
 JUNO_MODULE_RESULT(JUNO_RESULT_VALUE_POINTER_T, JUNO_VALUE_POINTER_T);
+JUNO_MODULE_OPTION(JUNO_OPTION_POINTER_T, JUNO_POINTER_T);
 
 #define JunoMemory_PointerInit(api, type, addr) (JUNO_POINTER_T){api, addr, sizeof(type), alignof(type)}
 #define JunoMemory_ValuePointerInit(api, type, addr) (JUNO_VALUE_POINTER_T){{{api, addr, sizeof(type), alignof(type)}}}
@@ -99,36 +100,33 @@ static JUNO_STATUS_T TYPE_T##Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSr
 static JUNO_STATUS_T TYPE_T##Reset(JUNO_POINTER_T tPointer)
 
 
-#define JUNO_POINTER_API(TYPE_T) \
+#define JunoMemory_PointerApiInit(TYPE_T) \
 { \
     TYPE_T##Copy, \
     TYPE_T##Reset \
 }
 
-#define JUNO_VALUE_POINTER_API(TYPE_T) \
+#define JunoMemory_ValuePointerApiInit(TYPE_T) \
 { \
     JUNO_POINTER_API(TYPE_T), \
     TYPE_T##Equals \
 }
 
-#define JUNO_POINTER_API_FUNC(TYPE_T, POINTER_TYPE_T, tApi) \
+#define JUNO_POINTER_API_FUNC(TYPE_T, tApi) \
 static JUNO_STATUS_T TYPE_T##Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc) \
 { \
     JUNO_ASSERT_POINTER_COPY(tDest, tSrc, tApi); \
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS; \
     JUNO_ASSERT_POINTER(tStatus, tDest, TYPE_T, tApi); \
     JUNO_ASSERT_POINTER(tStatus, tSrc, TYPE_T, tApi); \
-    POINTER_TYPE_T tTypedDest = {tDest}; \
-    POINTER_TYPE_T tTypedSrc = {tSrc}; \
-    *tTypedDest.tPtr = *tTypedSrc.tPtr; \
+    *(TYPE_T*)tDest.pvAddr = *(TYPE_T*)tSrc.pvAddr; \
     return tStatus; \
 } \
 static JUNO_STATUS_T TYPE_T##Reset(JUNO_POINTER_T tPointer) \
 { \
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS; \
     JUNO_ASSERT_POINTER(tStatus, tPointer, TYPE_T, tApi); \
-    POINTER_TYPE_T tTypedPointer = {tPointer}; \
-    *tTypedPointer.tPtr = (TYPE_T){0}; \
+    *(TYPE_T*)tPointer.pvAddr = (TYPE_T){0}; \
     return tStatus; \
 }
 
@@ -137,24 +135,21 @@ JUNO_POINTER_API_FUNC_DECLARE(TYPE_T); \
 static JUNO_RESULT_BOOL_T TYPE_T##Equals(const JUNO_VALUE_POINTER_T tLeft, const JUNO_VALUE_POINTER_T tRight)
 
 
-#define JUNO_VALUE_POINTER_API_FUNC(TYPE_T, POINTER_TYPE_T, tApi) \
+#define JUNO_VALUE_POINTER_API_FUNC(TYPE_T, tApi) \
 static JUNO_STATUS_T TYPE_T##Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc) \
 { \
     JUNO_ASSERT_POINTER_COPY(tDest, tSrc, tApi); \
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS; \
     JUNO_ASSERT_POINTER(tStatus, tDest, TYPE_T, tApi); \
     JUNO_ASSERT_POINTER(tStatus, tSrc, TYPE_T, tApi); \
-    POINTER_TYPE_T tTypedDest = {{{tDest}}}; \
-    POINTER_TYPE_T tTypedSrc = {{{tSrc}}}; \
-    *tTypedDest.tPtr = *tTypedSrc.tPtr; \
+    *(*TYPE_T)tDest.pvAddr = *(TYPE_T*)tSrc.pvAddr; \
     return tStatus; \
 } \
 static JUNO_STATUS_T TYPE_T##Reset(JUNO_POINTER_T tPointer) \
 { \
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS; \
     JUNO_ASSERT_POINTER(tStatus, tPointer, TYPE_T, tApi); \
-    POINTER_TYPE_T tTypedPointer = {{{tPointer}}}; \
-    *tTypedPointer.tPtr = (TYPE_T){0}; \
+    *(*TYPE_T)tPointer.pvAddr = (TYPE_T){0}; \
     return tStatus; \
 } \
 static JUNO_RESULT_BOOL_T TYPE_T##Equals(const JUNO_VALUE_POINTER_T tLeft, const JUNO_VALUE_POINTER_T tRight) \
@@ -164,11 +159,11 @@ static JUNO_RESULT_BOOL_T TYPE_T##Equals(const JUNO_VALUE_POINTER_T tLeft, const
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult); \
     tResult.tStatus = JunoMemory_PointerCheckType(tRight.tRoot, TYPE_T, tApi); \
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult); \
-    POINTER_TYPE_T tTypedLeft = {tLeft}; \
-    POINTER_TYPE_T tTypedRight = {tRight}; \
-    tResult.tOk = *tTypedLeft.tPtr == *tTypedRight.tPtr; \
+    tResult.tOk = (*(TYPE_T*)tLeft.pvAddr) == (*(TYPE_T)tRight.pvAddr); \
     return tResult; \
 }
+
+
 
 
 static inline JUNO_STATUS_T JunoMemory_PointerApiVerify(const JUNO_POINTER_API_T *ptPointerApi)

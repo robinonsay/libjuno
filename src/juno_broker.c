@@ -5,7 +5,7 @@
 #include "juno/status.h"
 
 /// Publish the SB message with message id
-static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MSG_ID_T tMid, JUNO_POINTER_T tMsg);
+static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MID_T tMid, JUNO_POINTER_T tMsg);
 /// Register a subscriber to a sb message
 static JUNO_STATUS_T RegisterSubscriber(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T *ptPipe);
 
@@ -29,7 +29,7 @@ JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T 
     return tStatus;
 }
 
-static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MSG_ID_T tMid, JUNO_POINTER_T tMsg)
+static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MID_T tMid, JUNO_POINTER_T tMsg)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = JunoSb_BrokerVerify(ptBroker);
@@ -39,7 +39,7 @@ static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MSG_ID_T t
     {
         // Get the current item
         JUNO_SB_PIPE_T *ptCurrentItem = ptBroker->ptPipeRegistry[i];
-        tStatus = JunoDs_Buff_QueueVerify(&ptCurrentItem->tRoot);
+        tStatus = JunoDs_QueueVerify(&ptCurrentItem->tRoot);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
         // Check if the mids are equal
         if(ptCurrentItem->iMsgId == tMid)

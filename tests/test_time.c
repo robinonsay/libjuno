@@ -8,7 +8,7 @@
 #include <stdint.h>  // For UINT64_MAX
 
 // Now implementation uses real clock; verify it returns reasonable values
-static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_ROOT_T *ptTime)
+static JUNO_TIMESTAMP_RESULT_T Now(const JUNO_TIME_ROOT_T *ptTime)
 {
     struct timespec tTimeNow = {0};
     clock_gettime(CLOCK_REALTIME, &tTimeNow);
@@ -19,14 +19,14 @@ static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_ROOT_T *ptTime)
 }
 
 // Stub SleepTo always succeeds
-static JUNO_STATUS_T SleepTo(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup)
+static JUNO_STATUS_T SleepTo(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup)
 {
     (void)ptTime; (void)tTimeToWakeup;
     return JUNO_STATUS_SUCCESS;
 }
 
 // Stub Sleep always succeeds
-static JUNO_STATUS_T Sleep(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDuration)
+static JUNO_STATUS_T Sleep(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDuration)
 {
     (void)ptTime; (void)tDuration;
     return JUNO_STATUS_SUCCESS;
