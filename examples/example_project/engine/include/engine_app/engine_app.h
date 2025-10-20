@@ -31,7 +31,7 @@
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/app/app_api.h"
-#include "engine_app/engine_cmd_msg_pipe.h"
+#include "engine_app/engine_cmd_msg.h"
 #include "juno/time/time_api.h"
 #ifdef __cplusplus
 extern "C"
@@ -40,11 +40,13 @@ extern "C"
 
 typedef struct ENGINE_APP_API_TAG ENGINE_APP_API_T;
 typedef struct ENGINE_APP_TAG ENGINE_APP_T;
+#define ENGINE_CMD_MSG_PIPE_DEPTH   (1)
 
 struct ENGINE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
     const JUNO_LOG_ROOT_T *ptLogger;
     const JUNO_TIME_ROOT_T *ptTime;
     JUNO_SB_BROKER_ROOT_T *ptBroker;
+    ENGINE_CMD_MSG_T ptArrCmdBuffer[ENGINE_CMD_MSG_PIPE_DEPTH];
     ENGINE_CMD_MSG_PIPE_T tCmdPipe;
     float fCurrentRpm;
 );

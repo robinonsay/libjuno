@@ -32,7 +32,7 @@
 #include "juno/module.h"
 #include "juno/app/app_api.h"
 #include "juno/time/time_api.h"
-#include "system_manager_app/engine_tlm_msg_pipe.h"
+#include "engine_app/engine_tlm_msg.h"
 #include <stdint.h>
 #ifdef __cplusplus
 extern "C"
@@ -42,10 +42,13 @@ extern "C"
 typedef struct SYSTEM_MANAGER_APP_API_TAG SYSTEM_MANAGER_APP_API_T;
 typedef struct SYSTEM_MANAGER_APP_TAG SYSTEM_MANAGER_APP_T;
 
+#define ENGINE_TLM_MSG_PIPE_DEPTH   (1)
+
 struct SYSTEM_MANAGER_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
     const JUNO_LOG_ROOT_T *ptLogger;
     const JUNO_TIME_ROOT_T *ptTime;
     JUNO_SB_BROKER_ROOT_T *ptBroker;
+    ENGINE_TLM_MSG_T ptArrEngineTlmBuff[ENGINE_TLM_MSG_PIPE_DEPTH];
     ENGINE_TLM_MSG_PIPE_T tEngineTlmPipe;
     JUNO_TIMESTAMP_T tEngineStart;
     float fTargetRpm;

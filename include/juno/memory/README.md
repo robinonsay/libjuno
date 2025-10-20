@@ -93,9 +93,9 @@ static const JUNO_POINTER_API_T gMyPtrApi;
 
 static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc)
 {
-    JUNO_STATUS_T tStatus = JunoMemory_PointerCheckType(tDest, MY_TYPE_T, gMyPtrApi);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tDest, MY_TYPE_T, gMyPtrApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerCheckType(tSrc, MY_TYPE_T, gMyPtrApi);
+    tStatus = JunoMemory_PointerVerifyType(tSrc, MY_TYPE_T, gMyPtrApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     *(MY_TYPE_T *)tDest.pvAddr = *(MY_TYPE_T *)tSrc.pvAddr;
     return JUNO_STATUS_SUCCESS;
@@ -103,7 +103,7 @@ static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc)
 
 static JUNO_STATUS_T MyReset(JUNO_POINTER_T tPointer)
 {
-    JUNO_STATUS_T tStatus = JunoMemory_PointerCheckType(tPointer, MY_TYPE_T, gMyPtrApi);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tPointer, MY_TYPE_T, gMyPtrApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     *(MY_TYPE_T *)tPointer.pvAddr = (MY_TYPE_T){0};
     return JUNO_STATUS_SUCCESS;
@@ -114,7 +114,7 @@ static const JUNO_POINTER_API_T gMyPtrApi = { MyCopy, MyReset };
 
 ### Helpers provided by the API
 
-- `JunoMemory_PointerCheckType(pointer, TYPE, tApi)` — validates size, alignment, and API matching
+- `JunoMemory_PointerVerifyType(pointer, TYPE, tApi)` — validates size, alignment, and API matching
 - `JunoMemory_PointerInit(api, TYPE, addr)` — constructs a typed pointer descriptor (rarely needed by users)
 - `JUNO_ASSERT_POINTER_COPY(tDest, tSrc, tApi)` — validates preconditions for copy operations
 - `JunoMemory_PointerApiVerify(ptPointerApi)` — verifies a pointer API vtable is complete
@@ -231,7 +231,7 @@ The allocator automatically calls `Reset` on newly allocated blocks. If `Reset` 
 - Passing an unaligned address to `Put` is rejected.
 - Ensure `pvMemory` is correctly aligned; pass `alignof(TYPE)` at init.
 - After a successful `Put`, the pointer's `pvAddr` is set to NULL, `zSize` and `zAlignment` are zeroed.
-- The `JunoMemory_PointerCheckType` macro now requires three arguments: `(pointer, TYPE, tApi)`.
+- The `JunoMemory_PointerVerifyType` macro now requires three arguments: `(pointer, TYPE, tApi)`.
 - The `Copy` function signature takes `const JUNO_POINTER_T tSrc` (const second parameter).
 - When the `Reset` operation fails during `Get`, the block is returned to the free list automatically.
 
@@ -253,16 +253,16 @@ JUNO_MEMORY_BLOCK_METADATA(gMeta, 10);
 static const JUNO_POINTER_API_T gPtrApi;
 
 static JUNO_STATUS_T Copy(JUNO_POINTER_T d, const JUNO_POINTER_T s) {
-    JUNO_STATUS_T st = JunoMemory_PointerCheckType(d, MY_TYPE_T, gPtrApi);
+    JUNO_STATUS_T st = JunoMemory_PointerVerifyType(d, MY_TYPE_T, gPtrApi);
     JUNO_ASSERT_SUCCESS(st, return st);
-    st = JunoMemory_PointerCheckType(s, MY_TYPE_T, gPtrApi);
+    st = JunoMemory_PointerVerifyType(s, MY_TYPE_T, gPtrApi);
     JUNO_ASSERT_SUCCESS(st, return st);
     *(MY_TYPE_T*)d.pvAddr = *(MY_TYPE_T*)s.pvAddr; 
     return JUNO_STATUS_SUCCESS;
 }
 
 static JUNO_STATUS_T Reset(JUNO_POINTER_T p) {
-    JUNO_STATUS_T st = JunoMemory_PointerCheckType(p, MY_TYPE_T, gPtrApi);
+    JUNO_STATUS_T st = JunoMemory_PointerVerifyType(p, MY_TYPE_T, gPtrApi);
     JUNO_ASSERT_SUCCESS(st, return st);
     *(MY_TYPE_T*)p.pvAddr = (MY_TYPE_T){0}; 
     return JUNO_STATUS_SUCCESS;
@@ -309,7 +309,7 @@ The memory module reports errors through status codes of type `JUNO_STATUS_T`:
 3. **Implement failure handlers**: Use failure handlers to catch memory issues early during development.
 4. **Initialize your data**: Even if memory is zeroed by Reset, initialize your data structures explicitly to reveal intent.
 5. **Use typed macros**: Prefer `JunoMemory_BlockGetT` and `JunoMemory_BlockPutT` to reduce size mismatches.
-6. **Forward declare APIs**: When using `JunoMemory_PointerCheckType` in Copy/Reset, forward declare the API constant.
+6. **Forward declare APIs**: When using `JunoMemory_PointerVerifyType` in Copy/Reset, forward declare the API constant.
 
 ## Future work
 

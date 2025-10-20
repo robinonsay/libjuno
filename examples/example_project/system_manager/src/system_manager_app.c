@@ -16,7 +16,6 @@
 */
 #include "engine_app/engine_cmd_msg.h"
 #include "engine_app/engine_tlm_msg.h"
-#include "system_manager_app/engine_tlm_msg_pipe.h"
 #include "juno/ds/queue_api.h"
 #include "juno/log/log_api.h"
 #include "system_manager_app/system_manager_app.h"
@@ -47,7 +46,7 @@ static JUNO_STATUS_T OnInit(JUNO_APP_ROOT_T *ptJunoApp)
     // Log that the app was intialized
     ptLoggerApi->LogInfo(ptLogger, "SystemManager App Initialized");
     // Initialize the cmd pipe
-    tStatus = EngineTlmMsgPipeInit(&ptSystemManagerApp->tEngineTlmPipe, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    tStatus = EngineTlmMsg_PipeInit(&ptSystemManagerApp->tEngineTlmPipe, ptSystemManagerApp->ptArrEngineTlmBuff, ENGINE_TLM_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Register the subscriber
     tStatus = ptSystemManagerApp->ptBroker->ptApi->RegisterSubscriber(ptSystemManagerApp->ptBroker, &ptSystemManagerApp->tEngineTlmPipe.tRoot);

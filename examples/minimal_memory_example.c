@@ -23,9 +23,9 @@ const JUNO_POINTER_API_T gtUserDataPointerApi = {
 // Define the pointer api for this type
 static JUNO_STATUS_T UserDataCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 {
-    JUNO_STATUS_T tStatus = JunoMemory_PointerCheckType(tDest, USER_DATA_T, gtUserDataPointerApi);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tDest, USER_DATA_T, gtUserDataPointerApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerCheckType(tSrc, USER_DATA_T, gtUserDataPointerApi);
+    tStatus = JunoMemory_PointerVerifyType(tSrc, USER_DATA_T, gtUserDataPointerApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     USER_DATA_T *ptDest = (USER_DATA_T *)tDest.pvAddr;
     USER_DATA_T *ptSrc = (USER_DATA_T *)tSrc.pvAddr;
@@ -36,7 +36,7 @@ static JUNO_STATUS_T UserDataCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 /// Reset the memory at the pointer. This could mean zero-initialization
 static JUNO_STATUS_T UserDataReset(JUNO_POINTER_T tPointer)
 {
-    JUNO_STATUS_T tStatus = JunoMemory_PointerCheckType(tPointer, USER_DATA_T, gtUserDataPointerApi);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tPointer, USER_DATA_T, gtUserDataPointerApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     USER_DATA_T *ptBlock = (USER_DATA_T *)tPointer.pvAddr;
     *ptBlock = (USER_DATA_T){0};

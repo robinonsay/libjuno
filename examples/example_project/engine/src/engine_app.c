@@ -15,7 +15,6 @@
     included in all copies or substantial portions of the Software.
 */
 #include "engine_app/engine_cmd_msg.h"
-#include "engine_app/engine_cmd_msg_pipe.h"
 #include "engine_app/engine_tlm_msg.h"
 #include "juno/ds/queue_api.h"
 #include "juno/log/log_api.h"
@@ -46,7 +45,7 @@ static JUNO_STATUS_T OnInit(JUNO_APP_ROOT_T *ptJunoApp)
     // Log that the app was intialized
     ptLoggerApi->LogInfo(ptLogger, "Engine App Initialized");
     // Initialize the cmd pipe
-    tStatus = EngineCmdMsgPipeInit(&ptEngineApp->tCmdPipe, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    tStatus = EngineCmdMsg_PipeInit(&ptEngineApp->tCmdPipe, ptEngineApp->ptArrCmdBuffer, ENGINE_CMD_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Register the subscriber
     tStatus = ptEngineApp->ptBroker->ptApi->RegisterSubscriber(ptEngineApp->ptBroker, &ptEngineApp->tCmdPipe.tRoot);
