@@ -26,6 +26,7 @@
 */
 #ifndef JUNO_LOG_API_H
 #define JUNO_LOG_API_H
+#include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #ifdef __cplusplus
@@ -41,11 +42,20 @@ struct JUNO_LOG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_LOG_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_LOG_API_TAG
 {
-    JUNO_STATUS_T (*LogDebug)(JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
-    JUNO_STATUS_T (*LogInfo)(JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
-    JUNO_STATUS_T (*LogWarning)(JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
-    JUNO_STATUS_T (*LogError)(JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
+    JUNO_STATUS_T (*LogDebug)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
+    JUNO_STATUS_T (*LogInfo)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
+    JUNO_STATUS_T (*LogWarning)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
+    JUNO_STATUS_T (*LogError)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
 };
+
+static inline JUNO_STATUS_T JunoLog_LogInit(JUNO_LOG_ROOT_T *ptLog, const JUNO_LOG_API_T *ptApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
+{
+    JUNO_ASSERT_EXISTS(ptLog);
+    ptLog->_pfcnFailureHandler = pfcnFailureHandler;
+    ptLog->_pvFailureUserData = pvUserData;
+    ptLog->ptApi = ptApi;
+    return JUNO_STATUS_SUCCESS;
+}
 
 #ifdef __cplusplus
 }

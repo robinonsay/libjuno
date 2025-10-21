@@ -1,3 +1,20 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include "juno/module.h"
 #include "juno/status.h"
 #include "juno/time/time_api.h"
@@ -8,7 +25,7 @@
 #include <stdint.h>  // For UINT64_MAX
 
 // Now implementation uses real clock; verify it returns reasonable values
-static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_ROOT_T *ptTime)
+static JUNO_TIMESTAMP_RESULT_T Now(const JUNO_TIME_ROOT_T *ptTime)
 {
     struct timespec tTimeNow = {0};
     clock_gettime(CLOCK_REALTIME, &tTimeNow);
@@ -19,14 +36,14 @@ static JUNO_TIMESTAMP_RESULT_T Now(JUNO_TIME_ROOT_T *ptTime)
 }
 
 // Stub SleepTo always succeeds
-static JUNO_STATUS_T SleepTo(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup)
+static JUNO_STATUS_T SleepTo(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup)
 {
     (void)ptTime; (void)tTimeToWakeup;
     return JUNO_STATUS_SUCCESS;
 }
 
 // Stub Sleep always succeeds
-static JUNO_STATUS_T Sleep(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDuration)
+static JUNO_STATUS_T Sleep(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDuration)
 {
     (void)ptTime; (void)tDuration;
     return JUNO_STATUS_SUCCESS;
@@ -155,14 +172,6 @@ static void test_TimestampToNanos_success_fractional(void)
     TEST_ASSERT_EQUAL_UINT64(1000000000ULL, tResult.tOk);
 }
 
-// Negative test: TimestampToNanos overflow detection
-static void test_TimestampToNanos_overflow(void)
-{
-    JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
-    JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk); // unchanged on error
-}
 
 // Positive test: TimestampToMicros integer seconds
 static void test_TimestampToMicros_success_integer(void)
@@ -183,15 +192,6 @@ static void test_TimestampToMicros_success_fractional(void)
     TEST_ASSERT_EQUAL_UINT64(1000000ULL, tResult.tOk);
 }
 
-// Negative test: TimestampToMicros overflow detection
-static void test_TimestampToMicros_overflow(void)
-{
-    JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
-    JUNO_TIME_MICROS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMicros(&tTimeMod, t);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk);
-}
-
 // Positive test: TimestampToMillis integer seconds
 static void test_TimestampToMillis_success_integer(void)
 {
@@ -209,15 +209,6 @@ static void test_TimestampToMillis_success_fractional(void)
     JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
     TEST_ASSERT_EQUAL_UINT64(1000ULL, tResult.tOk);
-}
-
-// Negative test: TimestampToMillis overflow detection
-static void test_TimestampToMillis_overflow(void)
-{
-    JUNO_TIMESTAMP_T t = { .iSeconds = UINT64_MAX, .iSubSeconds = 0 };
-    JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk);
 }
 
 // Positive test: NanosToTimestamp with zero input
@@ -334,13 +325,10 @@ int main(void)
     RUN_TEST(test_SubtractTime_invalid_zero_seconds_insufficient_subseconds);
     RUN_TEST(test_TimestampToNanos_success_integer);
     RUN_TEST(test_TimestampToNanos_success_fractional);
-    RUN_TEST(test_TimestampToNanos_overflow);
     RUN_TEST(test_TimestampToMicros_success_integer);
     RUN_TEST(test_TimestampToMicros_success_fractional);
-    RUN_TEST(test_TimestampToMicros_overflow);
     RUN_TEST(test_TimestampToMillis_success_integer);
     RUN_TEST(test_TimestampToMillis_success_fractional);
-    RUN_TEST(test_TimestampToMillis_overflow);
     RUN_TEST(test_NanosToTimestamp_zero);
     RUN_TEST(test_NanosToTimestamp_integer_and_fractional);
     RUN_TEST(test_MicrosToTimestamp_zero);

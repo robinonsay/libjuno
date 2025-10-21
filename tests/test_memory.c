@@ -1,5 +1,23 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include "juno/macros.h"
 #include "juno/memory/memory_api.h"
+#include "juno/memory/pointer_api.h"
 #define JUNO_MEMORY_DEFAULT
 #include "juno/memory/memory_block.h"
 #include "juno/status.h"
@@ -21,11 +39,19 @@ typedef struct TEST_BLOCK_TAG
 JUNO_MEMORY_BLOCK(ptTestBlock, TEST_BLOCK_T, 10);
 JUNO_MEMORY_BLOCK_METADATA(ptTestMetadata, 10);
 /// Copy memory from one pointer to another
+static JUNO_STATUS_T Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);
+static JUNO_STATUS_T Reset(JUNO_POINTER_T tPointer);
+
+const JUNO_POINTER_API_T gtTestBlockApi = {
+    Copy,
+    Reset
+};
+
 static JUNO_STATUS_T Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 {
-    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tDest, TEST_BLOCK_T);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tDest, TEST_BLOCK_T, gtTestBlockApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JUNO_CHECK_POINTER_TYPE(tSrc, TEST_BLOCK_T);
+    tStatus = JunoMemory_PointerVerifyType(tSrc, TEST_BLOCK_T, gtTestBlockApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TEST_BLOCK_T *ptDest = (TEST_BLOCK_T *)tDest.pvAddr;
     TEST_BLOCK_T *ptSrc = (TEST_BLOCK_T *)tSrc.pvAddr;
@@ -36,17 +62,12 @@ static JUNO_STATUS_T Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 /// Reset the memory at the pointer. This could mean zero-initialization
 static JUNO_STATUS_T Reset(JUNO_POINTER_T tPointer)
 {
-    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tPointer, TEST_BLOCK_T);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tPointer, TEST_BLOCK_T, gtTestBlockApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TEST_BLOCK_T *ptBlock = (TEST_BLOCK_T *)tPointer.pvAddr;
     *ptBlock = (TEST_BLOCK_T){0};
     return tStatus;
 }
-
-const JUNO_POINTER_API_T gtTestBlockApi = {
-    Copy,
-    Reset
-};
 
 void setUp(void)
 {

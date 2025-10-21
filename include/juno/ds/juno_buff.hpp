@@ -21,11 +21,11 @@
 */
 
 /**
-    This header contains the juno_buff_queue library API
+    This header contains the juno_ds_queue library API
     @author Robin Onsay
 */
-#ifndef JUNO_BUFF_HPP
-#define JUNO_BUFF_HPP
+#ifndef JUNO_DS_HPP
+#define JUNO_DS_HPP
 #include "buff_api.hpp"
 #include "juno/module.h"
 #include "juno/module.hpp"
@@ -182,5 +182,5 @@ RESULT_T<T*> StackPeek(STACK_ROOT_T<T, N>& tStack)
 }
 }
 
-#endif // JUNO_BUFF_QUEUE_API_H
+#endif // JUNO_DS_QUEUE_API_H
 

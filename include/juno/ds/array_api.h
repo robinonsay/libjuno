@@ -21,13 +21,14 @@
 */
 
 /**
-    This header contains the juno_buff_queue library API
+    This header contains the juno_ds_queue library API
     @author Robin Onsay
 */
-#ifndef JUNO_ARRAY_API_H
-#define JUNO_ARRAY_API_H
+#ifndef JUNO_DS_ARRAY_API_H
+#define JUNO_DS_ARRAY_API_H
 #include "juno/macros.h"
 #include "juno/memory/memory_api.h"
+#include "juno/memory/pointer_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/types.h"
@@ -38,27 +39,26 @@ extern "C"
 #endif
 
 /// The Buffer queue root
-typedef struct JUNO_ARRAY_ROOT_TAG JUNO_ARRAY_ROOT_T;
-typedef struct JUNO_ARRAY_API_TAG  JUNO_ARRAY_API_T;
+typedef struct JUNO_DS_ARRAY_ROOT_TAG JUNO_DS_ARRAY_ROOT_T;
+typedef struct JUNO_DS_ARRAY_API_TAG  JUNO_DS_ARRAY_API_T;
 
 /// The root buffee queue
-struct JUNO_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ARRAY_API_T,
-    /// The pointer api for this array
-    const JUNO_POINTER_API_T *ptPointerApi;
-    /// The current length of the buffer
-    size_t zLength;
+struct JUNO_DS_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_ARRAY_API_T,
     /// The capacity of this array
     size_t zCapacity;
 );
 
-struct JUNO_ARRAY_API_TAG
+struct JUNO_DS_ARRAY_API_TAG
 {
-    JUNO_STATUS_T (*SetAt)(JUNO_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
-    JUNO_RESULT_POINTER_T (*GetAt)(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
-    JUNO_STATUS_T (*RemoveAt)(JUNO_ARRAY_ROOT_T *ptArray, size_t iIndex);
+    /// Set the value at an index
+    JUNO_STATUS_T (*SetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
+    /// Get the value at an index
+    JUNO_RESULT_POINTER_T (*GetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
+    /// Remove a value at an index
+    JUNO_STATUS_T (*RemoveAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 };
 
-static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_ARRAY_API_T *ptArrayApi)
+static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_DS_ARRAY_API_T *ptArrayApi)
 {
     JUNO_ASSERT_EXISTS(ptArrayApi);
     JUNO_ASSERT_EXISTS(
@@ -69,22 +69,42 @@ static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_ARRAY_API_T *ptArra
     );
     return JUNO_STATUS_SUCCESS;
 }
-static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_ARRAY_ROOT_T *ptArray)
+static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_DS_ARRAY_ROOT_T *ptArray)
 {
     JUNO_ASSERT_EXISTS(ptArray);
     JUNO_ASSERT_EXISTS(
-        ptArray->zCapacity &&
-        ptArray->ptPointerApi
+        ptArray->zCapacity
     );
     JUNO_STATUS_T tStatus = JunoDs_ArrayApiVerify(ptArray->ptApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerApiVerify(ptArray->ptPointerApi);
+    return tStatus;
+}
+
+static inline JUNO_STATUS_T JunoDs_ArrayVerifyIndex(const JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
+{
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    if(iIndex >= ptArray->zCapacity)
+    {
+        tStatus = JUNO_STATUS_OOB;
+        JUNO_FAIL_ROOT(tStatus, ptArray, "Index is OOB");
+    }
+    return tStatus;
+}
+
+static inline JUNO_STATUS_T JunoDs_ArrayInit(JUNO_DS_ARRAY_ROOT_T *ptArray, const JUNO_DS_ARRAY_API_T *ptArrayApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+{
+    JUNO_ASSERT_EXISTS(ptArray && iCapacity && ptArrayApi);
+    ptArray->ptApi = ptArrayApi;
+    ptArray->zCapacity = iCapacity;
+    ptArray->_pfcnFailureHandler = pfcnFailureHdlr;
+    ptArray->_pvFailureUserData = pvUserData;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
     return tStatus;
 }
 
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_ARRAY_API_H
+#endif // JUNO_DS_ARRAY_API_H
 

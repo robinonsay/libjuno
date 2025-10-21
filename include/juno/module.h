@@ -217,6 +217,8 @@
     __VA_ARGS__ \
 }
 
+#define JUNO_TRAIT_DERIVE(ROOT_T, ...) JUNO_MODULE_DERIVE(ROOT_T, __VA_ARGS__)
+
 #define JUNO_MODULE_DERIVE_WITH_API(ROOT_T, API_T, ...) \
 { \
     union { \

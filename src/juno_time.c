@@ -1,3 +1,20 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/time/time_api.h"
@@ -6,7 +23,7 @@
 static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = (~(JUNO_TIME_SUBSECONDS_T)0);
 static const JUNO_TIME_SECONDS_T giSECS_MAX = (~(JUNO_TIME_SECONDS_T)0);
 
-JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)
+JUNO_STATUS_T JunoTime_AddTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)
 {
     JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
     // Add seconds
@@ -28,7 +45,7 @@ JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRet
     return JUNO_STATUS_SUCCESS;
 }
 
-JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract)
+JUNO_STATUS_T JunoTime_SubtractTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract)
 {
     JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
@@ -56,7 +73,7 @@ JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *
     return JUNO_STATUS_SUCCESS;
 }
 
-JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
+JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_NANOS_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -93,7 +110,7 @@ JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_ROOT_T *ptTime, JUN
     return tResult;
 }
 
-JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
+JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_MICROS_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -127,7 +144,7 @@ JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_ROOT_T *ptTime, J
     return tResult;
 }
 
-JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
+JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_MILLIS_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -161,7 +178,7 @@ JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_ROOT_T *ptTime, J
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_NANOS_T iNanos)
+JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_NANOS_T iNanos)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -177,7 +194,7 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_ROOT_T *ptTime, JUNO
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MICROS_T iMicros)
+JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MICROS_T iMicros)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -193,7 +210,7 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_ROOT_T *ptTime, JUN
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MILLIS_T iMillis)
+JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MILLIS_T iMillis)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -210,7 +227,7 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_ROOT_T *ptTime, JUN
 }
 
 
-JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)
+JUNO_RESULT_F64_T JunoTime_TimestampToDouble(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)
 {
     JUNO_RESULT_F64_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -224,7 +241,7 @@ JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_ROOT_T *ptTime, JUNO_TIME
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_ROOT_T *ptTime, double dTimestamp)
+JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(const JUNO_TIME_ROOT_T *ptTime, double dTimestamp)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;

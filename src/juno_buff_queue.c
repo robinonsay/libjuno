@@ -1,44 +1,61 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include "juno/ds/array_api.h"
-#include "juno/ds/buff_queue_api.h"
+#include "juno/ds/queue_api.h"
 #include "juno/macros.h"
-#include "juno/memory/memory_api.h"
+#include "juno/status.h"
 
 /// Enqueue an item on the queue
-static JUNO_STATUS_T JunoEnqueue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem)
+JUNO_STATUS_T JunoDs_QueuePush(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
-    JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(ptQueue);
+    JUNO_STATUS_T tStatus = JunoDs_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
-    if(ptBuffer->zLength < ptBuffer->zCapacity)
+    JUNO_DS_ARRAY_ROOT_T *ptBuffer = &ptQueue->tRoot;
+    if(ptQueue->zLength < ptBuffer->zCapacity)
     {
-        size_t iIndex = (ptQueue->iStartIndex + ptBuffer->zLength) % ptBuffer->zCapacity;
+        size_t iIndex = (ptQueue->iStartIndex + ptQueue->zLength) % ptBuffer->zCapacity;
         tStatus = ptBuffer->ptApi->SetAt(ptBuffer, tItem, iIndex);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-        ptBuffer->zLength += 1;
+        ptQueue->zLength += 1;
     }
     else
     {
         tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailureUserData, "Failed to enqueue data");
+        JUNO_FAIL_MODULE(tStatus, ptQueue, "Failed to enqueue data");
         return tStatus;
     }
     return tStatus;
 }
 
 /// Dequeue an item from the queue
-static JUNO_STATUS_T JunoDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn)
+JUNO_STATUS_T JunoDs_QueuePop(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn)
 {
-    JUNO_STATUS_T tStatus = JunoDs_Buff_QueueVerify(ptQueue);
+    JUNO_STATUS_T tStatus = JunoDs_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
-    if(ptBuffer->zLength > 0)
+    JUNO_DS_ARRAY_ROOT_T *ptBuffer = &ptQueue->tRoot;
+    if(ptQueue->zLength > 0)
     {
-        const JUNO_ARRAY_API_T *ptApi = ptBuffer->ptApi;
+        const JUNO_DS_ARRAY_API_T *ptApi = ptBuffer->ptApi;
         size_t iDequeueIndex = ptQueue->iStartIndex;
         JUNO_RESULT_POINTER_T tPtrResult = ptApi->GetAt(ptBuffer, iDequeueIndex);
         JUNO_ASSERT_SUCCESS(tPtrResult.tStatus, return tPtrResult.tStatus);
@@ -47,46 +64,39 @@ static JUNO_STATUS_T JunoDequeue(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T
         tStatus = ptApi->RemoveAt(ptBuffer, iDequeueIndex);
         JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
         ptQueue->iStartIndex = (ptQueue->iStartIndex + 1) % ptBuffer->zCapacity;
-        ptBuffer->zLength -= 1;
+        ptQueue->zLength -= 1;
         return tStatus;
     }
     tStatus = JUNO_STATUS_ERR;
-    JUNO_FAIL(tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailureUserData, "Queue is empty");
+    JUNO_FAIL_MODULE(tStatus, ptQueue, "Queue is empty");
     return tStatus;
 }
 
 /// Peek at the next item in the queue
-static JUNO_RESULT_POINTER_T JunoPeek(JUNO_BUFF_QUEUE_ROOT_T *ptQueue)
+JUNO_RESULT_POINTER_T JunoDs_QueuePeek(JUNO_DS_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_RESULT_POINTER_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR, {0});
-    tResult.tStatus = JunoDs_Buff_QueueVerify(ptQueue);
+    tResult.tStatus = JunoDs_QueueVerify(ptQueue);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    JUNO_ARRAY_ROOT_T *ptBuffer = ptQueue->ptBuffer;
-    if(ptBuffer->zLength == 0)
+    JUNO_DS_ARRAY_ROOT_T *ptBuffer = &ptQueue->tRoot;
+    if(ptQueue->zLength == 0)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
-        JUNO_FAIL(tResult.tStatus, ptQueue->_pfcnFailureHandler, ptQueue->_pvFailureUserData, "Queue is empty");
+        JUNO_FAIL_MODULE(tResult.tStatus, ptQueue, "Queue is empty");
         return tResult;
     }
     tResult = ptBuffer->ptApi->GetAt(ptBuffer, ptQueue->iStartIndex);
     return tResult;
 }
 
-static const JUNO_BUFF_QUEUE_API_T gtBuffQueueApi =
-{
-    JunoEnqueue,
-    JunoDequeue,
-    JunoPeek
-};
-
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_Buff_QueueInit(JUNO_BUFF_QUEUE_ROOT_T *ptQueue, JUNO_ARRAY_ROOT_T *ptBuffer, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
+JUNO_STATUS_T JunoDs_QueueInit(JUNO_DS_QUEUE_ROOT_T *ptQueue, const JUNO_DS_QUEUE_API_T *ptQueueApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
-    JUNO_ASSERT_EXISTS(ptQueue);
-    ptQueue->ptApi = &gtBuffQueueApi;
+    JUNO_ASSERT_EXISTS(ptQueue && ptQueueApi && iCapacity);
+    ptQueue->ptApi = ptQueueApi;
     ptQueue->iStartIndex = 0;
-    ptQueue->ptBuffer = ptBuffer;
-    ptQueue->_pfcnFailureHandler = pfcnFailureHdlr;
-    ptQueue->_pvFailureUserData = pvFailureUserData;
-    return JunoDs_Buff_QueueVerify(ptQueue);
+    ptQueue->zLength = 0;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&ptQueue->tRoot, &ptQueueApi->tRoot, iCapacity, pfcnFailureHdlr, pvFailureUserData);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return JunoDs_QueueVerify(ptQueue);
 }

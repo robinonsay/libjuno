@@ -2,44 +2,63 @@
 
 Deterministic, static, block-based memory management for embedded systems. This module avoids dynamic allocation and favors predictable behavior and explicit error paths.
 
-This document reflects the current APIs in `juno/memory/memory_api.h` and `juno/memory/memory_block.h` and matches the unit tests in `tests/test_memory.c`.
+This document reflects the current APIs in `juno/memory/memory_api.h`, `juno/memory/pointer_api.h`, and `juno/memory/memory_block.h` and matches the unit tests in `tests/test_memory.c`.
 
 ## Overview
 
 The memory module provides a fixed-size block allocator. You supply:
 - A statically allocated memory array for elements of a single type
-- A metadata array for the allocator’s free list
+- A metadata array for the allocator's free list
 - A pointer API (Copy/Reset) that defines how to copy and reset one element
 
 The allocator exposes an API vtable with Get/Update/Put. Get returns a result containing both a status and a pointer payload.
+
+The module integrates with LibJuno's module system:
+- `JUNO_POINTER_T` uses `JUNO_TRAIT_ROOT` to carry its API pointer
+- `JUNO_MEMORY_ALLOC_ROOT_T` uses `JUNO_MODULE_ROOT` with both the allocator API and pointer API
+- `JUNO_MEMORY_ALLOC_BLOCK_T` uses `JUNO_MODULE_DERIVE` to extend the root with implementation fields
+- Failure handlers can be attached to allocators for error reporting
 
 No reference counting is implemented in the current design.
 
 ## Core types (public headers)
 
-- `JUNO_MEMORY_BLOCK_METADATA_T`
-  - Per-block metadata used by the allocator’s free list. This is a simple public struct (currently contains a `uint8_t *ptFreeMem` field) used internally by the allocator. Treat it as allocator-managed storage: declare arrays with `JUNO_MEMORY_BLOCK_METADATA(...)` but avoid reading/modifying fields directly. The layout may evolve; consumers should not rely on specific members.
+### `JUNO_MEMORY_BLOCK_METADATA_T`
+Per-block metadata used by the allocator's free list. This is a simple public struct (currently contains a `uint8_t *ptFreeMem` field) used internally by the allocator. Treat it as allocator-managed storage: declare arrays with `JUNO_MEMORY_BLOCK_METADATA(...)` but avoid reading/modifying fields directly. The layout may evolve; consumers should not rely on specific members.
 
-- `JUNO_POINTER_T`
-  - Describes a block of memory the allocator returned:
-    - `void *pvAddr;` — block address
-    - `size_t zSize;` — block size in bytes
-    - `size_t zAlignment;` — required alignment for the block
-    - plus an internal `ptApi` member (via lite root) used by the pointer API
+### `JUNO_POINTER_T`
+Describes a block of memory the allocator returned (defined in `pointer_api.h`):
+- `void *pvAddr;` — block address
+- `size_t zSize;` — block size in bytes
+- `size_t zAlignment;` — required alignment for the block
+- `const JUNO_POINTER_API_T *ptApi;` — pointer to the API (via `JUNO_TRAIT_ROOT` macro)
 
-- `JUNO_POINTER_API_T`
-  - Functions that the allocator calls per element type:
-    - `JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);`
-    - `JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);`
+### `JUNO_POINTER_API_T`
+Functions that the allocator calls per element type (defined in `pointer_api.h`):
+- `JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc);` — copy from source to destination
+- `JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);` — reset/zero-initialize the memory
 
-- `JUNO_MEMORY_ALLOC_API_T`
-  - Allocator vtable:
-    - `JUNO_RESULT_POINTER_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, size_t zSize);`
-    - `JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);`
-    - `JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory);`
+### `JUNO_MEMORY_ALLOC_API_T`
+Allocator vtable:
+- `JUNO_RESULT_POINTER_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, size_t zSize);` — allocate a block
+- `JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);` — update block size
+- `JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory);` — free a block
 
-- `JUNO_MEMORY_ALLOC_ROOT_T` and `JUNO_MEMORY_ALLOC_BLOCK_T`
-  - The concrete block allocator type is `JUNO_MEMORY_ALLOC_BLOCK_T` (derived). Its first member is a root (`tRoot`) that carries the API pointer and the pointer API.
+### `JUNO_MEMORY_ALLOC_ROOT_T` and `JUNO_MEMORY_ALLOC_BLOCK_T`
+The concrete block allocator type is `JUNO_MEMORY_ALLOC_BLOCK_T` (derived via `JUNO_MODULE_DERIVE`). It contains:
+- `tRoot` member of type `JUNO_MEMORY_ALLOC_ROOT_T` carrying the API pointer and pointer API
+- `pvMemory` — pointer to the allocated memory area (uint8_t*)
+- `ptMetadata` — array of metadata for each block
+- `zTypeSize` — size of each block element
+- `zAlignment` — required alignment
+- `zLength` — total number of blocks available
+- `zUsed` — current count of allocated blocks (monotonically increases)
+- `zFreed` — current count of freed blocks in the free stack
+
+### `JUNO_VALUE_POINTER_T` and `JUNO_VALUE_POINTER_API_T`
+Extended pointer types with value semantics (defined in `pointer_api.h`):
+- `JUNO_VALUE_POINTER_T` derives from `JUNO_POINTER_T` 
+- `JUNO_VALUE_POINTER_API_T` adds `Equals` comparison operation
 
 ## Declaring memory and metadata
 
@@ -62,17 +81,21 @@ You must provide a `JUNO_POINTER_API_T` for your element type. For trivially cop
 ```c
 #include <stdalign.h>
 #include "juno/memory/memory_api.h"
+#include "juno/memory/pointer_api.h"
 
 typedef struct {
     int id;
     bool flag;
 } MY_TYPE_T;
 
-static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
+// Forward declare the API to use in checks
+static const JUNO_POINTER_API_T gMyPtrApi;
+
+static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc)
 {
-    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tDest, MY_TYPE_T);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tDest, MY_TYPE_T, gMyPtrApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JUNO_CHECK_POINTER_TYPE(tSrc, MY_TYPE_T);
+    tStatus = JunoMemory_PointerVerifyType(tSrc, MY_TYPE_T, gMyPtrApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     *(MY_TYPE_T *)tDest.pvAddr = *(MY_TYPE_T *)tSrc.pvAddr;
     return JUNO_STATUS_SUCCESS;
@@ -80,7 +103,7 @@ static JUNO_STATUS_T MyCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
 
 static JUNO_STATUS_T MyReset(JUNO_POINTER_T tPointer)
 {
-    JUNO_STATUS_T tStatus = JUNO_CHECK_POINTER_TYPE(tPointer, MY_TYPE_T);
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tPointer, MY_TYPE_T, gMyPtrApi);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     *(MY_TYPE_T *)tPointer.pvAddr = (MY_TYPE_T){0};
     return JUNO_STATUS_SUCCESS;
@@ -89,9 +112,15 @@ static JUNO_STATUS_T MyReset(JUNO_POINTER_T tPointer)
 static const JUNO_POINTER_API_T gMyPtrApi = { MyCopy, MyReset };
 ```
 
-Helpers provided by the API:
-- `JUNO_CHECK_POINTER_TYPE(pointer, TYPE)` validates size and alignment
-- `Juno_PointerInit(api, TYPE, addr)` constructs a typed pointer descriptor (rarely needed by users)
+### Helpers provided by the API
+
+- `JunoMemory_PointerVerifyType(pointer, TYPE, tApi)` — validates size, alignment, and API matching
+- `JunoMemory_PointerInit(api, TYPE, addr)` — constructs a typed pointer descriptor (rarely needed by users)
+- `JUNO_ASSERT_POINTER_COPY(tDest, tSrc, tApi)` — validates preconditions for copy operations
+- `JunoMemory_PointerApiVerify(ptPointerApi)` — verifies a pointer API vtable is complete
+- `JunoMemory_PointerVerify(tPointer)` — verifies a pointer structure is valid
+- `JunoMemory_AllocApiVerify(ptAllocApi)` — verifies an allocator API vtable is complete
+- `JunoMemory_AllocVerify(ptAlloc)` — verifies an allocator root structure is valid
 
 ## Initializing the block allocator
 
@@ -135,6 +164,7 @@ Notes:
 - `ptPointerApi` and `zAlignment` are required and validated.
 - `pvMemory` must be aligned to `zAlignment`.
 - Failure handler and user data are optional.
+- The function validates parameters and sets up the allocator's internal state.
 
 ## Allocating, updating, and freeing
 
@@ -149,11 +179,21 @@ if (r.tStatus != JUNO_STATUS_SUCCESS) { /* handle full/invalid size */ }
 JUNO_POINTER_T tPtr = r.tOk;
 MY_TYPE_T *p = (MY_TYPE_T *)tPtr.pvAddr;
 
-// Update size (must not exceed element size)
-(void)ptApi->Update(&tMem.tRoot, &tPtr, sizeof(MY_TYPE_T));
+// The returned pointer includes:
+//   - tPtr.pvAddr: address of the allocated block
+//   - tPtr.zSize: size set to zTypeSize from the allocator
+//   - tPtr.zAlignment: alignment from the allocator
+//   - tPtr.ptApi: pointer to the API used for Copy/Reset
 
-// Free
-(void)ptApi->Put(&tMem.tRoot, &tPtr);
+// Update size (must not exceed element size)
+JUNO_STATUS_T st = ptApi->Update(&tMem.tRoot, &tPtr, sizeof(MY_TYPE_T));
+if (st != JUNO_STATUS_SUCCESS) { /* handle size too large */ }
+
+// Free (pointer is cleared on success)
+st = ptApi->Put(&tMem.tRoot, &tPtr);
+if (st == JUNO_STATUS_SUCCESS) {
+    // tPtr.pvAddr is now NULL, zSize and zAlignment are zeroed
+}
 ```
 
 ### Typed convenience macros
@@ -162,19 +202,38 @@ MY_TYPE_T *p = (MY_TYPE_T *)tPtr.pvAddr;
 
 ```c
 // Get a block for a type; returns JUNO_RESULT_POINTER_T
-JunoMemory_BlockGetT(&tMem, MY_TYPE_T);
+JUNO_RESULT_POINTER_T r = JunoMemory_BlockGetT(&tMem, MY_TYPE_T);
 
 // Put a previously acquired JUNO_POINTER_T*
-JunoMemory_BlockPutT(&tMem, &tPtr);
+JUNO_STATUS_T st = JunoMemory_BlockPutT(&tMem, &tPtr);
 ```
+
+## Internal allocator behavior
+
+The block allocator maintains:
+- `zUsed`: Total number of blocks ever allocated (monotonically increases until pool is full)
+- `zFreed`: Count of freed blocks available for reuse (decreases on Get, increases on Put)
+- Freed blocks are tracked in the `ptMetadata` array as a stack (LIFO order)
+
+Allocation strategy:
+1. If freed blocks exist (`zFreed > 0`), reuse the most recently freed block
+2. Otherwise, if room remains (`zUsed < zLength`), allocate a new block from the pool
+3. When all blocks are allocated and none are freed, return `JUNO_STATUS_MEMALLOC_ERROR`
+
+The allocator automatically calls `Reset` on newly allocated blocks. If `Reset` fails, the block is returned to the free list and the error is propagated.
 
 ## Common pitfalls
 
-- Always check `tStatus` on results from `Get`; don’t use `tOk` unless success.
+- Always check `tStatus` on results from `Get`; don't use `tOk` unless success.
 - Request sizes must be > 0 and <= element size (`zTypeSize`).
-- Freeing the same pointer twice is rejected.
+- Freeing the same pointer twice is rejected with `JUNO_STATUS_MEMFREE_ERROR`.
 - Passing an address outside the managed block range is rejected.
+- Passing an unaligned address to `Put` is rejected.
 - Ensure `pvMemory` is correctly aligned; pass `alignof(TYPE)` at init.
+- After a successful `Put`, the pointer's `pvAddr` is set to NULL, `zSize` and `zAlignment` are zeroed.
+- The `JunoMemory_PointerVerifyType` macro now requires three arguments: `(pointer, TYPE, tApi)`.
+- The `Copy` function signature takes `const JUNO_POINTER_T tSrc` (const second parameter).
+- When the `Reset` operation fails during `Get`, the block is returned to the free list automatically.
 
 ## Minimal end-to-end example (compiles like the tests)
 
@@ -183,24 +242,32 @@ JunoMemory_BlockPutT(&tMem, &tPtr);
 #include <stdbool.h>
 #include "juno/memory/memory_api.h"
 #include "juno/memory/memory_block.h"
+#include "juno/memory/pointer_api.h"
 
 typedef struct { int id; bool flag; } MY_TYPE_T;
 
 JUNO_MEMORY_BLOCK(gMem, MY_TYPE_T, 10);
 JUNO_MEMORY_BLOCK_METADATA(gMeta, 10);
 
-static JUNO_STATUS_T Copy(JUNO_POINTER_T d, JUNO_POINTER_T s) {
-    JUNO_STATUS_T st = JUNO_CHECK_POINTER_TYPE(d, MY_TYPE_T);
+// Forward declare the API to use in checks
+static const JUNO_POINTER_API_T gPtrApi;
+
+static JUNO_STATUS_T Copy(JUNO_POINTER_T d, const JUNO_POINTER_T s) {
+    JUNO_STATUS_T st = JunoMemory_PointerVerifyType(d, MY_TYPE_T, gPtrApi);
     JUNO_ASSERT_SUCCESS(st, return st);
-    st = JUNO_CHECK_POINTER_TYPE(s, MY_TYPE_T);
+    st = JunoMemory_PointerVerifyType(s, MY_TYPE_T, gPtrApi);
     JUNO_ASSERT_SUCCESS(st, return st);
-    *(MY_TYPE_T*)d.pvAddr = *(MY_TYPE_T*)s.pvAddr; return JUNO_STATUS_SUCCESS;
+    *(MY_TYPE_T*)d.pvAddr = *(MY_TYPE_T*)s.pvAddr; 
+    return JUNO_STATUS_SUCCESS;
 }
+
 static JUNO_STATUS_T Reset(JUNO_POINTER_T p) {
-    JUNO_STATUS_T st = JUNO_CHECK_POINTER_TYPE(p, MY_TYPE_T);
+    JUNO_STATUS_T st = JunoMemory_PointerVerifyType(p, MY_TYPE_T, gPtrApi);
     JUNO_ASSERT_SUCCESS(st, return st);
-    *(MY_TYPE_T*)p.pvAddr = (MY_TYPE_T){0}; return JUNO_STATUS_SUCCESS;
+    *(MY_TYPE_T*)p.pvAddr = (MY_TYPE_T){0}; 
+    return JUNO_STATUS_SUCCESS;
 }
+
 static const JUNO_POINTER_API_T gPtrApi = { Copy, Reset };
 
 void example(void) {
@@ -228,18 +295,22 @@ The module is suitable for freestanding builds. Avoid hosted headers in your Cop
 The memory module reports errors through status codes of type `JUNO_STATUS_T`:
 
 - `JUNO_STATUS_SUCCESS`: Operation completed successfully
-- `JUNO_STATUS_MEMALLOC_ERROR`: Failed to allocate memory (block is full)
-- `JUNO_STATUS_MEMFREE_ERROR`: Failed to free memory (invalid address or double free)
-- `JUNO_STATUS_NULLPTR_ERROR`: Null pointer provided to function
-- `JUNO_STATUS_INVALID_TYPE_ERROR`: Invalid memory allocator type
+- `JUNO_STATUS_MEMALLOC_ERROR`: Failed to allocate memory (block is full or size exceeds element size)
+- `JUNO_STATUS_MEMFREE_ERROR`: Failed to free memory (invalid address, double free, or unaligned address)
+- `JUNO_STATUS_NULLPTR_ERROR`: Null pointer provided to function (handled by `JUNO_ASSERT_EXISTS`)
+- `JUNO_STATUS_INVALID_TYPE_ERROR`: Invalid memory allocator type (API mismatch)
 - `JUNO_STATUS_INVALID_SIZE_ERROR`: Invalid size parameter (e.g., zero size)
+- `JUNO_STATUS_ERR`: General error (e.g., corrupt allocator counters, alignment issues, overflow)
 
 ## Best Practices
 
 1. **Always check status codes**: Memory operations can fail, especially in resource-constrained environments.
 2. **Define appropriate block sizes**: Size your memory blocks based on your application's needs to avoid waste.
-3. **Implement failure handlers**: Use failure handlers to catch memory issues early.
-4. **Initialize your data**: Even if memory is zeroed, initialize your data structures explicitly to intent-reveal.
+3. **Implement failure handlers**: Use failure handlers to catch memory issues early during development.
+4. **Initialize your data**: Even if memory is zeroed by Reset, initialize your data structures explicitly to reveal intent.
+5. **Use typed macros**: Prefer `JunoMemory_BlockGetT` and `JunoMemory_BlockPutT` to reduce size mismatches.
+6. **Forward declare APIs**: When using `JunoMemory_PointerVerifyType` in Copy/Reset, forward declare the API constant.
+
 ## Future work
 
 Reference counting is planned but not implemented in the current allocator. The macros `JUNO_REF` and `JUNO_NEW_REF` are reserved for a future reference-counting extension and should not be used yet. Status codes such as `JUNO_STATUS_INVALID_REF_ERROR` and `JUNO_STATUS_REF_IN_USE_ERROR` are defined globally but are not produced by the block allocator at this time.

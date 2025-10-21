@@ -6,12 +6,35 @@
 
 # LibJuno
 * [LibJuno GitHub](https://github.com/robinonsay/libjuno)
+
+LibJuno is a lightweight C11 embedded systems micro-framework. It's designed to
+provide developers with common capabilities and interfaces that are utilized
+commonly in embedded systems development.
+
 * LibJuno is a lightweight C11 library designed specifically for embedded systems.
-* LibJuno enables embedded systems developers to utilize dependency injection within
-   C11 in a memory-safe manner
-* LibJuno provides essential functionalities like memory management and more all without dynamic memory allocation!
+* LibJuno enables embedded systems developers to utilize dependency injection within 
+C11 in a memory-safe manner
+* LibJuno provides essential functionalities like memory management
 * LibJuno optimizes for memory safety, determinism and efficiency in constrained environments.
-* LibJuno supports freestanding builds (no hosted standard library) for maximum portability when enabled via `-DJUNO_FREESTANDING=ON`. Hosted builds are the default.
+* LibJuno supports freestanding builds (no hosted standard library) for maximum portability when enabled via `-DJUNO_FREESTANDING=ON`.
+
+# Core Philosophy
+LibJuno prioritizes the following:
+1. Memory Safety -- Memory needs to be accessed safely.
+This means **no dynamic memory allocation** and **no heap allocated memory** within this library.
+2. Software Scalability -- Software should be maintainable as the codebase grows
+3. Shareability -- Small software components should be easy to share from one codebase to another
+4. Transparency -- Capabilities need to be transparent about the dependencies they have
+
+In order to implement this philosophy LibJuno heavily utilizes the Dependency Injection paradigm.
+This enables these software systems to be scalable and easier to test. Additionally, LibJuno injects
+memory use instead of allocating it. This enables developers to safely access their memory.
+
+Finally, LibJuno aims to make few assumptions about developer's intended use-case. LibJuno understands
+that developers and software architects are the experts of their system, not this library. The intent
+is for this micro-framework to fit within developers software systems, not for a software system to conform
+to this library. If you can tolerate function pointer use then this library is right for you.
+
 
 ## Using LibJuno
 * By default, LibJuno builds a static library (`libjuno.a`). To also build a shared library, pass `-DJUNO_SHARED=ON`.
