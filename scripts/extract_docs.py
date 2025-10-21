@@ -15,23 +15,23 @@ def extract_docs_from_file(filepath):
 
     # Regex to match /**DOC ... */ including multiline, capturing end position
     pattern = re.compile(r"/\*\*DOC(.*?)\*/", re.DOTALL)
-    
+
     docs = []
     matches = list(pattern.finditer(content))
-    
+
     for idx, match in enumerate(matches):
         doc_block = match.group(1)
         end_pos = match.end()
-        
+
         # Clean up documentation block
         lines = doc_block.strip().splitlines()
         cleaned_lines = []
         for line in lines:
-            # Remove optional leading '*' and any leading spaces
+            # Remove optional leading '*' and any leading spaces (keep code alone untouched)
             cleaned = re.sub(r'^ {4}', '', line)
             cleaned_lines.append(cleaned)
         doc_text = '\n'.join(cleaned_lines).strip()
-        
+
         # Determine the end position for code extraction
         if idx + 1 < len(matches):
             # There's another /**DOC block - extract code up to it
@@ -40,13 +40,13 @@ def extract_docs_from_file(filepath):
         else:
             # This is the last /**DOC block - extract to end of file
             code_end_pos = len(content)
-        
+
         # Extract code between this /**DOC and the next (or end of file)
         code_section = content[end_pos:code_end_pos]
-        
-        # Strip leading/trailing whitespace but preserve internal structure
-        code_section = code_section.strip()
-        
+        # IMPORTANT: Do NOT strip leading whitespace; we want to preserve indentation.
+        # If you want to remove only trailing whitespace, use rstrip() instead:
+        # code_section = code_section.rstrip()
+
         if code_section:
             # Combine doc and code
             combined = f"{doc_text}\n\n```cpp\n{code_section}\n```"
@@ -54,7 +54,7 @@ def extract_docs_from_file(filepath):
         else:
             # No code after this doc block
             docs.append(doc_text)
-    
+
     return docs
 
 
@@ -65,46 +65,46 @@ def process_tutorial(tutorial_path, base_dir):
     """
     with open(tutorial_path, 'r', encoding='utf-8') as f:
         tutorial_config = json.load(f)
-    
+
     title = tutorial_config.get('title', 'Tutorial')
     files = tutorial_config.get('files', [])
-    
+
     if not files:
         print(f"Warning: No files specified in {tutorial_path}")
         return
-    
+
     all_docs = []
-    
+
     # Process each file in order
     for file_entry in files:
         file_path = file_entry.get('path')
         if not file_path:
             continue
-        
+
         # Resolve path relative to the tutorial.json location
         full_path = os.path.join(base_dir, file_path)
-        
+
         if not os.path.exists(full_path):
             print(f"Warning: File not found: {full_path}")
             continue
-        
+
         print(f"  Processing: {file_path}")
         docs = extract_docs_from_file(full_path)
-        
+
         if docs:
             # Add a section header for this file
             file_section = f"## {os.path.basename(file_path)}\n\n" + '\n\n'.join(docs)
             all_docs.append(file_section)
-    
+
     if all_docs:
         # Write combined markdown file
         md_filename = f"{title}.md"
         md_path = os.path.join(base_dir, md_filename)
-        
+
         with open(md_path, 'w', encoding='utf-8') as md_file:
             md_file.write(f"# {title}\n\n")
             md_file.write('\n\n'.join(all_docs))
-        
+
         print(f"Created tutorial: {md_filename} with {len(files)} source file(s)")
     else:
         print(f"Warning: No documentation found in specified files for {tutorial_path}")
@@ -122,7 +122,7 @@ def main(root_dir):
             print(f"Found tutorial configuration: {tutorial_path}")
             process_tutorial(tutorial_path, dirpath)
             continue  # Skip individual file processing in this directory
-        
+
         # Otherwise, process individual files
         for filename in filenames:
             if filename.endswith(('.c', '.h', '.cpp', '.hpp')):

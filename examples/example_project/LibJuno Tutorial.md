@@ -1,17 +1,7 @@
-#include "juno/app/app_api.h"
-#include "juno/log/log_api.h"
-#include "juno/sb/broker_api.h"
-#include "juno/time/time_api.h"
-#include "engine_app/engine_app.h"
-#include "juno/macros.h"
-#include "juno/status.h"
-#include "system_manager_app/system_manager_app.h"
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <time.h>
+# LibJuno Tutorial
 
-/**DOC
+## main.c
+
 The purpose of this tutorial is to show new users how to use LibJuno as a
 embedded software micro-framework. LibJuno is intended to provide developers and
 software architects the freedom to implement their software system according
@@ -28,7 +18,9 @@ time management since LibJuno assume your OS or time use-case.
 In this case, we are going to implement the logging functions using
 `printf`. A fixed size buffer is utilized with `vsnprintf` to ensure
 the logger doesn't see any memory overruns.
-*/
+
+```cpp
+
 static JUNO_STATUS_T LogDebug(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...)
 {
     (void) ptJunoLog;
@@ -74,13 +66,17 @@ static JUNO_STATUS_T LogError(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMs
     return JUNO_STATUS_SUCCESS;
 }
 
-/**DOC
+
+```
+
 # Time
 In this example project we will need a timestamp, so we'll implement the `Now` function.
 We don't need `Sleep` or `SleepTo` so we'll provide mocks to those functions. LibJuno
 provides time math functions that we can utilize so we only need to provide implementations
 to these three time functions.
-*/
+
+```cpp
+
 /// Get the current time as specified by the implementation
 static JUNO_TIMESTAMP_RESULT_T Now(const JUNO_TIME_ROOT_T *ptTime)
 {
@@ -112,7 +108,9 @@ static JUNO_STATUS_T Sleep(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDur
     return JUNO_STATUS_SUCCESS;
 }
 
-/**DOC
+
+```
+
 # Instantiating APIs
 LibJuno utilizes a vtable, or a table of function pointers to the specific implementation, that
 is passed to the LibJuno module. This vtable is called an "API" in LibJuno nomenclature and it
@@ -125,7 +123,9 @@ Below is tha API instantiation of the logger and time APIs for this project. We 
 implementations and time implementations. You'll notice that the time API provides a helper macro to instantiate
 the API. Some APIs offer existing implementations, so a helper macro is used to inform users which functions they
 need to implement.
-*/
+
+```cpp
+
 static const JUNO_LOG_API_T gtMyLoggerApi ={
     LogDebug,
     LogInfo,
@@ -135,30 +135,40 @@ static const JUNO_LOG_API_T gtMyLoggerApi ={
 
 static const JUNO_TIME_API_T gtTimeApi = JunoTime_TimeApiInit(Now, SleepTo, Sleep);
 
-/**DOC
+
+```
+
 # Failure Handler
 LibJuno utilizes a failure handler callback. This is a function that is automatically called by
 downstream code when a failure occurs. In an embedded system, you might not have a terminal or console
 log running. This enables developers to have a single implementation and methodology for handling failure
 within the software. The `JUNO_FAIL...` macros will automatically call the failure handler if one is
 provided.
-*/
+
+```cpp
+
 void FailureHandler(JUNO_STATUS_T tStatus, const char *pcMsg, JUNO_USER_DATA_T *pvUserData)
 {
     (void) pvUserData;
     printf("FAILURE: %u | %s\n", tStatus, pcMsg);
 }
 
-/**DOC
+
+```
+
 # The Entry Point
 This example project assumes its running on a POSIX system. Therefore,
 we can use a main method as the entry point. Many microcontrollers have
 different architectures for their entry point so you'll need to consult with
 your architecture documentation on how to implement the entry point.
-*/
+
+```cpp
+
 int main(void)
 {
-/**DOC
+
+```
+
 # Dependency Injection in Action
 The core principle of dependency injection is "inversion of control".
 This is a fancy term for saying that modules don't allocate resources,
@@ -169,49 +179,67 @@ the time, logger, registry modules.
 
 Applications in LibJuno are actually derived modules of `JUNO_APP_ROOT_T`.
 Here we will need to instantiate the engine, and system manager application modules.
-*/
+
+```cpp
+
     JUNO_TIME_ROOT_T tTime = {0};
     JUNO_LOG_ROOT_T tLogger = {0};
     JUNO_SB_PIPE_T *tRegistry[10] = {0};
     JUNO_SB_BROKER_ROOT_T tBroker = {0};
     ENGINE_APP_T tEngineApp = {0};
     SYSTEM_MANAGER_APP_T tSystemManagerApp = {0};
-/**DOC
+
+```
+
 # Module Initialization
 
 Modules typically have an `Init` function that specifies the required fields to initialize a module.
 Modules also utilize a `Verify` function to verify they've been initialzed. Most modules will return
 a `JUNO_STATUS_NULLPTR_ERROR` if they have not been initalized and a function has been called on them.
-*/
+
+```cpp
+
     JUNO_STATUS_T tStatus = JunoTime_TimeInit(&tTime, &gtTimeApi, FailureHandler, NULL);
     JUNO_ASSERT_SUCCESS(tStatus, return -1);
     tStatus = JunoLog_LogInit(&tLogger, &gtMyLoggerApi, FailureHandler, NULL);
     JUNO_ASSERT_SUCCESS(tStatus, return -1);
-/**DOC
+
+```
+
 Notice how the broker, engine, and system manager take initialized modules as dependencies to their initialization.
 This is DI in action. For example, the engine app is provided with a logger, time, and broker instead of instantiating it
 itself.
-*/
+
+```cpp
+
     tStatus = JunoSb_BrokerInit(&tBroker, tRegistry, 10, FailureHandler, NULL);
     JUNO_ASSERT_SUCCESS(tStatus, return -1);
     tStatus = EngineApp_Init(&tEngineApp, &tLogger, &tTime, &tBroker, FailureHandler, NULL);
     JUNO_ASSERT_SUCCESS(tStatus, return -1);
     tStatus = SystemManagerApp(&tSystemManagerApp, &tLogger, &tTime, &tBroker, FailureHandler, NULL);
     JUNO_ASSERT_SUCCESS(tStatus, return -1);
-/**DOC
+
+```
+
 # Runtime
 For this example we are going to create a very simple "schedule table" or table of applications that
 will run in a specific order. This schedule table will run at best-effort. This means that when one
 application is done, the next will start.
-*/
+
+```cpp
+
     JUNO_APP_ROOT_T *ptAppList[2] = {
         &tSystemManagerApp.tRoot,
         &tEngineApp.tRoot
     };
-/**DOC
+
+```
+
 Since all applications have the same interface, we can run their init function in a for-loop
 and run the application `OnProcess` function in a `while(true)` loop.
-*/
+
+```cpp
+
     for(size_t i = 0; i < 2; i++)
     {
         tStatus = ptAppList[i]->ptApi->OnInit(ptAppList[i]);
@@ -224,3 +252,5 @@ and run the application `OnProcess` function in a `while(true)` loop.
         iCounter = (iCounter + 1) % 2;
     }
 }
+
+```
