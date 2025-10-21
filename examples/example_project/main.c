@@ -138,7 +138,7 @@ software components that perform a set functionality. These capabilities are cal
 be extened through derivation. Additionally APIs can be extended through derivation. When a module or API
 is extended its called "derived".
 
-Below is tha API instantiation of the logger and time APIs for this project. We are providing our logging
+Below is the API instantiation of the logger and time APIs for this project. We are providing our logging
 implementations and time implementations. You'll notice that the time API provides a helper macro to instantiate
 the API. Some APIs offer existing implementations, so a helper macro is used to inform users which functions they
 need to implement.
