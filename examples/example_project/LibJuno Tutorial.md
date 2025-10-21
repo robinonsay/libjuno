@@ -11,7 +11,7 @@ This means users will need to define their own entry point. On systems with an O
 this would be a main function.
 
 Additionally, users will need to implement project specific functions like logging and
-time management since LibJuno assume your OS or time use-case.
+time management since LibJuno doesn't assume your OS or time use-case.
 
 # Logging
 
