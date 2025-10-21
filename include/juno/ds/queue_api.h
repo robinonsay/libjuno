@@ -84,7 +84,7 @@ JUNO_STATUS_T JunoDs_QueuePop(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tRet
 /// Peek at the next item in the queue
 JUNO_RESULT_POINTER_T JunoDs_QueuePeek(JUNO_DS_QUEUE_ROOT_T *ptQueue);
 
-#define JunoDs_QueueApiInit(...) (JUNO_DS_QUEUE_API_T) { \
+#define JunoDs_QueueApiInit(...) { \
     {__VA_ARGS__}, \
     JunoDs_QueuePush, \
     JunoDs_QueuePop, \

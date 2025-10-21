@@ -58,7 +58,7 @@ struct JUNO_DS_STACK_API_TAG JUNO_MODULE_API_DERIVE(JUNO_DS_ARRAY_API_T,
     JUNO_RESULT_POINTER_T (*Peek)(JUNO_DS_STACK_ROOT_T *ptQueue);
 );
 
-#define JunoDs_StackApiInit(...) (JUNO_DS_STACK_API_T) { \
+#define JunoDs_StackApiInit(...) { \
     {__VA_ARGS__}, \
     JunoDs_StackPush, \
     JunoDs_StackPop, \
