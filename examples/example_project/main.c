@@ -231,7 +231,7 @@ and run the application `OnProcess` function in a `while(true)` loop.
 */
     for(size_t i = 0; i < 2; i++)
     {
-        tStatus = ptAppList[i]->ptApi->OnInit(ptAppList[i]);
+        tStatus = ptAppList[i]->ptApi->OnStart(ptAppList[i]);
         JUNO_ASSERT_SUCCESS(tStatus, return -1);
     }
     size_t iCounter = 0;

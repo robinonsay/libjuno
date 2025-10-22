@@ -52,7 +52,7 @@ typedef struct TEST_STACK_DATA_TAG
  * Test Stack Implementation (Custom Array-backed Stack)
  * ============================================================================ */
 
-typedef struct TEST_STACK_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_STACK_ROOT_T, JUNO_DS_STACK_API_T,
+typedef struct TEST_STACK_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_STACK_T, JUNO_DS_STACK_API_T,
     TEST_STACK_DATA_T *ptBuffer;
 ) TEST_STACK_T;
 

@@ -242,7 +242,7 @@ and run the application `OnProcess` function in a `while(true)` loop.
 
     for(size_t i = 0; i < 2; i++)
     {
-        tStatus = ptAppList[i]->ptApi->OnInit(ptAppList[i]);
+        tStatus = ptAppList[i]->ptApi->OnStart(ptAppList[i]);
         JUNO_ASSERT_SUCCESS(tStatus, return -1);
     }
     size_t iCounter = 0;
@@ -252,5 +252,171 @@ and run the application `OnProcess` function in a `while(true)` loop.
         iCounter = (iCounter + 1) % 2;
     }
 }
+
+```
+
+## engine_app.h
+
+# The Engine Application
+Next we will be going over a typical LibJuno application. For this tutorial project
+we are defining an engine application that manages the engine hardware for our car.
+In this example the engine needs to receive a command for the RPM and telemeter the
+actual RPM of the engine.
+
+## Deriving an Application
+Applications in LibJuno are derived from the application root. This provides
+a common API for applications to utilize. A standard application has three
+lifecycle functions:
+1. OnStart: The first function called in the application. It is called
+only once at the beginning of the application lifecycle. This is where
+developers would initialize resources that will be utilized by the
+application
+2. OnProcess: This is the "main run-loop" function of the application.
+This function is called by the main run-time in a loop and is the primary
+run function of the app.
+3. OnExit: This is the last function called by the application. This is
+where developers would clean up resources allocated by the application.
+A typical runtime would call application exit functions when the software
+is closing.
+
+## The Application Structure
+Within the derived application users are expected to place
+pointers to dependencies they require from the main runtime
+and hold resources the application needs to own and pass from
+one lifecycle event to the next. In this case the engine app
+needs the following from the runtime:
+* Logger
+* Time
+* Broker
+
+And the application needs to allocate:
+* A command buffer for engine commands. This is a memory allocation
+for commands that will be received by the application
+* A command pipe. This is the module that manages the command buffer
+* The current RPM. This is the current state of our engine.
+
+```cpp
+
+typedef struct ENGINE_APP_TAG ENGINE_APP_T;
+#define ENGINE_CMD_MSG_PIPE_DEPTH   (1)
+
+struct ENGINE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
+    const JUNO_LOG_ROOT_T *ptLogger;
+    const JUNO_TIME_ROOT_T *ptTime;
+    JUNO_SB_BROKER_ROOT_T *ptBroker;
+    ENGINE_CMD_MSG_T ptArrCmdBuffer[ENGINE_CMD_MSG_PIPE_DEPTH];
+    ENGINE_CMD_MSG_PIPE_T tCmdPipe;
+    float fCurrentRpm;
+);
+
+
+```
+
+## The App Init Function
+The application also needs to provide a concrete application initialization function. This function
+sets dependencies and the API pointers within the application. The application has an internal "Verify"
+function that checks if any of these dependencies are null.
+
+```cpp
+
+JUNO_STATUS_T EngineApp_Init(
+    ENGINE_APP_T *ptEngineApp,
+    const JUNO_LOG_ROOT_T *ptLogger,
+    const JUNO_TIME_ROOT_T *ptTime,
+    JUNO_SB_BROKER_ROOT_T *ptBroker,
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
+    JUNO_USER_DATA_T *pvUserData
+);
+
+#ifdef __cplusplus
+}
+#endif
+#endif // ENGINE_APP_API_H
+
+```
+
+## engine_cmd_msg.h
+
+## Engine Application Commands
+This file is auto-generated from a LibJuno script (scripts/create_msg.py). Similarly the
+engine_tlm_msg.h and engine_tlm_msg.c files are also auto-generated. We will only go over the
+command file since it's identical to the telemetry file in terms of architecture.
+
+In LibJuno the software bus is operated on a single thread. A single broker is implemented
+for each thread of execution and the broker distributes messages to various queues that
+are subscribed on the software bus. These queues are called pipes. Pipes are derived LibJuno
+queues with a message ID subscription.
+
+The message ID is a unique identifier for the type of message. Each message type will have its
+own message ID. In this example the engine command MID is `0x1800`. This number can be arbitrary.
+The only requirement is the MIDs are unique for every message type.
+
+```cpp
+
+#define ENGINE_CMD_MSG_MID            (0x1800)
+
+
+```
+
+The command message contains the RPM. Another application can send this command on the software bus
+and tell the engine what RPM it should be set to. The engine app will then control the engine so it's
+set to the new RPM.
+
+```cpp
+
+typedef struct ENGINE_CMD_MSG_TAG
+{
+    float fRpm;
+} ENGINE_CMD_MSG_T;
+
+
+```
+
+## Engine Command Pipe
+Below is the definition for the engine command pipe. This is derived from the `JUNO_SB_PIPE_T` using the 
+`DERIVE_WITH_API` macro. This macro enables users to specify which API they are using.
+The inheritance for a pipe is as follows:
+```
+JUNO_DS_ARRAY_ROOT_T -> JUNO_DS_QUEUE_T -> JUNO_SB_PIPE_T -> Custom Pipe Type
+```
+Because this is a longer chain of inheritance, it's convenient to specify the API for ease-of-use.
+In this case we are specifying the QUEUE api.
+
+The pipe holds a pointer to a command buffer, which is specific to the command message type defined 
+earlier. This enables the derived pipe to have specific type information (vs using a void pointer in the pipe).
+
+```cpp
+
+typedef struct ENGINE_CMD_MSG_PIPE_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_SB_PIPE_T, JUNO_DS_QUEUE_API_T,
+    ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer;
+) ENGINE_CMD_MSG_PIPE_T;
+
+
+```
+
+The queue api relies on LibJuno pointers. This enables the modules to write generic code safely without
+specific type information. As a result, we need to specify a pointer API implementation for this command type.
+
+```cpp
+
+extern const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi;
+
+
+```
+
+We also define convience macros for initializing and verifying this type of pointer. This makes working
+with LibJuno pointers easy.
+
+```cpp
+
+#define EngineCmdMsg_PointerInit(addr) JunoMemory_PointerInit(&gtEngineCmdMsgPointerApi, ENGINE_CMD_MSG_T, addr)
+#define EngineCmdMsg_PointerVerify(tPointer) JunoMemory_PointerVerifyType(tPointer, ENGINE_CMD_MSG_T, gtEngineCmdMsgPointerApi)
+JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
+
+#ifdef __cplusplus
+}
+#endif
+#endif
+
 
 ```

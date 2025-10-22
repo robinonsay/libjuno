@@ -38,10 +38,10 @@ extern "C"
 #endif
 
 /// The buffer stack root module
-typedef struct JUNO_DS_STACK_ROOT_TAG JUNO_DS_STACK_ROOT_T;
+typedef struct JUNO_DS_STACK_TAG JUNO_DS_STACK_T;
 typedef struct JUNO_DS_STACK_API_TAG JUNO_DS_STACK_API_T;
 
-struct JUNO_DS_STACK_ROOT_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_ARRAY_ROOT_T, JUNO_DS_STACK_API_T,
+struct JUNO_DS_STACK_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_ARRAY_ROOT_T, JUNO_DS_STACK_API_T,
     /// The current length of the buffer
     size_t zLength;
 );
@@ -49,13 +49,13 @@ struct JUNO_DS_STACK_ROOT_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_ARRAY_ROOT_T, 
 struct JUNO_DS_STACK_API_TAG JUNO_MODULE_API_DERIVE(JUNO_DS_ARRAY_API_T,
     /// Enqueue an item into the buffer
     /// @returns The index to place the enqueued item
-    JUNO_STATUS_T (*Push)(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
+    JUNO_STATUS_T (*Push)(JUNO_DS_STACK_T *ptQueue, JUNO_POINTER_T tItem);
     /// Dequeue an item from the buffer
     /// @returns The index to dequeue the item from
-    JUNO_STATUS_T (*Pop)(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
+    JUNO_STATUS_T (*Pop)(JUNO_DS_STACK_T *ptQueue, JUNO_POINTER_T tReturn);
     /// Peek at the next item in the queue
     /// @returns the index of the next item in the queue
-    JUNO_RESULT_POINTER_T (*Peek)(JUNO_DS_STACK_ROOT_T *ptQueue);
+    JUNO_RESULT_POINTER_T (*Peek)(JUNO_DS_STACK_T *ptQueue);
 );
 
 #define JunoDs_StackApiInit(...) { \
@@ -65,7 +65,7 @@ struct JUNO_DS_STACK_API_TAG JUNO_MODULE_API_DERIVE(JUNO_DS_ARRAY_API_T,
     JunoDs_StackPeek, \
 }
 
-static inline JUNO_STATUS_T JunoDs_StackVerify(const JUNO_DS_STACK_ROOT_T *ptStack)
+static inline JUNO_STATUS_T JunoDs_StackVerify(const JUNO_DS_STACK_T *ptStack)
 {
     JUNO_ASSERT_EXISTS(ptStack);
     JUNO_ASSERT_EXISTS(
@@ -78,10 +78,10 @@ static inline JUNO_STATUS_T JunoDs_StackVerify(const JUNO_DS_STACK_ROOT_T *ptSta
 }
 
 /// Initialize a buffer queue with a capacity
-JUNO_STATUS_T JunoDs_StackInit(JUNO_DS_STACK_ROOT_T *ptStack, const JUNO_DS_STACK_API_T *ptStackApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
-JUNO_STATUS_T JunoDs_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tItem);
-JUNO_STATUS_T JunoDs_StackPop(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
-JUNO_RESULT_POINTER_T JunoDs_StackPeek(JUNO_DS_STACK_ROOT_T *ptStack);
+JUNO_STATUS_T JunoDs_StackInit(JUNO_DS_STACK_T *ptStack, const JUNO_DS_STACK_API_T *ptStackApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T JunoDs_StackPush(JUNO_DS_STACK_T *ptStack, JUNO_POINTER_T tItem);
+JUNO_STATUS_T JunoDs_StackPop(JUNO_DS_STACK_T *ptQueue, JUNO_POINTER_T tReturn);
+JUNO_RESULT_POINTER_T JunoDs_StackPeek(JUNO_DS_STACK_T *ptStack);
 
 
 

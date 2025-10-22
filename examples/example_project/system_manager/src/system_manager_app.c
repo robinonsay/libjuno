@@ -32,7 +32,7 @@
 static inline JUNO_STATUS_T Verify(JUNO_APP_ROOT_T *ptJunoApp);
 
 
-static JUNO_STATUS_T OnInit(JUNO_APP_ROOT_T *ptJunoApp)
+static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptJunoApp)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
     tStatus = Verify(ptJunoApp);
@@ -115,7 +115,7 @@ static JUNO_STATUS_T OnExit(JUNO_APP_ROOT_T *ptJunoApp)
 }
 
 static const JUNO_APP_API_T tSystemManagerAppApi = {
-    .OnInit = OnInit,
+    .OnStart = OnStart,
     .OnProcess = OnProcess,
     .OnExit = OnExit
 };

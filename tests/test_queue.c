@@ -52,7 +52,7 @@ typedef struct TEST_QUEUE_DATA_TAG
  * Test Queue Implementation (Custom Array-backed Queue)
  * ============================================================================ */
 
-typedef struct TEST_QUEUE_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_QUEUE_ROOT_T, JUNO_DS_QUEUE_API_T,
+typedef struct TEST_QUEUE_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_QUEUE_T, JUNO_DS_QUEUE_API_T,
     TEST_QUEUE_DATA_T *ptBuffer;
 ) TEST_QUEUE_T;
 
