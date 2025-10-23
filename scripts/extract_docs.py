@@ -9,17 +9,23 @@ def extract_docs_from_file(filepath):
     Extract all /**DOC ... */ blocks from the given file and clean up the content.
     Also extracts all code between consecutive /**DOC blocks (or to end of file).
     Returns a list of markdown strings with embedded code blocks.
+    
+    If /**END*/ is encountered, code extraction stops at that marker.
     """
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
 
     # Regex to match /**DOC ... */ including multiline, capturing end position
-    pattern = re.compile(r"/\*\*DOC(.*?)\*/", re.DOTALL)
+    doc_pattern = re.compile(r"/\*\*DOC(.*?)\*/", re.DOTALL)
+    # Regex to match /**END*/ marker
+    end_pattern = re.compile(r"/\*\*END\*/")
 
     docs = []
-    matches = list(pattern.finditer(content))
+    doc_matches = list(doc_pattern.finditer(content))
+    end_match = end_pattern.search(content)
+    end_pos_limit = end_match.start() if end_match else len(content)
 
-    for idx, match in enumerate(matches):
+    for idx, match in enumerate(doc_matches):
         doc_block = match.group(1)
         end_pos = match.end()
 
@@ -33,15 +39,15 @@ def extract_docs_from_file(filepath):
         doc_text = '\n'.join(cleaned_lines).strip()
 
         # Determine the end position for code extraction
-        if idx + 1 < len(matches):
+        if idx + 1 < len(doc_matches):
             # There's another /**DOC block - extract code up to it
-            next_match = matches[idx + 1]
+            next_match = doc_matches[idx + 1]
             code_end_pos = next_match.start()
         else:
-            # This is the last /**DOC block - extract to end of file
-            code_end_pos = len(content)
+            # This is the last /**DOC block - extract to end of file or /**END*/
+            code_end_pos = end_pos_limit
 
-        # Extract code between this /**DOC and the next (or end of file)
+        # Extract code between this /**DOC and the next (or end of file/END marker)
         code_section = content[end_pos:code_end_pos]
         # IMPORTANT: Do NOT strip leading whitespace; we want to preserve indentation.
         # If you want to remove only trailing whitespace, use rstrip() instead:
@@ -121,7 +127,7 @@ def main(root_dir):
             tutorial_path = os.path.join(dirpath, 'tutorial.json')
             print(f"Found tutorial configuration: {tutorial_path}")
             process_tutorial(tutorial_path, dirpath)
-            continue  # Skip individual file processing in this directory
+            break# Skip individual file processing in this directory
 
         # Otherwise, process individual files
         for filename in filenames:

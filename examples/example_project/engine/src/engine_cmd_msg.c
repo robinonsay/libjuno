@@ -20,6 +20,12 @@
 #include "juno/memory/pointer_api.h"
 #include "juno/status.h"
 
+/**DOC
+## Engine Command Pipe Implementation
+
+In `.c` source file we will need to implement the following functions for
+the pointer and queue api:
+*/
 static JUNO_STATUS_T EngineCmdMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc);
 static JUNO_STATUS_T EngineCmdMsg_Reset(JUNO_POINTER_T tPointer);
 
@@ -30,6 +36,15 @@ static JUNO_RESULT_POINTER_T GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
 /// Remove a value at an index
 static JUNO_STATUS_T RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 
+/**DOC
+These function will provide an interface to our specific message type
+and enable users to write type-safe code within LibJuno.
+
+We need to forward-declare these API functions so we can use the API
+pointer to verify the type of the queue and pointer.
+
+Below we will instantiate the pointer and pipe API tables.
+*/
 // Instantiate the engine_cmd msg pointer api
 const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi =
 {
@@ -40,6 +55,13 @@ const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi =
 // Instantiate the engine_cmd msg pipe api
 static const JUNO_DS_QUEUE_API_T gtEngineCmdMsgPipeApi = JunoDs_QueueApiInit(SetAt, GetAt, RemoveAt);
 
+/**DOC
+### Pointer Copy
+The pointer copy function is responsible for copy memory from one pointer of the same
+type to another. We verify the pointers are implemented and are of the same type
+by checking the alignment, size, and api pointer. We then dereference the pointer
+and copy the values since we have verified the type
+*/
 static JUNO_STATUS_T EngineCmdMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc)
 {
     // Verify the dest pointer
@@ -53,6 +75,12 @@ static JUNO_STATUS_T EngineCmdMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_
     return tStatus;
 }
 
+/**DOC
+### Pointer Reset
+The reset function will reinitialize the memory of a pointer of this message type.
+In this case, it means setting the memory to 0. Similar to the copy function,
+we verify the pointer type and api before dereferencing the pointer.
+*/
 static JUNO_STATUS_T EngineCmdMsg_Reset(JUNO_POINTER_T tPointer)
 {
     // Verify the pointer
@@ -63,10 +91,19 @@ static JUNO_STATUS_T EngineCmdMsg_Reset(JUNO_POINTER_T tPointer)
     return tStatus;
 }
 
-
+/**DOC
+## Pipe Api Assert
+We also define a macro to easily assert that the pipe type matches
+our implementation. This is done by checking the pipe api pointer.
+*/
 /// Asserts the api is for the pipe
 #define ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtEngineCmdMsgPipeApi.tRoot) { __VA_ARGS__; }
 
+/**DOC
+## Pipe Init
+We also implement the pipe init function, which sets the API pointer as well as the
+message buffer and capacity.
+*/
 JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     // Assert the msg pipe exists
@@ -78,6 +115,13 @@ JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, E
     return tStatus;
 }
 
+/**DOC
+## Pipe Queue Implementation
+Finally we implement the `SetAt`, `GetAt`, and `RemoveAt` functions.
+These functions provide a type-safe interface to setting, getting, and removing
+values within the command buffer at specific indicies. It essentially acts as an API
+to the array.
+*/
 static JUNO_STATUS_T SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex)
 {
     // Verify the array

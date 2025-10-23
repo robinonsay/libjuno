@@ -79,13 +79,19 @@ specific type information. As a result, we need to specify a pointer API impleme
 extern const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi;
 
 /**DOC
-We also define convience macros for initializing and verifying this type of pointer. This makes working
+We also define convenience macros for initializing and verifying this type of pointer. This makes working
 with LibJuno pointers easy.
 */
 #define EngineCmdMsg_PointerInit(addr) JunoMemory_PointerInit(&gtEngineCmdMsgPointerApi, ENGINE_CMD_MSG_T, addr)
 #define EngineCmdMsg_PointerVerify(tPointer) JunoMemory_PointerVerifyType(tPointer, ENGINE_CMD_MSG_T, gtEngineCmdMsgPointerApi)
+
+/**DOC
+Finally we define a Pipe Init function for this pipe type. This function will
+initialize the pipe with the message buffer and capacity.
+*/
 JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
 
+/**END*/
 #ifdef __cplusplus
 }
 #endif

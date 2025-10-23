@@ -12,10 +12,10 @@
             "path": "engine/include/engine_app/engine_cmd_msg.h"
         },
         {
-            "path": "engine/src/engine_app.c"
+            "path": "engine/src/engine_cmd_msg.c"
         },
         {
-            "path": "engine/src/engine_cmd_msg.c"
+            "path": "engine/src/engine_app.c"
         }
     ]
 }

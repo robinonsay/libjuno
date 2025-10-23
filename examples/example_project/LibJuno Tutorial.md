@@ -119,7 +119,7 @@ software components that perform a set functionality. These capabilities are cal
 be extened through derivation. Additionally APIs can be extended through derivation. When a module or API
 is extended its called "derived".
 
-Below is tha API instantiation of the logger and time APIs for this project. We are providing our logging
+Below is the API instantiation of the logger and time APIs for this project. We are providing our logging
 implementations and time implementations. You'll notice that the time API provides a helper macro to instantiate
 the API. Some APIs offer existing implementations, so a helper macro is used to inform users which functions they
 need to implement.
@@ -328,10 +328,6 @@ JUNO_STATUS_T EngineApp_Init(
     JUNO_USER_DATA_T *pvUserData
 );
 
-#ifdef __cplusplus
-}
-#endif
-#endif // ENGINE_APP_API_H
 
 ```
 
@@ -404,19 +400,218 @@ extern const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi;
 
 ```
 
-We also define convience macros for initializing and verifying this type of pointer. This makes working
+We also define convenience macros for initializing and verifying this type of pointer. This makes working
 with LibJuno pointers easy.
 
 ```cpp
 
 #define EngineCmdMsg_PointerInit(addr) JunoMemory_PointerInit(&gtEngineCmdMsgPointerApi, ENGINE_CMD_MSG_T, addr)
 #define EngineCmdMsg_PointerVerify(tPointer) JunoMemory_PointerVerifyType(tPointer, ENGINE_CMD_MSG_T, gtEngineCmdMsgPointerApi)
+
+
+```
+
+Finally we define a Pipe Init function for this pipe type. This function will
+initialize the pipe with the message buffer and capacity.
+
+```cpp
+
 JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
 
-#ifdef __cplusplus
-}
-#endif
-#endif
 
+```
+
+## engine_cmd_msg.c
+
+## Engine Command Pipe Implementation
+
+In `.c` source file we will need to implement the following functions for
+the pointer and queue api:
+
+```cpp
+
+static JUNO_STATUS_T EngineCmdMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc);
+static JUNO_STATUS_T EngineCmdMsg_Reset(JUNO_POINTER_T tPointer);
+
+/// Set the value at an index
+static JUNO_STATUS_T SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
+/// Get the value at an index
+static JUNO_RESULT_POINTER_T GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
+/// Remove a value at an index
+static JUNO_STATUS_T RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
+
+
+```
+
+These function will provide an interface to our specific message type
+and enable users to write type-safe code within LibJuno.
+
+We need to forward-declare these API functions so we can use the API
+pointer to verify the type of the queue and pointer.
+
+Below we will instantiate the pointer and pipe API tables.
+
+```cpp
+
+// Instantiate the engine_cmd msg pointer api
+const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi =
+{
+    EngineCmdMsg_Copy,
+    EngineCmdMsg_Reset
+};
+
+// Instantiate the engine_cmd msg pipe api
+static const JUNO_DS_QUEUE_API_T gtEngineCmdMsgPipeApi = JunoDs_QueueApiInit(SetAt, GetAt, RemoveAt);
+
+
+```
+
+### Pointer Copy
+The pointer copy function is responsible for copy memory from one pointer of the same
+type to another. We verify the pointers are implemented and are of the same type
+by checking the alignment, size, and api pointer. We then dereference the pointer
+and copy the values since we have verified the type
+
+```cpp
+
+static JUNO_STATUS_T EngineCmdMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc)
+{
+    // Verify the dest pointer
+    JUNO_STATUS_T tStatus = EngineCmdMsg_PointerVerify(tDest);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Verify the src pointer
+    tStatus = EngineCmdMsg_PointerVerify(tSrc);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Perform the copy
+    *(ENGINE_CMD_MSG_T *) tDest.pvAddr = *(ENGINE_CMD_MSG_T *) tSrc.pvAddr;
+    return tStatus;
+}
+
+
+```
+
+### Pointer Reset
+The reset function will reinitialize the memory of a pointer of this message type.
+In this case, it means setting the memory to 0. Similar to the copy function,
+we verify the pointer type and api before dereferencing the pointer.
+
+```cpp
+
+static JUNO_STATUS_T EngineCmdMsg_Reset(JUNO_POINTER_T tPointer)
+{
+    // Verify the pointer
+    JUNO_STATUS_T tStatus = EngineCmdMsg_PointerVerify(tPointer);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Perform the reset
+    *(ENGINE_CMD_MSG_T *) tPointer.pvAddr = (ENGINE_CMD_MSG_T){0};
+    return tStatus;
+}
+
+
+```
+
+## Pipe Api Assert
+We also define a macro to easily assert that the pipe type matches
+our implementation. This is done by checking the pipe api pointer.
+
+```cpp
+
+/// Asserts the api is for the pipe
+#define ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtEngineCmdMsgPipeApi.tRoot) { __VA_ARGS__; }
+
+
+```
+
+## Pipe Init
+We also implement the pipe init function, which sets the API pointer as well as the
+message buffer and capacity.
+
+```cpp
+
+JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+{
+    // Assert the msg pipe exists
+    JUNO_ASSERT_EXISTS(ptEngineCmdMsgPipe && ptArrEngineCmdMsgBuffer);
+    // Set the message buffer
+    ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer = ptArrEngineCmdMsgBuffer;
+    // init the pipe
+    JUNO_STATUS_T tStatus = JunoSb_PipeInit(&ptEngineCmdMsgPipe->tRoot, &gtEngineCmdMsgPipeApi, ENGINE_CMD_MSG_MID, iCapacity, pfcnFailureHdlr, pvUserData);
+    return tStatus;
+}
+
+
+```
+
+## Pipe Queue Implementation
+Finally we implement the `SetAt`, `GetAt`, and `RemoveAt` functions.
+These functions provide a type-safe interface to setting, getting, and removing
+values within the command buffer at specific indicies. It essentially acts as an API
+to the array.
+
+```cpp
+
+static JUNO_STATUS_T SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex)
+{
+    // Verify the array
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Assert the api
+    ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
+    // Verify the pointer
+    tStatus = EngineCmdMsg_PointerVerify(tItem);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Check if the index is valid
+    tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Cast to the pipe type
+    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    // Init the pointer to the buffer
+    JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
+    // Copy the memory to the buffer
+    tStatus = tIndexPointer.ptApi->Copy(tIndexPointer, tItem);
+    return tStatus;
+}
+/// Get the value at an index
+static JUNO_RESULT_POINTER_T GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
+{
+    JUNO_RESULT_POINTER_T tResult = {0};
+    // Verify the array
+    tResult.tStatus = JunoDs_ArrayVerify(ptArray);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    // Assert the api
+    ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray,
+        tResult.tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+        return tResult;
+    );
+    // Check the index
+    tResult.tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    // Cast to the pipe type
+    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    // Create the pointer to the buffer
+    JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
+    // Copy to ok result
+    tResult.tOk = tIndexPointer;
+    return tResult;
+}
+/// Remove a value at an index
+static JUNO_STATUS_T RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
+{
+    // Verify the array
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Assert the api
+    ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
+    // Verify the index
+    tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    // Cast to the msg pipe type
+    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    // Create pointer to memory
+    JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
+    // Reset the memory
+    tStatus = tIndexPointer.ptApi->Reset(tIndexPointer);
+    return tStatus;
+}
 
 ```

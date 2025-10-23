@@ -36,6 +36,12 @@ is for this micro-framework to fit within developers software systems, not for a
 to this library. If you can tolerate function pointer use then this library is right for you.
 
 
+# Tutorial
+
+See [the LibJuno Tutorial](examples/example_project/LibJuno Tutorial.md) for a tutorial
+on how to use LibJuno. This is a complete toy-project that is used to explain and demonstrate
+many concepts and core capabilities within LibJuno.
+
 ## Using LibJuno
 * By default, LibJuno builds a static library (`libjuno.a`). To also build a shared library, pass `-DJUNO_SHARED=ON`.
 

@@ -104,6 +104,7 @@ JUNO_STATUS_T EngineApp_Init(
     JUNO_USER_DATA_T *pvUserData
 );
 
+/**END*/
 #ifdef __cplusplus
 }
 #endif
