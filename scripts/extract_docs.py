@@ -104,7 +104,7 @@ def process_tutorial(tutorial_path, base_dir):
 
     if all_docs:
         # Write combined markdown file
-        md_filename = f"{title}.md"
+        md_filename = f"{title}.md".replace(' ', '_')
         md_path = os.path.join(base_dir, md_filename)
 
         with open(md_path, 'w', encoding='utf-8') as md_file:
