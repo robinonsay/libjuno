@@ -38,7 +38,7 @@ to this library. If you can tolerate function pointer use then this library is r
 
 # Tutorial
 
-See [the LibJuno Tutorial](examples/example_project/LibJuno Tutorial.md) for a tutorial
+See [the LibJuno Tutorial](examples/example_project/LibJuno\ Tutorial.md) for a tutorial
 on how to use LibJuno. This is a complete toy-project that is used to explain and demonstrate
 many concepts and core capabilities within LibJuno.
 
