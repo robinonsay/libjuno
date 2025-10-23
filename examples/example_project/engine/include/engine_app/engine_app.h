@@ -39,7 +39,7 @@ extern "C"
 #endif
 
 /**DOC
-# The Engine Application
+### The Engine Application
 Next we will be going over a typical LibJuno application. For this tutorial project
 we are defining an engine application that manages the engine hardware for our car.
 In this example the engine needs to receive a command for the RPM and telemeter the
@@ -90,7 +90,7 @@ struct ENGINE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
 );
 
 /**DOC
-## The App Init Function
+#### The App Init Function
 The application also needs to provide a concrete application initialization function. This function
 sets dependencies and the API pointers within the application. The application has an internal "Verify"
 function that checks if any of these dependencies are null.

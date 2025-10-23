@@ -13,7 +13,7 @@ this would be a main function.
 Additionally, users will need to implement project specific functions like logging and
 time management since LibJuno doesn't assume your OS or time use-case.
 
-# Logging
+### Logging
 
 In this case, we are going to implement the logging functions using
 `printf`. A fixed size buffer is utilized with `vsnprintf` to ensure
@@ -69,7 +69,7 @@ static JUNO_STATUS_T LogError(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMs
 
 ```
 
-# Time
+### Time
 In this example project we will need a timestamp, so we'll implement the `Now` function.
 We don't need `Sleep` or `SleepTo` so we'll provide mocks to those functions. LibJuno
 provides time math functions that we can utilize so we only need to provide implementations
@@ -111,7 +111,7 @@ static JUNO_STATUS_T Sleep(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDur
 
 ```
 
-# Instantiating APIs
+### Instantiating APIs
 LibJuno utilizes a vtable, or a table of function pointers to the specific implementation, that
 is passed to the LibJuno module. This vtable is called an "API" in LibJuno nomenclature and it
 provides a standard interface to the capabilities. LibJuno is implemented as a set of capabilities, or
@@ -138,7 +138,7 @@ static const JUNO_TIME_API_T gtTimeApi = JunoTime_TimeApiInit(Now, SleepTo, Slee
 
 ```
 
-# Failure Handler
+### Failure Handler
 LibJuno utilizes a failure handler callback. This is a function that is automatically called by
 downstream code when a failure occurs. In an embedded system, you might not have a terminal or console
 log running. This enables developers to have a single implementation and methodology for handling failure
@@ -156,7 +156,7 @@ void FailureHandler(JUNO_STATUS_T tStatus, const char *pcMsg, JUNO_USER_DATA_T *
 
 ```
 
-# The Entry Point
+### The Entry Point
 This example project assumes its running on a POSIX system. Therefore,
 we can use a main method as the entry point. Many microcontrollers have
 different architectures for their entry point so you'll need to consult with
@@ -169,7 +169,7 @@ int main(void)
 
 ```
 
-# Dependency Injection in Action
+### Dependency Injection in Action
 The core principle of dependency injection is "inversion of control".
 This is a fancy term for saying that modules don't allocate resources,
 up stream users do. This is done at the "composition root", or the spot
@@ -191,7 +191,7 @@ Here we will need to instantiate the engine, and system manager application modu
 
 ```
 
-# Module Initialization
+### Module Initialization
 
 Modules typically have an `Init` function that specifies the required fields to initialize a module.
 Modules also utilize a `Verify` function to verify they've been initialzed. Most modules will return
@@ -221,7 +221,7 @@ itself.
 
 ```
 
-# Runtime
+### Runtime
 For this example we are going to create a very simple "schedule table" or table of applications that
 will run in a specific order. This schedule table will run at best-effort. This means that when one
 application is done, the next will start.
@@ -257,7 +257,7 @@ and run the application `OnProcess` function in a `while(true)` loop.
 
 ## engine_app.h
 
-# The Engine Application
+### The Engine Application
 Next we will be going over a typical LibJuno application. For this tutorial project
 we are defining an engine application that manages the engine hardware for our car.
 In this example the engine needs to receive a command for the RPM and telemeter the
@@ -312,7 +312,7 @@ struct ENGINE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
 
 ```
 
-## The App Init Function
+#### The App Init Function
 The application also needs to provide a concrete application initialization function. This function
 sets dependencies and the API pointers within the application. The application has an internal "Verify"
 function that checks if any of these dependencies are null.
@@ -333,7 +333,7 @@ JUNO_STATUS_T EngineApp_Init(
 
 ## engine_cmd_msg.h
 
-## Engine Application Commands
+### Engine Application Commands
 This file is auto-generated from a LibJuno script (scripts/create_msg.py). Similarly the
 engine_tlm_msg.h and engine_tlm_msg.c files are also auto-generated. We will only go over the
 command file since it's identical to the telemetry file in terms of architecture.
@@ -368,7 +368,7 @@ typedef struct ENGINE_CMD_MSG_TAG
 
 ```
 
-## Engine Command Pipe
+### Engine Command Pipe
 Below is the definition for the engine command pipe. This is derived from the `JUNO_SB_PIPE_T` using the 
 `DERIVE_WITH_API` macro. This macro enables users to specify which API they are using.
 The inheritance for a pipe is as follows:
@@ -423,7 +423,7 @@ JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, E
 
 ## engine_cmd_msg.c
 
-## Engine Command Pipe Implementation
+### Engine Command Pipe Implementation
 
 In `.c` source file we will need to implement the following functions for
 the pointer and queue api:
@@ -466,7 +466,7 @@ static const JUNO_DS_QUEUE_API_T gtEngineCmdMsgPipeApi = JunoDs_QueueApiInit(Set
 
 ```
 
-### Pointer Copy
+#### Pointer Copy
 The pointer copy function is responsible for copy memory from one pointer of the same
 type to another. We verify the pointers are implemented and are of the same type
 by checking the alignment, size, and api pointer. We then dereference the pointer
@@ -490,7 +490,7 @@ static JUNO_STATUS_T EngineCmdMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_
 
 ```
 
-### Pointer Reset
+#### Pointer Reset
 The reset function will reinitialize the memory of a pointer of this message type.
 In this case, it means setting the memory to 0. Similar to the copy function,
 we verify the pointer type and api before dereferencing the pointer.
@@ -510,7 +510,7 @@ static JUNO_STATUS_T EngineCmdMsg_Reset(JUNO_POINTER_T tPointer)
 
 ```
 
-## Pipe Api Assert
+### Pipe Api Assert
 We also define a macro to easily assert that the pipe type matches
 our implementation. This is done by checking the pipe api pointer.
 
@@ -522,7 +522,7 @@ our implementation. This is done by checking the pipe api pointer.
 
 ```
 
-## Pipe Init
+### Pipe Init
 We also implement the pipe init function, which sets the API pointer as well as the
 message buffer and capacity.
 
@@ -542,7 +542,7 @@ JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, E
 
 ```
 
-## Pipe Queue Implementation
+### Pipe Queue Implementation
 Finally we implement the `SetAt`, `GetAt`, and `RemoveAt` functions.
 These functions provide a type-safe interface to setting, getting, and removing
 values within the command buffer at specific indicies. It essentially acts as an API

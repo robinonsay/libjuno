@@ -21,7 +21,7 @@
 #include "juno/status.h"
 
 /**DOC
-## Engine Command Pipe Implementation
+### Engine Command Pipe Implementation
 
 In `.c` source file we will need to implement the following functions for
 the pointer and queue api:
@@ -56,7 +56,7 @@ const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi =
 static const JUNO_DS_QUEUE_API_T gtEngineCmdMsgPipeApi = JunoDs_QueueApiInit(SetAt, GetAt, RemoveAt);
 
 /**DOC
-### Pointer Copy
+#### Pointer Copy
 The pointer copy function is responsible for copy memory from one pointer of the same
 type to another. We verify the pointers are implemented and are of the same type
 by checking the alignment, size, and api pointer. We then dereference the pointer
@@ -76,7 +76,7 @@ static JUNO_STATUS_T EngineCmdMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_
 }
 
 /**DOC
-### Pointer Reset
+#### Pointer Reset
 The reset function will reinitialize the memory of a pointer of this message type.
 In this case, it means setting the memory to 0. Similar to the copy function,
 we verify the pointer type and api before dereferencing the pointer.
@@ -92,7 +92,7 @@ static JUNO_STATUS_T EngineCmdMsg_Reset(JUNO_POINTER_T tPointer)
 }
 
 /**DOC
-## Pipe Api Assert
+### Pipe Api Assert
 We also define a macro to easily assert that the pipe type matches
 our implementation. This is done by checking the pipe api pointer.
 */
@@ -100,7 +100,7 @@ our implementation. This is done by checking the pipe api pointer.
 #define ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtEngineCmdMsgPipeApi.tRoot) { __VA_ARGS__; }
 
 /**DOC
-## Pipe Init
+### Pipe Init
 We also implement the pipe init function, which sets the API pointer as well as the
 message buffer and capacity.
 */
@@ -116,7 +116,7 @@ JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, E
 }
 
 /**DOC
-## Pipe Queue Implementation
+### Pipe Queue Implementation
 Finally we implement the `SetAt`, `GetAt`, and `RemoveAt` functions.
 These functions provide a type-safe interface to setting, getting, and removing
 values within the command buffer at specific indicies. It essentially acts as an API

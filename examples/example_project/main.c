@@ -40,7 +40,7 @@ this would be a main function.
 Additionally, users will need to implement project specific functions like logging and
 time management since LibJuno doesn't assume your OS or time use-case.
 
-# Logging
+### Logging
 
 In this case, we are going to implement the logging functions using
 `printf`. A fixed size buffer is utilized with `vsnprintf` to ensure
@@ -92,7 +92,7 @@ static JUNO_STATUS_T LogError(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMs
 }
 
 /**DOC
-# Time
+### Time
 In this example project we will need a timestamp, so we'll implement the `Now` function.
 We don't need `Sleep` or `SleepTo` so we'll provide mocks to those functions. LibJuno
 provides time math functions that we can utilize so we only need to provide implementations
@@ -130,7 +130,7 @@ static JUNO_STATUS_T Sleep(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDur
 }
 
 /**DOC
-# Instantiating APIs
+### Instantiating APIs
 LibJuno utilizes a vtable, or a table of function pointers to the specific implementation, that
 is passed to the LibJuno module. This vtable is called an "API" in LibJuno nomenclature and it
 provides a standard interface to the capabilities. LibJuno is implemented as a set of capabilities, or
@@ -153,7 +153,7 @@ static const JUNO_LOG_API_T gtMyLoggerApi ={
 static const JUNO_TIME_API_T gtTimeApi = JunoTime_TimeApiInit(Now, SleepTo, Sleep);
 
 /**DOC
-# Failure Handler
+### Failure Handler
 LibJuno utilizes a failure handler callback. This is a function that is automatically called by
 downstream code when a failure occurs. In an embedded system, you might not have a terminal or console
 log running. This enables developers to have a single implementation and methodology for handling failure
@@ -167,7 +167,7 @@ void FailureHandler(JUNO_STATUS_T tStatus, const char *pcMsg, JUNO_USER_DATA_T *
 }
 
 /**DOC
-# The Entry Point
+### The Entry Point
 This example project assumes its running on a POSIX system. Therefore,
 we can use a main method as the entry point. Many microcontrollers have
 different architectures for their entry point so you'll need to consult with
@@ -176,7 +176,7 @@ your architecture documentation on how to implement the entry point.
 int main(void)
 {
 /**DOC
-# Dependency Injection in Action
+### Dependency Injection in Action
 The core principle of dependency injection is "inversion of control".
 This is a fancy term for saying that modules don't allocate resources,
 up stream users do. This is done at the "composition root", or the spot
@@ -194,7 +194,7 @@ Here we will need to instantiate the engine, and system manager application modu
     ENGINE_APP_T tEngineApp = {0};
     SYSTEM_MANAGER_APP_T tSystemManagerApp = {0};
 /**DOC
-# Module Initialization
+### Module Initialization
 
 Modules typically have an `Init` function that specifies the required fields to initialize a module.
 Modules also utilize a `Verify` function to verify they've been initialzed. Most modules will return
@@ -216,7 +216,7 @@ itself.
     tStatus = SystemManagerApp(&tSystemManagerApp, &tLogger, &tTime, &tBroker, FailureHandler, NULL);
     JUNO_ASSERT_SUCCESS(tStatus, return -1);
 /**DOC
-# Runtime
+### Runtime
 For this example we are going to create a very simple "schedule table" or table of applications that
 will run in a specific order. This schedule table will run at best-effort. This means that when one
 application is done, the next will start.

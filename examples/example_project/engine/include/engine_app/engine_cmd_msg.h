@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 /**DOC
-## Engine Application Commands
+### Engine Application Commands
 This file is auto-generated from a LibJuno script (scripts/create_msg.py). Similarly the
 engine_tlm_msg.h and engine_tlm_msg.c files are also auto-generated. We will only go over the
 command file since it's identical to the telemetry file in terms of architecture.
@@ -55,7 +55,7 @@ typedef struct ENGINE_CMD_MSG_TAG
 } ENGINE_CMD_MSG_T;
 
 /**DOC
-## Engine Command Pipe
+### Engine Command Pipe
 Below is the definition for the engine command pipe. This is derived from the `JUNO_SB_PIPE_T` using the 
 `DERIVE_WITH_API` macro. This macro enables users to specify which API they are using.
 The inheritance for a pipe is as follows:
