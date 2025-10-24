@@ -35,20 +35,18 @@ extern "C"
 {
 #endif
 
-typedef struct TEMPLATE_APP_API_TAG TEMPLATE_APP_API_T;
 typedef struct TEMPLATE_APP_TAG TEMPLATE_APP_T;
+#define TEMPLATE_CMD_MSG_PIPE_DEPTH   (1)
 
 struct TEMPLATE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
-    JUNO_LOG_T *ptLogger;
+    /**TODO: Add custom definitions here */
+    const JUNO_LOG_ROOT_T *ptLogger;
 );
 
-JUNO_STATUS_T TemplateApp(
-    JUNO_APP_T *ptTemplateApp,
-    JUNO_LOG_T *ptLogger,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvUserData
-);
 
+/// The application init function
+JUNO_STATUS_T TemplateApp_Init(TEMPLATE_APP_T *ptTemplateApp, const JUNO_LOG_ROOT_T *ptLogger, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData);
+/**END*/
 #ifdef __cplusplus
 }
 #endif

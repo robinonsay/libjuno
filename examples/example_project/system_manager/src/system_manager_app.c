@@ -30,6 +30,64 @@
 
 
 static inline JUNO_STATUS_T Verify(JUNO_APP_ROOT_T *ptJunoApp);
+static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptJunoApp);
+static JUNO_STATUS_T OnProcess(JUNO_APP_ROOT_T *ptJunoApp);
+static JUNO_STATUS_T OnExit(JUNO_APP_ROOT_T *ptJunoApp);
+
+static const JUNO_APP_API_T tSystemManagerAppApi = {
+    .OnStart = OnStart,
+    .OnProcess = OnProcess,
+    .OnExit = OnExit
+};
+
+static inline JUNO_STATUS_T Verify(JUNO_APP_ROOT_T *ptJunoApp)
+{
+    // Assert the pointer is not null
+    JUNO_ASSERT_EXISTS(ptJunoApp);
+    // Cast to the systemmanager app
+    SYSTEM_MANAGER_APP_T *ptSystemManagerApp = (SYSTEM_MANAGER_APP_T *)(ptJunoApp);
+    // Assert the module dependencies are present
+    JUNO_ASSERT_EXISTS_MODULE(
+        /* TODO: Assert other dependencies and members here using &&*/
+        ptSystemManagerApp &&
+        ptSystemManagerApp->tRoot.ptApi &&
+        ptSystemManagerApp->ptLogger &&
+        ptSystemManagerApp->ptTime &&
+        ptSystemManagerApp->ptBroker,
+        ptSystemManagerApp,
+        "Module does not have all dependencies"
+    );
+    // Verify that this application is using the correct API
+    if(ptSystemManagerApp->tRoot.ptApi != &tSystemManagerAppApi)
+    {
+        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptSystemManagerApp, "Module has invalid API");
+        return JUNO_STATUS_INVALID_TYPE_ERROR;
+    }
+    return JUNO_STATUS_SUCCESS;
+}
+
+/* TODO: Insert initialization arguments for module members here*/
+JUNO_STATUS_T SystemManagerApp(
+    SYSTEM_MANAGER_APP_T *ptSystemManagerApp,
+    JUNO_LOG_ROOT_T *ptLogger,
+    JUNO_TIME_ROOT_T *ptTime,
+    JUNO_SB_BROKER_ROOT_T *ptBroker,
+    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
+    JUNO_USER_DATA_T *pvUserData
+)
+{
+    JUNO_ASSERT_EXISTS(ptSystemManagerApp);
+    ptSystemManagerApp->tRoot.ptApi = &tSystemManagerAppApi;
+    ptSystemManagerApp->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
+    ptSystemManagerApp->tRoot.JUNO_FAILURE_USER_DATA = pvUserData;
+    ptSystemManagerApp->ptLogger = ptLogger;
+    ptSystemManagerApp->ptTime = ptTime;
+    ptSystemManagerApp->ptBroker = ptBroker;
+    JUNO_STATUS_T tStatus = Verify(&ptSystemManagerApp->tRoot);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return tStatus;
+}
+
 
 
 static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptJunoApp)
@@ -147,59 +205,3 @@ static JUNO_STATUS_T OnExit(JUNO_APP_ROOT_T *ptJunoApp)
     ptLoggerApi->LogInfo(ptLogger, "SystemManager App Exiting");
     return tStatus;
 }
-
-static const JUNO_APP_API_T tSystemManagerAppApi = {
-    .OnStart = OnStart,
-    .OnProcess = OnProcess,
-    .OnExit = OnExit
-};
-
-static inline JUNO_STATUS_T Verify(JUNO_APP_ROOT_T *ptJunoApp)
-{
-    // Assert the pointer is not null
-    JUNO_ASSERT_EXISTS(ptJunoApp);
-    // Cast to the systemmanager app
-    SYSTEM_MANAGER_APP_T *ptSystemManagerApp = (SYSTEM_MANAGER_APP_T *)(ptJunoApp);
-    // Assert the module dependencies are present
-    JUNO_ASSERT_EXISTS_MODULE(
-        /* TODO: Assert other dependencies and members here using &&*/
-        ptSystemManagerApp &&
-        ptSystemManagerApp->tRoot.ptApi &&
-        ptSystemManagerApp->ptLogger &&
-        ptSystemManagerApp->ptTime &&
-        ptSystemManagerApp->ptBroker,
-        ptSystemManagerApp,
-        "Module does not have all dependencies"
-    );
-    // Verify that this application is using the correct API
-    if(ptSystemManagerApp->tRoot.ptApi != &tSystemManagerAppApi)
-    {
-        JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptSystemManagerApp, "Module has invalid API");
-        return JUNO_STATUS_INVALID_TYPE_ERROR;
-    }
-    return JUNO_STATUS_SUCCESS;
-}
-
-/* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T SystemManagerApp(
-    SYSTEM_MANAGER_APP_T *ptSystemManagerApp,
-    JUNO_LOG_ROOT_T *ptLogger,
-    JUNO_TIME_ROOT_T *ptTime,
-    JUNO_SB_BROKER_ROOT_T *ptBroker,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvUserData
-)
-{
-    JUNO_ASSERT_EXISTS(ptSystemManagerApp);
-    ptSystemManagerApp->tRoot.ptApi = &tSystemManagerAppApi;
-    ptSystemManagerApp->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
-    ptSystemManagerApp->tRoot.JUNO_FAILURE_USER_DATA = pvUserData;
-    ptSystemManagerApp->ptLogger = ptLogger;
-    ptSystemManagerApp->ptTime = ptTime;
-    ptSystemManagerApp->ptBroker = ptBroker;
-    JUNO_STATUS_T tStatus = Verify(&ptSystemManagerApp->tRoot);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    return tStatus;
-}
-
-

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,7 +25,6 @@ set(JUNO_COMPILE_OPTIONS
     -fno-common                     # Disallow multiple definitions of common symbols
     -fno-strict-aliasing            # Disable strict aliasing
     -fPIC                           # Platform Independent
-    -O1                             # Turn on some optimization
 )
 
 set(JUNO_COMPILE_CXX_OPTIONS
@@ -42,13 +41,6 @@ set(JUNO_COMPILE_C_OPTIONS
 find_library(
     JUNO_LIBRARY
     NAME juno
-    PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
-    PATH_SUFFIXES lib lib64
-)
-
-find_library(
-    JUNO_SHARED_LIBRARY
-    NAME juno_shared
     PATHS ${PROJECT_SOURCE_DIR}/.local/ ENV JUNO_PATH
     PATH_SUFFIXES lib lib64
 )
