@@ -27,11 +27,9 @@
 #ifndef JUNO_DS_ARRAY_API_H
 #define JUNO_DS_ARRAY_API_H
 #include "juno/macros.h"
-#include "juno/memory/memory_api.h"
 #include "juno/memory/pointer_api.h"
 #include "juno/status.h"
 #include "juno/module.h"
-#include "juno/types.h"
 #include <stddef.h>
 #ifdef __cplusplus
 extern "C"
