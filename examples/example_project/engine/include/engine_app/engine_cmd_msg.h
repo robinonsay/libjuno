@@ -28,11 +28,11 @@ extern "C" {
 #endif
 
 /**DOC
-### Engine Application Commands
 This file is auto-generated from a LibJuno script (scripts/create_msg.py). Similarly the
 engine_tlm_msg.h and engine_tlm_msg.c files are also auto-generated. We will only go over the
 command file since it's identical to the telemetry file in terms of architecture.
 
+### Engine Application Commands
 In LibJuno the software bus is operated on a single thread. A single broker is implemented
 for each thread of execution and the broker distributes messages to various queues that
 are subscribed on the software bus. These queues are called pipes. Pipes are derived LibJuno

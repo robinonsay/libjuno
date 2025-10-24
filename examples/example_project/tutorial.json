@@ -16,6 +16,9 @@
         },
         {
             "path": "engine/src/engine_app.c"
+        },
+        {
+            "path": "system_manager/src/system_manager_app.c"
         }
     ]
 }

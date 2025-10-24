@@ -95,15 +95,7 @@ The application also needs to provide a concrete application initialization func
 sets dependencies and the API pointers within the application. The application has an internal "Verify"
 function that checks if any of these dependencies are null.
 */
-JUNO_STATUS_T EngineApp_Init(
-    ENGINE_APP_T *ptEngineApp,
-    const JUNO_LOG_ROOT_T *ptLogger,
-    const JUNO_TIME_ROOT_T *ptTime,
-    JUNO_SB_BROKER_ROOT_T *ptBroker,
-    JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
-    JUNO_USER_DATA_T *pvUserData
-);
-
+JUNO_STATUS_T EngineApp_Init(ENGINE_APP_T *ptEngineApp, const JUNO_LOG_ROOT_T *ptLogger, const JUNO_TIME_ROOT_T *ptTime, JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData);
 /**END*/
 #ifdef __cplusplus
 }

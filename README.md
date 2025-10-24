@@ -18,13 +18,33 @@ C11 in a memory-safe manner
 * LibJuno optimizes for memory safety, determinism and efficiency in constrained environments.
 * LibJuno supports freestanding builds (no hosted standard library) for maximum portability when enabled via `-DJUNO_FREESTANDING=ON`.
 
+# The "Library of Everything" Problem
+Many developers try to write the "Library of Everything". This is a library
+that promises to solve all the problems that every developer has and does absolutely everything. It
+claims to meet the needs of everyone and will lead to a glorious software future. It sounds great on paper
+but is fundamentally flawed. Library developers have no idea what the user's requirements are and the
+assumptions made about the user's requirements will be wrong for many users. It's impossible to write a library
+that can meet every developer's needs. When library developers write the "Library of Everything" they often prescribe
+developers to a specific architecture and run-time. A "Library of Everything" can be spotted when they dictate
+a "central executive" and convoluted abstraction layers with specific implementations designed with a specific system
+in mind. This pigeon holes them to the framework and does not scale when a developer has different requirements
+than what the library assumed. 
+
+
+LibJuno makes the assumption that it doesn't know how you're going to use it. It's designed to be
+easy to change and adapt to your specific requirements. That's why LibJuno doesn't implement a run-time
+and heavily utilizes dependency injection. Developers know their system better than anyone, especially
+developers of LibJuno. This library attempts to impower users with a set of tools they can choose to use
+or leave on the table and create a solution that meets their requirements. LibJuno differs from other frameworks
+because this library makes it easy for developers to make that choice.
+
 # Core Philosophy
 LibJuno prioritizes the following:
 1. Memory Safety -- Memory needs to be accessed safely.
-This means **no dynamic memory allocation** and **no heap allocated memory** within this library.
-2. Software Scalability -- Software should be maintainable as the codebase grows
-3. Shareability -- Small software components should be easy to share from one codebase to another
-4. Transparency -- Capabilities need to be transparent about the dependencies they have
+   This means **no dynamic memory allocation** and **no heap allocated memory** within this library.
+2. Software Scalability -- Software should be maintainable as the codebase grows.
+3. Shareability -- Small software components should be easy to share from one codebase to another.
+4. Transparency -- Capabilities need to be transparent about the dependencies they have.
 
 In order to implement this philosophy LibJuno heavily utilizes the Dependency Injection paradigm.
 This enables these software systems to be scalable and easier to test. Additionally, LibJuno injects
@@ -33,7 +53,8 @@ memory use instead of allocating it. This enables developers to safely access th
 Finally, LibJuno aims to make few assumptions about developer's intended use-case. LibJuno understands
 that developers and software architects are the experts of their system, not this library. The intent
 is for this micro-framework to fit within developers software systems, not for a software system to conform
-to this library. If you can tolerate function pointer use then this library is right for you.
+to this library. Developers can flexibly use the whole library or a single function with little project
+overhead.
 
 
 # Tutorial
