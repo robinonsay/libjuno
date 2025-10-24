@@ -54,17 +54,6 @@ struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
     size_t zAlignment;
 );
 
-#define JUNO_POINTER_DERIVE(POINTER_T, TYPE_T) \
-{ \
-    union { \
-        POINTER_T tRoot; \
-        struct{ \
-            const JUNO_POINTER_API_T *ptApi; \
-            TYPE_T *tPtr; \
-        }; \
-    }; \
-}
-
 struct JUNO_POINTER_API_TAG
 {
     /// Copy memory from one pointer to another
@@ -73,9 +62,7 @@ struct JUNO_POINTER_API_TAG
     JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);
 };
 
-struct JUNO_VALUE_POINTER_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_POINTER_T, JUNO_VALUE_POINTER_API_T,
-
-);
+struct JUNO_VALUE_POINTER_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_POINTER_T, JUNO_VALUE_POINTER_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_VALUE_POINTER_API_TAG JUNO_MODULE_API_DERIVE(JUNO_POINTER_API_T,
     /// Left == Right
@@ -91,25 +78,17 @@ JUNO_MODULE_OPTION(JUNO_OPTION_POINTER_T, JUNO_POINTER_T);
 /// Initialize a value pointer with an api, type, and address
 #define JunoMemory_ValuePointerInit(ptApi, TYPE_T, pvAddr) (JUNO_VALUE_POINTER_T){{{ptApi, pvAddr, sizeof(TYPE_T), alignof(TYPE_T)}}}
 /// Verify the pointer and pointer type
-#define JunoMemory_PointerVerifyType(pointer, type, tApi) ((JunoMemory_PointerVerify(pointer) == JUNO_STATUS_SUCCESS && pointer.ptApi == &tApi && pointer.zSize == sizeof(type) && pointer.zAlignment == alignof(type) && (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
+#define JunoMemory_PointerVerifyType(pointer, type, tApi) \
+(( \
+    JunoMemory_PointerVerify(pointer) == JUNO_STATUS_SUCCESS && \
+    pointer.ptApi == &tApi && \
+    pointer.zSize == sizeof(type) && \
+    pointer.zAlignment == alignof(type) && \
+    (uintptr_t) pointer.pvAddr % pointer.zAlignment == 0 \
+)?JUNO_STATUS_SUCCESS:JUNO_STATUS_ERR)
+
 /// Assert the pointer type
 #define JUNO_ASSERT_POINTER_TYPE(tStatus, tPointer, tType, tApi)  JUNO_ASSERT_SUCCESS((tStatus = JunoMemory_PointerVerifyType(tPointer, tType, tApi)), return tStatus)
-#define JUNO_POINTER_API_FUNC_DECLARE(TYPE_T) \
-static JUNO_STATUS_T TYPE_T##Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc); \
-static JUNO_STATUS_T TYPE_T##Reset(JUNO_POINTER_T tPointer)
-
-
-#define JunoMemory_PointerApiInit(TYPE_T) \
-{ \
-    TYPE_T##Copy, \
-    TYPE_T##Reset \
-}
-
-#define JunoMemory_ValuePointerApiInit(TYPE_T) \
-{ \
-    JUNO_POINTER_API(TYPE_T), \
-    TYPE_T##Equals \
-}
 
 static inline JUNO_STATUS_T JunoMemory_PointerApiVerify(const JUNO_POINTER_API_T *ptPointerApi)
 {
