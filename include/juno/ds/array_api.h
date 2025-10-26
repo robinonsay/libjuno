@@ -84,7 +84,7 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerifyIndex(const JUNO_DS_ARRAY_ROOT_T *
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     if(iIndex >= ptArray->zCapacity)
     {
-        tStatus = JUNO_STATUS_OOB;
+        tStatus = JUNO_STATUS_OOB_ERROR;
         JUNO_FAIL_ROOT(tStatus, ptArray, "Index is OOB");
     }
     return tStatus;

@@ -886,7 +886,7 @@ static void test_stack_array_api_get_at_out_of_bounds(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     JUNO_RESULT_POINTER_T tResult = TestStack_GetAt(&gtTestStack.tRoot.tRoot, 10);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB, tResult.tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
 static void test_stack_array_api_remove_at_out_of_bounds(void)
@@ -895,7 +895,7 @@ static void test_stack_array_api_remove_at_out_of_bounds(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     tStatus = TestStack_RemoveAt(&gtTestStack.tRoot.tRoot, 5);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
 static void test_stack_array_api_null_array(void)

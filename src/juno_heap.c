@@ -32,26 +32,21 @@
  *  - tStatus = SUCCESS and bIsSome = false when the left child would be beyond zLength.
  *  - tStatus = ERR when the computed index would exceed zCapacity.
  */
-static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iIndex)
+static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iIndex)
 {
-    JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
+    JUNO_DS_HEAP_INDEX_RESULT_T tResult = {0};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    // Calculate the left index
     iIndex = 2 * iIndex + 1;
+    // Check if the index is out of bounds or if the length exceeds capacity
     if(iIndex > ptHeap->tRoot.zCapacity || ptHeap->zLength > ptHeap->tRoot.zCapacity)
     {
-        tResult.tStatus = JUNO_STATUS_ERR;
-        return tResult;
-    }
-    if(iIndex >= ptHeap->zLength)
-    {
-        tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tOk.bIsSome = false;
+        tResult.tStatus = JUNO_STATUS_OOB_ERROR;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tOk.bIsSome = true;
-    tResult.tOk.tSome = iIndex;
+    tResult.tOk= iIndex;
     return tResult;
 }
 
@@ -59,26 +54,21 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_D
  * @brief Compute the right child index of iIndex.
  * @copydetails JunoDs_Heap_ChildGetLeft
  */
-static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iIndex)
+static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iIndex)
 {
-    JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
+    JUNO_DS_HEAP_INDEX_RESULT_T tResult = {JUNO_STATUS_SUCCESS, 0};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    // Calculate the right child
     iIndex = 2 * iIndex + 2;
+    // Check if this index is beyond the capacity or if the length is beyond the capacity
     if(iIndex > ptHeap->tRoot.zCapacity || ptHeap->zLength > ptHeap->tRoot.zCapacity)
     {
-        tResult.tStatus = JUNO_STATUS_ERR;
-        return tResult;
-    }
-    if(iIndex >= ptHeap->zLength)
-    {
-        tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tOk.bIsSome = false;
+        tResult.tStatus = JUNO_STATUS_OOB_ERROR;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tOk.bIsSome = true;
-    tResult.tOk.tSome = iIndex;
+    tResult.tOk = iIndex;
     return tResult;
 }
 
@@ -86,26 +76,21 @@ static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_
  * @brief Compute the parent index of iIndex.
  * @copydetails JunoDs_Heap_ChildGetLeft
  */
-static inline JUNO_DS_HEAP_INDEX_OPTION_RESULT_T JunoDs_Heap_ChildGetParent(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iIndex)
+static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_ChildGetParent(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iIndex)
 {
-    JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tResult = {JUNO_STATUS_SUCCESS, {false, 0}};
+    JUNO_DS_HEAP_INDEX_RESULT_T tResult = {0};
     tResult.tStatus = JunoDs_Heap_Verify(ptHeap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    // calculate the parent
     iIndex = (iIndex - 1)/2;
+    // Check if the index is OOB
     if(iIndex > ptHeap->tRoot.zCapacity || ptHeap->zLength > ptHeap->tRoot.zCapacity)
     {
-        tResult.tStatus = JUNO_STATUS_ERR;
-        return tResult;
-    }
-    if(iIndex >= ptHeap->zLength)
-    {
-        tResult.tStatus = JUNO_STATUS_SUCCESS;
-        tResult.tOk.bIsSome = false;
+        tResult.tStatus = JUNO_STATUS_OOB_ERROR;
         return tResult;
     }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
-    tResult.tOk.bIsSome = true;
-    tResult.tOk.tSome = iIndex;
+    tResult.tOk = iIndex;
     return tResult;
 }
 
@@ -119,7 +104,7 @@ JUNO_STATUS_T JunoDs_Heap_Update(JUNO_DS_HEAP_ROOT_T *ptHeap)
         tStatus = JUNO_STATUS_ERR;
         return tStatus;
     }
-    JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tIndexResult = {0};
+    JUNO_DS_HEAP_INDEX_RESULT_T tIndexResult = {0};
     size_t iCurrentIndex = ptHeap->zLength-1;
     // Get the parent of the current index
     if(iCurrentIndex == 0)
@@ -134,12 +119,12 @@ JUNO_STATUS_T JunoDs_Heap_Update(JUNO_DS_HEAP_ROOT_T *ptHeap)
     {
         tIndexResult = JunoDs_Heap_ChildGetParent(ptHeap, iCurrentIndex);
         JUNO_ASSERT_SUCCESS(tIndexResult.tStatus, return tIndexResult.tStatus);
-        if(!tIndexResult.tOk.bIsSome)
+        if(JUNO_OK(tIndexResult) >= ptHeap->zLength)
         {
             return tStatus;
         }
         // Assign to the parent index
-        iParentIndex = tIndexResult.tOk.tSome;
+        iParentIndex = tIndexResult.tOk;
         JUNO_RESULT_POINTER_T tResultCurrent = ptArrayApi->GetAt(ptArray, iCurrentIndex);
         JUNO_ASSERT_OK(tResultCurrent, return tResultCurrent.tStatus);
         JUNO_RESULT_POINTER_T tResultParent = ptArrayApi->GetAt(ptArray, iParentIndex);
@@ -179,23 +164,23 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart)
     {
         iCurrentIndex = iRoot;
         JUNO_DS_HEAP_COMPARE_RESULT_T tCompareResult = {0};
-        JUNO_DS_HEAP_INDEX_OPTION_RESULT_T tIndexResult = JunoDs_Heap_ChildGetLeft(ptHeap, iCurrentIndex);
+        JUNO_DS_HEAP_INDEX_RESULT_T tIndexResult = JunoDs_Heap_ChildGetLeft(ptHeap, iCurrentIndex);
         JUNO_ASSERT_SUCCESS(tIndexResult.tStatus, return tIndexResult.tStatus);
         size_t iLeft = 0;
-        bool bLeftSome = tIndexResult.tOk.bIsSome;
-        if(tIndexResult.tOk.bIsSome)
+        bool bLeftSome = JUNO_OK(tIndexResult) < ptHeap->zLength;
+        if(bLeftSome)
         {
-            iLeft = tIndexResult.tOk.tSome;
+            iLeft = tIndexResult.tOk;
         }
         tIndexResult = JunoDs_Heap_ChildGetRight(ptHeap, iCurrentIndex);
         JUNO_ASSERT_SUCCESS(tIndexResult.tStatus, return tIndexResult.tStatus);
         size_t iRight = 0;
-        bool bRightSome = tIndexResult.tOk.bIsSome;
+        bool bRightSome = tIndexResult.tOk < ptHeap->zLength;
         JUNO_RESULT_POINTER_T tResultCurrent = ptArrayApi->GetAt(ptArray, iCurrentIndex);
         JUNO_ASSERT_OK(tResultCurrent, return tResultCurrent.tStatus);
-        if(tIndexResult.tOk.bIsSome)
+        if(bRightSome)
         {
-            iRight = tIndexResult.tOk.tSome;
+            iRight = tIndexResult.tOk;
         }
         if(bLeftSome)
         {
@@ -286,13 +271,13 @@ JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
     {
         return JUNO_STATUS_ERR;
     }
-    JUNO_DS_HEAP_INDEX_OPTION_RESULT_T iIndexResult = JunoDs_Heap_ChildGetParent(ptHeap, ptHeap->zLength);
+    JUNO_DS_HEAP_INDEX_RESULT_T iIndexResult = JunoDs_Heap_ChildGetParent(ptHeap, ptHeap->zLength);
     JUNO_ASSERT_SUCCESS(iIndexResult.tStatus, return iIndexResult.tStatus);
-    if(!iIndexResult.tOk.bIsSome)
+    if(iIndexResult.tOk >= ptHeap->zLength)
     {
         return tStatus;
     }
-    size_t iIndex = iIndexResult.tOk.tSome;
+    size_t iIndex = iIndexResult.tOk;
     for(size_t i = 0; i <= iIndex; ++i)
     {
         size_t iCurrentIndex = iIndex - i;

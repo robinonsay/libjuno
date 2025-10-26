@@ -38,7 +38,7 @@ typedef int32_t JUNO_STATUS_T;
 #define JUNO_STATUS_REF_IN_USE_ERROR    14
 #define JUNO_STATUS_INVALID_DATA_ERROR  15
 #define JUNO_STATUS_TIMEOUT_ERROR       16
-#define JUNO_STATUS_OOB                 17
+#define JUNO_STATUS_OOB_ERROR                 17
 
 typedef void JUNO_USER_DATA_T;
 typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData);
