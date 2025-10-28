@@ -14,28 +14,41 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
+#include "juno/ds/array_api.h"
 #include "juno/macros.h"
 #include "juno/ds/map_api.h"
 #include "juno/memory/memory_api.h"
+#include "juno/module.h"
 #include "juno/status.h"
 #include "juno/macros.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
-JUNO_RESULT_SIZE_T JunoMap_GetIndex(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey)
+
+JUNO_STATUS_T JunoDs_MapInit(JUNO_MAP_T *ptMap, const JUNO_MAP_API_T *ptApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
-    JUNO_RESULT_SIZE_T tResult = {0, 0};
-    tResult.tStatus = JunoMap_Verify(ptJunoMap);
+    JUNO_ASSERT_EXISTS(ptMap);
+    ptMap->ptApi = ptApi;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&ptMap->tRoot, &ptApi->tRoot, zCapacity, pfcnFailureHandler, pvUserData); 
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoDs_MapVerify(ptMap);
+    return tStatus;
+}
+
+static JUNO_RESULT_MAP_HASHABLE_POINTER_T JunoDs_MapGetWithKey(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem)
+{
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0};
+    tResult.tStatus = JunoDs_MapVerify(ptJunoMap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    tResult.tStatus = JunoMemory_PointerVerify(tKey);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    const JUNO_MAP_BUFFER_API_T *ptApi = ptJunoMap->ptBufferApi;
-    tResult = ptApi->Hash(tKey);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    size_t iHash = tResult.tOk;
+    tResult.tStatus = JunoDs_MapHashablePointerVerify(tItem);
+    const JUNO_MAP_HASHABLE_POINTER_API_T *ptPointerApi = tItem.ptApi;
+    JUNO_RESULT_SIZE_T tHashResult = ptPointerApi->Hash(tItem);
+    tResult.tStatus = tHashResult.tStatus;
+    JUNO_ASSERT_SUCCESS(tHashResult.tStatus, return tResult);
+    size_t iHash = tHashResult.tOk;
     // Get the capacity
-    size_t zCapacity = ptJunoMap->zCapacity;
+    size_t zCapacity = ptJunoMap->tRoot.zCapacity;
     tResult.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
     // Calculate the index
     // Set the initial status
@@ -44,8 +57,18 @@ JUNO_RESULT_SIZE_T JunoMap_GetIndex(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T t
     {
         size_t zIndex = (iHash + i) % zCapacity;
         // Get a pointer to the current key
-
-        JUNO_RESULT_BOOL_T tBoolResult = ptApi->IsEmpty( zIndex);
+        JUNO_RESULT_POINTER_T tPtrResult = ptJunoMap->ptApi->tRoot.GetAt(&ptJunoMap->tRoot, zIndex);
+        tResult.tStatus = tPtrResult.tStatus;
+        JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+        if((const JUNO_MAP_HASHABLE_POINTER_API_T *)tPtrResult.tOk.ptApi != tItem.ptApi)
+        {
+            tResult.tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+            JUNO_FAIL_MODULE(tResult.tStatus, ptJunoMap, "Invalid pointer type");
+            return tResult;
+        }
+        JUNO_MAP_HASHABLE_POINTER_T tAddr = {0};
+        tAddr.tRoot.tRoot = tPtrResult.tOk;
+        JUNO_RESULT_BOOL_T tBoolResult = ptPointerApi->IsNull(tAddr);
         tResult.tStatus = tBoolResult.tStatus;
         JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
         bool bIsEmpty = tBoolResult.tOk;
@@ -53,22 +76,18 @@ JUNO_RESULT_SIZE_T JunoMap_GetIndex(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T t
         if(bIsEmpty)
         {
             // Return the index
-            tResult.tOk = zIndex;
+            tResult.tOk.tRoot.tRoot = tPtrResult.tOk;
             tResult.tStatus = JUNO_STATUS_SUCCESS;
             break;
         }
-        JUNO_RESULT_POINTER_T tPtrResult = ptApi->GetKey(zIndex);
-        tResult.tStatus = tPtrResult.tStatus;
-        JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-        JUNO_POINTER_T tAddr = tPtrResult.tOk;
-        tBoolResult = ptApi->KeyIsEqual(tKey, tAddr);
+        tBoolResult = ptPointerApi->tRoot.Equals(tItem.tRoot, tAddr.tRoot);
         tResult.tStatus = tBoolResult.tStatus;
         JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
         bool bIsEqual = tBoolResult.tOk;
         if(bIsEqual)
         {
             // Return the index
-            tResult.tOk = zIndex;
+            tResult.tOk.tRoot.tRoot = tPtrResult.tOk;
             tResult.tStatus = JUNO_STATUS_SUCCESS;
             break;
         }
@@ -78,46 +97,18 @@ JUNO_RESULT_SIZE_T JunoMap_GetIndex(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T t
     return tResult;
 }
 
-
-/// Set the value at a given key
-static inline JUNO_STATUS_T JunoMap_Set(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey, JUNO_POINTER_T tValue)
+JUNO_RESULT_MAP_HASHABLE_POINTER_T JunoDs_MapGet(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    // verify the map
-    JUNO_STATUS_T tStatus = JunoMap_Verify(ptJunoMap);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(tKey);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(tValue);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Get the index for the key
-    JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, tKey);
-    tStatus = tSizeResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    const JUNO_MAP_BUFFER_API_T *ptApi = ptJunoMap->ptBufferApi;
-    // Set the key for the index
-    tStatus = ptApi->SetKey(tSizeResult.tOk, tKey);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Set the value for the index
-    tStatus = ptApi->SetValue(tSizeResult.tOk, tValue);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    return tStatus;
-}
-
-/// Get the value for a given key
-static inline JUNO_RESULT_POINTER_T JunoMap_Get(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey)
-{
-    JUNO_RESULT_POINTER_T tResult = {0, {0}};
-    tResult.tStatus = JunoMap_Verify(ptJunoMap);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0};
+    tResult.tStatus = JunoDs_MapVerify(ptJunoMap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    tResult.tStatus = JunoMemory_PointerVerify(tKey);
+    tResult.tStatus = JunoDs_MapHashablePointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     // Get the index for the key
-    JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, tKey);
-    tResult.tStatus = tSizeResult.tStatus;
+    tResult = JunoDs_MapGetWithKey(ptJunoMap, tItem);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    const JUNO_MAP_BUFFER_API_T *ptApi = ptJunoMap->ptBufferApi;
     // Check if the value at the index is empty
-    JUNO_RESULT_BOOL_T tBoolResult = ptApi->IsEmpty(tSizeResult.tOk);
+    JUNO_RESULT_BOOL_T tBoolResult = tResult.tOk.ptApi->IsNull(tResult.tOk);
     tResult.tStatus = tBoolResult.tStatus;
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     bool bIsEmpty = tBoolResult.tOk;
@@ -128,52 +119,82 @@ static inline JUNO_RESULT_POINTER_T JunoMap_Get(JUNO_MAP_ROOT_T *ptJunoMap, JUNO
         return tResult;
     }
     // Get the value
-    return ptApi->GetValue(tSizeResult.tOk);
+    return tResult;
 }
 
-/// Remove the key and value ata given key
-static inline JUNO_STATUS_T JunoMap_Remove(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey)
+JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    JUNO_STATUS_T tStatus = JunoMap_Verify(ptJunoMap);
+    JUNO_STATUS_T tStatus = JunoDs_MapVerify(ptJunoMap);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoMemory_PointerVerify(tKey);
+    tStatus = JunoDs_MapHashablePointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    // Get the index for the given key
-    JUNO_RESULT_SIZE_T tSizeResult = JunoMap_GetIndex(ptJunoMap, tKey);
-    tStatus = tSizeResult.tStatus;
+    // Get the index for the key
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tItemResult = JunoDs_MapGetWithKey(ptJunoMap, tItem);
+    tStatus = tItemResult.tStatus;
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    const JUNO_MAP_BUFFER_API_T *ptApi = ptJunoMap->ptBufferApi;
-    // Check if the key is empty
-    JUNO_RESULT_BOOL_T tBoolResult = ptApi->IsEmpty(tSizeResult.tOk);
-    tStatus = tBoolResult.tStatus;
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    bool bIsEmpty = tBoolResult.tOk;
-    if(bIsEmpty)
+    if(tItem.ptApi != tItemResult.tOk.ptApi)
     {
-        // Its empty so fail silently
+        tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+        JUNO_FAIL_MODULE(tStatus, ptJunoMap, "Invalid map type");
         return tStatus;
     }
-    //  Remove the key, value at the index
-    tStatus = ptApi->Remove(tSizeResult.tOk);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tItem.ptApi->tRoot.tRoot.Copy(tItemResult.tOk.tRoot.tRoot, tItem.tRoot.tRoot);
     return tStatus;
 }
 
-static const JUNO_MAP_API_T gtJunoMapApi =
+JUNO_STATUS_T JunoDs_MapRemove(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    JunoMap_Get,
-    JunoMap_Set,
-    JunoMap_Remove
-};
-
-
-JUNO_STATUS_T JunoMap_Init(JUNO_MAP_ROOT_T *ptMapRoot, const JUNO_MAP_BUFFER_API_T *ptBufferApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
-{
-    JUNO_ASSERT_EXISTS(ptMapRoot);
-    ptMapRoot->ptApi = &gtJunoMapApi;
-    ptMapRoot->ptBufferApi = ptBufferApi;
-    ptMapRoot->zCapacity = zCapacity;
-    ptMapRoot->_pfcnFailureHandler = pfcnFailureHandler;
-    ptMapRoot->_pvFailureUserData = pvUserData;
-    return JunoMap_Verify(ptMapRoot);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0};
+    tResult.tStatus = JunoDs_MapVerify(ptJunoMap);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult.tStatus);
+    tResult.tStatus = JunoDs_MapHashablePointerVerify(tItem);
+    const JUNO_MAP_HASHABLE_POINTER_API_T *ptPointerApi = tItem.ptApi;
+    JUNO_RESULT_SIZE_T tHashResult = ptPointerApi->Hash(tItem);
+    tResult.tStatus = tHashResult.tStatus;
+    JUNO_ASSERT_SUCCESS(tHashResult.tStatus, return tResult.tStatus);
+    size_t iHash = tHashResult.tOk;
+    // Get the capacity
+    size_t zCapacity = ptJunoMap->tRoot.zCapacity;
+    tResult.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
+    // Calculate the index
+    // Set the initial status
+    // Iterate over the table
+    for (size_t i = 0; i < zCapacity; i++)
+    {
+        size_t zIndex = (iHash + i) % zCapacity;
+        JUNO_RESULT_POINTER_T tPtrResult = ptJunoMap->ptApi->tRoot.GetAt(&ptJunoMap->tRoot, zIndex);
+        tResult.tStatus = tPtrResult.tStatus;
+        JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult.tStatus);
+        if((const JUNO_MAP_HASHABLE_POINTER_API_T *)tPtrResult.tOk.ptApi != tItem.ptApi)
+        {
+            tResult.tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+            JUNO_FAIL_MODULE(tResult.tStatus, ptJunoMap, "Invalid pointer type");
+            return tResult.tStatus;
+        }
+        JUNO_MAP_HASHABLE_POINTER_T tAddr = {0};
+        tAddr.tRoot.tRoot = tPtrResult.tOk;
+        // Get a pointer to the current key
+        JUNO_RESULT_BOOL_T tBoolResult = ptPointerApi->IsNull(tAddr);
+        tResult.tStatus = tBoolResult.tStatus;
+        JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult.tStatus);
+        bool bIsEmpty = tBoolResult.tOk;
+        // Check if the spot is empty or the key is equal
+        if(bIsEmpty)
+        {
+            break;
+        }
+        tBoolResult = ptPointerApi->tRoot.Equals(tItem.tRoot, tAddr.tRoot);
+        tResult.tStatus = tBoolResult.tStatus;
+        JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult.tStatus);
+        bool bIsEqual = tBoolResult.tOk;
+        if(bIsEqual)
+        {
+            // Return the index
+            tResult.tStatus = ptJunoMap->ptApi->tRoot.RemoveAt(&ptJunoMap->tRoot, zIndex);
+            break;
+        }
+        tResult.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
+    }
+    // Return the status
+    return tResult.tStatus;
 }

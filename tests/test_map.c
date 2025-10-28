@@ -15,474 +15,934 @@
     included in all copies or substantial portions of the Software.
 */
 
-#include "unity.h"
-#include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
+/**
+ * @file test_map.c
+ * @brief Comprehensive unit tests for the LibJuno Map API
+ * @author Robin Onsay
+ * 
+ * This test suite aims for 100% code and branch coverage of the map
+ * implementation, testing all edge cases and error paths including:
+ * - Hash collision handling (linear probing)
+ * - Set/Get/Remove operations
+ * - Boundary conditions and table full scenarios
+ */
 
 #include "juno/ds/map_api.h"
-#include "juno/memory/memory_api.h"
+#include "juno/ds/array_api.h"
+#include "juno/macros.h"
+#include "juno/memory/pointer_api.h"
+#include "juno/status.h"
+#include "unity.h"
+#include "unity_internals.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
 
-#ifndef TEST_MAP_CAPACITY
-#define TEST_MAP_CAPACITY 16
-#endif
+/* ============================================================================
+ * Test Data Type Definition
+ * ============================================================================ */
 
-// Storage for test map (buffer implementation for JUNO_MAP_BUFFER_API_T)
-static JUNO_POINTER_T gKeys[TEST_MAP_CAPACITY];
-static JUNO_POINTER_T gValues[TEST_MAP_CAPACITY];
-static bool gOccupied[TEST_MAP_CAPACITY];
-
-// Forward-declared buffer API and map root
-static JUNO_MAP_BUFFER_API_T gBufferApi;
-static JUNO_MAP_ROOT_T gRoot;
-
-// Simple digit parser
-static size_t parse_digits(const char *s)
+typedef struct TEST_MAP_ENTRY_TAG
 {
-    size_t v = 0;
-    while (*s >= '0' && *s <= '9')
+    uint32_t iKey;
+    uint32_t iValue;
+    bool bIsNull; // Indicates if this entry is empty
+} TEST_MAP_ENTRY_T;
+
+/* ============================================================================
+ * Test Map Implementation (Custom Array-backed Hash Map)
+ * ============================================================================ */
+
+typedef struct TEST_MAP_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_MAP_T, JUNO_MAP_API_T,
+    TEST_MAP_ENTRY_T *ptBuffer;
+) TEST_MAP_T;
+
+/* Forward declarations for array API functions */
+static JUNO_STATUS_T TestMap_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
+static JUNO_RESULT_POINTER_T TestMap_GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
+static JUNO_STATUS_T TestMap_RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
+
+/* Forward declarations for pointer API functions */
+static JUNO_STATUS_T TestMapEntry_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc);
+static JUNO_STATUS_T TestMapEntry_Reset(JUNO_POINTER_T tPointer);
+static JUNO_RESULT_BOOL_T TestMapEntry_Equals(const JUNO_VALUE_POINTER_T tLeft, const JUNO_VALUE_POINTER_T tRight);
+
+/* Forward declarations for hashable pointer API functions */
+static JUNO_RESULT_SIZE_T TestMapEntry_Hash(JUNO_MAP_HASHABLE_POINTER_T tItem);
+static JUNO_RESULT_BOOL_T TestMapEntry_IsNull(JUNO_MAP_HASHABLE_POINTER_T tItem);
+
+/* Hashable Pointer API for TEST_MAP_ENTRY_T */
+const JUNO_MAP_HASHABLE_POINTER_API_T gtTestMapEntryHashablePointerApi = {
     {
-        v = (v * 10) + (size_t)(*s - '0');
-        s++;
-    }
-    return v;
-}
-
-// Pointer API used by tests (needed to build JUNO_POINTER_T values)
-static JUNO_STATUS_T TestPointer_Copy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
-{
-    // Basic copy: sizes must match
-    if (!tDest.pvAddr || !tSrc.pvAddr || tDest.zSize != tSrc.zSize)
-        return JUNO_STATUS_ERR;
-    memcpy(tDest.pvAddr, tSrc.pvAddr, tDest.zSize);
-    return JUNO_STATUS_SUCCESS;
-}
-static JUNO_STATUS_T TestPointer_Reset(JUNO_POINTER_T tPointer)
-{
-    if (!tPointer.pvAddr || !tPointer.zSize) return JUNO_STATUS_ERR;
-    memset(tPointer.pvAddr, 0, tPointer.zSize);
-    return JUNO_STATUS_SUCCESS;
-}
-static const JUNO_POINTER_API_T gPointerApi = {
-    .Copy = TestPointer_Copy,
-    .Reset = TestPointer_Reset,
+        {
+            TestMapEntry_Copy,
+            TestMapEntry_Reset
+        },
+        TestMapEntry_Equals
+    },
+    TestMapEntry_Hash,
+    TestMapEntry_IsNull
 };
 
-// Helpers
-static void TestMap_Reset(void)
-{
-    memset(gKeys, 0, sizeof(gKeys));
-    memset(gValues, 0, sizeof(gValues));
-    memset(gOccupied, 0, sizeof(gOccupied));
-}
+/* Map API for TEST_MAP_T */
+static const JUNO_MAP_API_T gtTestMapApi = JunoDs_MapApiInit(
+    TestMap_SetAt,
+    TestMap_GetAt,
+    TestMap_RemoveAt
+);
 
-// Hash function:
-// - If key starts with '#' or 'C', parse the following digits as the hash seed.
-// - Else, use a simple sum to avoid dependence on external functions.
-static JUNO_RESULT_SIZE_T TestHash(JUNO_POINTER_T tKey)
-{
-    JUNO_RESULT_SIZE_T r = (JUNO_RESULT_SIZE_T){0};
-    if (!tKey.pvAddr)
-    {
-        r.tStatus = JUNO_STATUS_TABLE_FULL_ERROR; // any non-success code works for tests
-        return r;
-    }
-    const char *s = (const char *)tKey.pvAddr;
-    size_t v = 0;
-    if (s[0] == '#' || s[0] == 'C')
-    {
-        v = parse_digits(s + 1);
-    }
-    else
-    {
-        for (int i = 0; s[i] && i < 8; i++) v += (unsigned char)s[i];
-    }
-    r.tOk = v;
-    r.tStatus = JUNO_STATUS_SUCCESS;
-    return r;
-}
+/* Macros to initialize and verify pointer types */
+#define TestMapEntry_HashablePointerInit(addr) (JUNO_MAP_HASHABLE_POINTER_T){{{{{&gtTestMapEntryHashablePointerApi.tRoot.tRoot, addr, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)}}}}}
+#define TestMapEntry_HashablePointerVerify(tPointer) JunoDs_MapHashablePointerVerify(tPointer)
+#define TEST_MAP_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtTestMapApi.tRoot) { __VA_ARGS__; }
 
-static JUNO_RESULT_BOOL_T TestKeyIsEqual(JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight)
-{
-    JUNO_RESULT_BOOL_T r = (JUNO_RESULT_BOOL_T){0};
-    const char *l = (const char *)tLeft.pvAddr;
-    const char *p = (const char *)tRight.pvAddr;
-    if (!l || !p)
-    {
-        r.tOk = (l == p);
-        r.tStatus = JUNO_STATUS_SUCCESS;
-        return r;
-    }
-    r.tOk = (strcmp(l, p) == 0);
-    r.tStatus = JUNO_STATUS_SUCCESS;
-    return r;
-}
+/* ============================================================================
+ * Pointer API Implementation
+ * ============================================================================ */
 
-static JUNO_RESULT_POINTER_T TestGetValue(size_t iIndex)
+static JUNO_STATUS_T TestMapEntry_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc)
 {
-    JUNO_RESULT_POINTER_T r = (JUNO_RESULT_POINTER_T){0};
-    if (iIndex >= TEST_MAP_CAPACITY)
-    {
-        r.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
-        return r;
+    if (!tDest.pvAddr || !tSrc.pvAddr) {
+        return JUNO_STATUS_ERR;
     }
-    r.tOk = gValues[iIndex];
-    r.tStatus = JUNO_STATUS_SUCCESS;
-    return r;
-}
-
-static JUNO_RESULT_POINTER_T TestGetKey(size_t iIndex)
-{
-    JUNO_RESULT_POINTER_T r = (JUNO_RESULT_POINTER_T){0};
-    if (iIndex >= TEST_MAP_CAPACITY)
-    {
-        r.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
-        return r;
+    if (tDest.zSize != sizeof(TEST_MAP_ENTRY_T) || tSrc.zSize != sizeof(TEST_MAP_ENTRY_T)) {
+        return JUNO_STATUS_INVALID_SIZE_ERROR;
     }
-    r.tOk = gKeys[iIndex];
-    r.tStatus = JUNO_STATUS_SUCCESS;
-    return r;
-}
-
-static JUNO_STATUS_T TestSetValue(size_t iIndex, JUNO_POINTER_T tValue)
-{
-    if (iIndex >= TEST_MAP_CAPACITY) return JUNO_STATUS_TABLE_FULL_ERROR;
-    gValues[iIndex] = tValue;
+    *(TEST_MAP_ENTRY_T *)tDest.pvAddr = *(TEST_MAP_ENTRY_T *)tSrc.pvAddr;
     return JUNO_STATUS_SUCCESS;
 }
 
-static JUNO_STATUS_T TestSetKey(size_t iIndex, JUNO_POINTER_T tKey)
+static JUNO_STATUS_T TestMapEntry_Reset(JUNO_POINTER_T tPointer)
 {
-    if (iIndex >= TEST_MAP_CAPACITY) return JUNO_STATUS_TABLE_FULL_ERROR;
-    gKeys[iIndex] = tKey;
-    gOccupied[iIndex] = (tKey.pvAddr != NULL);
+    if (!tPointer.pvAddr) {
+        return JUNO_STATUS_ERR;
+    }
+    if (tPointer.zSize != sizeof(TEST_MAP_ENTRY_T)) {
+        return JUNO_STATUS_INVALID_SIZE_ERROR;
+    }
+    TEST_MAP_ENTRY_T *ptEntry = (TEST_MAP_ENTRY_T *)tPointer.pvAddr;
+    ptEntry->iKey = 0;
+    ptEntry->iValue = 0;
+    ptEntry->bIsNull = true;
     return JUNO_STATUS_SUCCESS;
 }
 
-static JUNO_STATUS_T TestRemove(size_t iIndex)
+static JUNO_RESULT_BOOL_T TestMapEntry_Equals(const JUNO_VALUE_POINTER_T tLeft, const JUNO_VALUE_POINTER_T tRight)
 {
-    if (iIndex >= TEST_MAP_CAPACITY) return JUNO_STATUS_TABLE_FULL_ERROR;
-    if (!gOccupied[iIndex]) return JUNO_STATUS_TABLE_FULL_ERROR;
-    memset(&gKeys[iIndex], 0, sizeof(JUNO_POINTER_T));
-    memset(&gValues[iIndex], 0, sizeof(JUNO_POINTER_T));
-    gOccupied[iIndex] = false;
-    return JUNO_STATUS_SUCCESS;
-}
-
-static JUNO_RESULT_BOOL_T TestIsEmpty(size_t zIndex)
-{
-    JUNO_RESULT_BOOL_T r = (JUNO_RESULT_BOOL_T){0};
-    if (zIndex >= TEST_MAP_CAPACITY)
-    {
-        r.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
-        return r;
+    JUNO_RESULT_BOOL_T tResult = {0};
+    if (!tLeft.tRoot.pvAddr || !tRight.tRoot.pvAddr) {
+        tResult.tStatus = JUNO_STATUS_ERR;
+        return tResult;
     }
-    r.tOk = !gOccupied[zIndex];
-    r.tStatus = JUNO_STATUS_SUCCESS;
-    return r;
-}
-
-// Count occupied slots
-static size_t TestMap_CountOccupied(void)
-{
-    size_t c = 0;
-    for (size_t i = 0; i < TEST_MAP_CAPACITY; i++)
-        if (gOccupied[i]) c++;
-    return c;
-}
-
-// Injection helpers for error-path testing
-static bool gInjectGetKeyError = false;
-static size_t gInjectGetKeyErrorIndex = 0;
-
-static JUNO_RESULT_POINTER_T TestGetKey_WithInjectedError(size_t iIndex)
-{
-    JUNO_RESULT_POINTER_T r = (JUNO_RESULT_POINTER_T){0};
-    if (gInjectGetKeyError && iIndex == gInjectGetKeyErrorIndex)
-    {
-        r.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
-        return r;
+    if (tLeft.tRoot.zSize != sizeof(TEST_MAP_ENTRY_T) || tRight.tRoot.zSize != sizeof(TEST_MAP_ENTRY_T)) {
+        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        return tResult;
     }
-    return TestGetKey(iIndex);
+    
+    TEST_MAP_ENTRY_T *ptLeft = (TEST_MAP_ENTRY_T *)tLeft.tRoot.pvAddr;
+    TEST_MAP_ENTRY_T *ptRight = (TEST_MAP_ENTRY_T *)tRight.tRoot.pvAddr;
+    
+    tResult.tOk = (ptLeft->iKey == ptRight->iKey);
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    return tResult;
 }
 
-static bool gInjectIsEmptyError = false;
-static size_t gInjectIsEmptyErrorIndex = 0;
+/* ============================================================================
+ * Hashable Pointer API Implementation
+ * ============================================================================ */
 
-static JUNO_RESULT_BOOL_T TestIsEmpty_WithInjectedError(size_t zIndex)
+static JUNO_RESULT_SIZE_T TestMapEntry_Hash(JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    JUNO_RESULT_BOOL_T r = (JUNO_RESULT_BOOL_T){0};
-    if (gInjectIsEmptyError && zIndex == gInjectIsEmptyErrorIndex)
-    {
-        r.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
-        return r;
+    JUNO_RESULT_SIZE_T tResult = {0};
+    if (!tItem.tRoot.tRoot.pvAddr) {
+        tResult.tStatus = JUNO_STATUS_ERR;
+        return tResult;
     }
-    return TestIsEmpty(zIndex);
+    if (tItem.tRoot.tRoot.zSize != sizeof(TEST_MAP_ENTRY_T)) {
+        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        return tResult;
+    }
+    
+    TEST_MAP_ENTRY_T *ptEntry = (TEST_MAP_ENTRY_T *)tItem.tRoot.tRoot.pvAddr;
+    // Simple hash function for testing
+    tResult.tOk = (size_t)ptEntry->iKey;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    return tResult;
 }
 
-static const char *gInjectHashErrorKey = NULL;
-
-static JUNO_RESULT_SIZE_T TestHash_WithInjectedError(JUNO_POINTER_T tKey)
+static JUNO_RESULT_BOOL_T TestMapEntry_IsNull(JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    JUNO_RESULT_SIZE_T r = (JUNO_RESULT_SIZE_T){0};
-    const char *s = (const char *)tKey.pvAddr;
-    if (gInjectHashErrorKey && s && strcmp(s, gInjectHashErrorKey) == 0)
-    {
-        r.tStatus = JUNO_STATUS_TABLE_FULL_ERROR;
-        return r;
+    JUNO_RESULT_BOOL_T tResult = {0};
+    if (!tItem.tRoot.tRoot.pvAddr) {
+        tResult.tStatus = JUNO_STATUS_ERR;
+        return tResult;
     }
-    return TestHash(tKey);
+    if (tItem.tRoot.tRoot.zSize != sizeof(TEST_MAP_ENTRY_T)) {
+        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        return tResult;
+    }
+    
+    TEST_MAP_ENTRY_T *ptEntry = (TEST_MAP_ENTRY_T *)tItem.tRoot.tRoot.pvAddr;
+    tResult.tOk = ptEntry->bIsNull;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    return tResult;
 }
 
-// Unity fixtures
+/* ============================================================================
+ * Array API Implementation
+ * ============================================================================ */
+
+static JUNO_STATUS_T TestMap_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex)
+{
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    TEST_MAP_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
+    
+    if (tItem.zSize != sizeof(TEST_MAP_ENTRY_T)) {
+        return JUNO_STATUS_INVALID_SIZE_ERROR;
+    }
+    
+    tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    
+    TEST_MAP_T *ptMap = (TEST_MAP_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = {tItem.ptApi, &ptMap->ptBuffer[iIndex], sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)};
+    tStatus = tItem.ptApi->Copy(tIndexPointer, tItem);
+    return tStatus;
+}
+
+static JUNO_RESULT_POINTER_T TestMap_GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
+{
+    JUNO_RESULT_POINTER_T tResult = {0};
+    tResult.tStatus = JunoDs_ArrayVerify(ptArray);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    TEST_MAP_ASSERT_API(ptArray,
+        tResult.tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
+        return tResult
+    );
+    tResult.tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    
+    TEST_MAP_T *ptMap = (TEST_MAP_T *)ptArray;
+    tResult.tOk.ptApi = &gtTestMapEntryHashablePointerApi.tRoot.tRoot;
+    tResult.tOk.pvAddr = &ptMap->ptBuffer[iIndex];
+    tResult.tOk.zSize = sizeof(TEST_MAP_ENTRY_T);
+    tResult.tOk.zAlignment = alignof(TEST_MAP_ENTRY_T);
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
+    return tResult;
+}
+
+static JUNO_STATUS_T TestMap_RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
+{
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    TEST_MAP_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
+    tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    
+    TEST_MAP_T *ptMap = (TEST_MAP_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = {&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &ptMap->ptBuffer[iIndex], sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)};
+    tStatus = tIndexPointer.ptApi->Reset(tIndexPointer);
+    return tStatus;
+}
+
+/* ============================================================================
+ * Test Fixture Setup/Teardown
+ * ============================================================================ */
+
+#define TEST_MAP_CAPACITY 10
+static TEST_MAP_T gtTestMap;
+static TEST_MAP_ENTRY_T gtTestMapBuffer[TEST_MAP_CAPACITY];
+
 void setUp(void)
 {
-    TestMap_Reset();
-
-    gBufferApi.Hash = TestHash;
-    gBufferApi.KeyIsEqual = TestKeyIsEqual;
-    gBufferApi.GetValue = TestGetValue;
-    gBufferApi.GetKey = TestGetKey;
-    gBufferApi.SetValue = TestSetValue;
-    gBufferApi.SetKey = TestSetKey;
-    gBufferApi.Remove = TestRemove;
-    gBufferApi.IsEmpty = TestIsEmpty;
-
-    // Initialize map root via API init (sets ptApi to JunoMap implementation)
-    (void)JunoMap_Init(&gRoot, &gBufferApi, TEST_MAP_CAPACITY, NULL, NULL);
-
-    gInjectGetKeyError = false;
-    gInjectIsEmptyError = false;
-    gInjectHashErrorKey = NULL;
+    memset(&gtTestMap, 0, sizeof(gtTestMap));
+    memset(gtTestMapBuffer, 0, sizeof(gtTestMapBuffer));
+    // Initialize all entries as null
+    for (size_t i = 0; i < TEST_MAP_CAPACITY; i++) {
+        gtTestMapBuffer[i].bIsNull = true;
+    }
 }
 
 void tearDown(void)
 {
+    /* No dynamic allocations to clean up */
 }
 
-// Convenience builders for test pointers
-#define K(strlit) (JunoMemory_PointerInit(&gPointerApi, char, (void*)(strlit)))
-#define V_int(pint) (JunoMemory_PointerInit(&gPointerApi, int, (void*)(pint)))
+/* ============================================================================
+ * Helper Functions
+ * ============================================================================ */
 
-// Tests
-static void test_nominal_map(void)
+static JUNO_STATUS_T InitTestMap(TEST_MAP_T *ptMap, size_t zCapacity)
 {
-    const char *k1_c = "#1";
-    int v1 = 42;
-    JUNO_POINTER_T k1 = K(k1_c);
-    JUNO_POINTER_T v1p = V_int(&v1);
-
-    JUNO_STATUS_T s = gRoot.ptApi->Set(&gRoot, k1, v1p);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, s);
-
-    JUNO_RESULT_POINTER_T r = gRoot.ptApi->Get(&gRoot, k1);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-    TEST_ASSERT_EQUAL_PTR(&v1, r.tOk.pvAddr);
-
-    s = gRoot.ptApi->Remove(&gRoot, k1);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, s);
-
-    r = gRoot.ptApi->Get(&gRoot, k1);
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-    TEST_ASSERT_NULL(r.tOk.pvAddr);
-
-    const char *ka_c = "C3a";
-    const char *kb_c = "C4b";
-    int va = 11, vb = 22;
-
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(ka_c), V_int(&va)));
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(kb_c), V_int(&vb)));
-
-    JUNO_RESULT_POINTER_T ra = gRoot.ptApi->Get(&gRoot, K(ka_c));
-    JUNO_RESULT_POINTER_T rb = gRoot.ptApi->Get(&gRoot, K(kb_c));
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, ra.tStatus);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, rb.tStatus);
-    TEST_ASSERT_EQUAL_PTR(&va, ra.tOk.pvAddr);
-    TEST_ASSERT_EQUAL_PTR(&vb, rb.tOk.pvAddr);
-
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Remove(&gRoot, K(ka_c)));
-    ra = gRoot.ptApi->Get(&gRoot, K(ka_c));
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, ra.tStatus);
-    TEST_ASSERT_NULL(ra.tOk.pvAddr);
-    rb = gRoot.ptApi->Get(&gRoot, K(kb_c));
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, rb.tStatus);
-    TEST_ASSERT_EQUAL_PTR(&vb, rb.tOk.pvAddr);
+    ptMap->ptBuffer = gtTestMapBuffer;
+    return JunoDs_MapInit(&ptMap->tRoot, &gtTestMapApi, zCapacity, NULL, NULL);
 }
 
-static void test_null_init(void)
+static TEST_MAP_ENTRY_T CreateTestEntry(uint32_t iKey, uint32_t iValue)
 {
-    // Buffer API verify should fail on NULL
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_BufferApiVerify(NULL));
-
-    JUNO_MAP_ROOT_T badRoot1 = {0};
-    badRoot1.ptApi = NULL;
-    badRoot1.zCapacity = TEST_MAP_CAPACITY;
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Verify(&badRoot1));
-
-    JUNO_MAP_ROOT_T badRoot2 = {0};
-    badRoot2.ptApi = gRoot.ptApi; // but capacity 0
-    badRoot2.zCapacity = 0;
-    badRoot2.ptBufferApi = &gBufferApi;
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Verify(&badRoot2));
+    TEST_MAP_ENTRY_T tEntry = {
+        .iKey = iKey,
+        .iValue = iValue,
+        .bIsNull = false
+    };
+    return tEntry;
 }
 
-static void test_null_set(void)
+/* ============================================================================
+ * Test Cases: Initialization
+ * ============================================================================ */
+
+static void test_map_init_nominal(void)
 {
-    int v = 1;
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(NULL, K("#1"), V_int(&v)));
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, (JUNO_POINTER_T){0}, V_int(&v)));
-}
-
-static void test_null_get(void)
-{
-    JUNO_RESULT_POINTER_T r = gRoot.ptApi->Get(NULL, K("#2"));
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-
-    r = gRoot.ptApi->Get(&gRoot, (JUNO_POINTER_T){0});
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-}
-
-static void test_null_remove(void)
-{
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Remove(NULL, K("#3")));
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Remove(&gRoot, (JUNO_POINTER_T){0}));
-}
-
-static void test_remove_nonexistent_key(void)
-{
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Remove(&gRoot, K("#7")));
-
-    int vals[4] = {10, 20, 30, 40};
-    const char *k0 = "C7a";
-    const char *k1 = "C7b";
-    const char *k2 = "C7c";
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(k0), V_int(&vals[0])));
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(k1), V_int(&vals[1])));
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(k2), V_int(&vals[2])));
-
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Remove(&gRoot, K("C7x")));
-}
-
-static void test_duplicate_key_insertion(void)
-{
-    const char *k = "#5";
-    int a = 100, b = 200;
-
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(k), V_int(&a)));
-    size_t before = TestMap_CountOccupied();
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(k), V_int(&b)));
-    size_t after = TestMap_CountOccupied();
-
-    TEST_ASSERT_EQUAL(before, after);
-
-    JUNO_RESULT_POINTER_T r = gRoot.ptApi->Get(&gRoot, K(k));
-    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, r.tStatus);
-    TEST_ASSERT_EQUAL_PTR(&b, r.tOk.pvAddr);
-}
-
-static void test_overflow_map(void)
-{
-    int vals[TEST_MAP_CAPACITY];
-    char keys[TEST_MAP_CAPACITY][8];
-    for (size_t i = 0; i < TEST_MAP_CAPACITY; i++)
-    {
-        vals[i] = (int)i + 1;
-        snprintf(keys[i], sizeof(keys[i]), "#%u", (unsigned)i);
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_EQUAL(TEST_MAP_CAPACITY, gtTestMap.tRoot.tRoot.zCapacity);
+    TEST_ASSERT_NOT_NULL(gtTestMap.tRoot.ptApi);
+    
+    // Verify all entries are initialized as null
+    for (size_t i = 0; i < TEST_MAP_CAPACITY; i++) {
+        TEST_ASSERT_TRUE(gtTestMapBuffer[i].bIsNull);
     }
-    for (size_t i = 0; i < TEST_MAP_CAPACITY; i++)
-    {
-        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(keys[i]), V_int(&vals[i])));
-    }
-    TEST_ASSERT_EQUAL(TEST_MAP_CAPACITY, TestMap_CountOccupied());
-
-    JUNO_STATUS_T s = gRoot.ptApi->Set(&gRoot, K("C0_overflow"), V_int(&vals[0]));
-    TEST_ASSERT_EQUAL(JUNO_STATUS_TABLE_FULL_ERROR, s);
 }
 
-#include <stdlib.h>
-
-static void test_fill_map(void)
+static void test_map_init_null_map(void)
 {
-    int baseVals[TEST_MAP_CAPACITY * 2];
-    char tmp[32];
-    // Store stable pointers for all keys we touch in this test
-    const char *keys[TEST_MAP_CAPACITY] = {0};
-
-    // Insert: allocate and store unique key strings "C<i>"
-    for (size_t i = 0; i < TEST_MAP_CAPACITY; i++)
-    {
-        baseVals[i] = 1000 + (int)i;
-        snprintf(tmp, sizeof(tmp), "C%u", (unsigned)i);
-
-        // Duplicate key into heap so the map stores a stable pointer
-        size_t len = strlen(tmp) + 1;
-        char *k = (char *)malloc(len);
-        TEST_ASSERT_NOT_NULL(k);
-        memcpy(k, tmp, len);
-        keys[i] = k;
-        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(keys[i]), V_int(&baseVals[i])));
-    }
-
-    // Remove every other entry using the exact same pointer used for insert
-    for (size_t i = 0; i < TEST_MAP_CAPACITY / 2; i += 2)
-    {
-        TEST_ASSERT_NOT_NULL(keys[i]);
-        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Remove(&gRoot, K(keys[i])));
-    }
-
-    // Reinsert the same keys (same pointers) for those removed, with new values
-    for (size_t i = 0; i < TEST_MAP_CAPACITY / 2; i++)
-    {
-        if ((i % 2) == 0)
-        {
-            baseVals[TEST_MAP_CAPACITY + i] = 2000 + (int)i;
-            TEST_ASSERT_NOT_NULL(keys[i]);
-            TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, gRoot.ptApi->Set(&gRoot, K(keys[i]), V_int(&baseVals[TEST_MAP_CAPACITY + i])));
-        }
-    }
-
-    // 1) GetKey error path
-    gBufferApi.GetKey = TestGetKey_WithInjectedError;
-    gInjectGetKeyErrorIndex = 2;
-    gInjectGetKeyError = true;
-    JUNO_RESULT_SIZE_T gi = JunoMap_GetIndex(&gRoot, K("#2"));
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, gi.tStatus);
-    gInjectGetKeyError = false;
-    gBufferApi.GetKey = TestGetKey;
-
-    // 2) IsEmpty error path
-    gBufferApi.IsEmpty = TestIsEmpty_WithInjectedError;
-    gInjectIsEmptyErrorIndex = 3;
-    gInjectIsEmptyError = true;
-    gi = JunoMap_GetIndex(&gRoot, K("#3"));
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, gi.tStatus);
-    gInjectIsEmptyError = false;
-    gBufferApi.IsEmpty = TestIsEmpty;
-
-    // 3) Hash error path
-    gBufferApi.Hash = TestHash_WithInjectedError;
-    gInjectHashErrorKey = "BADHASH";
-    gi = JunoMap_GetIndex(&gRoot, K("BADHASH"));
-    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, gi.tStatus);
-    gInjectHashErrorKey = NULL;
-    gBufferApi.Hash = TestHash;
-
-    // Note: keys[] are intentionally not freed to avoid dangling pointers
-    // inside the map; tests exit shortly after.
+    JUNO_STATUS_T tStatus = JunoDs_MapInit(NULL, &gtTestMapApi, TEST_MAP_CAPACITY, NULL, NULL);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
+
+static void test_map_init_null_api(void)
+{
+    gtTestMap.ptBuffer = gtTestMapBuffer;
+    JUNO_STATUS_T tStatus = JunoDs_MapInit(&gtTestMap.tRoot, NULL, TEST_MAP_CAPACITY, NULL, NULL);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_init_zero_capacity(void)
+{
+    gtTestMap.ptBuffer = gtTestMapBuffer;
+    JUNO_STATUS_T tStatus = JunoDs_MapInit(&gtTestMap.tRoot, &gtTestMapApi, 0, NULL, NULL);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+/* ============================================================================
+ * Test Cases: Set Operations
+ * ============================================================================ */
+
+static void test_map_set_single_item(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify the entry was stored at the correct index (hash % capacity)
+    size_t iExpectedIndex = 42 % TEST_MAP_CAPACITY;
+    TEST_ASSERT_FALSE(gtTestMapBuffer[iExpectedIndex].bIsNull);
+    TEST_ASSERT_EQUAL(42, gtTestMapBuffer[iExpectedIndex].iKey);
+    TEST_ASSERT_EQUAL(100, gtTestMapBuffer[iExpectedIndex].iValue);
+}
+
+static void test_map_set_multiple_items(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set multiple non-colliding entries
+    for (uint32_t i = 0; i < 5; i++) {
+        TEST_MAP_ENTRY_T tEntry = CreateTestEntry(i, i * 10);
+        JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+        tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer);
+        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    }
+    
+    // Verify all entries were stored correctly
+    for (uint32_t i = 0; i < 5; i++) {
+        TEST_ASSERT_FALSE(gtTestMapBuffer[i].bIsNull);
+        TEST_ASSERT_EQUAL(i, gtTestMapBuffer[i].iKey);
+        TEST_ASSERT_EQUAL(i * 10, gtTestMapBuffer[i].iValue);
+    }
+}
+
+static void test_map_set_update_existing(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set initial value
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer1 = TestMapEntry_HashablePointerInit(&tEntry1);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Update with new value
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(42, 200);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify the value was updated
+    size_t iExpectedIndex = 42 % TEST_MAP_CAPACITY;
+    TEST_ASSERT_EQUAL(42, gtTestMapBuffer[iExpectedIndex].iKey);
+    TEST_ASSERT_EQUAL(200, gtTestMapBuffer[iExpectedIndex].iValue);
+}
+
+static void test_map_set_with_collision(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set first entry at key 5 (hash = 5, index = 5)
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(5, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer1 = TestMapEntry_HashablePointerInit(&tEntry1);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set second entry at key 15 (hash = 15, index = 5, collision!)
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(15, 200);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify linear probing: first entry at index 5, second at index 6
+    TEST_ASSERT_EQUAL(5, gtTestMapBuffer[5].iKey);
+    TEST_ASSERT_EQUAL(100, gtTestMapBuffer[5].iValue);
+    TEST_ASSERT_EQUAL(15, gtTestMapBuffer[6].iKey);
+    TEST_ASSERT_EQUAL(200, gtTestMapBuffer[6].iValue);
+}
+
+static void test_map_set_null_map(void)
+{
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    JUNO_STATUS_T tStatus = JunoDs_MapSet(NULL, tPointer);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_set_table_full(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Fill the entire map
+    for (uint32_t i = 0; i < TEST_MAP_CAPACITY; i++) {
+        TEST_MAP_ENTRY_T tEntry = CreateTestEntry(i, i * 10);
+        JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+        tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer);
+        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    }
+    
+    // Attempt to add one more entry (should fail)
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(TEST_MAP_CAPACITY + 10, 999);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_TABLE_FULL_ERROR, tStatus);
+}
+
+/* ============================================================================
+ * Test Cases: Get Operations
+ * ============================================================================ */
+
+static void test_map_get_existing_item(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set an entry
+    TEST_MAP_ENTRY_T tSetEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tSetPointer = TestMapEntry_HashablePointerInit(&tSetEntry);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tSetPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Get the entry
+    TEST_MAP_ENTRY_T tGetEntry = CreateTestEntry(42, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tGetPointer = TestMapEntry_HashablePointerInit(&tGetEntry);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = JunoDs_MapGet(&gtTestMap.tRoot, tGetPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    
+    // Verify the retrieved entry
+    TEST_MAP_ENTRY_T *ptRetrieved = (TEST_MAP_ENTRY_T *)tResult.tOk.tRoot.tRoot.pvAddr;
+    TEST_ASSERT_EQUAL(42, ptRetrieved->iKey);
+    TEST_ASSERT_EQUAL(100, ptRetrieved->iValue);
+    TEST_ASSERT_FALSE(ptRetrieved->bIsNull);
+}
+
+static void test_map_get_nonexistent_item(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Try to get an entry that doesn't exist
+    TEST_MAP_ENTRY_T tGetEntry = CreateTestEntry(99, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tGetPointer = TestMapEntry_HashablePointerInit(&tGetEntry);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = JunoDs_MapGet(&gtTestMap.tRoot, tGetPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_DNE_ERROR, tResult.tStatus);
+}
+
+static void test_map_get_after_collision(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set entries that will collide
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(5, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer1 = TestMapEntry_HashablePointerInit(&tEntry1);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(15, 200);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Get the second entry (which had collision)
+    TEST_MAP_ENTRY_T tGetEntry = CreateTestEntry(15, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tGetPointer = TestMapEntry_HashablePointerInit(&tGetEntry);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = JunoDs_MapGet(&gtTestMap.tRoot, tGetPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    
+    TEST_MAP_ENTRY_T *ptRetrieved = (TEST_MAP_ENTRY_T *)tResult.tOk.tRoot.tRoot.pvAddr;
+    TEST_ASSERT_EQUAL(15, ptRetrieved->iKey);
+    TEST_ASSERT_EQUAL(200, ptRetrieved->iValue);
+}
+
+static void test_map_get_null_map(void)
+{
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = JunoDs_MapGet(NULL, tPointer);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+}
+
+/* ============================================================================
+ * Test Cases: Remove Operations
+ * ============================================================================ */
+
+static void test_map_remove_existing_item(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set an entry
+    TEST_MAP_ENTRY_T tSetEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tSetPointer = TestMapEntry_HashablePointerInit(&tSetEntry);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tSetPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Remove the entry
+    TEST_MAP_ENTRY_T tRemoveEntry = CreateTestEntry(42, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tRemovePointer = TestMapEntry_HashablePointerInit(&tRemoveEntry);
+    tStatus = JunoDs_MapRemove(&gtTestMap.tRoot, tRemovePointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify the entry was removed (marked as null)
+    size_t iExpectedIndex = 42 % TEST_MAP_CAPACITY;
+    TEST_ASSERT_TRUE(gtTestMapBuffer[iExpectedIndex].bIsNull);
+}
+
+static void test_map_remove_nonexistent_item(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Add some entries to force linear probing search
+    // Fill positions 9, 0 (wrapping) with colliding keys
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(9, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer1 = TestMapEntry_HashablePointerInit(&tEntry1);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(19, 200); // Collides with 9, goes to index 0
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Try to remove key 99 (hashes to 9, but occupied by key 9)
+    // It will probe and find an empty slot eventually, returning success
+    TEST_MAP_ENTRY_T tRemoveEntry = CreateTestEntry(99, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tRemovePointer = TestMapEntry_HashablePointerInit(&tRemoveEntry);
+    tStatus = JunoDs_MapRemove(&gtTestMap.tRoot, tRemovePointer);
+    // When it encounters an empty slot during probing (item not found), it breaks with SUCCESS
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_remove_after_collision(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set entries that will collide
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(5, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer1 = TestMapEntry_HashablePointerInit(&tEntry1);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(15, 200);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Remove the second entry (which had collision)
+    TEST_MAP_ENTRY_T tRemoveEntry = CreateTestEntry(15, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tRemovePointer = TestMapEntry_HashablePointerInit(&tRemoveEntry);
+    tStatus = JunoDs_MapRemove(&gtTestMap.tRoot, tRemovePointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify the second entry was removed but first remains
+    TEST_ASSERT_FALSE(gtTestMapBuffer[5].bIsNull);
+    TEST_ASSERT_EQUAL(5, gtTestMapBuffer[5].iKey);
+    TEST_ASSERT_TRUE(gtTestMapBuffer[6].bIsNull);
+}
+
+static void test_map_remove_null_map(void)
+{
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    JUNO_STATUS_T tStatus = JunoDs_MapRemove(NULL, tPointer);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+/* ============================================================================
+ * Test Cases: Collision Handling & Linear Probing
+ * ============================================================================ */
+
+static void test_map_multiple_collisions_linear_probing(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set entries that all hash to the same initial index
+    // Keys: 3, 13, 23 all hash to index 3, 3, 3
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(3, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer1 = TestMapEntry_HashablePointerInit(&tEntry1);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(13, 200);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    TEST_MAP_ENTRY_T tEntry3 = CreateTestEntry(23, 300);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer3 = TestMapEntry_HashablePointerInit(&tEntry3);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer3);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify linear probing: should be at indices 3, 4, 5
+    TEST_ASSERT_EQUAL(3, gtTestMapBuffer[3].iKey);
+    TEST_ASSERT_EQUAL(100, gtTestMapBuffer[3].iValue);
+    TEST_ASSERT_EQUAL(13, gtTestMapBuffer[4].iKey);
+    TEST_ASSERT_EQUAL(200, gtTestMapBuffer[4].iValue);
+    TEST_ASSERT_EQUAL(23, gtTestMapBuffer[5].iKey);
+    TEST_ASSERT_EQUAL(300, gtTestMapBuffer[5].iValue);
+    
+    // Verify all can be retrieved correctly
+    TEST_MAP_ENTRY_T tGet1 = CreateTestEntry(3, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tGetPtr1 = TestMapEntry_HashablePointerInit(&tGet1);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult1 = JunoDs_MapGet(&gtTestMap.tRoot, tGetPtr1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult1.tStatus);
+    TEST_ASSERT_EQUAL(3, ((TEST_MAP_ENTRY_T *)tResult1.tOk.tRoot.tRoot.pvAddr)->iKey);
+    
+    TEST_MAP_ENTRY_T tGet2 = CreateTestEntry(13, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tGetPtr2 = TestMapEntry_HashablePointerInit(&tGet2);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult2 = JunoDs_MapGet(&gtTestMap.tRoot, tGetPtr2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult2.tStatus);
+    TEST_ASSERT_EQUAL(13, ((TEST_MAP_ENTRY_T *)tResult2.tOk.tRoot.tRoot.pvAddr)->iKey);
+    
+    TEST_MAP_ENTRY_T tGet3 = CreateTestEntry(23, 0);
+    JUNO_MAP_HASHABLE_POINTER_T tGetPtr3 = TestMapEntry_HashablePointerInit(&tGet3);
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult3 = JunoDs_MapGet(&gtTestMap.tRoot, tGetPtr3);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult3.tStatus);
+    TEST_ASSERT_EQUAL(23, ((TEST_MAP_ENTRY_T *)tResult3.tOk.tRoot.tRoot.pvAddr)->iKey);
+}
+
+static void test_map_wraparound_probing(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Fill slots 9, then try to add items that would probe past end
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(9, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer1 = TestMapEntry_HashablePointerInit(&tEntry1);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Key 19 hashes to 19 % 10 = 9, should wrap to index 0
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(19, 200);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify wraparound: first at 9, second at 0 (wrapped)
+    TEST_ASSERT_EQUAL(9, gtTestMapBuffer[9].iKey);
+    TEST_ASSERT_EQUAL(19, gtTestMapBuffer[0].iKey);
+}
+
+/* ============================================================================
+ * Test Cases: Edge Cases
+ * ============================================================================ */
+
+static void test_map_single_element_capacity(void)
+{
+    TEST_MAP_T tSmallMap;
+    TEST_MAP_ENTRY_T tSmallBuffer[1];
+    tSmallBuffer[0].bIsNull = true;
+    
+    tSmallMap.ptBuffer = tSmallBuffer;
+    JUNO_STATUS_T tStatus = JunoDs_MapInit(&tSmallMap.tRoot, &gtTestMapApi, 1, NULL, NULL);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Set one entry
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    tStatus = JunoDs_MapSet(&tSmallMap.tRoot, tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    // Verify it's stored
+    TEST_ASSERT_EQUAL(42, tSmallBuffer[0].iKey);
+    TEST_ASSERT_EQUAL(100, tSmallBuffer[0].iValue);
+    
+    // Attempt to add another (should fail - table full)
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(99, 200);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer2 = TestMapEntry_HashablePointerInit(&tEntry2);
+    tStatus = JunoDs_MapSet(&tSmallMap.tRoot, tPointer2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_TABLE_FULL_ERROR, tStatus);
+}
+
+static void test_map_set_get_remove_cycle(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    for (uint32_t i = 0; i < 5; i++) {
+        // Set
+        TEST_MAP_ENTRY_T tSetEntry = CreateTestEntry(i, i * 100);
+        JUNO_MAP_HASHABLE_POINTER_T tSetPointer = TestMapEntry_HashablePointerInit(&tSetEntry);
+        tStatus = JunoDs_MapSet(&gtTestMap.tRoot, tSetPointer);
+        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+        
+        // Get
+        TEST_MAP_ENTRY_T tGetEntry = CreateTestEntry(i, 0);
+        JUNO_MAP_HASHABLE_POINTER_T tGetPointer = TestMapEntry_HashablePointerInit(&tGetEntry);
+        JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = JunoDs_MapGet(&gtTestMap.tRoot, tGetPointer);
+        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+        TEST_ASSERT_EQUAL(i * 100, ((TEST_MAP_ENTRY_T *)tResult.tOk.tRoot.tRoot.pvAddr)->iValue);
+        
+        // Remove
+        tStatus = JunoDs_MapRemove(&gtTestMap.tRoot, tGetPointer);
+        TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+        
+        // Verify removed (Get should fail)
+        tResult = JunoDs_MapGet(&gtTestMap.tRoot, tGetPointer);
+        TEST_ASSERT_EQUAL(JUNO_STATUS_DNE_ERROR, tResult.tStatus);
+    }
+}
+
+/* ============================================================================
+ * Test Cases: API Verification
+ * ============================================================================ */
+
+static void test_map_verify_valid_map(void)
+{
+    JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    tStatus = JunoDs_MapVerify(&gtTestMap.tRoot);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_verify_null_map(void)
+{
+    JUNO_STATUS_T tStatus = JunoDs_MapVerify(NULL);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_api_verify_valid(void)
+{
+    JUNO_STATUS_T tStatus = JunoDs_MapApiVerify(&gtTestMapApi);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_api_verify_null(void)
+{
+    JUNO_STATUS_T tStatus = JunoDs_MapApiVerify(NULL);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_hashable_pointer_verify_valid(void)
+{
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    JUNO_STATUS_T tStatus = TestMapEntry_HashablePointerVerify(tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+/* ============================================================================
+ * Test Cases: Pointer API Functions
+ * ============================================================================ */
+
+static void test_map_entry_copy_nominal(void)
+{
+    TEST_MAP_ENTRY_T tSrc = CreateTestEntry(42, 100);
+    TEST_MAP_ENTRY_T tDest = {0};
+    
+    JUNO_POINTER_T tSrcPointer = {&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tSrc, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)};
+    JUNO_POINTER_T tDestPointer = {&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tDest, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)};
+    
+    JUNO_STATUS_T tStatus = TestMapEntry_Copy(tDestPointer, tSrcPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_EQUAL(42, tDest.iKey);
+    TEST_ASSERT_EQUAL(100, tDest.iValue);
+    TEST_ASSERT_FALSE(tDest.bIsNull);
+}
+
+static void test_map_entry_copy_null_dest(void)
+{
+    TEST_MAP_ENTRY_T tSrc = CreateTestEntry(42, 100);
+    JUNO_POINTER_T tSrcPointer = {&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tSrc, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)};
+    JUNO_POINTER_T tDestPointer = {&gtTestMapEntryHashablePointerApi.tRoot.tRoot, NULL, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)};
+    
+    JUNO_STATUS_T tStatus = TestMapEntry_Copy(tDestPointer, tSrcPointer);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_map_entry_reset_nominal(void)
+{
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
+    JUNO_POINTER_T tPointer = {&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tEntry, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)};
+    
+    JUNO_STATUS_T tStatus = TestMapEntry_Reset(tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_EQUAL(0, tEntry.iKey);
+    TEST_ASSERT_EQUAL(0, tEntry.iValue);
+    TEST_ASSERT_TRUE(tEntry.bIsNull);
+}
+
+static void test_map_entry_equals_same_key(void)
+{
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(42, 100);
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(42, 200); // Same key, different value
+    
+    JUNO_VALUE_POINTER_T tPtr1 = {{{&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tEntry1, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)}}};
+    JUNO_VALUE_POINTER_T tPtr2 = {{{&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tEntry2, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)}}};
+    
+    JUNO_RESULT_BOOL_T tResult = TestMapEntry_Equals(tPtr1, tPtr2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_TRUE(tResult.tOk);
+}
+
+static void test_map_entry_equals_different_key(void)
+{
+    TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(42, 100);
+    TEST_MAP_ENTRY_T tEntry2 = CreateTestEntry(43, 100);
+    
+    JUNO_VALUE_POINTER_T tPtr1 = {{{&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tEntry1, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)}}};
+    JUNO_VALUE_POINTER_T tPtr2 = {{{&gtTestMapEntryHashablePointerApi.tRoot.tRoot, &tEntry2, sizeof(TEST_MAP_ENTRY_T), alignof(TEST_MAP_ENTRY_T)}}};
+    
+    JUNO_RESULT_BOOL_T tResult = TestMapEntry_Equals(tPtr1, tPtr2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_FALSE(tResult.tOk);
+}
+
+static void test_map_entry_hash_nominal(void)
+{
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    JUNO_RESULT_SIZE_T tResult = TestMapEntry_Hash(tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_EQUAL(42, tResult.tOk);
+}
+
+static void test_map_entry_is_null_true(void)
+{
+    TEST_MAP_ENTRY_T tEntry = {0, 0, true};
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    JUNO_RESULT_BOOL_T tResult = TestMapEntry_IsNull(tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_TRUE(tResult.tOk);
+}
+
+static void test_map_entry_is_null_false(void)
+{
+    TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
+    JUNO_MAP_HASHABLE_POINTER_T tPointer = TestMapEntry_HashablePointerInit(&tEntry);
+    
+    JUNO_RESULT_BOOL_T tResult = TestMapEntry_IsNull(tPointer);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_FALSE(tResult.tOk);
+}
+
+/* ============================================================================
+ * Main Test Runner
+ * ============================================================================ */
 
 int main(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(test_nominal_map);
-    RUN_TEST(test_null_init);
-    RUN_TEST(test_null_set);
-    RUN_TEST(test_null_get);
-    RUN_TEST(test_null_remove);
-    RUN_TEST(test_remove_nonexistent_key);
-    RUN_TEST(test_duplicate_key_insertion);
-    RUN_TEST(test_overflow_map);
-    RUN_TEST(test_fill_map);
+    
+    // Initialization tests
+    RUN_TEST(test_map_init_nominal);
+    RUN_TEST(test_map_init_null_map);
+    RUN_TEST(test_map_init_null_api);
+    RUN_TEST(test_map_init_zero_capacity);
+    
+    // Set operation tests
+    RUN_TEST(test_map_set_single_item);
+    RUN_TEST(test_map_set_multiple_items);
+    RUN_TEST(test_map_set_update_existing);
+    RUN_TEST(test_map_set_with_collision);
+    RUN_TEST(test_map_set_null_map);
+    RUN_TEST(test_map_set_table_full);
+    
+    // Get operation tests
+    RUN_TEST(test_map_get_existing_item);
+    RUN_TEST(test_map_get_nonexistent_item);
+    RUN_TEST(test_map_get_after_collision);
+    RUN_TEST(test_map_get_null_map);
+    
+    // Remove operation tests
+    RUN_TEST(test_map_remove_existing_item);
+    RUN_TEST(test_map_remove_nonexistent_item);
+    RUN_TEST(test_map_remove_after_collision);
+    RUN_TEST(test_map_remove_null_map);
+    
+    // Collision handling tests
+    RUN_TEST(test_map_multiple_collisions_linear_probing);
+    RUN_TEST(test_map_wraparound_probing);
+    
+    // Edge case tests
+    RUN_TEST(test_map_single_element_capacity);
+    RUN_TEST(test_map_set_get_remove_cycle);
+    
+    // API verification tests
+    RUN_TEST(test_map_verify_valid_map);
+    RUN_TEST(test_map_verify_null_map);
+    RUN_TEST(test_map_api_verify_valid);
+    RUN_TEST(test_map_api_verify_null);
+    RUN_TEST(test_map_hashable_pointer_verify_valid);
+    
+    // Pointer API tests
+    RUN_TEST(test_map_entry_copy_nominal);
+    RUN_TEST(test_map_entry_copy_null_dest);
+    RUN_TEST(test_map_entry_reset_nominal);
+    RUN_TEST(test_map_entry_equals_same_key);
+    RUN_TEST(test_map_entry_equals_different_key);
+    RUN_TEST(test_map_entry_hash_nominal);
+    RUN_TEST(test_map_entry_is_null_true);
+    RUN_TEST(test_map_entry_is_null_false);
+    
     return UNITY_END();
 }
-
