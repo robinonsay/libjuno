@@ -38,7 +38,7 @@ JUNO_STATUS_T JunoDs_MapInit(JUNO_MAP_T *ptMap, const JUNO_MAP_API_T *ptApi, siz
 
 static JUNO_RESULT_MAP_HASHABLE_POINTER_T JunoDs_MapGetWithKey(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0, {0}};
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0};
     tResult.tStatus = JunoDs_MapVerify(ptJunoMap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     tResult.tStatus = JunoDs_MapHashablePointerVerify(tItem);
@@ -99,7 +99,7 @@ static JUNO_RESULT_MAP_HASHABLE_POINTER_T JunoDs_MapGetWithKey(JUNO_MAP_T *ptJun
 
 JUNO_RESULT_MAP_HASHABLE_POINTER_T JunoDs_MapGet(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0, {0}};
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0};
     tResult.tStatus = JunoDs_MapVerify(ptJunoMap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     tResult.tStatus = JunoDs_MapHashablePointerVerify(tItem);
@@ -144,7 +144,7 @@ JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T t
 
 JUNO_STATUS_T JunoDs_MapRemove(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem)
 {
-    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0, {0}};
+    JUNO_RESULT_MAP_HASHABLE_POINTER_T tResult = {0};
     tResult.tStatus = JunoDs_MapVerify(ptJunoMap);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult.tStatus);
     tResult.tStatus = JunoDs_MapHashablePointerVerify(tItem);
