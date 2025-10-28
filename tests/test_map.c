@@ -34,7 +34,7 @@ static bool gOccupied[TEST_MAP_CAPACITY];
 
 // Forward-declared buffer API and map root
 static JUNO_MAP_BUFFER_API_T gBufferApi;
-static JUNO_MAP_ROOT_T gRoot;
+static JUNO_MAP_T gRoot;
 
 // Simple digit parser
 static size_t parse_digits(const char *s)
@@ -314,12 +314,12 @@ static void test_null_init(void)
     // Buffer API verify should fail on NULL
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_BufferApiVerify(NULL));
 
-    JUNO_MAP_ROOT_T badRoot1 = {0};
+    JUNO_MAP_T badRoot1 = {0};
     badRoot1.ptApi = NULL;
     badRoot1.zCapacity = TEST_MAP_CAPACITY;
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, JunoMap_Verify(&badRoot1));
 
-    JUNO_MAP_ROOT_T badRoot2 = {0};
+    JUNO_MAP_T badRoot2 = {0};
     badRoot2.ptApi = gRoot.ptApi; // but capacity 0
     badRoot2.zCapacity = 0;
     badRoot2.ptBufferApi = &gBufferApi;
