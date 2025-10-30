@@ -3,7 +3,6 @@
 #include "juno/ds/array_api.h"
 #include "juno/memory/pointer_api.h"
 #include "juno/module.h"
-#include "juno/sb/broker_api.h"
 #include "juno/status.h"
 
 #ifdef __cplusplus
