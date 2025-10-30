@@ -187,12 +187,12 @@ the time, logger, registry modules.
 Applications in LibJuno are actually derived modules of `JUNO_APP_ROOT_T`.
 Here we will need to instantiate the engine, and system manager application modules.
 */
-    JUNO_TIME_ROOT_T tTime = {0};
-    JUNO_LOG_ROOT_T tLogger = {0};
-    JUNO_SB_PIPE_T *tRegistry[10] = {0};
-    JUNO_SB_BROKER_ROOT_T tBroker = {0};
-    ENGINE_APP_T tEngineApp = {0};
-    SYSTEM_MANAGER_APP_T tSystemManagerApp = {0};
+    static JUNO_TIME_ROOT_T tTime = {0};
+    static JUNO_LOG_ROOT_T tLogger = {0};
+    static JUNO_SB_PIPE_T *tRegistry[10] = {0};
+    static JUNO_SB_BROKER_ROOT_T tBroker = {0};
+    static ENGINE_APP_T tEngineApp = {0};
+    static SYSTEM_MANAGER_APP_T tSystemManagerApp = {0};
 /**DOC
 ### Module Initialization
 
@@ -221,7 +221,7 @@ For this example we are going to create a very simple "schedule table" or table 
 will run in a specific order. This schedule table will run at best-effort. This means that when one
 application is done, the next will start.
 */
-    JUNO_APP_ROOT_T *ptAppList[2] = {
+    static JUNO_APP_ROOT_T *ptAppList[2] = {
         &tSystemManagerApp.tRoot,
         &tEngineApp.tRoot
     };

@@ -192,12 +192,6 @@
     __VA_ARGS__ \
 }
 
-#define JUNO_MODULE_API_DERIVE(API_T, ...) \
-{ \
-    API_T JUNO_MODULE_SUPER; \
-    __VA_ARGS__ \
-}
-
 /**
     Implement a derivation of a module
     Example:
@@ -218,15 +212,6 @@
 }
 
 #define JUNO_TRAIT_DERIVE(ROOT_T, ...) JUNO_MODULE_DERIVE(ROOT_T, __VA_ARGS__)
-
-#define JUNO_MODULE_DERIVE_WITH_API(ROOT_T, API_T, ...) \
-{ \
-    union { \
-        ROOT_T JUNO_MODULE_SUPER; \
-        const API_T  *ptApi; \
-    }; \
-    __VA_ARGS__ \
-}
 
 /**
     Get the API pointer from the module

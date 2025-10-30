@@ -1,4 +1,5 @@
 #include "template_msg.h"
+#include "juno/ds/array_api.h"
 #include "juno/macros.h"
 #include "juno/memory/pointer_api.h"
 #include "juno/status.h"
@@ -21,7 +22,10 @@ const JUNO_POINTER_API_T gtTemplateMsgPointerApi =
 };
 
 // Instantiate the template msg pipe api
-static const JUNO_DS_QUEUE_API_T gtTemplateMsgPipeApi = JunoDs_QueueApiInit(SetAt, GetAt, RemoveAt);
+static const JUNO_DS_ARRAY_API_T gtTemplateMsgPipeApi =
+{
+    SetAt, GetAt, RemoveAt
+};
 
 static JUNO_STATUS_T TemplateMsg_Copy(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc)
 {
@@ -48,16 +52,17 @@ static JUNO_STATUS_T TemplateMsg_Reset(JUNO_POINTER_T tPointer)
 
 
 /// Asserts the api is for the pipe
-#define TEMPLATE_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtTemplateMsgPipeApi.tRoot) { __VA_ARGS__; }
+#define TEMPLATE_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtTemplateMsgPipeApi) { __VA_ARGS__; }
 
-JUNO_STATUS_T TemplateMsg_PipeInit(TEMPLATE_MSG_PIPE_T *ptTemplateMsgPipe, TEMPLATE_MSG_T *ptArrTemplateMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+JUNO_STATUS_T TemplateMsg_ArrayInit(TEMPLATE_MSG_ARRAY_T *ptTemplateMsgPipe, TEMPLATE_MSG_T *ptArrTemplateMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     // Assert the msg pipe exists
     JUNO_ASSERT_EXISTS(ptTemplateMsgPipe && ptArrTemplateMsgBuffer);
     // Set the message buffer
     ptTemplateMsgPipe->ptArrTemplateMsgBuffer = ptArrTemplateMsgBuffer;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&ptTemplateMsgPipe->tRoot, &gtTemplateMsgPipeApi, iCapacity, pfcnFailureHdlr, pvUserData);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // init the pipe
-    JUNO_STATUS_T tStatus = JunoSb_PipeInit(&ptTemplateMsgPipe->tRoot, &gtTemplateMsgPipeApi, TEMPLATE_MSG_MID, iCapacity, pfcnFailureHdlr, pvUserData);
     return tStatus;
 }
 
@@ -75,7 +80,7 @@ static JUNO_STATUS_T SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, 
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Cast to the pipe type
-    TEMPLATE_MSG_PIPE_T *ptTemplateMsgPipe = (TEMPLATE_MSG_PIPE_T *)ptArray;
+    TEMPLATE_MSG_ARRAY_T *ptTemplateMsgPipe = (TEMPLATE_MSG_ARRAY_T *)ptArray;
     // Init the pointer to the buffer
     JUNO_POINTER_T tIndexPointer = TemplateMsg_PointerInit(&ptTemplateMsgPipe->ptArrTemplateMsgBuffer[iIndex]);
     // Copy the memory to the buffer
@@ -98,7 +103,7 @@ static JUNO_RESULT_POINTER_T GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
     tResult.tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     // Cast to the pipe type
-    TEMPLATE_MSG_PIPE_T *ptTemplateMsgPipe = (TEMPLATE_MSG_PIPE_T *)ptArray;
+    TEMPLATE_MSG_ARRAY_T *ptTemplateMsgPipe = (TEMPLATE_MSG_ARRAY_T *)ptArray;
     // Create the pointer to the buffer
     JUNO_POINTER_T tIndexPointer = TemplateMsg_PointerInit(&ptTemplateMsgPipe->ptArrTemplateMsgBuffer[iIndex]);
     // Copy to ok result
@@ -117,7 +122,7 @@ static JUNO_STATUS_T RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Cast to the msg pipe type
-    TEMPLATE_MSG_PIPE_T *ptTemplateMsgPipe = (TEMPLATE_MSG_PIPE_T *)ptArray;
+    TEMPLATE_MSG_ARRAY_T *ptTemplateMsgPipe = (TEMPLATE_MSG_ARRAY_T *)ptArray;
     // Create pointer to memory
     JUNO_POINTER_T tIndexPointer = TemplateMsg_PointerInit(&ptTemplateMsgPipe->ptArrTemplateMsgBuffer[iIndex]);
     // Reset the memory

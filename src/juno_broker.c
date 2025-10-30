@@ -62,7 +62,7 @@ static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MID_T tMid
         if(ptCurrentItem->iMsgId == tMid)
         {
             // MIDs are equal, enqueue the message
-            JUNO_DS_QUEUE_T *ptRecvQueue = &ptCurrentItem->tRoot;
+            JUNO_DS_QUEUE_ROOT_T *ptRecvQueue = &ptCurrentItem->tRoot;
             tStatus = ptRecvQueue->ptApi->Enqueue(ptRecvQueue, tMsg);
             JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
         }

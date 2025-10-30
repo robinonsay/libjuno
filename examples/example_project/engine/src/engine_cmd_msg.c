@@ -16,6 +16,7 @@
 */
 
 #include "engine_app/engine_cmd_msg.h"
+#include "juno/ds/array_api.h"
 #include "juno/macros.h"
 #include "juno/memory/pointer_api.h"
 #include "juno/status.h"
@@ -53,7 +54,10 @@ const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi =
 };
 
 // Instantiate the engine_cmd msg pipe api
-static const JUNO_DS_QUEUE_API_T gtEngineCmdMsgPipeApi = JunoDs_QueueApiInit(SetAt, GetAt, RemoveAt);
+static const JUNO_DS_ARRAY_API_T gtEngineCmdMsgPipeApi = 
+{
+    SetAt, GetAt, RemoveAt
+};
 
 /**DOC
 #### Pointer Copy
@@ -97,21 +101,23 @@ We also define a macro to easily assert that the pipe type matches
 our implementation. This is done by checking the pipe api pointer.
 */
 /// Asserts the api is for the pipe
-#define ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtEngineCmdMsgPipeApi.tRoot) { __VA_ARGS__; }
+#define ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtEngineCmdMsgPipeApi) { __VA_ARGS__; }
 
 /**DOC
 ### Pipe Init
 We also implement the pipe init function, which sets the API pointer as well as the
 message buffer and capacity.
 */
-JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+JUNO_STATUS_T EngineCmdMsg_ArrayInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     // Assert the msg pipe exists
     JUNO_ASSERT_EXISTS(ptEngineCmdMsgPipe && ptArrEngineCmdMsgBuffer);
     // Set the message buffer
     ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer = ptArrEngineCmdMsgBuffer;
+
     // init the pipe
-    JUNO_STATUS_T tStatus = JunoSb_PipeInit(&ptEngineCmdMsgPipe->tRoot, &gtEngineCmdMsgPipeApi, ENGINE_CMD_MSG_MID, iCapacity, pfcnFailureHdlr, pvUserData);
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&ptEngineCmdMsgPipe->tRoot, &gtEngineCmdMsgPipeApi, iCapacity, pfcnFailureHdlr, pvUserData);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }
 
@@ -136,7 +142,7 @@ static JUNO_STATUS_T SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, 
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Cast to the pipe type
-    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_ARRAY_T *)ptArray;
     // Init the pointer to the buffer
     JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
     // Copy the memory to the buffer
@@ -159,7 +165,7 @@ static JUNO_RESULT_POINTER_T GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
     tResult.tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     // Cast to the pipe type
-    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_ARRAY_T *)ptArray;
     // Create the pointer to the buffer
     JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
     // Copy to ok result
@@ -178,7 +184,7 @@ static JUNO_STATUS_T RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Cast to the msg pipe type
-    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_ARRAY_T *)ptArray;
     // Create pointer to memory
     JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
     // Reset the memory

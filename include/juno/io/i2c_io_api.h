@@ -28,8 +28,8 @@
 #define JUNO_I2C_IO_API_H
 #include "juno/status.h"
 #include "juno/module.h"
-#include "juno/time/time_api.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #ifdef __cplusplus
 extern "C"

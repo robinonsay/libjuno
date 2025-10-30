@@ -104,10 +104,12 @@ static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptJunoApp)
     // Log that the app was intialized
     ptLoggerApi->LogInfo(ptLogger, "SystemManager App Initialized");
     // Initialize the cmd pipe
-    tStatus = EngineTlmMsg_PipeInit(&ptSystemManagerApp->tEngineTlmPipe, ptSystemManagerApp->ptArrEngineTlmBuff, ENGINE_TLM_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    tStatus = EngineTlmMsg_ArrayInit(&ptSystemManagerApp->tEngineTlmArray, ptSystemManagerApp->ptArrEngineTlmBuff, ENGINE_TLM_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoSb_PipeInit(&ptSystemManagerApp->tEngineTlmPipe, ENGINE_TLM_MSG_MID, &ptSystemManagerApp->tEngineTlmArray.tRoot, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Register the subscriber
-    tStatus = ptSystemManagerApp->ptBroker->ptApi->RegisterSubscriber(ptSystemManagerApp->ptBroker, &ptSystemManagerApp->tEngineTlmPipe.tRoot);
+    tStatus = ptSystemManagerApp->ptBroker->ptApi->RegisterSubscriber(ptSystemManagerApp->ptBroker, &ptSystemManagerApp->tEngineTlmPipe);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_TIMESTAMP_RESULT_T tTimestampResult = ptSystemManagerApp->ptTime->ptApi->Now(ptSystemManagerApp->ptTime);
     tStatus = tTimestampResult.tStatus;
@@ -154,7 +156,7 @@ If there is telemetry it will process it and set a new RPM. If there is no telem
 will command the engine to the same target as before.
 */
     JUNO_TIME_MILLIS_RESULT_T tMillisResult = {0};
-    tStatus = ptSystemManagerApp->tEngineTlmPipe.ptApi->Dequeue(&ptSystemManagerApp->tEngineTlmPipe.tRoot.tRoot, tTlmMsgPointer);
+    tStatus = ptSystemManagerApp->tEngineTlmPipe.tRoot.ptApi->Dequeue(&ptSystemManagerApp->tEngineTlmPipe.tRoot, tTlmMsgPointer);
     JUNO_ASSERT_SUCCESS(tStatus, goto exit);
 /**DOC
 The system manager will substract the time from engine start to get an elapsed time. I will then

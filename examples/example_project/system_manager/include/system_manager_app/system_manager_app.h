@@ -49,7 +49,8 @@ struct SYSTEM_MANAGER_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
     const JUNO_TIME_ROOT_T *ptTime;
     JUNO_SB_BROKER_ROOT_T *ptBroker;
     ENGINE_TLM_MSG_T ptArrEngineTlmBuff[ENGINE_TLM_MSG_PIPE_DEPTH];
-    ENGINE_TLM_MSG_PIPE_T tEngineTlmPipe;
+    ENGINE_TLM_MSG_ARRAY_T tEngineTlmArray;
+    JUNO_SB_PIPE_T tEngineTlmPipe;
     JUNO_TIMESTAMP_T tEngineStart;
     float fTargetRpm;
 );

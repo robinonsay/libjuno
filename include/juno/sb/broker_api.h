@@ -56,7 +56,7 @@ typedef struct JUNO_SB_BROKER_API_TAG JUNO_SB_BROKER_API_T;
 typedef struct JUNO_SB_PIPE_TAG JUNO_SB_PIPE_T;
 typedef uint32_t JUNO_SB_MID_T;
 
-struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_QUEUE_T, JUNO_DS_QUEUE_API_T,
+struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE(JUNO_DS_QUEUE_ROOT_T,
     /// The pipe Id
     JUNO_SB_MID_T iMsgId;
 );
@@ -107,11 +107,11 @@ static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 
 JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T **ptPipeRegistry, size_t iRegistryCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
-static inline JUNO_STATUS_T JunoSb_PipeInit(JUNO_SB_PIPE_T *ptPipe, const JUNO_DS_QUEUE_API_T *ptApi, JUNO_SB_MID_T iMid, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
+static inline JUNO_STATUS_T JunoSb_PipeInit(JUNO_SB_PIPE_T *ptPipe, JUNO_SB_MID_T iMid, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptPipe);
     ptPipe->iMsgId = iMid;
-    return JunoDs_QueueInit(&ptPipe->tRoot, ptApi, iCapacity, pfcnFailureHandler, pvUserData);
+    return JunoDs_QueueInit(&ptPipe->tRoot, ptArray, pfcnFailureHandler, pvUserData);
 }
 
 #ifdef __cplusplus

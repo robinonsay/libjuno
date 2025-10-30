@@ -17,7 +17,7 @@
 
 #ifndef ENGINE_CMD_MSG_H
 #define ENGINE_CMD_MSG_H
-#include "juno/ds/queue_api.h"
+#include "juno/ds/array_api.h"
 #include "juno/memory/pointer_api.h"
 #include "juno/module.h"
 #include "juno/sb/broker_api.h"
@@ -60,7 +60,7 @@ Below is the definition for the engine command pipe. This is derived from the `J
 `DERIVE_WITH_API` macro. This macro enables users to specify which API they are using.
 The inheritance for a pipe is as follows:
 ```
-JUNO_DS_ARRAY_ROOT_T -> JUNO_DS_QUEUE_T -> JUNO_SB_PIPE_T -> Custom Pipe Type
+JUNO_DS_ARRAY_ROOT_T -> JUNO_DS_QUEUE_ROOT_T -> JUNO_SB_PIPE_T -> Custom Pipe Type
 ```
 Because this is a longer chain of inheritance, it's convenient to specify the API for ease-of-use.
 In this case we are specifying the QUEUE api.
@@ -68,9 +68,9 @@ In this case we are specifying the QUEUE api.
 The pipe holds a pointer to a command buffer, which is specific to the command message type defined 
 earlier. This enables the derived pipe to have specific type information (vs using a void pointer in the pipe).
 */
-typedef struct ENGINE_CMD_MSG_PIPE_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_SB_PIPE_T, JUNO_DS_QUEUE_API_T,
+typedef struct ENGINE_CMD_MSG_ARRAY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
     ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer;
-) ENGINE_CMD_MSG_PIPE_T;
+) ENGINE_CMD_MSG_ARRAY_T;
 
 /**DOC
 The queue api relies on LibJuno pointers. This enables the modules to write generic code safely without
@@ -89,7 +89,7 @@ with LibJuno pointers easy.
 Finally we define a Pipe Init function for this pipe type. This function will
 initialize the pipe with the message buffer and capacity.
 */
-JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
+JUNO_STATUS_T EngineCmdMsg_ArrayInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
 
 /**END*/
 #ifdef __cplusplus

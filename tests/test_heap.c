@@ -52,18 +52,12 @@ typedef struct TEST_HEAP_DATA_TAG
  * Test Heap Implementation (Custom Array-backed Heap)
  * ============================================================================ */
 
-typedef struct TEST_HEAP_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_HEAP_ROOT_T, JUNO_DS_HEAP_API_T,
-    TEST_HEAP_DATA_T *ptBuffer;
-    bool bFailCompare;
-    bool bFailSwap;
-) TEST_HEAP_T;
-
 /* Forward declarations for array API functions */
 static JUNO_STATUS_T TestHeap_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
 static JUNO_RESULT_POINTER_T TestHeap_GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 static JUNO_STATUS_T TestHeap_RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 
-/* Forward declarations for heap API functions */
+/* Forward declarations for heap pointer API functions */
 static JUNO_DS_HEAP_COMPARE_RESULT_T TestHeap_CompareMax(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tParent, JUNO_POINTER_T tChild);
 static JUNO_DS_HEAP_COMPARE_RESULT_T TestHeap_CompareMin(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tParent, JUNO_POINTER_T tChild);
 static JUNO_STATUS_T TestHeap_Swap(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
@@ -78,28 +72,41 @@ const JUNO_POINTER_API_T gtTestHeapDataPointerApi = {
     TestHeapData_Reset
 };
 
-/* Heap API for TEST_HEAP_T - Max Heap */
-static const JUNO_DS_HEAP_API_T gtTestMaxHeapApi = JunoDs_HeapApiInit(
+/* Array API for TEST_HEAP_ARRAY */
+static const JUNO_DS_ARRAY_API_T gtTestHeapArrayApi = {
     TestHeap_SetAt,
     TestHeap_GetAt,
-    TestHeap_RemoveAt,
+    TestHeap_RemoveAt
+};
+
+/* Heap Pointer API for TEST_HEAP_T - Max Heap */
+static const JUNO_DS_HEAP_POINTER_API_T gtTestMaxHeapPointerApi = {
     TestHeap_CompareMax,
     TestHeap_Swap
-);
+};
 
-/* Heap API for TEST_HEAP_T - Min Heap */
-static const JUNO_DS_HEAP_API_T gtTestMinHeapApi = JunoDs_HeapApiInit(
-    TestHeap_SetAt,
-    TestHeap_GetAt,
-    TestHeap_RemoveAt,
+/* Heap Pointer API for TEST_HEAP_T - Min Heap */
+static const JUNO_DS_HEAP_POINTER_API_T gtTestMinHeapPointerApi = {
     TestHeap_CompareMin,
     TestHeap_Swap
-);
+};
+
+/* Test heap array structure */
+typedef struct TEST_HEAP_ARRAY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
+    TEST_HEAP_DATA_T *ptBuffer;
+) TEST_HEAP_ARRAY_T;
+
+/* Test heap structure */
+typedef struct TEST_HEAP_TAG JUNO_MODULE_DERIVE(JUNO_DS_HEAP_ROOT_T,
+    TEST_HEAP_ARRAY_T tArray;
+    bool bFailCompare;
+    bool bFailSwap;
+) TEST_HEAP_T;
 
 /* Macro to verify pointer type */
 #define TestHeapData_PointerInit(addr) JunoMemory_PointerInit(&gtTestHeapDataPointerApi, TEST_HEAP_DATA_T, addr)
 #define TestHeapData_PointerVerify(tPointer) JunoMemory_PointerVerifyType(tPointer, TEST_HEAP_DATA_T, gtTestHeapDataPointerApi)
-#define TEST_HEAP_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtTestMaxHeapApi.tRoot && ptArray->ptApi != &gtTestMinHeapApi.tRoot) { __VA_ARGS__; }
+#define TEST_HEAP_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtTestHeapArrayApi) { __VA_ARGS__; }
 
 /* ============================================================================
  * Pointer API Implementation
@@ -134,11 +141,13 @@ static JUNO_STATUS_T TestHeap_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_
     TEST_HEAP_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
     tStatus = TestHeapData_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     
-    TEST_HEAP_T *ptHeap = (TEST_HEAP_T *)ptArray;
-    JUNO_POINTER_T tIndexPointer = TestHeapData_PointerInit(&ptHeap->ptBuffer[iIndex]);
+    if (iIndex >= ptArray->zCapacity) {
+        return JUNO_STATUS_OOB_ERROR;
+    }
+    
+    TEST_HEAP_ARRAY_T *ptHeapArray = (TEST_HEAP_ARRAY_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = TestHeapData_PointerInit(&ptHeapArray->ptBuffer[iIndex]);
     tStatus = tIndexPointer.ptApi->Copy(tIndexPointer, tItem);
     return tStatus;
 }
@@ -152,12 +161,16 @@ static JUNO_RESULT_POINTER_T TestHeap_GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_
         tResult.tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
         return tResult;
     );
-    tResult.tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
-    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     
-    TEST_HEAP_T *ptHeap = (TEST_HEAP_T *)ptArray;
-    JUNO_POINTER_T tIndexPointer = TestHeapData_PointerInit(&ptHeap->ptBuffer[iIndex]);
+    if (iIndex >= ptArray->zCapacity) {
+        tResult.tStatus = JUNO_STATUS_OOB_ERROR;
+        return tResult;
+    }
+    
+    TEST_HEAP_ARRAY_T *ptHeapArray = (TEST_HEAP_ARRAY_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = TestHeapData_PointerInit(&ptHeapArray->ptBuffer[iIndex]);
     tResult.tOk = tIndexPointer;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
     return tResult;
 }
 
@@ -166,11 +179,13 @@ static JUNO_STATUS_T TestHeap_RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIn
     JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TEST_HEAP_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
-    tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     
-    TEST_HEAP_T *ptHeap = (TEST_HEAP_T *)ptArray;
-    JUNO_POINTER_T tIndexPointer = TestHeapData_PointerInit(&ptHeap->ptBuffer[iIndex]);
+    if (iIndex >= ptArray->zCapacity) {
+        return JUNO_STATUS_OOB_ERROR;
+    }
+    
+    TEST_HEAP_ARRAY_T *ptHeapArray = (TEST_HEAP_ARRAY_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = TestHeapData_PointerInit(&ptHeapArray->ptBuffer[iIndex]);
     tStatus = tIndexPointer.ptApi->Reset(tIndexPointer);
     return tStatus;
 }
@@ -277,12 +292,14 @@ void tearDown(void)
  * Helper Functions
  * ============================================================================ */
 
-static JUNO_STATUS_T InitTestHeap(TEST_HEAP_T *ptHeap, const JUNO_DS_HEAP_API_T *ptApi, size_t zCapacity)
+static JUNO_STATUS_T InitTestHeap(TEST_HEAP_T *ptHeap, const JUNO_DS_HEAP_POINTER_API_T *ptPointerApi, size_t zCapacity)
 {
-    ptHeap->ptBuffer = gtTestHeapBuffer;
+    ptHeap->tArray.ptBuffer = gtTestHeapBuffer;
+    ptHeap->tArray.tRoot.ptApi = &gtTestHeapArrayApi;
+    ptHeap->tArray.tRoot.zCapacity = zCapacity;
     ptHeap->bFailCompare = false;
     ptHeap->bFailSwap = false;
-    return JunoDs_Heap_Init(&ptHeap->tRoot, ptApi, zCapacity, NULL, NULL);
+    return JunoDs_Heap_Init(&ptHeap->tRoot, ptPointerApi, &ptHeap->tArray.tRoot, NULL, NULL);
 }
 
 static TEST_HEAP_DATA_T CreateTestData(uint32_t iValue, bool bFlag, uint8_t iCounter)
@@ -301,13 +318,13 @@ static void assert_max_heap_property(TEST_HEAP_T *ptHeap)
     for (size_t i = 0; i < n; ++i) {
         size_t l = 2*i + 1;
         size_t r = 2*i + 2;
-        if (l < n) { 
-            TEST_ASSERT_TRUE_MESSAGE(ptHeap->ptBuffer[i].iValue >= ptHeap->ptBuffer[l].iValue, 
-                                   "Max-heap property violated on left child"); 
+        if (l < n) {
+            TEST_ASSERT_TRUE_MESSAGE(ptHeap->tArray.ptBuffer[i].iValue >= ptHeap->tArray.ptBuffer[l].iValue,
+                                     "Max-heap property violated: parent < left child");
         }
-        if (r < n) { 
-            TEST_ASSERT_TRUE_MESSAGE(ptHeap->ptBuffer[i].iValue >= ptHeap->ptBuffer[r].iValue, 
-                                   "Max-heap property violated on right child"); 
+        if (r < n) {
+            TEST_ASSERT_TRUE_MESSAGE(ptHeap->tArray.ptBuffer[i].iValue >= ptHeap->tArray.ptBuffer[r].iValue,
+                                     "Max-heap property violated: parent < right child");
         }
     }
 }
@@ -319,11 +336,11 @@ static void assert_min_heap_property(TEST_HEAP_T *ptHeap)
         size_t l = 2*i + 1;
         size_t r = 2*i + 2;
         if (l < n) { 
-            TEST_ASSERT_TRUE_MESSAGE(ptHeap->ptBuffer[i].iValue <= ptHeap->ptBuffer[l].iValue, 
+            TEST_ASSERT_TRUE_MESSAGE(ptHeap->tArray.ptBuffer[i].iValue <= ptHeap->tArray.ptBuffer[l].iValue, 
                                    "Min-heap property violated on left child"); 
         }
         if (r < n) { 
-            TEST_ASSERT_TRUE_MESSAGE(ptHeap->ptBuffer[i].iValue <= ptHeap->ptBuffer[r].iValue, 
+            TEST_ASSERT_TRUE_MESSAGE(ptHeap->tArray.ptBuffer[i].iValue <= ptHeap->tArray.ptBuffer[r].iValue, 
                                    "Min-heap property violated on right child"); 
         }
     }
@@ -335,30 +352,37 @@ static void assert_min_heap_property(TEST_HEAP_T *ptHeap)
 
 static void test_heap_init_nominal(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_EQUAL(0, gtTestHeap.tRoot.zLength);
-    TEST_ASSERT_EQUAL(TEST_HEAP_CAPACITY, gtTestHeap.tRoot.tRoot.zCapacity);
+    TEST_ASSERT_EQUAL(TEST_HEAP_CAPACITY, gtTestHeap.tArray.tRoot.zCapacity);
     TEST_ASSERT_NOT_NULL(gtTestHeap.tRoot.ptApi);
 }
 
 static void test_heap_init_null_heap(void)
 {
-    JUNO_STATUS_T tStatus = JunoDs_Heap_Init(NULL, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY, NULL, NULL);
+    TEST_HEAP_ARRAY_T tArray = {0};
+    tArray.tRoot.ptApi = &gtTestHeapArrayApi;
+    tArray.tRoot.zCapacity = TEST_HEAP_CAPACITY;
+    JUNO_STATUS_T tStatus = JunoDs_Heap_Init(NULL, &gtTestMaxHeapPointerApi, &tArray.tRoot, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
 static void test_heap_init_null_api(void)
 {
-    gtTestHeap.ptBuffer = gtTestHeapBuffer;
-    JUNO_STATUS_T tStatus = JunoDs_Heap_Init(&gtTestHeap.tRoot, NULL, TEST_HEAP_CAPACITY, NULL, NULL);
+    gtTestHeap.tArray.ptBuffer = gtTestHeapBuffer;
+    gtTestHeap.tArray.tRoot.ptApi = &gtTestHeapArrayApi;
+    gtTestHeap.tArray.tRoot.zCapacity = TEST_HEAP_CAPACITY;
+    JUNO_STATUS_T tStatus = JunoDs_Heap_Init(&gtTestHeap.tRoot, NULL, &gtTestHeap.tArray.tRoot, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
 static void test_heap_init_zero_capacity(void)
 {
-    gtTestHeap.ptBuffer = gtTestHeapBuffer;
-    JUNO_STATUS_T tStatus = JunoDs_Heap_Init(&gtTestHeap.tRoot, &gtTestMaxHeapApi, 0, NULL, NULL);
+    gtTestHeap.tArray.ptBuffer = gtTestHeapBuffer;
+    gtTestHeap.tArray.tRoot.ptApi = &gtTestHeapArrayApi;
+    gtTestHeap.tArray.tRoot.zCapacity = 0;
+    JUNO_STATUS_T tStatus = JunoDs_Heap_Init(&gtTestHeap.tRoot, &gtTestMaxHeapPointerApi, &gtTestHeap.tArray.tRoot, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
@@ -384,7 +408,7 @@ static void test_heap_verify_invalid_api(void)
 
 static void test_heap_insert_single_item_max_heap(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     TEST_HEAP_DATA_T tData = CreateTestData(42, true, 1);
@@ -400,7 +424,7 @@ static void test_heap_insert_single_item_max_heap(void)
 
 static void test_heap_insert_multiple_items_max_heap(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     const uint32_t vals[] = {5, 3, 8, 1, 6, 9, 2, 7, 4, 0};
@@ -420,7 +444,7 @@ static void test_heap_insert_multiple_items_max_heap(void)
 
 static void test_heap_insert_to_full_capacity(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Fill heap to capacity */
@@ -438,7 +462,7 @@ static void test_heap_insert_to_full_capacity(void)
 
 static void test_heap_insert_overflow(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Fill heap to capacity */
@@ -469,7 +493,7 @@ static void test_heap_insert_null_heap(void)
 
 static void test_heap_insert_invalid_pointer(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Create pointer with NULL address to make it invalid */
@@ -489,7 +513,7 @@ static void test_heap_insert_invalid_pointer(void)
 
 static void test_heap_min_heap_insert_and_property(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMinHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMinHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     const uint32_t vals[] = {9, 1, 8, 2, 7, 3, 6, 4, 5, 0};
@@ -512,7 +536,7 @@ static void test_heap_min_heap_insert_and_property(void)
 
 static void test_heap_pop_single_item_max_heap(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Insert an item */
@@ -535,7 +559,7 @@ static void test_heap_pop_single_item_max_heap(void)
 
 static void test_heap_pop_multiple_items_max_heap(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     const uint32_t vals[] = {5, 3, 8, 1, 6, 9, 2, 7};
@@ -570,7 +594,7 @@ static void test_heap_pop_multiple_items_max_heap(void)
 
 static void test_heap_pop_empty_heap(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     TEST_HEAP_DATA_T tPopData = {0};
@@ -589,7 +613,7 @@ static void test_heap_pop_null_heap(void)
 
 static void test_heap_pop_invalid_pointer(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Insert an item */
@@ -605,12 +629,213 @@ static void test_heap_pop_invalid_pointer(void)
 }
 
 /* ============================================================================
+ * Test Cases: Update Operations
+ * ============================================================================ */
+
+static void test_heap_update_single_element(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Manually place an element at index 0 */
+    gtTestHeapBuffer[0] = CreateTestData(42, true, 1);
+    gtTestHeap.tRoot.zLength = 1;
+    
+    /* Update should succeed but do nothing for single element */
+    tStatus = JunoDs_Heap_Update(&gtTestHeap.tRoot);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_EQUAL(42, gtTestHeapBuffer[0].iValue);
+}
+
+static void test_heap_update_bubble_up(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create a max heap: [100, 50, 25] */
+    gtTestHeapBuffer[0] = CreateTestData(100, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(50, true, 2);
+    gtTestHeapBuffer[2] = CreateTestData(25, true, 3);
+    gtTestHeap.tRoot.zLength = 3;
+    
+    /* Add a new element that should bubble up: 75 as child of 50 */
+    gtTestHeapBuffer[3] = CreateTestData(75, true, 4);
+    gtTestHeap.tRoot.zLength = 4;
+    
+    /* Update should bubble 75 up to maintain max-heap property */
+    tStatus = JunoDs_Heap_Update(&gtTestHeap.tRoot);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    assert_max_heap_property(&gtTestHeap);
+}
+
+static void test_heap_update_empty_heap(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Update on empty heap should fail */
+    tStatus = JunoDs_Heap_Update(&gtTestHeap.tRoot);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
+}
+
+static void test_heap_update_null_heap(void)
+{
+    JUNO_STATUS_T tStatus = JunoDs_Heap_Update(NULL);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_heap_update_with_compare_error(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create a small heap */
+    gtTestHeapBuffer[0] = CreateTestData(50, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(100, true, 2);
+    gtTestHeap.tRoot.zLength = 2;
+    
+    /* Force compare failure */
+    gtTestHeap.bFailCompare = true;
+    tStatus = JunoDs_Heap_Update(&gtTestHeap.tRoot);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    gtTestHeap.bFailCompare = false;
+}
+
+static void test_heap_update_with_swap_error(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create a heap where swap will be needed */
+    gtTestHeapBuffer[0] = CreateTestData(50, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(100, true, 2);
+    gtTestHeap.tRoot.zLength = 2;
+    
+    /* Force swap failure */
+    gtTestHeap.bFailSwap = true;
+    tStatus = JunoDs_Heap_Update(&gtTestHeap.tRoot);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    gtTestHeap.bFailSwap = false;
+}
+
+/* ============================================================================
+ * Test Cases: SiftDown Operations
+ * ============================================================================ */
+
+static void test_heap_siftdown_from_root(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create an invalid heap: [10, 50, 25] where root is smaller than children */
+    gtTestHeapBuffer[0] = CreateTestData(10, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(50, true, 2);
+    gtTestHeapBuffer[2] = CreateTestData(25, true, 3);
+    gtTestHeap.tRoot.zLength = 3;
+    
+    /* SiftDown from root should fix the heap property */
+    tStatus = JunoDs_Heap_SiftDown(&gtTestHeap.tRoot, 0);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    assert_max_heap_property(&gtTestHeap);
+}
+
+static void test_heap_siftdown_from_middle(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create heap with violation at index 1: [100, 20, 80, 10, 15] */
+    gtTestHeapBuffer[0] = CreateTestData(100, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(20, true, 2);
+    gtTestHeapBuffer[2] = CreateTestData(80, true, 3);
+    gtTestHeapBuffer[3] = CreateTestData(10, true, 4);
+    gtTestHeapBuffer[4] = CreateTestData(15, true, 5);
+    gtTestHeap.tRoot.zLength = 5;
+    
+    /* SiftDown from index 1 should fix the violation */
+    tStatus = JunoDs_Heap_SiftDown(&gtTestHeap.tRoot, 1);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    assert_max_heap_property(&gtTestHeap);
+}
+
+static void test_heap_siftdown_leaf_node(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create a valid heap */
+    gtTestHeapBuffer[0] = CreateTestData(100, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(50, true, 2);
+    gtTestHeapBuffer[2] = CreateTestData(25, true, 3);
+    gtTestHeap.tRoot.zLength = 3;
+    
+    /* SiftDown from leaf (index 2) should do nothing */
+    tStatus = JunoDs_Heap_SiftDown(&gtTestHeap.tRoot, 2);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    TEST_ASSERT_EQUAL(100, gtTestHeapBuffer[0].iValue);
+    TEST_ASSERT_EQUAL(50, gtTestHeapBuffer[1].iValue);
+    TEST_ASSERT_EQUAL(25, gtTestHeapBuffer[2].iValue);
+}
+
+static void test_heap_siftdown_empty_heap(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* SiftDown on empty heap should fail */
+    tStatus = JunoDs_Heap_SiftDown(&gtTestHeap.tRoot, 0);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
+}
+
+static void test_heap_siftdown_null_heap(void)
+{
+    JUNO_STATUS_T tStatus = JunoDs_Heap_SiftDown(NULL, 0);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+static void test_heap_siftdown_with_compare_error(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create a heap that needs sifting */
+    gtTestHeapBuffer[0] = CreateTestData(10, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(50, true, 2);
+    gtTestHeapBuffer[2] = CreateTestData(25, true, 3);
+    gtTestHeap.tRoot.zLength = 3;
+    
+    /* Force compare failure */
+    gtTestHeap.bFailCompare = true;
+    tStatus = JunoDs_Heap_SiftDown(&gtTestHeap.tRoot, 0);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    gtTestHeap.bFailCompare = false;
+}
+
+static void test_heap_siftdown_with_swap_error(void)
+{
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    
+    /* Create a heap that needs sifting */
+    gtTestHeapBuffer[0] = CreateTestData(10, true, 1);
+    gtTestHeapBuffer[1] = CreateTestData(50, true, 2);
+    gtTestHeapBuffer[2] = CreateTestData(25, true, 3);
+    gtTestHeap.tRoot.zLength = 3;
+    
+    /* Force swap failure */
+    gtTestHeap.bFailSwap = true;
+    tStatus = JunoDs_Heap_SiftDown(&gtTestHeap.tRoot, 0);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+    gtTestHeap.bFailSwap = false;
+}
+
+/* ============================================================================
  * Test Cases: Heapify Operations
  * ============================================================================ */
 
 static void test_heap_heapify_from_unsorted_array(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Put unsorted data directly into the buffer */
@@ -628,7 +853,7 @@ static void test_heap_heapify_from_unsorted_array(void)
 }
 static void test_heap_heapify_empty_heap(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Heapify with zero length should fail */
@@ -649,7 +874,7 @@ static void test_heap_heapify_null_heap(void)
 
 static void test_heap_compare_function_error(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Insert two items */
@@ -670,7 +895,7 @@ static void test_heap_compare_function_error(void)
 
 static void test_heap_swap_function_error(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Insert items to create a scenario where swap is needed */
@@ -695,7 +920,7 @@ static void test_heap_swap_function_error(void)
 
 static void test_heap_stress_insert_pop_cycles(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Perform 50 insert/pop cycles */
@@ -732,7 +957,7 @@ static void test_heap_stress_insert_pop_cycles(void)
 static void test_heap_mixed_min_max_operations(void)
 {
     /* Test min heap operations */
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMinHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMinHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     const uint32_t vals[] = {50, 30, 70, 20, 40, 60, 80};
@@ -769,7 +994,7 @@ static void test_heap_mixed_min_max_operations(void)
 
 static void test_heap_single_element_capacity(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, 1);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, 1);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Insert one item */
@@ -793,7 +1018,7 @@ static void test_heap_single_element_capacity(void)
 
 static void test_heap_data_integrity_after_operations(void)
 {
-    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapApi, TEST_HEAP_CAPACITY);
+    JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Insert items with distinct flag and counter values */
@@ -853,6 +1078,23 @@ int main(void)
     RUN_TEST(test_heap_pop_empty_heap);
     RUN_TEST(test_heap_pop_null_heap);
     RUN_TEST(test_heap_pop_invalid_pointer);
+
+    /* Update Tests */
+    RUN_TEST(test_heap_update_single_element);
+    RUN_TEST(test_heap_update_bubble_up);
+    RUN_TEST(test_heap_update_empty_heap);
+    RUN_TEST(test_heap_update_null_heap);
+    RUN_TEST(test_heap_update_with_compare_error);
+    RUN_TEST(test_heap_update_with_swap_error);
+
+    /* SiftDown Tests */
+    RUN_TEST(test_heap_siftdown_from_root);
+    RUN_TEST(test_heap_siftdown_from_middle);
+    RUN_TEST(test_heap_siftdown_leaf_node);
+    RUN_TEST(test_heap_siftdown_empty_heap);
+    RUN_TEST(test_heap_siftdown_null_heap);
+    RUN_TEST(test_heap_siftdown_with_compare_error);
+    RUN_TEST(test_heap_siftdown_with_swap_error);
 
     /* Heapify Tests */
     RUN_TEST(test_heap_heapify_from_unsorted_array);

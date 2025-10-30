@@ -143,10 +143,12 @@ static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptJunoApp)
 Within `OnStart` we will initialize our command message pipe so we can receive
 commands. We will also register this pipe with the broker so it can be active.
 */
-    tStatus = EngineCmdMsg_PipeInit(&ptEngineApp->tCmdPipe, ptEngineApp->ptArrCmdBuffer, ENGINE_CMD_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    tStatus = EngineCmdMsg_ArrayInit(&ptEngineApp->tCmdArray, ptEngineApp->ptArrCmdBuffer, ENGINE_CMD_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoSb_PipeInit(&ptEngineApp->tCmdPipe, ENGINE_CMD_MSG_MID, &ptEngineApp->tCmdArray.tRoot, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Register the subscriber
-    tStatus = ptEngineApp->ptBroker->ptApi->RegisterSubscriber(ptEngineApp->ptBroker, &ptEngineApp->tCmdPipe.tRoot);
+    tStatus = ptEngineApp->ptBroker->ptApi->RegisterSubscriber(ptEngineApp->ptBroker, &ptEngineApp->tCmdPipe);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
 /**DOC
 For this example we will also set the current RPM to 0
@@ -187,7 +189,7 @@ create a convenience variable to access the pipe's queue API.
 */
     // sleep for half a second
     usleep(500E3);
-    const JUNO_DS_QUEUE_API_T *ptCmdPipeApi = ptEngineApp->tCmdPipe.ptApi;
+    const JUNO_DS_QUEUE_API_T *ptCmdPipeApi = ptEngineApp->tCmdPipe.tRoot.ptApi;
 /**DOC
 For this example we will allocate a buffer to attempt to receive a command
 from the message pipe. We will then initialize an engine command pointer with
@@ -218,7 +220,7 @@ We will calculate some artificial noise to simulate an actual sensor measurement
 Next we will attempt to dequeue a command from the software bus. This operation will fail
 if there is no command in the pipe and will jump to the exit point of this function.
 */
-    tStatus = ptCmdPipeApi->Dequeue(&ptEngineApp->tCmdPipe.tRoot.tRoot, tEngineCmdPointer);
+    tStatus = ptCmdPipeApi->Dequeue(&ptEngineApp->tCmdPipe.tRoot, tEngineCmdPointer);
     JUNO_ASSERT_SUCCESS(tStatus, goto exit);
 /*DOC
 Because we has a `JUNO_ASSERT_SUCCESS` on the previous function, we know that at this point

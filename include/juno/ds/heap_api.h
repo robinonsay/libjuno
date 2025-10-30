@@ -40,6 +40,7 @@ extern "C"
 
 typedef struct JUNO_DS_HEAP_ROOT_TAG JUNO_DS_HEAP_ROOT_T;   /**< Opaque root that stores heap metadata and API pointer. */
 typedef struct JUNO_DS_HEAP_API_TAG  JUNO_DS_HEAP_API_T;    /**< API vtable you implement for your storage and element type. */
+typedef struct JUNO_DS_HEAP_POINTER_API_TAG JUNO_DS_HEAP_POINTER_API_T;
 
 /**
  * @brief Result type carrying an index on success.
@@ -64,29 +65,25 @@ JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_OPTION_RESULT_T, JUNO_DS_HEAP_INDEX_OPTION
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_COMPARE_RESULT_T, bool);
 
 
-struct JUNO_DS_HEAP_ROOT_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_ARRAY_ROOT_T, JUNO_DS_HEAP_API_T,
+struct JUNO_DS_HEAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_HEAP_API_T,
+    const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi;
+    JUNO_DS_ARRAY_ROOT_T *ptHeapArray;
     size_t zLength;     /**< Current number of elements in the heap. */
 );
 
-
-struct JUNO_DS_HEAP_API_TAG JUNO_MODULE_API_DERIVE(JUNO_DS_ARRAY_API_T,
+struct JUNO_DS_HEAP_POINTER_API_TAG
+{
     /// Compare two values to perform the heap operation
     JUNO_DS_HEAP_COMPARE_RESULT_T (*Compare)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tParent, JUNO_POINTER_T tChild);
     JUNO_STATUS_T (*Swap)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
+};
+
+struct JUNO_DS_HEAP_API_TAG
+{
     JUNO_STATUS_T (*Insert)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tValue);
     JUNO_STATUS_T (*Heapify)(JUNO_DS_HEAP_ROOT_T *ptHeap);
     JUNO_STATUS_T (*Pop)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tReturn);
-);
-
-#define JunoDs_HeapApiInit(SetAt, GetAt, RemoveAt, Compare, Swap) \
-{\
-    {SetAt, GetAt, RemoveAt}, \
-    Compare, \
-    Swap, \
-    JunoDs_Heap_Insert, \
-    JunoDs_Heap_Heapify, \
-    JunoDs_Heap_Pop, \
-}
+};
 
 /**
  * @brief Bubble-up the last inserted element to restore the heap property.
@@ -104,6 +101,7 @@ JUNO_STATUS_T JunoDs_Heap_Update(JUNO_DS_HEAP_ROOT_T *ptHeap);
 JUNO_STATUS_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tValue);
 JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap);
 JUNO_STATUS_T JunoDs_Heap_Pop(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tReturn);
+JUNO_STATUS_T JunoDs_Heap_Init(JUNO_DS_HEAP_ROOT_T *ptHeap, const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi, JUNO_DS_ARRAY_ROOT_T *ptHeapArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
 
 /**
  * @brief Sift down from a starting index to restore the heap property.
@@ -128,35 +126,16 @@ static inline JUNO_STATUS_T JunoDs_Heap_Verify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_ASSERT_EXISTS(
         ptHeap &&
+        ptHeap->ptHeapArray &&
+        ptHeap->ptHeapPointerApi &&
+        ptHeap->ptHeapPointerApi->Compare &&
+        ptHeap->ptHeapPointerApi->Swap &&
         ptHeap->ptApi &&
-        ptHeap->ptApi->Compare &&
-        ptHeap->ptApi->Swap &&
         ptHeap->ptApi->Insert &&
         ptHeap->ptApi->Heapify &&
         ptHeap->ptApi->Pop
     );
-    return JunoDs_ArrayVerify(&ptHeap->tRoot);
-}
-
-/**
- * @brief Initialize a heap root with the given API and capacity.
- *
- * This does not allocate storage or touch your element array. It simply sets the
- * API pointer, length, and capacity.
- *
- * @param ptHeap Pointer to the heap root (first member of your derived type).
- * @param ptApi  Pointer to your API implementation (Compare/Swap/Reset).
- * @param zCapacity Maximum number of elements this heap may contain.
- * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_NULLPTR_ERROR otherwise.
- */
-static inline JUNO_STATUS_T JunoDs_Heap_Init(JUNO_DS_HEAP_ROOT_T *ptHeap, const JUNO_DS_HEAP_API_T *ptApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
-{
-    JUNO_ASSERT_EXISTS(ptHeap);
-    ptHeap->ptApi = ptApi;
-    ptHeap->zLength = 0;
-    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&ptHeap->tRoot, &ptApi->tRoot, zCapacity, pfcnFailureHdlr, pvUserData);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus;)
-    return JunoDs_Heap_Verify(ptHeap);
+    return JunoDs_ArrayVerify(ptHeap->ptHeapArray);
 }
 #ifdef __cplusplus
 }

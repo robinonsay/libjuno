@@ -52,9 +52,15 @@ typedef struct TEST_STACK_DATA_TAG
  * Test Stack Implementation (Custom Array-backed Stack)
  * ============================================================================ */
 
-typedef struct TEST_STACK_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_STACK_T, JUNO_DS_STACK_API_T,
+typedef struct TEST_ARRAY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
     TEST_STACK_DATA_T *ptBuffer;
-) TEST_STACK_T;
+) TEST_ARRAY_T;
+
+typedef struct TEST_STACK_TAG
+{
+    JUNO_DS_STACK_ROOT_T tRoot;
+    TEST_ARRAY_T tArray;
+} TEST_STACK_T;
 
 /* Forward declarations for array API functions */
 static JUNO_STATUS_T TestStack_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
@@ -71,17 +77,17 @@ const JUNO_POINTER_API_T gtTestStackDataPointerApi = {
     TestStackData_Reset
 };
 
-/* Stack API for TEST_STACK_T */
-static const JUNO_DS_STACK_API_T gtTestStackApi = JunoDs_StackApiInit(
+/* Array API for TEST_ARRAY_T */
+static const JUNO_DS_ARRAY_API_T gtTestArrayApi = {
     TestStack_SetAt,
     TestStack_GetAt,
     TestStack_RemoveAt
-);
+};
 
 /* Macro to verify pointer type */
 #define TestStackData_PointerInit(addr) JunoMemory_PointerInit(&gtTestStackDataPointerApi, TEST_STACK_DATA_T, addr)
 #define TestStackData_PointerVerify(tPointer) JunoMemory_PointerVerifyType(tPointer, TEST_STACK_DATA_T, gtTestStackDataPointerApi)
-#define TEST_STACK_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtTestStackApi.tRoot) { __VA_ARGS__; }
+#define TEST_ARRAY_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtTestArrayApi) { __VA_ARGS__; }
 
 /* ============================================================================
  * Pointer API Implementation
@@ -113,14 +119,14 @@ static JUNO_STATUS_T TestStack_SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER
 {
     JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    TEST_STACK_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
+    TEST_ARRAY_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
     tStatus = TestStackData_PointerVerify(tItem);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     
-    TEST_STACK_T *ptStack = (TEST_STACK_T *)ptArray;
-    JUNO_POINTER_T tIndexPointer = TestStackData_PointerInit(&ptStack->ptBuffer[iIndex]);
+    TEST_ARRAY_T *ptTestArray = (TEST_ARRAY_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = TestStackData_PointerInit(&ptTestArray->ptBuffer[iIndex]);
     tStatus = tIndexPointer.ptApi->Copy(tIndexPointer, tItem);
     return tStatus;
 }
@@ -130,15 +136,15 @@ static JUNO_RESULT_POINTER_T TestStack_GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size
     JUNO_RESULT_POINTER_T tResult = {0};
     tResult.tStatus = JunoDs_ArrayVerify(ptArray);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
-    TEST_STACK_ASSERT_API(ptArray,
+    TEST_ARRAY_ASSERT_API(ptArray,
         tResult.tStatus = JUNO_STATUS_INVALID_TYPE_ERROR;
         return tResult;
     );
     tResult.tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     
-    TEST_STACK_T *ptStack = (TEST_STACK_T *)ptArray;
-    JUNO_POINTER_T tIndexPointer = TestStackData_PointerInit(&ptStack->ptBuffer[iIndex]);
+    TEST_ARRAY_T *ptTestArray = (TEST_ARRAY_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = TestStackData_PointerInit(&ptTestArray->ptBuffer[iIndex]);
     tResult.tOk = tIndexPointer;
     return tResult;
 }
@@ -147,12 +153,12 @@ static JUNO_STATUS_T TestStack_RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iI
 {
     JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    TEST_STACK_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
+    TEST_ARRAY_ASSERT_API(ptArray, return JUNO_STATUS_INVALID_TYPE_ERROR);
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     
-    TEST_STACK_T *ptStack = (TEST_STACK_T *)ptArray;
-    JUNO_POINTER_T tIndexPointer = TestStackData_PointerInit(&ptStack->ptBuffer[iIndex]);
+    TEST_ARRAY_T *ptTestArray = (TEST_ARRAY_T *)ptArray;
+    JUNO_POINTER_T tIndexPointer = TestStackData_PointerInit(&ptTestArray->ptBuffer[iIndex]);
     tStatus = tIndexPointer.ptApi->Reset(tIndexPointer);
     return tStatus;
 }
@@ -182,8 +188,10 @@ void tearDown(void)
 
 static JUNO_STATUS_T InitTestStack(TEST_STACK_T *ptStack, size_t zCapacity)
 {
-    ptStack->ptBuffer = gtTestStackBuffer;
-    return JunoDs_StackInit(&ptStack->tRoot, &gtTestStackApi, zCapacity, NULL, NULL);
+    ptStack->tArray.ptBuffer = gtTestStackBuffer;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&ptStack->tArray.tRoot, &gtTestArrayApi, zCapacity, NULL, NULL);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return JunoDs_StackInit(&ptStack->tRoot, &ptStack->tArray.tRoot, NULL, NULL);
 }
 
 static TEST_STACK_DATA_T CreateTestData(uint32_t iValue, bool bFlag, uint8_t iCounter)
@@ -205,27 +213,27 @@ static void test_stack_init_nominal(void)
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     TEST_ASSERT_EQUAL(0, gtTestStack.tRoot.zLength);
-    TEST_ASSERT_EQUAL(TEST_STACK_CAPACITY, gtTestStack.tRoot.tRoot.zCapacity);
+    TEST_ASSERT_EQUAL(TEST_STACK_CAPACITY, gtTestStack.tArray.tRoot.zCapacity);
     TEST_ASSERT_NOT_NULL(gtTestStack.tRoot.ptApi);
 }
 
 static void test_stack_init_null_stack(void)
 {
-    JUNO_STATUS_T tStatus = JunoDs_StackInit(NULL, &gtTestStackApi, TEST_STACK_CAPACITY, NULL, NULL);
+    JUNO_STATUS_T tStatus = JunoDs_StackInit(NULL, &gtTestStack.tArray.tRoot, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
 static void test_stack_init_null_api(void)
 {
-    gtTestStack.ptBuffer = gtTestStackBuffer;
-    JUNO_STATUS_T tStatus = JunoDs_StackInit(&gtTestStack.tRoot, NULL, TEST_STACK_CAPACITY, NULL, NULL);
+    gtTestStack.tArray.ptBuffer = gtTestStackBuffer;
+    JUNO_STATUS_T tStatus = JunoDs_StackInit(&gtTestStack.tRoot, NULL, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
 static void test_stack_init_zero_capacity(void)
 {
-    gtTestStack.ptBuffer = gtTestStackBuffer;
-    JUNO_STATUS_T tStatus = JunoDs_StackInit(&gtTestStack.tRoot, &gtTestStackApi, 0, NULL, NULL);
+    gtTestStack.tArray.ptBuffer = gtTestStackBuffer;
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&gtTestStack.tArray.tRoot, &gtTestArrayApi, 0, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
@@ -703,9 +711,9 @@ static void test_stack_verify_missing_push_function(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Create invalid API with missing Push */
-    static JUNO_DS_STACK_API_T tInvalidApi;
-    tInvalidApi = gtTestStackApi;
-    tInvalidApi.Push = NULL;
+    static JUNO_DS_STACK_API_T tInvalidApi = {0};
+    tInvalidApi.Pop = JunoDs_StackPop;
+    tInvalidApi.Peek = JunoDs_StackPeek;
     gtTestStack.tRoot.ptApi = &tInvalidApi;
     
     tStatus = JunoDs_StackVerify(&gtTestStack.tRoot);
@@ -718,9 +726,9 @@ static void test_stack_verify_missing_pop_function(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Create invalid API with missing Pop */
-    static JUNO_DS_STACK_API_T tInvalidApi;
-    tInvalidApi = gtTestStackApi;
-    tInvalidApi.Pop = NULL;
+    static JUNO_DS_STACK_API_T tInvalidApi = {0};
+    tInvalidApi.Push = JunoDs_StackPush;
+    tInvalidApi.Peek = JunoDs_StackPeek;
     gtTestStack.tRoot.ptApi = &tInvalidApi;
     
     tStatus = JunoDs_StackVerify(&gtTestStack.tRoot);
@@ -733,9 +741,9 @@ static void test_stack_verify_missing_peek_function(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Create invalid API with missing Peek */
-    static JUNO_DS_STACK_API_T tInvalidApi;
-    tInvalidApi = gtTestStackApi;
-    tInvalidApi.Peek = NULL;
+    static JUNO_DS_STACK_API_T tInvalidApi = {0};
+    tInvalidApi.Push = JunoDs_StackPush;
+    tInvalidApi.Pop = JunoDs_StackPop;
     gtTestStack.tRoot.ptApi = &tInvalidApi;
     
     tStatus = JunoDs_StackVerify(&gtTestStack.tRoot);
@@ -866,18 +874,18 @@ static void test_stack_array_api_set_at_invalid_api(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     /* Corrupt the array API to test error path */
-    const JUNO_DS_ARRAY_API_T *ptOriginalApi = gtTestStack.tRoot.tRoot.ptApi;
+    const JUNO_DS_ARRAY_API_T *ptOriginalApi = gtTestStack.tArray.tRoot.ptApi;
     static JUNO_DS_ARRAY_API_T tBadApi = {0};
     tBadApi = *ptOriginalApi;
-    gtTestStack.tRoot.tRoot.ptApi = &tBadApi;
+    gtTestStack.tArray.tRoot.ptApi = &tBadApi;
     
     TEST_STACK_DATA_T tData = CreateTestData(1, true, 1);
     JUNO_POINTER_T tPointer = TestStackData_PointerInit(&tData);
-    tStatus = TestStack_SetAt(&gtTestStack.tRoot.tRoot, tPointer, 0);
+    tStatus = TestStack_SetAt(&gtTestStack.tArray.tRoot, tPointer, 0);
     TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_TYPE_ERROR, tStatus);
     
     /* Restore */
-    gtTestStack.tRoot.tRoot.ptApi = ptOriginalApi;
+    gtTestStack.tArray.tRoot.ptApi = ptOriginalApi;
 }
 
 static void test_stack_array_api_get_at_out_of_bounds(void)
@@ -885,7 +893,7 @@ static void test_stack_array_api_get_at_out_of_bounds(void)
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 5);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
-    JUNO_RESULT_POINTER_T tResult = TestStack_GetAt(&gtTestStack.tRoot.tRoot, 10);
+    JUNO_RESULT_POINTER_T tResult = TestStack_GetAt(&gtTestStack.tArray.tRoot, 10);
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
@@ -894,7 +902,7 @@ static void test_stack_array_api_remove_at_out_of_bounds(void)
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 5);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
-    tStatus = TestStack_RemoveAt(&gtTestStack.tRoot.tRoot, 5);
+    tStatus = TestStack_RemoveAt(&gtTestStack.tArray.tRoot, 5);
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
@@ -1029,16 +1037,11 @@ static void test_stack_push_with_setAt_failure(void)
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
-    /* Create a corrupted API that will cause SetAt to fail */
+    /* Create a corrupted array API that will cause SetAt to fail */
     static JUNO_DS_ARRAY_API_T tCorruptedArrayApi = {0}; /* All function pointers NULL */
-    static JUNO_DS_STACK_API_T tCorruptedStackApi;
-    tCorruptedStackApi.tRoot = tCorruptedArrayApi;
-    tCorruptedStackApi.Push = JunoDs_StackPush;
-    tCorruptedStackApi.Pop = JunoDs_StackPop;
-    tCorruptedStackApi.Peek = JunoDs_StackPeek;
     
-    /* Replace with corrupted API */
-    gtTestStack.tRoot.ptApi = &tCorruptedStackApi;
+    /* Replace array API with corrupted one */
+    gtTestStack.tArray.tRoot.ptApi = &tCorruptedArrayApi;
     
     TEST_STACK_DATA_T tData = CreateTestData(42, true, 1);
     JUNO_POINTER_T tPointer = TestStackData_PointerInit(&tData);
@@ -1059,16 +1062,11 @@ static void test_stack_pop_with_getAt_failure(void)
     tStatus = JunoDs_StackPush(&gtTestStack.tRoot, tPointer);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
-    /* Create a corrupted API that will cause GetAt to fail */
+    /* Create a corrupted array API that will cause GetAt to fail */
     static JUNO_DS_ARRAY_API_T tCorruptedArrayApi = {0}; /* All function pointers NULL */
-    static JUNO_DS_STACK_API_T tCorruptedStackApi;
-    tCorruptedStackApi.tRoot = tCorruptedArrayApi;
-    tCorruptedStackApi.Push = JunoDs_StackPush;
-    tCorruptedStackApi.Pop = JunoDs_StackPop;
-    tCorruptedStackApi.Peek = JunoDs_StackPeek;
     
-    /* Replace with corrupted API */
-    gtTestStack.tRoot.ptApi = &tCorruptedStackApi;
+    /* Replace array API with corrupted one */
+    gtTestStack.tArray.tRoot.ptApi = &tCorruptedArrayApi;
     
     TEST_STACK_DATA_T tPopData = {0};
     JUNO_POINTER_T tPopPointer = TestStackData_PointerInit(&tPopData);
@@ -1089,16 +1087,11 @@ static void test_stack_peek_with_getAt_failure(void)
     tStatus = JunoDs_StackPush(&gtTestStack.tRoot, tPointer);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
-    /* Create a corrupted API that will cause GetAt to fail */
+    /* Create a corrupted array API that will cause GetAt to fail */
     static JUNO_DS_ARRAY_API_T tCorruptedArrayApi = {0}; /* All function pointers NULL */
-    static JUNO_DS_STACK_API_T tCorruptedStackApi;
-    tCorruptedStackApi.tRoot = tCorruptedArrayApi;
-    tCorruptedStackApi.Push = JunoDs_StackPush;
-    tCorruptedStackApi.Pop = JunoDs_StackPop;
-    tCorruptedStackApi.Peek = JunoDs_StackPeek;
     
-    /* Replace with corrupted API */
-    gtTestStack.tRoot.ptApi = &tCorruptedStackApi;
+    /* Replace array API with corrupted one */
+    gtTestStack.tArray.tRoot.ptApi = &tCorruptedArrayApi;
     
     /* Peek should fail due to GetAt failure */
     JUNO_RESULT_POINTER_T tResult = JunoDs_StackPeek(&gtTestStack.tRoot);
@@ -1128,18 +1121,18 @@ static void test_stack_pop_copy_failure(void)
 
 static void test_stack_init_with_array_verify_failure(void)
 {
-    gtTestStack.ptBuffer = gtTestStackBuffer;
+    gtTestStack.tArray.ptBuffer = gtTestStackBuffer;
     
-    /* Create a corrupted API that will cause array verification to fail */
+    /* Create a corrupted array API that will cause array verification to fail */
     static JUNO_DS_ARRAY_API_T tCorruptedArrayApi = {0}; /* All function pointers NULL */
-    static JUNO_DS_STACK_API_T tCorruptedStackApi;
-    tCorruptedStackApi.tRoot = tCorruptedArrayApi;
-    tCorruptedStackApi.Push = JunoDs_StackPush;
-    tCorruptedStackApi.Pop = JunoDs_StackPop;
-    tCorruptedStackApi.Peek = JunoDs_StackPeek;
     
-    /* Init should fail due to array verification failure */
-    JUNO_STATUS_T tStatus = JunoDs_StackInit(&gtTestStack.tRoot, &tCorruptedStackApi, TEST_STACK_CAPACITY, NULL, NULL);
+    /* Init array with corrupted API */
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&gtTestStack.tArray.tRoot, &tCorruptedArrayApi, TEST_STACK_CAPACITY, NULL, NULL);
+    
+    /* Array init should fail or stack init should fail due to array verification failure */
+    if (tStatus == JUNO_STATUS_SUCCESS) {
+        tStatus = JunoDs_StackInit(&gtTestStack.tRoot, &gtTestStack.tArray.tRoot, NULL, NULL);
+    }
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 

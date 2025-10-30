@@ -305,7 +305,7 @@ struct ENGINE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
     const JUNO_TIME_ROOT_T *ptTime;
     JUNO_SB_BROKER_ROOT_T *ptBroker;
     ENGINE_CMD_MSG_T ptArrCmdBuffer[ENGINE_CMD_MSG_PIPE_DEPTH];
-    ENGINE_CMD_MSG_PIPE_T tCmdPipe;
+    ENGINE_CMD_MSG_ARRAY_T tCmdPipe;
     float fCurrentRpm;
 );
 
@@ -365,7 +365,7 @@ Below is the definition for the engine command pipe. This is derived from the `J
 `DERIVE_WITH_API` macro. This macro enables users to specify which API they are using.
 The inheritance for a pipe is as follows:
 ```
-JUNO_DS_ARRAY_ROOT_T -> JUNO_DS_QUEUE_T -> JUNO_SB_PIPE_T -> Custom Pipe Type
+JUNO_DS_ARRAY_ROOT_T -> JUNO_DS_QUEUE_ROOT_T -> JUNO_SB_PIPE_T -> Custom Pipe Type
 ```
 Because this is a longer chain of inheritance, it's convenient to specify the API for ease-of-use.
 In this case we are specifying the QUEUE api.
@@ -375,9 +375,9 @@ earlier. This enables the derived pipe to have specific type information (vs usi
 
 ```cpp
 
-typedef struct ENGINE_CMD_MSG_PIPE_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_SB_PIPE_T, JUNO_DS_QUEUE_API_T,
+typedef struct ENGINE_CMD_MSG_ARRAY_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_SB_PIPE_T, JUNO_DS_QUEUE_API_T,
     ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer;
-) ENGINE_CMD_MSG_PIPE_T;
+) ENGINE_CMD_MSG_ARRAY_T;
 
 
 ```
@@ -408,7 +408,7 @@ initialize the pipe with the message buffer and capacity.
 
 ```cpp
 
-JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
+JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
 
 
 ```
@@ -520,7 +520,7 @@ message buffer and capacity.
 
 ```cpp
 
-JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     // Assert the msg pipe exists
     JUNO_ASSERT_EXISTS(ptEngineCmdMsgPipe && ptArrEngineCmdMsgBuffer);
@@ -556,7 +556,7 @@ static JUNO_STATUS_T SetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, 
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Cast to the pipe type
-    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_ARRAY_T *)ptArray;
     // Init the pointer to the buffer
     JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
     // Copy the memory to the buffer
@@ -579,7 +579,7 @@ static JUNO_RESULT_POINTER_T GetAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
     tResult.tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
     // Cast to the pipe type
-    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_ARRAY_T *)ptArray;
     // Create the pointer to the buffer
     JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
     // Copy to ok result
@@ -598,7 +598,7 @@ static JUNO_STATUS_T RemoveAt(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
     tStatus = JunoDs_ArrayVerifyIndex(ptArray, iIndex);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Cast to the msg pipe type
-    ENGINE_CMD_MSG_PIPE_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_PIPE_T *)ptArray;
+    ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe = (ENGINE_CMD_MSG_ARRAY_T *)ptArray;
     // Create pointer to memory
     JUNO_POINTER_T tIndexPointer = EngineCmdMsg_PointerInit(&ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer[iIndex]);
     // Reset the memory

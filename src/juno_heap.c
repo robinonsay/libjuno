@@ -23,6 +23,23 @@
 #include "juno/status.h"
 #include <stddef.h>
 
+static const JUNO_DS_HEAP_API_T tHeapApi = {
+    JunoDs_Heap_Insert,
+    JunoDs_Heap_Heapify,
+    JunoDs_Heap_Pop,
+};
+
+JUNO_STATUS_T JunoDs_Heap_Init(JUNO_DS_HEAP_ROOT_T *ptHeap, const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi, JUNO_DS_ARRAY_ROOT_T *ptHeapArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+{
+    JUNO_ASSERT_EXISTS(ptHeap);
+    ptHeap->ptApi = &tHeapApi;
+    ptHeap->ptHeapPointerApi = ptHeapPointerApi;
+    ptHeap->ptHeapArray = ptHeapArray;
+    ptHeap->zLength = 0;
+    ptHeap->_pfcnFailureHandler = pfcnFailureHdlr;
+    ptHeap->_pvFailureUserData = pvUserData;
+    return JunoDs_Heap_Verify(ptHeap);
+}
 
 /**
  * @brief Compute the left child index of iIndex.
@@ -40,7 +57,7 @@ static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_ChildGetLeft(JUNO_DS_HEAP_
     // Calculate the left index
     iIndex = 2 * iIndex + 1;
     // Check if the index is out of bounds or if the length exceeds capacity
-    if(iIndex > ptHeap->tRoot.zCapacity || ptHeap->zLength > ptHeap->tRoot.zCapacity)
+    if(iIndex > ptHeap->ptHeapArray->zCapacity || ptHeap->zLength > ptHeap->ptHeapArray->zCapacity)
     {
         tResult.tStatus = JUNO_STATUS_OOB_ERROR;
         return tResult;
@@ -62,7 +79,7 @@ static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_ChildGetRight(JUNO_DS_HEAP
     // Calculate the right child
     iIndex = 2 * iIndex + 2;
     // Check if this index is beyond the capacity or if the length is beyond the capacity
-    if(iIndex > ptHeap->tRoot.zCapacity || ptHeap->zLength > ptHeap->tRoot.zCapacity)
+    if(iIndex > ptHeap->ptHeapArray->zCapacity || ptHeap->zLength > ptHeap->ptHeapArray->zCapacity)
     {
         tResult.tStatus = JUNO_STATUS_OOB_ERROR;
         return tResult;
@@ -84,7 +101,7 @@ static inline JUNO_DS_HEAP_INDEX_RESULT_T JunoDs_Heap_ChildGetParent(JUNO_DS_HEA
     // calculate the parent
     iIndex = (iIndex - 1)/2;
     // Check if the index is OOB
-    if(iIndex > ptHeap->tRoot.zCapacity || ptHeap->zLength > ptHeap->tRoot.zCapacity)
+    if(iIndex > ptHeap->ptHeapArray->zCapacity || ptHeap->zLength > ptHeap->ptHeapArray->zCapacity)
     {
         tResult.tStatus = JUNO_STATUS_OOB_ERROR;
         return tResult;
@@ -111,8 +128,8 @@ JUNO_STATUS_T JunoDs_Heap_Update(JUNO_DS_HEAP_ROOT_T *ptHeap)
     {
         return tStatus;
     }
-    const JUNO_DS_ARRAY_API_T *ptArrayApi = &ptHeap->ptApi->tRoot;
-    JUNO_DS_ARRAY_ROOT_T *ptArray = &ptHeap->tRoot;
+    const JUNO_DS_ARRAY_API_T *ptArrayApi = ptHeap->ptHeapArray->ptApi;
+    JUNO_DS_ARRAY_ROOT_T *ptArray = ptHeap->ptHeapArray;
     // Assign to the parent index
     size_t iParentIndex = 0;
     for(size_t i = 0; i < ptHeap->zLength; ++i)
@@ -130,11 +147,11 @@ JUNO_STATUS_T JunoDs_Heap_Update(JUNO_DS_HEAP_ROOT_T *ptHeap)
         JUNO_RESULT_POINTER_T tResultParent = ptArrayApi->GetAt(ptArray, iParentIndex);
         JUNO_ASSERT_OK(tResultParent, return tResultParent.tStatus);
         // Assign to the parent metrix
-        JUNO_DS_HEAP_COMPARE_RESULT_T tCompareResult = ptHeap->ptApi->Compare(ptHeap, JUNO_OK(tResultParent), JUNO_OK(tResultCurrent));
+        JUNO_DS_HEAP_COMPARE_RESULT_T tCompareResult = ptHeap->ptHeapPointerApi->Compare(ptHeap, JUNO_OK(tResultParent), JUNO_OK(tResultCurrent));
         JUNO_ASSERT_SUCCESS(tCompareResult.tStatus, return tCompareResult.tStatus);
         if(!tCompareResult.tOk)
         {
-            tStatus = ptHeap->ptApi->Swap(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResultParent));
+            tStatus = ptHeap->ptHeapPointerApi->Swap(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResultParent));
             JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
         }
         if(iParentIndex == 0)
@@ -158,8 +175,8 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart)
     }
     size_t iRoot = iStart;
     size_t iCurrentIndex = iRoot;
-    const JUNO_DS_ARRAY_API_T *ptArrayApi = &ptHeap->ptApi->tRoot;
-    JUNO_DS_ARRAY_ROOT_T *ptArray = &ptHeap->tRoot;
+    const JUNO_DS_ARRAY_API_T *ptArrayApi = ptHeap->ptHeapArray->ptApi;
+    JUNO_DS_ARRAY_ROOT_T *ptArray = ptHeap->ptHeapArray;
     for(size_t i = 0; i < ptHeap->zLength; ++i)
     {
         iCurrentIndex = iRoot;
@@ -188,7 +205,7 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart)
             JUNO_ASSERT_OK(tResultCurrent, return tResultCurrent.tStatus);
             JUNO_RESULT_POINTER_T tResultLeft = ptArrayApi->GetAt(ptArray, iLeft);
             JUNO_ASSERT_OK(tResultLeft, return tResultLeft.tStatus);
-            tCompareResult = ptHeap->ptApi->Compare(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResultLeft));
+            tCompareResult = ptHeap->ptHeapPointerApi->Compare(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResultLeft));
             JUNO_ASSERT_SUCCESS(tCompareResult.tStatus, return tCompareResult.tStatus);
             if(!tCompareResult.tOk)
             {
@@ -201,7 +218,7 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart)
             JUNO_ASSERT_OK(tResultCurrent, return tResultCurrent.tStatus);
             JUNO_RESULT_POINTER_T tResulRight = ptArrayApi->GetAt(ptArray, iRight);
             JUNO_ASSERT_OK(tResulRight, return tResulRight.tStatus);
-            tCompareResult = ptHeap->ptApi->Compare(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResulRight));
+            tCompareResult = ptHeap->ptHeapPointerApi->Compare(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResulRight));
             JUNO_ASSERT_SUCCESS(tCompareResult.tStatus, return tCompareResult.tStatus);
             if(!tCompareResult.tOk)
             {
@@ -214,7 +231,7 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart)
             JUNO_ASSERT_OK(tResultCurrent, return tResultCurrent.tStatus);
             JUNO_RESULT_POINTER_T tResultRoot = ptArrayApi->GetAt(ptArray, iRoot);
             JUNO_ASSERT_OK(tResultRoot, return tResultRoot.tStatus);
-            tStatus = ptHeap->ptApi->Swap(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResultRoot));
+            tStatus = ptHeap->ptHeapPointerApi->Swap(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResultRoot));
             JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
             iRoot = iCurrentIndex;
         }
@@ -241,14 +258,14 @@ JUNO_STATUS_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tVa
 {
     JUNO_STATUS_T tStatus = JunoDs_Heap_Verify(ptHeap);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    if(ptHeap->zLength >= ptHeap->tRoot.zCapacity)
+    if(ptHeap->zLength >= ptHeap->ptHeapArray->zCapacity)
     {
         tStatus = JUNO_STATUS_ERR;
         return tStatus;
     }
     tStatus = JunoMemory_PointerVerify(tValue);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = ptHeap->ptApi->tRoot.SetAt(&ptHeap->tRoot, tValue, ptHeap->zLength);
+    tStatus = ptHeap->ptHeapArray->ptApi->SetAt(ptHeap->ptHeapArray, tValue, ptHeap->zLength);
     ptHeap->zLength += 1;
     tStatus = JunoDs_Heap_Update(ptHeap);
     return tStatus;
@@ -314,13 +331,13 @@ JUNO_STATUS_T JunoDs_Heap_Pop(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tRetur
     }
     tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    const JUNO_DS_ARRAY_API_T *ptArrayApi = &ptHeap->ptApi->tRoot;
-    JUNO_DS_ARRAY_ROOT_T *ptArray = &ptHeap->tRoot;
+    const JUNO_DS_ARRAY_API_T *ptArrayApi = ptHeap->ptHeapArray->ptApi;
+    JUNO_DS_ARRAY_ROOT_T *ptArray = ptHeap->ptHeapArray;
     JUNO_RESULT_POINTER_T tEnd = ptArrayApi->GetAt(ptArray, ptHeap->zLength-1);
     JUNO_ASSERT_OK(tEnd, return tEnd.tStatus);
     JUNO_RESULT_POINTER_T tStart = ptArrayApi->GetAt(ptArray, 0);
     JUNO_ASSERT_OK(tStart, return tStart.tStatus);
-    tStatus = ptHeap->ptApi->Swap(ptHeap, JUNO_OK(tEnd), JUNO_OK(tStart));
+    tStatus = ptHeap->ptHeapPointerApi->Swap(ptHeap, JUNO_OK(tEnd), JUNO_OK(tStart));
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     tStatus = JunoMemory_PointerVerify(tReturn);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);

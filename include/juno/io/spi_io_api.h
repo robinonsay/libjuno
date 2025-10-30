@@ -28,9 +28,9 @@
 #define JUNO_SPI_IO_API_H
 #include "juno/status.h"
 #include "juno/module.h"
-#include "juno/time/time_api.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C"
 {

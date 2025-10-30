@@ -34,76 +34,55 @@
 #include <stddef.h>
 #include "juno/status.h"
 #include "juno/types.h"
-#include "juno/memory/memory_api.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 typedef struct JUNO_MAP_API_TAG JUNO_MAP_API_T;
-typedef struct JUNO_MAP_TAG JUNO_MAP_T;
+typedef struct JUNO_MAP_ROOT_TAG JUNO_MAP_ROOT_T;
 typedef struct JUNO_MAP_HASHABLE_POINTER_API_TAG JUNO_MAP_HASHABLE_POINTER_API_T;
-typedef struct JUNO_MAP_HASHABLE_POINTER_TAG JUNO_MAP_HASHABLE_POINTER_T;
-struct JUNO_MAP_HASHABLE_POINTER_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_VALUE_POINTER_T, JUNO_MAP_HASHABLE_POINTER_API_T, JUNO_MODULE_EMPTY);
-struct JUNO_MAP_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_DS_ARRAY_ROOT_T, JUNO_MAP_API_T, JUNO_MODULE_EMPTY);
-
-struct JUNO_MAP_HASHABLE_POINTER_API_TAG JUNO_MODULE_API_DERIVE(JUNO_VALUE_POINTER_API_T,
-    /// Calculate the hash for the given key
-    JUNO_RESULT_SIZE_T (*Hash)(JUNO_MAP_HASHABLE_POINTER_T tItem);
-    JUNO_RESULT_BOOL_T (*IsNull)(JUNO_MAP_HASHABLE_POINTER_T tItem);
+struct JUNO_MAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MAP_API_T,
+    const JUNO_MAP_HASHABLE_POINTER_API_T *ptHashablePointerApi;
+    const JUNO_VALUE_POINTER_API_T *ptValuePointerApi;
+    JUNO_DS_ARRAY_ROOT_T *ptHashMap;
 );
 
-JUNO_MODULE_RESULT(JUNO_RESULT_MAP_HASHABLE_POINTER_T, JUNO_MAP_HASHABLE_POINTER_T);
-
-struct JUNO_MAP_API_TAG JUNO_MODULE_API_DERIVE(JUNO_DS_ARRAY_API_T,
-    JUNO_RESULT_MAP_HASHABLE_POINTER_T (*Get)(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem);
-    JUNO_STATUS_T (*Set)(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem);
-    JUNO_STATUS_T (*Remove)(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tKey);
-);
-
-#define JunoDs_MapApiInit(GetAt, SetAt, RemoveAt) \
-{ \
-    {GetAt, SetAt, RemoveAt}, \
-    JunoDs_MapGet, \
-    JunoDs_MapSet, \
-    JunoDs_MapRemove \
-}
-
-static inline JUNO_STATUS_T JunoDs_MapApiVerify(const JUNO_MAP_API_T *ptApi)
+struct JUNO_MAP_HASHABLE_POINTER_API_TAG
 {
-    JUNO_ASSERT_EXISTS(
-        ptApi &&
-        ptApi->Get &&
-        ptApi->Remove &&
-        ptApi->Set
-    );
-    return JunoDs_ArrayApiVerify(&ptApi->tRoot);
-}
+    /// Calculate the hash for the given key
+    JUNO_RESULT_SIZE_T (*Hash)(JUNO_POINTER_T tItem);
+    JUNO_RESULT_BOOL_T (*IsValueNull)(JUNO_POINTER_T tItem);
+};
+
+struct JUNO_MAP_API_TAG
+{
+    JUNO_RESULT_POINTER_T (*Get)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tReturnItem);
+    JUNO_STATUS_T (*Set)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
+    JUNO_STATUS_T (*Remove)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
+};
 
 /// Verify the map has all members
-static inline JUNO_STATUS_T JunoDs_MapVerify(JUNO_MAP_T *ptMap)
-{
-    JUNO_ASSERT_EXISTS(ptMap);
-    JUNO_STATUS_T tStatus = JunoDs_MapApiVerify(ptMap->ptApi);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
-    tStatus = JunoDs_ArrayVerify(&ptMap->tRoot);
-    return tStatus;
-}
-
-static inline JUNO_STATUS_T JunoDs_MapHashablePointerVerify(const JUNO_MAP_HASHABLE_POINTER_T tPointer)
+static inline JUNO_STATUS_T JunoDs_MapVerify(JUNO_MAP_ROOT_T *ptMap)
 {
     JUNO_ASSERT_EXISTS(
-        tPointer.ptApi &&
-        tPointer.ptApi->Hash
+        ptMap &&
+        ptMap->ptApi &&
+        ptMap->ptHashablePointerApi &&
+        ptMap->ptValuePointerApi &&
+        ptMap->ptHashMap &&
+        ptMap->ptHashablePointerApi->Hash &&
+        ptMap->ptHashablePointerApi->IsValueNull &&
+        ptMap->ptValuePointerApi->Equals
     );
-    JUNO_STATUS_T tStatus = JunoMemory_ValuePointerVerify(tPointer.tRoot);
+    JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptMap->ptHashMap);
     return tStatus;
 }
 
 /// Init the juno map module
-JUNO_STATUS_T JunoDs_MapInit(JUNO_MAP_T *ptMapRoot, const JUNO_MAP_API_T *ptApi, size_t zCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData);
-JUNO_RESULT_MAP_HASHABLE_POINTER_T JunoDs_MapGet(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem);
-JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tItem);
-JUNO_STATUS_T JunoDs_MapRemove(JUNO_MAP_T *ptJunoMap, JUNO_MAP_HASHABLE_POINTER_T tKey);
+JUNO_STATUS_T JunoDs_MapInit(JUNO_MAP_ROOT_T *ptMapRoot, const JUNO_MAP_HASHABLE_POINTER_API_T *ptHashablePointerApi, const JUNO_VALUE_POINTER_API_T *ptValuePointerApi, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData);
+JUNO_RESULT_POINTER_T JunoDs_MapGet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
+JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
+JUNO_STATUS_T JunoDs_MapRemove(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
 #ifdef __cplusplus
 }
 #endif
