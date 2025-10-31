@@ -41,7 +41,7 @@ typedef struct JUNO_SCH_API_TAG JUNO_SCH_API_T;
 typedef struct JUNO_SCH_ROOT_TAG JUNO_SCH_ROOT_T;
 
 #define JUNO_SCH_TABLE_NEW(ptArrName, zAppsPerMinorFrame, zNumMinorFrames, ...) \
-JUNO_APP_T *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}
+JUNO_APP_ROOT_T *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}
 
 struct JUNO_SCH_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SCH_API_T,
     JUNO_TIME_ROOT_T *ptTime;
