@@ -89,21 +89,21 @@ static void test_AddTime_no_subseconds_overflow(void)
     JUNO_TIMESTAMP_T add = { .iSeconds = 3, .iSubSeconds = 50 };
     JUNO_STATUS_T status = tTimeMod.ptApi->AddTime(&tTimeMod, &ret, add);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
-    TEST_ASSERT_EQUAL_UINT64(5, ret.iSeconds);     // 2 + 3
-    TEST_ASSERT_EQUAL_UINT64(150, ret.iSubSeconds); // 100 + 50
+    TEST_ASSERT_EQUAL_UINT32(5, ret.iSeconds);     // 2 + 3
+    TEST_ASSERT_EQUAL_UINT32(150, ret.iSubSeconds); // 100 + 50
 }
 
 // Positive test: AddTime with subseconds overflow
 static void test_AddTime_with_subseconds_overflow(void)
 {
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
     JUNO_TIMESTAMP_T ret = { .iSeconds = 1, .iSubSeconds = max_sub - 5 };
     JUNO_TIMESTAMP_T add = { .iSeconds = 0, .iSubSeconds = 10 };
     // Difference = max_sub - (max_sub -5) = 5; 10 >=5 triggers overflow branch
     JUNO_STATUS_T status = tTimeMod.ptApi->AddTime(&tTimeMod, &ret, add);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
-    TEST_ASSERT_EQUAL_UINT64(2, ret.iSeconds);         // 1 + 0 + overflow(1)
-    TEST_ASSERT_EQUAL_UINT64(5, ret.iSubSeconds);      // 10 - 5
+    TEST_ASSERT_EQUAL_UINT32(2, ret.iSeconds);         // 1 + 0 + overflow(1)
+    TEST_ASSERT_EQUAL_UINT32(5, ret.iSubSeconds);      // 10 - 5
 }
 
 // Positive test: SubtractTime without borrow
@@ -114,21 +114,21 @@ static void test_SubtractTime_no_borrow(void)
 
     JUNO_STATUS_T status = tTimeMod.ptApi->SubtractTime(&tTimeMod, &ret, sub);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
-    TEST_ASSERT_EQUAL_UINT64(7, ret.iSeconds);       // 10 - 3
-    TEST_ASSERT_EQUAL_UINT64(900, ret.iSubSeconds);  // 1000 - 100
+    TEST_ASSERT_EQUAL_UINT32(7, ret.iSeconds);       // 10 - 3
+    TEST_ASSERT_EQUAL_UINT32(900, ret.iSubSeconds);  // 1000 - 100
 }
 
 // Positive test: SubtractTime with subseconds borrow
 static void test_SubtractTime_borrow_subseconds(void)
 {
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
     JUNO_TIMESTAMP_T ret = { .iSeconds = 10, .iSubSeconds = 2 };
     JUNO_TIMESTAMP_T sub = { .iSeconds = 3, .iSubSeconds = 100 };
     // 2 < 100 triggers borrow: seconds--, subseconds = max_sub - (100 - 2)
     JUNO_STATUS_T status = tTimeMod.ptApi->SubtractTime(&tTimeMod, &ret, sub);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
-    TEST_ASSERT_EQUAL_UINT64(6, ret.iSeconds);                   // 10 - borrow(1)
-    TEST_ASSERT_EQUAL_UINT64(max_sub - 98, ret.iSubSeconds);     // max - (100 - 2)
+    TEST_ASSERT_EQUAL_UINT32(6, ret.iSeconds);                   // 10 - borrow(1)
+    TEST_ASSERT_EQUAL_UINT32(max_sub - 98, ret.iSubSeconds);     // max - (100 - 2)
 }
 
 // Negative test: SubtractTime when subtracting more seconds than available
@@ -138,8 +138,8 @@ static void test_SubtractTime_invalid_lower_seconds(void)
     JUNO_TIMESTAMP_T sub = { .iSeconds = 2, .iSubSeconds = 0 };
     JUNO_STATUS_T status = tTimeMod.ptApi->SubtractTime(&tTimeMod, &ret, sub);
     TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, status);
-    TEST_ASSERT_EQUAL_UINT64(0, ret.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, ret.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, ret.iSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, ret.iSubSeconds);
 }
 
 // Negative test: SubtractTime when seconds = 0 but subseconds < subtract
@@ -149,8 +149,8 @@ static void test_SubtractTime_invalid_zero_seconds_insufficient_subseconds(void)
     JUNO_TIMESTAMP_T sub = { .iSeconds = 0, .iSubSeconds = 10 };
     JUNO_STATUS_T status = tTimeMod.ptApi->SubtractTime(&tTimeMod, &ret, sub);
     TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, status);
-    TEST_ASSERT_EQUAL_UINT64(0, ret.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, ret.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, ret.iSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, ret.iSubSeconds);
 }
 
 // Positive test: TimestampToNanos integer seconds
@@ -165,7 +165,7 @@ static void test_TimestampToNanos_success_integer(void)
 // Positive test: TimestampToNanos fractional subseconds
 static void test_TimestampToNanos_success_fractional(void)
 {
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
     JUNO_TIMESTAMP_T t = { .iSeconds = 0, .iSubSeconds = max_sub };
     JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
@@ -185,7 +185,7 @@ static void test_TimestampToMicros_success_integer(void)
 // Positive test: TimestampToMicros fractional subseconds
 static void test_TimestampToMicros_success_fractional(void)
 {
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
     JUNO_TIMESTAMP_T t = { .iSeconds = 0, .iSubSeconds = max_sub };
     JUNO_TIME_MICROS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMicros(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
@@ -204,7 +204,7 @@ static void test_TimestampToMillis_success_integer(void)
 // Positive test: TimestampToMillis fractional subseconds
 static void test_TimestampToMillis_success_fractional(void)
 {
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
     JUNO_TIMESTAMP_T t = { .iSeconds = 0, .iSubSeconds = max_sub };
     JUNO_TIME_MILLIS_RESULT_T tResult = tTimeMod.ptApi->TimestampToMillis(&tTimeMod, t);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
@@ -214,70 +214,76 @@ static void test_TimestampToMillis_success_fractional(void)
 // Positive test: NanosToTimestamp with zero input
 static void test_NanosToTimestamp_zero(void)
 {
-    uint64_t input = 0;
+    JUNO_TIME_NANOS_T input = 0;
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->NanosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: NanosToTimestamp integer and fractional parts
 static void test_NanosToTimestamp_integer_and_fractional(void)
 {
-    const uint64_t NANO_PER_SEC = 1000000000ULL;
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
-    const uint64_t subs_per_nano = max_sub / NANO_PER_SEC;
-    uint64_t input = 1500000000ULL; // 1.5 seconds
+    const JUNO_TIME_NANOS_T NANO_PER_SEC = 1000000000ULL;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
+    JUNO_TIME_NANOS_T input = 1500000000ULL; // 1.5 seconds
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->NanosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(1, tResult.tOk.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64((input % NANO_PER_SEC) * subs_per_nano, tResult.tOk.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(1, tResult.tOk.iSeconds);
+    // Calculate expected subseconds with rounding: (500000000 * max_sub + 500000000) / 1000000000
+    JUNO_TIME_NANOS_T iFraction = input % NANO_PER_SEC;
+    JUNO_TIME_SUBSECONDS_T expected = (iFraction * (JUNO_TIME_NANOS_T)max_sub + NANO_PER_SEC / 2) / NANO_PER_SEC;
+    TEST_ASSERT_EQUAL_UINT32(expected, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MicrosToTimestamp with zero input
 static void test_MicrosToTimestamp_zero(void)
 {
-    uint64_t input = 0;
+    JUNO_TIME_MICROS_T input = 0;
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MicrosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MicrosToTimestamp integer and fractional parts
 static void test_MicrosToTimestamp_integer_and_fractional(void)
 {
-    const uint64_t MICRO_PER_SEC = 1000000ULL;
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
-    const uint64_t subs_per_micro = max_sub / MICRO_PER_SEC;
-    uint64_t input = 2500000ULL; // 2.5 seconds
+    const JUNO_TIME_MICROS_T MICRO_PER_SEC = 1000000ULL;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
+    JUNO_TIME_MICROS_T input = 2500000ULL; // 2.5 seconds
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MicrosToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(2, tResult.tOk.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64((input % MICRO_PER_SEC) * subs_per_micro, tResult.tOk.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(2, tResult.tOk.iSeconds);
+    // Calculate expected subseconds with rounding: (500000 * max_sub + 500000) / 1000000
+    JUNO_TIME_MICROS_T iFraction = input % MICRO_PER_SEC;
+    JUNO_TIME_SUBSECONDS_T expected = (iFraction * (JUNO_TIME_MICROS_T)max_sub + MICRO_PER_SEC / 2) / MICRO_PER_SEC;
+    TEST_ASSERT_EQUAL_UINT32(expected, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MillisToTimestamp with zero input
 static void test_MillisToTimestamp_zero(void)
 {
-    uint64_t input = 0;
+    JUNO_TIME_MILLIS_T input = 0;
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MillisToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64(0, tResult.tOk.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSubSeconds);
 }
 
 // Positive test: MillisToTimestamp integer and fractional parts
 static void test_MillisToTimestamp_integer_and_fractional(void)
 {
-    const uint64_t MILLI_PER_SEC = 1000ULL;
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
-    const uint64_t subs_per_milli = max_sub / MILLI_PER_SEC;
-    uint64_t input = 4500ULL; // 4.5 seconds
+    const JUNO_TIME_MILLIS_T MILLI_PER_SEC = 1000ULL;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
+    JUNO_TIME_MILLIS_T input = 4500ULL; // 4.5 seconds
     JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->MillisToTimestamp(&tTimeMod, input);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
-    TEST_ASSERT_EQUAL_UINT64(4, tResult.tOk.iSeconds);
-    TEST_ASSERT_EQUAL_UINT64((input % MILLI_PER_SEC) * subs_per_milli, tResult.tOk.iSubSeconds);
+    TEST_ASSERT_EQUAL_UINT32(4, tResult.tOk.iSeconds);
+    // Calculate expected subseconds with rounding: (500 * max_sub + 500) / 1000
+    JUNO_TIME_MILLIS_T iFraction = input % MILLI_PER_SEC;
+    JUNO_TIME_SUBSECONDS_T expected = (iFraction * (JUNO_TIME_MILLIS_T)max_sub + MILLI_PER_SEC / 2) / MILLI_PER_SEC;
+    TEST_ASSERT_EQUAL_UINT32(expected, tResult.tOk.iSubSeconds);
 }
 
 // Test Now function returns reasonable values
@@ -307,7 +313,7 @@ static void test_Sleep_returns_success(void)
 // Test Sleep stub returns success
 static void test_timestamp_to_double(void)
 {
-    const JUNO_TIME_SUBSECONDS_T max_sub = -1;
+    const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
     JUNO_TIMESTAMP_T duration = { .iSeconds = 1, .iSubSeconds = max_sub };
     JUNO_RESULT_F64_T tResult = tTimeMod.ptApi->TimestampToDouble(&tTimeMod, duration);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
