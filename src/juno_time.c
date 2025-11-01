@@ -82,12 +82,11 @@ JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(const JUNO_TIME_ROOT_T *ptTim
         return tResult;
     }
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
-    const JUNO_TIME_NANOS_T iMAX_NANOS = (JUNO_TIME_NANOS_T)-1;
+    const JUNO_TIME_NANOS_T iMAX_NANOS = (~(JUNO_TIME_NANOS_T)0);
     const JUNO_TIME_NANOS_T iNANOS_PER_SEC = 1000ULL * 1000ULL * 1000ULL;
 
-    // Compute fractional contribution using integer math
-    JUNO_TIME_NANOS_T iFrac = ((JUNO_TIME_NANOS_T)tTime.iSubSeconds * iNANOS_PER_SEC) / giSUBSECS_MAX;
-
+    // Compute fractional contribution using integer math with rounding
+    JUNO_TIME_NANOS_T iFrac = ((JUNO_TIME_NANOS_T)tTime.iSubSeconds * iNANOS_PER_SEC + giSUBSECS_MAX / 2) / giSUBSECS_MAX;
     // Guard seconds multiplication overflow
     if (tTime.iSeconds > iMAX_NANOS / iNANOS_PER_SEC)
     {
@@ -119,10 +118,9 @@ JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(const JUNO_TIME_ROOT_T *ptT
         return tResult;
     }
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
-    const JUNO_TIME_MICROS_T iMAX_MICROS = (JUNO_TIME_MICROS_T)-1;
+    const JUNO_TIME_MICROS_T iMAX_MICROS = (~(JUNO_TIME_MICROS_T)0);
     const JUNO_TIME_MICROS_T iMICROS_PER_SEC = 1000ULL * 1000ULL;
-
-    JUNO_TIME_MICROS_T iFrac = ((JUNO_TIME_MICROS_T)tTime.iSubSeconds * iMICROS_PER_SEC) / giSUBSECS_MAX;
+    JUNO_TIME_MICROS_T iFrac = ((JUNO_TIME_MICROS_T)tTime.iSubSeconds * iMICROS_PER_SEC + giSUBSECS_MAX / 2) / giSUBSECS_MAX;
 
     if (tTime.iSeconds > iMAX_MICROS / iMICROS_PER_SEC)
     {
@@ -153,10 +151,10 @@ JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(const JUNO_TIME_ROOT_T *ptT
         return tResult;
     }
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
-    const JUNO_TIME_MILLIS_T iMAX_MILLIS = (JUNO_TIME_MILLIS_T)-1;
+    const JUNO_TIME_MILLIS_T iMAX_MILLIS = (~(JUNO_TIME_MILLIS_T)0);
     const JUNO_TIME_MILLIS_T iMILLIS_PER_SEC = 1000ULL;
 
-    JUNO_TIME_MILLIS_T iFrac = ((JUNO_TIME_MILLIS_T)tTime.iSubSeconds * iMILLIS_PER_SEC) / giSUBSECS_MAX;
+    JUNO_TIME_MILLIS_T iFrac = ((JUNO_TIME_MILLIS_T)tTime.iSubSeconds * iMILLIS_PER_SEC + giSUBSECS_MAX / 2) / giSUBSECS_MAX;
 
     if (tTime.iSeconds > iMAX_MILLIS / iMILLIS_PER_SEC)
     {
@@ -187,10 +185,11 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(const JUNO_TIME_ROOT_T *ptTime
         return tResult;
     }
     const JUNO_TIME_NANOS_T iNANOS_PER_SEC = 1000 * 1000 * 1000;
-    const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_NANO = giSUBSECS_MAX / iNANOS_PER_SEC;
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk.iSeconds = iNanos / iNANOS_PER_SEC;
-    tResult.tOk.iSubSeconds = (iNanos % iNANOS_PER_SEC) * iSUBSECS_PER_NANO;
+    // Use full precision: (fraction * SUBSECS_MAX) / NANOS_PER_SEC with rounding
+    JUNO_TIME_NANOS_T iFraction = iNanos % iNANOS_PER_SEC;
+    tResult.tOk.iSubSeconds = (iFraction * (JUNO_TIME_NANOS_T)giSUBSECS_MAX + iNANOS_PER_SEC / 2) / iNANOS_PER_SEC;
     return tResult;
 }
 
@@ -203,10 +202,11 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(const JUNO_TIME_ROOT_T *ptTim
         return tResult;
     }
     const JUNO_TIME_MICROS_T iMICROS_PER_SEC = 1000 * 1000;
-    const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_MICRO = giSUBSECS_MAX / iMICROS_PER_SEC;
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk.iSeconds = iMicros / iMICROS_PER_SEC;
-    tResult.tOk.iSubSeconds = (iMicros % iMICROS_PER_SEC) * iSUBSECS_PER_MICRO;
+    // Use full precision: (fraction * SUBSECS_MAX) / MICROS_PER_SEC with rounding
+    JUNO_TIME_MICROS_T iFraction = iMicros % iMICROS_PER_SEC;
+    tResult.tOk.iSubSeconds = (iFraction * (JUNO_TIME_MICROS_T)giSUBSECS_MAX + iMICROS_PER_SEC / 2) / iMICROS_PER_SEC;
     return tResult;
 }
 
@@ -219,10 +219,11 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(const JUNO_TIME_ROOT_T *ptTim
         return tResult;
     }
     const JUNO_TIME_MILLIS_T iMILLIS_PER_SEC = 1000;
-    const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_MILLI = giSUBSECS_MAX / iMILLIS_PER_SEC;
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk.iSeconds = iMillis / iMILLIS_PER_SEC;
-    tResult.tOk.iSubSeconds = (iMillis % iMILLIS_PER_SEC) * iSUBSECS_PER_MILLI;
+    // Use full precision: (fraction * SUBSECS_MAX) / MILLIS_PER_SEC with rounding
+    JUNO_TIME_MILLIS_T iFraction = iMillis % iMILLIS_PER_SEC;
+    tResult.tOk.iSubSeconds = (iFraction * (JUNO_TIME_MILLIS_T)giSUBSECS_MAX + iMILLIS_PER_SEC / 2) / iMILLIS_PER_SEC;
     return tResult;
 }
 
