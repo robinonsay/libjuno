@@ -26,6 +26,7 @@
 */
 #ifndef TEMPLATE_API_H
 #define TEMPLATE_API_H
+#include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #ifdef __cplusplus
@@ -34,8 +35,6 @@ extern "C"
 #endif
 
 typedef struct TEMPLATE_API_TAG TEMPLATE_API_T;
-
-typedef union TEMPLATE_TAG TEMPLATE_T;
 typedef struct TEMPLATE_ROOT_TAG TEMPLATE_ROOT_T;
 
 struct TEMPLATE_ROOT_TAG JUNO_MODULE_ROOT(TEMPLATE_API_T,
@@ -49,8 +48,34 @@ struct TEMPLATE_ROOT_TAG JUNO_MODULE_ROOT(TEMPLATE_API_T,
 struct TEMPLATE_API_TAG
 {
     /// TODO: Replace this example function with your own functions
-    JUNO_STATUS_T (*ExampleFunction)(TEMPLATE_T *ptTemplate);
+    JUNO_STATUS_T (*ExampleFunction)(TEMPLATE_ROOT_T *ptTemplate);
 };
+
+static inline JUNO_STATUS_T Template_ApiVerify(const TEMPLATE_API_T *ptTemplateApi)
+{
+    JUNO_ASSERT_EXISTS(
+        ptTemplateApi &&
+        ptTemplateApi->ExampleFunction
+    );
+    return JUNO_STATUS_SUCCESS;
+}
+
+
+static inline JUNO_STATUS_T Template_Verify(TEMPLATE_ROOT_T *ptTemplate)
+{
+    JUNO_ASSERT_EXISTS(ptTemplate);
+    JUNO_STATUS_T tStatus = Template_ApiVerify(ptTemplate->ptApi);
+    return tStatus;
+}
+
+static inline JUNO_STATUS_T Template_Init(TEMPLATE_ROOT_T *ptTemplate, const TEMPLATE_API_T *ptTemplateApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+{
+    JUNO_ASSERT_EXISTS(ptTemplate && ptTemplateApi);
+    ptTemplate->ptApi = ptTemplateApi;
+    ptTemplate->_pfcnFailureHandler = pfcnFailureHandler;
+    ptTemplate->_pvFailureUserData = pvFailureUserData;
+    return Template_Verify(ptTemplate);
+}
 
 #ifdef __cplusplus
 }
