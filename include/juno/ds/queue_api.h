@@ -21,9 +21,33 @@
 */
 
 /**
-    This header contains the juno_ds_queue library API
-    @author Robin Onsay
-*/
+ * @file queue_api.h
+ * @brief Fixed-capacity FIFO queue built on the Array API.
+ * @defgroup juno_ds_queue Queue API
+ * @details
+ *  A lightweight, fixed-capacity FIFO queue that stores elements in a
+ *  circular buffer backed by a Juno Array instance. The queue uses
+ *  JUNO_POINTER_T to copy elements into the backing array and to return them.
+ *
+ *  Characteristics:
+ *  - Deterministic O(1) enqueue/dequeue/peek.
+ *  - Capacity defined by the backing array; no dynamic allocation.
+ *  - Non-thread-safe by default; guard externally if needed.
+ *
+ *  Invariants:
+ *  - 0 <= zLength <= ptQueueArray->zCapacity
+ *  - iStartIndex < ptQueueArray->zCapacity (when capacity > 0)
+ *  - Backing array API must be valid (see JunoDs_ArrayVerify).
+ *
+ *  Error behavior (per implementation):
+ *  - Enqueue on full queue: returns JUNO_STATUS_INVALID_SIZE_ERROR.
+ *  - Dequeue on empty queue: returns JUNO_STATUS_ERR.
+ *  - Peek on empty queue: returns JUNO_STATUS_INVALID_SIZE_ERROR.
+ *
+ *  Element ownership:
+ *  - Elements are copied into/out of the array via the pointer API (Copy),
+ *    so tItem/tReturn must describe a valid storage location and size.
+ */
 #ifndef JUNO_DS_QUEUE_API_H
 #define JUNO_DS_QUEUE_API_H
 #include "juno/ds/array_api.h"
@@ -37,29 +61,46 @@ extern "C"
 {
 #endif
 
-/// The Buffer queue root
+/// The queue root module
 typedef struct JUNO_DS_QUEUE_ROOT_TAG JUNO_DS_QUEUE_ROOT_T;
 typedef struct JUNO_DS_QUEUE_API_TAG  JUNO_DS_QUEUE_API_T;
 
-/// The root buffee queue
+/// The queue root module instance.
+/**
+ * @brief Queue root instance and state.
+ * @ingroup juno_ds_queue
+ */
 struct JUNO_DS_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_QUEUE_API_T,
-    JUNO_DS_ARRAY_ROOT_T *ptQueueArray;
-    /// The start index of the buffer (ie the first element)
-    size_t iStartIndex;
-    /// The current length of the buffer
-    size_t zLength;
+    JUNO_DS_ARRAY_ROOT_T *ptQueueArray; /**< Backing array defining capacity and element ops. */
+    size_t iStartIndex;                 /**< Index of the logical front element. */
+    size_t zLength;                     /**< Current number of elements in the queue. */
 );
 
+/**
+ * @brief Queue API vtable.
+ * @ingroup juno_ds_queue
+ */
 struct JUNO_DS_QUEUE_API_TAG
 {
-    /// Enqueue an item on the queue
+    /// @brief Enqueue an item to the back of the queue.
+    /// @param ptQueue Queue instance.
+    /// @param tItem Pointer trait describing the item to copy into the queue.
+    /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_INVALID_SIZE_ERROR if full; or pointer/array errors.
     JUNO_STATUS_T (*Enqueue)(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
-    /// Dequeue an item from the queue
+    /// @brief Dequeue the item at the front of the queue.
+    /// @param ptQueue Queue instance.
+    /// @param tReturn Pointer trait receiving the dequeued item (copied out).
+    /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if empty; or pointer/array errors.
     JUNO_STATUS_T (*Dequeue)(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
-    /// Peek at the next item in the queue
+    /// @brief Peek at the item at the front without removing it.
+    /// @param ptQueue Queue instance.
+    /// @return Result with pointer descriptor to the front element; JUNO_STATUS_INVALID_SIZE_ERROR if empty.
     JUNO_RESULT_POINTER_T (*Peek)(JUNO_DS_QUEUE_ROOT_T *ptQueue);
 };
 
+/**
+ * @brief Verify that the queue API provides all required functions.
+ */
 static inline JUNO_STATUS_T JunoDs_QueueApiVerify(const JUNO_DS_QUEUE_API_T *ptQueueApi)
 {
      JUNO_ASSERT_EXISTS(
@@ -71,6 +112,7 @@ static inline JUNO_STATUS_T JunoDs_QueueApiVerify(const JUNO_DS_QUEUE_API_T *ptQ
     return JUNO_STATUS_SUCCESS;   
 }
 
+/// @brief Verify a queue instance and its API table.
 static inline JUNO_STATUS_T JunoDs_QueueVerify(const JUNO_DS_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
@@ -79,14 +121,19 @@ static inline JUNO_STATUS_T JunoDs_QueueVerify(const JUNO_DS_QUEUE_ROOT_T *ptQue
     return JunoDs_QueueApiVerify(ptQueue->ptApi);
 }
 
-/// Enqueue an item on the queue
+/// @brief Enqueue an item to the back of the queue (O(1)).
 JUNO_STATUS_T JunoDs_QueuePush(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
-/// Dequeue an item from the queue
+/// @brief Dequeue the item at the front of the queue into tReturn (O(1)).
 JUNO_STATUS_T JunoDs_QueuePop(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
-/// Peek at the next item in the queue
+/// @brief Peek at the item at the front without removing it (O(1)).
 JUNO_RESULT_POINTER_T JunoDs_QueuePeek(JUNO_DS_QUEUE_ROOT_T *ptQueue);
 
-/// Initialize a buffer queue with a capacity
+/// @brief Initialize a queue over a backing array with a given capacity.
+/// @param ptQueue Queue to initialize (output).
+/// @param ptQueueArray Backing array used for storage; defines capacity and element size.
+/// @param pfcnFailureHdlr Failure callback for assertions in this module.
+/// @param pvFailureUserData Opaque user data for the failure handler.
+/// @return JUNO_STATUS_SUCCESS on success; error if array verification fails.
 JUNO_STATUS_T JunoDs_QueueInit(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_DS_ARRAY_ROOT_T *ptQueueArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 #ifdef __cplusplus

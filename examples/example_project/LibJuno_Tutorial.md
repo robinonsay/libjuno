@@ -182,12 +182,12 @@ Here we will need to instantiate the engine, and system manager application modu
 
 ```cpp
 
-    JUNO_TIME_ROOT_T tTime = {0};
-    JUNO_LOG_ROOT_T tLogger = {0};
-    JUNO_SB_PIPE_T *tRegistry[10] = {0};
-    JUNO_SB_BROKER_ROOT_T tBroker = {0};
-    ENGINE_APP_T tEngineApp = {0};
-    SYSTEM_MANAGER_APP_T tSystemManagerApp = {0};
+    static JUNO_TIME_ROOT_T tTime = {0};
+    static JUNO_LOG_ROOT_T tLogger = {0};
+    static JUNO_SB_PIPE_T *tRegistry[10] = {0};
+    static JUNO_SB_BROKER_ROOT_T tBroker = {0};
+    static ENGINE_APP_T tEngineApp = {0};
+    static SYSTEM_MANAGER_APP_T tSystemManagerApp = {0};
 
 ```
 
@@ -228,7 +228,7 @@ application is done, the next will start.
 
 ```cpp
 
-    JUNO_APP_ROOT_T *ptAppList[2] = {
+    static JUNO_APP_ROOT_T *ptAppList[2] = {
         &tSystemManagerApp.tRoot,
         &tEngineApp.tRoot
     };
@@ -305,7 +305,8 @@ struct ENGINE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
     const JUNO_TIME_ROOT_T *ptTime;
     JUNO_SB_BROKER_ROOT_T *ptBroker;
     ENGINE_CMD_MSG_T ptArrCmdBuffer[ENGINE_CMD_MSG_PIPE_DEPTH];
-    ENGINE_CMD_MSG_ARRAY_T tCmdPipe;
+    ENGINE_CMD_MSG_ARRAY_T tCmdArray;
+    JUNO_SB_PIPE_T tCmdPipe;
     float fCurrentRpm;
 );
 
@@ -375,7 +376,7 @@ earlier. This enables the derived pipe to have specific type information (vs usi
 
 ```cpp
 
-typedef struct ENGINE_CMD_MSG_ARRAY_TAG JUNO_MODULE_DERIVE_WITH_API(JUNO_SB_PIPE_T, JUNO_DS_QUEUE_API_T,
+typedef struct ENGINE_CMD_MSG_ARRAY_TAG JUNO_MODULE_DERIVE(JUNO_DS_ARRAY_ROOT_T,
     ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer;
 ) ENGINE_CMD_MSG_ARRAY_T;
 
@@ -408,7 +409,7 @@ initialize the pipe with the message buffer and capacity.
 
 ```cpp
 
-JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
+JUNO_STATUS_T EngineCmdMsg_ArrayInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
 
 
 ```
@@ -453,7 +454,10 @@ const JUNO_POINTER_API_T gtEngineCmdMsgPointerApi =
 };
 
 // Instantiate the engine_cmd msg pipe api
-static const JUNO_DS_QUEUE_API_T gtEngineCmdMsgPipeApi = JunoDs_QueueApiInit(SetAt, GetAt, RemoveAt);
+static const JUNO_DS_ARRAY_API_T gtEngineCmdMsgPipeApi = 
+{
+    SetAt, GetAt, RemoveAt
+};
 
 
 ```
@@ -509,7 +513,7 @@ our implementation. This is done by checking the pipe api pointer.
 ```cpp
 
 /// Asserts the api is for the pipe
-#define ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtEngineCmdMsgPipeApi.tRoot) { __VA_ARGS__; }
+#define ENGINE_CMD_MSG_PIPE_ASSERT_API(ptArray, ...)  if(ptArray->ptApi != &gtEngineCmdMsgPipeApi) { __VA_ARGS__; }
 
 
 ```
@@ -520,14 +524,16 @@ message buffer and capacity.
 
 ```cpp
 
-JUNO_STATUS_T EngineCmdMsg_PipeInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
+JUNO_STATUS_T EngineCmdMsg_ArrayInit(ENGINE_CMD_MSG_ARRAY_T *ptEngineCmdMsgPipe, ENGINE_CMD_MSG_T *ptArrEngineCmdMsgBuffer, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     // Assert the msg pipe exists
     JUNO_ASSERT_EXISTS(ptEngineCmdMsgPipe && ptArrEngineCmdMsgBuffer);
     // Set the message buffer
     ptEngineCmdMsgPipe->ptArrEngineCmdMsgBuffer = ptArrEngineCmdMsgBuffer;
+
     // init the pipe
-    JUNO_STATUS_T tStatus = JunoSb_PipeInit(&ptEngineCmdMsgPipe->tRoot, &gtEngineCmdMsgPipeApi, ENGINE_CMD_MSG_MID, iCapacity, pfcnFailureHdlr, pvUserData);
+    JUNO_STATUS_T tStatus = JunoDs_ArrayInit(&ptEngineCmdMsgPipe->tRoot, &gtEngineCmdMsgPipeApi, iCapacity, pfcnFailureHdlr, pvUserData);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }
 
@@ -743,10 +749,12 @@ commands. We will also register this pipe with the broker so it can be active.
 
 ```cpp
 
-    tStatus = EngineCmdMsg_PipeInit(&ptEngineApp->tCmdPipe, ptEngineApp->ptArrCmdBuffer, ENGINE_CMD_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    tStatus = EngineCmdMsg_ArrayInit(&ptEngineApp->tCmdArray, ptEngineApp->ptArrCmdBuffer, ENGINE_CMD_MSG_PIPE_DEPTH, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoSb_PipeInit(&ptEngineApp->tCmdPipe, ENGINE_CMD_MSG_MID, &ptEngineApp->tCmdArray.tRoot, ptJunoApp->_pfcnFailureHandler, ptJunoApp->_pvFailureUserData);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     // Register the subscriber
-    tStatus = ptEngineApp->ptBroker->ptApi->RegisterSubscriber(ptEngineApp->ptBroker, &ptEngineApp->tCmdPipe.tRoot);
+    tStatus = ptEngineApp->ptBroker->ptApi->RegisterSubscriber(ptEngineApp->ptBroker, &ptEngineApp->tCmdPipe);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
 
 ```
@@ -799,7 +807,7 @@ create a convenience variable to access the pipe's queue API.
 
     // sleep for half a second
     usleep(500E3);
-    const JUNO_DS_QUEUE_API_T *ptCmdPipeApi = ptEngineApp->tCmdPipe.ptApi;
+    const JUNO_DS_QUEUE_API_T *ptCmdPipeApi = ptEngineApp->tCmdPipe.tRoot.ptApi;
 
 ```
 
@@ -850,7 +858,7 @@ if there is no command in the pipe and will jump to the exit point of this funct
 
 ```cpp
 
-    tStatus = ptCmdPipeApi->Dequeue(&ptEngineApp->tCmdPipe.tRoot.tRoot, tEngineCmdPointer);
+    tStatus = ptCmdPipeApi->Dequeue(&ptEngineApp->tCmdPipe.tRoot, tEngineCmdPointer);
     JUNO_ASSERT_SUCCESS(tStatus, goto exit);
 /*DOC
 Because we has a `JUNO_ASSERT_SUCCESS` on the previous function, we know that at this point
@@ -933,7 +941,7 @@ will command the engine to the same target as before.
 ```cpp
 
     JUNO_TIME_MILLIS_RESULT_T tMillisResult = {0};
-    tStatus = ptSystemManagerApp->tEngineTlmPipe.ptApi->Dequeue(&ptSystemManagerApp->tEngineTlmPipe.tRoot.tRoot, tTlmMsgPointer);
+    tStatus = ptSystemManagerApp->tEngineTlmPipe.tRoot.ptApi->Dequeue(&ptSystemManagerApp->tEngineTlmPipe.tRoot, tTlmMsgPointer);
     JUNO_ASSERT_SUCCESS(tStatus, goto exit);
 
 ```

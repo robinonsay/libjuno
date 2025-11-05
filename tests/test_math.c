@@ -88,8 +88,8 @@ static void test_vec2_f64_cross(void)
 static void test_vec2_f64_L2(void)
 {
 	JUNO_VEC2_F64_T tVec1 = {{3, 4}};
-	double tRes = Juno_Vec2_F64_L2Norm(tVec1);
-	double tTruth = 5;
+	double tRes = Juno_Vec2_F64_L2Norm2(tVec1);
+	double tTruth = 25;
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
@@ -149,8 +149,8 @@ static void test_vec2_f32_cross(void)
 static void test_vec2_f32_L2(void)
 {
 	JUNO_VEC2_F32_T tVec1 = {{3, 4}};
-	float tRes = Juno_Vec2_F32_L2Norm(tVec1);
-	float tTruth = 5;
+	float tRes = Juno_Vec2_F32_L2Norm2(tVec1);
+	float tTruth = 25;
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
@@ -210,8 +210,8 @@ static void test_vec2_i32_cross(void)
 static void test_vec2_i32_L2(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {{3, 4}};
-	float tRes = Juno_Vec2_I32_L2Norm(tVec1);
-	float tTruth = 5;
+	float tRes = Juno_Vec2_I32_L2Norm2(tVec1);
+	float tTruth = 25;
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
@@ -274,8 +274,8 @@ static void test_vec3_f64_cross(void)
 static void test_vec3_f64_L2(void)
 {
 	JUNO_VEC3_F64_T tVec1 = {{1, 2, 2}};
-	double tRes = Juno_Vec3_F64_L2Norm(tVec1);
-	double tTruth = 3;
+	double tRes = Juno_Vec3_F64_L2Norm2(tVec1);
+	double tTruth = 9;
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
@@ -338,8 +338,8 @@ static void test_vec3_f32_cross(void)
 static void test_vec3_f32_L2(void)
 {
 	JUNO_VEC3_F32_T tVec1 = {{1, 2, 2}};
-	float tRes = Juno_Vec3_F32_L2Norm(tVec1);
-	float tTruth = 3;
+	float tRes = Juno_Vec3_F32_L2Norm2(tVec1);
+	float tTruth = 9;
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
@@ -402,8 +402,8 @@ static void test_vec3_i32_cross(void)
 static void test_vec3_i32_L2(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {{1, 2, 2}};
-	float tRes = Juno_Vec3_I32_L2Norm(tVec1);
-	float tTruth = 3;
+	float tRes = Juno_Vec3_I32_L2Norm2(tVec1);
+	float tTruth = 9;
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
@@ -452,6 +452,19 @@ static void test_rquat_f64_hamprod(void)
     }
 }
 
+static void test_rquat_f64_hamprod_general(void)
+{
+	// General case check against canonical Hamilton product
+	// q0 = (1,2,3,4), q1 = (5,6,7,8) -> (-60, 12, 30, 24)
+	JUNO_RQUAT_F64_T q0 = {{1.0, 2.0, 3.0, 4.0}};
+	JUNO_RQUAT_F64_T q1 = {{5.0, 6.0, 7.0, 8.0}};
+	JUNO_RQUAT_F64_T res = Juno_RQuat_F64_HamProd(q0, q1);
+	double truth[4] = { -60.0, 12.0, 30.0, 24.0 };
+	for(uint8_t i = 0; i < 4; i++) {
+		TEST_ASSERT_EQUAL_DOUBLE(truth[i], res.arr[i]);
+	}
+}
+
 static void test_rquat_f64_conj(void)
 {
     JUNO_RQUAT_F64_T q = {{1.0, 2.0, -3.0, 4.0}};
@@ -473,9 +486,9 @@ static void test_rquat_f64_l2norm2(void)
 static void test_rquat_f64_l2norm(void)
 {
     JUNO_RQUAT_F64_T q = {{1.0, 2.0, 3.0, 4.0}};
-    double n = Juno_RQuat_F64_L2Norm(q);
+    double n = Juno_RQuat_F64_L2Norm2(q);
     // sqrt(30) ≈ 5.477225575
-    TEST_ASSERT_DOUBLE_WITHIN(1e-12, sqrt(30.0), n);
+    TEST_ASSERT_DOUBLE_WITHIN(1e-12, 30.0, n);
 }
 
 static void test_rquat_f64_recip(void)
@@ -532,6 +545,7 @@ int main(void)
     RUN_TEST(test_rquat_f64_sub);
     RUN_TEST(test_rquat_f64_mult_scalar);
     RUN_TEST(test_rquat_f64_hamprod);
+	RUN_TEST(test_rquat_f64_hamprod_general);
     RUN_TEST(test_rquat_f64_conj);
     RUN_TEST(test_rquat_f64_l2norm2);
     RUN_TEST(test_rquat_f64_l2norm);

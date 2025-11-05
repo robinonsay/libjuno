@@ -21,9 +21,14 @@
 */
 
 /**
-    This header contains the io library API
-    @author Robin Onsay
-*/
+ * @file i2c_io_api.h
+ * @brief I2C transfer facade with simple read/write message descriptors.
+ * @defgroup juno_io_i2c I2C IO API
+ * @details
+ *  Provides a single Transfer() that takes an array of messages. Messages are
+ *  built using ReadMsg(...) and WriteMsg(...) helpers and grouped with
+ *  JUNO_I2C_IO_TRANSFER(...).
+ */
 #ifndef JUNO_I2C_IO_API_H
 #define JUNO_I2C_IO_API_H
 #include "juno/status.h"
@@ -106,27 +111,24 @@ struct JUNO_I2C_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_I2C_IO_API_T, JUNO_MODULE_EMPT
 struct JUNO_I2C_IO_API_TAG
 {
     /**
-        Perform an I2C transfer.
-        A typical call would look like:
-
-        ```c
-        // Single message
-        ptApi->Transfer(ptI2c, JUNO_I2C_IO_TRANSFER(WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff))), 1);
-
-        // OR, create an array of messages
-        JUNO_I2C_IO_MSG_T ptArrTransfer[] = JUNO_I2C_IO_TRANSFER(
-            WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff)),
-            ReadMsg(0xFF, ptMyReadBuff, sizeof(ptMyReadBuff))
-        );
-        ptApi->Transfer(ptI2c, ptArrTransfer, sizeof(ptArrTransfer) / sizeof(ptArrTransfer[0]));
-        ```
-
-        @param ptI2c     The I2C module instance.
-        @param ptArrMsgs Pointer to an array of I2C messages created with
-                         JUNO_I2C_IO_TRANSFER(...).
-        @param zMsgArrLen Number of messages in the array.
-        @return JUNO_STATUS_SUCCESS on success, error code otherwise.
-    */
+     * @brief Perform an I2C transfer composed of one or more messages.
+     * Example usage:
+     * @code
+     * // Single message
+     * ptApi->Transfer(ptI2c,
+     *     JUNO_I2C_IO_TRANSFER(WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff))), 1);
+     *
+     * // OR, create an array of messages
+     * JUNO_I2C_IO_MSG_T ptArrTransfer[] = JUNO_I2C_IO_TRANSFER(
+     *     WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff)),
+     *     ReadMsg(0xFF, ptMyReadBuff, sizeof(ptMyReadBuff))
+     * );
+     * ptApi->Transfer(ptI2c, ptArrTransfer, sizeof(ptArrTransfer) / sizeof(ptArrTransfer[0]));
+     * @endcode
+     * @param ptI2c I2C module instance.
+     * @param ptArrMsgs Pointer to message array created with JUNO_I2C_IO_TRANSFER(...).
+     * @param zMsgArrLen Number of messages in the array.
+     */
     JUNO_STATUS_T (*Transfer)(JUNO_I2C_IO_ROOT_T *ptI2c, const JUNO_I2C_IO_MSG_T *ptArrMsgs, size_t zMsgArrLen);
 };
 

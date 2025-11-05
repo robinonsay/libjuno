@@ -15,6 +15,14 @@
     included in all copies or substantial portions of the Software.
 */
 
+/**
+ * @file juno_math_constants.h
+ * @brief Common math constants for LibJuno (double precision).
+ * @defgroup juno_math Math Core
+ * @details
+ *  Provides frequently used mathematical constants as double-precision
+ *  macros. These are intended for compile-time use and freestanding builds.
+ */
 #ifndef JUNO_CONST_H
 #define JUNO_CONST_H
 
@@ -22,10 +30,39 @@
 extern "C" {
 #endif
 
+/**
+ * @def JUNO_PI
+ * @ingroup juno_math
+ * @brief Pi (π) in radians as a double-precision literal.
+ */
 #define JUNO_PI         3.141592653589793
+
+/**
+ * @def JUNO_HALF_PI
+ * @ingroup juno_math
+ * @brief Half pi (π/2) in radians as a double-precision literal.
+ */
 #define JUNO_HALF_PI    1.5707963267948966
+
+/**
+ * @def JUNO_QUART_PI
+ * @ingroup juno_math
+ * @brief Quarter pi (π/4) in radians as a double-precision literal.
+ */
 #define JUNO_QUART_PI   0.7853981633974483
+
+/**
+ * @def JUNO_E
+ * @ingroup juno_math
+ * @brief Euler's number e as a double-precision literal.
+ */
 #define JUNO_E          2.718281828459045
+
+/**
+ * @def ANG_EPSILON
+ * @ingroup juno_math
+ * @brief Small angle epsilon (radians) for approximate comparisons.
+ */
 #define ANG_EPSILON     1.0E-12
 
 #ifdef __cplusplus

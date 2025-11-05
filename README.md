@@ -33,8 +33,8 @@ than what the library assumed.
 
 LibJuno makes the assumption that it doesn't know how you're going to use it. It's designed to be
 easy to change and adapt to your specific requirements. That's why LibJuno doesn't implement a run-time
-and heavily utilizes dependency injection. Developers know their system better than anyone, especially
-developers of LibJuno. This library attempts to impower users with a set of tools they can choose to use
+and heavily utilizes dependency injection. Developers know their system better than anyone.
+This library attempts to impower users with a set of tools they can choose to use
 or leave on the table and create a solution that meets their requirements. LibJuno differs from other frameworks
 because this library makes it easy for developers to make that choice.
 
@@ -110,19 +110,6 @@ cmake -S . -B build -DJUNO_TESTS=ON -DJUNO_ASAN=ON -DJUNO_UBSAN=ON -DCMAKE_BUILD
 cmake --build build -j
 ctest --test-dir build --output-on-failure
 ```
-
-## Current Modules
-- **Memory**: Block-based allocator with typed pointer API (no malloc required). See `include/juno/memory/` and `src/juno_memory_block.c`.
-- **CRCs**: CCITT, CCITT32, Kermit, ZIP. See `include/juno/crc/crc.h` and `src/juno_ccitt*.c`, `src/juno_kermit.c`, `src/juno_zip.c`.
-- **Data Structures**: Buffers, queues, stacks, heap, map. See `include/juno/ds/*` and corresponding sources in `src/`.
-- **Time Utilities**: Basic time helpers. See `include/juno/time/time_api.h` and `src/juno_time.c`.
-- **BinHex/ARC helpers**: Utility encoders/decoders. See `src/juno_binhex.c`, `src/juno_arc.c`.
-
-## Future Modules
-- Filesystem interactions
-- Networking support
-- Additional utility libraries for embedded applications
-
 ## Inspiration for the Name
 Juno is the name of my wonderful dog and
 she has brought me so much comfort and stability throughout the years.

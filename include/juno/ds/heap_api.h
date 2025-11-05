@@ -21,9 +21,15 @@
 */
 
 /**
-    This header contains the juno_ds library API
-    @author Robin Onsay
-*/
+ * @file heap_api.h
+ * @brief Heap data structure API built on the array abstraction.
+ * @defgroup juno_ds_heap Heap API
+ * @details
+ *  A binary heap interface parameterized by element comparison and swap
+ *  operations. Backed by a JUNO_DS_ARRAY_ROOT_T for storage. Provides
+ *  Insert/Heapify/Pop operations and helpers like Update (bubble up) and
+ *  SiftDown.
+ */
 #ifndef JUNO_DS_API_H
 #define JUNO_DS_API_H
 #include "juno/ds/array_api.h"
@@ -71,17 +77,22 @@ struct JUNO_DS_HEAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_HEAP_API_T,
     size_t zLength;     /**< Current number of elements in the heap. */
 );
 
+/** @brief Element-level operations required by the heap. */
 struct JUNO_DS_HEAP_POINTER_API_TAG
 {
-    /// Compare two values to perform the heap operation
+    /// @brief Compare two values to determine ordering.
     JUNO_DS_HEAP_COMPARE_RESULT_T (*Compare)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tParent, JUNO_POINTER_T tChild);
+    /// @brief Swap two values in the underlying storage.
     JUNO_STATUS_T (*Swap)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
 };
 
 struct JUNO_DS_HEAP_API_TAG
 {
+    /// @brief Insert a new element into the heap.
     JUNO_STATUS_T (*Insert)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tValue);
+    /// @brief Transform the underlying array into a heap in-place.
     JUNO_STATUS_T (*Heapify)(JUNO_DS_HEAP_ROOT_T *ptHeap);
+    /// @brief Pop the root element (extreme) into tReturn.
     JUNO_STATUS_T (*Pop)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tReturn);
 };
 
@@ -121,6 +132,9 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart);
  * @brief Verify that the heap root has been initialized properly.
  * @return JUNO_STATUS_SUCCESS if ptHeap != NULL, ptHeap->ptApi != NULL, and zCapacity > 0;
  *         JUNO_STATUS_NULLPTR_ERROR otherwise.
+ */
+/**
+ * @brief Verify heap configuration and dependent APIs.
  */
 static inline JUNO_STATUS_T JunoDs_Heap_Verify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {

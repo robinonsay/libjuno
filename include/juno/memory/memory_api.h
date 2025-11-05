@@ -21,9 +21,14 @@
 */
 
 /**
-    This header contains the juno_memory library API
-    @author Robin Onsay
-*/
+ * @file memory_api.h
+ * @brief Abstract memory allocation API and verification helpers.
+ * @defgroup juno_memory_alloc Memory allocation API
+ * @details
+ *  Provides a generic allocation interface that concrete allocators implement
+ *  (e.g., fixed block allocator). The API is freestanding-friendly and uses
+ *  JUNO_POINTER_T descriptors for memory regions.
+ */
 #ifndef JUNO_MEMORY_API_H
 #define JUNO_MEMORY_API_H
 #include "juno/macros.h"
@@ -40,42 +45,46 @@ extern "C"
 typedef struct JUNO_MEMORY_ALLOC_API_TAG JUNO_MEMORY_ALLOC_API_T;
 typedef struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MEMORY_ALLOC_ROOT_T;
 
-/// The memory metadata
-struct JUNO_MEMORY_BLOCK_METADATA_TAG
-{
-    uint8_t *ptFreeMem;
-};
-
 struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
     const JUNO_POINTER_API_T *ptPointerApi;
 );
 
+/** @brief Vtable for memory allocation operations.
+ *  @ingroup juno_memory_alloc
+ */
 struct JUNO_MEMORY_ALLOC_API_TAG
 {
-    /// @brief Allocates memory using the specified memory allocation method.
-    /// 
-    /// @param ptMem Pointer to the memory allocation structure.
-    /// @param pvRetAddr Pointer to a memory descriptor where allocation details will be stored.
-    /// @param zSize Size of the memory block to allocate in bytes.
-    /// @return JUNO_STATUS_T Status of the allocation operation.
+    /// @brief Allocate a memory region of at least zSize bytes.
+    /// @param ptMem Allocator root object.
+    /// @param zSize Size in bytes to allocate.
+    /// @return Result containing a JUNO_POINTER_T on success.
     JUNO_RESULT_POINTER_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, size_t zSize);
 
-    /// @brief Updates an existing memory allocation to a new size.
-    /// 
-    /// @param ptMem Pointer to the memory allocation structure.
-    /// @param ptMemory Pointer to the memory descriptor to update.
-    /// @param zNewSize The new size for the memory block.
-    /// @return JUNO_STATUS_T Status of the update operation.
+    /// @brief Update an existing allocation to a new size.
+    /// @param ptMem Allocator root object.
+    /// @param ptMemory Pointer descriptor to update (in/out).
+    /// @param zNewSize The new size in bytes.
+    /// @return JUNO_STATUS_SUCCESS on success, error code otherwise.
     JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);
 
-    /// @brief Frees an allocated memory block.
-    /// 
-    /// @param ptMem Pointer to the memory allocation structure.
-    /// @param pvAddr Pointer to the memory block to free.
-    /// @return JUNO_STATUS_T Status of the free operation.
+    /// @brief Free a previously allocated memory region.
+    /// @param ptMem Allocator root object.
+    /// @param pvAddr Pointer descriptor to free.
+    /// @return JUNO_STATUS_SUCCESS on success, error code otherwise.
     JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *pvAddr);
 };
 
+/**
+ * @brief Verify that a memory allocator API provides required functions.
+ * @param ptAllocApi API vtable to check.
+ * @return JUNO_STATUS_SUCCESS if valid.
+ */
+/**
+ * @brief Verify that a memory allocator API provides required functions.
+ * @ingroup juno_memory_alloc
+ * @param ptAllocApi API vtable to check.
+ * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
+ */
 static inline JUNO_STATUS_T JunoMemory_AllocApiVerify(const JUNO_MEMORY_ALLOC_API_T *ptAllocApi)
 {
     JUNO_ASSERT_EXISTS(
@@ -87,6 +96,17 @@ static inline JUNO_STATUS_T JunoMemory_AllocApiVerify(const JUNO_MEMORY_ALLOC_AP
     return JUNO_STATUS_SUCCESS;
 }
 
+/**
+ * @brief Verify a memory allocator instance and its dependent pointer API.
+ * @param ptAlloc Allocator root object to verify.
+ * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
+ */
+/**
+ * @brief Verify a memory allocator instance and its dependent pointer API.
+ * @ingroup juno_memory_alloc
+ * @param ptAlloc Allocator root object to verify.
+ * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
+ */
 static inline JUNO_STATUS_T JunoMemory_AllocVerify(const JUNO_MEMORY_ALLOC_ROOT_T *ptAlloc)
 {
     JUNO_ASSERT_EXISTS(

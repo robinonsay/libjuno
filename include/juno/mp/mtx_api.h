@@ -21,9 +21,12 @@
 */
 
 /**
- * @file include/juno/mp_mtx/mp_mtx_api.h
- * @brief 
- * @author Robin Onsay
+ * @file mtx_api.h
+ * @brief Minimal mutex API for cooperative concurrency.
+ * @defgroup juno_mp_mtx Mutex API
+ * @details
+ *  A small abstraction over a mutual exclusion primitive. Implementations
+ *  may busy-wait in Lock; TryLock is non-blocking and returns a bool result.
  */
 #ifndef JUNO_MP_MTX_API_H
 #define JUNO_MP_MTX_API_H
@@ -42,14 +45,15 @@ struct JUNO_MP_MTX_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MP_MTX_API_T, JUNO_MODULE_EMPT
 
 struct JUNO_MP_MTX_API_TAG
 {
-    /// Attempt to acquire the lock and return immediately
+    /// @brief Attempt to acquire the lock and return immediately.
     JUNO_RESULT_BOOL_T (*TryLock)(JUNO_MP_MTX_ROOT_T *ptMtx);
-    /// Busy wait until it can acquire the lock
+    /// @brief Busy-wait until the lock is acquired.
     JUNO_STATUS_T (*Lock)(JUNO_MP_MTX_ROOT_T *ptMtx);
-    /// Free the lock
+    /// @brief Release the lock.
     JUNO_STATUS_T (*Free)(JUNO_MP_MTX_ROOT_T *ptMtx);
 };
 
+/// @brief Verify a mutex instance and its API table.
 static inline JUNO_STATUS_T JunoMp_MtxVerify(const JUNO_MP_MTX_ROOT_T *ptMtx)
 {
     JUNO_ASSERT_EXISTS(

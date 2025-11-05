@@ -21,9 +21,14 @@
 */
 
 /**
-    This header contains the juno_ds_queue library API
-    @author Robin Onsay
-*/
+ * @file array_api.h
+ * @brief Abstract array interface for DS modules.
+ * @defgroup juno_ds_array Array API
+ * @details
+ *  A minimal fixed-capacity array abstraction used by other data structures
+ *  (e.g., heaps and maps). Provides SetAt/GetAt/RemoveAt operations and
+ *  verification helpers to ensure capacity and API validity.
+ */
 #ifndef JUNO_DS_ARRAY_API_H
 #define JUNO_DS_ARRAY_API_H
 #include "juno/macros.h"
@@ -36,11 +41,11 @@ extern "C"
 {
 #endif
 
-/// The Buffer queue root
+/// @brief Opaque array root carrying capacity and API pointer.
 typedef struct JUNO_DS_ARRAY_ROOT_TAG JUNO_DS_ARRAY_ROOT_T;
 typedef struct JUNO_DS_ARRAY_API_TAG  JUNO_DS_ARRAY_API_T;
 
-/// The root buffee queue
+/// @brief Array root with capacity.
 struct JUNO_DS_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_ARRAY_API_T,
     /// The capacity of this array
     size_t zCapacity;
@@ -48,14 +53,20 @@ struct JUNO_DS_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_ARRAY_API_T,
 
 struct JUNO_DS_ARRAY_API_TAG
 {
-    /// Set the value at an index
+    /// @brief Set the value at an index.
+    /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_OOB_ERROR on invalid index.
     JUNO_STATUS_T (*SetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
-    /// Get the value at an index
+    /// @brief Get the value at an index.
+    /// @return Result containing a pointer descriptor on success.
     JUNO_RESULT_POINTER_T (*GetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
-    /// Remove a value at an index
+    /// @brief Remove a value at an index.
+    /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_OOB_ERROR on invalid index.
     JUNO_STATUS_T (*RemoveAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 };
 
+/**
+ * @brief Verify that the array API provides all required functions.
+ */
 static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_DS_ARRAY_API_T *ptArrayApi)
 {
     JUNO_ASSERT_EXISTS(ptArrayApi);
@@ -67,6 +78,9 @@ static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_DS_ARRAY_API_T *ptA
     );
     return JUNO_STATUS_SUCCESS;
 }
+/**
+ * @brief Verify an array instance's capacity and API.
+ */
 static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_DS_ARRAY_ROOT_T *ptArray)
 {
     JUNO_ASSERT_EXISTS(ptArray);
@@ -78,6 +92,10 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_DS_ARRAY_ROOT_T *ptArr
     return tStatus;
 }
 
+/**
+ * @brief Verify an index is within array capacity.
+ * @return JUNO_STATUS_SUCCESS or JUNO_STATUS_OOB_ERROR (and invokes failure handler).
+ */
 static inline JUNO_STATUS_T JunoDs_ArrayVerifyIndex(const JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
 {
     JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
@@ -90,6 +108,9 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerifyIndex(const JUNO_DS_ARRAY_ROOT_T *
     return tStatus;
 }
 
+/**
+ * @brief Initialize an array root with capacity and API.
+ */
 static inline JUNO_STATUS_T JunoDs_ArrayInit(JUNO_DS_ARRAY_ROOT_T *ptArray, const JUNO_DS_ARRAY_API_T *ptArrayApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptArray && iCapacity && ptArrayApi);

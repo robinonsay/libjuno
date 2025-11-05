@@ -21,20 +21,17 @@
 */
 
 /**
-    @file include/juno/broker/broker_api.h
-    @brief This file contains the implementation of the Software Bus (SB) Broker.
-    The main purpose of the broker is to distribute software bus messages between
-    various applications **within a single thread**. Various applications could be
-    running on a processor within a thread and the broker offers a methodology
-    of distributing the messages to the applications.
-
-    The broker **IS NOT** thread safe by design. The rationale for this design decision
-    is to encourage the handling of IPC to be on the software architect. It's up to them
-    to determine how multiple threads will communicate with each other since they are the
-    experts of their software system. This design paradigm encourages
-    "share data not memory" and gives software architects the option to implement
-    whichever IPC mechanism they would like (i.e. UDP/TCP, POSIX queues, In-memory buffers, etc).
-    @author Robin Onsay
+ * @file broker_api.h
+ * @brief Software Bus (SB) broker for single-threaded message fan-out.
+ * @defgroup juno_sb Software Bus Broker
+ * @details
+ *  The broker distributes messages to registered subscribers (pipes) within
+ *  a single thread. It is intentionally not thread-safe to encourage explicit
+ *  IPC design when multiple threads are involved (e.g., queues, sockets).
+ *
+ *  Messages are enqueued to subscriber pipes implemented as queues. The broker
+ *  deals in JUNO_POINTER_T message handles; ownership and copy semantics follow
+ *  the pointer trait provided by the application.
  */
 #ifndef JUNO_SB_API_H
 #define JUNO_SB_API_H
@@ -56,27 +53,34 @@ typedef struct JUNO_SB_BROKER_API_TAG JUNO_SB_BROKER_API_T;
 typedef struct JUNO_SB_PIPE_TAG JUNO_SB_PIPE_T;
 typedef uint32_t JUNO_SB_MID_T;
 
+/// A subscriber pipe that carries messages for a specific MID.
 struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE(JUNO_DS_QUEUE_ROOT_T,
-    /// The pipe Id
+    /// The pipe Id (Message ID / topic).
     JUNO_SB_MID_T iMsgId;
 );
 
+/// Broker root containing the registry of subscriber pipes.
 struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
-    /// The pipe registry
+    /// The pipe registry (array of pointers to pipes).
     JUNO_SB_PIPE_T **ptPipeRegistry;
-    /// The length of the pipe registry
+    /// The current length of the pipe registry.
     size_t zRegistryLength;
+    /// Maximum number of pipes that can be registered.
     size_t zRegistryCapacity;
 );
 
 struct JUNO_SB_BROKER_API_TAG
 {
-    /// Publish a message using the broker
+    /// @brief Publish a message to all subscribers of tMid.
+    /// @param ptBroker Broker instance.
+    /// @param tMid Message ID / topic.
+    /// @param tMsg Message handle (copied/enqueued per pointer trait).
     JUNO_STATUS_T (*Publish)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MID_T tMid, JUNO_POINTER_T tMsg);
-    /// Subscribe to a message through the broker
+    /// @brief Register a subscriber pipe with the broker.
     JUNO_STATUS_T (*RegisterSubscriber)(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T *ptPipe);
 };
 
+/// @brief Verify a broker API table has required functions.
 static inline JUNO_STATUS_T JunoSb_BrokerApiVerify(const JUNO_SB_BROKER_API_T *ptBrokerApi)
 {
     JUNO_ASSERT_EXISTS(
@@ -87,6 +91,7 @@ static inline JUNO_STATUS_T JunoSb_BrokerApiVerify(const JUNO_SB_BROKER_API_T *p
     return JUNO_STATUS_SUCCESS;
 }
 
+/// @brief Verify a broker instance and basic registry invariants.
 static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptBroker)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
@@ -97,6 +102,7 @@ static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptB
     return tStatus;
 }
 
+/// @brief Verify a pipe instance.
 static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 {
     JUNO_ASSERT_EXISTS(ptPipe);
@@ -105,8 +111,10 @@ static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
     return tStatus;
 }
 
+/// @brief Initialize a broker with a pipe registry storage array.
 JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T **ptPipeRegistry, size_t iRegistryCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
+/// @brief Initialize a pipe for a specific MID backed by a queue over ptArray.
 static inline JUNO_STATUS_T JunoSb_PipeInit(JUNO_SB_PIPE_T *ptPipe, JUNO_SB_MID_T iMid, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptPipe);

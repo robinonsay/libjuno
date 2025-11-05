@@ -21,9 +21,19 @@
 */
 
 /**
-    This header contains the juno_log library API
-    @author Robin Onsay
-*/
+ * @file log_api.h
+ * @brief Minimal logging facade for embedded targets.
+ * @defgroup juno_log Logging API
+ * @details
+ *  A small, pluggable logging interface intended for embedded/freestanding
+ *  systems. Implementations decide the sink (e.g., UART, RTT, buffer) and
+ *  formatting strategy. All functions are printf-like and accept varargs.
+ *
+ *  Notes:
+ *  - This API does not impose threading guarantees.
+ *  - Format string interpretation is implementation-defined; callers should
+ *    avoid undefined format specifiers in freestanding builds.
+ */
 #ifndef JUNO_LOG_API_H
 #define JUNO_LOG_API_H
 #include "juno/macros.h"
@@ -42,12 +52,17 @@ struct JUNO_LOG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_LOG_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_LOG_API_TAG
 {
+    /// @brief Log a debug-level message (most verbose).
     JUNO_STATUS_T (*LogDebug)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
+    /// @brief Log an info-level message.
     JUNO_STATUS_T (*LogInfo)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
+    /// @brief Log a warning-level message.
     JUNO_STATUS_T (*LogWarning)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
+    /// @brief Log an error-level message.
     JUNO_STATUS_T (*LogError)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
 };
 
+/// @brief Initialize a log instance with an API implementation and failure handler.
 static inline JUNO_STATUS_T JunoLog_LogInit(JUNO_LOG_ROOT_T *ptLog, const JUNO_LOG_API_T *ptApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptLog);

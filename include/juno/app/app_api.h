@@ -21,9 +21,19 @@
 */
 
 /**
-    This header contains the juno_app library API
+    This header contains the juno_app library API. The application
+    API is used to provide a common interface to a LibJuno application
+    that a custom executive could utilize
     @author Robin Onsay
 */
+/**
+ * @file app_api.h
+ * @brief Application module API (start/process/exit lifecycle).
+ * @defgroup juno_app Application API
+ * @details
+ *  Defines a minimal application lifecycle interface that can be used by a
+ *  custom executive or scheduler: OnStart, OnProcess, and OnExit.
+ */
 #ifndef JUNO_APP_API_H
 #define JUNO_APP_API_H
 #include "juno/status.h"
@@ -33,16 +43,21 @@ extern "C"
 {
 #endif
 
+/// The application API
 typedef struct JUNO_APP_API_TAG JUNO_APP_API_T;
 
+/// The application module
 typedef struct JUNO_APP_ROOT_TAG JUNO_APP_ROOT_T;
 
 struct JUNO_APP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_APP_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_APP_API_TAG
 {
+    /// @brief Called once to initialize resources before processing.
     JUNO_STATUS_T (*OnStart)(JUNO_APP_ROOT_T *ptJunoApp);
+    /// @brief Main processing routine; may be invoked repeatedly.
     JUNO_STATUS_T (*OnProcess)(JUNO_APP_ROOT_T *ptJunoApp);
+    /// @brief Called once prior to shutdown to release resources.
     JUNO_STATUS_T (*OnExit)(JUNO_APP_ROOT_T *ptJunoApp);
 };
 

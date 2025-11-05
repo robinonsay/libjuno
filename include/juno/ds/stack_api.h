@@ -21,9 +21,31 @@
 */
 
 /**
-    This header contains the juno_ds_stack library API
-    @author Robin Onsay
-*/
+ * @file stack_api.h
+ * @brief Fixed-capacity LIFO stack built on the Array API.
+ * @defgroup juno_ds_stack Stack API
+ * @details
+ *  A deterministic, fixed-capacity stack (LIFO) backed by a Juno Array.
+ *  Elements are copied using JUNO_POINTER_T when pushing and popping.
+ *  Capacity is defined by the backing array. Non-thread-safe by default.
+ *
+ *  Characteristics:
+ *  - O(1) push/pop/peek
+ *  - No dynamic allocation; capacity determined by backing array
+ *
+ *  Invariants:
+ *  - 0 <= zLength <= ptStackArray->zCapacity
+ *  - Backing array API must be valid (see JunoDs_ArrayVerify)
+ *
+ *  Error behavior (per implementation):
+ *  - Push on full stack: returns JUNO_STATUS_INVALID_SIZE_ERROR
+ *  - Pop on empty stack: returns JUNO_STATUS_INVALID_SIZE_ERROR
+ *  - Peek on empty stack: returns JUNO_STATUS_INVALID_SIZE_ERROR
+ *
+ *  Element ownership:
+ *  - Elements are copied into/out of the array via the pointer API (Copy),
+ *    so tItem/tReturn must describe a valid storage location and size.
+ */
 #ifndef JUNO_DS_STACK_API_H
 #define JUNO_DS_STACK_API_H
 #include "juno/ds/array_api.h"
@@ -35,27 +57,35 @@ extern "C"
 {
 #endif
 
-/// The buffer stack root module
+/// The stack root module
 typedef struct JUNO_DS_STACK_ROOT_TAG JUNO_DS_STACK_ROOT_T;
 typedef struct JUNO_DS_STACK_API_TAG JUNO_DS_STACK_API_T;
 
+/**
+ * @brief Stack root instance and state.
+ * @ingroup juno_ds_stack
+ */
 struct JUNO_DS_STACK_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_STACK_API_T,
-    JUNO_DS_ARRAY_ROOT_T *ptStackArray;
-    /// The current length of the buffer
-    size_t zLength;
+    JUNO_DS_ARRAY_ROOT_T *ptStackArray; /**< Backing array defining capacity and element ops. */
+    size_t zLength;                     /**< Current number of elements in the stack. */
 );
 
 struct JUNO_DS_STACK_API_TAG
 {
-    /// Enqueue an item into the buffer
-    /// @returns The index to place the enqueued item
-    JUNO_STATUS_T (*Push)(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tItem);
-    /// Dequeue an item from the buffer
-    /// @returns The index to dequeue the item from
-    JUNO_STATUS_T (*Pop)(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
-    /// Peek at the next item in the queue
-    /// @returns the index of the next item in the queue
-    JUNO_RESULT_POINTER_T (*Peek)(JUNO_DS_STACK_ROOT_T *ptQueue);
+    /// @brief Push an item onto the top of the stack (O(1)).
+    /// @param ptStack Stack instance.
+    /// @param tItem Pointer trait describing the item to copy into the stack.
+    /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_INVALID_SIZE_ERROR if full; or pointer/array errors.
+    JUNO_STATUS_T (*Push)(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tItem);
+    /// @brief Pop the top item into tReturn (O(1)).
+    /// @param ptStack Stack instance.
+    /// @param tReturn Pointer trait receiving the popped item (copied out).
+    /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_INVALID_SIZE_ERROR if empty; or pointer/array errors.
+    JUNO_STATUS_T (*Pop)(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tReturn);
+    /// @brief Peek at the top item without removing it (O(1)).
+    /// @param ptStack Stack instance.
+    /// @return Result with pointer descriptor to the top element; JUNO_STATUS_INVALID_SIZE_ERROR if empty.
+    JUNO_RESULT_POINTER_T (*Peek)(JUNO_DS_STACK_ROOT_T *ptStack);
 };
 
 static inline JUNO_STATUS_T JunoDs_StackVerify(const JUNO_DS_STACK_ROOT_T *ptStack)
@@ -70,10 +100,19 @@ static inline JUNO_STATUS_T JunoDs_StackVerify(const JUNO_DS_STACK_ROOT_T *ptSta
     return JunoDs_ArrayVerify(ptStack->ptStackArray);
 }
 
-/// Initialize a buffer queue with a capacity
+/// @brief Initialize a stack over a backing array with a given capacity.
+/// @param ptStack Stack to initialize (output).
+/// @param ptStackArray Backing array used for storage; defines capacity and element size.
+/// @param pfcnFailureHdlr Failure callback for assertions in this module.
+/// @param pvFailureUserData Opaque user data for the failure handler.
+/// @return JUNO_STATUS_SUCCESS on success; error if array verification fails.
 JUNO_STATUS_T JunoDs_StackInit(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_DS_ARRAY_ROOT_T *ptStackArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
+
+/// @brief Push an item onto the top of the stack (O(1)).
 JUNO_STATUS_T JunoDs_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tItem);
-JUNO_STATUS_T JunoDs_StackPop(JUNO_DS_STACK_ROOT_T *ptQueue, JUNO_POINTER_T tReturn);
+/// @brief Pop the top item into tReturn (O(1)).
+JUNO_STATUS_T JunoDs_StackPop(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tReturn);
+/// @brief Peek at the top item without removing it (O(1)).
 JUNO_RESULT_POINTER_T JunoDs_StackPeek(JUNO_DS_STACK_ROOT_T *ptStack);
 
 

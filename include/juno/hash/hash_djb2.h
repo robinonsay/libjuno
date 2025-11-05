@@ -21,9 +21,13 @@
 */
 
 /**
-    This header contains the juno_hash djb2 implementation
-    @author Robin Onsay
-*/
+ * @file hash_djb2.h
+ * @brief djb2 hash implementation (unsigned size_t variant).
+ * @defgroup juno_hash Hash Utilities
+ * @details
+ *  Computes the classic djb2 hash over a byte buffer using the recurrence
+ *  h = h * 33 + x. The initial value is 5381. Returns the result as size_t.
+ */
 #ifndef JUNO_HASH_DJB2_H
 #define JUNO_HASH_DJB2_H
 #include "juno/status.h"
@@ -34,6 +38,12 @@ extern "C"
 #endif
 
 
+/**
+ * @brief Compute djb2 hash over a byte buffer.
+ * @param pcBuff Pointer to input bytes (must not be NULL unless zBuffSize==0).
+ * @param zBuffSize Number of bytes to hash.
+ * @return Result containing the hash value or an error for invalid input.
+ */
 static inline JUNO_RESULT_SIZE_T JunoHash_Djb2(const uint8_t *pcBuff, size_t zBuffSize)
 {
     JUNO_RESULT_SIZE_T tResult = {0, 0};

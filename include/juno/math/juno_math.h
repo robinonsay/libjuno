@@ -16,8 +16,28 @@
 */
 
 /**
-    @file Juno Math offers various math types and inline math functions
-*/
+ * @file juno_math.h
+ * @brief Convenience header: math types plus inline vector/quaternion ops.
+ * @ingroup juno_math
+ * @details
+ *  Umbrella include that aggregates:
+ *   - `juno_math_types.h` — structural type definitions (vectors, matrices, real quaternions)
+ *   - `juno_vec.h` — inline operations (add/sub/scale, dot/cross, norms, quaternion algebra)
+ *
+ *  Use this header when you want both the math types and the inline utilities in one place.
+ *  If you only need type definitions without inline operations, prefer `juno_math_types.h`.
+ *
+ *  Quaternions use the component order [s, i, j, k] and the Hamilton product
+ *  follows the right-handed convention (i^2 = j^2 = k^2 = ijk = -1). See
+ *  `Juno_RQuat_F64_HamProd` in `juno_vec.h` for the exact formula.
+ *
+ * @code{.c}
+ *  #include "juno/math/juno_math.h"
+ *  JUNO_VEC3_F64_T a = {{1.0, 2.0, 3.0}};
+ *  JUNO_VEC3_F64_T b = {{4.0, 5.0, 6.0}};
+ *  JUNO_VEC3_F64_T c = Juno_Vec3_F64_Add(a, b); // {5, 7, 9}
+ * @endcode
+ */
 
 #ifndef JUNO_MATH_H
 #define JUNO_MATH_H

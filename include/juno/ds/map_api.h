@@ -21,9 +21,13 @@
 */
 
 /**
-    This header contains the juno_map library API
-    @author Robin Onsay
-*/
+ * @file map_api.h
+ * @brief Hash map API built on array and pointer traits.
+ * @defgroup juno_ds_map Map API
+ * @details
+ *  An associative container interface parameterized by a hash function and a
+ *  value-equality comparator. Backed by a user-supplied array for storage.
+ */
 #ifndef JUNO_MAP_API_H
 #define JUNO_MAP_API_H
 #include "juno/ds/array_api.h"
@@ -47,17 +51,22 @@ struct JUNO_MAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MAP_API_T,
     JUNO_DS_ARRAY_ROOT_T *ptHashMap;
 );
 
+/** @brief Hashing and null-check operations for map keys/values. */
 struct JUNO_MAP_HASHABLE_POINTER_API_TAG
 {
-    /// Calculate the hash for the given key
+    /// @brief Compute a hash value for the given key.
     JUNO_RESULT_SIZE_T (*Hash)(JUNO_POINTER_T tItem);
+    /// @brief Determine if a value slot is logically empty/null.
     JUNO_RESULT_BOOL_T (*IsValueNull)(JUNO_POINTER_T tItem);
 };
 
 struct JUNO_MAP_API_TAG
 {
+    /// @brief Retrieve the value for the provided key; returns pointer result.
     JUNO_RESULT_POINTER_T (*Get)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tReturnItem);
+    /// @brief Insert or update a key-value pair.
     JUNO_STATUS_T (*Set)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
+    /// @brief Remove a key (and its value) from the map.
     JUNO_STATUS_T (*Remove)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
 };
 
@@ -78,8 +87,9 @@ static inline JUNO_STATUS_T JunoDs_MapVerify(JUNO_MAP_ROOT_T *ptMap)
     return tStatus;
 }
 
-/// Init the juno map module
+/// @brief Initialize the map root with hashing and equality APIs and backing array.
 JUNO_STATUS_T JunoDs_MapInit(JUNO_MAP_ROOT_T *ptMapRoot, const JUNO_MAP_HASHABLE_POINTER_API_T *ptHashablePointerApi, const JUNO_VALUE_POINTER_API_T *ptValuePointerApi, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData);
+/// Get/Set/Remove operations
 JUNO_RESULT_POINTER_T JunoDs_MapGet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
 JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
 JUNO_STATUS_T JunoDs_MapRemove(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
