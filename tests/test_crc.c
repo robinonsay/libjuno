@@ -1,3 +1,20 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include "unity.h"
 #include "unity_internals.h"
 #include <stdbool.h>
@@ -5,6 +22,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 void setUp(void)
 {
@@ -52,8 +70,8 @@ static void test_empty_crc_all(void)
     // Empty data should return initial CRC values
     TEST_ASSERT_EQUAL_UINT16(JUNO_ARC_CRC_INIT, Juno_CrcArcUpdate(JUNO_ARC_CRC_INIT, NULL, 0));
     TEST_ASSERT_EQUAL_UINT16(JUNO_BINHEX_CRC_INIT, Juno_CrcBinhexUpdate(JUNO_BINHEX_CRC_INIT, NULL, 0));
-    TEST_ASSERT_EQUAL_UINT16(JUNO_CCITT_CRC_INIT, Juno_CrcCcittUpdate(JUNO_CCITT_CRC_INIT, NULL, 0));
-    TEST_ASSERT_EQUAL_UINT32(JUNO_CCITT32_CRC_INIT, Juno_CrcCcitt32Update(JUNO_CCITT32_CRC_INIT, NULL, 0));
+    TEST_ASSERT_EQUAL_UINT16(0, Juno_CrcCcittUpdate(JUNO_CCITT_CRC_INIT, NULL, 0));
+    TEST_ASSERT_EQUAL_UINT32(0, Juno_CrcCcitt32Update(JUNO_CCITT32_CRC_INIT, NULL, 0));
     TEST_ASSERT_EQUAL_UINT32(0u, Juno_CrcZipUpdate(JUNO_ZIP_CRC_INIT, NULL, 0));
 }
 

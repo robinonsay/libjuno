@@ -21,9 +21,15 @@
 */
 
 /**
-    This header contains the juno_sch library API
-    @author Robin Onsay
-*/
+ * @file juno_sch_api.h
+ * @brief Cyclic executive (minor/major frame) scheduler API.
+ * @defgroup juno_sch Scheduler API
+ * @details
+ *  Simple table-driven scheduler that executes application OnProcess hooks in
+ *  minor frames of fixed duration. The schedule table is a 2D layout flattened
+ *  as an array of JUNO_APP_ROOT_T* with dimensions
+ *  zNumMinorFrames x zAppsPerMinorFrame.
+ */
 #ifndef JUNO_SCH_API_H
 #define JUNO_SCH_API_H
 #include "juno/app/app_api.h"
@@ -38,25 +44,35 @@ extern "C"
 
 typedef struct JUNO_SCH_API_TAG JUNO_SCH_API_T;
 
-typedef union JUNO_SCH_TAG JUNO_SCH_T;
 typedef struct JUNO_SCH_ROOT_TAG JUNO_SCH_ROOT_T;
 
+/**
+ * @brief Declare and initialize a schedule table array.
+ * @param ptArrName Variable name of the table array.
+ * @param zAppsPerMinorFrame Number of slots per minor frame.
+ * @param zNumMinorFrames Number of minor frames per major frame.
+ * @param ... Initializer list of JUNO_APP_ROOT_T* entries.
+ */
 #define JUNO_SCH_TABLE_NEW(ptArrName, zAppsPerMinorFrame, zNumMinorFrames, ...) \
-JUNO_APP_T *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}
+JUNO_APP_ROOT_T *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}
 
+/// Scheduler root containing time source and flattened schedule table.
 struct JUNO_SCH_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SCH_API_T,
-    JUNO_TIME_T *ptTime;
-    JUNO_APP_T **ptArrSchTable;
-    size_t zAppsPerMinorFrame;
-    size_t zNumMinorFrames;
-    JUNO_TIMESTAMP_T tMinorFramePeriod;
+    JUNO_TIME_ROOT_T *ptTime;                 ///< Time source module.
+    JUNO_APP_ROOT_T **ptArrSchTable;          ///< Flattened schedule table.
+    size_t zAppsPerMinorFrame;                ///< Apps per minor frame.
+    size_t zNumMinorFrames;                   ///< Minor frames per major frame.
+    JUNO_TIMESTAMP_T tMinorFramePeriod;       ///< Minor frame period.
 );
 
 struct JUNO_SCH_API_TAG
 {
-    JUNO_STATUS_T (*Execute)(JUNO_SCH_T *ptJunoSch);
-    JUNO_TIMESTAMP_RESULT_T (*GetMinorFramePeriod)(JUNO_SCH_T *ptJunoSch);
-    JUNO_TIMESTAMP_RESULT_T (*GetMajorFramePeriod)(JUNO_SCH_T *ptJunoSch);
+    /// @brief Run the scheduler for one major frame.
+    JUNO_STATUS_T (*Execute)(JUNO_SCH_ROOT_T *ptJunoSch);
+    /// @brief Get the configured minor frame period.
+    JUNO_TIMESTAMP_RESULT_T (*GetMinorFramePeriod)(JUNO_SCH_ROOT_T *ptJunoSch);
+    /// @brief Compute the major frame period (minor * count).
+    JUNO_TIMESTAMP_RESULT_T (*GetMajorFramePeriod)(JUNO_SCH_ROOT_T *ptJunoSch);
 };
 
 #ifdef __cplusplus

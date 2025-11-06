@@ -21,23 +21,26 @@
 */
 
 /**
-    This header contains the io library API
-    @author Robin Onsay
-*/
+ * @file spi_io_api.h
+ * @brief SPI transaction facade (full-duplex).
+ * @defgroup juno_io_spi SPI IO API
+ * @details
+ *  Single function to perform a full-duplex SPI transaction. Implementations
+ *  may treat zero-length read/write as half-duplex operations.
+ */
 #ifndef JUNO_SPI_IO_API_H
 #define JUNO_SPI_IO_API_H
 #include "juno/status.h"
 #include "juno/module.h"
-#include "juno/time/time_api.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
 typedef struct JUNO_SPI_IO_API_TAG JUNO_SPI_IO_API_T;
-typedef union JUNO_SPI_IO_TAG JUNO_SPI_IO_T;
 typedef struct JUNO_SPI_IO_ROOT_TAG JUNO_SPI_IO_ROOT_T;
 
 struct JUNO_SPI_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SPI_IO_API_T, JUNO_MODULE_EMPTY);
@@ -45,8 +48,13 @@ struct JUNO_SPI_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SPI_IO_API_T, JUNO_MODULE_EMPT
 
 struct JUNO_SPI_IO_API_TAG
 {
-    /// Perform an SPI transaction
-    JUNO_STATUS_T (*Transaction)(JUNO_SPI_IO_T *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize);
+    /// @brief Perform an SPI transaction.
+    /// @param ptIo SPI instance.
+    /// @param pcReadBuff Destination for received bytes (optional if zReadBuffSize==0).
+    /// @param zReadBuffSize Number of bytes to read.
+    /// @param pvWriteBuff Source buffer to transmit (optional if zWriteBuffSize==0).
+    /// @param zWriteBuffSize Number of bytes to write.
+    JUNO_STATUS_T (*Transaction)(JUNO_SPI_IO_ROOT_T *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize);
 };
 
 #ifdef __cplusplus

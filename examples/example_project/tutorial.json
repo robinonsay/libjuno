@@ -1,0 +1,24 @@
+{
+    "title": "LibJuno Tutorial",
+    "files":
+    [
+        {
+            "path": "main.c"
+        },
+        {
+            "path": "engine/include/engine_app/engine_app.h"
+        },
+        {
+            "path": "engine/include/engine_app/engine_cmd_msg.h"
+        },
+        {
+            "path": "engine/src/engine_cmd_msg.c"
+        },
+        {
+            "path": "engine/src/engine_app.c"
+        },
+        {
+            "path": "system_manager/src/system_manager_app.c"
+        }
+    ]
+}

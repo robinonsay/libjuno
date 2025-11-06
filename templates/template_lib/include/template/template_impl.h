@@ -45,23 +45,8 @@ struct TEMPLATE_IMPL_TAG JUNO_MODULE_DERIVE(TEMPLATE_ROOT_T,
     */
 );
 
-#ifndef TEMPLATE_CUSTOM
-/**
-    This is the default implementation for `TEMPLATE_T`.
-    If you want to use the default implementation for `TEMPLATE_T`
-    use `#define TEMPLATE_DEFAULT` prior to including
-    `#include "template_impl.h"`
-
-    Note: If you are implementing a derived module you will need
-    to implement `TEMPLATE_IMPL`.
-*/
-union TEMPLATE_TAG JUNO_MODULE(TEMPLATE_API_T, TEMPLATE_ROOT_T,
-    TEMPLATE_IMPL_T tTemplateImpl;
-);
-#endif
-
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T Template_ImplApi(TEMPLATE_T *ptTemplate, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T Template_ImplInit(TEMPLATE_IMPL_T *ptTemplate, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
 #ifdef __cplusplus
 }
 #endif

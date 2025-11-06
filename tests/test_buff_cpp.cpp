@@ -1,3 +1,20 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include <cstddef>
 #include <cstdint>
 
@@ -20,7 +37,7 @@ static void test_queue(void)
 
     // Initialize queue via API
     auto api_q     = JUNO_QUEUE_T<uint8_t, N>::NewApi();
-    QUEUE_T<uint8_t, N> queueRoot{};
+    QUEUE_ROOT_T<uint8_t, N> queueRoot{};
     auto tStatus = JUNO_QUEUE_T<uint8_t, N>::New(queueRoot, api_q, nullptr, nullptr);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     // — fill to capacity
@@ -80,7 +97,7 @@ static void test_stack(void)
 
     // Initialize stack via API
     auto api_s     = JUNO_STACK_T<uint8_t, N>::NewApi();
-    STACK_T<uint8_t, N> stackRoot{};
+    STACK_ROOT_T<uint8_t, N> stackRoot{};
     auto tStatus = JUNO_STACK_T<uint8_t, N>::New(stackRoot, api_s, nullptr, nullptr);
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     // — fill to capacity

@@ -21,109 +21,119 @@
 */
 
 /**
-    This header contains the juno_memory library API
-    @author Robin Onsay
-*/
+ * @file memory_api.h
+ * @brief Abstract memory allocation API and verification helpers.
+ * @defgroup juno_memory_alloc Memory allocation API
+ * @details
+ *  A small, freestanding-friendly allocation interface used across LibJuno.
+ *  Concrete allocators (such as the fixed-size block allocator) implement
+ *  this vtable. Callers interact only through the root's API pointer.
+ *
+ *  Core concepts:
+ *  - Pointers are described by JUNO_POINTER_T, which carries an address, size,
+ *    alignment, and a pointer-operations API (Copy/Reset). See
+ *    @ref juno_memory_pointer.
+ *  - The allocator root (JUNO_MEMORY_ALLOC_ROOT_T) stores the allocator API
+ *    (this vtable) and the dependent pointer API used by the allocator.
+ *  - All operations return explicit status codes; no hidden dynamic allocation.
+ *
+ *  Contract summary:
+ *  - Get(ptMem, zSize): allocates a region of at least zSize bytes and
+ *    returns a result carrying a JUNO_POINTER_T on success. zSize must be
+ *    > 0 and must satisfy allocator-specific bounds (e.g., <= element size
+ *    in a block allocator). On failure, tStatus != JUNO_STATUS_SUCCESS and
+ *    tOk is unspecified (do not use).
+ *  - Update(ptMem, ptMemory, zNewSize): adjusts the size field of an existing
+ *    allocation when supported by the allocator. For the fixed block allocator,
+ *    this only shrinks or sets size up to the element size; it does not move
+ *    memory. Returns JUNO_STATUS_MEMALLOC_ERROR if zNewSize exceeds limits.
+ *  - Put(ptMem, ptMemory): frees a previously allocated region. On success,
+ *    the descriptor is cleared (pvAddr=NULL, zSize=zAlignment=0). Errors such
+ *    as double free, invalid address, or misalignment are reported with
+ *    JUNO_STATUS_MEMFREE_ERROR and the descriptor is restored to its
+ *    original value.
+ */
 #ifndef JUNO_MEMORY_API_H
 #define JUNO_MEMORY_API_H
+#include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include <stddef.h>
+#include <stdalign.h>
+#include "juno/memory/pointer_api.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-/// Define a reference for memory
-#define JUNO_REF(name) REF##name
-/// Create a new reference for memory
-#define JUNO_NEW_REF(name) JUNO_MEMORY_T *JUNO_REF(name)
-
-typedef struct JUNO_MEMORY_TAG JUNO_MEMORY_T;
-
-/// The memory metadata
-struct JUNO_MEMORY_BLOCK_METADATA_TAG
-{
-    uint8_t *ptFreeMem;
-};
-
-/// @brief Structure for an allocated memory segment.
-/// Describes the allocated memory with a pointer to the start and its size.
-struct JUNO_MEMORY_TAG
-{
-    /// Pointer to the allocated memory.
-    void *pvAddr;
-    /// Size of the allocated memory, in bytes.
-    size_t zSize;
-    /// The reference count for this memory
-    size_t iRefCount;
-};
 
 typedef struct JUNO_MEMORY_ALLOC_API_TAG JUNO_MEMORY_ALLOC_API_T;
-
-typedef union JUNO_MEMORY_ALLOC_TAG JUNO_MEMORY_ALLOC_T;
 typedef struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MEMORY_ALLOC_ROOT_T;
 
-struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T, JUNO_MODULE_EMPTY);
+struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
+    const JUNO_POINTER_API_T *ptPointerApi;
+);
 
+/** @brief Vtable for memory allocation operations.
+ *  @ingroup juno_memory_alloc
+  */
 struct JUNO_MEMORY_ALLOC_API_TAG
 {
-    /// @brief Allocates memory using the specified memory allocation method.
-    /// 
-    /// @param ptMem Pointer to the memory allocation structure.
-    /// @param pvRetAddr Pointer to a memory descriptor where allocation details will be stored.
-    /// @param zSize Size of the memory block to allocate in bytes.
-    /// @return JUNO_STATUS_T Status of the allocation operation.
-    JUNO_STATUS_T (*Get)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvRetAddr, size_t zSize);
+    /// @brief Allocate a memory region of at least zSize bytes.
+    /// @param ptMem Allocator root object.
+    /// @param zSize Size in bytes to allocate.
+    /// @return Result containing a JUNO_POINTER_T on success.
+    JUNO_RESULT_POINTER_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, size_t zSize);
 
-    /// @brief Updates an existing memory allocation to a new size.
-    /// 
-    /// @param ptMem Pointer to the memory allocation structure.
-    /// @param ptMemory Pointer to the memory descriptor to update.
-    /// @param zNewSize The new size for the memory block.
-    /// @return JUNO_STATUS_T Status of the update operation.
-    JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *ptMemory, size_t zNewSize);
+    /// @brief Update an existing allocation to a new size (in-place descriptor update).
+    /// @param ptMem Allocator root object.
+    /// @param ptMemory Pointer descriptor to update (in/out).
+    /// @param zNewSize The new size in bytes.
+    /// @return JUNO_STATUS_SUCCESS on success, error code otherwise.
+    JUNO_STATUS_T (*Update)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *ptMemory, size_t zNewSize);
 
-    /// @brief Frees an allocated memory block.
-    /// 
-    /// @param ptMem Pointer to the memory allocation structure.
-    /// @param pvAddr Pointer to the memory block to free.
-    /// @return JUNO_STATUS_T Status of the free operation.
-    JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_T *ptMem, JUNO_MEMORY_T *pvAddr);
+    /// @brief Free a previously allocated memory region.
+    /// @param ptMem Allocator root object.
+    /// @param pvAddr Pointer descriptor to free.
+    /// @return JUNO_STATUS_SUCCESS on success, error code otherwise.
+    JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *pvAddr);
 };
 
-
-/// Get the reference to this juno memory
-/// - This function will track the reference count to this memory
-/// - The reference count is used to prevent freeing of used memory
-/// - When using `JUNO_MEMORY_T` it is recommended to pass memory
-///   around using this function to increment/decrement the reference count
-/// @param ptMemory The memory to get the reference to
-/// @return The reference to the memory
-static inline JUNO_MEMORY_T * Juno_MemoryGetRef(JUNO_MEMORY_T *ptMemory)
+/**
+ * @brief Verify that a memory allocator API provides required functions.
+ * @ingroup juno_memory_alloc
+ * @param ptAllocApi API vtable to check.
+ * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
+ */
+static inline JUNO_STATUS_T JunoMemory_AllocApiVerify(const JUNO_MEMORY_ALLOC_API_T *ptAllocApi)
 {
-    if(ptMemory->iRefCount)
-    {
-        ptMemory->iRefCount += 1;
-    }
-    return ptMemory;
+    JUNO_ASSERT_EXISTS(
+        ptAllocApi &&
+        ptAllocApi->Get &&
+        ptAllocApi->Put &&
+        ptAllocApi->Update
+    );
+    return JUNO_STATUS_SUCCESS;
 }
 
-/// Put the reference to this juno memory
-/// - This function will track the reference count to this memory
-/// - The reference count is used to prevent freeing of used memory
-/// - When using `JUNO_MEMORY_T` it is recommended to pass memory
-///   around using this function to increment /decrement the reference count
-/// @param ptMemory The memory to put the reference away
-/// @return The reference to the memory
-static inline void Juno_MemoryPutRef(JUNO_MEMORY_T *ptMemory)
+/**
+ * @brief Verify a memory allocator instance and its dependent pointer API.
+ * @ingroup juno_memory_alloc
+ * @param ptAlloc Allocator root object to verify.
+ * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
+ */
+static inline JUNO_STATUS_T JunoMemory_AllocVerify(const JUNO_MEMORY_ALLOC_ROOT_T *ptAlloc)
 {
-    if(ptMemory->iRefCount)
-    {
-        ptMemory->iRefCount -= 1;
-    }
+    JUNO_ASSERT_EXISTS(
+        ptAlloc &&
+        ptAlloc->ptApi &&
+        ptAlloc->ptPointerApi
+    );
+    JUNO_STATUS_T tStatus = JunoMemory_AllocApiVerify(ptAlloc->ptApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoMemory_PointerApiVerify(ptAlloc->ptPointerApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return tStatus;
 }
-
-
 
 #ifdef __cplusplus
 }

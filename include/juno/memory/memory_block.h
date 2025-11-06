@@ -21,9 +21,45 @@
 */
 
 /**
-    This header contains the juno_memory block blockementation
-    @author Robin Onsay
-*/
+ * @file memory_block.h
+ * @brief Fixed-size block allocator interface and helpers.
+ * @defgroup juno_memory_block Fixed block allocator
+ * @details
+ *  A deterministic, fixed-capacity allocator that dispenses blocks of a
+ *  uniform element size from a caller-supplied backing region. Metadata tracks
+ *  a LIFO free list for O(1) allocation and free. Alignment is enforced per
+ *  block. This module is freestanding-friendly and uses the Pointer API for
+ *  verification and zeroing.
+ *
+ *  Behavior and guarantees:
+ *  - Get: Returns a block whose size is the configured element size. If a
+ *    freed block exists (zFreed > 0), it is reused (LIFO). Otherwise, a new
+ *    block is carved from the next offset if zUsed < zLength. Newly provided
+ *    blocks are Reset via the pointer API before being returned; on Reset
+ *    failure, the allocator rolls back and reports the error.
+ *  - Put: Verifies the address belongs to the pool and is aligned. Double
+ *    frees are rejected. If the block being freed is the most recently
+ *    allocated block, zUsed is decremented without pushing onto the free
+ *    stack; otherwise, the address is pushed to the free stack (zFreed++).
+ *    On success, the caller's descriptor is cleared (pvAddr=NULL, sizes 0).
+ *  - Update: Adjusts the descriptor's zSize in place up to the element size;
+ *    memory is never moved. Requests above element size are rejected.
+ *
+ *  Invariants:
+ *  - 0 <= zUsed <= zLength
+ *  - 0 <= zFreed <= zLength
+ *  - zUsed counts total blocks ever allocated; it is decremented only when
+ *    freeing the last allocated block.
+ *  - The free stack keeps freed block addresses in ptMetadata[0..zFreed).
+ *
+ *  Complexity:
+ *  - Init, Get, Put, Update are all O(1).
+ *
+ *  Error cases:
+ *  - Get: zero size, size > element size, pool full, corrupt counters.
+ *  - Put: null/unaligned/out-of-range address, double free, free list overflow
+ *          (should be impossible if invariants are maintained).
+ */
 #ifndef JUNO_MEMORY_BLOCK_H
 #define JUNO_MEMORY_BLOCK_H
 #include "juno/module.h"
@@ -34,10 +70,14 @@ extern "C"
 {
 #endif
 
-/// @brief Macro to declare a static memory block and its associated free stack.
-/// @param name Name of the memory block.
-/// @param type Data type of each block element.
-/// @param length Number of elements in the memory block.
+/**
+ * @def JUNO_MEMORY_BLOCK(name, type, length)
+ * @ingroup juno_memory_block
+ * @brief Declare a static contiguous memory array for block storage.
+ * @param name Name of the backing array symbol.
+ * @param type Element type for each block.
+ * @param length Number of elements in the block pool.
+ */
 
 #ifdef __cplusplus
 #define JUNO_MEMORY_BLOCK(name, type, length) static type name[length] = {}
@@ -45,9 +85,13 @@ extern "C"
 #define JUNO_MEMORY_BLOCK(name, type, length) static type name[length] = {0}
 #endif
 
-/// @brief Macro to declare a static array for memory metadata.
-/// @param name Name of the metadata array.
-/// @param length Number of metadata entries.
+/**
+ * @def JUNO_MEMORY_BLOCK_METADATA(name, length)
+ * @ingroup juno_memory_block
+ * @brief Declare a static array for per-block metadata.
+ * @param name Name of the metadata array symbol.
+ * @param length Number of entries (should match the block array length).
+ */
 #ifdef __cplusplus
 #define JUNO_MEMORY_BLOCK_METADATA(name, length) static JUNO_MEMORY_BLOCK_METADATA_T name[length] = {}
 #else
@@ -56,51 +100,83 @@ extern "C"
 
 
 typedef struct JUNO_MEMORY_BLOCK_METADATA_TAG JUNO_MEMORY_BLOCK_METADATA_T;
-typedef struct JUNO_MEMORY_BLOCK_TAG JUNO_MEMORY_BLOCK_T;
 typedef struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MEMORY_ALLOC_BLOCK_T;
 
-struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
-    uint8_t *pvMemory;                  ///< Pointer to the allocated memory area.
-    JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata; ///< Array of metadata for each block.
-    size_t zTypeSize;                   ///< Size of each block element.
-    size_t zLength;                     ///< Total number of blocks available.
-    size_t zUsed;                       ///< Current count of allocated blocks.
-    size_t zFreed;                      ///< Current count of freed blocks in the free stack.
-);
-
-#ifndef JUNO_MEMORY_CUSTOM
 /**
-    This is the default blockementation for `JUNO_MEMORY_T`.
-    If you want to derive new blockementations for `JUNO_MEMORY_T`
-    use `#define JUNO_MEMORY_DERIVED` prior to including
-    `#include "juno_memory_block.h"`
+ * @brief Metadata for a memory block entry (allocator-specific).
+ * @ingroup juno_memory_block
+ * @details Each entry stores the address of a free block when present; the
+ *          free list is treated as a stack in the range [0, zFreed).
+ */
+struct JUNO_MEMORY_BLOCK_METADATA_TAG
+{
+    uint8_t *ptFreeMem;
+};
 
-    Note: If you are blockementing a derived module you will need
-    to blockement `JUNO_MEMORY_BLOCK`.
-*/
-union JUNO_MEMORY_ALLOC_TAG JUNO_MODULE(JUNO_MEMORY_ALLOC_API_T, JUNO_MEMORY_ALLOC_ROOT_T,
-    JUNO_MEMORY_ALLOC_BLOCK_T tJunoMemoryBlock;
+/**
+ * @brief Concrete block allocator derivation over the generic alloc root.
+ * @ingroup juno_memory_block
+ * @details Stores the backing region and metadata required to manage a pool of
+ *          fixed-size blocks. The root provides the allocation API pointer and
+ *          failure handling; `ptPointerApi` lives in the root (see memory_api.h).
+ */
+struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
+    uint8_t *pvMemory;                          ///< Backing memory region (byte-addressable).
+    JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata;   ///< Per-block metadata array (length == zLength).
+    size_t zTypeSize;                           ///< Size of each block element in bytes (non-zero).
+    size_t zAlignment;                          ///< Alignment in bytes for each block (power-of-two recommended).
+    size_t zLength;                             ///< Total number of blocks in the pool (non-zero).
+    size_t zUsed;                               ///< Count of allocated blocks so far (<= zLength).
+    size_t zFreed;                              ///< Count of entries currently on the free stack (<= zLength).
 );
-#endif
 
-/// @brief Initializes a memory block for allocation.
-/// Sets up a memory block with an associated free stack for managing fixed-size allocations.
-/// @param ptMemBlk Pointer to the memory block structure to initialize.
-/// @param pvMemory Pointer to the contiguous memory used for allocations.
-/// @param pvMetadata Pointer to an array for block metadata tracking.
-/// @param zTypeSize Size in bytes of each element in the block.
-/// @param zLength Total number of possible allocations.
-/// @param pfcnFailureHandler Callback function to handle failures.
-/// @param pvUserData User data passed to the failure handler.
-/// @return JUNO_STATUS_T Status of the initialization.
-JUNO_STATUS_T JunoMemory_BlockApi(JUNO_MEMORY_ALLOC_T *ptJunoMemory,
+
+
+/**
+ * @brief Initialize a fixed-size block allocator over a caller-supplied region.
+ * @ingroup juno_memory_block
+ * @param ptJunoMemory Allocator instance to initialize.
+ * @param ptPointerApi Pointer API required for internal operations (non-null).
+ * @param pvMemory Backing memory region for blocks (aligned to zAlignment).
+ * @param ptMetadata Metadata array to track free blocks (length == zLength).
+ * @param zTypeSize Size of each block element in bytes (non-zero).
+ * @param zAlignment Alignment requirement in bytes for each block (non-zero).
+ * @param zLength Total number of blocks available in the pool (non-zero).
+ * @param pfcnFailureHandler Optional failure handler callback.
+ * @param pvFailureUserData Optional user data passed to the failure handler.
+ * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR or specific codes on failure.
+ * @note Performs parameter validation (nulls, overflow of zTypeSize*zLength, base alignment) and
+ *       wires the allocator API into the root. Counters zUsed and zFreed start at 0.
+ */
+JUNO_STATUS_T JunoMemory_BlockInit(
+    JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemory,
+    const JUNO_POINTER_API_T *ptPointerApi,
     void *pvMemory,
     JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata,
     size_t zTypeSize,
+    size_t zAlignment,
     size_t zLength,
     JUNO_FAILURE_HANDLER_T pfcnFailureHandler,
     JUNO_USER_DATA_T *pvFailureUserData
 );
+
+/**
+ * @def JunoMemory_BlockGetT(ptBlkRoot, type)
+ * @ingroup juno_memory_block
+ * @brief Allocate a block sized for the specified C type.
+ * @param ptBlkRoot Pointer to a JUNO_MEMORY_ALLOC_BLOCK_T instance.
+ * @param type C type used to derive size and alignment.
+ */
+#define JunoMemory_BlockGetT(ptBlkRoot, type) (ptBlkRoot)->tRoot.ptApi->Get(&(ptBlkRoot)->tRoot, sizeof(type))
+/**
+ * @def JunoMemory_BlockPutT(ptBlkRoot, pPtr)
+ * @ingroup juno_memory_block
+ * @brief Free a previously allocated block given its pointer descriptor.
+ * @param ptBlkRoot Pointer to a JUNO_MEMORY_ALLOC_BLOCK_T instance.
+ * @param pPtr Pointer descriptor previously returned by the allocator.
+ */
+#define JunoMemory_BlockPutT(ptBlkRoot, pPtr) (ptBlkRoot)->tRoot.ptApi->Put(&(ptBlkRoot)->tRoot, (pPtr))
+
 #ifdef __cplusplus
 }
 #endif

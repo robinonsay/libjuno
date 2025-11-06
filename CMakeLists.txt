@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,16 +10,18 @@ option(JUNO_COVERAGE "Compile Juno with code coverage" OFF)
 option(JUNO_DOCS "Enable doxygen docs" OFF)
 option(JUNO_PIC "Compile Juno with Position Independent Code" ON)
 option(JUNO_SHARED "Compile the juno shared library" OFF)
+option(JUNO_FREESTANDING "Compile as a freestanding library" OFF)
+option(JUNO_ASAN "Compile ASAN" OFF)
+option(JUNO_UBSAN "Compile with UBSAN" OFF)
+option(JUNO_EXAMPLES "Compile Juno Examples" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
-project(juno VERSION 0.42.0 LANGUAGES C CXX)
+project(juno VERSION 1.0.0 LANGUAGES C CXX)
 
-if(JUNO_API)
-    add_definitions(-DJUNO_API)
-endif(JUNO_API)
-
-
+# Package config helpers for installing CMake package files
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 # Create the library (update the source files as needed)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src JUNO_SRCS)
@@ -28,7 +30,9 @@ add_library(${PROJECT_NAME} STATIC
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/src
 )
 
 set(JUNO_COMPILE_OPTIONS
@@ -47,13 +51,11 @@ set(JUNO_COMPILE_OPTIONS
 )
 
 set(JUNO_COMPILE_CXX_OPTIONS
-    -fno-rtti             # Warn if a function is declared without specifying argument types
-    -fno-exceptions       # Warn if a global function is defined without a previous prototype declaration
+    -fno-rtti
+    -fno-exceptions
 )
 
 set(JUNO_COMPILE_C_OPTIONS
-    -Wstrict-prototypes             # Warn if a function is declared without specifying argument types
-    -Wmissing-prototypes            # Warn if a global function is defined without a previous prototype declaration
 )
 
 if(JUNO_PIC)
@@ -64,59 +66,84 @@ if(JUNO_COVERAGE)
         --coverage
         -g
     )
-    link_libraries(gcov)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        gcov
+    )
 endif()
 
-set(JUNO_LIBS ${PROJECT_NAME})
-foreach(file ${JUNO_SRCS})
-    # Get the file name without extension (NAME_WE stands for Name Without Extension)
-    get_filename_component(lib_name ${file} NAME_WE)
-    add_library(${lib_name} STATIC
-        ${file}
-    )
-    list(APPEND JUNO_LIBS ${lib_name})
-endforeach()
 
-# Specify the include directories for consumers of this library
-foreach(lib ${JUNO_LIBS})
-    target_include_directories(${lib} PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
-        PRIVATE
-        ${PROJECT_SOURCE_DIR}/src
-    )
-    # Enable a comprehensive set of warnings
-    target_compile_options(${lib} PRIVATE
-        ${JUNO_COMPILE_OPTIONS}
-        $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
-        $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
+if(JUNO_FREESTANDING)
+    list(APPEND JUNO_COMPILE_C_OPTIONS
         -nostdlib
-        -ffreestanding                  # Disable the hosted environment
+        -ffreestanding
     )
-    target_link_options(${lib} PRIVATE
+    target_link_options(${PROJECT_NAME} PRIVATE
         -nostdlib
     )
-endforeach()
+endif()
+if(JUNO_ASAN)
+    add_compile_options(
+        -fsanitize=address
+    )
+    add_link_options(
+        -fsanitize=address
+    )
+endif()
+if(JUNO_UBSAN)
+    add_compile_options( 
+        -fsanitize=undefined
+    )
+    add_link_options(
+        -fsanitize=undefined
+    )
+endif()
+# Enable a comprehensive set of warnings
+target_compile_options(${PROJECT_NAME} PRIVATE
+    ${JUNO_COMPILE_OPTIONS}
+    $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+    $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
+
+)
 
 if(JUNO_SHARED)
     set(JUNO_SHARED_TARGET ${PROJECT_NAME}_shared)
     add_library(${JUNO_SHARED_TARGET} SHARED ${JUNO_SRCS})
     target_include_directories(${JUNO_SHARED_TARGET} PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
+    )
+    target_compile_options(${PROJECT_NAME}_shared PRIVATE
+        ${JUNO_COMPILE_OPTIONS}
+        $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+        $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
+
+    )
+    target_link_options(${PROJECT_NAME}_shared PRIVATE
+        -nostdlib
     )
 endif()
 
 install(
-  TARGETS ${JUNO_LIBS} ${JUNO_SHARED_TARGET} ${JUNO_POSIX_TARGET}
-  EXPORT junoTargets                          # for later use in find_package()
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # usually “lib”
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    TARGETS ${PROJECT_NAME}
+    EXPORT junoTargets                          # for later use in find_package()
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # usually “lib”
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+
+if(JUNO_SHARED)
+    install(
+        TARGETS ${JUNO_SHARED_TARGET}
+        EXPORT junoTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+endif()
 
 install(
   DIRECTORY ${PROJECT_SOURCE_DIR}/include/     # source directory
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include  # usually “include/juno”
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}      # usually “include/”
   FILES_MATCHING
   PATTERN "*.h"      # match .h files
   PATTERN "*.hpp"    # match .hpp files
@@ -124,11 +151,14 @@ install(
 
 if(JUNO_TESTS)
     add_definitions(-DUNITY_INCLUDE_DOUBLE)
-    set(CMAKE_BUILD_TYPE Debug)
     enable_testing()
     add_library(unity ${PROJECT_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${PROJECT_SOURCE_DIR}/deps/unity/src)
     add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
+endif()
+
+if(JUNO_EXAMPLES)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/examples)
 endif()
 
 
@@ -156,3 +186,37 @@ else()
   message(WARNING "Doxygen not found—'make docs' target will be unavailable.")
 endif()
 endif()
+
+# -----------------------------
+# CMake package export and config
+# -----------------------------
+
+# Configure the package config file
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/junoConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/junoConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
+)
+
+# Generate a version file for find_package compatibility checks
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/junoConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+# Export the targets for find_package consumers
+install(
+    EXPORT junoTargets
+    FILE junoTargets.cmake
+    NAMESPACE juno::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
+)
+
+# Install the configured config and version files
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/junoConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/junoConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/juno
+)

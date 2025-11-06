@@ -21,9 +21,14 @@
 */
 
 /**
-    This header contains the io library API
-    @author Robin Onsay
-*/
+ * @file async_io_api.h
+ * @brief Asynchronous/non-blocking IO facade with timeouts.
+ * @defgroup juno_io_async Async IO API
+ * @details
+ *  Read/Write primitives with optional timeout. Size parameters are in/out:
+ *  on input, they specify buffer capacity/desired length; on return, they are
+ *  updated with the number of bytes read/written.
+ */
 #ifndef JUNO_ASYNC_IO_API_H
 #define JUNO_ASYNC_IO_API_H
 #include "juno/status.h"
@@ -37,27 +42,26 @@ extern "C"
 
 typedef struct JUNO_ASYNC_IO_API_TAG JUNO_ASYNC_IO_API_T;
 
-typedef union JUNO_ASYNC_IO_TAG JUNO_ASYNC_IO_T;
 typedef struct JUNO_ASYNC_IO_ROOT_TAG JUNO_ASYNC_IO_ROOT_T;
 
 struct JUNO_ASYNC_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ASYNC_IO_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_ASYNC_IO_API_TAG
 {
-    /// Read the specified number of bytes from the IO
-    JUNO_STATUS_T (*Read)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize);
-    /// Try to read from the IO until timeout expires
-    JUNO_STATUS_T (*TryRead)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
-    /// Read from the IO until the set of characters is recieved
-    JUNO_STATUS_T (*ReadUntil)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars);
-    /// Try to read from the IO until the set of characters is recieved
-    JUNO_STATUS_T (*TryReadUntil)(JUNO_ASYNC_IO_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, JUNO_TIME_MICROS_T iTimeoutUs);
-    /// Write the specified number of bytes to the IO
-    JUNO_STATUS_T (*Write)(JUNO_ASYNC_IO_T *ptIo, const void *pvBuff, size_t *pzBuffSize);
-    /// Try to write the specified number of bytes to the IO
-    JUNO_STATUS_T (*TryWrite)(JUNO_ASYNC_IO_T *ptIo, const void *pvBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
-    /// Poll the IO
-    JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs, bool *pbHasData);
+    /// @brief Read up to *pzBuffSize bytes; updates size with bytes read.
+    JUNO_STATUS_T (*Read)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize);
+    /// @brief Try to read with timeout; returns when data available or timeout.
+    JUNO_STATUS_T (*TryRead)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
+    /// @brief Read until any stop character is received (size updated).
+    JUNO_STATUS_T (*ReadUntil)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars);
+    /// @brief Try to read until stop character or timeout.
+    JUNO_STATUS_T (*TryReadUntil)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, JUNO_TIME_MICROS_T iTimeoutUs);
+    /// @brief Write up to *pzBuffSize bytes; updates size with bytes written.
+    JUNO_STATUS_T (*Write)(JUNO_ASYNC_IO_ROOT_T *ptIo, const void *pvBuff, size_t *pzBuffSize);
+    /// @brief Try to write with timeout; updates size with bytes written.
+    JUNO_STATUS_T (*TryWrite)(JUNO_ASYNC_IO_ROOT_T *ptIo, const void *pvBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
+    /// @brief Poll for input readiness within timeout; sets pbHasData.
+    JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_ROOT_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs, bool *pbHasData);
 };
 
 #ifdef __cplusplus

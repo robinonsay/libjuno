@@ -1,3 +1,20 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include "juno/macros.h"
 #include "juno/module.h"
 #include "juno/sm/sm_api.h"
@@ -24,9 +41,9 @@ union JUNO_SM_STATE_T JUNO_MODULE(JUNO_SM_STATE_API_T, JUNO_SM_STATE_ROOT_T,
 );
 
 /// The action that should be executed in this state
-static JUNO_STATUS_T StateAction(JUNO_SM_STATE_T *ptJunoSm)
+static JUNO_STATUS_T StateAction(JUNO_SM_STATE_ROOT_T *ptJunoSm)
 {
-    JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
+    JUNO_STATUS_T tStatus = JunoSm_StateVerify(ptJunoSm);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     printf("Current State: %u\n", ptTrafficLightState->tThisLight);
@@ -35,9 +52,9 @@ static JUNO_STATUS_T StateAction(JUNO_SM_STATE_T *ptJunoSm)
     return JUNO_STATUS_SUCCESS;
 }
 /// Returns a bool result whether the current state should exit
-static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_T *ptJunoSm)
+static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_ROOT_T *ptJunoSm)
 {
-    JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
+    JUNO_STATUS_T tStatus = JunoSm_StateVerify(ptJunoSm);
     JUNO_RESULT_BOOL_T tResult = {0};
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     tResult.tStatus = tStatus;
@@ -47,9 +64,9 @@ static JUNO_RESULT_BOOL_T ShouldExit(JUNO_SM_STATE_T *ptJunoSm)
 }
 
 
-static JUNO_STATUS_T ResetState(JUNO_SM_STATE_T *ptJunoSm)
+static JUNO_STATUS_T ResetState(JUNO_SM_STATE_ROOT_T *ptJunoSm)
 {
-    JUNO_STATUS_T tStatus = JunoSm_StateVerify(&ptJunoSm->tRoot);
+    JUNO_STATUS_T tStatus = JunoSm_StateVerify(ptJunoSm);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     TRAFFIC_LIGHT_STATE_T *ptTrafficLightState = (TRAFFIC_LIGHT_STATE_T*) ptJunoSm;
     ptTrafficLightState->iCounter = 0;
@@ -86,9 +103,10 @@ TRAFFIC_LIGHT_SM_T tSm = {
         },
 };
 
-int main()
+int main(void)
 {
     JUNO_STATUS_T tStatus = JunoSm_Init(&tSm.tRoot, &tSm.tStates[TRAFFIC_RED].tRoot, NULL, NULL);
+    JUNO_ASSERT_SUCCESS(tStatus, return -1);
     for(size_t i = 0; i < TRAFFIC_COUNT; i++)
     {
         TRAFFIC_LIGHT_STATE_T *ptSmState = &tSm.tStates[i];
@@ -97,21 +115,21 @@ int main()
     while(true)
     {
         JUNO_SM_RESULT_STATE_T tStateResult = JunoSm_GetCurrentState(&tSm.tRoot);
-        JUNO_ASSERT_SUCCESS(tStateResult.tStatus, break;);
-        JUNO_SM_STATE_ROOT_T *ptSmState = &tStateResult.tOk->tRoot;
+        JUNO_ASSERT_SUCCESS(tStateResult.tStatus, break);
+        JUNO_SM_STATE_ROOT_T *ptSmState = tStateResult.tOk;
         if(ptSmState)
         {
             const JUNO_SM_STATE_API_T *ptSmStateApi = ptSmState->ptApi;
-            JUNO_RESULT_BOOL_T tBoolResult = ptSmStateApi->ShouldExit((JUNO_SM_STATE_T *)ptSmState);
-            JUNO_ASSERT_SUCCESS(tBoolResult.tStatus, break;);
+            JUNO_RESULT_BOOL_T tBoolResult = ptSmStateApi->ShouldExit(ptSmState);
+            JUNO_ASSERT_SUCCESS(tBoolResult.tStatus, break);
             if(tBoolResult.tOk)
             {
-                ptSmStateApi->ResetState((JUNO_SM_STATE_T *)ptSmState);
+                ptSmStateApi->ResetState(ptSmState);
                 JunoSm_TransitionState(&tSm.tRoot);
             }
             else
             {
-                ptSmStateApi->StateAction((JUNO_SM_STATE_T *)ptSmState);
+                ptSmStateApi->StateAction(ptSmState);
             }
         }
     }

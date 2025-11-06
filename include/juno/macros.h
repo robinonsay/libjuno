@@ -14,6 +14,17 @@
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 */
+/**
+ * @file macros.h
+ * @brief Common assertion and helper macros for LibJuno modules.
+ * @defgroup juno_macros Assertions and helpers
+ * @details
+ *  These macros provide lightweight, freestanding-friendly assertions and
+ *  failure-notification hooks. They are designed to return error codes rather
+ *  than aborting, in line with LibJuno's deterministic error handling.
+ *
+ *  @{
+ */
 #ifndef JUNO_MACROS_H
 #define JUNO_MACROS_H
 
@@ -21,10 +32,21 @@
 #include <stdint.h>
 
 /**
-    Assert if `ptr` exists.
-    For example `JUNO_ASSERT_EXISTS(ptMyPointerFoo)` or JUNO_ASSERT_EXISTS(ptMyPointerFoo && ptMyPointerBar)
-    @param ptr A pointer or pointers concatinated with &&
-*/
+ * @def JUNO_ASSERT_EXISTS(ptr)
+ * @ingroup juno_macros
+ * @brief Returns JUNO_STATUS_NULLPTR_ERROR if the expression is falsy.
+ * @details
+ *  Use to validate required pointers or expressions. Typical usage within a
+ *  function that returns JUNO_STATUS_T:
+ *  @code{.c}
+ *  JUNO_STATUS_T f(void *p) {
+ *      JUNO_ASSERT_EXISTS(p);
+ *      // safe to use p
+ *      return JUNO_STATUS_SUCCESS;
+ *  }
+ *  @endcode
+ * @param ptr Pointer/expression to validate (may combine with &&).
+ */
 #define JUNO_ASSERT_EXISTS(ptr) \
 if(!(ptr)) \
 { \
@@ -32,27 +54,41 @@ if(!(ptr)) \
 }
 
 /**
-    Assert if a module's dependencies exist
-    @param ptr the Module dependecy or dependencies
-    to assert (similar to `JUNO_ASSERT_EXISTS`)
-    @param ptMod The module
-    @param str The error message if `ptr` fails assertion
-*/
-#define JUNO_JUNO_ASSERT_EXISTS_MODULE(ptr, ptMod, str) if(!(ptr)) \
+ * @def JUNO_ASSERT_EXISTS_MODULE(ptr, ptMod, str)
+ * @ingroup juno_macros
+ * @brief Like JUNO_ASSERT_EXISTS but also calls the module's failure handler.
+ * @details Invokes `JUNO_FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptMod, str)`
+ *          before returning `JUNO_STATUS_NULLPTR_ERROR`.
+ * @param ptr The dependency expression to validate.
+ * @param ptMod The module instance providing the failure handler.
+ * @param str Message passed to the failure handler upon failure.
+ */
+#define JUNO_ASSERT_EXISTS_MODULE(ptr, ptMod, str) if(!(ptr)) \
 { \
     JUNO_FAIL_MODULE(JUNO_STATUS_NULLPTR_ERROR, ptMod, str); \
     return JUNO_STATUS_NULLPTR_ERROR; \
 }
 
 /**
-    Assert the status is a success, if not perform `failOp`
-    @param tStatus The status to assert
-    @param failOp The failure operation
-*/
-#define JUNO_ASSERT_SUCCESS(tStatus, failOp) if(tStatus != JUNO_STATUS_SUCCESS) \
+ * @def JUNO_ASSERT_SUCCESS(tStatus, ...)
+ * @ingroup juno_macros
+ * @brief Execute the provided failure operation(s) if status is not success.
+ * @details
+ *  Intended for early-returns and cleanup in error paths:
+ *  @code{.c}
+ *  JUNO_STATUS_T t = do_something();
+ *  JUNO_ASSERT_SUCCESS(t, return t);
+ *  @endcode
+ *  The variadic statements are emitted verbatim inside the error branch;
+ *  ensure they are valid in the enclosing scope.
+ * @param tStatus Status value to check.
+ * @param ... Statements to execute when tStatus != JUNO_STATUS_SUCCESS.
+ */
+#define JUNO_ASSERT_SUCCESS(tStatus, ...) if(tStatus != JUNO_STATUS_SUCCESS) \
 { \
-    failOp; \
+    __VA_ARGS__; \
 }
 
+/** @} */
 
 #endif // JUNO_MACROS_H

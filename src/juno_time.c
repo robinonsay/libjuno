@@ -1,11 +1,29 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
 #include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/time/time_api.h"
 #include <stdint.h>
 
-static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = -1;
+static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = (~(JUNO_TIME_SUBSECONDS_T)0);
+static const JUNO_TIME_SECONDS_T giSECS_MAX = (~(JUNO_TIME_SECONDS_T)0);
 
-JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)
+JUNO_STATUS_T JunoTime_AddTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)
 {
     JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
     // Add seconds
@@ -27,12 +45,12 @@ JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime,
     return JUNO_STATUS_SUCCESS;
 }
 
-JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract)
+JUNO_STATUS_T JunoTime_SubtractTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract)
 {
     JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
     // Check if we are going to result in negative time
-    if(ptRetTime->iSeconds < tTimeToSubtract.iSeconds || (ptRetTime->iSeconds == 0 && ptRetTime->iSubSeconds < tTimeToSubtract.iSubSeconds))
+    if(ptRetTime->iSeconds < tTimeToSubtract.iSeconds || (ptRetTime->iSeconds == tTimeToSubtract.iSeconds && ptRetTime->iSubSeconds < tTimeToSubtract.iSubSeconds))
     {
         ptRetTime->iSeconds = 0;
         ptRetTime->iSubSeconds = 0;
@@ -55,7 +73,7 @@ JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRet
     return JUNO_STATUS_SUCCESS;
 }
 
-JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)
+JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_NANOS_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -63,23 +81,35 @@ JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIM
     {
         return tResult;
     }
-    tResult.tStatus = JUNO_STATUS_SUCCESS;
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
-    const JUNO_TIME_NANOS_T iMAX_NANOS = -1;
-    const JUNO_TIME_NANOS_T iNANOS_PER_SEC = 1000 * 1000 * 1000;
-    // check if seconds -1 would overflow nanos
-    if(tTime.iSeconds > iMAX_NANOS / iNANOS_PER_SEC - 1)
+    const JUNO_TIME_NANOS_T iMAX_NANOS = (~(JUNO_TIME_NANOS_T)0);
+    const JUNO_TIME_NANOS_T iNANOS_PER_SEC = 1000ULL * 1000ULL * 1000ULL;
+
+    // Compute fractional contribution using integer math with rounding
+    JUNO_TIME_NANOS_T iFrac = ((JUNO_TIME_NANOS_T)tTime.iSubSeconds * iNANOS_PER_SEC + giSUBSECS_MAX / 2) / giSUBSECS_MAX;
+    // Guard seconds multiplication overflow
+    if (tTime.iSeconds > iMAX_NANOS / iNANOS_PER_SEC)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
-        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos");
-        return tResult;     
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos (seconds)");
+        return tResult;
     }
-    tResult.tOk = tTime.iSeconds * iNANOS_PER_SEC;
-    tResult.tOk += ((double)tTime.iSubSeconds) / giSUBSECS_MAX * iNANOS_PER_SEC ;
+    JUNO_TIME_NANOS_T iBase = (JUNO_TIME_NANOS_T)tTime.iSeconds * iNANOS_PER_SEC;
+
+    // Guard addition overflow
+    if (iFrac > iMAX_NANOS - iBase)
+    {
+        tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos (fraction)");
+        return tResult;
+    }
+
+    tResult.tOk = iBase + iFrac;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
     return tResult;
 }
 
-JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)
+JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_MICROS_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -88,22 +118,31 @@ JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_T
         return tResult;
     }
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
-    const JUNO_TIME_MICROS_T iMAX_MICROS = -1;
-    const JUNO_TIME_MICROS_T iMICROS_PER_SEC = 1000 * 1000;
-    tResult.tStatus = JUNO_STATUS_SUCCESS;
-    // check if seconds -1 would overflow nanos
-    if(tTime.iSeconds > iMAX_MICROS / iMICROS_PER_SEC - 1)
+    const JUNO_TIME_MICROS_T iMAX_MICROS = (~(JUNO_TIME_MICROS_T)0);
+    const JUNO_TIME_MICROS_T iMICROS_PER_SEC = 1000ULL * 1000ULL;
+    JUNO_TIME_MICROS_T iFrac = ((JUNO_TIME_MICROS_T)tTime.iSubSeconds * iMICROS_PER_SEC + giSUBSECS_MAX / 2) / giSUBSECS_MAX;
+
+    if (tTime.iSeconds > iMAX_MICROS / iMICROS_PER_SEC)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
-        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos");
-        return tResult;     
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting micros (seconds)");
+        return tResult;
     }
-    tResult.tOk = tTime.iSeconds * iMICROS_PER_SEC;
-    tResult.tOk +=  (((double)tTime.iSubSeconds) * iMICROS_PER_SEC) / giSUBSECS_MAX;
+    JUNO_TIME_MICROS_T iBase = (JUNO_TIME_MICROS_T)tTime.iSeconds * iMICROS_PER_SEC;
+
+    if (iFrac > iMAX_MICROS - iBase)
+    {
+        tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting micros (fraction)");
+        return tResult;
+    }
+
+    tResult.tOk = iBase + iFrac;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
     return tResult;
 }
 
-JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)
+JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_MILLIS_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -112,22 +151,32 @@ JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_T
         return tResult;
     }
     JUNO_TIME_ROOT_T *ptTimeRoot = (JUNO_TIME_ROOT_T *)(ptTime);
-    const JUNO_TIME_MICROS_T iMAX_MILLIS = -1;
-    const JUNO_TIME_MICROS_T iMILLIS_PER_SEC = 1000;
-    tResult.tStatus = JUNO_STATUS_SUCCESS;
-    // check if seconds -1 would overflow nanos
-    if(tTime.iSeconds > iMAX_MILLIS / iMILLIS_PER_SEC - 1)
+    const JUNO_TIME_MILLIS_T iMAX_MILLIS = (~(JUNO_TIME_MILLIS_T)0);
+    const JUNO_TIME_MILLIS_T iMILLIS_PER_SEC = 1000ULL;
+
+    JUNO_TIME_MILLIS_T iFrac = ((JUNO_TIME_MILLIS_T)tTime.iSubSeconds * iMILLIS_PER_SEC + giSUBSECS_MAX / 2) / giSUBSECS_MAX;
+
+    if (tTime.iSeconds > iMAX_MILLIS / iMILLIS_PER_SEC)
     {
         tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
-        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting nanos");
-        return tResult;     
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting millis (seconds)");
+        return tResult;
     }
-    tResult.tOk = tTime.iSeconds * iMILLIS_PER_SEC;
-    tResult.tOk += (((double)tTime.iSubSeconds) * iMILLIS_PER_SEC)/ giSUBSECS_MAX;
+    JUNO_TIME_MILLIS_T iBase = (JUNO_TIME_MILLIS_T)tTime.iSeconds * iMILLIS_PER_SEC;
+
+    if (iFrac > iMAX_MILLIS - iBase)
+    {
+        tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
+        JUNO_FAIL_ROOT(tResult.tStatus, ptTimeRoot, "Overflow when converting millis (fraction)");
+        return tResult;
+    }
+
+    tResult.tOk = iBase + iFrac;
+    tResult.tStatus = JUNO_STATUS_SUCCESS;
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos)
+JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_NANOS_T iNanos)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -136,14 +185,15 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME
         return tResult;
     }
     const JUNO_TIME_NANOS_T iNANOS_PER_SEC = 1000 * 1000 * 1000;
-    const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_NANO = giSUBSECS_MAX / iNANOS_PER_SEC;
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk.iSeconds = iNanos / iNANOS_PER_SEC;
-    tResult.tOk.iSubSeconds = (iNanos % iNANOS_PER_SEC) * iSUBSECS_PER_NANO;
+    // Use full precision: (fraction * SUBSECS_MAX) / NANOS_PER_SEC with rounding
+    JUNO_TIME_NANOS_T iFraction = iNanos % iNANOS_PER_SEC;
+    tResult.tOk.iSubSeconds = (iFraction * (JUNO_TIME_NANOS_T)giSUBSECS_MAX + iNANOS_PER_SEC / 2) / iNANOS_PER_SEC;
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros)
+JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MICROS_T iMicros)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -151,15 +201,16 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIM
     {
         return tResult;
     }
-    const JUNO_TIME_NANOS_T iMICROS_PER_SEC = 1000 * 1000;
-    const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_MICRO = giSUBSECS_MAX / iMICROS_PER_SEC;
+    const JUNO_TIME_MICROS_T iMICROS_PER_SEC = 1000 * 1000;
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk.iSeconds = iMicros / iMICROS_PER_SEC;
-    tResult.tOk.iSubSeconds = (iMicros % iMICROS_PER_SEC) * iSUBSECS_PER_MICRO;
+    // Use full precision: (fraction * SUBSECS_MAX) / MICROS_PER_SEC with rounding
+    JUNO_TIME_MICROS_T iFraction = iMicros % iMICROS_PER_SEC;
+    tResult.tOk.iSubSeconds = (iFraction * (JUNO_TIME_MICROS_T)giSUBSECS_MAX + iMICROS_PER_SEC / 2) / iMICROS_PER_SEC;
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis)
+JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MILLIS_T iMillis)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -167,16 +218,17 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIM
     {
         return tResult;
     }
-    const JUNO_TIME_NANOS_T iMILLIS_PER_SEC = 1000;
-    const JUNO_TIME_SUBSECONDS_T iSUBSECS_PER_MILLI = giSUBSECS_MAX / iMILLIS_PER_SEC;
+    const JUNO_TIME_MILLIS_T iMILLIS_PER_SEC = 1000;
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk.iSeconds = iMillis / iMILLIS_PER_SEC;
-    tResult.tOk.iSubSeconds = (iMillis % iMILLIS_PER_SEC) * iSUBSECS_PER_MILLI;
+    // Use full precision: (fraction * SUBSECS_MAX) / MILLIS_PER_SEC with rounding
+    JUNO_TIME_MILLIS_T iFraction = iMillis % iMILLIS_PER_SEC;
+    tResult.tOk.iSubSeconds = (iFraction * (JUNO_TIME_MILLIS_T)giSUBSECS_MAX + iMILLIS_PER_SEC / 2) / iMILLIS_PER_SEC;
     return tResult;
 }
 
 
-JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)
+JUNO_RESULT_F64_T JunoTime_TimestampToDouble(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)
 {
     JUNO_RESULT_F64_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -190,7 +242,7 @@ JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP
     return tResult;
 }
 
-JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_T *ptTime, double dTimestamp)
+JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(const JUNO_TIME_ROOT_T *ptTime, double dTimestamp)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
     tResult.tStatus = JUNO_STATUS_NULLPTR_ERROR;
@@ -198,9 +250,22 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_T *ptTime, double d
     {
         return tResult;
     }
+    if(dTimestamp < 0 || dTimestamp > giSECS_MAX)
+    {
+        tResult.tStatus = JUNO_STATUS_INVALID_DATA_ERROR;
+        return tResult;
+    }
     tResult.tStatus = JUNO_STATUS_SUCCESS;
     tResult.tOk.iSeconds = dTimestamp;
-    tResult.tOk.iSubSeconds = (dTimestamp - tResult.tOk.iSeconds) * giSUBSECS_MAX;
+    if(dTimestamp - tResult.tOk.iSeconds < 1.0 - 1.0 / giSUBSECS_MAX)
+    {
+        tResult.tOk.iSubSeconds = (dTimestamp - tResult.tOk.iSeconds) * giSUBSECS_MAX;
+    }
+    else
+    {
+        tResult.tOk.iSubSeconds = 0;
+        tResult.tOk.iSeconds += 1;
+    }
     return tResult;
 }
 

@@ -16,28 +16,54 @@
 */
 
 /**
-    @file Juno Math offers various math types and inline math functions
-*/
+ * @file juno_vec.h
+ * @brief Inline vector and quaternion operations for Juno math types.
+ * @ingroup juno_math
+ * @details
+ *  Provides basic arithmetic (add/sub/scale), dot/cross products, and L2
+ *  norms (often squared) for 2D and 3D vectors across double/float/int32
+ *  precisions, plus quaternion operations (add/sub/scale, Hamilton product,
+ *  conjugate, reciprocal). See function comments for squared vs true norm.
+ */
 
 #ifndef JUNO_VEC_H
 #define JUNO_VEC_H
 
 #include "juno/math/juno_vec_types.h"
-#include "juno_math_types.h"
 #include <stdint.h>
-#include <math.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define Juno_Pow2(d)    (d*d)
-#define Juno_Pow3(d)    (d*d*d)
-#define Juno_Pow4(d)    (d*d*d*d)
+/**
+ * @def Juno_Pow2
+ * @brief Square of a value.
+ * @param d Input value.
+ * @return d*d
+ */
+#define Juno_Pow2(d) (d*d)
+/**
+ * @def Juno_Pow3
+ * @brief Cube of a value.
+ * @param d Input value.
+ * @return d*d*d
+ */
+#define Juno_Pow3(d) (d*d*d)
+/**
+ * @def Juno_Pow4
+ * @brief Fourth power of a value.
+ * @param d Input value.
+ * @return d*d*d*d
+ */
+#define Juno_Pow4(d) (d*d*d*d)
 
 /**
-    Add two vecf's together
-*/
+ * @brief Add two 2D vectors (double).
+ * @param tVec0 First vector (augend).
+ * @param tVec1 Second vector (addend).
+ * @return Component-wise sum tVec0 + tVec1.
+ */
 static inline JUNO_VEC2_F64_T Juno_Vec2_F64_Add(JUNO_VEC2_F64_T tVec0, JUNO_VEC2_F64_T tVec1)
 {
     tVec0.arr[0] += tVec1.arr[0];
@@ -47,10 +73,11 @@ static inline JUNO_VEC2_F64_T Juno_Vec2_F64_Add(JUNO_VEC2_F64_T tVec0, JUNO_VEC2
 
 
 /**
-    Subtract to vec2f's
-    @param tVec0 The vec to subtract from
-    @param tVec1 The vec to subtract
-*/
+ * @brief Subtract two 2D vectors (double).
+ * @param tVec0 Minuend vector (from which tVec1 is subtracted).
+ * @param tVec1 Subtrahend vector.
+ * @return Component-wise difference tVec0 - tVec1.
+ */
 static inline JUNO_VEC2_F64_T Juno_Vec2_F64_Sub(JUNO_VEC2_F64_T tVec0, JUNO_VEC2_F64_T tVec1)
 {
     tVec0.arr[0] -= tVec1.arr[0];
@@ -59,8 +86,11 @@ static inline JUNO_VEC2_F64_T Juno_Vec2_F64_Sub(JUNO_VEC2_F64_T tVec0, JUNO_VEC2
 }
 
 /**
-    Multiply scalar with vec2f's
-*/
+ * @brief Scale a 2D vector by a scalar (double).
+ * @param tVec0 Input vector.
+ * @param dScalar Scalar multiplier.
+ * @return Component-wise product tVec0 * dScalar.
+ */
 static inline JUNO_VEC2_F64_T Juno_Vec2_F64_Mult(JUNO_VEC2_F64_T tVec0, double dScalar)
 {
     tVec0.arr[0] *= dScalar;
@@ -69,34 +99,37 @@ static inline JUNO_VEC2_F64_T Juno_Vec2_F64_Mult(JUNO_VEC2_F64_T tVec0, double d
 }
 
 /**
-    Dot product of two vec2f's
-*/
+ * @brief Dot product of two 2D vectors (double).
+ * @return tVec0.x*tVec1.x + tVec0.y*tVec1.y
+ */
 static inline double Juno_Vec2_F64_Dot(JUNO_VEC2_F64_T tVec0, JUNO_VEC2_F64_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[0] + tVec0.arr[1] * tVec1.arr[1];
 }
 
 /**
-    The cross product of two vec2f's.
-    The result is a psedoscalar
-*/
+ * @brief 2D cross product (double).
+ * @details Returns the pseudoscalar z-component of the 3D cross product of
+ *          (x0, y0, 0) × (x1, y1, 0): x0*y1 - y0*x1.
+ */
 static inline double Juno_Vec2_F64_Cross(JUNO_VEC2_F64_T tVec0, JUNO_VEC2_F64_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0];
 }
 
 /**
-    Get L2 norm of vector
-*/
-static inline double Juno_Vec2_F64_L2Norm(JUNO_VEC2_F64_T tVec0)
+ * @brief Squared L2 norm of a 2D vector (double).
+ * @return x^2 + y^2
+ */
+static inline double Juno_Vec2_F64_L2Norm2(JUNO_VEC2_F64_T tVec0)
 {
 
-    return sqrt(Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]));
+    return Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]);
 }
 
 /**
-    Add two vecf's together
-*/
+ * @brief Add two 2D vectors (float).
+ */
 static inline JUNO_VEC2_F32_T Juno_Vec2_F32_Add(JUNO_VEC2_F32_T tVec0, JUNO_VEC2_F32_T tVec1)
 {
     tVec0.arr[0] += tVec1.arr[0];
@@ -106,10 +139,8 @@ static inline JUNO_VEC2_F32_T Juno_Vec2_F32_Add(JUNO_VEC2_F32_T tVec0, JUNO_VEC2
 
 
 /**
-    Subtract to vec2f's
-    @param tVec0 The vec to subtract from
-    @param tVec1 The vec to subtract
-*/
+ * @brief Subtract two 2D vectors (float).
+ */
 static inline JUNO_VEC2_F32_T Juno_Vec2_F32_Sub(JUNO_VEC2_F32_T tVec0, JUNO_VEC2_F32_T tVec1)
 {
     tVec0.arr[0] -= tVec1.arr[0];
@@ -118,8 +149,8 @@ static inline JUNO_VEC2_F32_T Juno_Vec2_F32_Sub(JUNO_VEC2_F32_T tVec0, JUNO_VEC2
 }
 
 /**
-    Multiply scalar with vec2f's
-*/
+ * @brief Scale a 2D vector by a scalar (float).
+ */
 static inline JUNO_VEC2_F32_T Juno_Vec2_F32_Mult(JUNO_VEC2_F32_T tVec0, float dScalar)
 {
     tVec0.arr[0] *= dScalar;
@@ -128,32 +159,33 @@ static inline JUNO_VEC2_F32_T Juno_Vec2_F32_Mult(JUNO_VEC2_F32_T tVec0, float dS
 }
 
 /**
-    Dot product of two vec2f's
-*/
+ * @brief Dot product of two 2D vectors (float).
+ */
 static inline float Juno_Vec2_F32_Dot(JUNO_VEC2_F32_T tVec0, JUNO_VEC2_F32_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[0] + tVec0.arr[1] * tVec1.arr[1];
 }
 
 /**
-    The cross product of two vec2f's.
-    The result is a psedoscalar
-*/
+ * @brief 2D cross product (float); returns pseudoscalar z-component.
+ */
 static inline float Juno_Vec2_F32_Cross(JUNO_VEC2_F32_T tVec0, JUNO_VEC2_F32_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0];
 }
 
 /**
-    Get L2 norm of vector
-*/
-static inline float Juno_Vec2_F32_L2Norm(JUNO_VEC2_F32_T tVec0)
+ * @brief Squared L2 norm of a 2D vector (float).
+ */
+static inline float Juno_Vec2_F32_L2Norm2(JUNO_VEC2_F32_T tVec0)
 {
 
-    return sqrtf(Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]));
+    return Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]);
 }
 
-/// Add two vec2i's
+/**
+ * @brief Add two 2D vectors (int32).
+ */
 static inline JUNO_VEC2_I32_T Juno_Vec2_I32_Add(JUNO_VEC2_I32_T tVec0, JUNO_VEC2_I32_T tVec1)
 {
     tVec0.arr[0] += tVec1.arr[0];
@@ -163,10 +195,8 @@ static inline JUNO_VEC2_I32_T Juno_Vec2_I32_Add(JUNO_VEC2_I32_T tVec0, JUNO_VEC2
 
 
 /**
-    Subtract to vec2i's
-    @param tVec0 The vec to subtract from
-    @param tVec1 The vec to subtract
-*/
+ * @brief Subtract two 2D vectors (int32).
+ */
 static inline JUNO_VEC2_I32_T Juno_Vec2_I32_Sub(JUNO_VEC2_I32_T tVec0, JUNO_VEC2_I32_T tVec1)
 {
     tVec0.arr[0] -= tVec1.arr[0];
@@ -175,8 +205,8 @@ static inline JUNO_VEC2_I32_T Juno_Vec2_I32_Sub(JUNO_VEC2_I32_T tVec0, JUNO_VEC2
 }
 
 /**
-    Multiply scalar with vec2f's
-*/
+ * @brief Scale a 2D vector by a scalar (int32).
+ */
 static inline JUNO_VEC2_I32_T Juno_Vec2_I32_Mult(JUNO_VEC2_I32_T tVec0, int32_t dScalar)
 {
     tVec0.arr[0] *= dScalar;
@@ -185,34 +215,34 @@ static inline JUNO_VEC2_I32_T Juno_Vec2_I32_Mult(JUNO_VEC2_I32_T tVec0, int32_t 
 }
 
 /**
-    Dot product of two vec2i's
-*/
+ * @brief Dot product of two 2D vectors (int32).
+ */
 static inline int32_t Juno_Vec2_I32_Dot(JUNO_VEC2_I32_T tVec0, JUNO_VEC2_I32_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[0] + tVec0.arr[1] * tVec1.arr[1];
 }
 
 /**
-    The cross product of two vec2i's.
-    The result is a psedoscalar
-*/
+ * @brief 2D cross product (int32); returns pseudoscalar z-component.
+ */
 static inline int32_t Juno_Vec2_I32_Cross(JUNO_VEC2_I32_T tVec0, JUNO_VEC2_I32_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0];
 }
 
 /**
-    Get L2 norm of vector
-*/
-static inline float Juno_Vec2_I32_L2Norm(JUNO_VEC2_I32_T tVec0)
+ * @brief Squared L2 norm of a 2D vector (int32 inputs; float return).
+ * @return (float)(x^2 + y^2)
+ */
+static inline float Juno_Vec2_I32_L2Norm2(JUNO_VEC2_I32_T tVec0)
 {
 
-    return sqrtf(Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]));
+    return Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]);
 }
 
 /**
-    Add two vecf's together
-*/
+ * @brief Add two 3D vectors (double).
+ */
 static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Add(JUNO_VEC3_F64_T tVec0, JUNO_VEC3_F64_T tVec1)
 {
     tVec0.arr[0] += tVec1.arr[0];
@@ -223,10 +253,8 @@ static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Add(JUNO_VEC3_F64_T tVec0, JUNO_VEC3
 
 
 /**
-    Subtract to vec2f's
-    @param tVec0 The vec to subtract from
-    @param tVec1 The vec to subtract
-*/
+ * @brief Subtract two 3D vectors (double).
+ */
 static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Sub(JUNO_VEC3_F64_T tVec0, JUNO_VEC3_F64_T tVec1)
 {
     tVec0.arr[0] -= tVec1.arr[0];
@@ -236,8 +264,8 @@ static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Sub(JUNO_VEC3_F64_T tVec0, JUNO_VEC3
 }
 
 /**
-    Multiply scalar with vec2f's
-*/
+ * @brief Scale a 3D vector by a scalar (double).
+ */
 static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Mult(JUNO_VEC3_F64_T tVec0, double dScalar)
 {
     tVec0.arr[0] *= dScalar;
@@ -247,39 +275,39 @@ static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Mult(JUNO_VEC3_F64_T tVec0, double d
 }
 
 /**
-    Dot product of two vec2f's
-*/
+ * @brief Dot product of two 3D vectors (double).
+ */
 static inline double Juno_Vec3_F64_Dot(JUNO_VEC3_F64_T tVec0, JUNO_VEC3_F64_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[0] + tVec0.arr[1] * tVec1.arr[1] + tVec0.arr[2] * tVec1.arr[2];
 }
 
 /**
-    The cross product of two vec2f's.
-    The result is a psedoscalar
-*/
+ * @brief 3D cross product (double).
+ * @details Returns a vector orthogonal to inputs: (x0,y0,z0)×(x1,y1,z1).
+ */
 static inline JUNO_VEC3_F64_T Juno_Vec3_F64_Cross(JUNO_VEC3_F64_T tVec0, JUNO_VEC3_F64_T tVec1)
 {
     JUNO_VEC3_F64_T tRes = {{
-        tRes.arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1],
-        tRes.arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2],
-        tRes.arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0]
+        tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1],
+        tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2],
+        tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0]
     }};
     return tRes;
 }
 
 /**
-    Get L2 norm of vector
-*/
-static inline double Juno_Vec3_F64_L2Norm(JUNO_VEC3_F64_T tVec0)
+ * @brief Squared L2 norm of a 3D vector (double).
+ */
+static inline double Juno_Vec3_F64_L2Norm2(JUNO_VEC3_F64_T tVec0)
 {
 
-    return sqrtf(Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]) + Juno_Pow2(tVec0.arr[2]));
+    return Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]) + Juno_Pow2(tVec0.arr[2]);
 }
 
 /**
-    Add two vecf's together
-*/
+ * @brief Add two 3D vectors (float).
+ */
 static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Add(JUNO_VEC3_F32_T tVec0, JUNO_VEC3_F32_T tVec1)
 {
     tVec0.arr[0] += tVec1.arr[0];
@@ -290,10 +318,8 @@ static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Add(JUNO_VEC3_F32_T tVec0, JUNO_VEC3
 
 
 /**
-    Subtract to vec2f's
-    @param tVec0 The vec to subtract from
-    @param tVec1 The vec to subtract
-*/
+ * @brief Subtract two 3D vectors (float).
+ */
 static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Sub(JUNO_VEC3_F32_T tVec0, JUNO_VEC3_F32_T tVec1)
 {
     tVec0.arr[0] -= tVec1.arr[0];
@@ -303,8 +329,8 @@ static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Sub(JUNO_VEC3_F32_T tVec0, JUNO_VEC3
 }
 
 /**
-    Multiply scalar with vec2f's
-*/
+ * @brief Scale a 3D vector by a scalar (float).
+ */
 static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Mult(JUNO_VEC3_F32_T tVec0, float dScalar)
 {
     tVec0.arr[0] *= dScalar;
@@ -314,37 +340,38 @@ static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Mult(JUNO_VEC3_F32_T tVec0, float dS
 }
 
 /**
-    Dot product of two vec2f's
-*/
+ * @brief Dot product of two 3D vectors (float).
+ */
 static inline float Juno_Vec3_F32_Dot(JUNO_VEC3_F32_T tVec0, JUNO_VEC3_F32_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[0] + tVec0.arr[1] * tVec1.arr[1] + tVec0.arr[2] * tVec1.arr[2];
 }
 
 /**
-    The cross product of two vec2f's.
-    The result is a psedoscalar
-*/
+ * @brief 3D cross product (float).
+ */
 static inline JUNO_VEC3_F32_T Juno_Vec3_F32_Cross(JUNO_VEC3_F32_T tVec0, JUNO_VEC3_F32_T tVec1)
 {
     JUNO_VEC3_F32_T tRes = {{
-        tRes.arr[0] = tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1],
-        tRes.arr[1] = tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2],
-        tRes.arr[2] = tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0]
+        tVec0.arr[1] * tVec1.arr[2] - tVec0.arr[2] * tVec1.arr[1],
+        tVec0.arr[2] * tVec1.arr[0] - tVec0.arr[0] * tVec1.arr[2],
+        tVec0.arr[0] * tVec1.arr[1] - tVec0.arr[1] * tVec1.arr[0]
     }};
     return tRes;
 }
 
 /**
-    Get L2 norm of vector
-*/
-static inline float Juno_Vec3_F32_L2Norm(JUNO_VEC3_F32_T tVec0)
+ * @brief Squared L2 norm of a 3D vector (float).
+ */
+static inline float Juno_Vec3_F32_L2Norm2(JUNO_VEC3_F32_T tVec0)
 {
 
-    return sqrtf(Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]) + Juno_Pow2(tVec0.arr[2]));
+    return (Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]) + Juno_Pow2(tVec0.arr[2]));
 }
 
-/// Add two vec2i's
+/**
+ * @brief Add two 3D vectors (int32).
+ */
 static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Add(JUNO_VEC3_I32_T tVec0, JUNO_VEC3_I32_T tVec1)
 {
     tVec0.arr[0] += tVec1.arr[0];
@@ -355,10 +382,8 @@ static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Add(JUNO_VEC3_I32_T tVec0, JUNO_VEC3
 
 
 /**
-    Subtract to vec2i's
-    @param tVec0 The vec to subtract from
-    @param tVec1 The vec to subtract
-*/
+ * @brief Subtract two 3D vectors (int32).
+ */
 static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Sub(JUNO_VEC3_I32_T tVec0, JUNO_VEC3_I32_T tVec1)
 {
     tVec0.arr[0] -= tVec1.arr[0];
@@ -368,8 +393,8 @@ static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Sub(JUNO_VEC3_I32_T tVec0, JUNO_VEC3
 }
 
 /**
-    Multiply scalar with vec2f's
-*/
+ * @brief Scale a 3D vector by a scalar (int32).
+ */
 static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Mult(JUNO_VEC3_I32_T tVec0, int32_t dScalar)
 {
     tVec0.arr[0] *= dScalar;
@@ -379,17 +404,16 @@ static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Mult(JUNO_VEC3_I32_T tVec0, int32_t 
 }
 
 /**
-    Dot product of two vec2i's
-*/
+ * @brief Dot product of two 3D vectors (int32).
+ */
 static inline int32_t Juno_Vec3_I32_Dot(JUNO_VEC3_I32_T tVec0, JUNO_VEC3_I32_T tVec1)
 {
     return tVec0.arr[0] * tVec1.arr[0] + tVec0.arr[1] * tVec1.arr[1] + tVec0.arr[2] * tVec1.arr[2];
 }
 
 /**
-    The cross product of two vec2i's.
-    The result is a psedoscalar
-*/
+ * @brief 3D cross product (int32).
+ */
 static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Cross(JUNO_VEC3_I32_T tVec0, JUNO_VEC3_I32_T tVec1)
 {
     JUNO_VEC3_I32_T tRes = {{
@@ -401,15 +425,18 @@ static inline JUNO_VEC3_I32_T Juno_Vec3_I32_Cross(JUNO_VEC3_I32_T tVec0, JUNO_VE
 }
 
 /**
-    Get L2 norm of vector
-*/
-static inline float Juno_Vec3_I32_L2Norm(JUNO_VEC3_I32_T tVec0)
+ * @brief Squared L2 norm of a 3D vector (int32 inputs; float return).
+ */
+static inline float Juno_Vec3_I32_L2Norm2(JUNO_VEC3_I32_T tVec0)
 {
 
-    return sqrtf(Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]) + Juno_Pow2(tVec0.arr[2]));
+    return (Juno_Pow2(tVec0.arr[0]) + Juno_Pow2(tVec0.arr[1]) + Juno_Pow2(tVec0.arr[2]));
 }
 
-/// Add two rquaternions
+/**
+ * @brief Add two real quaternions (double).
+ * @details Component-wise addition using [s, i, j, k] order.
+ */
 static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Add(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
 {
     q0.arr[0] += q1.arr[0];
@@ -421,10 +448,8 @@ static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Add(JUNO_RQUAT_F64_T q0, JUNO_RQUA
 
 
 /**
-    Subtract to rquaternions
-    @param q0 The rquat to subtract from
-    @param q1 The rquat to subtract
-*/
+ * @brief Subtract two real quaternions (double).
+ */
 static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Sub(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
 {
     q0.arr[0] -= q1.arr[0];
@@ -435,8 +460,8 @@ static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Sub(JUNO_RQUAT_F64_T q0, JUNO_RQUA
 }
 
 /**
-    Multiply scalar with rquaternion
-*/
+ * @brief Scale a real quaternion by a scalar (double).
+ */
 static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Mult(JUNO_RQUAT_F64_T q0, double dScalar)
 {
     q0.arr[0] *= dScalar;
@@ -447,22 +472,30 @@ static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Mult(JUNO_RQUAT_F64_T q0, double d
 }
 
 /**
-    The hamilton product of two rquaternions.
-*/
+ * @brief Hamilton product of two right-handed real quaternions (double).
+ * @details
+ *  Given q0 = (s0, i0, j0, k0) and q1 = (s1, i1, j1, k1) with i^2 = j^2 = k^2 = ijk = -1
+ *  and component order [s, i, j, k], the product q = q0 ⊗ q1 is:
+ *   - s' = s0*s1 − i0*i1 − j0*j1 − k0*k1
+ *   - i' = s0*i1 + i0*s1 + j0*k1 − k0*j1
+ *   - j' = s0*j1 − i0*k1 + j0*s1 + k0*i1
+ *   - k' = s0*k1 + i0*j1 − j0*i1 + k0*s1
+ */
 static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_HamProd(JUNO_RQUAT_F64_T q0, JUNO_RQUAT_F64_T q1)
 {
     JUNO_RQUAT_F64_T tRes = {{
-        q0.tQuat.s * q1.tQuat.s + q0.tQuat.i * q1.tQuat.i + q0.tQuat.j * q1.tQuat.j + q0.tQuat.k * q1.tQuat.k,
-        q0.tQuat.s * q1.tQuat.i + q0.tQuat.i * q1.tQuat.s + q0.tQuat.j * q1.tQuat.k + q0.tQuat.k * q1.tQuat.i,
-        q0.tQuat.s * q1.tQuat.j + q0.tQuat.i * q1.tQuat.k + q0.tQuat.j * q1.tQuat.s + q0.tQuat.k * q1.tQuat.j,
-        q0.tQuat.s * q1.tQuat.k + q0.tQuat.i * q1.tQuat.j + q0.tQuat.j * q1.tQuat.j + q0.tQuat.k * q1.tQuat.s
+        q0.tQuat.s * q1.tQuat.s  -  q0.tQuat.i * q1.tQuat.i  -  q0.tQuat.j * q1.tQuat.j  -  q0.tQuat.k * q1.tQuat.k,
+        q0.tQuat.s * q1.tQuat.i  +  q0.tQuat.i * q1.tQuat.s  +  q0.tQuat.j * q1.tQuat.k  -  q0.tQuat.k * q1.tQuat.j,
+        q0.tQuat.s * q1.tQuat.j  -  q0.tQuat.i * q1.tQuat.k  +  q0.tQuat.j * q1.tQuat.s  +  q0.tQuat.k * q1.tQuat.i,
+        q0.tQuat.s * q1.tQuat.k  +  q0.tQuat.i * q1.tQuat.j  -  q0.tQuat.j * q1.tQuat.i  +  q0.tQuat.k * q1.tQuat.s
     }};
     return tRes;
 }
 
 /**
-    The conjugate product of two rquaternions.
-*/
+ * @brief Conjugate of a right-handed real quaternion (double).
+ * @details Negates the vector part: (s, i, j, k) -> (s, -i, -j, -k).
+ */
 static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Conj(JUNO_RQUAT_F64_T q0)
 {
     q0.tQuat.i = -q0.tQuat.i;
@@ -471,31 +504,19 @@ static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Conj(JUNO_RQUAT_F64_T q0)
     return q0;
 }
 
+/**
+ * @brief Squared L2 norm of a quaternion (double).
+ */
 static inline double Juno_RQuat_F64_L2Norm2(JUNO_RQUAT_F64_T q0)
 {
     return Juno_Pow2(q0.arr[0]) + Juno_Pow2(q0.arr[1]) + Juno_Pow2(q0.arr[2]) + Juno_Pow2(q0.arr[3]);
 }
 
-/**
-    Get L2 norm of rquaternions 
-*/
-static inline double Juno_RQuat_F64_L2Norm(JUNO_RQUAT_F64_T q0)
-{
-
-    return sqrt(Juno_RQuat_F64_L2Norm2(q0));
-}
 
 /**
-    Get L2 norm of rquaternions 
-*/
-static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Normalize(JUNO_RQUAT_F64_T q0)
-{
-    return Juno_RQuat_F64_Mult(q0, 1.0 / Juno_RQuat_F64_L2Norm(q0));
-}
-
-/**
-    Get L2 norm of rquaternions 
-*/
+ * @brief Multiplicative inverse (reciprocal) of a quaternion (double).
+ * @details Returns conj(q) / ||q||^2. Caller must ensure non-zero norm.
+ */
 static inline JUNO_RQUAT_F64_T Juno_RQuat_F64_Recip(JUNO_RQUAT_F64_T q0)
 {
     return Juno_RQuat_F64_Mult(Juno_RQuat_F64_Conj(q0), 1/Juno_RQuat_F64_L2Norm2(q0));

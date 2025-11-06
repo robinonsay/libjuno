@@ -15,11 +15,46 @@
     included in all copies or substantial portions of the Software.
 */
 /**
-    This header contains the time library API
-    @author Robin Onsay
-*/
+ * @file time_api.h
+ * @brief Juno Time module API and common time math helpers.
+ * @defgroup juno_time Time module
+ * @details
+ *  Declares the Juno Time module interface (JUNO_TIME_API_T) and provides
+ *  reference implementations for common time math and conversions
+ *  (add/subtract timestamps; convert between timestamp and nanos/micros/millis
+ *  and double).
+ *
+ *  Notes on timestamp representation:
+ *  - JUNO_TIMESTAMP_T uses an integer seconds field (iSeconds) and an
+ *    unsigned fractional field (iSubSeconds).
+ *  - The fractional field is interpreted as a fixed-point fraction of a second
+ *    over the full-scale value giSUBSECS_MAX (all-ones of the type). That is,
+ *    fraction = (double)iSubSeconds / giSUBSECS_MAX.
+ *  - Representations are not normalized: iSubSeconds == giSUBSECS_MAX is
+ *    equivalent to adding 1 to iSeconds and setting iSubSeconds to 0. Callers
+ *    should avoid constructing such non-canonical values unless they plan to
+ *    normalize.
+ *
+ *  Conversion/rounding behavior (as implemented in juno_time.c):
+ *  - Timestamp -> integer nanos/micros/millis: rounds to the nearest integer
+ *    using half-up rounding of the fractional part.
+ *  - double -> timestamp: truncates integer seconds, maps the fractional part
+ *    to subseconds by truncation except for the maximal fractional bucket:
+ *    when frac >= 1 - 1/giSUBSECS_MAX, rounds up to the next whole second
+ *    with subseconds set to 0. Valid inputs satisfy
+ *    0.0 <= dTimestamp <= max(JUNO_TIME_SECONDS_T).
+ *
+ *  Error handling:
+ *  - Subtraction that would result in negative time returns
+ *    JUNO_STATUS_INVALID_DATA_ERROR and saturates the result to 0 seconds and
+ *    0 subseconds.
+ *  - Integer conversions from timestamp (to nanos/micros/millis) detect
+ *    overflow and return JUNO_STATUS_INVALID_DATA_ERROR.
+ *  @{ 
+ */
 #ifndef JUNO_TIME_API_H
 #define JUNO_TIME_API_H
+#include "juno/macros.h"
 #include "juno/status.h"
 #include "juno/module.h"
 #include "juno/types.h"
@@ -31,20 +66,23 @@ extern "C"
 #endif
 
 typedef struct JUNO_TIME_API_TAG JUNO_TIME_API_T;
-typedef union JUNO_TIME_TAG JUNO_TIME_T;
 typedef struct JUNO_TIME_ROOT_TAG JUNO_TIME_ROOT_T;
 typedef struct JUNO_TIMESTAMP_TAG JUNO_TIMESTAMP_T;
 
-typedef uint64_t JUNO_TIME_SECONDS_T;
+/** @brief Whole seconds component type. @ingroup juno_time */
+typedef uint32_t JUNO_TIME_SECONDS_T;
+/** @brief Milliseconds count type. @ingroup juno_time */
 typedef uint64_t JUNO_TIME_MILLIS_T;
+/** @brief Microseconds count type. @ingroup juno_time */
 typedef uint64_t JUNO_TIME_MICROS_T;
+/** @brief Nanoseconds count type. @ingroup juno_time */
 typedef uint64_t JUNO_TIME_NANOS_T;
-typedef uint64_t JUNO_TIME_SUBSECONDS_T;
+/** @brief Subsecond fixed-point fraction type. @ingroup juno_time */
+typedef uint32_t JUNO_TIME_SUBSECONDS_T;
 
 /**
     @brief This is the Juno Time Module for all time time related
-    operations. Some of the time API function implementations may
-    be very implementation specific, so be consciencous of the implementation
+    operations.
 
     Certain operations regarding time math are implemented by LibJuno for module
     developers to include:
@@ -57,67 +95,106 @@ typedef uint64_t JUNO_TIME_SUBSECONDS_T;
     * `JunoTime_MicrosToTimestamp`
     * `JunoTime_MillisToTimestamp`
 */
+/** @brief Time module root (holds API pointer and failure handler). @ingroup juno_time */
 struct JUNO_TIME_ROOT_TAG JUNO_MODULE_ROOT(JUNO_TIME_API_T, JUNO_MODULE_EMPTY);
 
+/** @brief Timestamp consisting of whole seconds and fixed-point subseconds.
+ *  @ingroup juno_time
+ */
 struct JUNO_TIMESTAMP_TAG
 {
-    /// Seconds component of time
+    /// Whole seconds component of time
     JUNO_TIME_SECONDS_T iSeconds;
-    /// Subseconds componenet of time.
-    /// `1 Second == 1 << sizeof(JUNO_TIME_SUBSECONDS_T) - 1 Subseconds`
+    /// Fractional component of time represented over full-scale giSUBSECS_MAX
+    /// i.e., fractional_seconds = (double)iSubSeconds / giSUBSECS_MAX
     JUNO_TIME_SUBSECONDS_T iSubSeconds;
 };
 
+/** Result type carrying a timestamp. @ingroup juno_time */
 JUNO_MODULE_RESULT(JUNO_TIMESTAMP_RESULT_T, JUNO_TIMESTAMP_T);
+/** Result type carrying seconds. @ingroup juno_time */
 JUNO_MODULE_RESULT(JUNO_TIME_SECONDS_RESULT_T, JUNO_TIME_SECONDS_T);
+/** Result type carrying milliseconds. @ingroup juno_time */
 JUNO_MODULE_RESULT(JUNO_TIME_MILLIS_RESULT_T, JUNO_TIME_MILLIS_T);
+/** Result type carrying microseconds. @ingroup juno_time */
 JUNO_MODULE_RESULT(JUNO_TIME_MICROS_RESULT_T, JUNO_TIME_MICROS_T);
+/** Result type carrying nanoseconds. @ingroup juno_time */
 JUNO_MODULE_RESULT(JUNO_TIME_NANOS_RESULT_T, JUNO_TIME_NANOS_T);
+/** Result type carrying subseconds. @ingroup juno_time */
 JUNO_MODULE_RESULT(JUNO_TIME_SUBSECONDS_RESULT_T, JUNO_TIME_SUBSECONDS_T);
 
+/** @brief Vtable for time operations and conversions. @ingroup juno_time */
 struct JUNO_TIME_API_TAG
 {
     /// Get the current time as specified by the implementation
-    JUNO_TIMESTAMP_RESULT_T (*Now)(JUNO_TIME_T *ptTime);
-    /// Perform addition with time
-    JUNO_STATUS_T (*AddTime)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
-    /// Perform subtraction with time
-    JUNO_STATUS_T (*SubtractTime)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract);
+    JUNO_TIMESTAMP_RESULT_T (*Now)(const JUNO_TIME_ROOT_T *ptTime);
+    /// Perform addition with time (in-place add to ptRetTime)
+    JUNO_STATUS_T (*AddTime)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
+    /// Perform subtraction with time (in-place subtract from ptRetTime)
+    JUNO_STATUS_T (*SubtractTime)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract);
     /// Sleep this thread until a specific time
-    JUNO_STATUS_T (*SleepTo)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup);
+    JUNO_STATUS_T (*SleepTo)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimeToWakeup);
     /// Sleep this thread for a duration
-    JUNO_STATUS_T (*Sleep)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tDuration);
-    /// Convert a timestamp to nanoseconds
-    JUNO_TIME_NANOS_RESULT_T (*TimestampToNanos)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
-    /// Convert a timestamp to microsconds
-    JUNO_TIME_MICROS_RESULT_T (*TimestampToMicros)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
-    /// Convert a timestamp to milliseconds
-    JUNO_TIME_MILLIS_RESULT_T (*TimestampToMillis)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
+    JUNO_STATUS_T (*Sleep)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tDuration);
+    /// Convert a timestamp to nanoseconds (round to nearest, half-up)
+    JUNO_TIME_NANOS_RESULT_T (*TimestampToNanos)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime);
+    /// Convert a timestamp to microseconds (round to nearest, half-up)
+    JUNO_TIME_MICROS_RESULT_T (*TimestampToMicros)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime);
+    /// Convert a timestamp to milliseconds (round to nearest, half-up)
+    JUNO_TIME_MILLIS_RESULT_T (*TimestampToMillis)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime);
     /// Convert nanoseconds to a timestamp
-    JUNO_TIMESTAMP_RESULT_T (*NanosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos);
+    JUNO_TIMESTAMP_RESULT_T (*NanosToTimestamp)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_NANOS_T iNanos);
     /// Convert microseconds to a timestamp
-    JUNO_TIMESTAMP_RESULT_T (*MicrosToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros);
+    JUNO_TIMESTAMP_RESULT_T (*MicrosToTimestamp)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MICROS_T iMicros);
     /// Convert milliseconds to a timestamp
-    JUNO_TIMESTAMP_RESULT_T (*MillisToTimestamp)(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
+    JUNO_TIMESTAMP_RESULT_T (*MillisToTimestamp)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
     /// Convert a timestamp to a double
-    JUNO_RESULT_F64_T (*TimestampToDouble)(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
+    JUNO_RESULT_F64_T (*TimestampToDouble)(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
     /// Convert a double to a timestamp
-    JUNO_TIMESTAMP_RESULT_T (*DoubleToTimestamp)(JUNO_TIME_T *ptTime, double dTimestamp);
+    JUNO_TIMESTAMP_RESULT_T (*DoubleToTimestamp)(const JUNO_TIME_ROOT_T *ptTime, double dTimestamp);
 };
 
 
-JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
-JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract);
-JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
-JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
-JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime);
-JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos);
-JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros);
-JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
-JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
-JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_T *ptTime, double dTimestamp);
+/**
+ * @brief Add a duration to a timestamp in-place.
+ * @param ptTime Module pointer (used for error reporting).
+ * @param ptRetTime In/out timestamp to be updated.
+ * @param tTimeToAdd Duration to add.
+ * @return JUNO_STATUS_SUCCESS on success.
+ */
+JUNO_STATUS_T JunoTime_AddTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd);
 
-#define JUNO_TIME_NEW_API(Now, SleepTo, Sleep) \
+/**
+ * @brief Subtract a duration from a timestamp in-place.
+ * If the subtraction would underflow (negative time), the result is saturated
+ * to 0 seconds and 0 subseconds, and JUNO_STATUS_INVALID_DATA_ERROR is
+ * returned.
+ */
+JUNO_STATUS_T JunoTime_SubtractTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract);
+
+/** Conversions from timestamp to integer durations (round to nearest, half-up) */
+JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime);
+JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime);
+JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime);
+
+/** Conversions from integer durations to timestamp */
+JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_NANOS_T iNanos);
+JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MICROS_T iMicros);
+JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MILLIS_T iMillis);
+
+/** Conversions between timestamp and double (see rounding notes above) */
+JUNO_RESULT_F64_T JunoTime_TimestampToDouble(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimestamp);
+JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(const JUNO_TIME_ROOT_T *ptTime, double dTimestamp);
+
+/**
+ * @def JunoTime_TimeApiInit(Now, SleepTo, Sleep)
+ * @ingroup juno_time
+ * @brief Initialize a JUNO_TIME_API_T literal with default math/conversion impls.
+ * @param Now Implementation of current time provider.
+ * @param SleepTo Implementation of sleep-until.
+ * @param Sleep Implementation of sleep-for.
+ */
+#define JunoTime_TimeApiInit(Now, SleepTo, Sleep) \
 { \
     Now, \
     JunoTime_AddTime, \
@@ -134,23 +211,37 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_T *ptTime, double d
     JunoTime_DoubleToTimestamp, \
 }
 
+/** @brief Compare timestamps (tLeft > tRight). @ingroup juno_time */
 static inline bool JunoTime_TimestampGreaterThan(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
 {
     return (tLeft.iSeconds > tRight.iSeconds) || (tLeft.iSeconds == tRight.iSeconds && tLeft.iSubSeconds > tRight.iSubSeconds);
 }
 
+/** @brief Compare timestamps (tLeft < tRight). @ingroup juno_time */
 static inline bool JunoTime_TimestampLessThan(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
 {
     return (tLeft.iSeconds < tRight.iSeconds) || (tLeft.iSeconds == tRight.iSeconds && tLeft.iSubSeconds < tRight.iSubSeconds);
 }
 
+/** @brief Compare timestamps for equality. @ingroup juno_time */
 static inline bool JunoTime_TimestampEquals(JUNO_TIMESTAMP_T tLeft, JUNO_TIMESTAMP_T tRight)
 {
     return (tLeft.iSeconds == tRight.iSeconds) && (tLeft.iSubSeconds == tRight.iSubSeconds);
+}
+
+/** @brief Initialize the time module root with API and failure handler. @ingroup juno_time */
+static inline JUNO_STATUS_T JunoTime_TimeInit(JUNO_TIME_ROOT_T *ptTime, const JUNO_TIME_API_T *ptApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
+{
+    JUNO_ASSERT_EXISTS(ptTime);
+    ptTime->ptApi = ptApi;
+    ptTime->_pfcnFailureHandler = pfcnFailureHandler;
+    ptTime->_pvFailureUserData = pvUserData;
+    return JUNO_STATUS_SUCCESS;
 }
 
 #ifdef __cplusplus
 }
 #endif
 #endif // JUNO_TIME_API_H
+/** @} */
 

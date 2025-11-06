@@ -1,15 +1,66 @@
+/*
+    MIT License
+
+    Copyright (c) 2025 Robin A. Onsay
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+*/
+
+#include "juno/macros.h"
 #include "juno/memory/memory_api.h"
-#define JUNO_MEMORY_DEFAULT
 #include "juno/memory/memory_block.h"
 #include "juno/status.h"
 #include <stdio.h>
+#include <stdalign.h>
 
 // Define a simple data structure
-typedef struct {
+typedef struct USER_DATA_T {
     int id;
     char name[32];
     float value;
 } USER_DATA_T;
+
+static JUNO_STATUS_T UserDataCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc);
+static JUNO_STATUS_T UserDataReset(JUNO_POINTER_T tPointer);
+
+const JUNO_POINTER_API_T gtUserDataPointerApi = {
+    UserDataCopy,
+    UserDataReset
+};
+// Define the pointer api for this type
+static JUNO_STATUS_T UserDataCopy(JUNO_POINTER_T tDest, JUNO_POINTER_T tSrc)
+{
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tDest, USER_DATA_T, gtUserDataPointerApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    tStatus = JunoMemory_PointerVerifyType(tSrc, USER_DATA_T, gtUserDataPointerApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    USER_DATA_T *ptDest = (USER_DATA_T *)tDest.pvAddr;
+    USER_DATA_T *ptSrc = (USER_DATA_T *)tSrc.pvAddr;
+    *ptDest = *ptSrc;
+    return tStatus;
+}
+
+/// Reset the memory at the pointer. This could mean zero-initialization
+static JUNO_STATUS_T UserDataReset(JUNO_POINTER_T tPointer)
+{
+    JUNO_STATUS_T tStatus = JunoMemory_PointerVerifyType(tPointer, USER_DATA_T, gtUserDataPointerApi);
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    USER_DATA_T *ptBlock = (USER_DATA_T *)tPointer.pvAddr;
+    *ptBlock = (USER_DATA_T){0};
+    return tStatus;
+}
+
+
+
 
 // Declare memory block for 5 USER_DATA_T objects
 JUNO_MEMORY_BLOCK(gUserDataMemory, USER_DATA_T, 5);
@@ -26,34 +77,31 @@ int main(void) {
     printf("------------------------------------\n\n");
     
     // Step 1: Initialize the memory allocator
-    JUNO_MEMORY_ALLOC_T tMemAlloc = {0};
-    JUNO_STATUS_T tStatus = JunoMemory_BlockApi(
+    JUNO_MEMORY_ALLOC_BLOCK_T tMemAlloc = {0};
+    JUNO_STATUS_T tStatus = JunoMemory_BlockInit(
         &tMemAlloc,
+        &gtUserDataPointerApi,
         gUserDataMemory,
         gUserDataMetadata,
         sizeof(USER_DATA_T),
+        alignof(USER_DATA_T),
         5,
         ErrorHandler,
         NULL
     );
-    
-    if (tStatus != JUNO_STATUS_SUCCESS) {
+    JUNO_ASSERT_SUCCESS(tStatus,
         printf("Failed to initialize memory block\n");
         return -1;
-    }
+    );
     
     printf("Memory block initialized successfully\n");
     
     // Step 2: Allocate memory
-    JUNO_MEMORY_T tMemory = {0};
+    JUNO_POINTER_T tMemory = {0};
     const JUNO_MEMORY_ALLOC_API_T *ptApi = tMemAlloc.tRoot.ptApi;
-    tStatus = ptApi->Get(&tMemAlloc,  &tMemory,  sizeof(USER_DATA_T));
-    
-    if (tStatus != JUNO_STATUS_SUCCESS) {
-        printf("Failed to allocate memory\n");
-        return -1;
-    }
-    
+    JUNO_RESULT_POINTER_T tPointerResult = ptApi->Get(&tMemAlloc.tRoot, sizeof(USER_DATA_T));
+    JUNO_ASSERT_SUCCESS(tPointerResult.tStatus, return -1);
+    tMemory = tPointerResult.tOk;
     printf("Memory allocated successfully\n");
     
     // Step 3: Use the memory
@@ -64,39 +112,15 @@ int main(void) {
     
     printf("Data stored: ID=%d, Name=%s, Value=%.2f\n", 
            pUserData->id, pUserData->name, pUserData->value);
-    
-    // Step 4: Create a reference to share the memory
-    printf("\nCreating a reference to memory...\n");
-    JUNO_NEW_REF(userDataRef) = Juno_MemoryGetRef(&tMemory);
-    
-    printf("Reference count: %zu\n", tMemory.iRefCount);
-    
-    // Access through the reference
-    USER_DATA_T *pSharedData = (USER_DATA_T *)JUNO_REF(userDataRef)->pvAddr;
-    printf("Accessed via reference: ID=%d, Name=%s, Value=%.2f\n", 
-           pSharedData->id, pSharedData->name, pSharedData->value);
-    
-    // Step 5: Try to free memory while reference exists
-    printf("\nAttempting to free memory with active references...\n");
-    tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
-    
-    if (tStatus == JUNO_STATUS_REF_IN_USE_ERROR) {
-        printf("As expected, could not free memory with active references\n");
-    }
-    
-    // Step 6: Release reference and try again
-    printf("\nReleasing reference...\n");
-    Juno_MemoryPutRef(JUNO_REF(userDataRef));
-    printf("Reference count after release: %zu\n", tMemory.iRefCount);
-    
+
+
     printf("Freeing memory...\n");
-    tStatus = ptApi->Put(&tMemAlloc,  &tMemory);
+    tStatus = ptApi->Put(&tMemAlloc.tRoot,  &tMemory);
     
-    if (tStatus == JUNO_STATUS_SUCCESS) {
-        printf("Memory freed successfully\n");
-    } else {
+    JUNO_ASSERT_SUCCESS(tStatus,
         printf("Failed to free memory: %d\n", tStatus);
-    }
-    
+        return -1;
+    )
+    printf("Memory freed successfully\n");
     return 0;
 }
