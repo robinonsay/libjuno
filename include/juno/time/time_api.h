@@ -48,8 +48,8 @@
  *  - Subtraction that would result in negative time returns
  *    JUNO_STATUS_INVALID_DATA_ERROR and saturates the result to 0 seconds and
  *    0 subseconds.
- *  - Conversion functions detect overflow and return
- *    JUNO_STATUS_INVALID_DATA_ERROR.
+ *  - Integer conversions from timestamp (to nanos/micros/millis) detect
+ *    overflow and return JUNO_STATUS_INVALID_DATA_ERROR.
  *  @{ 
  */
 #ifndef JUNO_TIME_API_H

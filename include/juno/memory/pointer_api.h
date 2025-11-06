@@ -39,6 +39,7 @@
 #include "juno/module.h"
 #include <stddef.h>
 #include <stdalign.h>
+#include <stdint.h> // for uintptr_t used in type/alignment verification macros
 #include "juno/types.h"
 #ifdef __cplusplus
 extern "C"
@@ -60,8 +61,14 @@ struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
     size_t zAlignment;
 );
 
-/** @brief Pointer operations API (copy/reset).
- *  @ingroup juno_memory_pointer
+/**
+ * @brief Pointer operations API (copy/reset).
+ * @ingroup juno_memory_pointer
+ * @details Implementations should enforce type-appropriate semantics:
+ *  - Copy: copies the value referenced by tSrc into tDest's storage location
+ *    (size/alignment validated by callers via verification helpers/macros).
+ *  - Reset: resets the pointee to a defined "empty" state (often zero-init),
+ *    suitable for clearing slots in containers.
  */
 struct JUNO_POINTER_API_TAG
 {
@@ -77,8 +84,11 @@ struct JUNO_POINTER_API_TAG
 };
 
 
-/** @brief Value-pointer operations API (equality by contents).
- *  @ingroup juno_memory_pointer
+/**
+ * @brief Value-pointer operations API (equality by contents).
+ * @ingroup juno_memory_pointer
+ * @details Equals should compare logical key/value identity based on pointee
+ *  contents, not pointer identity. Used by associative containers (e.g., map).
  */
 struct JUNO_VALUE_POINTER_API_TAG
 {
@@ -99,24 +109,21 @@ JUNO_MODULE_OPTION(JUNO_OPTION_POINTER_T, JUNO_POINTER_T);
 /**
  * @def JunoMemory_PointerInit(ptApi, TYPE_T, pvAddr)
  * @brief Initialize a JUNO_POINTER_T with API, type, and address.
+ * @ingroup juno_memory_pointer
  * @param ptApi Pointer to a valid JUNO_POINTER_API_T.
  * @param TYPE_T The value type at pvAddr (deduces size and alignment).
  * @param pvAddr Address of the value or buffer.
- */
-/**
- * @ingroup juno_memory_pointer
+ * @return A populated JUNO_POINTER_T describing the location, size, and alignment.
  */
 #define JunoMemory_PointerInit(ptApi, TYPE_T, pvAddr) (JUNO_POINTER_T){ptApi, pvAddr, sizeof(TYPE_T), alignof(TYPE_T)}
 /**
  * @def JunoMemory_PointerVerifyType(pointer, type, tApi)
  * @brief Verify pointer descriptor matches an expected type and API.
+ * @ingroup juno_memory_pointer
  * @param pointer The JUNO_POINTER_T descriptor to verify.
  * @param type The expected C type for the memory region.
  * @param tApi The expected JUNO_POINTER_API_T symbol.
  * @return JUNO_STATUS_SUCCESS if the descriptor is valid and matches, error otherwise.
- */
-/**
- * @ingroup juno_memory_pointer
  */
 #define JunoMemory_PointerVerifyType(pointer, type, tApi) \
 (( \
@@ -130,21 +137,14 @@ JUNO_MODULE_OPTION(JUNO_OPTION_POINTER_T, JUNO_POINTER_T);
 /**
  * @def JUNO_ASSERT_POINTER_TYPE(tStatus, tPointer, tType, tApi)
  * @brief Assert a pointer descriptor's type and API, returning on failure.
+ * @ingroup juno_memory_pointer
  * @param tStatus Lvalue to receive the resulting status.
  * @param tPointer The pointer descriptor to validate.
  * @param tType The expected type of the pointee.
  * @param tApi The expected pointer API symbol.
  */
-/**
- * @ingroup juno_memory_pointer
- */
 #define JUNO_ASSERT_POINTER_TYPE(tStatus, tPointer, tType, tApi)  JUNO_ASSERT_SUCCESS((tStatus = JunoMemory_PointerVerifyType(tPointer, tType, tApi)), return tStatus)
 
-/**
- * @brief Verify that a pointer API provides required functions.
- * @param ptPointerApi Pointer to the API vtable.
- * @return JUNO_STATUS_SUCCESS if all required functions are present.
- */
 /**
  * @brief Verify that a pointer API provides required functions.
  * @ingroup juno_memory_pointer
@@ -163,11 +163,6 @@ static inline JUNO_STATUS_T JunoMemory_PointerApiVerify(const JUNO_POINTER_API_T
 
 /**
  * @brief Verify that a value-pointer API provides required functions.
- * @param ptPointerApi Pointer to the value-pointer API vtable.
- * @return JUNO_STATUS_SUCCESS if all required functions are present.
- */
-/**
- * @brief Verify that a value-pointer API provides required functions.
  * @ingroup juno_memory_pointer
  * @param ptPointerApi Pointer to the value-pointer API vtable.
  * @return JUNO_STATUS_SUCCESS if all required functions are present.
@@ -181,11 +176,6 @@ static inline JUNO_STATUS_T JunoMemory_ValuePointerApiVerify(const JUNO_VALUE_PO
     return JUNO_STATUS_SUCCESS;
 }
 
-/**
- * @brief Verify a pointer descriptor (API non-null, address non-null, size non-zero).
- * @param tPointer The pointer descriptor to check.
- * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
- */
 /**
  * @brief Verify a pointer descriptor (API non-null, address non-null, size non-zero).
  * @ingroup juno_memory_pointer

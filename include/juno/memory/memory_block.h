@@ -25,22 +25,40 @@
  * @brief Fixed-size block allocator interface and helpers.
  * @defgroup juno_memory_block Fixed block allocator
  * @details
- *  Provides a deterministic, fixed-capacity allocator that dispenses blocks of
- *  uniform size from a caller-supplied memory region, with metadata tracking a
- *  LIFO free list. Allocation and free are O(1). Alignment is enforced per
- *  block. This module is freestanding-friendly and uses the pointer API for
- *  memory verification and zeroing.
+ *  A deterministic, fixed-capacity allocator that dispenses blocks of a
+ *  uniform element size from a caller-supplied backing region. Metadata tracks
+ *  a LIFO free list for O(1) allocation and free. Alignment is enforced per
+ *  block. This module is freestanding-friendly and uses the Pointer API for
+ *  verification and zeroing.
+ *
+ *  Behavior and guarantees:
+ *  - Get: Returns a block whose size is the configured element size. If a
+ *    freed block exists (zFreed > 0), it is reused (LIFO). Otherwise, a new
+ *    block is carved from the next offset if zUsed < zLength. Newly provided
+ *    blocks are Reset via the pointer API before being returned; on Reset
+ *    failure, the allocator rolls back and reports the error.
+ *  - Put: Verifies the address belongs to the pool and is aligned. Double
+ *    frees are rejected. If the block being freed is the most recently
+ *    allocated block, zUsed is decremented without pushing onto the free
+ *    stack; otherwise, the address is pushed to the free stack (zFreed++).
+ *    On success, the caller's descriptor is cleared (pvAddr=NULL, sizes 0).
+ *  - Update: Adjusts the descriptor's zSize in place up to the element size;
+ *    memory is never moved. Requests above element size are rejected.
  *
  *  Invariants:
  *  - 0 <= zUsed <= zLength
  *  - 0 <= zFreed <= zLength
- *  - zUsed is the count of ever-allocated blocks (not net in-use) and will be
- *    decremented when freeing the most recently allocated block.
- *  - The free stack holds addresses of freed blocks at indices [0, zFreed).
+ *  - zUsed counts total blocks ever allocated; it is decremented only when
+ *    freeing the last allocated block.
+ *  - The free stack keeps freed block addresses in ptMetadata[0..zFreed).
+ *
+ *  Complexity:
+ *  - Init, Get, Put, Update are all O(1).
  *
  *  Error cases:
- *  - Get: size 0, size > element size, pool full, corrupt counters.
- *  - Put: null/unaligned/out-of-range address, double free, free list overflow.
+ *  - Get: zero size, size > element size, pool full, corrupt counters.
+ *  - Put: null/unaligned/out-of-range address, double free, free list overflow
+ *          (should be impossible if invariants are maintained).
  */
 #ifndef JUNO_MEMORY_BLOCK_H
 #define JUNO_MEMORY_BLOCK_H

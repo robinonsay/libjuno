@@ -22,16 +22,38 @@
 
 /**
  * @file heap_api.h
- * @brief Heap data structure API built on the array abstraction.
+ * @brief Binary heap API built on the Array abstraction.
  * @defgroup juno_ds_heap Heap API
  * @details
- *  A binary heap interface parameterized by element comparison and swap
- *  operations. Backed by a JUNO_DS_ARRAY_ROOT_T for storage. Provides
- *  Insert/Heapify/Pop operations and helpers like Update (bubble up) and
- *  SiftDown.
+ *  A binary heap interface parameterized by element-level comparison and swap
+ *  callbacks over an underlying Array. The heap stores elements in a contiguous
+ *  array (JUNO_DS_ARRAY_ROOT_T) and maintains either a max-heap or min-heap
+ *  property depending on the user-provided Compare function.
+ *
+ *  Characteristics
+ *  - Deterministic operations with no dynamic allocation; capacity is defined
+ *    by the backing array.
+ *  - Time complexity: Insert O(log n), Pop O(log n), Update O(log n),
+ *    SiftDown O(log n), Heapify O(n).
+ *  - Non-thread-safe by default; protect externally as needed.
+ *
+ *  Invariants (enforced by implementation and Verify):
+ *  - 0 <= zLength <= ptHeapArray->zCapacity
+ *  - All required function pointers are non-NULL (heap API, pointer API, array API)
+ *  - Backing array verifies via JunoDs_ArrayVerify.
+ *
+ *  Ordering semantics:
+ *  - The user provides Compare(parent, child) that returns true when the heap
+ *    property holds for that pair. Example: max-heap uses parent >= child;
+ *    min-heap uses parent <= child. Swap exchanges two elements in storage.
+ *
+ *  Element ownership:
+ *  - Elements are copied into/out of the heap using the JUNO_POINTER_T API
+ *    (Copy/Reset). Callers must provide valid pointer descriptors describing
+ *    storage location, size, and alignment.
  */
-#ifndef JUNO_DS_API_H
-#define JUNO_DS_API_H
+#ifndef JUNO_DS_HEAP_API_H
+#define JUNO_DS_HEAP_API_H
 #include "juno/ds/array_api.h"
 #include "juno/macros.h"
 #include "juno/memory/pointer_api.h"
@@ -44,51 +66,69 @@ extern "C"
 {
 #endif
 
-typedef struct JUNO_DS_HEAP_ROOT_TAG JUNO_DS_HEAP_ROOT_T;   /**< Opaque root that stores heap metadata and API pointer. */
-typedef struct JUNO_DS_HEAP_API_TAG  JUNO_DS_HEAP_API_T;    /**< API vtable you implement for your storage and element type. */
+/** @brief Heap root type holding state and API pointer. */
+typedef struct JUNO_DS_HEAP_ROOT_TAG JUNO_DS_HEAP_ROOT_T;
+/** @brief Heap API vtable type. */
+typedef struct JUNO_DS_HEAP_API_TAG  JUNO_DS_HEAP_API_T;
+/** @brief Element-level operations (compare/swap) used by the heap. */
 typedef struct JUNO_DS_HEAP_POINTER_API_TAG JUNO_DS_HEAP_POINTER_API_T;
 
 /**
  * @brief Result type carrying an index on success.
  * tStatus conveys success/error; tOk holds the index.
  */
-JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_RESULT_T, size_t);
+JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_RESULT_T, size_t); /**< Internal helper result carrying an index. */
 
 /**
  * @brief Option type for an index. bIsSome indicates presence; tSome is the index.
  */
-JUNO_MODULE_OPTION(JUNO_DS_HEAP_INDEX_OPTION_T, size_t);
+JUNO_MODULE_OPTION(JUNO_DS_HEAP_INDEX_OPTION_T, size_t); /**< Internal helper option for an index. */
 
 /**
  * @brief Result that wraps an optional index.
  */
-JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_OPTION_RESULT_T, JUNO_DS_HEAP_INDEX_OPTION_T);
+JUNO_MODULE_RESULT(JUNO_DS_HEAP_INDEX_OPTION_RESULT_T, JUNO_DS_HEAP_INDEX_OPTION_T); /**< Internal helper result wrapping an optional index. */
 
-/**
- * @brief Result of a comparison: tOk=true means the heap property holds
- * between the given parent and child indices; false means it does not.
- */
+/** @brief Result of a comparison between parent/child respecting heap order. */
 JUNO_MODULE_RESULT(JUNO_DS_HEAP_COMPARE_RESULT_T, bool);
 
 
+/**
+ * @brief Heap root instance and state.
+ * @ingroup juno_ds_heap
+ */
 struct JUNO_DS_HEAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_HEAP_API_T,
-    const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi;
-    JUNO_DS_ARRAY_ROOT_T *ptHeapArray;
-    size_t zLength;     /**< Current number of elements in the heap. */
+    const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi; /**< Element compare/swap callbacks. */
+    JUNO_DS_ARRAY_ROOT_T *ptHeapArray;                  /**< Backing array defining capacity and element ops. */
+    size_t zLength;                                     /**< Current number of elements in the heap. */
 );
 
-/** @brief Element-level operations required by the heap. */
+/**
+ * @brief Element-level operations required by the heap.
+ * @ingroup juno_ds_heap
+ */
 struct JUNO_DS_HEAP_POINTER_API_TAG
 {
-    /// @brief Compare two values to determine ordering.
+    /// @brief Compare two values to determine ordering (heap property).
+    /// @details Return true if the heap property holds for (parent, child).
+    ///  For max-heap: parent >= child. For min-heap: parent <= child.
+    ///  Must not modify elements; return status != SUCCESS indicates error.
     JUNO_DS_HEAP_COMPARE_RESULT_T (*Compare)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tParent, JUNO_POINTER_T tChild);
     /// @brief Swap two values in the underlying storage.
+    /// @details Exchange element values referenced by tLeft and tRight. Return
+    ///  an error status to abort the heap operation if swap cannot be performed.
     JUNO_STATUS_T (*Swap)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tLeft, JUNO_POINTER_T tRight);
 };
 
+/**
+ * @brief Heap API vtable.
+ * @ingroup juno_ds_heap
+ */
 struct JUNO_DS_HEAP_API_TAG
 {
     /// @brief Insert a new element into the heap.
+    /// @details Copies @p tValue into the slot at index zLength, increments
+    ///  zLength, and bubbles the element up to restore the heap property.
     JUNO_STATUS_T (*Insert)(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tValue);
     /// @brief Transform the underlying array into a heap in-place.
     JUNO_STATUS_T (*Heapify)(JUNO_DS_HEAP_ROOT_T *ptHeap);
@@ -100,25 +140,63 @@ struct JUNO_DS_HEAP_API_TAG
  * @brief Bubble-up the last inserted element to restore the heap property.
  *
  * Typical usage:
- *  - After JunoDs_Heap_Insert(...), write your element to the returned index,
- *    then call Update to reposition it upward as needed.
+ *  - Used internally by Insert after copying the new element.
+ *  - Can be called by users who directly modify the last element (index zLength-1)
+ *    to restore the heap property.
  *
  * Returns:
  *  - JUNO_STATUS_SUCCESS on success.
- *  - JUNO_STATUS_ERR if zLength == 0, if Compare fails, if Swap fails, or if
- *    the computed parent index would exceed zCapacity. See tests/test_heap.c.
+ *  - JUNO_STATUS_ERR if zLength == 0, or if Compare/Swap report an error, or if
+ *    a computed parent index would exceed capacity.
  */
 JUNO_STATUS_T JunoDs_Heap_Update(JUNO_DS_HEAP_ROOT_T *ptHeap);
+/**
+ * @brief Insert a new element into the heap.
+ * @ingroup juno_ds_heap
+ * @param ptHeap Heap instance.
+ * @param tValue Pointer descriptor for the element to copy into the heap.
+ * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if full; or pointer/array
+ *         errors from SetAt/Compare/Swap/Update.
+ * @note Complexity O(log n). Capacity is bounded by ptHeapArray->zCapacity.
+ */
 JUNO_STATUS_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tValue);
+/**
+ * @brief Transform the underlying array into a heap.
+ * @ingroup juno_ds_heap
+ * @param ptHeap Heap instance with zLength set to the count of initialized elements.
+ * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR when zLength == 0; or
+ *         propagation of errors from SiftDown.
+ * @note Complexity O(n).
+ */
 JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap);
+/**
+ * @brief Pop the root element into @p tReturn.
+ * @ingroup juno_ds_heap
+ * @param ptHeap Heap instance.
+ * @param tReturn Pointer descriptor receiving a copy of the popped root value.
+ * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if the heap is empty;
+ *         or propagation of errors from Swap/Copy/RemoveAt/SiftDown.
+ * @note Complexity O(log n).
+ */
 JUNO_STATUS_T JunoDs_Heap_Pop(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tReturn);
+/**
+ * @brief Initialize a heap over a backing array and element pointer API.
+ * @ingroup juno_ds_heap
+ * @param ptHeap Heap instance to initialize (output).
+ * @param ptHeapPointerApi Element-level callbacks (Compare/Swap) defining ordering.
+ * @param ptHeapArray Backing array providing capacity and element storage ops.
+ * @param pfcnFailureHdlr Optional failure handler for assertions in this module (can be NULL).
+ * @param pvUserData Optional user data passed to the failure handler (can be NULL).
+ * @return Result of JunoDs_Heap_Verify on the configured heap (SUCCESS on valid configuration,
+ *         otherwise an error code such as JUNO_STATUS_NULLPTR_ERROR or array verification failures).
+ */
 JUNO_STATUS_T JunoDs_Heap_Init(JUNO_DS_HEAP_ROOT_T *ptHeap, const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi, JUNO_DS_ARRAY_ROOT_T *ptHeapArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData);
 
 /**
  * @brief Sift down from a starting index to restore the heap property.
  *
  * Typical usage:
- *  - Used internally by Delete and Heapify. You can also call it directly if
+ *  - Used internally by Pop and Heapify. You can also call it directly if
  *    you overwrite the root or another node and need to restore ordering.
  *
  * Returns:
@@ -126,15 +204,25 @@ JUNO_STATUS_T JunoDs_Heap_Init(JUNO_DS_HEAP_ROOT_T *ptHeap, const JUNO_DS_HEAP_P
  *  - JUNO_STATUS_ERR if zLength == 0, if child indices exceed capacity, or if
  *    Compare/Swap report an error.
  */
+/**
+ * @brief Sift the element at @p iStart downward until the heap property holds.
+ * @ingroup juno_ds_heap
+ * @param ptHeap Heap instance.
+ * @param iStart Start index for sifting (commonly 0 after a pop).
+ * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if zLength == 0; or
+ *         propagation of errors from Compare/Swap.
+ * @note Complexity O(log n).
+ */
 JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart);
 
 /**
- * @brief Verify that the heap root has been initialized properly.
- * @return JUNO_STATUS_SUCCESS if ptHeap != NULL, ptHeap->ptApi != NULL, and zCapacity > 0;
- *         JUNO_STATUS_NULLPTR_ERROR otherwise.
- */
-/**
  * @brief Verify heap configuration and dependent APIs.
+ * @ingroup juno_ds_heap
+ * @details Ensures the heap instance and all required API pointers are set,
+ *  then delegates to JunoDs_ArrayVerify for the backing array. Used by all
+ *  heap operations to guard preconditions.
+ * @return JUNO_STATUS_SUCCESS on valid configuration; an error (e.g., NULLPTR,
+ *         INVALID_TYPE) otherwise.
  */
 static inline JUNO_STATUS_T JunoDs_Heap_Verify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
@@ -154,4 +242,4 @@ static inline JUNO_STATUS_T JunoDs_Heap_Verify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 #ifdef __cplusplus
 }
 #endif
-#endif // JUNO_DS_API_H
+#endif // JUNO_DS_HEAP_API_H

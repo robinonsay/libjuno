@@ -22,11 +22,30 @@
 
 /**
  * @file map_api.h
- * @brief Hash map API built on array and pointer traits.
+ * @brief Open-addressed hash map API built on Array and Pointer traits.
  * @defgroup juno_ds_map Map API
+ * @ingroup juno_ds_map
  * @details
- *  An associative container interface parameterized by a hash function and a
- *  value-equality comparator. Backed by a user-supplied array for storage.
+ *  A lightweight associative container using linear probing over a
+ *  user-supplied array as storage. Behavior is parameterized by:
+ *  - A hash function for keys.
+ *  - A value equality comparator for key comparison.
+ *  - A predicate to detect logically empty slots in the table.
+ *
+ *  Characteristics
+ *  - Deterministic and capacity-bound; no dynamic allocation.
+ *  - Average O(1) Set/Get/Remove with linear probing; worst-case O(n) under
+ *    high load or clustered collisions.
+ *  - Non-thread-safe by default; guard externally if needed.
+ *
+ *  Invariants and requirements
+ *  - The backing array defines capacity (zCapacity) and provides element access
+ *    operations via its API (see JunoDs_ArrayVerify).
+ *  - The hashable pointer API must supply Hash and IsValueNull.
+ *  - The value pointer API must supply Equals to compare a key against an entry.
+ *  - Slot pointer types must match the provided key/value pointer types; the
+ *    implementation checks pointer API identity and returns
+ *    JUNO_STATUS_INVALID_TYPE_ERROR on mismatch.
  */
 #ifndef JUNO_MAP_API_H
 #define JUNO_MAP_API_H
@@ -42,16 +61,29 @@
 extern "C"
 {
 #endif
+/** @brief Map API vtable type. */
 typedef struct JUNO_MAP_API_TAG JUNO_MAP_API_T;
+/** @brief Map root type holding state and API pointers. */
 typedef struct JUNO_MAP_ROOT_TAG JUNO_MAP_ROOT_T;
+/** @brief Hashing and null-check operations for keys/entries. */
 typedef struct JUNO_MAP_HASHABLE_POINTER_API_TAG JUNO_MAP_HASHABLE_POINTER_API_T;
+/**
+ * @brief Map root instance and state.
+ * @ingroup juno_ds_map
+ */
 struct JUNO_MAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MAP_API_T,
-    const JUNO_MAP_HASHABLE_POINTER_API_T *ptHashablePointerApi;
-    const JUNO_VALUE_POINTER_API_T *ptValuePointerApi;
-    JUNO_DS_ARRAY_ROOT_T *ptHashMap;
+    const JUNO_MAP_HASHABLE_POINTER_API_T *ptHashablePointerApi; /**< Key hash and null-check callbacks. */
+    const JUNO_VALUE_POINTER_API_T *ptValuePointerApi;           /**< Equality comparator for keys. */
+    JUNO_DS_ARRAY_ROOT_T *ptHashMap;                             /**< Backing array used as the hash table. */
 );
 
-/** @brief Hashing and null-check operations for map keys/values. */
+/**
+ * @brief Hashing and null-check operations for map keys/values.
+ * @ingroup juno_ds_map
+ * @details Implementations must:
+ *  - Hash: produce a size_t hash for the provided key pointer.
+ *  - IsValueNull: return true when the slot (entry) is logically empty.
+ */
 struct JUNO_MAP_HASHABLE_POINTER_API_TAG
 {
     /// @brief Compute a hash value for the given key.
@@ -60,17 +92,41 @@ struct JUNO_MAP_HASHABLE_POINTER_API_TAG
     JUNO_RESULT_BOOL_T (*IsValueNull)(JUNO_POINTER_T tItem);
 };
 
+/**
+ * @brief Map API vtable.
+ * @ingroup juno_ds_map
+ * @details Operations use linear probing with wraparound.
+ */
 struct JUNO_MAP_API_TAG
 {
     /// @brief Retrieve the value for the provided key; returns pointer result.
+    /// @details On success, returns a pointer descriptor to the matching entry
+    ///  in the backing array. If the key is not found and an empty slot is
+    ///  encountered during probing, returns JUNO_STATUS_DNE_ERROR. Propagates
+    ///  errors from hashing, array access, or pointer verification. May return
+    ///  JUNO_STATUS_TABLE_FULL_ERROR when the probe sequence traverses the full
+    ///  table without finding an empty slot or match.
     JUNO_RESULT_POINTER_T (*Get)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tReturnItem);
     /// @brief Insert or update a key-value pair.
+    /// @details Copies the provided entry into the first empty slot found in
+    ///  the probe sequence or overwrites the matching key. Returns
+    ///  JUNO_STATUS_TABLE_FULL_ERROR if no empty slot is available.
     JUNO_STATUS_T (*Set)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
     /// @brief Remove a key (and its value) from the map.
+    /// @details Probes for the key; if found, resets the slot via the array
+    ///  API. If an empty slot is encountered before a match, the operation is a
+    ///  no-op and returns JUNO_STATUS_SUCCESS (key not present).
     JUNO_STATUS_T (*Remove)(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
 };
 
-/// Verify the map has all members
+/**
+ * @brief Verify the map root, APIs, and backing array are valid.
+ * @ingroup juno_ds_map
+ * @details Ensures all required function pointers are non-NULL and delegates
+ *  to JunoDs_ArrayVerify for the backing array. Called by all operations.
+ * @return JUNO_STATUS_SUCCESS on valid configuration; otherwise an error
+ *         (e.g., NULLPTR or INVALID_TYPE from dependencies).
+ */
 static inline JUNO_STATUS_T JunoDs_MapVerify(JUNO_MAP_ROOT_T *ptMap)
 {
     JUNO_ASSERT_EXISTS(
@@ -87,11 +143,49 @@ static inline JUNO_STATUS_T JunoDs_MapVerify(JUNO_MAP_ROOT_T *ptMap)
     return tStatus;
 }
 
-/// @brief Initialize the map root with hashing and equality APIs and backing array.
+/**
+ * @brief Initialize the map root with hashing/equality APIs and backing array.
+ * @ingroup juno_ds_map
+ * @param ptMapRoot Map instance to initialize (output).
+ * @param ptHashablePointerApi Hash and null-check callbacks for entries.
+ * @param ptValuePointerApi Equality comparator for keys.
+ * @param ptArray Backing array providing capacity and element storage ops.
+ * @param pfcnFailureHandler Optional failure handler (can be NULL).
+ * @param pvUserData Optional user data for the failure handler (can be NULL).
+ * @return Result of JunoDs_MapVerify on the configured map.
+ */
 JUNO_STATUS_T JunoDs_MapInit(JUNO_MAP_ROOT_T *ptMapRoot, const JUNO_MAP_HASHABLE_POINTER_API_T *ptHashablePointerApi, const JUNO_VALUE_POINTER_API_T *ptValuePointerApi, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData);
-/// Get/Set/Remove operations
+
+/**
+ * @brief Retrieve an entry by key via linear probing.
+ * @ingroup juno_ds_map
+ * @param ptJunoMap Map instance.
+ * @param tItem Pointer descriptor to a key-only or key/value entry used for lookup.
+ * @return On success, a pointer result to the matching entry. Returns
+ *         JUNO_STATUS_DNE_ERROR when probing encounters an empty slot (key not found).
+ *         May return JUNO_STATUS_TABLE_FULL_ERROR if the table is full with no
+ *         empty slots and no match. Propagates hashing/array/pointer errors.
+ */
 JUNO_RESULT_POINTER_T JunoDs_MapGet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
+
+/**
+ * @brief Insert or update an entry (key/value) via linear probing.
+ * @ingroup juno_ds_map
+ * @param ptJunoMap Map instance.
+ * @param tItem Pointer descriptor to the entry to write into the table.
+ * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_TABLE_FULL_ERROR when no
+ *         empty slot exists; or pointer/array errors.
+ */
 JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem);
+
+/**
+ * @brief Remove an entry by key via linear probing.
+ * @ingroup juno_ds_map
+ * @param ptJunoMap Map instance.
+ * @param tKey Pointer descriptor to a key-only or key/value entry identifying the key.
+ * @return JUNO_STATUS_SUCCESS whether removed or not-present (no-op when empty
+ *         encountered); or errors from hashing/pointer/array operations.
+ */
 JUNO_STATUS_T JunoDs_MapRemove(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tKey);
 #ifdef __cplusplus
 }

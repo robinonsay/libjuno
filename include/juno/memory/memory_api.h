@@ -25,9 +25,33 @@
  * @brief Abstract memory allocation API and verification helpers.
  * @defgroup juno_memory_alloc Memory allocation API
  * @details
- *  Provides a generic allocation interface that concrete allocators implement
- *  (e.g., fixed block allocator). The API is freestanding-friendly and uses
- *  JUNO_POINTER_T descriptors for memory regions.
+ *  A small, freestanding-friendly allocation interface used across LibJuno.
+ *  Concrete allocators (such as the fixed-size block allocator) implement
+ *  this vtable. Callers interact only through the root's API pointer.
+ *
+ *  Core concepts:
+ *  - Pointers are described by JUNO_POINTER_T, which carries an address, size,
+ *    alignment, and a pointer-operations API (Copy/Reset). See
+ *    @ref juno_memory_pointer.
+ *  - The allocator root (JUNO_MEMORY_ALLOC_ROOT_T) stores the allocator API
+ *    (this vtable) and the dependent pointer API used by the allocator.
+ *  - All operations return explicit status codes; no hidden dynamic allocation.
+ *
+ *  Contract summary:
+ *  - Get(ptMem, zSize): allocates a region of at least zSize bytes and
+ *    returns a result carrying a JUNO_POINTER_T on success. zSize must be
+ *    > 0 and must satisfy allocator-specific bounds (e.g., <= element size
+ *    in a block allocator). On failure, tStatus != JUNO_STATUS_SUCCESS and
+ *    tOk is unspecified (do not use).
+ *  - Update(ptMem, ptMemory, zNewSize): adjusts the size field of an existing
+ *    allocation when supported by the allocator. For the fixed block allocator,
+ *    this only shrinks or sets size up to the element size; it does not move
+ *    memory. Returns JUNO_STATUS_MEMALLOC_ERROR if zNewSize exceeds limits.
+ *  - Put(ptMem, ptMemory): frees a previously allocated region. On success,
+ *    the descriptor is cleared (pvAddr=NULL, zSize=zAlignment=0). Errors such
+ *    as double free, invalid address, or misalignment are reported with
+ *    JUNO_STATUS_MEMFREE_ERROR and the descriptor is restored to its
+ *    original value.
  */
 #ifndef JUNO_MEMORY_API_H
 #define JUNO_MEMORY_API_H
@@ -51,7 +75,7 @@ struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
 
 /** @brief Vtable for memory allocation operations.
  *  @ingroup juno_memory_alloc
- */
+  */
 struct JUNO_MEMORY_ALLOC_API_TAG
 {
     /// @brief Allocate a memory region of at least zSize bytes.
@@ -60,7 +84,7 @@ struct JUNO_MEMORY_ALLOC_API_TAG
     /// @return Result containing a JUNO_POINTER_T on success.
     JUNO_RESULT_POINTER_T (*Get)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, size_t zSize);
 
-    /// @brief Update an existing allocation to a new size.
+    /// @brief Update an existing allocation to a new size (in-place descriptor update).
     /// @param ptMem Allocator root object.
     /// @param ptMemory Pointer descriptor to update (in/out).
     /// @param zNewSize The new size in bytes.
@@ -74,11 +98,6 @@ struct JUNO_MEMORY_ALLOC_API_TAG
     JUNO_STATUS_T (*Put)(JUNO_MEMORY_ALLOC_ROOT_T *ptMem, JUNO_POINTER_T *pvAddr);
 };
 
-/**
- * @brief Verify that a memory allocator API provides required functions.
- * @param ptAllocApi API vtable to check.
- * @return JUNO_STATUS_SUCCESS if valid.
- */
 /**
  * @brief Verify that a memory allocator API provides required functions.
  * @ingroup juno_memory_alloc
@@ -96,11 +115,6 @@ static inline JUNO_STATUS_T JunoMemory_AllocApiVerify(const JUNO_MEMORY_ALLOC_AP
     return JUNO_STATUS_SUCCESS;
 }
 
-/**
- * @brief Verify a memory allocator instance and its dependent pointer API.
- * @param ptAlloc Allocator root object to verify.
- * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
- */
 /**
  * @brief Verify a memory allocator instance and its dependent pointer API.
  * @ingroup juno_memory_alloc
