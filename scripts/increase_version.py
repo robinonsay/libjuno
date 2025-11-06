@@ -11,7 +11,7 @@ text = cmake_file.read_text()
 pattern = (
     r"(project\s*\(\s*juno\s+VERSION\s+)"
     r"(\d+)\.(\d+)\.(\d+)"
-    r"(\s+LANGUAGES\s+C\s*\))"
+    r"(\s+LANGUAGES\s+C\s*CXX\s*\))"
 )
 
 def bump_match(m):
