@@ -33,7 +33,7 @@ than what the library assumed.
 LibJuno makes the assumption that it doesn't know how you're going to use it. It's designed to be
 easy to change and adapt to your specific requirements. That's why LibJuno doesn't implement a run-time
 and heavily utilizes dependency injection. Developers know their system better than anyone.
-This library attempts to impower users with a set of tools they can choose to use
+This library attempts to empower users with a set of tools they can choose to use
 or leave on the table and create a solution that meets their requirements. LibJuno differs from other frameworks
 because this library makes it easy for developers to make that choice.
 

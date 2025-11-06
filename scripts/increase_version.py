@@ -18,9 +18,10 @@ def bump_match(m):
     # Parse existing major/minor/patch
     major = int(m.group(2))
     minor = int(m.group(3))
+    patch = int(m.group(4))
     # Always bump minor, reset patch to 0
-    new_minor = minor + 1
-    new_patch = 0
+    new_minor = minor
+    new_patch = patch + 1
     # Reconstruct the line prefix + new version + suffix
     return f"{m.group(1)}{major}.{new_minor}.{new_patch}{m.group(5)}"
 
