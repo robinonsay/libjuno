@@ -8,7 +8,7 @@ foreach(file ${JUNO_EXAMPLE_SRCS})
     # Get the file name without extension (NAME_WE stands for Name Without Extension)
     get_filename_component(example_name ${file} NAME_WE)
     add_executable(${example_name} ${file})
-    target_link_libraries(${example_name} ${PROJECT_NAME} unity m)
+    target_link_libraries(${example_name} ${PROJECT_NAME} m)
     target_compile_options(${example_name} PRIVATE 
       ${JUNO_COMPILE_OPTIONS}
       $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>

@@ -45,7 +45,6 @@
 #include "juno_math_types.h"
 #include "juno_vec.h"
 #include <stdint.h>
-#include <math.h>
 
 #ifdef __cplusplus
 extern "C" {

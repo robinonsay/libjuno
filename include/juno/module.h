@@ -244,7 +244,7 @@ typedef struct NAME_T \
  *  @brief Access the payload from an option produced by JUNO_MODULE_OPTION.
  *  @ingroup juno_module
  */
-#define JUNO_SOME(result, ...) result.tSome
+#define JUNO_SOME(result) result.tSome
 /** @def JUNO_ASSERT_SOME(result, ...)
  *  @brief Execute the provided statements if `result.bIsSome` is false.
  *  @ingroup juno_module

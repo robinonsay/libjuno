@@ -23,12 +23,6 @@ project(juno VERSION 1.0.0 LANGUAGES C CXX)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
-if(JUNO_API)
-    add_definitions(-DJUNO_API)
-endif(JUNO_API)
-
-
-
 # Create the library (update the source files as needed)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src JUNO_SRCS)
 add_library(${PROJECT_NAME} STATIC
@@ -57,8 +51,8 @@ set(JUNO_COMPILE_OPTIONS
 )
 
 set(JUNO_COMPILE_CXX_OPTIONS
-    -fno-rtti             # Warn if a function is declared without specifying argument types
-    -fno-exceptions       # Warn if a global function is defined without a previous prototype declaration
+    -fno-rtti
+    -fno-exceptions
 )
 
 set(JUNO_COMPILE_C_OPTIONS
@@ -72,7 +66,9 @@ if(JUNO_COVERAGE)
         --coverage
         -g
     )
-    link_libraries(gcov)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        gcov
+    )
 endif()
 
 
@@ -118,6 +114,15 @@ if(JUNO_SHARED)
         PRIVATE
         ${PROJECT_SOURCE_DIR}/src
     )
+    target_compile_options(${PROJECT_NAME}_shared PRIVATE
+        ${JUNO_COMPILE_OPTIONS}
+        $<$<COMPILE_LANGUAGE:C>:${JUNO_COMPILE_C_OPTIONS}>
+        $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
+
+    )
+    target_link_options(${PROJECT_NAME}_shared PRIVATE
+        -nostdlib
+    )
 endif()
 
 install(
@@ -146,7 +151,6 @@ install(
 
 if(JUNO_TESTS)
     add_definitions(-DUNITY_INCLUDE_DOUBLE)
-    set(CMAKE_BUILD_TYPE Debug)
     enable_testing()
     add_library(unity ${PROJECT_SOURCE_DIR}/deps/unity/src/unity.c)
     target_include_directories(unity PUBLIC ${PROJECT_SOURCE_DIR}/deps/unity/src)
@@ -154,7 +158,6 @@ if(JUNO_TESTS)
 endif()
 
 if(JUNO_EXAMPLES)
-    set(CMAKE_BUILD_TYPE Debug)
     add_subdirectory(${PROJECT_SOURCE_DIR}/examples)
 endif()
 

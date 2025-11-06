@@ -7,16 +7,15 @@
 # LibJuno
 * [LibJuno GitHub](https://github.com/robinonsay/libjuno)
 
-LibJuno is a lightweight C11 embedded systems micro-framework. It's designed to
-provide developers with common capabilities and interfaces that are utilized
-commonly in embedded systems development.
+LibJuno is a lightweight C11 embedded systems micro-framework designed to provide developers with common capabilities and interfaces commonly used in embedded systems development.
 
-* LibJuno is a lightweight C11 library designed specifically for embedded systems.
-* LibJuno enables embedded systems developers to utilize dependency injection within 
-C11 in a memory-safe manner
-* LibJuno provides essential functionalities like memory management
-* LibJuno optimizes for memory safety, determinism and efficiency in constrained environments.
-* LibJuno supports freestanding builds (no hosted standard library) for maximum portability when enabled via `-DJUNO_FREESTANDING=ON`.
+**Key Features:**
+* **Dependency Injection in C11**: Enable modular, testable embedded software with explicit dependencies
+* **Memory Safety**: Static memory allocation with type-safe pointer APIs - no dynamic allocation
+* **Freestanding Support**: Can build without hosted C standard library (`-DJUNO_FREESTANDING=ON`)
+* **Deterministic**: Predictable behavior and explicit error paths for real-time systems
+* **Modular**: Use the whole library or cherry-pick individual components
+* **Portable**: C11 standard with minimal platform assumptions
 
 # The "Library of Everything" Problem
 Many developers try to write the "Library of Everything". This is a library
@@ -85,21 +84,33 @@ See [the LibJuno Tutorial](examples/example_project/LibJuno_Tutorial.md) for a t
 on how to use LibJuno. This is a complete toy-project that is used to explain and demonstrate
 many concepts and core capabilities within LibJuno.
 
+## Version and API Stability
+
+**Current Version**: 1.0.0
+
+LibJuno follows semantic versioning. While we strive for API stability and aim to minimize breaking changes, we prioritize correctness and safety. Future releases will follow semantic versioning practices:
+- **Patch releases** (1.0.x): Bug fixes, no API changes
+- **Minor releases** (1.x.0): New features, backward compatible
+- **Major releases** (2.0.0): May include breaking changes when necessary
+
+The public API includes all headers in `include/juno/`. Internal implementation details in `src/` are subject to change.
+
 ## Using LibJuno
 * By default, LibJuno builds a static library (`libjuno.a`). To also build a shared library, pass `-DJUNO_SHARED=ON`.
 
 ### Documentation
-* [Dependency Injection](include/juno/README.md)
+* [Module System & Dependency Injection](include/juno/README.md)
 * [Memory Module](include/juno/memory/README.md)
+* [Examples Guide](examples/README.md)
 
 ## Dependencies
-* LibJuno aims to minimize dependencies, including dependencies on the C standard library
-* Dependencies of LibJuno are listed here
-   * This does not include dependencies on compilers or build scripting/tooling
+LibJuno is designed to minimize external dependencies for maximum portability.
 
-| Dependency Name | Rationale                                      |
-|-----------------|------------------------------------------------|
-|    <math.h>     | Math is required for math lib                  |
+**Core Library**: No external dependencies (can build freestanding with `-DJUNO_FREESTANDING=ON`)
+
+**Testing Only**: Unity test framework (included in `deps/unity/`)
+
+**Note**: Examples and tutorials may use standard library features (printf, etc.) for demonstration purposes, but the core library supports true freestanding operation where you provide your own I/O implementations.
 
 ## Building and Testing
 1. Configure (static library by default):
@@ -111,29 +122,84 @@ many concepts and core capabilities within LibJuno.
    - `cmake --build build -j`
    - `ctest --test-dir build --output-on-failure`
 
-### CMake Build Option
+### CMake Build Options
 
-* `-DJUNO_TESTS=On` (Default `Off`): Enable unit testing
-* `-DJUNO_COVERAGE=On` (Default `Off`): Compile Juno with code coverage
-* `-DJUNO_DOCS=On` (Default `Off`): Enable doxygen docs
-* `-DJUNO_PIC=On` (Default `On`): Compile Juno with Position Independent Code
-* `-DJUNO_SHARED=On` (Default `Off`): Compile the juno shared library
-* `-DJUNO_FREESTANDING=On` (Default `Off`): Build in freestanding mode (adds `-ffreestanding -nostdlib` and avoids hosted libc)
-* `-DJUNO_ASAN=On` (Default `Off`): Enable AddressSanitizer (host debugging)
-* `-DJUNO_UBSAN=On` (Default `Off`): Enable UndefinedBehaviorSanitizer (host debugging)
-* `-DJUNO_EXAMPLES=On` (Default `Off`): Build examples in `examples/`
+| Option | Default | Description |
+|--------|---------|-------------|
+| `JUNO_TESTS` | `OFF` | Enable unit testing with Unity framework |
+| `JUNO_COVERAGE` | `OFF` | Compile with code coverage instrumentation |
+| `JUNO_DOCS` | `OFF` | Generate Doxygen API documentation |
+| `JUNO_PIC` | `ON` | Compile with Position Independent Code |
+| `JUNO_SHARED` | `OFF` | Build shared library in addition to static |
+| `JUNO_FREESTANDING` | `OFF` | **Freestanding mode**: Adds `-ffreestanding -nostdlib` flags for bare-metal targets |
+| `JUNO_ASAN` | `OFF` | Enable AddressSanitizer (host debugging only) |
+| `JUNO_UBSAN` | `OFF` | Enable UndefinedBehaviorSanitizer (host debugging only) |
+| `JUNO_EXAMPLES` | `OFF` | Build example programs (requires hosted environment) |
 
-#### Sanitizers and host debug builds (optional)
+#### Freestanding Mode
 
-For a quick host review with sanitizers and tests enabled:
+LibJuno is designed to support **true freestanding builds** for bare-metal and RTOS environments:
 
 ```sh
-cmake -S . -B build -DJUNO_TESTS=ON -DJUNO_ASAN=ON -DJUNO_UBSAN=ON -DCMAKE_BUILD_TYPE=Debug
+cmake -S . -B build -DJUNO_FREESTANDING=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build build -j
+```
+
+In freestanding mode:
+- No standard library headers are used (except freestanding ones like `<stdint.h>`, `<stdbool.h>`, `<stddef.h>`)
+- Links with `-nostdlib`
+- Core library APIs remain fully functional
+- You provide platform-specific implementations (time, logging, I/O) via dependency injection
+
+**Note**: Tests and examples require a hosted environment and cannot be built in freestanding mode.
+
+#### Development and Testing Workflow
+
+For comprehensive testing with sanitizers:
+
+```sh
+# Configure with tests and sanitizers
+cmake -S . -B build -DJUNO_TESTS=ON -DJUNO_ASAN=ON -DJUNO_UBSAN=ON -DCMAKE_BUILD_TYPE=Debug
+
+# Build
+cmake --build build -j
+
+# Run tests
 ctest --test-dir build --output-on-failure
 ```
+
+For code coverage analysis:
+
+```sh
+cmake -S . -B build -DJUNO_TESTS=ON -DJUNO_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug
+cmake --build build -j
+ctest --test-dir build
+# Generate coverage report with lcov/genhtml
+```
+
+## Installation
+
+Install headers and library to a system or staging prefix:
+
+```sh
+cmake --install build --prefix /path/to/install
+```
+
+For CMake-based projects, LibJuno provides package configuration files:
+
+```cmake
+find_package(juno REQUIRED)
+target_link_libraries(your_target PRIVATE juno::juno)
+```
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Ensure all tests pass with sanitizers enabled
+2. Verify freestanding compatibility for core library changes
+3. Update documentation for API changes
+4. Follow existing code style and conventions
+
 ## Inspiration for the Name
-Juno is the name of my wonderful dog and
-she has brought me so much comfort and stability throughout the years.
-I wanted to honor her legacy by naming an open-source library after her.
+Juno is the name of my wonderful dog and she has brought me so much comfort and stability throughout the years. I wanted to honor her legacy by naming an open-source library after her.
 
