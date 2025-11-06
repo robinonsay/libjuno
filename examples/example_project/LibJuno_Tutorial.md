@@ -984,3 +984,8 @@ implementations that they can choose to use. Ultimately the developers will impl
 targeted for their project so much of the architecture is dependent on specific project needs
 that can't possibly be captured here. This example project is to showcase the various capabilities
 a user can choose to implement.
+
+```cpp
+
+
+```

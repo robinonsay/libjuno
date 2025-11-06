@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 
 THIS_DIR = Path(__file__).parent.absolute()
 PROJECT_DIR = THIS_DIR.parent
-TEMPLATE_PATH = PROJECT_DIR / "templates" / "template_msg"
+TEMPLATE_PATH = PROJECT_DIR / "templates" / "template_array"
 
 template_keywords = ["template", "Template", "TEMPLATE"]
 impl_keywords = ["msg", "Msg", "MSG"]

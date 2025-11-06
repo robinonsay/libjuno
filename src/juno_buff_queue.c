@@ -38,7 +38,7 @@ JUNO_STATUS_T JunoDs_QueuePush(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tIt
     }
     else
     {
-        tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        tStatus = JUNO_STATUS_OOB_ERROR;
         JUNO_FAIL_ROOT(tStatus, ptQueue, "Failed to enqueue data");
         return tStatus;
     }
@@ -67,7 +67,7 @@ JUNO_STATUS_T JunoDs_QueuePop(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tRet
         ptQueue->zLength -= 1;
         return tStatus;
     }
-    tStatus = JUNO_STATUS_ERR;
+    tStatus = JUNO_STATUS_OOB_ERROR;
     JUNO_FAIL_ROOT(tStatus, ptQueue, "Queue is empty");
     return tStatus;
 }
@@ -81,7 +81,7 @@ JUNO_RESULT_POINTER_T JunoDs_QueuePeek(JUNO_DS_QUEUE_ROOT_T *ptQueue)
     JUNO_DS_ARRAY_ROOT_T *ptBuffer = ptQueue->ptQueueArray;
     if(ptQueue->zLength == 0)
     {
-        tResult.tStatus = JUNO_STATUS_INVALID_SIZE_ERROR;
+        tResult.tStatus = JUNO_STATUS_OOB_ERROR;
         JUNO_FAIL_ROOT(tResult.tStatus, ptQueue, "Queue is empty");
         return tResult;
     }

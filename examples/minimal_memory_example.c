@@ -17,7 +17,6 @@
 
 #include "juno/macros.h"
 #include "juno/memory/memory_api.h"
-#define JUNO_MEMORY_DEFAULT
 #include "juno/memory/memory_block.h"
 #include "juno/status.h"
 #include <stdio.h>
@@ -90,11 +89,10 @@ int main(void) {
         ErrorHandler,
         NULL
     );
-    
-    if (tStatus != JUNO_STATUS_SUCCESS) {
+    JUNO_ASSERT_SUCCESS(tStatus,
         printf("Failed to initialize memory block\n");
         return -1;
-    }
+    );
     
     printf("Memory block initialized successfully\n");
     
@@ -119,11 +117,10 @@ int main(void) {
     printf("Freeing memory...\n");
     tStatus = ptApi->Put(&tMemAlloc.tRoot,  &tMemory);
     
-    if (tStatus == JUNO_STATUS_SUCCESS) {
-        printf("Memory freed successfully\n");
-    } else {
+    JUNO_ASSERT_SUCCESS(tStatus,
         printf("Failed to free memory: %d\n", tStatus);
-    }
-    
+        return -1;
+    )
+    printf("Memory freed successfully\n");
     return 0;
 }

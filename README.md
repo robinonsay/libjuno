@@ -56,6 +56,28 @@ is for this micro-framework to fit within developers software systems, not for a
 to this library. Developers can flexibly use the whole library or a single function with little project
 overhead.
 
+## Memory Safety, Pointers, and Arrays
+At first, the LibJuno Pointer and Array systems may seem complex, or
+boilerplate heavy. It's worth asking the question "Why not *just* use
+`void *` and take a size?". The answer is memory safety. `void *`'s are
+inherently unsafe. Many memory bugs and segfaults are a result of
+complex pointer math and type erasure. LibJuno does not know your
+type. It doesn't know what size, alignment, copy requirements your
+type has. It doesn't know if you need a linked list, static array,
+or some secret third data structure. Instead LibJuno says "Tell
+me how to copy and reset your type and how to access your data". With
+the answer to that question LibJuno can provide many tools at your disposal.
+The alternative is either compromise on memory safety, or implement
+the same queue function for every single type. The trade this library
+makes is a little boilerplate for a lot of functionality. The nice
+thing about LibJuno is that if you don't like the implementation,
+you don't need to use it. You can always roll your own implementation
+if that's what your project requires.
+
+# Templates and Scripts
+LibJuno provides many boilerplate generators in the `scripts` directory.
+This makes it easy and effortless to generate structures and implementations
+for arrays, pointers, apps, messages, and more.
 
 # Tutorial
 

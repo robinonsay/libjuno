@@ -87,7 +87,7 @@ typedef int32_t JUNO_STATUS_T;
 /** @brief Operation timed out. */
 #define JUNO_STATUS_TIMEOUT_ERROR       16
 /** @brief Index or pointer was out of bounds. */
-#define JUNO_STATUS_OOB_ERROR                 17
+#define JUNO_STATUS_OOB_ERROR           17
 /** @} */
 
 /** @brief Opaque user data type for failure callbacks.

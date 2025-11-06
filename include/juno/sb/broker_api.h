@@ -25,13 +25,27 @@
  * @brief Software Bus (SB) broker for single-threaded message fan-out.
  * @defgroup juno_sb Software Bus Broker
  * @details
- *  The broker distributes messages to registered subscribers (pipes) within
- *  a single thread. It is intentionally not thread-safe to encourage explicit
- *  IPC design when multiple threads are involved (e.g., queues, sockets).
- *
- *  Messages are enqueued to subscriber pipes implemented as queues. The broker
- *  deals in JUNO_POINTER_T message handles; ownership and copy semantics follow
- *  the pointer trait provided by the application.
+ *  The broker solves: "A message arrived in my thread. Who needs a copy?"
+ *  The broker does NOT solve: "How do I get messages between threads?"
+ *  
+ *  Why? Inter-thread communication (IPC) is system-specific:
+ *    - FreeRTOS: xQueue, xStreamBuffer, direct-to-task notification
+ *    - Zephyr: k_msgq, k_pipe, k_fifo
+ *    - POSIX: pipes, sockets, shared memory + semaphores
+ *    - QNX: MsgSend/MsgReceive
+ *    - Bare metal: Hardware FIFOs, DMA, mailbox interrupts
+ *  
+ *  LibJuno cannot provide a one-size-fits-all abstraction for these
+ *  fundamentally different mechanisms. YOU choose the IPC that fits
+ *  YOUR system's requirements (latency, safety, determinism, etc.)
+ *  
+ *  Architecture: One broker per thread. Bridge brokers with your IPC layer.
+ *  
+ *  Thread safety: Intentionally NOT thread-safe. Each thread owns its broker.
+ *  If you need to publish from another thread, use your IPC to send the
+ *  message to that thread first, then publish locally.
+ *  
+ *  @see examples/example_project for single-threaded usage
  */
 #ifndef JUNO_SB_API_H
 #define JUNO_SB_API_H
