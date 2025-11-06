@@ -84,7 +84,7 @@ See [the LibJuno Tutorial](examples/example_project/LibJuno_Tutorial.md) for a t
 on how to use LibJuno. This is a complete toy-project that is used to explain and demonstrate
 many concepts and core capabilities within LibJuno.
 
-## Version and API Stability
+# Version and API Stability
 
 **Current Version**: 1.0.0
 
@@ -95,10 +95,10 @@ LibJuno follows semantic versioning. While we strive for API stability and aim t
 
 The public API includes all headers in `include/juno/`. Internal implementation details in `src/` are subject to change.
 
-## Using LibJuno
+# Using LibJuno
 * By default, LibJuno builds a static library (`libjuno.a`). To also build a shared library, pass `-DJUNO_SHARED=ON`.
 
-### Documentation
+## Documentation
 * [Module System & Dependency Injection](include/juno/README.md)
 * [Memory Module](include/juno/memory/README.md)
 * [Examples Guide](examples/README.md)
