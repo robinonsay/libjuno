@@ -17,7 +17,7 @@ option(JUNO_EXAMPLES "Compile Juno Examples" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
-project(juno VERSION 1.1.0 LANGUAGES C CXX)
+project(juno VERSION 1.1.1 LANGUAGES C CXX)
 
 # Package config helpers for installing CMake package files
 include(CMakePackageConfigHelpers)
