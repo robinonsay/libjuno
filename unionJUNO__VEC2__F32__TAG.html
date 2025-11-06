@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -127,6 +127,9 @@ $(document).ready(function(){initNavTree('unionJUNO__VEC2__F32__TAG.html',''); i
 </div><!--header-->
 <div class="contents">
 
+<p>2D vector union supporting Cartesian, polar, and array access (float32 precision).  
+ <a href="unionJUNO__VEC2__F32__TAG.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="juno__vec__types_8h_source.html">juno_vec_types.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for JUNO_VEC2_F32_TAG:</div>
@@ -143,7 +146,14 @@ Data Fields</h2></td></tr>
 <tr class="memitem:ab895167a302987d31267145554bb5ab6" id="r_ab895167a302987d31267145554bb5ab6"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC2__F32__TAG.html#ab895167a302987d31267145554bb5ab6">arr</a> [2]</td></tr>
 <tr class="separator:ab895167a302987d31267145554bb5ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>2D vector union supporting Cartesian, polar, and array access (float32 precision). </p>
+<ul>
+<li>tCart: Cartesian form.</li>
+<li>tSph: Polar form.</li>
+<li>arr: Raw component array [0]=x/r, [1]=y/phi. </li>
+</ul>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a id="ab895167a302987d31267145554bb5ab6" name="ab895167a302987d31267145554bb5ab6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab895167a302987d31267145554bb5ab6">&#9670;&#160;</a></span>arr</h2>
 
@@ -185,7 +195,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Spherical coordinates. </p>
+<p>Polar coordinates. </p>
 
 </div>
 </div>

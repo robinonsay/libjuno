@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['features_0',['Features',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md13',1,'']]],
-  ['for_20the_20name_1',['Inspiration for the Name',['../index.html#autotoc_md92',1,'']]],
-  ['free_2',['Free',['../structJUNO__STRING__API__TAG.html#ae69f1e7a38c89e794a65dfd6a4bddef1',1,'JUNO_STRING_API_TAG']]],
-  ['fuel_20source_3a_20“hybrid”_20engines_3',['6. Injecting an Entirely Different Fuel Source: “Hybrid” Engines',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md73',1,'']]],
-  ['future_20modules_4',['Future Modules',['../index.html#autotoc_md91',1,'']]]
+  ['k_0',['k',['../unionJUNO__RQUAT__F64__TAG.html#a7110cbd738e0c3e334446721f7408173',1,'JUNO_RQUAT_F64_TAG::k'],['../unionJUNO__RQUAT__F32__TAG.html#a4d4d0b479a71814c4066c248e6d65ab1',1,'JUNO_RQUAT_F32_TAG::k'],['../unionJUNO__RQUAT__I32__TAG.html#a8e2dbe4f187d080a0deb42c938e724c7',1,'JUNO_RQUAT_I32_TAG::k']]],
+  ['kermit_2eh_1',['kermit.h',['../kermit_8h.html',1,'']]],
+  ['kermit_5fcrctab_2',['kermit_crctab',['../kermit_8h.html#ac265d198d02ab3d70521ce14fb2f9005',1,'kermit.h']]]
 ];

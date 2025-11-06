@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -131,53 +131,62 @@ $(document).ready(function(){initNavTree('structJUNO__APP__API__TAG.html',''); i
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a90dcdac12b805f68ef8a5ad00653ff86" id="r_a90dcdac12b805f68ef8a5ad00653ff86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__APP__API__TAG.html#a90dcdac12b805f68ef8a5ad00653ff86">OnInit</a> )(<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptJunoApp)</td></tr>
-<tr class="separator:a90dcdac12b805f68ef8a5ad00653ff86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0186207594727b023adfb84b8fd832e" id="r_aa0186207594727b023adfb84b8fd832e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__APP__API__TAG.html#aa0186207594727b023adfb84b8fd832e">OnProcess</a> )(<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptJunoApp)</td></tr>
-<tr class="separator:aa0186207594727b023adfb84b8fd832e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7655d73591ea6f608422fa51f240eac0" id="r_a7655d73591ea6f608422fa51f240eac0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__APP__API__TAG.html#a7655d73591ea6f608422fa51f240eac0">OnExit</a> )(<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptJunoApp)</td></tr>
-<tr class="separator:a7655d73591ea6f608422fa51f240eac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ad5e3c5b5e1afd9d79473a1634ce3a8" id="r_a0ad5e3c5b5e1afd9d79473a1634ce3a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__APP__API__TAG.html#a0ad5e3c5b5e1afd9d79473a1634ce3a8">OnStart</a> )(<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptJunoApp)</td></tr>
+<tr class="memdesc:a0ad5e3c5b5e1afd9d79473a1634ce3a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once to initialize resources before processing.  <br /></td></tr>
+<tr class="separator:a0ad5e3c5b5e1afd9d79473a1634ce3a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f76d1db87a2db473a69369a8a320f0a" id="r_a4f76d1db87a2db473a69369a8a320f0a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__APP__API__TAG.html#a4f76d1db87a2db473a69369a8a320f0a">OnProcess</a> )(<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptJunoApp)</td></tr>
+<tr class="memdesc:a4f76d1db87a2db473a69369a8a320f0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main processing routine; may be invoked repeatedly.  <br /></td></tr>
+<tr class="separator:a4f76d1db87a2db473a69369a8a320f0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5176d66b8c36d24eb0cacff69da2df02" id="r_a5176d66b8c36d24eb0cacff69da2df02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__APP__API__TAG.html#a5176d66b8c36d24eb0cacff69da2df02">OnExit</a> )(<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptJunoApp)</td></tr>
+<tr class="memdesc:a5176d66b8c36d24eb0cacff69da2df02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once prior to shutdown to release resources.  <br /></td></tr>
+<tr class="separator:a5176d66b8c36d24eb0cacff69da2df02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a7655d73591ea6f608422fa51f240eac0" name="a7655d73591ea6f608422fa51f240eac0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7655d73591ea6f608422fa51f240eac0">&#9670;&#160;</a></span>OnExit</h2>
+<a id="a5176d66b8c36d24eb0cacff69da2df02" name="a5176d66b8c36d24eb0cacff69da2df02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5176d66b8c36d24eb0cacff69da2df02">&#9670;&#160;</a></span>OnExit</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_APP_API_TAG::OnExit) (<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptJunoApp)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_APP_API_TAG::OnExit) (<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptJunoApp)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Called once prior to shutdown to release resources. </p>
+
 </div>
 </div>
-<a id="a90dcdac12b805f68ef8a5ad00653ff86" name="a90dcdac12b805f68ef8a5ad00653ff86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90dcdac12b805f68ef8a5ad00653ff86">&#9670;&#160;</a></span>OnInit</h2>
+<a id="a4f76d1db87a2db473a69369a8a320f0a" name="a4f76d1db87a2db473a69369a8a320f0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f76d1db87a2db473a69369a8a320f0a">&#9670;&#160;</a></span>OnProcess</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_APP_API_TAG::OnInit) (<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptJunoApp)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_APP_API_TAG::OnProcess) (<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptJunoApp)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Main processing routine; may be invoked repeatedly. </p>
+
 </div>
 </div>
-<a id="aa0186207594727b023adfb84b8fd832e" name="aa0186207594727b023adfb84b8fd832e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0186207594727b023adfb84b8fd832e">&#9670;&#160;</a></span>OnProcess</h2>
+<a id="a0ad5e3c5b5e1afd9d79473a1634ce3a8" name="a0ad5e3c5b5e1afd9d79473a1634ce3a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ad5e3c5b5e1afd9d79473a1634ce3a8">&#9670;&#160;</a></span>OnStart</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_APP_API_TAG::OnProcess) (<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptJunoApp)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_APP_API_TAG::OnStart) (<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptJunoApp)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Called once to initialize resources before processing. </p>
 
 </div>
 </div>

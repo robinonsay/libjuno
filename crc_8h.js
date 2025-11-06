@@ -14,6 +14,6 @@ var crc_8h =
     [ "Juno_CrcBinhexUpdate", "crc_8h.html#a835d961b72a12364ef0530570e6ea8ef", null ],
     [ "Juno_CrcCcitt32Update", "crc_8h.html#a4e868dd96f542f42ecad980ad7e345ee", null ],
     [ "Juno_CrcCcittUpdate", "crc_8h.html#a969509a6c7fec9019121f57b8b89e99f", null ],
-    [ "Juno_CrcKermitUpdate", "crc_8h.html#a1f8424f662028c0a7a4e264d96b62ca7", null ],
+    [ "Juno_CrcKermitUpdate", "crc_8h.html#aaede9fca81f2fdb320f8502ffb804983", null ],
     [ "Juno_CrcZipUpdate", "crc_8h.html#a0aa54f766ef152dc09579979a81d59da", null ]
 ];

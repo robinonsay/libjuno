@@ -1,10 +1,21 @@
 var searchData=
 [
-  ['get_0',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__ALLOC__API__TAG.html#a0ac4d16586e6e5ae36a13889bacc8ee7',1,'JUNO_MEMORY_ALLOC_API_TAG::Get']]],
-  ['getbuffer_1',['GetBuffer',['../structJUNO__MSG__API__TAG.html#a044f174e3fbe8269a8287be8b5e85753',1,'JUNO_MSG_API_TAG']]],
-  ['getmajorframeperiod_2',['GetMajorFramePeriod',['../structJUNO__SCH__API__TAG.html#a081aceb704219323d5ff1ed71330864b',1,'JUNO_SCH_API_TAG']]],
-  ['getminorframeperiod_3',['GetMinorFramePeriod',['../structJUNO__SCH__API__TAG.html#a1866c5537247a5337e8617362b848cb9',1,'JUNO_SCH_API_TAG']]],
-  ['getpublisherid_4',['GetPublisherId',['../structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f',1,'JUNO_PUBLISHER_API_TAG']]],
-  ['getsize_5',['GetSize',['../structJUNO__STRING__API__TAG.html#a75d02b815e5225c87bfbaada096e2d1e',1,'JUNO_STRING_API_TAG']]],
-  ['gisubsecs_5fmax_6',['giSUBSECS_MAX',['../juno__time_8c.html#aa122a53fca584785c3b9cd2521307e06',1,'juno_time.c']]]
+  ['get_0',['get',['../structJUNO__MEMORY__ALLOC__API__TAG.html#ad3c6cfeddd4c3a1605db44e474ee21a6',1,'JUNO_MEMORY_ALLOC_API_TAG::Get'],['../structJUNO__MAP__API__TAG.html#ada35c124eb55257f281c055a53045182',1,'JUNO_MAP_API_TAG::Get']]],
+  ['getat_1',['GetAt',['../structJUNO__DS__ARRAY__API__TAG.html#a50ddefd56050c7ce9fa2c3159b5bccbb',1,'JUNO_DS_ARRAY_API_TAG']]],
+  ['getmajorframeperiod_2',['GetMajorFramePeriod',['../structJUNO__SCH__API__TAG.html#a1c895a1a557c2c6d46a1ffa4a2dd030d',1,'JUNO_SCH_API_TAG']]],
+  ['getminorframeperiod_3',['GetMinorFramePeriod',['../structJUNO__SCH__API__TAG.html#a3f41bb383465bc90b53fff8f8dd6d414',1,'JUNO_SCH_API_TAG']]],
+  ['gisecs_5fmax_4',['giSECS_MAX',['../juno__time_8c.html#a9afd7e4734a46bc96503fb9872d0d1d0',1,'juno_time.c']]],
+  ['gisubsecs_5fmax_5',['giSUBSECS_MAX',['../juno__time_8c.html#aa122a53fca584785c3b9cd2521307e06',1,'juno_time.c']]],
+  ['gtbrokerapi_6',['gtBrokerApi',['../juno__broker_8c.html#a826f7ddf15b1c8a1257db6a562ca5639',1,'juno_broker.c']]],
+  ['gtenginecmdmsgpipeapi_7',['gtEngineCmdMsgPipeApi',['../engine__cmd__msg_8c.html#a63d8409c9ec4c299cb8ce089ef6fc642',1,'engine_cmd_msg.c']]],
+  ['gtenginecmdmsgpointerapi_8',['gtenginecmdmsgpointerapi',['../engine__cmd__msg_8c.html#aea9c2ee7031b2418ca8a4f8b881ffd11',1,'gtEngineCmdMsgPointerApi:&#160;engine_cmd_msg.c'],['../engine__cmd__msg_8h.html#aea9c2ee7031b2418ca8a4f8b881ffd11',1,'gtEngineCmdMsgPointerApi:&#160;engine_cmd_msg.c']]],
+  ['gtenginetlmmsgpipeapi_9',['gtEngineTlmMsgPipeApi',['../engine__tlm__msg_8c.html#aeb405e3a3bcdce5e3789b7010fd0c074',1,'engine_tlm_msg.c']]],
+  ['gtenginetlmmsgpointerapi_10',['gtenginetlmmsgpointerapi',['../engine__tlm__msg_8h.html#a52e25a69768cfcffac1426d71d28b4ef',1,'gtEngineTlmMsgPointerApi:&#160;engine_tlm_msg.c'],['../engine__tlm__msg_8c.html#a52e25a69768cfcffac1426d71d28b4ef',1,'gtEngineTlmMsgPointerApi:&#160;engine_tlm_msg.c']]],
+  ['gtmapapi_11',['gtMapApi',['../juno__map_8c.html#a7b1411ddc096076ed89bd29c1e859db3',1,'juno_map.c']]],
+  ['gtmyloggerapi_12',['gtMyLoggerApi',['../main_8c.html#a5bc99417ed1aea4d7f1432f37d41b015',1,'main.c']]],
+  ['gtqueueapi_13',['gtQueueApi',['../juno__buff__queue_8c.html#aff7fad6a4107b6f3a64dd0f70ccb97e1',1,'juno_buff_queue.c']]],
+  ['gtstackapi_14',['gtStackApi',['../juno__buff__stack_8c.html#ac9e9680d295cfdccb24d824bdddaf0e3',1,'juno_buff_stack.c']]],
+  ['gttimeapi_15',['gtTimeApi',['../main_8c.html#a4acd2b68aa418cc093a2e16719229fe8',1,'main.c']]],
+  ['gtuserdataarrayapi_16',['gtUserDataArrayApi',['../minimal__queue__example_8c.html#aca65459c761045d3984c17555d462315',1,'minimal_queue_example.c']]],
+  ['gtuserdatapointerapi_17',['gtUserDataPointerApi',['../minimal__memory__example_8c.html#afe029eb94060e5b50da9900e7b8952eb',1,'minimal_memory_example.c']]]
 ];

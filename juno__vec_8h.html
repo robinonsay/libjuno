@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -124,13 +124,14 @@ $(document).ready(function(){initNavTree('juno__vec_8h.html',''); initResizable(
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">juno_vec.h File Reference</div></div>
+  <div class="headertitle"><div class="title">juno_vec.h File Reference<div class="ingroups"><a class="el" href="group__juno__math.html">Math Core</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Inline vector and quaternion operations for Juno math types.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="juno__vec__types_8h_source.html">juno/math/juno_vec_types.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="juno__math__types_8h_source.html">juno_math_types.h</a>&quot;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for juno_vec.h:</div>
 <div class="dyncontent">
@@ -147,109 +148,151 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ae4133d215d5b3646d9d885d0dc209ee8" id="r_ae4133d215d5b3646d9d885d0dc209ee8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ae4133d215d5b3646d9d885d0dc209ee8">Juno_Pow2</a>(d)&#160;&#160;&#160;(d*d)</td></tr>
+<tr class="memdesc:ae4133d215d5b3646d9d885d0dc209ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Square of a value.  <br /></td></tr>
 <tr class="separator:ae4133d215d5b3646d9d885d0dc209ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17696ae9ffb819caad241756670f0d90" id="r_a17696ae9ffb819caad241756670f0d90"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a17696ae9ffb819caad241756670f0d90">Juno_Pow3</a>(d)&#160;&#160;&#160;(d*d*d)</td></tr>
+<tr class="memdesc:a17696ae9ffb819caad241756670f0d90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cube of a value.  <br /></td></tr>
 <tr class="separator:a17696ae9ffb819caad241756670f0d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dc32a1fa1d7bed7872b17d8d08428a7" id="r_a5dc32a1fa1d7bed7872b17d8d08428a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a5dc32a1fa1d7bed7872b17d8d08428a7">Juno_Pow4</a>(d)&#160;&#160;&#160;(d*d*d*d)</td></tr>
+<tr class="memdesc:a5dc32a1fa1d7bed7872b17d8d08428a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fourth power of a value.  <br /></td></tr>
 <tr class="separator:a5dc32a1fa1d7bed7872b17d8d08428a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa979438907f6bc1e2b2f5e1049734e48" id="r_aa979438907f6bc1e2b2f5e1049734e48"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#aa979438907f6bc1e2b2f5e1049734e48">Juno_Vec2_F64_Add</a> (<a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:aa979438907f6bc1e2b2f5e1049734e48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two 2D vectors (double).  <br /></td></tr>
 <tr class="separator:aa979438907f6bc1e2b2f5e1049734e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07a8dd7b0de756e5a7f7466dee4f5ae3" id="r_a07a8dd7b0de756e5a7f7466dee4f5ae3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a07a8dd7b0de756e5a7f7466dee4f5ae3">Juno_Vec2_F64_Sub</a> (<a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:a07a8dd7b0de756e5a7f7466dee4f5ae3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two 2D vectors (double).  <br /></td></tr>
 <tr class="separator:a07a8dd7b0de756e5a7f7466dee4f5ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36ebb7fc2e89639359d9b0e46c16d6bb" id="r_a36ebb7fc2e89639359d9b0e46c16d6bb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a36ebb7fc2e89639359d9b0e46c16d6bb">Juno_Vec2_F64_Mult</a> (<a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec0, double dScalar)</td></tr>
+<tr class="memdesc:a36ebb7fc2e89639359d9b0e46c16d6bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale a 2D vector by a scalar (double).  <br /></td></tr>
 <tr class="separator:a36ebb7fc2e89639359d9b0e46c16d6bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91841111d58bcb69ec9c2bd2d664cac6" id="r_a91841111d58bcb69ec9c2bd2d664cac6"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a91841111d58bcb69ec9c2bd2d664cac6">Juno_Vec2_F64_Dot</a> (<a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:a91841111d58bcb69ec9c2bd2d664cac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot product of two 2D vectors (double).  <br /></td></tr>
 <tr class="separator:a91841111d58bcb69ec9c2bd2d664cac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63448e2807ff9da7d9e93051b64a1c2d" id="r_a63448e2807ff9da7d9e93051b64a1c2d"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a63448e2807ff9da7d9e93051b64a1c2d">Juno_Vec2_F64_Cross</a> (<a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:a63448e2807ff9da7d9e93051b64a1c2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D cross product (double).  <br /></td></tr>
 <tr class="separator:a63448e2807ff9da7d9e93051b64a1c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0de888ebc4458ea0e7504554196a0416" id="r_a0de888ebc4458ea0e7504554196a0416"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a0de888ebc4458ea0e7504554196a0416">Juno_Vec2_F64_L2Norm</a> (<a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec0)</td></tr>
-<tr class="separator:a0de888ebc4458ea0e7504554196a0416"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f6fc5fabc218082a5c945e456238f63" id="r_a7f6fc5fabc218082a5c945e456238f63"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a7f6fc5fabc218082a5c945e456238f63">Juno_Vec2_F64_L2Norm2</a> (<a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a> tVec0)</td></tr>
+<tr class="memdesc:a7f6fc5fabc218082a5c945e456238f63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Squared L2 norm of a 2D vector (double).  <br /></td></tr>
+<tr class="separator:a7f6fc5fabc218082a5c945e456238f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab409b8e41ce5c6cdb2998158ec11b107" id="r_ab409b8e41ce5c6cdb2998158ec11b107"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ab409b8e41ce5c6cdb2998158ec11b107">Juno_Vec2_F32_Add</a> (<a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:ab409b8e41ce5c6cdb2998158ec11b107"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two 2D vectors (float).  <br /></td></tr>
 <tr class="separator:ab409b8e41ce5c6cdb2998158ec11b107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcfeacf58eba2d6ba5ac2946e133345c" id="r_abcfeacf58eba2d6ba5ac2946e133345c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#abcfeacf58eba2d6ba5ac2946e133345c">Juno_Vec2_F32_Sub</a> (<a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:abcfeacf58eba2d6ba5ac2946e133345c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two 2D vectors (float).  <br /></td></tr>
 <tr class="separator:abcfeacf58eba2d6ba5ac2946e133345c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d653382a89a1156db4e5743c67056f5" id="r_a2d653382a89a1156db4e5743c67056f5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a2d653382a89a1156db4e5743c67056f5">Juno_Vec2_F32_Mult</a> (<a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec0, float dScalar)</td></tr>
+<tr class="memdesc:a2d653382a89a1156db4e5743c67056f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale a 2D vector by a scalar (float).  <br /></td></tr>
 <tr class="separator:a2d653382a89a1156db4e5743c67056f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63270b5566890d1b41971b4450dcbf9b" id="r_a63270b5566890d1b41971b4450dcbf9b"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a63270b5566890d1b41971b4450dcbf9b">Juno_Vec2_F32_Dot</a> (<a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:a63270b5566890d1b41971b4450dcbf9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot product of two 2D vectors (float).  <br /></td></tr>
 <tr class="separator:a63270b5566890d1b41971b4450dcbf9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6d35b6c963e9816d95a87c1e98e4294" id="r_ac6d35b6c963e9816d95a87c1e98e4294"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ac6d35b6c963e9816d95a87c1e98e4294">Juno_Vec2_F32_Cross</a> (<a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:ac6d35b6c963e9816d95a87c1e98e4294"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D cross product (float); returns pseudoscalar z-component.  <br /></td></tr>
 <tr class="separator:ac6d35b6c963e9816d95a87c1e98e4294"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a608434874e43e0a67d1f5a248712c6d0" id="r_a608434874e43e0a67d1f5a248712c6d0"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a608434874e43e0a67d1f5a248712c6d0">Juno_Vec2_F32_L2Norm</a> (<a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec0)</td></tr>
-<tr class="separator:a608434874e43e0a67d1f5a248712c6d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1976cc41f34f0327101202c1515432b4" id="r_a1976cc41f34f0327101202c1515432b4"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a1976cc41f34f0327101202c1515432b4">Juno_Vec2_F32_L2Norm2</a> (<a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a> tVec0)</td></tr>
+<tr class="memdesc:a1976cc41f34f0327101202c1515432b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Squared L2 norm of a 2D vector (float).  <br /></td></tr>
+<tr class="separator:a1976cc41f34f0327101202c1515432b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae935d74e64c5178999673c140985d5c0" id="r_ae935d74e64c5178999673c140985d5c0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ae935d74e64c5178999673c140985d5c0">Juno_Vec2_I32_Add</a> (<a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec1)</td></tr>
-<tr class="memdesc:ae935d74e64c5178999673c140985d5c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two vec2i's.  <br /></td></tr>
+<tr class="memdesc:ae935d74e64c5178999673c140985d5c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two 2D vectors (int32).  <br /></td></tr>
 <tr class="separator:ae935d74e64c5178999673c140985d5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a896c5e4eafa49099dcaf1a94732343dc" id="r_a896c5e4eafa49099dcaf1a94732343dc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a896c5e4eafa49099dcaf1a94732343dc">Juno_Vec2_I32_Sub</a> (<a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec1)</td></tr>
+<tr class="memdesc:a896c5e4eafa49099dcaf1a94732343dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two 2D vectors (int32).  <br /></td></tr>
 <tr class="separator:a896c5e4eafa49099dcaf1a94732343dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf1acefd85c0dd2213a31998294b9212" id="r_aaf1acefd85c0dd2213a31998294b9212"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#aaf1acefd85c0dd2213a31998294b9212">Juno_Vec2_I32_Mult</a> (<a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec0, int32_t dScalar)</td></tr>
+<tr class="memdesc:aaf1acefd85c0dd2213a31998294b9212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale a 2D vector by a scalar (int32).  <br /></td></tr>
 <tr class="separator:aaf1acefd85c0dd2213a31998294b9212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4132f17e84ec13409799b709a0480df" id="r_af4132f17e84ec13409799b709a0480df"><td class="memItemLeft" align="right" valign="top">static int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#af4132f17e84ec13409799b709a0480df">Juno_Vec2_I32_Dot</a> (<a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec1)</td></tr>
+<tr class="memdesc:af4132f17e84ec13409799b709a0480df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot product of two 2D vectors (int32).  <br /></td></tr>
 <tr class="separator:af4132f17e84ec13409799b709a0480df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe7c457e095e680ac7b0dd7e4d742b70" id="r_afe7c457e095e680ac7b0dd7e4d742b70"><td class="memItemLeft" align="right" valign="top">static int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#afe7c457e095e680ac7b0dd7e4d742b70">Juno_Vec2_I32_Cross</a> (<a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec1)</td></tr>
+<tr class="memdesc:afe7c457e095e680ac7b0dd7e4d742b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D cross product (int32); returns pseudoscalar z-component.  <br /></td></tr>
 <tr class="separator:afe7c457e095e680ac7b0dd7e4d742b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7754b8062145927002c9c7f62ccef5a9" id="r_a7754b8062145927002c9c7f62ccef5a9"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a7754b8062145927002c9c7f62ccef5a9">Juno_Vec2_I32_L2Norm</a> (<a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec0)</td></tr>
-<tr class="separator:a7754b8062145927002c9c7f62ccef5a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a816476332c6109030a55c074103d6da7" id="r_a816476332c6109030a55c074103d6da7"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a816476332c6109030a55c074103d6da7">Juno_Vec2_I32_L2Norm2</a> (<a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a> tVec0)</td></tr>
+<tr class="memdesc:a816476332c6109030a55c074103d6da7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Squared L2 norm of a 2D vector (int32 inputs; float return).  <br /></td></tr>
+<tr class="separator:a816476332c6109030a55c074103d6da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6aafc0b62d83d81714f75bc0680e4ef" id="r_af6aafc0b62d83d81714f75bc0680e4ef"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#af6aafc0b62d83d81714f75bc0680e4ef">Juno_Vec3_F64_Add</a> (<a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:af6aafc0b62d83d81714f75bc0680e4ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two 3D vectors (double).  <br /></td></tr>
 <tr class="separator:af6aafc0b62d83d81714f75bc0680e4ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad6944e33dc9357473c7f15605b6d9bb" id="r_aad6944e33dc9357473c7f15605b6d9bb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#aad6944e33dc9357473c7f15605b6d9bb">Juno_Vec3_F64_Sub</a> (<a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:aad6944e33dc9357473c7f15605b6d9bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two 3D vectors (double).  <br /></td></tr>
 <tr class="separator:aad6944e33dc9357473c7f15605b6d9bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af35333860f07d159cc9da0ca598ed986" id="r_af35333860f07d159cc9da0ca598ed986"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#af35333860f07d159cc9da0ca598ed986">Juno_Vec3_F64_Mult</a> (<a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec0, double dScalar)</td></tr>
+<tr class="memdesc:af35333860f07d159cc9da0ca598ed986"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale a 3D vector by a scalar (double).  <br /></td></tr>
 <tr class="separator:af35333860f07d159cc9da0ca598ed986"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ec9625ea0e70362ac99865d7fc91d5f" id="r_a1ec9625ea0e70362ac99865d7fc91d5f"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a1ec9625ea0e70362ac99865d7fc91d5f">Juno_Vec3_F64_Dot</a> (<a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:a1ec9625ea0e70362ac99865d7fc91d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot product of two 3D vectors (double).  <br /></td></tr>
 <tr class="separator:a1ec9625ea0e70362ac99865d7fc91d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3a52d41e1ee34929753e205c934b2fe" id="r_af3a52d41e1ee34929753e205c934b2fe"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#af3a52d41e1ee34929753e205c934b2fe">Juno_Vec3_F64_Cross</a> (<a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec1)</td></tr>
+<tr class="memdesc:af3a52d41e1ee34929753e205c934b2fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">3D cross product (double).  <br /></td></tr>
 <tr class="separator:af3a52d41e1ee34929753e205c934b2fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6ff6aabe0e321cbd705909c95389086" id="r_ae6ff6aabe0e321cbd705909c95389086"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ae6ff6aabe0e321cbd705909c95389086">Juno_Vec3_F64_L2Norm</a> (<a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec0)</td></tr>
-<tr class="separator:ae6ff6aabe0e321cbd705909c95389086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afec9a4d17fb1e13b6386dd04a2f4d2b8" id="r_afec9a4d17fb1e13b6386dd04a2f4d2b8"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#afec9a4d17fb1e13b6386dd04a2f4d2b8">Juno_Vec3_F64_L2Norm2</a> (<a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a> tVec0)</td></tr>
+<tr class="memdesc:afec9a4d17fb1e13b6386dd04a2f4d2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Squared L2 norm of a 3D vector (double).  <br /></td></tr>
+<tr class="separator:afec9a4d17fb1e13b6386dd04a2f4d2b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b6ae4d415f5b2d677ef77f1175d568d" id="r_a8b6ae4d415f5b2d677ef77f1175d568d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a8b6ae4d415f5b2d677ef77f1175d568d">Juno_Vec3_F32_Add</a> (<a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:a8b6ae4d415f5b2d677ef77f1175d568d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two 3D vectors (float).  <br /></td></tr>
 <tr class="separator:a8b6ae4d415f5b2d677ef77f1175d568d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af11e4d743c918faedb5501ae6f053bec" id="r_af11e4d743c918faedb5501ae6f053bec"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#af11e4d743c918faedb5501ae6f053bec">Juno_Vec3_F32_Sub</a> (<a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:af11e4d743c918faedb5501ae6f053bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two 3D vectors (float).  <br /></td></tr>
 <tr class="separator:af11e4d743c918faedb5501ae6f053bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa220453229006f281ae80f9da44199bf" id="r_aa220453229006f281ae80f9da44199bf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#aa220453229006f281ae80f9da44199bf">Juno_Vec3_F32_Mult</a> (<a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec0, float dScalar)</td></tr>
+<tr class="memdesc:aa220453229006f281ae80f9da44199bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale a 3D vector by a scalar (float).  <br /></td></tr>
 <tr class="separator:aa220453229006f281ae80f9da44199bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af860f05a64599526007b46069f03ad96" id="r_af860f05a64599526007b46069f03ad96"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#af860f05a64599526007b46069f03ad96">Juno_Vec3_F32_Dot</a> (<a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:af860f05a64599526007b46069f03ad96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot product of two 3D vectors (float).  <br /></td></tr>
 <tr class="separator:af860f05a64599526007b46069f03ad96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3570ccf1b52e818160a9fc0b0994b15" id="r_ad3570ccf1b52e818160a9fc0b0994b15"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ad3570ccf1b52e818160a9fc0b0994b15">Juno_Vec3_F32_Cross</a> (<a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec1)</td></tr>
+<tr class="memdesc:ad3570ccf1b52e818160a9fc0b0994b15"><td class="mdescLeft">&#160;</td><td class="mdescRight">3D cross product (float).  <br /></td></tr>
 <tr class="separator:ad3570ccf1b52e818160a9fc0b0994b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb4b13feeaed7ff6f3dc1686912ce015" id="r_acb4b13feeaed7ff6f3dc1686912ce015"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#acb4b13feeaed7ff6f3dc1686912ce015">Juno_Vec3_F32_L2Norm</a> (<a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec0)</td></tr>
-<tr class="separator:acb4b13feeaed7ff6f3dc1686912ce015"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f50f16161df9ae407ee92ddc4ee250c" id="r_a6f50f16161df9ae407ee92ddc4ee250c"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a6f50f16161df9ae407ee92ddc4ee250c">Juno_Vec3_F32_L2Norm2</a> (<a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a> tVec0)</td></tr>
+<tr class="memdesc:a6f50f16161df9ae407ee92ddc4ee250c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Squared L2 norm of a 3D vector (float).  <br /></td></tr>
+<tr class="separator:a6f50f16161df9ae407ee92ddc4ee250c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a407854bee711af0da947295515d8ff50" id="r_a407854bee711af0da947295515d8ff50"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a407854bee711af0da947295515d8ff50">Juno_Vec3_I32_Add</a> (<a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec1)</td></tr>
-<tr class="memdesc:a407854bee711af0da947295515d8ff50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two vec2i's.  <br /></td></tr>
+<tr class="memdesc:a407854bee711af0da947295515d8ff50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two 3D vectors (int32).  <br /></td></tr>
 <tr class="separator:a407854bee711af0da947295515d8ff50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af308ec14a5851185efabf8dd40f6eac6" id="r_af308ec14a5851185efabf8dd40f6eac6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#af308ec14a5851185efabf8dd40f6eac6">Juno_Vec3_I32_Sub</a> (<a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec1)</td></tr>
+<tr class="memdesc:af308ec14a5851185efabf8dd40f6eac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two 3D vectors (int32).  <br /></td></tr>
 <tr class="separator:af308ec14a5851185efabf8dd40f6eac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8f6bbecce5aa3dde77ff4973de01cbe" id="r_ac8f6bbecce5aa3dde77ff4973de01cbe"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ac8f6bbecce5aa3dde77ff4973de01cbe">Juno_Vec3_I32_Mult</a> (<a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec0, int32_t dScalar)</td></tr>
+<tr class="memdesc:ac8f6bbecce5aa3dde77ff4973de01cbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale a 3D vector by a scalar (int32).  <br /></td></tr>
 <tr class="separator:ac8f6bbecce5aa3dde77ff4973de01cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade69a526dce81f9ed3ac6f4957650d84" id="r_ade69a526dce81f9ed3ac6f4957650d84"><td class="memItemLeft" align="right" valign="top">static int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#ade69a526dce81f9ed3ac6f4957650d84">Juno_Vec3_I32_Dot</a> (<a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec1)</td></tr>
+<tr class="memdesc:ade69a526dce81f9ed3ac6f4957650d84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot product of two 3D vectors (int32).  <br /></td></tr>
 <tr class="separator:ade69a526dce81f9ed3ac6f4957650d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a160e6ee896502431da2654db9148a115" id="r_a160e6ee896502431da2654db9148a115"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a160e6ee896502431da2654db9148a115">Juno_Vec3_I32_Cross</a> (<a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec0, <a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec1)</td></tr>
+<tr class="memdesc:a160e6ee896502431da2654db9148a115"><td class="mdescLeft">&#160;</td><td class="mdescRight">3D cross product (int32).  <br /></td></tr>
 <tr class="separator:a160e6ee896502431da2654db9148a115"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19bdaaf7b6aabadfe06a3d4ff7b2179f" id="r_a19bdaaf7b6aabadfe06a3d4ff7b2179f"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a19bdaaf7b6aabadfe06a3d4ff7b2179f">Juno_Vec3_I32_L2Norm</a> (<a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec0)</td></tr>
-<tr class="separator:a19bdaaf7b6aabadfe06a3d4ff7b2179f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8962159d7e6ade22fb047c4702208438" id="r_a8962159d7e6ade22fb047c4702208438"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a8962159d7e6ade22fb047c4702208438">Juno_Vec3_I32_L2Norm2</a> (<a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a> tVec0)</td></tr>
+<tr class="memdesc:a8962159d7e6ade22fb047c4702208438"><td class="mdescLeft">&#160;</td><td class="mdescRight">Squared L2 norm of a 3D vector (int32 inputs; float return).  <br /></td></tr>
+<tr class="separator:a8962159d7e6ade22fb047c4702208438"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6685e584525a178d40c8f42fe529c76d" id="r_a6685e584525a178d40c8f42fe529c76d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a6685e584525a178d40c8f42fe529c76d">Juno_RQuat_F64_Add</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0, <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q1)</td></tr>
-<tr class="memdesc:a6685e584525a178d40c8f42fe529c76d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two rquaternions.  <br /></td></tr>
+<tr class="memdesc:a6685e584525a178d40c8f42fe529c76d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add two real quaternions (double).  <br /></td></tr>
 <tr class="separator:a6685e584525a178d40c8f42fe529c76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e724acb27c7335b1bbe88875c5a332f" id="r_a8e724acb27c7335b1bbe88875c5a332f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a8e724acb27c7335b1bbe88875c5a332f">Juno_RQuat_F64_Sub</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0, <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q1)</td></tr>
+<tr class="memdesc:a8e724acb27c7335b1bbe88875c5a332f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two real quaternions (double).  <br /></td></tr>
 <tr class="separator:a8e724acb27c7335b1bbe88875c5a332f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba145cea4733b6de325fca6e90310ed3" id="r_aba145cea4733b6de325fca6e90310ed3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#aba145cea4733b6de325fca6e90310ed3">Juno_RQuat_F64_Mult</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0, double dScalar)</td></tr>
+<tr class="memdesc:aba145cea4733b6de325fca6e90310ed3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale a real quaternion by a scalar (double).  <br /></td></tr>
 <tr class="separator:aba145cea4733b6de325fca6e90310ed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb6211a04e6abee01af4b0c8025eb743" id="r_abb6211a04e6abee01af4b0c8025eb743"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#abb6211a04e6abee01af4b0c8025eb743">Juno_RQuat_F64_HamProd</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0, <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q1)</td></tr>
+<tr class="memdesc:abb6211a04e6abee01af4b0c8025eb743"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hamilton product of two right-handed real quaternions (double).  <br /></td></tr>
 <tr class="separator:abb6211a04e6abee01af4b0c8025eb743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f7ab0ed9716d017fac06ec8fac80c43" id="r_a8f7ab0ed9716d017fac06ec8fac80c43"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a8f7ab0ed9716d017fac06ec8fac80c43">Juno_RQuat_F64_Conj</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0)</td></tr>
+<tr class="memdesc:a8f7ab0ed9716d017fac06ec8fac80c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conjugate of a right-handed real quaternion (double).  <br /></td></tr>
 <tr class="separator:a8f7ab0ed9716d017fac06ec8fac80c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a750678ecbbcc4634ff764088ef6814b7" id="r_a750678ecbbcc4634ff764088ef6814b7"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a750678ecbbcc4634ff764088ef6814b7">Juno_RQuat_F64_L2Norm2</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0)</td></tr>
+<tr class="memdesc:a750678ecbbcc4634ff764088ef6814b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Squared L2 norm of a quaternion (double).  <br /></td></tr>
 <tr class="separator:a750678ecbbcc4634ff764088ef6814b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a122f84af8c88f7b4d1403d2ec7a91957" id="r_a122f84af8c88f7b4d1403d2ec7a91957"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a122f84af8c88f7b4d1403d2ec7a91957">Juno_RQuat_F64_L2Norm</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0)</td></tr>
-<tr class="separator:a122f84af8c88f7b4d1403d2ec7a91957"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10383dac962f222231dba3b4a4c5b557" id="r_a10383dac962f222231dba3b4a4c5b557"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a10383dac962f222231dba3b4a4c5b557">Juno_RQuat_F64_Normalize</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0)</td></tr>
-<tr class="separator:a10383dac962f222231dba3b4a4c5b557"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4381e643781ff20f7235eb6d1aa937f4" id="r_a4381e643781ff20f7235eb6d1aa937f4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__vec_8h.html#a4381e643781ff20f7235eb6d1aa937f4">Juno_RQuat_F64_Recip</a> (<a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> q0)</td></tr>
+<tr class="memdesc:a4381e643781ff20f7235eb6d1aa937f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplicative inverse (reciprocal) of a quaternion (double).  <br /></td></tr>
 <tr class="separator:a4381e643781ff20f7235eb6d1aa937f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Inline vector and quaternion operations for Juno math types. </p>
+<p>Provides basic arithmetic (add/sub/scale), dot/cross products, and L2 norms (often squared) for 2D and 3D vectors across double/float/int32 precisions, plus quaternion operations (add/sub/scale, Hamilton product, conjugate, reciprocal). See function comments for squared vs true norm. </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="ae4133d215d5b3646d9d885d0dc209ee8" name="ae4133d215d5b3646d9d885d0dc209ee8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae4133d215d5b3646d9d885d0dc209ee8">&#9670;&#160;</a></span>Juno_Pow2</h2>
 
@@ -265,6 +308,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Square of a value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">d</td><td>Input value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>d*d </dd></dl>
 
 </div>
 </div>
@@ -284,6 +336,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Cube of a value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">d</td><td>Input value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>d*d*d </dd></dl>
+
 </div>
 </div>
 <a id="a5dc32a1fa1d7bed7872b17d8d08428a7" name="a5dc32a1fa1d7bed7872b17d8d08428a7"></a>
@@ -301,6 +362,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Fourth power of a value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">d</td><td>Input value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>d*d*d*d </dd></dl>
 
 </div>
 </div>
@@ -339,7 +409,8 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Add two rquaternions. </p>
+<p>Add two real quaternions (double). </p>
+<p>Component-wise addition using [s, i, j, k] order. </p>
 
 </div>
 </div>
@@ -366,7 +437,9 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The conjugate product of two rquaternions. </p>
+
+<p>Conjugate of a right-handed real quaternion (double). </p>
+<p>Negates the vector part: (s, i, j, k) -&gt; (s, -i, -j, -k). </p>
 
 </div>
 </div>
@@ -403,34 +476,14 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The hamilton product of two rquaternions. </p>
 
-</div>
-</div>
-<a id="a122f84af8c88f7b4d1403d2ec7a91957" name="a122f84af8c88f7b4d1403d2ec7a91957"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a122f84af8c88f7b4d1403d2ec7a91957">&#9670;&#160;</a></span>Juno_RQuat_F64_L2Norm()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static double Juno_RQuat_F64_L2Norm </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td>
-          <td class="paramname"><em>q0</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get L2 norm of rquaternions </p>
+<p>Hamilton product of two right-handed real quaternions (double). </p>
+<p>Given q0 = (s0, i0, j0, k0) and q1 = (s1, i1, j1, k1) with i^2 = j^2 = k^2 = ijk = -1 and component order [s, i, j, k], the product q = q0 ⊗ q1 is:</p><ul>
+<li>s' = s0*s1 − i0*i1 − j0*j1 − k0*k1</li>
+<li>i' = s0*i1 + i0*s1 + j0*k1 − k0*j1</li>
+<li>j' = s0*j1 − i0*k1 + j0*s1 + k0*i1</li>
+<li>k' = s0*k1 + i0*j1 − j0*i1 + k0*s1 </li>
+</ul>
 
 </div>
 </div>
@@ -457,6 +510,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Squared L2 norm of a quaternion (double). </p>
 
 </div>
 </div>
@@ -493,34 +548,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Multiply scalar with rquaternion </p>
 
-</div>
-</div>
-<a id="a10383dac962f222231dba3b4a4c5b557" name="a10383dac962f222231dba3b4a4c5b557"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10383dac962f222231dba3b4a4c5b557">&#9670;&#160;</a></span>Juno_RQuat_F64_Normalize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a> Juno_RQuat_F64_Normalize </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#af4965912e9eaf6e122916e3ea4c0fd25">JUNO_RQUAT_F64_T</a>&#160;</td>
-          <td class="paramname"><em>q0</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get L2 norm of rquaternions </p>
+<p>Scale a real quaternion by a scalar (double). </p>
 
 </div>
 </div>
@@ -547,7 +576,9 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get L2 norm of rquaternions </p>
+
+<p>Multiplicative inverse (reciprocal) of a quaternion (double). </p>
+<p>Returns conj(q) / ||q||^2. Caller must ensure non-zero norm. </p>
 
 </div>
 </div>
@@ -584,13 +615,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Subtract to rquaternions </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">q0</td><td>The rquat to subtract from </td></tr>
-    <tr><td class="paramname">q1</td><td>The rquat to subtract </td></tr>
-  </table>
-  </dd>
-</dl>
+
+<p>Subtract two real quaternions (double). </p>
 
 </div>
 </div>
@@ -627,7 +653,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Add two vecf's together </p>
+
+<p>Add two 2D vectors (float). </p>
 
 </div>
 </div>
@@ -664,7 +691,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The cross product of two vec2f's. The result is a psedoscalar </p>
+
+<p>2D cross product (float); returns pseudoscalar z-component. </p>
 
 </div>
 </div>
@@ -701,12 +729,13 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Dot product of two vec2f's </p>
+
+<p>Dot product of two 2D vectors (float). </p>
 
 </div>
 </div>
-<a id="a608434874e43e0a67d1f5a248712c6d0" name="a608434874e43e0a67d1f5a248712c6d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a608434874e43e0a67d1f5a248712c6d0">&#9670;&#160;</a></span>Juno_Vec2_F32_L2Norm()</h2>
+<a id="a1976cc41f34f0327101202c1515432b4" name="a1976cc41f34f0327101202c1515432b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1976cc41f34f0327101202c1515432b4">&#9670;&#160;</a></span>Juno_Vec2_F32_L2Norm2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -715,7 +744,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static float Juno_Vec2_F32_L2Norm </td>
+          <td class="memname">static float Juno_Vec2_F32_L2Norm2 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#af4770ec6ba6a807a32bada62bf294cf6">JUNO_VEC2_F32_T</a>&#160;</td>
           <td class="paramname"><em>tVec0</em></td><td>)</td>
@@ -728,7 +757,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get L2 norm of vector </p>
+
+<p>Squared L2 norm of a 2D vector (float). </p>
 
 </div>
 </div>
@@ -765,7 +795,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Multiply scalar with vec2f's </p>
+
+<p>Scale a 2D vector by a scalar (float). </p>
 
 </div>
 </div>
@@ -802,13 +833,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Subtract to vec2f's </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tVec0</td><td>The vec to subtract from </td></tr>
-    <tr><td class="paramname">tVec1</td><td>The vec to subtract </td></tr>
-  </table>
-  </dd>
-</dl>
+
+<p>Subtract two 2D vectors (float). </p>
 
 </div>
 </div>
@@ -845,7 +871,16 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Add two vecf's together </p>
+
+<p>Add two 2D vectors (double). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tVec0</td><td>First vector (augend). </td></tr>
+    <tr><td class="paramname">tVec1</td><td>Second vector (addend). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Component-wise sum tVec0 + tVec1. </dd></dl>
 
 </div>
 </div>
@@ -882,7 +917,9 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The cross product of two vec2f's. The result is a psedoscalar </p>
+
+<p>2D cross product (double). </p>
+<p>Returns the pseudoscalar z-component of the 3D cross product of (x0, y0, 0) × (x1, y1, 0): x0*y1 - y0*x1. </p>
 
 </div>
 </div>
@@ -919,12 +956,14 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Dot product of two vec2f's </p>
+
+<p>Dot product of two 2D vectors (double). </p>
+<dl class="section return"><dt>Returns</dt><dd>tVec0.x*tVec1.x + tVec0.y*tVec1.y </dd></dl>
 
 </div>
 </div>
-<a id="a0de888ebc4458ea0e7504554196a0416" name="a0de888ebc4458ea0e7504554196a0416"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0de888ebc4458ea0e7504554196a0416">&#9670;&#160;</a></span>Juno_Vec2_F64_L2Norm()</h2>
+<a id="a7f6fc5fabc218082a5c945e456238f63" name="a7f6fc5fabc218082a5c945e456238f63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f6fc5fabc218082a5c945e456238f63">&#9670;&#160;</a></span>Juno_Vec2_F64_L2Norm2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -933,7 +972,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static double Juno_Vec2_F64_L2Norm </td>
+          <td class="memname">static double Juno_Vec2_F64_L2Norm2 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#ae4288c3bb6e4134c206e9b8ba02af227">JUNO_VEC2_F64_T</a>&#160;</td>
           <td class="paramname"><em>tVec0</em></td><td>)</td>
@@ -946,7 +985,9 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get L2 norm of vector </p>
+
+<p>Squared L2 norm of a 2D vector (double). </p>
+<dl class="section return"><dt>Returns</dt><dd>x^2 + y^2 </dd></dl>
 
 </div>
 </div>
@@ -983,7 +1024,16 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Multiply scalar with vec2f's </p>
+
+<p>Scale a 2D vector by a scalar (double). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tVec0</td><td>Input vector. </td></tr>
+    <tr><td class="paramname">dScalar</td><td>Scalar multiplier. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Component-wise product tVec0 * dScalar. </dd></dl>
 
 </div>
 </div>
@@ -1020,13 +1070,16 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Subtract to vec2f's </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Subtract two 2D vectors (double). </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tVec0</td><td>The vec to subtract from </td></tr>
-    <tr><td class="paramname">tVec1</td><td>The vec to subtract </td></tr>
+    <tr><td class="paramname">tVec0</td><td>Minuend vector (from which tVec1 is subtracted). </td></tr>
+    <tr><td class="paramname">tVec1</td><td>Subtrahend vector. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Component-wise difference tVec0 - tVec1. </dd></dl>
 
 </div>
 </div>
@@ -1064,7 +1117,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Add two vec2i's. </p>
+<p>Add two 2D vectors (int32). </p>
 
 </div>
 </div>
@@ -1101,7 +1154,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The cross product of two vec2i's. The result is a psedoscalar </p>
+
+<p>2D cross product (int32); returns pseudoscalar z-component. </p>
 
 </div>
 </div>
@@ -1138,12 +1192,13 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Dot product of two vec2i's </p>
+
+<p>Dot product of two 2D vectors (int32). </p>
 
 </div>
 </div>
-<a id="a7754b8062145927002c9c7f62ccef5a9" name="a7754b8062145927002c9c7f62ccef5a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7754b8062145927002c9c7f62ccef5a9">&#9670;&#160;</a></span>Juno_Vec2_I32_L2Norm()</h2>
+<a id="a816476332c6109030a55c074103d6da7" name="a816476332c6109030a55c074103d6da7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a816476332c6109030a55c074103d6da7">&#9670;&#160;</a></span>Juno_Vec2_I32_L2Norm2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1152,7 +1207,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static float Juno_Vec2_I32_L2Norm </td>
+          <td class="memname">static float Juno_Vec2_I32_L2Norm2 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#abfb49615c81f42f571c4a35e7345eab6">JUNO_VEC2_I32_T</a>&#160;</td>
           <td class="paramname"><em>tVec0</em></td><td>)</td>
@@ -1165,7 +1220,9 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get L2 norm of vector </p>
+
+<p>Squared L2 norm of a 2D vector (int32 inputs; float return). </p>
+<dl class="section return"><dt>Returns</dt><dd>(float)(x^2 + y^2) </dd></dl>
 
 </div>
 </div>
@@ -1202,7 +1259,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Multiply scalar with vec2f's </p>
+
+<p>Scale a 2D vector by a scalar (int32). </p>
 
 </div>
 </div>
@@ -1239,13 +1297,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Subtract to vec2i's </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tVec0</td><td>The vec to subtract from </td></tr>
-    <tr><td class="paramname">tVec1</td><td>The vec to subtract </td></tr>
-  </table>
-  </dd>
-</dl>
+
+<p>Subtract two 2D vectors (int32). </p>
 
 </div>
 </div>
@@ -1282,7 +1335,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Add two vecf's together </p>
+
+<p>Add two 3D vectors (float). </p>
 
 </div>
 </div>
@@ -1319,7 +1373,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The cross product of two vec2f's. The result is a psedoscalar </p>
+
+<p>3D cross product (float). </p>
 
 </div>
 </div>
@@ -1356,12 +1411,13 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Dot product of two vec2f's </p>
+
+<p>Dot product of two 3D vectors (float). </p>
 
 </div>
 </div>
-<a id="acb4b13feeaed7ff6f3dc1686912ce015" name="acb4b13feeaed7ff6f3dc1686912ce015"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb4b13feeaed7ff6f3dc1686912ce015">&#9670;&#160;</a></span>Juno_Vec3_F32_L2Norm()</h2>
+<a id="a6f50f16161df9ae407ee92ddc4ee250c" name="a6f50f16161df9ae407ee92ddc4ee250c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f50f16161df9ae407ee92ddc4ee250c">&#9670;&#160;</a></span>Juno_Vec3_F32_L2Norm2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1370,7 +1426,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static float Juno_Vec3_F32_L2Norm </td>
+          <td class="memname">static float Juno_Vec3_F32_L2Norm2 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#aad89d831bb8fda26eb9f55179b576abc">JUNO_VEC3_F32_T</a>&#160;</td>
           <td class="paramname"><em>tVec0</em></td><td>)</td>
@@ -1383,7 +1439,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get L2 norm of vector </p>
+
+<p>Squared L2 norm of a 3D vector (float). </p>
 
 </div>
 </div>
@@ -1420,7 +1477,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Multiply scalar with vec2f's </p>
+
+<p>Scale a 3D vector by a scalar (float). </p>
 
 </div>
 </div>
@@ -1457,13 +1515,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Subtract to vec2f's </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tVec0</td><td>The vec to subtract from </td></tr>
-    <tr><td class="paramname">tVec1</td><td>The vec to subtract </td></tr>
-  </table>
-  </dd>
-</dl>
+
+<p>Subtract two 3D vectors (float). </p>
 
 </div>
 </div>
@@ -1500,7 +1553,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Add two vecf's together </p>
+
+<p>Add two 3D vectors (double). </p>
 
 </div>
 </div>
@@ -1537,7 +1591,9 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The cross product of two vec2f's. The result is a psedoscalar </p>
+
+<p>3D cross product (double). </p>
+<p>Returns a vector orthogonal to inputs: (x0,y0,z0)×(x1,y1,z1). </p>
 
 </div>
 </div>
@@ -1574,12 +1630,13 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Dot product of two vec2f's </p>
+
+<p>Dot product of two 3D vectors (double). </p>
 
 </div>
 </div>
-<a id="ae6ff6aabe0e321cbd705909c95389086" name="ae6ff6aabe0e321cbd705909c95389086"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6ff6aabe0e321cbd705909c95389086">&#9670;&#160;</a></span>Juno_Vec3_F64_L2Norm()</h2>
+<a id="afec9a4d17fb1e13b6386dd04a2f4d2b8" name="afec9a4d17fb1e13b6386dd04a2f4d2b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afec9a4d17fb1e13b6386dd04a2f4d2b8">&#9670;&#160;</a></span>Juno_Vec3_F64_L2Norm2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1588,7 +1645,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static double Juno_Vec3_F64_L2Norm </td>
+          <td class="memname">static double Juno_Vec3_F64_L2Norm2 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#a76b9affcf0e719a44963d5df3297a5c7">JUNO_VEC3_F64_T</a>&#160;</td>
           <td class="paramname"><em>tVec0</em></td><td>)</td>
@@ -1601,7 +1658,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get L2 norm of vector </p>
+
+<p>Squared L2 norm of a 3D vector (double). </p>
 
 </div>
 </div>
@@ -1638,7 +1696,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Multiply scalar with vec2f's </p>
+
+<p>Scale a 3D vector by a scalar (double). </p>
 
 </div>
 </div>
@@ -1675,13 +1734,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Subtract to vec2f's </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tVec0</td><td>The vec to subtract from </td></tr>
-    <tr><td class="paramname">tVec1</td><td>The vec to subtract </td></tr>
-  </table>
-  </dd>
-</dl>
+
+<p>Subtract two 3D vectors (double). </p>
 
 </div>
 </div>
@@ -1719,7 +1773,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Add two vec2i's. </p>
+<p>Add two 3D vectors (int32). </p>
 
 </div>
 </div>
@@ -1756,7 +1810,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The cross product of two vec2i's. The result is a psedoscalar </p>
+
+<p>3D cross product (int32). </p>
 
 </div>
 </div>
@@ -1793,12 +1848,13 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Dot product of two vec2i's </p>
+
+<p>Dot product of two 3D vectors (int32). </p>
 
 </div>
 </div>
-<a id="a19bdaaf7b6aabadfe06a3d4ff7b2179f" name="a19bdaaf7b6aabadfe06a3d4ff7b2179f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19bdaaf7b6aabadfe06a3d4ff7b2179f">&#9670;&#160;</a></span>Juno_Vec3_I32_L2Norm()</h2>
+<a id="a8962159d7e6ade22fb047c4702208438" name="a8962159d7e6ade22fb047c4702208438"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8962159d7e6ade22fb047c4702208438">&#9670;&#160;</a></span>Juno_Vec3_I32_L2Norm2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1807,7 +1863,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static float Juno_Vec3_I32_L2Norm </td>
+          <td class="memname">static float Juno_Vec3_I32_L2Norm2 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="juno__vec__types_8h.html#a894602be7c0190c518979b7d8d56939b">JUNO_VEC3_I32_T</a>&#160;</td>
           <td class="paramname"><em>tVec0</em></td><td>)</td>
@@ -1820,7 +1876,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get L2 norm of vector </p>
+
+<p>Squared L2 norm of a 3D vector (int32 inputs; float return). </p>
 
 </div>
 </div>
@@ -1857,7 +1914,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Multiply scalar with vec2f's </p>
+
+<p>Scale a 3D vector by a scalar (int32). </p>
 
 </div>
 </div>
@@ -1894,13 +1952,8 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Subtract to vec2i's </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tVec0</td><td>The vec to subtract from </td></tr>
-    <tr><td class="paramname">tVec1</td><td>The vec to subtract </td></tr>
-  </table>
-  </dd>
-</dl>
+
+<p>Subtract two 3D vectors (int32). </p>
 
 </div>
 </div>

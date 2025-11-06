@@ -1,14 +1,15 @@
 var juno__time_8c =
 [
-    [ "JunoTime_AddTime", "juno__time_8c.html#a4b525b6b3f21aa697e9a8e2446489d5c", null ],
-    [ "JunoTime_DoubleToTimestamp", "juno__time_8c.html#ab65793d840334a9269084eb936ee13d9", null ],
-    [ "JunoTime_MicrosToTimestamp", "juno__time_8c.html#a1b40b38a3b7148d691ae4892ca12fc0a", null ],
-    [ "JunoTime_MillisToTimestamp", "juno__time_8c.html#a1fa00ba4237c7224b447261feac2871c", null ],
-    [ "JunoTime_NanosToTimestamp", "juno__time_8c.html#ac4a3d59290ca5feb65eeea6117860f4b", null ],
-    [ "JunoTime_SubtractTime", "juno__time_8c.html#a8ca112a59fa1b795531675dc402c47f3", null ],
-    [ "JunoTime_TimestampToDouble", "juno__time_8c.html#ae1da4608f7a7eac9394580c5ba1d6113", null ],
-    [ "JunoTime_TimestampToMicros", "juno__time_8c.html#a1395e0d31b9aeb31c6a755ba0bf84433", null ],
-    [ "JunoTime_TimestampToMillis", "juno__time_8c.html#aeac656ce8c7dab03ac3db1cebcb70f2b", null ],
-    [ "JunoTime_TimestampToNanos", "juno__time_8c.html#a2a5f498657381dd193751024d97a0295", null ],
+    [ "JunoTime_AddTime", "group__juno__time.html#gaabcc1ebb448648d60e2c1ef7122e1277", null ],
+    [ "JunoTime_DoubleToTimestamp", "group__juno__time.html#ga9293299dffa78317098ce38b48b32f97", null ],
+    [ "JunoTime_MicrosToTimestamp", "group__juno__time.html#ga1791bde93a8b01860b9e1d00c68cc7e1", null ],
+    [ "JunoTime_MillisToTimestamp", "group__juno__time.html#ga17aab03587962032be13bb74ba219412", null ],
+    [ "JunoTime_NanosToTimestamp", "group__juno__time.html#gac6cbb950d039541fc3cb6bab2f2bf22e", null ],
+    [ "JunoTime_SubtractTime", "group__juno__time.html#ga600762a10638de68e6fe6dbafd4bcf14", null ],
+    [ "JunoTime_TimestampToDouble", "group__juno__time.html#gaa79c4a82eec1d7760abe469f33f4b1d8", null ],
+    [ "JunoTime_TimestampToMicros", "group__juno__time.html#ga172b23986845ad61d64465f011a9fbae", null ],
+    [ "JunoTime_TimestampToMillis", "group__juno__time.html#gab75c9a2c00d07374a059c56e508ddb8e", null ],
+    [ "JunoTime_TimestampToNanos", "group__juno__time.html#ga28b52c07935979df672239fdfbb2134c", null ],
+    [ "giSECS_MAX", "juno__time_8c.html#a9afd7e4734a46bc96503fb9872d0d1d0", null ],
     [ "giSUBSECS_MAX", "juno__time_8c.html#aa122a53fca584785c3b9cd2521307e06", null ]
 ];

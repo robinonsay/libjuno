@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -131,138 +131,138 @@ $(document).ready(function(){initNavTree('structJUNO__ASYNC__IO__API__TAG.html',
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:aa250cb7a33649deafcd4af7da633ccf8" id="r_aa250cb7a33649deafcd4af7da633ccf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#aa250cb7a33649deafcd4af7da633ccf8">Read</a> )(<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize)</td></tr>
-<tr class="memdesc:aa250cb7a33649deafcd4af7da633ccf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the specified number of bytes from the IO.  <br /></td></tr>
-<tr class="separator:aa250cb7a33649deafcd4af7da633ccf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a641bda61680908a148ef1e4ea7aee271" id="r_a641bda61680908a148ef1e4ea7aee271"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a641bda61680908a148ef1e4ea7aee271">TryRead</a> )(<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td></tr>
-<tr class="memdesc:a641bda61680908a148ef1e4ea7aee271"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to read from the IO until timeout expires.  <br /></td></tr>
-<tr class="separator:a641bda61680908a148ef1e4ea7aee271"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a464b5615d82b1ec7317875efcabd7316" id="r_a464b5615d82b1ec7317875efcabd7316"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a464b5615d82b1ec7317875efcabd7316">ReadUntil</a> )(<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars)</td></tr>
-<tr class="memdesc:a464b5615d82b1ec7317875efcabd7316"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from the IO until the set of characters is recieved.  <br /></td></tr>
-<tr class="separator:a464b5615d82b1ec7317875efcabd7316"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f35aec741089c9758c928b08d3078c0" id="r_a1f35aec741089c9758c928b08d3078c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a1f35aec741089c9758c928b08d3078c0">TryReadUntil</a> )(<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td></tr>
-<tr class="memdesc:a1f35aec741089c9758c928b08d3078c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to read from the IO until the set of characters is recieved.  <br /></td></tr>
-<tr class="separator:a1f35aec741089c9758c928b08d3078c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb28c4fcfb0e8a0908d4219c1024a2e5" id="r_acb28c4fcfb0e8a0908d4219c1024a2e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#acb28c4fcfb0e8a0908d4219c1024a2e5">Write</a> )(<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize)</td></tr>
-<tr class="memdesc:acb28c4fcfb0e8a0908d4219c1024a2e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the specified number of bytes to the IO.  <br /></td></tr>
-<tr class="separator:acb28c4fcfb0e8a0908d4219c1024a2e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04787d2bac7dd5995c9f4ab7f404e477" id="r_a04787d2bac7dd5995c9f4ab7f404e477"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a04787d2bac7dd5995c9f4ab7f404e477">TryWrite</a> )(<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td></tr>
-<tr class="memdesc:a04787d2bac7dd5995c9f4ab7f404e477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to write the specified number of bytes to the IO.  <br /></td></tr>
-<tr class="separator:a04787d2bac7dd5995c9f4ab7f404e477"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a635e74653c23f3247f03be30a116fee6" id="r_a635e74653c23f3247f03be30a116fee6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a635e74653c23f3247f03be30a116fee6">Poll</a> )(<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs, bool *pbHasData)</td></tr>
-<tr class="memdesc:a635e74653c23f3247f03be30a116fee6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Poll the IO.  <br /></td></tr>
-<tr class="separator:a635e74653c23f3247f03be30a116fee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a3f36f2df408f29ecf3889b2f3205f3" id="r_a0a3f36f2df408f29ecf3889b2f3205f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a0a3f36f2df408f29ecf3889b2f3205f3">Read</a> )(<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize)</td></tr>
+<tr class="memdesc:a0a3f36f2df408f29ecf3889b2f3205f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read up to *pzBuffSize bytes; updates size with bytes read.  <br /></td></tr>
+<tr class="separator:a0a3f36f2df408f29ecf3889b2f3205f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfb28c312e7643c5d2c4384db717152f" id="r_adfb28c312e7643c5d2c4384db717152f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#adfb28c312e7643c5d2c4384db717152f">TryRead</a> )(<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td></tr>
+<tr class="memdesc:adfb28c312e7643c5d2c4384db717152f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to read with timeout; returns when data available or timeout.  <br /></td></tr>
+<tr class="separator:adfb28c312e7643c5d2c4384db717152f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43fe3ce5151256535286c5c41df20a0b" id="r_a43fe3ce5151256535286c5c41df20a0b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a43fe3ce5151256535286c5c41df20a0b">ReadUntil</a> )(<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars)</td></tr>
+<tr class="memdesc:a43fe3ce5151256535286c5c41df20a0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read until any stop character is received (size updated).  <br /></td></tr>
+<tr class="separator:a43fe3ce5151256535286c5c41df20a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4da388c7d2a387e66d9d6d0512c9d5e6" id="r_a4da388c7d2a387e66d9d6d0512c9d5e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a4da388c7d2a387e66d9d6d0512c9d5e6">TryReadUntil</a> )(<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td></tr>
+<tr class="memdesc:a4da388c7d2a387e66d9d6d0512c9d5e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to read until stop character or timeout.  <br /></td></tr>
+<tr class="separator:a4da388c7d2a387e66d9d6d0512c9d5e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a978b3d9ae76477f7d0350bbce384035c" id="r_a978b3d9ae76477f7d0350bbce384035c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a978b3d9ae76477f7d0350bbce384035c">Write</a> )(<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize)</td></tr>
+<tr class="memdesc:a978b3d9ae76477f7d0350bbce384035c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write up to *pzBuffSize bytes; updates size with bytes written.  <br /></td></tr>
+<tr class="separator:a978b3d9ae76477f7d0350bbce384035c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a865bd8ff6341009a43d0e90372be4863" id="r_a865bd8ff6341009a43d0e90372be4863"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a865bd8ff6341009a43d0e90372be4863">TryWrite</a> )(<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td></tr>
+<tr class="memdesc:a865bd8ff6341009a43d0e90372be4863"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to write with timeout; updates size with bytes written.  <br /></td></tr>
+<tr class="separator:a865bd8ff6341009a43d0e90372be4863"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00984a85957e2faf040bac6249b30f7b" id="r_a00984a85957e2faf040bac6249b30f7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__ASYNC__IO__API__TAG.html#a00984a85957e2faf040bac6249b30f7b">Poll</a> )(<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs, bool *pbHasData)</td></tr>
+<tr class="memdesc:a00984a85957e2faf040bac6249b30f7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Poll for input readiness within timeout; sets pbHasData.  <br /></td></tr>
+<tr class="separator:a00984a85957e2faf040bac6249b30f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a635e74653c23f3247f03be30a116fee6" name="a635e74653c23f3247f03be30a116fee6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a635e74653c23f3247f03be30a116fee6">&#9670;&#160;</a></span>Poll</h2>
+<a id="a00984a85957e2faf040bac6249b30f7b" name="a00984a85957e2faf040bac6249b30f7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00984a85957e2faf040bac6249b30f7b">&#9670;&#160;</a></span>Poll</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::Poll) (<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs, bool *pbHasData)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::Poll) (<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs, bool *pbHasData)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Poll the IO. </p>
+<p>Poll for input readiness within timeout; sets pbHasData. </p>
 
 </div>
 </div>
-<a id="aa250cb7a33649deafcd4af7da633ccf8" name="aa250cb7a33649deafcd4af7da633ccf8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa250cb7a33649deafcd4af7da633ccf8">&#9670;&#160;</a></span>Read</h2>
+<a id="a0a3f36f2df408f29ecf3889b2f3205f3" name="a0a3f36f2df408f29ecf3889b2f3205f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a3f36f2df408f29ecf3889b2f3205f3">&#9670;&#160;</a></span>Read</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::Read) (<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::Read) (<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Read the specified number of bytes from the IO. </p>
+<p>Read up to *pzBuffSize bytes; updates size with bytes read. </p>
 
 </div>
 </div>
-<a id="a464b5615d82b1ec7317875efcabd7316" name="a464b5615d82b1ec7317875efcabd7316"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a464b5615d82b1ec7317875efcabd7316">&#9670;&#160;</a></span>ReadUntil</h2>
+<a id="a43fe3ce5151256535286c5c41df20a0b" name="a43fe3ce5151256535286c5c41df20a0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43fe3ce5151256535286c5c41df20a0b">&#9670;&#160;</a></span>ReadUntil</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::ReadUntil) (<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::ReadUntil) (<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Read from the IO until the set of characters is recieved. </p>
+<p>Read until any stop character is received (size updated). </p>
 
 </div>
 </div>
-<a id="a641bda61680908a148ef1e4ea7aee271" name="a641bda61680908a148ef1e4ea7aee271"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a641bda61680908a148ef1e4ea7aee271">&#9670;&#160;</a></span>TryRead</h2>
+<a id="adfb28c312e7643c5d2c4384db717152f" name="adfb28c312e7643c5d2c4384db717152f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfb28c312e7643c5d2c4384db717152f">&#9670;&#160;</a></span>TryRead</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::TryRead) (<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::TryRead) (<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Try to read from the IO until timeout expires. </p>
+<p>Try to read with timeout; returns when data available or timeout. </p>
 
 </div>
 </div>
-<a id="a1f35aec741089c9758c928b08d3078c0" name="a1f35aec741089c9758c928b08d3078c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f35aec741089c9758c928b08d3078c0">&#9670;&#160;</a></span>TryReadUntil</h2>
+<a id="a4da388c7d2a387e66d9d6d0512c9d5e6" name="a4da388c7d2a387e66d9d6d0512c9d5e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4da388c7d2a387e66d9d6d0512c9d5e6">&#9670;&#160;</a></span>TryReadUntil</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::TryReadUntil) (<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::TryReadUntil) (<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Try to read from the IO until the set of characters is recieved. </p>
+<p>Try to read until stop character or timeout. </p>
 
 </div>
 </div>
-<a id="a04787d2bac7dd5995c9f4ab7f404e477" name="a04787d2bac7dd5995c9f4ab7f404e477"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04787d2bac7dd5995c9f4ab7f404e477">&#9670;&#160;</a></span>TryWrite</h2>
+<a id="a865bd8ff6341009a43d0e90372be4863" name="a865bd8ff6341009a43d0e90372be4863"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a865bd8ff6341009a43d0e90372be4863">&#9670;&#160;</a></span>TryWrite</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::TryWrite) (<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::TryWrite) (<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iTimeoutUs)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Try to write the specified number of bytes to the IO. </p>
+<p>Try to write with timeout; updates size with bytes written. </p>
 
 </div>
 </div>
-<a id="acb28c4fcfb0e8a0908d4219c1024a2e5" name="acb28c4fcfb0e8a0908d4219c1024a2e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb28c4fcfb0e8a0908d4219c1024a2e5">&#9670;&#160;</a></span>Write</h2>
+<a id="a978b3d9ae76477f7d0350bbce384035c" name="a978b3d9ae76477f7d0350bbce384035c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a978b3d9ae76477f7d0350bbce384035c">&#9670;&#160;</a></span>Write</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::Write) (<a class="el" href="async__io__api_8h.html#a4ed83fa7af5c75610348e02d9364d4aa">JUNO_ASYNC_IO_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_ASYNC_IO_API_TAG::Write) (<a class="el" href="async__io__api_8h.html#af40c7274bd40fb3f8acc7979c8c1b8eb">JUNO_ASYNC_IO_ROOT_T</a> *ptIo, const void *pvBuff, size_t *pzBuffSize)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Write the specified number of bytes to the IO. </p>
+<p>Write up to *pzBuffSize bytes; updates size with bytes written. </p>
 
 </div>
 </div>

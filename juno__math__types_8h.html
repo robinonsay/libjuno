@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -121,11 +121,13 @@ $(document).ready(function(){initNavTree('juno__math__types_8h.html',''); initRe
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">juno_math_types.h File Reference</div></div>
+  <div class="headertitle"><div class="title">juno_math_types.h File Reference<div class="ingroups"><a class="el" href="group__juno__math.html">Math Core</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Aggregated math type definitions (vectors, matrices, quaternions).  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="juno__vec__types_8h_source.html">juno_vec_types.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="juno__dyn__types_8h_source.html">juno_dyn_types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for juno_math_types.h:</div>
 <div class="dyncontent">
@@ -138,7 +140,14 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <p><a href="juno__math__types_8h_source.html">Go to the source code of this file.</a></p>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Aggregated math type definitions (vectors, matrices, quaternions). </p>
+<p>Convenience umbrella header that includes the structural math types from <code><a class="el" href="juno__vec__types_8h.html" title="Vector, matrix, and quaternion types and common result aliases.">juno_vec_types.h</a></code> (2D/3D/4D vectors in Cartesian/spherical/hyperspherical forms, matrices, and real quaternions).</p>
+<p>Prefer including this header when you need only the type definitions. If you also want the inline vector/quaternion operations, include <code><a class="el" href="juno__math_8h.html" title="Convenience header: math types plus inline vector/quaternion ops.">juno_math.h</a></code> instead, which pulls in both this header and <code><a class="el" href="juno__vec_8h.html" title="Inline vector and quaternion operations for Juno math types.">juno_vec.h</a></code>.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="juno__math__types_8h.html">juno/math/juno_math_types.h</a>&quot;</span></div>
+<div class="line"><span class="comment">// Access types like JUNO_VEC3_F64_T, JUNO_M4X4_F32_T, JUNO_RQUAT_F64_T</span></div>
+<div class="ttc" id="ajuno__math__types_8h_html"><div class="ttname"><a href="juno__math__types_8h.html">juno_math_types.h</a></div><div class="ttdoc">Aggregated math type definitions (vectors, matrices, quaternions).</div></div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

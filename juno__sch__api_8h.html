@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -129,6 +129,9 @@ $(document).ready(function(){initNavTree('juno__sch__api_8h.html',''); initResiz
   <div class="headertitle"><div class="title">juno_sch_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Cyclic executive (minor/major frame) scheduler API.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="app__api_8h_source.html">juno/app/app_api.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
@@ -149,24 +152,27 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a9a7dc74eca0809ed9540ee23a2ab432f" id="r_a9a7dc74eca0809ed9540ee23a2ab432f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__sch__api_8h.html#a9a7dc74eca0809ed9540ee23a2ab432f">JUNO_SCH_TABLE_NEW</a>(ptArrName,  zAppsPerMinorFrame,  zNumMinorFrames, ...)&#160;&#160;&#160;<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}</td></tr>
+<tr class="memitem:a9a7dc74eca0809ed9540ee23a2ab432f" id="r_a9a7dc74eca0809ed9540ee23a2ab432f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__sch__api_8h.html#a9a7dc74eca0809ed9540ee23a2ab432f">JUNO_SCH_TABLE_NEW</a>(ptArrName,  zAppsPerMinorFrame,  zNumMinorFrames, ...)&#160;&#160;&#160;<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}</td></tr>
+<tr class="memdesc:a9a7dc74eca0809ed9540ee23a2ab432f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare and initialize a schedule table array.  <br /></td></tr>
 <tr class="separator:a9a7dc74eca0809ed9540ee23a2ab432f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:af55499d9abdb16e56ab0bb07d149409b" id="r_af55499d9abdb16e56ab0bb07d149409b"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__SCH__API__TAG.html">JUNO_SCH_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__sch__api_8h.html#af55499d9abdb16e56ab0bb07d149409b">JUNO_SCH_API_T</a></td></tr>
 <tr class="separator:af55499d9abdb16e56ab0bb07d149409b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa60a7fd23b3e2c03882ddfe7acfd4dc8" id="r_aa60a7fd23b3e2c03882ddfe7acfd4dc8"><td class="memItemLeft" align="right" valign="top">typedef union JUNO_SCH_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__sch__api_8h.html#aa60a7fd23b3e2c03882ddfe7acfd4dc8">JUNO_SCH_T</a></td></tr>
-<tr class="separator:aa60a7fd23b3e2c03882ddfe7acfd4dc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13dc1c27c4d23a084a9d223e246ca74c" id="r_a13dc1c27c4d23a084a9d223e246ca74c"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_SCH_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__sch__api_8h.html#a13dc1c27c4d23a084a9d223e246ca74c">JUNO_SCH_ROOT_T</a></td></tr>
 <tr class="separator:a13dc1c27c4d23a084a9d223e246ca74c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad64f95eef60220a324b7c24a99b37c48" id="r_ad64f95eef60220a324b7c24a99b37c48"><td class="memItemLeft" align="right" valign="top">struct JUNO_SCH_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__sch__api_8h.html#ad64f95eef60220a324b7c24a99b37c48">JUNO_MODULE_ROOT</a> (<a class="el" href="juno__sch__api_8h.html#af55499d9abdb16e56ab0bb07d149409b">JUNO_SCH_API_T</a>, <a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime;<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> **ptArrSchTable;size_t zAppsPerMinorFrame;size_t zNumMinorFrames;<a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tMinorFramePeriod;)</td></tr>
-<tr class="separator:ad64f95eef60220a324b7c24a99b37c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7b854aad943d9ae9e996561201112c4" id="r_ab7b854aad943d9ae9e996561201112c4"><td class="memItemLeft" align="right" valign="top">struct JUNO_SCH_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__sch__api_8h.html#ab7b854aad943d9ae9e996561201112c4">JUNO_MODULE_ROOT</a> (<a class="el" href="juno__sch__api_8h.html#af55499d9abdb16e56ab0bb07d149409b">JUNO_SCH_API_T</a>, <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime;<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> **ptArrSchTable;size_t zAppsPerMinorFrame;size_t zNumMinorFrames;<a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tMinorFramePeriod;)</td></tr>
+<tr class="memdesc:ab7b854aad943d9ae9e996561201112c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scheduler root containing time source and flattened schedule table.  <br /></td></tr>
+<tr class="separator:ab7b854aad943d9ae9e996561201112c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Cyclic executive (minor/major frame) scheduler API. </p>
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a9a7dc74eca0809ed9540ee23a2ab432f" name="a9a7dc74eca0809ed9540ee23a2ab432f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9a7dc74eca0809ed9540ee23a2ab432f">&#9670;&#160;</a></span>JUNO_SCH_TABLE_NEW</h2>
 
@@ -200,10 +206,21 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> *ptArrName[zNumMinorFrames * zAppsPerMinorFrame] = {__VA_ARGS__}</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Declare and initialize a schedule table array. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptArrName</td><td>Variable name of the table array. </td></tr>
+    <tr><td class="paramname">zAppsPerMinorFrame</td><td>Number of slots per minor frame. </td></tr>
+    <tr><td class="paramname">zNumMinorFrames</td><td>Number of minor frames per major frame. </td></tr>
+    <tr><td class="paramname">...</td><td>Initializer list of JUNO_APP_ROOT_T* entries. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -219,7 +236,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_sch library API </p><dl class="section author"><dt>Author</dt><dd>Robin Onsay </dd></dl>
 
 </div>
 </div>
@@ -237,23 +253,9 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa60a7fd23b3e2c03882ddfe7acfd4dc8" name="aa60a7fd23b3e2c03882ddfe7acfd4dc8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa60a7fd23b3e2c03882ddfe7acfd4dc8">&#9670;&#160;</a></span>JUNO_SCH_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef union JUNO_SCH_TAG <a class="el" href="juno__sch__api_8h.html#aa60a7fd23b3e2c03882ddfe7acfd4dc8">JUNO_SCH_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ad64f95eef60220a324b7c24a99b37c48" name="ad64f95eef60220a324b7c24a99b37c48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad64f95eef60220a324b7c24a99b37c48">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
+<a id="ab7b854aad943d9ae9e996561201112c4" name="ab7b854aad943d9ae9e996561201112c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7b854aad943d9ae9e996561201112c4">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -267,7 +269,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime;<a class="el" href="app__api_8h.html#a1feffaa8786adfbedb4360bce1b1acca">JUNO_APP_T</a> **ptArrSchTable;size_t zAppsPerMinorFrame;size_t zNumMinorFrames;<a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tMinorFramePeriod;&#160;</td>
+          <td class="paramtype"><a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime;<a class="el" href="app__api_8h.html#af4d1371636773a3186696687c684db54">JUNO_APP_ROOT_T</a> **ptArrSchTable;size_t zAppsPerMinorFrame;size_t zNumMinorFrames;<a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tMinorFramePeriod;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -277,6 +279,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Scheduler root containing time source and flattened schedule table. </p>
 
 </div>
 </div>

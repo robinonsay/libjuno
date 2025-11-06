@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -128,12 +128,21 @@ $(document).ready(function(){initNavTree('log__api_8h.html',''); initResizable()
   <div class="headertitle"><div class="title">log_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
+
+<p>Minimal logging facade for embedded targets.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="macros_8h_source.html">juno/macros.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for log_api.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="log__api_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2log_2log__api_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="log__api_8h__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2log_2log__api_8hdep" alt=""/></div>
 </div>
 </div>
 <p><a href="log__api_8h_source.html">Go to the source code of this file.</a></p>
@@ -147,17 +156,21 @@ Data Structures</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:ab6441c7563bb6eca0f898fff16afc25d" id="r_ab6441c7563bb6eca0f898fff16afc25d"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__LOG__API__TAG.html">JUNO_LOG_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#ab6441c7563bb6eca0f898fff16afc25d">JUNO_LOG_API_T</a></td></tr>
 <tr class="separator:ab6441c7563bb6eca0f898fff16afc25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a7bd35ae829be3c9de8feba5da324cd" id="r_a2a7bd35ae829be3c9de8feba5da324cd"><td class="memItemLeft" align="right" valign="top">typedef union JUNO_LOG_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#a2a7bd35ae829be3c9de8feba5da324cd">JUNO_LOG_T</a></td></tr>
-<tr class="separator:a2a7bd35ae829be3c9de8feba5da324cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a006301174348e71fde021a376106f756" id="r_a006301174348e71fde021a376106f756"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_LOG_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#a006301174348e71fde021a376106f756">JUNO_LOG_ROOT_T</a></td></tr>
 <tr class="separator:a006301174348e71fde021a376106f756"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a52c35f569e1f7b84217442d9f9b0998b" id="r_a52c35f569e1f7b84217442d9f9b0998b"><td class="memItemLeft" align="right" valign="top">struct JUNO_LOG_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#a52c35f569e1f7b84217442d9f9b0998b">JUNO_MODULE_ROOT</a> (<a class="el" href="log__api_8h.html#ab6441c7563bb6eca0f898fff16afc25d">JUNO_LOG_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
+<tr class="memitem:a52c35f569e1f7b84217442d9f9b0998b" id="r_a52c35f569e1f7b84217442d9f9b0998b"><td class="memItemLeft" align="right" valign="top">struct JUNO_LOG_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#a52c35f569e1f7b84217442d9f9b0998b">JUNO_MODULE_ROOT</a> (<a class="el" href="log__api_8h.html#ab6441c7563bb6eca0f898fff16afc25d">JUNO_LOG_API_T</a>, <a class="el" href="group__juno__module.html#ga6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
 <tr class="separator:a52c35f569e1f7b84217442d9f9b0998b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8ae701345827e12c21e2547c1a230d2" id="r_af8ae701345827e12c21e2547c1a230d2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="log__api_8h.html#af8ae701345827e12c21e2547c1a230d2">JunoLog_LogInit</a> (<a class="el" href="log__api_8h.html#a006301174348e71fde021a376106f756">JUNO_LOG_ROOT_T</a> *ptLog, const <a class="el" href="log__api_8h.html#ab6441c7563bb6eca0f898fff16afc25d">JUNO_LOG_API_T</a> *ptApi, <a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
+<tr class="memdesc:af8ae701345827e12c21e2547c1a230d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a log instance with an API implementation and failure handler.  <br /></td></tr>
+<tr class="separator:af8ae701345827e12c21e2547c1a230d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Minimal logging facade for embedded targets. </p>
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> </p>
+</div><h2 class="groupheader">Typedef Documentation</h2>
 <a id="ab6441c7563bb6eca0f898fff16afc25d" name="ab6441c7563bb6eca0f898fff16afc25d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab6441c7563bb6eca0f898fff16afc25d">&#9670;&#160;</a></span>JUNO_LOG_API_T</h2>
 
@@ -169,7 +182,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_log library API </p><dl class="section author"><dt>Author</dt><dd>Robin Onsay </dd></dl>
 
 </div>
 </div>
@@ -181,20 +193,6 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">typedef struct JUNO_LOG_ROOT_TAG <a class="el" href="log__api_8h.html#a006301174348e71fde021a376106f756">JUNO_LOG_ROOT_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2a7bd35ae829be3c9de8feba5da324cd" name="a2a7bd35ae829be3c9de8feba5da324cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a7bd35ae829be3c9de8feba5da324cd">&#9670;&#160;</a></span>JUNO_LOG_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef union JUNO_LOG_TAG <a class="el" href="log__api_8h.html#a2a7bd35ae829be3c9de8feba5da324cd">JUNO_LOG_T</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -217,7 +215,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__juno__module.html#ga6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -227,6 +225,56 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8ae701345827e12c21e2547c1a230d2" name="af8ae701345827e12c21e2547c1a230d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8ae701345827e12c21e2547c1a230d2">&#9670;&#160;</a></span>JunoLog_LogInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoLog_LogInit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="log__api_8h.html#a006301174348e71fde021a376106f756">JUNO_LOG_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptLog</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="log__api_8h.html#ab6441c7563bb6eca0f898fff16afc25d">JUNO_LOG_API_T</a> *&#160;</td>
+          <td class="paramname"><em>ptApi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td>
+          <td class="paramname"><em>pfcnFailureHandler</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td>
+          <td class="paramname"><em>pvUserData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialize a log instance with an API implementation and failure handler. </p>
 
 </div>
 </div>

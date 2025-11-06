@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -131,27 +131,46 @@ $(document).ready(function(){initNavTree('structJUNO__I2C__IO__API__TAG.html',''
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a7ecc4bfa4758776e434e42d97fa7132c" id="r_a7ecc4bfa4758776e434e42d97fa7132c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__I2C__IO__API__TAG.html#a7ecc4bfa4758776e434e42d97fa7132c">Transfer</a> )(JUNO_I2C_IO_T *ptI2c, const <a class="el" href="i2c__io__api_8h.html#a9d4eb4bbde1b4309f50ce7b5facd7f75">JUNO_I2C_IO_MSG_T</a> *ptArrMsgs, size_t zMsgArrLen)</td></tr>
-<tr class="separator:a7ecc4bfa4758776e434e42d97fa7132c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1800e3e0bdd3883680f40db9bce63d52" id="r_a1800e3e0bdd3883680f40db9bce63d52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__I2C__IO__API__TAG.html#a1800e3e0bdd3883680f40db9bce63d52">Transfer</a> )(JUNO_I2C_IO_ROOT_T *ptI2c, const <a class="el" href="i2c__io__api_8h.html#a9d4eb4bbde1b4309f50ce7b5facd7f75">JUNO_I2C_IO_MSG_T</a> *ptArrMsgs, size_t zMsgArrLen)</td></tr>
+<tr class="memdesc:a1800e3e0bdd3883680f40db9bce63d52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an I2C transfer composed of one or more messages. Example usage:  <br /></td></tr>
+<tr class="separator:a1800e3e0bdd3883680f40db9bce63d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a7ecc4bfa4758776e434e42d97fa7132c" name="a7ecc4bfa4758776e434e42d97fa7132c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ecc4bfa4758776e434e42d97fa7132c">&#9670;&#160;</a></span>Transfer</h2>
+<a id="a1800e3e0bdd3883680f40db9bce63d52" name="a1800e3e0bdd3883680f40db9bce63d52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1800e3e0bdd3883680f40db9bce63d52">&#9670;&#160;</a></span>Transfer</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_I2C_IO_API_TAG::Transfer) (JUNO_I2C_IO_T *ptI2c, const <a class="el" href="i2c__io__api_8h.html#a9d4eb4bbde1b4309f50ce7b5facd7f75">JUNO_I2C_IO_MSG_T</a> *ptArrMsgs, size_t zMsgArrLen)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_I2C_IO_API_TAG::Transfer) (JUNO_I2C_IO_ROOT_T *ptI2c, const <a class="el" href="i2c__io__api_8h.html#a9d4eb4bbde1b4309f50ce7b5facd7f75">JUNO_I2C_IO_MSG_T</a> *ptArrMsgs, size_t zMsgArrLen)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">    Perform an I2C transfer.
-    A typical call would look like:
 
-    ```
-    ptApi-&gt;Transfer(ptI2c, JUNO_I2C_IO_TRANSFER{WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff))}, 1)
-</pre><p> OR JUNO_I2C_IO_MSG_T ptArrTransfer[] = JUNO_I2C_IO_TRANSFER{<a class="el" href="i2c__io__api_8h.html#aebcbf0ee0874bc10ff8f09d80c68a3c0">WriteMsg(0xFF, ptMyWriteBuff, sizeof(ptMyWriteBuff))</a>}; ptApi-&gt;Transfer(ptI2c, ptArrTransfer, sizeof(ptArrTransfer) / sizeof(ptArrTransfer[0])); ``` </p>
+<p>Perform an I2C transfer composed of one or more messages. Example usage: </p>
+<div class="fragment"><div class="line"><span class="comment">// Single message</span></div>
+<div class="line">ptApi-&gt;Transfer(ptI2c,</div>
+<div class="line">    <a class="code hl_define" href="i2c__io__api_8h.html#a1ae0ee515e47e8f74838d7c675288679">JUNO_I2C_IO_TRANSFER</a>(<a class="code hl_define" href="i2c__io__api_8h.html#aebcbf0ee0874bc10ff8f09d80c68a3c0">WriteMsg</a>(0xFF, ptMyWriteBuff, <span class="keyword">sizeof</span>(ptMyWriteBuff))), 1);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// OR, create an array of messages</span></div>
+<div class="line"><a class="code hl_union" href="unionJUNO__I2C__IO__MSG__TAG.html">JUNO_I2C_IO_MSG_T</a> ptArrTransfer[] = <a class="code hl_define" href="i2c__io__api_8h.html#a1ae0ee515e47e8f74838d7c675288679">JUNO_I2C_IO_TRANSFER</a>(</div>
+<div class="line">    <a class="code hl_define" href="i2c__io__api_8h.html#aebcbf0ee0874bc10ff8f09d80c68a3c0">WriteMsg</a>(0xFF, ptMyWriteBuff, <span class="keyword">sizeof</span>(ptMyWriteBuff)),</div>
+<div class="line">    <a class="code hl_define" href="i2c__io__api_8h.html#a32ba2488c58e4792c4d12d7585fbff58">ReadMsg</a>(0xFF, ptMyReadBuff, <span class="keyword">sizeof</span>(ptMyReadBuff))</div>
+<div class="line">);</div>
+<div class="line">ptApi-&gt;Transfer(ptI2c, ptArrTransfer, <span class="keyword">sizeof</span>(ptArrTransfer) / <span class="keyword">sizeof</span>(ptArrTransfer[0]));</div>
+<div class="ttc" id="ai2c__io__api_8h_html_a1ae0ee515e47e8f74838d7c675288679"><div class="ttname"><a href="i2c__io__api_8h.html#a1ae0ee515e47e8f74838d7c675288679">JUNO_I2C_IO_TRANSFER</a></div><div class="ttdeci">#define JUNO_I2C_IO_TRANSFER(...)</div><div class="ttdef"><b>Definition</b> i2c_io_api.h:109</div></div>
+<div class="ttc" id="ai2c__io__api_8h_html_a32ba2488c58e4792c4d12d7585fbff58"><div class="ttname"><a href="i2c__io__api_8h.html#a32ba2488c58e4792c4d12d7585fbff58">ReadMsg</a></div><div class="ttdeci">#define ReadMsg(iAddr, pcBuff, zBuffSize)</div><div class="ttdef"><b>Definition</b> i2c_io_api.h:85</div></div>
+<div class="ttc" id="ai2c__io__api_8h_html_aebcbf0ee0874bc10ff8f09d80c68a3c0"><div class="ttname"><a href="i2c__io__api_8h.html#aebcbf0ee0874bc10ff8f09d80c68a3c0">WriteMsg</a></div><div class="ttdeci">#define WriteMsg(iAddr, pvBuff, zBuffSize)</div><div class="ttdef"><b>Definition</b> i2c_io_api.h:96</div></div>
+<div class="ttc" id="aunionJUNO__I2C__IO__MSG__TAG_html"><div class="ttname"><a href="unionJUNO__I2C__IO__MSG__TAG.html">JUNO_I2C_IO_MSG_TAG</a></div><div class="ttdef"><b>Definition</b> i2c_io_api.h:79</div></div>
+</div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptI2c</td><td>I2C module instance. </td></tr>
+    <tr><td class="paramname">ptArrMsgs</td><td>Pointer to message array created with <a class="el" href="i2c__io__api_8h.html#a1ae0ee515e47e8f74838d7c675288679">JUNO_I2C_IO_TRANSFER(...)</a>. </td></tr>
+    <tr><td class="paramname">zMsgArrLen</td><td>Number of messages in the array. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

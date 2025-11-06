@@ -8,5 +8,5 @@ digraph "JUNO_VEC3_F64_TAG"
   Node2 -> Node1 [id="edge1_Node000001_Node000002",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tCart",fontcolor="grey" ];
   Node2 [id="Node000002",label="JUNO_VEC3_F64_CART_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__VEC3__F64__CART__TAG.html",tooltip="3D vector in Cartesian coordinates (double precision)."];
   Node3 -> Node1 [id="edge2_Node000001_Node000003",dir="back",color="darkorchid3",style="dashed",tooltip=" ",label=" tSph",fontcolor="grey" ];
-  Node3 [id="Node000003",label="JUNO_VEC3_F64_SPH_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__VEC3__F64__SPH__TAG.html",tooltip="3D vector in spherical coordinates (double precision)."];
+  Node3 [id="Node000003",label="JUNO_VEC3_F64_SPH_TAG",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structJUNO__VEC3__F64__SPH__TAG.html",tooltip="3D vector in spherical coordinates (float precision)."];
 }

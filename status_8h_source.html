@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -145,59 +145,59 @@ $(document).ready(function(){initNavTree('status_8h_source.html',''); initResiza
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">    The above copyright notice and this permission notice shall be</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">    included in all copies or substantial portions of the Software.</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">*/</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifndef JUNO_STATUS_H</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#define JUNO_STATUS_H</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">   23</a></span><span class="keyword">typedef</span> int32_t <a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">   24</a></span><span class="preprocessor">#define JUNO_STATUS_SUCCESS             0</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="status_8h.html#a07ec979dfc10514575e99ff44bb0c074">   25</a></span><span class="preprocessor">#define JUNO_STATUS_ERR                 1</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">   26</a></span><span class="preprocessor">#define JUNO_STATUS_NULLPTR_ERROR       2</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="status_8h.html#a5800687dfa1f01988ac8740fc1cb1121">   27</a></span><span class="preprocessor">#define JUNO_STATUS_MEMALLOC_ERROR      3</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="status_8h.html#ae396a6adc9c70494bf15a1ffc33565dc">   28</a></span><span class="preprocessor">#define JUNO_STATUS_MEMFREE_ERROR       4</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="status_8h.html#a3da532852cd9b246326d832e3ae265a1">   29</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_TYPE_ERROR  5</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="status_8h.html#a9b197e90ef890ed7401f334f897ca007">   30</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_SIZE_ERROR  6</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="status_8h.html#a33787f11cbb460dff93b43022629c900">   31</a></span><span class="preprocessor">#define JUNO_STATUS_TABLE_FULL_ERROR    7</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="status_8h.html#a07fa62e4e2f3ce807233b7acc9d06039">   32</a></span><span class="preprocessor">#define JUNO_STATUS_DNE_ERROR           8</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="status_8h.html#a4c47d741d50c36723478ae465ee56f6c">   33</a></span><span class="preprocessor">#define JUNO_STATUS_FILE_ERROR          9</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="status_8h.html#aadd03e9716bee770daf8354e4f3b4c45">   34</a></span><span class="preprocessor">#define JUNO_STATUS_READ_ERROR          10</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="status_8h.html#a5e50e1bd0fe5f0fcd3e96ac962d69aa4">   35</a></span><span class="preprocessor">#define JUNO_STATUS_WRITE_ERROR         11</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="status_8h.html#acf882ada02e2ec41ba4f36637e428d85">   36</a></span><span class="preprocessor">#define JUNO_STATUS_CRC_ERROR           12</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="status_8h.html#ae749aa5b7fe2239870653ede604b8454">   37</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_REF_ERROR   13</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="status_8h.html#a80c4d7e2489fc0a31f4f912cc47b39fc">   38</a></span><span class="preprocessor">#define JUNO_STATUS_REF_IN_USE_ERROR    14</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="status_8h.html#afe7ccc12aa36bcd25aa8ac849915b5d8">   39</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_DATA_ERROR  15</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="status_8h.html#aee0ae2477ea802ba303bf857d076a208">   40</a></span><span class="preprocessor">#define JUNO_STATUS_TIMEOUT_ERROR       16</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">   42</a></span><span class="keyword">typedef</span> <span class="keywordtype">void</span> <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">   43</a></span><span class="keyword">typedef</span> void (*<a class="code hl_typedef" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>)(<a class="code hl_typedef" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcCustomMessage, <a class="code hl_typedef" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#ifndef JUNO_FAIL_MESSAGE_LEN</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="status_8h.html#ad7f937d05d6c3595f49afb38c3d0777b">   46</a></span><span class="preprocessor">#define JUNO_FAIL_MESSAGE_LEN    256</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#endif</span></div>
-<div class="foldopen" id="foldopen00048" data-start="" data-end="">
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="status_8h.html#a3dafe1f7315674337ee37dfd077c18d1">   48</a></span><span class="preprocessor">#define JUNO_FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)\</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#ifndef JUNO_STATUS_H</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#define JUNO_STATUS_H</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">   49</a></span><span class="keyword">typedef</span> int32_t <a class="code hl_typedef" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gad89a3ea5be5fc21a4b97e2b1e761c084">   56</a></span><span class="preprocessor">#define JUNO_STATUS_SUCCESS             0</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga07ec979dfc10514575e99ff44bb0c074">   58</a></span><span class="preprocessor">#define JUNO_STATUS_ERR                 1</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga4ae7478f0e9875995d1e1430c39752ff">   60</a></span><span class="preprocessor">#define JUNO_STATUS_NULLPTR_ERROR       2</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga5800687dfa1f01988ac8740fc1cb1121">   62</a></span><span class="preprocessor">#define JUNO_STATUS_MEMALLOC_ERROR      3</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gae396a6adc9c70494bf15a1ffc33565dc">   64</a></span><span class="preprocessor">#define JUNO_STATUS_MEMFREE_ERROR       4</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga3da532852cd9b246326d832e3ae265a1">   66</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_TYPE_ERROR  5</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga9b197e90ef890ed7401f334f897ca007">   68</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_SIZE_ERROR  6</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga33787f11cbb460dff93b43022629c900">   70</a></span><span class="preprocessor">#define JUNO_STATUS_TABLE_FULL_ERROR    7</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga07fa62e4e2f3ce807233b7acc9d06039">   72</a></span><span class="preprocessor">#define JUNO_STATUS_DNE_ERROR           8</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga4c47d741d50c36723478ae465ee56f6c">   74</a></span><span class="preprocessor">#define JUNO_STATUS_FILE_ERROR          9</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gaadd03e9716bee770daf8354e4f3b4c45">   76</a></span><span class="preprocessor">#define JUNO_STATUS_READ_ERROR          10</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga5e50e1bd0fe5f0fcd3e96ac962d69aa4">   78</a></span><span class="preprocessor">#define JUNO_STATUS_WRITE_ERROR         11</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gacf882ada02e2ec41ba4f36637e428d85">   80</a></span><span class="preprocessor">#define JUNO_STATUS_CRC_ERROR           12</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gae749aa5b7fe2239870653ede604b8454">   82</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_REF_ERROR   13</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#ga80c4d7e2489fc0a31f4f912cc47b39fc">   84</a></span><span class="preprocessor">#define JUNO_STATUS_REF_IN_USE_ERROR    14</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gafe7ccc12aa36bcd25aa8ac849915b5d8">   86</a></span><span class="preprocessor">#define JUNO_STATUS_INVALID_DATA_ERROR  15</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gaee0ae2477ea802ba303bf857d076a208">   88</a></span><span class="preprocessor">#define JUNO_STATUS_TIMEOUT_ERROR       16</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="group__juno__status__codes.html#gaf19acf3477a0e3a9fe75e793f482d3cd">   90</a></span><span class="preprocessor">#define JUNO_STATUS_OOB_ERROR           17</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">   96</a></span><span class="keyword">typedef</span> <span class="keywordtype">void</span> <a class="code hl_typedef" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">  104</a></span><span class="keyword">typedef</span> void (*<a class="code hl_typedef" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>)(<a class="code hl_typedef" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> tStatus, <span class="keyword">const</span> <span class="keywordtype">char</span> *pcCustomMessage, <a class="code hl_typedef" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="preprocessor">#ifndef JUNO_FAIL_MESSAGE_LEN</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="group__juno__status.html#gad7f937d05d6c3595f49afb38c3d0777b">  110</a></span><span class="preprocessor">#define JUNO_FAIL_MESSAGE_LEN    256</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="preprocessor">#endif</span></div>
+<div class="foldopen" id="foldopen00123" data-start="" data-end="">
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="group__juno__status.html#ga3dafe1f7315674337ee37dfd077c18d1">  123</a></span><span class="preprocessor">#define JUNO_FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage) \</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}</span></div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="foldopen" id="foldopen00051" data-start="" data-end="">
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="status_8h.html#a45c2dc85533ae2d7cb60ba543390afee">   51</a></span><span class="preprocessor">#define JUNO_FAIL_MODULE(tStatus, ptMod, pcMessage)\</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">if(ptMod &amp;&amp; ptMod-&gt;JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER){ptMod-&gt;JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER(tStatus, pcMessage, ptMod-&gt;JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA);}</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="foldopen" id="foldopen00138" data-start="" data-end="">
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="group__juno__status.html#ga45c2dc85533ae2d7cb60ba543390afee">  138</a></span><span class="preprocessor">#define JUNO_FAIL_MODULE(tStatus, ptMod, pcMessage) \</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="preprocessor">if(ptMod &amp;&amp; ptMod-&gt;JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER){ptMod-&gt;JUNO_MODULE_SUPER.JUNO_FAILURE_HANDLER(tStatus, pcMessage, ptMod-&gt;JUNO_MODULE_SUPER.JUNO_FAILURE_USER_DATA);}</span></div>
 </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="foldopen" id="foldopen00054" data-start="" data-end="">
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="status_8h.html#ae4d65ea2d69a99959df5bfe8517b1ced">   54</a></span><span class="preprocessor">#define JUNO_FAIL_ROOT(tStatus, ptMod, pcMessage)\</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">if(ptMod &amp;&amp; ptMod-&gt;JUNO_FAILURE_HANDLER){ptMod-&gt;JUNO_FAILURE_HANDLER(tStatus, pcMessage, ptMod-&gt;JUNO_FAILURE_USER_DATA);}</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="foldopen" id="foldopen00149" data-start="" data-end="">
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="group__juno__status.html#gae4d65ea2d69a99959df5bfe8517b1ced">  149</a></span><span class="preprocessor">#define JUNO_FAIL_ROOT(tStatus, ptMod, pcMessage) \</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="preprocessor">if(ptMod &amp;&amp; ptMod-&gt;JUNO_FAILURE_HANDLER){ptMod-&gt;JUNO_FAILURE_HANDLER(tStatus, pcMessage, ptMod-&gt;JUNO_FAILURE_USER_DATA);}</span></div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astatus_8h_html_a0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> status.h:43</div></div>
-<div class="ttc" id="astatus_8h_html_a37f8e6b135f0c1a21a3a34b19d1772aa"><div class="ttname"><a href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></div><div class="ttdeci">int32_t JUNO_STATUS_T</div><div class="ttdef"><b>Definition</b> status.h:23</div></div>
-<div class="ttc" id="astatus_8h_html_af575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdef"><b>Definition</b> status.h:42</div></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>}</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="agroup__juno__status_html_ga0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdoc">Failure handler callback signature.</div><div class="ttdef"><b>Definition</b> status.h:104</div></div>
+<div class="ttc" id="agroup__juno__status_html_ga37f8e6b135f0c1a21a3a34b19d1772aa"><div class="ttname"><a href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></div><div class="ttdeci">int32_t JUNO_STATUS_T</div><div class="ttdoc">Canonical status type for LibJuno functions.</div><div class="ttdef"><b>Definition</b> status.h:49</div></div>
+<div class="ttc" id="agroup__juno__status_html_gaf575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdoc">Opaque user data type for failure callbacks.</div><div class="ttdef"><b>Definition</b> status.h:96</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

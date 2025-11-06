@@ -1,13 +1,11 @@
 var juno__buff_8hpp =
 [
-    [ "Dequeue", "juno__buff_8hpp.html#a3a176a29f9d5c200b062b87e4c374c33", null ],
-    [ "Enqueue", "juno__buff_8hpp.html#a09ed0df09c6705cb3a8091eba519159e", null ],
-    [ "JUNO_MODULE", "juno__buff_8hpp.html#a7f33cc33df6e92d31b15d25de5967765", null ],
-    [ "JUNO_MODULE", "juno__buff_8hpp.html#a0fba3aaf41a11d1bae5c6b304295b3af", null ],
-    [ "JUNO_MODULE_DERIVE", "juno__buff_8hpp.html#a1150e54ccbfc574dbcca8d0e168085b8", null ],
-    [ "JUNO_MODULE_DERIVE", "juno__buff_8hpp.html#aa0710c8f1dd599657d99cc6e942c6845", null ],
-    [ "Pop", "juno__buff_8hpp.html#ab21dceec34890eec7680d858674b951e", null ],
-    [ "Push", "juno__buff_8hpp.html#a34bea065cb89b753adba210e8b5ff457", null ],
-    [ "QueuePeek", "juno__buff_8hpp.html#ab15a2393fc5a2ef5ef896d015acec663", null ],
-    [ "StackPeek", "juno__buff_8hpp.html#ade40a21333652ded7eed09ade666118b", null ]
+    [ "Dequeue", "juno__buff_8hpp.html#a3d8caeef078d9f22a1b79d9592ac6e52", null ],
+    [ "Enqueue", "juno__buff_8hpp.html#a41121c4c2d402b6ef2db350fa82a1140", null ],
+    [ "JUNO_MODULE_DERIVE", "juno__buff_8hpp.html#a598c7e35e02eabe3976c4df73f4ae0ce", null ],
+    [ "JUNO_MODULE_DERIVE", "juno__buff_8hpp.html#acc50966045668aecf2102a642a6cc113", null ],
+    [ "Pop", "juno__buff_8hpp.html#ab0170beddb3d9828d329d5dcf8c8d3a5", null ],
+    [ "Push", "juno__buff_8hpp.html#a98eca69a6a189d91f31dfbbbe5d18201", null ],
+    [ "QueuePeek", "juno__buff_8hpp.html#ad3f08e8522eefa923a6d28f34934921f", null ],
+    [ "StackPeek", "juno__buff_8hpp.html#a9d92a41295c33914fa2493f341e02ad2", null ]
 ];

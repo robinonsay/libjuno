@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -127,6 +127,9 @@ $(document).ready(function(){initNavTree('unionJUNO__VEC4__F32__TAG.html',''); i
 </div><!--header-->
 <div class="contents">
 
+<p>4D vector union supporting Cartesian, hyperspherical, and array access (float32 precision).  
+ <a href="unionJUNO__VEC4__F32__TAG.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="juno__vec__types_8h_source.html">juno_vec_types.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for JUNO_VEC4_F32_TAG:</div>
@@ -143,7 +146,14 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a49439c1b62371c36f3d0104a2f33a96b" id="r_a49439c1b62371c36f3d0104a2f33a96b"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionJUNO__VEC4__F32__TAG.html#a49439c1b62371c36f3d0104a2f33a96b">arr</a> [4]</td></tr>
 <tr class="separator:a49439c1b62371c36f3d0104a2f33a96b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>4D vector union supporting Cartesian, hyperspherical, and array access (float32 precision). </p>
+<ul>
+<li>tCart: Cartesian form.</li>
+<li>tSph: Hyperspherical form.</li>
+<li>arr: Raw component array [0]=x/r, [1]=y/phi, [2]=z/theta, [3]=w/rho. </li>
+</ul>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a id="a49439c1b62371c36f3d0104a2f33a96b" name="a49439c1b62371c36f3d0104a2f33a96b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49439c1b62371c36f3d0104a2f33a96b">&#9670;&#160;</a></span>arr</h2>
 
@@ -185,7 +195,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Spherical coordinates. </p>
+<p>Hyperspherical coordinates. </p>
 
 </div>
 </div>

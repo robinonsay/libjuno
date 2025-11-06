@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['juno_20hash_20module_20beta_0',['Juno Hash Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2hash_2README.html',1,'']]],
-  ['juno_20map_20module_20beta_1',['Juno Map Module (Beta)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2map_2README.html',1,'']]],
-  ['juno_20memory_20module_2',['Juno Memory Module',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html',1,'']]]
+  ['libjuno_0',['LibJuno',['../index.html',1,'']]],
+  ['libjuno_20examples_1',['LibJuno Examples',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html',1,'']]],
+  ['libjuno_20module_20system_20dependency_20injection_2',['LibJuno Module System &amp; Dependency Injection',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html',1,'']]],
+  ['libjuno_20tutorial_3',['LibJuno Tutorial',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html',1,'']]]
 ];

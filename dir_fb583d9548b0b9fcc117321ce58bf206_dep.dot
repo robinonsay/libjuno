@@ -7,6 +7,8 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/ds"
   compound=true
   subgraph clusterdir_366da5caa8e7ec3e54d94764b6f022bc {
     graph [ bgcolor="#edf0f7", pencolor="grey50", label="juno", fontname=Helvetica,fontsize=10 style="filled,dashed", URL="dir_366da5caa8e7ec3e54d94764b6f022bc.html",tooltip=""]
+  dir_0ab7105f8cccca84cc3ec63bc4b5970d [label="memory", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_0ab7105f8cccca84cc3ec63bc4b5970d.html",tooltip=""];
   dir_fb583d9548b0b9fcc117321ce58bf206 [label="ds", fillcolor="#edf0f7", color="grey25", style="filled,bold", URL="dir_fb583d9548b0b9fcc117321ce58bf206.html",tooltip=""];
   }
+  dir_fb583d9548b0b9fcc117321ce58bf206->dir_0ab7105f8cccca84cc3ec63bc4b5970d [headlabel="4", labeldistance=1.5 headhref="dir_000003_000016.html" href="dir_000003_000016.html" color="steelblue1" fontcolor="steelblue1"];
 }

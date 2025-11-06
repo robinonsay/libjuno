@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -127,6 +127,9 @@ $(document).ready(function(){initNavTree('crc_8h.html',''); initResizable(); });
   <div class="headertitle"><div class="title">crc.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>CRC update routines (ARC, BinHex, CCITT, CCITT32, Kermit, ZIP).  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stddef.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -144,6 +147,27 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a433468a6dfe3d9560452e392ec78bd51" id="r_a433468a6dfe3d9560452e392ec78bd51"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a433468a6dfe3d9560452e392ec78bd51">JUNO_ARC_CRC_INIT</a>&#160;&#160;&#160;(0)</td></tr>
+<tr class="memdesc:a433468a6dfe3d9560452e392ec78bd51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial seed for CRC-16/ARC (IBM-16) computations.  <br /></td></tr>
+<tr class="separator:a433468a6dfe3d9560452e392ec78bd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb7baba5bdfd1077f9a380c1da6b9c9e" id="r_acb7baba5bdfd1077f9a380c1da6b9c9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#acb7baba5bdfd1077f9a380c1da6b9c9e">JUNO_BINHEX_CRC_INIT</a>&#160;&#160;&#160;(0)</td></tr>
+<tr class="memdesc:acb7baba5bdfd1077f9a380c1da6b9c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial seed for BinHex 16-bit CRC computations.  <br /></td></tr>
+<tr class="separator:acb7baba5bdfd1077f9a380c1da6b9c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27394975e5ac30d10a40efcab948c4ab" id="r_a27394975e5ac30d10a40efcab948c4ab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a27394975e5ac30d10a40efcab948c4ab">JUNO_CCITT_CRC_INIT</a>&#160;&#160;&#160;(-1)</td></tr>
+<tr class="memdesc:a27394975e5ac30d10a40efcab948c4ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial seed for CRC-16/CCITT computations (0xFFFF).  <br /></td></tr>
+<tr class="separator:a27394975e5ac30d10a40efcab948c4ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00959f2986e7a8e12863c70c718d920f" id="r_a00959f2986e7a8e12863c70c718d920f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a00959f2986e7a8e12863c70c718d920f">JUNO_CCITT32_CRC_INIT</a>&#160;&#160;&#160;(-1)</td></tr>
+<tr class="memdesc:a00959f2986e7a8e12863c70c718d920f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial seed for 32-bit CCITT-style CRC computations (0xFFFFFFFF).  <br /></td></tr>
+<tr class="separator:a00959f2986e7a8e12863c70c718d920f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebebe028705358ba9a347fc317f75c60" id="r_aebebe028705358ba9a347fc317f75c60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#aebebe028705358ba9a347fc317f75c60">JUNO_KERMIT_CRC_INIT</a>&#160;&#160;&#160;(0)</td></tr>
+<tr class="memdesc:aebebe028705358ba9a347fc317f75c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial seed for CRC-16/KERMIT computations.  <br /></td></tr>
+<tr class="separator:aebebe028705358ba9a347fc317f75c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a898fcba043598d58c4e1801191e767cb" id="r_a898fcba043598d58c4e1801191e767cb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a898fcba043598d58c4e1801191e767cb">JUNO_ZIP_CRC_INIT</a>&#160;&#160;&#160;(-1)</td></tr>
+<tr class="memdesc:a898fcba043598d58c4e1801191e767cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial seed for ZIP/PKZIP CRC-32 computations (0xFFFFFFFF).  <br /></td></tr>
+<tr class="separator:a898fcba043598d58c4e1801191e767cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Internal masks (implementation detail)</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Bit masks used by table-driven CRC update routines. </p>
+</div></td></tr>
 <tr class="memitem:ab317f0d06f885fa845cdc2ece30c9c08" id="r_ab317f0d06f885fa845cdc2ece30c9c08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#ab317f0d06f885fa845cdc2ece30c9c08">M1_16</a>&#160;&#160;&#160;0xff</td></tr>
 <tr class="separator:ab317f0d06f885fa845cdc2ece30c9c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a095a7e7d946ff357f1c7a3de1fb5318e" id="r_a095a7e7d946ff357f1c7a3de1fb5318e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a095a7e7d946ff357f1c7a3de1fb5318e">M2_16</a>&#160;&#160;&#160;0xff00</td></tr>
@@ -152,35 +176,31 @@ Macros</h2></td></tr>
 <tr class="separator:ada788445fe2084948f3ec0f5e10b2afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac35ec6bd37c71fc6febc26afe5431252" id="r_ac35ec6bd37c71fc6febc26afe5431252"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#ac35ec6bd37c71fc6febc26afe5431252">M2_32</a>&#160;&#160;&#160;0xffffff00</td></tr>
 <tr class="separator:ac35ec6bd37c71fc6febc26afe5431252"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433468a6dfe3d9560452e392ec78bd51" id="r_a433468a6dfe3d9560452e392ec78bd51"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a433468a6dfe3d9560452e392ec78bd51">JUNO_ARC_CRC_INIT</a>&#160;&#160;&#160;(0)</td></tr>
-<tr class="separator:a433468a6dfe3d9560452e392ec78bd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb7baba5bdfd1077f9a380c1da6b9c9e" id="r_acb7baba5bdfd1077f9a380c1da6b9c9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#acb7baba5bdfd1077f9a380c1da6b9c9e">JUNO_BINHEX_CRC_INIT</a>&#160;&#160;&#160;(0)</td></tr>
-<tr class="separator:acb7baba5bdfd1077f9a380c1da6b9c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27394975e5ac30d10a40efcab948c4ab" id="r_a27394975e5ac30d10a40efcab948c4ab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a27394975e5ac30d10a40efcab948c4ab">JUNO_CCITT_CRC_INIT</a>&#160;&#160;&#160;(-1)</td></tr>
-<tr class="separator:a27394975e5ac30d10a40efcab948c4ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00959f2986e7a8e12863c70c718d920f" id="r_a00959f2986e7a8e12863c70c718d920f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a00959f2986e7a8e12863c70c718d920f">JUNO_CCITT32_CRC_INIT</a>&#160;&#160;&#160;(-1)</td></tr>
-<tr class="separator:a00959f2986e7a8e12863c70c718d920f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebebe028705358ba9a347fc317f75c60" id="r_aebebe028705358ba9a347fc317f75c60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#aebebe028705358ba9a347fc317f75c60">JUNO_KERMIT_CRC_INIT</a>&#160;&#160;&#160;(0)</td></tr>
-<tr class="separator:aebebe028705358ba9a347fc317f75c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a898fcba043598d58c4e1801191e767cb" id="r_a898fcba043598d58c4e1801191e767cb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a898fcba043598d58c4e1801191e767cb">JUNO_ZIP_CRC_INIT</a>&#160;&#160;&#160;(-1)</td></tr>
-<tr class="separator:a898fcba043598d58c4e1801191e767cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aab923f1b240886f9d39c82768c76c9cd" id="r_aab923f1b240886f9d39c82768c76c9cd"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#aab923f1b240886f9d39c82768c76c9cd">Juno_CrcArcUpdate</a> (uint16_t iCrc, const void *pcData, size_t zDataSize)</td></tr>
+<tr class="memdesc:aab923f1b240886f9d39c82768c76c9cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update ARC CRC with new data.  <br /></td></tr>
 <tr class="separator:aab923f1b240886f9d39c82768c76c9cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a835d961b72a12364ef0530570e6ea8ef" id="r_a835d961b72a12364ef0530570e6ea8ef"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a835d961b72a12364ef0530570e6ea8ef">Juno_CrcBinhexUpdate</a> (uint16_t iCrc, const void *pcData, size_t zDataSize)</td></tr>
+<tr class="memdesc:a835d961b72a12364ef0530570e6ea8ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update BinHex CRC with new data.  <br /></td></tr>
 <tr class="separator:a835d961b72a12364ef0530570e6ea8ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a969509a6c7fec9019121f57b8b89e99f" id="r_a969509a6c7fec9019121f57b8b89e99f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a969509a6c7fec9019121f57b8b89e99f">Juno_CrcCcittUpdate</a> (uint16_t iCrc, const void *pcData, size_t zDataSize)</td></tr>
+<tr class="memdesc:a969509a6c7fec9019121f57b8b89e99f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update CCITT CRC (16-bit) with new data.  <br /></td></tr>
 <tr class="separator:a969509a6c7fec9019121f57b8b89e99f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e868dd96f542f42ecad980ad7e345ee" id="r_a4e868dd96f542f42ecad980ad7e345ee"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a4e868dd96f542f42ecad980ad7e345ee">Juno_CrcCcitt32Update</a> (uint32_t iCrc, const void *pcData, size_t zDataSize)</td></tr>
+<tr class="memdesc:a4e868dd96f542f42ecad980ad7e345ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update CCITT32 CRC (32-bit) with new data.  <br /></td></tr>
 <tr class="separator:a4e868dd96f542f42ecad980ad7e345ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f8424f662028c0a7a4e264d96b62ca7" id="r_a1f8424f662028c0a7a4e264d96b62ca7"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a1f8424f662028c0a7a4e264d96b62ca7">Juno_CrcKermitUpdate</a> (uint32_t iCrc, const void *pcData, size_t zDataSize)</td></tr>
-<tr class="separator:a1f8424f662028c0a7a4e264d96b62ca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaede9fca81f2fdb320f8502ffb804983" id="r_aaede9fca81f2fdb320f8502ffb804983"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#aaede9fca81f2fdb320f8502ffb804983">Juno_CrcKermitUpdate</a> (uint16_t iCrc, const void *pcData, size_t zDataSize)</td></tr>
+<tr class="memdesc:aaede9fca81f2fdb320f8502ffb804983"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update Kermit CRC with new data.  <br /></td></tr>
+<tr class="separator:aaede9fca81f2fdb320f8502ffb804983"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0aa54f766ef152dc09579979a81d59da" id="r_a0aa54f766ef152dc09579979a81d59da"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crc_8h.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a> (uint32_t iCrc, const void *pcData, size_t zDataSize)</td></tr>
+<tr class="memdesc:a0aa54f766ef152dc09579979a81d59da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update ZIP CRC (CRC-32) with new data.  <br /></td></tr>
 <tr class="separator:a0aa54f766ef152dc09579979a81d59da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>CRC update routines (ARC, BinHex, CCITT, CCITT32, Kermit, ZIP). </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a433468a6dfe3d9560452e392ec78bd51" name="a433468a6dfe3d9560452e392ec78bd51"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a433468a6dfe3d9560452e392ec78bd51">&#9670;&#160;</a></span>JUNO_ARC_CRC_INIT</h2>
 
@@ -192,6 +212,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initial seed for CRC-16/ARC (IBM-16) computations. </p>
+<p>Expands to 0 (all zeros). Use as the first <code>iCrc</code> value when starting a new ARC CRC computation. </p>
 
 </div>
 </div>
@@ -207,6 +230,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Initial seed for BinHex 16-bit CRC computations. </p>
+<p>Expands to 0 (all zeros). Use as the first <code>iCrc</code> value for BinHex. </p>
+
 </div>
 </div>
 <a id="a00959f2986e7a8e12863c70c718d920f" name="a00959f2986e7a8e12863c70c718d920f"></a>
@@ -220,6 +246,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initial seed for 32-bit CCITT-style CRC computations (0xFFFFFFFF). </p>
+<p>Expands to -1 (all ones) as a C integer literal; when passed to the 32-bit function parameter it yields 0xFFFFFFFF. Use as the first <code>iCrc</code> value when starting a new CCITT32 computation. </p>
 
 </div>
 </div>
@@ -235,6 +264,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Initial seed for CRC-16/CCITT computations (0xFFFF). </p>
+<p>Expands to -1 (all ones) as a C integer literal; when passed to the 16-bit function parameter it yields 0xFFFF. Use as the first <code>iCrc</code> value when starting a new CCITT CRC computation. </p>
+
 </div>
 </div>
 <a id="aebebe028705358ba9a347fc317f75c60" name="aebebe028705358ba9a347fc317f75c60"></a>
@@ -248,6 +280,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initial seed for CRC-16/KERMIT computations. </p>
+<p>Expands to 0 (all zeros). Use as the first <code>iCrc</code> value for Kermit. </p>
 
 </div>
 </div>
@@ -263,6 +298,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Initial seed for ZIP/PKZIP CRC-32 computations (0xFFFFFFFF). </p>
+<p>Expands to -1 (all ones) as a C integer literal; when passed to the 32-bit function parameter it yields 0xFFFFFFFF. Use as the first <code>iCrc</code> value when starting a new ZIP CRC computation. </p>
+
 </div>
 </div>
 <a id="ab317f0d06f885fa845cdc2ece30c9c08" name="ab317f0d06f885fa845cdc2ece30c9c08"></a>
@@ -276,6 +314,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Low byte mask for 16-bit CRC. </p>
 
 </div>
 </div>
@@ -290,6 +329,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Low word mask for 32-bit CRC. </p>
 
 </div>
 </div>
@@ -304,6 +344,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>High byte mask for 16-bit CRC. </p>
 
 </div>
 </div>
@@ -318,6 +359,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>High word mask for 32-bit CRC. </p>
 
 </div>
 </div>
@@ -354,6 +396,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Update ARC CRC with new data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iCrc</td><td>Running CRC value (use JUNO_ARC_CRC_INIT for first chunk). </td></tr>
+    <tr><td class="paramname">pcData</td><td>Pointer to data buffer (can be NULL when <code>zDataSize</code> is 0). </td></tr>
+    <tr><td class="paramname">zDataSize</td><td>Size of data buffer in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Updated CRC value; returns 0 when <code>pcData</code> is NULL or <code>zDataSize</code> is 0. </dd></dl>
+
 </div>
 </div>
 <a id="a835d961b72a12364ef0530570e6ea8ef" name="a835d961b72a12364ef0530570e6ea8ef"></a>
@@ -387,6 +440,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Update BinHex CRC with new data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iCrc</td><td>Running CRC value (use JUNO_BINHEX_CRC_INIT initially). </td></tr>
+    <tr><td class="paramname">pcData</td><td>Pointer to data buffer (can be NULL when <code>zDataSize</code> is 0). </td></tr>
+    <tr><td class="paramname">zDataSize</td><td>Size of data buffer in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Updated CRC value; returns 0 when <code>pcData</code> is NULL or <code>zDataSize</code> is 0. </dd></dl>
 
 </div>
 </div>
@@ -422,6 +486,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Update CCITT32 CRC (32-bit) with new data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iCrc</td><td>Running CRC value (use JUNO_CCITT32_CRC_INIT initially). </td></tr>
+    <tr><td class="paramname">pcData</td><td>Pointer to data buffer (can be NULL when <code>zDataSize</code> is 0). </td></tr>
+    <tr><td class="paramname">zDataSize</td><td>Size of data buffer in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Updated CRC value; returns 0 when <code>pcData</code> is NULL or <code>zDataSize</code> is 0. </dd></dl>
+
 </div>
 </div>
 <a id="a969509a6c7fec9019121f57b8b89e99f" name="a969509a6c7fec9019121f57b8b89e99f"></a>
@@ -456,18 +531,29 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Update CCITT CRC (16-bit) with new data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iCrc</td><td>Running CRC value (use JUNO_CCITT_CRC_INIT initially). </td></tr>
+    <tr><td class="paramname">pcData</td><td>Pointer to data buffer (can be NULL when <code>zDataSize</code> is 0). </td></tr>
+    <tr><td class="paramname">zDataSize</td><td>Size of data buffer in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Updated CRC value; returns 0 when <code>pcData</code> is NULL or <code>zDataSize</code> is 0. </dd></dl>
+
 </div>
 </div>
-<a id="a1f8424f662028c0a7a4e264d96b62ca7" name="a1f8424f662028c0a7a4e264d96b62ca7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f8424f662028c0a7a4e264d96b62ca7">&#9670;&#160;</a></span>Juno_CrcKermitUpdate()</h2>
+<a id="aaede9fca81f2fdb320f8502ffb804983" name="aaede9fca81f2fdb320f8502ffb804983"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaede9fca81f2fdb320f8502ffb804983">&#9670;&#160;</a></span>Juno_CrcKermitUpdate()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t Juno_CrcKermitUpdate </td>
+          <td class="memname">uint16_t Juno_CrcKermitUpdate </td>
           <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>iCrc</em>, </td>
         </tr>
         <tr>
@@ -489,6 +575,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Update Kermit CRC with new data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iCrc</td><td>Running CRC value (use JUNO_KERMIT_CRC_INIT initially). </td></tr>
+    <tr><td class="paramname">pcData</td><td>Pointer to data buffer (can be NULL when <code>zDataSize</code> is 0). </td></tr>
+    <tr><td class="paramname">zDataSize</td><td>Size of data buffer in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Updated CRC value; returns 0 when <code>pcData</code> is NULL or <code>zDataSize</code> is 0. </dd></dl>
 
 </div>
 </div>
@@ -523,6 +620,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Update ZIP CRC (CRC-32) with new data. </p>
+<p>Applies a final XOR (0xFFFFFFFF) to the computed value before returning when data is processed. If streaming across multiple chunks, undo the XOR on the returned value before using it as the next <code>iCrc</code>. When <code>pcData</code> is NULL or <code>zDataSize</code> is 0, the function returns 0 (no XOR is applied in that case). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iCrc</td><td>Running CRC value (use JUNO_ZIP_CRC_INIT initially). </td></tr>
+    <tr><td class="paramname">pcData</td><td>Pointer to data buffer (can be NULL when <code>zDataSize</code> is 0). </td></tr>
+    <tr><td class="paramname">zDataSize</td><td>Size of data buffer in bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Updated CRC-32 value; returns 0 when <code>pcData</code> is NULL or <code>zDataSize</code> is 0. </dd></dl>
 
 </div>
 </div>

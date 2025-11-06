@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -131,24 +131,34 @@ $(document).ready(function(){initNavTree('structJUNO__SPI__IO__API__TAG.html',''
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ab889c94b4af968d99488e38725c05b5f" id="r_ab889c94b4af968d99488e38725c05b5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__SPI__IO__API__TAG.html#ab889c94b4af968d99488e38725c05b5f">Transaction</a> )(<a class="el" href="spi__io__api_8h.html#a81f75c98c1fa982c8706228fe721b1b9">JUNO_SPI_IO_T</a> *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize)</td></tr>
-<tr class="memdesc:ab889c94b4af968d99488e38725c05b5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an SPI transaction.  <br /></td></tr>
-<tr class="separator:ab889c94b4af968d99488e38725c05b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d6ccf3bd20e08c4fb6860be4f88c4da" id="r_a0d6ccf3bd20e08c4fb6860be4f88c4da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__SPI__IO__API__TAG.html#a0d6ccf3bd20e08c4fb6860be4f88c4da">Transaction</a> )(<a class="el" href="spi__io__api_8h.html#a52c8009bc228a35231efa3324a175751">JUNO_SPI_IO_ROOT_T</a> *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize)</td></tr>
+<tr class="memdesc:a0d6ccf3bd20e08c4fb6860be4f88c4da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an SPI transaction.  <br /></td></tr>
+<tr class="separator:a0d6ccf3bd20e08c4fb6860be4f88c4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="ab889c94b4af968d99488e38725c05b5f" name="ab889c94b4af968d99488e38725c05b5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab889c94b4af968d99488e38725c05b5f">&#9670;&#160;</a></span>Transaction</h2>
+<a id="a0d6ccf3bd20e08c4fb6860be4f88c4da" name="a0d6ccf3bd20e08c4fb6860be4f88c4da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d6ccf3bd20e08c4fb6860be4f88c4da">&#9670;&#160;</a></span>Transaction</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_SPI_IO_API_TAG::Transaction) (<a class="el" href="spi__io__api_8h.html#a81f75c98c1fa982c8706228fe721b1b9">JUNO_SPI_IO_T</a> *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize)</td>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>(* JUNO_SPI_IO_API_TAG::Transaction) (<a class="el" href="spi__io__api_8h.html#a52c8009bc228a35231efa3324a175751">JUNO_SPI_IO_ROOT_T</a> *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Perform an SPI transaction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptIo</td><td>SPI instance. </td></tr>
+    <tr><td class="paramname">pcReadBuff</td><td>Destination for received bytes (optional if zReadBuffSize==0). </td></tr>
+    <tr><td class="paramname">zReadBuffSize</td><td>Number of bytes to read. </td></tr>
+    <tr><td class="paramname">pvWriteBuff</td><td>Source buffer to transmit (optional if zWriteBuffSize==0). </td></tr>
+    <tr><td class="paramname">zWriteBuffSize</td><td>Number of bytes to write. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

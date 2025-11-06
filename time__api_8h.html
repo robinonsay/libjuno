@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -129,7 +129,11 @@ $(document).ready(function(){initNavTree('time__api_8h.html',''); initResizable(
   <div class="headertitle"><div class="title">time_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
+
+<p>Juno Time module API and common time math helpers.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="macros_8h_source.html">juno/macros.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">juno/types.h</a>&quot;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
@@ -150,869 +154,97 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__TIMESTAMP__TAG.html">JUNO_TIMESTAMP_TAG</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestamp consisting of whole seconds and fixed-point subseconds.  <a href="structJUNO__TIMESTAMP__TAG.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__TIME__API__TAG.html">JUNO_TIME_API_TAG</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vtable for time operations and conversions.  <a href="structJUNO__TIME__API__TAG.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a6bdedd0daca2430506a739ab02eba994" id="r_a6bdedd0daca2430506a739ab02eba994"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a6bdedd0daca2430506a739ab02eba994">JUNO_TIME_NEW_API</a>(Now,  SleepTo,  Sleep)</td></tr>
-<tr class="separator:a6bdedd0daca2430506a739ab02eba994"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabec94293ca1788aa3309ec29667ff83d" id="r_gabec94293ca1788aa3309ec29667ff83d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gabec94293ca1788aa3309ec29667ff83d">JunoTime_TimeApiInit</a>(<a class="el" href="main_8c.html#a6572883ff03955261759096ae2e010f1">Now</a>,  <a class="el" href="main_8c.html#a333b276b4a717dcc52486e63586ca517">SleepTo</a>,  <a class="el" href="main_8c.html#a59d36535fea6c5303116ef1b51682761">Sleep</a>)</td></tr>
+<tr class="memdesc:gabec94293ca1788aa3309ec29667ff83d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a JUNO_TIME_API_T literal with default math/conversion impls.  <br /></td></tr>
+<tr class="separator:gabec94293ca1788aa3309ec29667ff83d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a076aada0c523de520d87145537969e4f" id="r_a076aada0c523de520d87145537969e4f"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__TIME__API__TAG.html">JUNO_TIME_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a></td></tr>
-<tr class="separator:a076aada0c523de520d87145537969e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a2f6fc72f023c5d3d6f829aede96993" id="r_a9a2f6fc72f023c5d3d6f829aede96993"><td class="memItemLeft" align="right" valign="top">typedef union JUNO_TIME_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a></td></tr>
-<tr class="separator:a9a2f6fc72f023c5d3d6f829aede96993"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefeb9d6509263f33b8586b99ae66bcac" id="r_aefeb9d6509263f33b8586b99ae66bcac"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_TIME_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#aefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a></td></tr>
-<tr class="separator:aefeb9d6509263f33b8586b99ae66bcac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae73b59eacc24dab1084a912d4db6dde" id="r_aae73b59eacc24dab1084a912d4db6dde"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__TIMESTAMP__TAG.html">JUNO_TIMESTAMP_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a></td></tr>
-<tr class="separator:aae73b59eacc24dab1084a912d4db6dde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7effd6727e7c6ca21c639df75d92f846" id="r_a7effd6727e7c6ca21c639df75d92f846"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846">JUNO_TIME_SECONDS_T</a></td></tr>
-<tr class="separator:a7effd6727e7c6ca21c639df75d92f846"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c625bf887d0c64dea2a20372a0ad821" id="r_a4c625bf887d0c64dea2a20372a0ad821"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a></td></tr>
-<tr class="separator:a4c625bf887d0c64dea2a20372a0ad821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a157796cd447440f52c16b99d69f1e045" id="r_a157796cd447440f52c16b99d69f1e045"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a></td></tr>
-<tr class="separator:a157796cd447440f52c16b99d69f1e045"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e1fe81030092f1ab2eff21b582132de" id="r_a0e1fe81030092f1ab2eff21b582132de"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a></td></tr>
-<tr class="separator:a0e1fe81030092f1ab2eff21b582132de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d9f166d914896853c1d80d4dab30ae1" id="r_a8d9f166d914896853c1d80d4dab30ae1"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a8d9f166d914896853c1d80d4dab30ae1">JUNO_TIME_SUBSECONDS_T</a></td></tr>
-<tr class="separator:a8d9f166d914896853c1d80d4dab30ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga076aada0c523de520d87145537969e4f" id="r_ga076aada0c523de520d87145537969e4f"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__TIME__API__TAG.html">JUNO_TIME_API_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a></td></tr>
+<tr class="separator:ga076aada0c523de520d87145537969e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefeb9d6509263f33b8586b99ae66bcac" id="r_gaefeb9d6509263f33b8586b99ae66bcac"><td class="memItemLeft" align="right" valign="top">typedef struct JUNO_TIME_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a></td></tr>
+<tr class="separator:gaefeb9d6509263f33b8586b99ae66bcac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaae73b59eacc24dab1084a912d4db6dde" id="r_gaae73b59eacc24dab1084a912d4db6dde"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structJUNO__TIMESTAMP__TAG.html">JUNO_TIMESTAMP_TAG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a></td></tr>
+<tr class="separator:gaae73b59eacc24dab1084a912d4db6dde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4fe8a7cbec7474e7d01261960dcf92e7" id="r_ga4fe8a7cbec7474e7d01261960dcf92e7"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga4fe8a7cbec7474e7d01261960dcf92e7">JUNO_TIME_SECONDS_T</a></td></tr>
+<tr class="memdesc:ga4fe8a7cbec7474e7d01261960dcf92e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whole seconds component type.  <br /></td></tr>
+<tr class="separator:ga4fe8a7cbec7474e7d01261960dcf92e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c625bf887d0c64dea2a20372a0ad821" id="r_ga4c625bf887d0c64dea2a20372a0ad821"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a></td></tr>
+<tr class="memdesc:ga4c625bf887d0c64dea2a20372a0ad821"><td class="mdescLeft">&#160;</td><td class="mdescRight">Milliseconds count type.  <br /></td></tr>
+<tr class="separator:ga4c625bf887d0c64dea2a20372a0ad821"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga157796cd447440f52c16b99d69f1e045" id="r_ga157796cd447440f52c16b99d69f1e045"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a></td></tr>
+<tr class="memdesc:ga157796cd447440f52c16b99d69f1e045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Microseconds count type.  <br /></td></tr>
+<tr class="separator:ga157796cd447440f52c16b99d69f1e045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e1fe81030092f1ab2eff21b582132de" id="r_ga0e1fe81030092f1ab2eff21b582132de"><td class="memItemLeft" align="right" valign="top">typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a></td></tr>
+<tr class="memdesc:ga0e1fe81030092f1ab2eff21b582132de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nanoseconds count type.  <br /></td></tr>
+<tr class="separator:ga0e1fe81030092f1ab2eff21b582132de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae37fcd44fe11c4e12370748985327405" id="r_gae37fcd44fe11c4e12370748985327405"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gae37fcd44fe11c4e12370748985327405">JUNO_TIME_SUBSECONDS_T</a></td></tr>
+<tr class="memdesc:gae37fcd44fe11c4e12370748985327405"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subsecond fixed-point fraction type.  <br /></td></tr>
+<tr class="separator:gae37fcd44fe11c4e12370748985327405"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1e1108a8eb94616ad1e0e8de8a1e12fc" id="r_a1e1108a8eb94616ad1e0e8de8a1e12fc"><td class="memItemLeft" align="right" valign="top">struct JUNO_TIME_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a1e1108a8eb94616ad1e0e8de8a1e12fc">JUNO_MODULE_ROOT</a> (<a class="el" href="time__api_8h.html#a076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a>, <a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
-<tr class="memdesc:a1e1108a8eb94616ad1e0e8de8a1e12fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the Juno Time Module for all time time related operations. Some of the time API function implementations may be very implementation specific, so be consciencous of the implementation.  <br /></td></tr>
-<tr class="separator:a1e1108a8eb94616ad1e0e8de8a1e12fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32a737d02dbf7a4e6beee229719b927d" id="r_a32a737d02dbf7a4e6beee229719b927d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a32a737d02dbf7a4e6beee229719b927d">JUNO_MODULE_RESULT</a> (JUNO_TIMESTAMP_RESULT_T, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>)</td></tr>
-<tr class="separator:a32a737d02dbf7a4e6beee229719b927d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0485f324e6e35ca728e43bd8bd320e0b" id="r_a0485f324e6e35ca728e43bd8bd320e0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a0485f324e6e35ca728e43bd8bd320e0b">JUNO_MODULE_RESULT</a> (JUNO_TIME_SECONDS_RESULT_T, <a class="el" href="time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846">JUNO_TIME_SECONDS_T</a>)</td></tr>
-<tr class="separator:a0485f324e6e35ca728e43bd8bd320e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab958d92c1af42637dfd7d218accd8236" id="r_ab958d92c1af42637dfd7d218accd8236"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#ab958d92c1af42637dfd7d218accd8236">JUNO_MODULE_RESULT</a> (JUNO_TIME_MILLIS_RESULT_T, <a class="el" href="time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a>)</td></tr>
-<tr class="separator:ab958d92c1af42637dfd7d218accd8236"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69a08ce06ab1b6c7fe85d7fde937b0d9" id="r_a69a08ce06ab1b6c7fe85d7fde937b0d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a69a08ce06ab1b6c7fe85d7fde937b0d9">JUNO_MODULE_RESULT</a> (JUNO_TIME_MICROS_RESULT_T, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a>)</td></tr>
-<tr class="separator:a69a08ce06ab1b6c7fe85d7fde937b0d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a7ec9ba65a142a114ad6bd8bf14a7c5" id="r_a3a7ec9ba65a142a114ad6bd8bf14a7c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a3a7ec9ba65a142a114ad6bd8bf14a7c5">JUNO_MODULE_RESULT</a> (JUNO_TIME_NANOS_RESULT_T, <a class="el" href="time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a>)</td></tr>
-<tr class="separator:a3a7ec9ba65a142a114ad6bd8bf14a7c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1aaed586e0f043d7905d4e7b9812bb04" id="r_a1aaed586e0f043d7905d4e7b9812bb04"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a1aaed586e0f043d7905d4e7b9812bb04">JUNO_MODULE_RESULT</a> (JUNO_TIME_SUBSECONDS_RESULT_T, <a class="el" href="time__api_8h.html#a8d9f166d914896853c1d80d4dab30ae1">JUNO_TIME_SUBSECONDS_T</a>)</td></tr>
-<tr class="separator:a1aaed586e0f043d7905d4e7b9812bb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b525b6b3f21aa697e9a8e2446489d5c" id="r_a4b525b6b3f21aa697e9a8e2446489d5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a4b525b6b3f21aa697e9a8e2446489d5c">JunoTime_AddTime</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> *ptRetTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTimeToAdd)</td></tr>
-<tr class="separator:a4b525b6b3f21aa697e9a8e2446489d5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ca112a59fa1b795531675dc402c47f3" id="r_a8ca112a59fa1b795531675dc402c47f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a8ca112a59fa1b795531675dc402c47f3">JunoTime_SubtractTime</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> *ptRetTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTimeToSubtract)</td></tr>
-<tr class="separator:a8ca112a59fa1b795531675dc402c47f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a5f498657381dd193751024d97a0295" id="r_a2a5f498657381dd193751024d97a0295"><td class="memItemLeft" align="right" valign="top">JUNO_TIME_NANOS_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a2a5f498657381dd193751024d97a0295">JunoTime_TimestampToNanos</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTime)</td></tr>
-<tr class="separator:a2a5f498657381dd193751024d97a0295"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1395e0d31b9aeb31c6a755ba0bf84433" id="r_a1395e0d31b9aeb31c6a755ba0bf84433"><td class="memItemLeft" align="right" valign="top">JUNO_TIME_MICROS_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a1395e0d31b9aeb31c6a755ba0bf84433">JunoTime_TimestampToMicros</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTime)</td></tr>
-<tr class="separator:a1395e0d31b9aeb31c6a755ba0bf84433"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeac656ce8c7dab03ac3db1cebcb70f2b" id="r_aeac656ce8c7dab03ac3db1cebcb70f2b"><td class="memItemLeft" align="right" valign="top">JUNO_TIME_MILLIS_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#aeac656ce8c7dab03ac3db1cebcb70f2b">JunoTime_TimestampToMillis</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTime)</td></tr>
-<tr class="separator:aeac656ce8c7dab03ac3db1cebcb70f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4a3d59290ca5feb65eeea6117860f4b" id="r_ac4a3d59290ca5feb65eeea6117860f4b"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#ac4a3d59290ca5feb65eeea6117860f4b">JunoTime_NanosToTimestamp</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a> iNanos)</td></tr>
-<tr class="separator:ac4a3d59290ca5feb65eeea6117860f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b40b38a3b7148d691ae4892ca12fc0a" id="r_a1b40b38a3b7148d691ae4892ca12fc0a"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a1b40b38a3b7148d691ae4892ca12fc0a">JunoTime_MicrosToTimestamp</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iMicros)</td></tr>
-<tr class="separator:a1b40b38a3b7148d691ae4892ca12fc0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fa00ba4237c7224b447261feac2871c" id="r_a1fa00ba4237c7224b447261feac2871c"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a1fa00ba4237c7224b447261feac2871c">JunoTime_MillisToTimestamp</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a> iMillis)</td></tr>
-<tr class="separator:a1fa00ba4237c7224b447261feac2871c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1da4608f7a7eac9394580c5ba1d6113" id="r_ae1da4608f7a7eac9394580c5ba1d6113"><td class="memItemLeft" align="right" valign="top">JUNO_RESULT_F64_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#ae1da4608f7a7eac9394580c5ba1d6113">JunoTime_TimestampToDouble</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTimestamp)</td></tr>
-<tr class="separator:ae1da4608f7a7eac9394580c5ba1d6113"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab65793d840334a9269084eb936ee13d9" id="r_ab65793d840334a9269084eb936ee13d9"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#ab65793d840334a9269084eb936ee13d9">JunoTime_DoubleToTimestamp</a> (<a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *ptTime, double dTimestamp)</td></tr>
-<tr class="separator:ab65793d840334a9269084eb936ee13d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42f9eed5a4e74dcbd3fe543d876ade28" id="r_a42f9eed5a4e74dcbd3fe543d876ade28"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a42f9eed5a4e74dcbd3fe543d876ade28">JunoTime_TimestampGreaterThan</a> (<a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tLeft, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tRight)</td></tr>
-<tr class="separator:a42f9eed5a4e74dcbd3fe543d876ade28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62151bd80436f6780e771589ddf5b096" id="r_a62151bd80436f6780e771589ddf5b096"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a62151bd80436f6780e771589ddf5b096">JunoTime_TimestampLessThan</a> (<a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tLeft, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tRight)</td></tr>
-<tr class="separator:a62151bd80436f6780e771589ddf5b096"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12aa7ac00666a9921960775f64bb216c" id="r_a12aa7ac00666a9921960775f64bb216c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time__api_8h.html#a12aa7ac00666a9921960775f64bb216c">JunoTime_TimestampEquals</a> (<a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tLeft, <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tRight)</td></tr>
-<tr class="separator:a12aa7ac00666a9921960775f64bb216c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1e1108a8eb94616ad1e0e8de8a1e12fc" id="r_ga1e1108a8eb94616ad1e0e8de8a1e12fc"><td class="memItemLeft" align="right" valign="top">struct JUNO_TIME_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga1e1108a8eb94616ad1e0e8de8a1e12fc">JUNO_MODULE_ROOT</a> (<a class="el" href="group__juno__time.html#ga076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a>, <a class="el" href="group__juno__module.html#ga6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>)</td></tr>
+<tr class="memdesc:ga1e1108a8eb94616ad1e0e8de8a1e12fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the Juno Time Module for all time time related operations.  <br /></td></tr>
+<tr class="separator:ga1e1108a8eb94616ad1e0e8de8a1e12fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32a737d02dbf7a4e6beee229719b927d" id="r_ga32a737d02dbf7a4e6beee229719b927d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga32a737d02dbf7a4e6beee229719b927d">JUNO_MODULE_RESULT</a> (JUNO_TIMESTAMP_RESULT_T, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>)</td></tr>
+<tr class="separator:ga32a737d02dbf7a4e6beee229719b927d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0485f324e6e35ca728e43bd8bd320e0b" id="r_ga0485f324e6e35ca728e43bd8bd320e0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga0485f324e6e35ca728e43bd8bd320e0b">JUNO_MODULE_RESULT</a> (JUNO_TIME_SECONDS_RESULT_T, <a class="el" href="group__juno__time.html#ga4fe8a7cbec7474e7d01261960dcf92e7">JUNO_TIME_SECONDS_T</a>)</td></tr>
+<tr class="separator:ga0485f324e6e35ca728e43bd8bd320e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab958d92c1af42637dfd7d218accd8236" id="r_gab958d92c1af42637dfd7d218accd8236"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gab958d92c1af42637dfd7d218accd8236">JUNO_MODULE_RESULT</a> (JUNO_TIME_MILLIS_RESULT_T, <a class="el" href="group__juno__time.html#ga4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a>)</td></tr>
+<tr class="separator:gab958d92c1af42637dfd7d218accd8236"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69a08ce06ab1b6c7fe85d7fde937b0d9" id="r_ga69a08ce06ab1b6c7fe85d7fde937b0d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga69a08ce06ab1b6c7fe85d7fde937b0d9">JUNO_MODULE_RESULT</a> (JUNO_TIME_MICROS_RESULT_T, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a>)</td></tr>
+<tr class="separator:ga69a08ce06ab1b6c7fe85d7fde937b0d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a7ec9ba65a142a114ad6bd8bf14a7c5" id="r_ga3a7ec9ba65a142a114ad6bd8bf14a7c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga3a7ec9ba65a142a114ad6bd8bf14a7c5">JUNO_MODULE_RESULT</a> (JUNO_TIME_NANOS_RESULT_T, <a class="el" href="group__juno__time.html#ga0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a>)</td></tr>
+<tr class="separator:ga3a7ec9ba65a142a114ad6bd8bf14a7c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1aaed586e0f043d7905d4e7b9812bb04" id="r_ga1aaed586e0f043d7905d4e7b9812bb04"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga1aaed586e0f043d7905d4e7b9812bb04">JUNO_MODULE_RESULT</a> (JUNO_TIME_SUBSECONDS_RESULT_T, <a class="el" href="group__juno__time.html#gae37fcd44fe11c4e12370748985327405">JUNO_TIME_SUBSECONDS_T</a>)</td></tr>
+<tr class="separator:ga1aaed586e0f043d7905d4e7b9812bb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaabcc1ebb448648d60e2c1ef7122e1277" id="r_gaabcc1ebb448648d60e2c1ef7122e1277"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gaabcc1ebb448648d60e2c1ef7122e1277">JunoTime_AddTime</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> *ptRetTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTimeToAdd)</td></tr>
+<tr class="memdesc:gaabcc1ebb448648d60e2c1ef7122e1277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a duration to a timestamp in-place.  <br /></td></tr>
+<tr class="separator:gaabcc1ebb448648d60e2c1ef7122e1277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga600762a10638de68e6fe6dbafd4bcf14" id="r_ga600762a10638de68e6fe6dbafd4bcf14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga600762a10638de68e6fe6dbafd4bcf14">JunoTime_SubtractTime</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> *ptRetTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTimeToSubtract)</td></tr>
+<tr class="memdesc:ga600762a10638de68e6fe6dbafd4bcf14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract a duration from a timestamp in-place. If the subtraction would underflow (negative time), the result is saturated to 0 seconds and 0 subseconds, and JUNO_STATUS_INVALID_DATA_ERROR is returned.  <br /></td></tr>
+<tr class="separator:ga600762a10638de68e6fe6dbafd4bcf14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga28b52c07935979df672239fdfbb2134c" id="r_ga28b52c07935979df672239fdfbb2134c"><td class="memItemLeft" align="right" valign="top">JUNO_TIME_NANOS_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga28b52c07935979df672239fdfbb2134c">JunoTime_TimestampToNanos</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTime)</td></tr>
+<tr class="separator:ga28b52c07935979df672239fdfbb2134c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga172b23986845ad61d64465f011a9fbae" id="r_ga172b23986845ad61d64465f011a9fbae"><td class="memItemLeft" align="right" valign="top">JUNO_TIME_MICROS_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga172b23986845ad61d64465f011a9fbae">JunoTime_TimestampToMicros</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTime)</td></tr>
+<tr class="separator:ga172b23986845ad61d64465f011a9fbae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab75c9a2c00d07374a059c56e508ddb8e" id="r_gab75c9a2c00d07374a059c56e508ddb8e"><td class="memItemLeft" align="right" valign="top">JUNO_TIME_MILLIS_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gab75c9a2c00d07374a059c56e508ddb8e">JunoTime_TimestampToMillis</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTime)</td></tr>
+<tr class="separator:gab75c9a2c00d07374a059c56e508ddb8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac6cbb950d039541fc3cb6bab2f2bf22e" id="r_gac6cbb950d039541fc3cb6bab2f2bf22e"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gac6cbb950d039541fc3cb6bab2f2bf22e">JunoTime_NanosToTimestamp</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#ga0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a> iNanos)</td></tr>
+<tr class="separator:gac6cbb950d039541fc3cb6bab2f2bf22e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1791bde93a8b01860b9e1d00c68cc7e1" id="r_ga1791bde93a8b01860b9e1d00c68cc7e1"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga1791bde93a8b01860b9e1d00c68cc7e1">JunoTime_MicrosToTimestamp</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#ga157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a> iMicros)</td></tr>
+<tr class="separator:ga1791bde93a8b01860b9e1d00c68cc7e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga17aab03587962032be13bb74ba219412" id="r_ga17aab03587962032be13bb74ba219412"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga17aab03587962032be13bb74ba219412">JunoTime_MillisToTimestamp</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#ga4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a> iMillis)</td></tr>
+<tr class="separator:ga17aab03587962032be13bb74ba219412"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa79c4a82eec1d7760abe469f33f4b1d8" id="r_gaa79c4a82eec1d7760abe469f33f4b1d8"><td class="memItemLeft" align="right" valign="top">JUNO_RESULT_F64_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#gaa79c4a82eec1d7760abe469f33f4b1d8">JunoTime_TimestampToDouble</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tTimestamp)</td></tr>
+<tr class="separator:gaa79c4a82eec1d7760abe469f33f4b1d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9293299dffa78317098ce38b48b32f97" id="r_ga9293299dffa78317098ce38b48b32f97"><td class="memItemLeft" align="right" valign="top">JUNO_TIMESTAMP_RESULT_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga9293299dffa78317098ce38b48b32f97">JunoTime_DoubleToTimestamp</a> (const <a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, double dTimestamp)</td></tr>
+<tr class="separator:ga9293299dffa78317098ce38b48b32f97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga42f9eed5a4e74dcbd3fe543d876ade28" id="r_ga42f9eed5a4e74dcbd3fe543d876ade28"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga42f9eed5a4e74dcbd3fe543d876ade28">JunoTime_TimestampGreaterThan</a> (<a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tLeft, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tRight)</td></tr>
+<tr class="memdesc:ga42f9eed5a4e74dcbd3fe543d876ade28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare timestamps (tLeft &gt; tRight).  <br /></td></tr>
+<tr class="separator:ga42f9eed5a4e74dcbd3fe543d876ade28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga62151bd80436f6780e771589ddf5b096" id="r_ga62151bd80436f6780e771589ddf5b096"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga62151bd80436f6780e771589ddf5b096">JunoTime_TimestampLessThan</a> (<a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tLeft, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tRight)</td></tr>
+<tr class="memdesc:ga62151bd80436f6780e771589ddf5b096"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare timestamps (tLeft &lt; tRight).  <br /></td></tr>
+<tr class="separator:ga62151bd80436f6780e771589ddf5b096"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga12aa7ac00666a9921960775f64bb216c" id="r_ga12aa7ac00666a9921960775f64bb216c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga12aa7ac00666a9921960775f64bb216c">JunoTime_TimestampEquals</a> (<a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tLeft, <a class="el" href="group__juno__time.html#gaae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> tRight)</td></tr>
+<tr class="memdesc:ga12aa7ac00666a9921960775f64bb216c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare timestamps for equality.  <br /></td></tr>
+<tr class="separator:ga12aa7ac00666a9921960775f64bb216c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7fa3a14d573be73b596317de7b4fb8ef" id="r_ga7fa3a14d573be73b596317de7b4fb8ef"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__time.html#ga7fa3a14d573be73b596317de7b4fb8ef">JunoTime_TimeInit</a> (<a class="el" href="group__juno__time.html#gaefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a> *ptTime, const <a class="el" href="group__juno__time.html#ga076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a> *ptApi, <a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
+<tr class="memdesc:ga7fa3a14d573be73b596317de7b4fb8ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the time module root with API and failure handler.  <br /></td></tr>
+<tr class="separator:ga7fa3a14d573be73b596317de7b4fb8ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a6bdedd0daca2430506a739ab02eba994" name="a6bdedd0daca2430506a739ab02eba994"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6bdedd0daca2430506a739ab02eba994">&#9670;&#160;</a></span>JUNO_TIME_NEW_API</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define JUNO_TIME_NEW_API</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">Now, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">SleepTo, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">Sleep&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">{ \</div>
-<div class="line">    Now, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#a4b525b6b3f21aa697e9a8e2446489d5c">JunoTime_AddTime</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#a8ca112a59fa1b795531675dc402c47f3">JunoTime_SubtractTime</a>, \</div>
-<div class="line">    SleepTo, \</div>
-<div class="line">    Sleep, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#a2a5f498657381dd193751024d97a0295">JunoTime_TimestampToNanos</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#a1395e0d31b9aeb31c6a755ba0bf84433">JunoTime_TimestampToMicros</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#aeac656ce8c7dab03ac3db1cebcb70f2b">JunoTime_TimestampToMillis</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#ac4a3d59290ca5feb65eeea6117860f4b">JunoTime_NanosToTimestamp</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#a1b40b38a3b7148d691ae4892ca12fc0a">JunoTime_MicrosToTimestamp</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#a1fa00ba4237c7224b447261feac2871c">JunoTime_MillisToTimestamp</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#ae1da4608f7a7eac9394580c5ba1d6113">JunoTime_TimestampToDouble</a>, \</div>
-<div class="line">    <a class="code hl_function" href="time__api_8h.html#ab65793d840334a9269084eb936ee13d9">JunoTime_DoubleToTimestamp</a>, \</div>
-<div class="line">}</div>
-<div class="ttc" id="atime__api_8h_html_a1395e0d31b9aeb31c6a755ba0bf84433"><div class="ttname"><a href="time__api_8h.html#a1395e0d31b9aeb31c6a755ba0bf84433">JunoTime_TimestampToMicros</a></div><div class="ttdeci">JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)</div><div class="ttdef"><b>Definition</b> juno_time.c:82</div></div>
-<div class="ttc" id="atime__api_8h_html_a1b40b38a3b7148d691ae4892ca12fc0a"><div class="ttname"><a href="time__api_8h.html#a1b40b38a3b7148d691ae4892ca12fc0a">JunoTime_MicrosToTimestamp</a></div><div class="ttdeci">JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MICROS_T iMicros)</div><div class="ttdef"><b>Definition</b> juno_time.c:146</div></div>
-<div class="ttc" id="atime__api_8h_html_a1fa00ba4237c7224b447261feac2871c"><div class="ttname"><a href="time__api_8h.html#a1fa00ba4237c7224b447261feac2871c">JunoTime_MillisToTimestamp</a></div><div class="ttdeci">JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_MILLIS_T iMillis)</div><div class="ttdef"><b>Definition</b> juno_time.c:162</div></div>
-<div class="ttc" id="atime__api_8h_html_a2a5f498657381dd193751024d97a0295"><div class="ttname"><a href="time__api_8h.html#a2a5f498657381dd193751024d97a0295">JunoTime_TimestampToNanos</a></div><div class="ttdeci">JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)</div><div class="ttdef"><b>Definition</b> juno_time.c:58</div></div>
-<div class="ttc" id="atime__api_8h_html_a4b525b6b3f21aa697e9a8e2446489d5c"><div class="ttname"><a href="time__api_8h.html#a4b525b6b3f21aa697e9a8e2446489d5c">JunoTime_AddTime</a></div><div class="ttdeci">JUNO_STATUS_T JunoTime_AddTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)</div><div class="ttdef"><b>Definition</b> juno_time.c:8</div></div>
-<div class="ttc" id="atime__api_8h_html_a8ca112a59fa1b795531675dc402c47f3"><div class="ttname"><a href="time__api_8h.html#a8ca112a59fa1b795531675dc402c47f3">JunoTime_SubtractTime</a></div><div class="ttdeci">JUNO_STATUS_T JunoTime_SubtractTime(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract)</div><div class="ttdef"><b>Definition</b> juno_time.c:30</div></div>
-<div class="ttc" id="atime__api_8h_html_ab65793d840334a9269084eb936ee13d9"><div class="ttname"><a href="time__api_8h.html#ab65793d840334a9269084eb936ee13d9">JunoTime_DoubleToTimestamp</a></div><div class="ttdeci">JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(JUNO_TIME_T *ptTime, double dTimestamp)</div><div class="ttdef"><b>Definition</b> juno_time.c:193</div></div>
-<div class="ttc" id="atime__api_8h_html_ac4a3d59290ca5feb65eeea6117860f4b"><div class="ttname"><a href="time__api_8h.html#ac4a3d59290ca5feb65eeea6117860f4b">JunoTime_NanosToTimestamp</a></div><div class="ttdeci">JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(JUNO_TIME_T *ptTime, JUNO_TIME_NANOS_T iNanos)</div><div class="ttdef"><b>Definition</b> juno_time.c:130</div></div>
-<div class="ttc" id="atime__api_8h_html_ae1da4608f7a7eac9394580c5ba1d6113"><div class="ttname"><a href="time__api_8h.html#ae1da4608f7a7eac9394580c5ba1d6113">JunoTime_TimestampToDouble</a></div><div class="ttdeci">JUNO_RESULT_F64_T JunoTime_TimestampToDouble(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)</div><div class="ttdef"><b>Definition</b> juno_time.c:179</div></div>
-<div class="ttc" id="atime__api_8h_html_aeac656ce8c7dab03ac3db1cebcb70f2b"><div class="ttname"><a href="time__api_8h.html#aeac656ce8c7dab03ac3db1cebcb70f2b">JunoTime_TimestampToMillis</a></div><div class="ttdeci">JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(JUNO_TIME_T *ptTime, JUNO_TIMESTAMP_T tTime)</div><div class="ttdef"><b>Definition</b> juno_time.c:106</div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<h2 class="groupheader">Typedef Documentation</h2>
-<a id="a076aada0c523de520d87145537969e4f" name="a076aada0c523de520d87145537969e4f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a076aada0c523de520d87145537969e4f">&#9670;&#160;</a></span>JUNO_TIME_API_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct <a class="el" href="structJUNO__TIME__API__TAG.html">JUNO_TIME_API_TAG</a> <a class="el" href="time__api_8h.html#a076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This header contains the time library API </p><dl class="section author"><dt>Author</dt><dd>Robin Onsay </dd></dl>
-
-</div>
-</div>
-<a id="a157796cd447440f52c16b99d69f1e045" name="a157796cd447440f52c16b99d69f1e045"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a157796cd447440f52c16b99d69f1e045">&#9670;&#160;</a></span>JUNO_TIME_MICROS_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef uint64_t <a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4c625bf887d0c64dea2a20372a0ad821" name="a4c625bf887d0c64dea2a20372a0ad821"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c625bf887d0c64dea2a20372a0ad821">&#9670;&#160;</a></span>JUNO_TIME_MILLIS_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef uint64_t <a class="el" href="time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0e1fe81030092f1ab2eff21b582132de" name="a0e1fe81030092f1ab2eff21b582132de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e1fe81030092f1ab2eff21b582132de">&#9670;&#160;</a></span>JUNO_TIME_NANOS_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef uint64_t <a class="el" href="time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aefeb9d6509263f33b8586b99ae66bcac" name="aefeb9d6509263f33b8586b99ae66bcac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefeb9d6509263f33b8586b99ae66bcac">&#9670;&#160;</a></span>JUNO_TIME_ROOT_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct JUNO_TIME_ROOT_TAG <a class="el" href="time__api_8h.html#aefeb9d6509263f33b8586b99ae66bcac">JUNO_TIME_ROOT_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7effd6727e7c6ca21c639df75d92f846" name="a7effd6727e7c6ca21c639df75d92f846"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7effd6727e7c6ca21c639df75d92f846">&#9670;&#160;</a></span>JUNO_TIME_SECONDS_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef uint64_t <a class="el" href="time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846">JUNO_TIME_SECONDS_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8d9f166d914896853c1d80d4dab30ae1" name="a8d9f166d914896853c1d80d4dab30ae1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d9f166d914896853c1d80d4dab30ae1">&#9670;&#160;</a></span>JUNO_TIME_SUBSECONDS_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef uint64_t <a class="el" href="time__api_8h.html#a8d9f166d914896853c1d80d4dab30ae1">JUNO_TIME_SUBSECONDS_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9a2f6fc72f023c5d3d6f829aede96993" name="a9a2f6fc72f023c5d3d6f829aede96993"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a2f6fc72f023c5d3d6f829aede96993">&#9670;&#160;</a></span>JUNO_TIME_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef union JUNO_TIME_TAG <a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aae73b59eacc24dab1084a912d4db6dde" name="aae73b59eacc24dab1084a912d4db6dde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae73b59eacc24dab1084a912d4db6dde">&#9670;&#160;</a></span>JUNO_TIMESTAMP_T</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct <a class="el" href="structJUNO__TIMESTAMP__TAG.html">JUNO_TIMESTAMP_TAG</a> <a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a69a08ce06ab1b6c7fe85d7fde937b0d9" name="a69a08ce06ab1b6c7fe85d7fde937b0d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69a08ce06ab1b6c7fe85d7fde937b0d9">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[1/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_TIME_MICROS_RESULT_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab958d92c1af42637dfd7d218accd8236" name="ab958d92c1af42637dfd7d218accd8236"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab958d92c1af42637dfd7d218accd8236">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[2/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_TIME_MILLIS_RESULT_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3a7ec9ba65a142a114ad6bd8bf14a7c5" name="a3a7ec9ba65a142a114ad6bd8bf14a7c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a7ec9ba65a142a114ad6bd8bf14a7c5">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[3/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_TIME_NANOS_RESULT_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0485f324e6e35ca728e43bd8bd320e0b" name="a0485f324e6e35ca728e43bd8bd320e0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0485f324e6e35ca728e43bd8bd320e0b">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[4/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_TIME_SECONDS_RESULT_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a7effd6727e7c6ca21c639df75d92f846">JUNO_TIME_SECONDS_T</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1aaed586e0f043d7905d4e7b9812bb04" name="a1aaed586e0f043d7905d4e7b9812bb04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1aaed586e0f043d7905d4e7b9812bb04">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[5/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_TIME_SUBSECONDS_RESULT_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a8d9f166d914896853c1d80d4dab30ae1">JUNO_TIME_SUBSECONDS_T</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a32a737d02dbf7a4e6beee229719b927d" name="a32a737d02dbf7a4e6beee229719b927d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32a737d02dbf7a4e6beee229719b927d">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[6/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_TIMESTAMP_RESULT_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1e1108a8eb94616ad1e0e8de8a1e12fc" name="a1e1108a8eb94616ad1e0e8de8a1e12fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e1108a8eb94616ad1e0e8de8a1e12fc">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct JUNO_TIME_ROOT_TAG JUNO_MODULE_ROOT </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a076aada0c523de520d87145537969e4f">JUNO_TIME_API_T</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="module_8h.html#a6dc58e4cd075d0ef32588498500af9a0">JUNO_MODULE_EMPTY</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This is the Juno Time Module for all time time related operations. Some of the time API function implementations may be very implementation specific, so be consciencous of the implementation. </p>
-<p>Certain operations regarding time math are implemented by LibJuno for module developers to include: <code>JunoTime_AddTime</code> <code>JunoTime_SubtractTime</code> <code>JunoTime_TimestampToNanos</code> <code>JunoTime_TimestampToMicros</code> <code>JunoTime_TimestampToMillis</code> <code>JunoTime_NanosToTimestamp</code> <code>JunoTime_MicrosToTimestamp</code> <code>JunoTime_MillisToTimestamp</code> </p>
-
-</div>
-</div>
-<a id="a4b525b6b3f21aa697e9a8e2446489d5c" name="a4b525b6b3f21aa697e9a8e2446489d5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b525b6b3f21aa697e9a8e2446489d5c">&#9670;&#160;</a></span>JunoTime_AddTime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoTime_AddTime </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> *&#160;</td>
-          <td class="paramname"><em>ptRetTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tTimeToAdd</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab65793d840334a9269084eb936ee13d9" name="ab65793d840334a9269084eb936ee13d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab65793d840334a9269084eb936ee13d9">&#9670;&#160;</a></span>JunoTime_DoubleToTimestamp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>dTimestamp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1b40b38a3b7148d691ae4892ca12fc0a" name="a1b40b38a3b7148d691ae4892ca12fc0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b40b38a3b7148d691ae4892ca12fc0a">&#9670;&#160;</a></span>JunoTime_MicrosToTimestamp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a157796cd447440f52c16b99d69f1e045">JUNO_TIME_MICROS_T</a>&#160;</td>
-          <td class="paramname"><em>iMicros</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1fa00ba4237c7224b447261feac2871c" name="a1fa00ba4237c7224b447261feac2871c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fa00ba4237c7224b447261feac2871c">&#9670;&#160;</a></span>JunoTime_MillisToTimestamp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a4c625bf887d0c64dea2a20372a0ad821">JUNO_TIME_MILLIS_T</a>&#160;</td>
-          <td class="paramname"><em>iMillis</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac4a3d59290ca5feb65eeea6117860f4b" name="ac4a3d59290ca5feb65eeea6117860f4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4a3d59290ca5feb65eeea6117860f4b">&#9670;&#160;</a></span>JunoTime_NanosToTimestamp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a0e1fe81030092f1ab2eff21b582132de">JUNO_TIME_NANOS_T</a>&#160;</td>
-          <td class="paramname"><em>iNanos</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8ca112a59fa1b795531675dc402c47f3" name="a8ca112a59fa1b795531675dc402c47f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ca112a59fa1b795531675dc402c47f3">&#9670;&#160;</a></span>JunoTime_SubtractTime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoTime_SubtractTime </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a> *&#160;</td>
-          <td class="paramname"><em>ptRetTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tTimeToSubtract</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a12aa7ac00666a9921960775f64bb216c" name="a12aa7ac00666a9921960775f64bb216c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12aa7ac00666a9921960775f64bb216c">&#9670;&#160;</a></span>JunoTime_TimestampEquals()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool JunoTime_TimestampEquals </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tLeft</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tRight</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a42f9eed5a4e74dcbd3fe543d876ade28" name="a42f9eed5a4e74dcbd3fe543d876ade28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42f9eed5a4e74dcbd3fe543d876ade28">&#9670;&#160;</a></span>JunoTime_TimestampGreaterThan()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool JunoTime_TimestampGreaterThan </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tLeft</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tRight</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a62151bd80436f6780e771589ddf5b096" name="a62151bd80436f6780e771589ddf5b096"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62151bd80436f6780e771589ddf5b096">&#9670;&#160;</a></span>JunoTime_TimestampLessThan()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static bool JunoTime_TimestampLessThan </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tLeft</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tRight</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae1da4608f7a7eac9394580c5ba1d6113" name="ae1da4608f7a7eac9394580c5ba1d6113"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1da4608f7a7eac9394580c5ba1d6113">&#9670;&#160;</a></span>JunoTime_TimestampToDouble()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_RESULT_F64_T JunoTime_TimestampToDouble </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tTimestamp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1395e0d31b9aeb31c6a755ba0bf84433" name="a1395e0d31b9aeb31c6a755ba0bf84433"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1395e0d31b9aeb31c6a755ba0bf84433">&#9670;&#160;</a></span>JunoTime_TimestampToMicros()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tTime</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aeac656ce8c7dab03ac3db1cebcb70f2b" name="aeac656ce8c7dab03ac3db1cebcb70f2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeac656ce8c7dab03ac3db1cebcb70f2b">&#9670;&#160;</a></span>JunoTime_TimestampToMillis()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tTime</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2a5f498657381dd193751024d97a0295" name="a2a5f498657381dd193751024d97a0295"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a5f498657381dd193751024d97a0295">&#9670;&#160;</a></span>JunoTime_TimestampToNanos()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#a9a2f6fc72f023c5d3d6f829aede96993">JUNO_TIME_T</a> *&#160;</td>
-          <td class="paramname"><em>ptTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="time__api_8h.html#aae73b59eacc24dab1084a912d4db6dde">JUNO_TIMESTAMP_T</a>&#160;</td>
-          <td class="paramname"><em>tTime</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Juno Time module API and common time math helpers. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

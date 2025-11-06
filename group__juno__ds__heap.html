@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LibJuno: Binary Heap (index-based)</title>
+<title>LibJuno: Heap API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -121,37 +121,356 @@ $(document).ready(function(){initNavTree('group__juno__ds__heap.html',''); initR
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Binary Heap (index-based)</div></div>
+  <div class="summary">
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">Heap API</div></div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__DS__HEAP__POINTER__API__TAG.html">JUNO_DS_HEAP_POINTER_API_TAG</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element-level operations required by the heap.  <a href="structJUNO__DS__HEAP__POINTER__API__TAG.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJUNO__DS__HEAP__API__TAG.html">JUNO_DS_HEAP_API_TAG</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap API vtable.  <a href="structJUNO__DS__HEAP__API__TAG.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gafa0eef4b3c7a410578313d56b887d17f" id="r_gafa0eef4b3c7a410578313d56b887d17f"><td class="memItemLeft" align="right" valign="top">struct JUNO_DS_HEAP_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__ds__heap.html#gafa0eef4b3c7a410578313d56b887d17f">JUNO_MODULE_ROOT</a> (<a class="el" href="heap__api_8h.html#ac0941facbb2cb5c815a1e743656877ec">JUNO_DS_HEAP_API_T</a>, const <a class="el" href="heap__api_8h.html#ad0eaf1ead4ae27dadc98a387b398b933">JUNO_DS_HEAP_POINTER_API_T</a> *ptHeapPointerApi;<a class="el" href="array__api_8h.html#a41c3dcd3aa4c045b5ca6794251257183">JUNO_DS_ARRAY_ROOT_T</a> *ptHeapArray;size_t zLength;)</td></tr>
+<tr class="memdesc:gafa0eef4b3c7a410578313d56b887d17f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap root instance and state.  <br /></td></tr>
+<tr class="separator:gafa0eef4b3c7a410578313d56b887d17f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d7addf40518163587ae24beca4fa3f3" id="r_ga8d7addf40518163587ae24beca4fa3f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__ds__heap.html#ga8d7addf40518163587ae24beca4fa3f3">JunoDs_Heap_Insert</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, <a class="el" href="pointer__api_8h.html#a3caf7d5b9c47228dcbb289ab1f8a6045">JUNO_POINTER_T</a> tValue)</td></tr>
+<tr class="memdesc:ga8d7addf40518163587ae24beca4fa3f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a new element into the heap.  <br /></td></tr>
+<tr class="separator:ga8d7addf40518163587ae24beca4fa3f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8e9d01df61e5921671dc835a25dc459e" id="r_ga8e9d01df61e5921671dc835a25dc459e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__ds__heap.html#ga8e9d01df61e5921671dc835a25dc459e">JunoDs_Heap_Heapify</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:ga8e9d01df61e5921671dc835a25dc459e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform the underlying array into a heap.  <br /></td></tr>
+<tr class="separator:ga8e9d01df61e5921671dc835a25dc459e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf0f401a509bcef408ae94e6e4a7d8e17" id="r_gaf0f401a509bcef408ae94e6e4a7d8e17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__ds__heap.html#gaf0f401a509bcef408ae94e6e4a7d8e17">JunoDs_Heap_Pop</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, <a class="el" href="pointer__api_8h.html#a3caf7d5b9c47228dcbb289ab1f8a6045">JUNO_POINTER_T</a> tReturn)</td></tr>
+<tr class="memdesc:gaf0f401a509bcef408ae94e6e4a7d8e17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the root element into <code>tReturn</code>.  <br /></td></tr>
+<tr class="separator:gaf0f401a509bcef408ae94e6e4a7d8e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga15847d5dea93f29bceddd20234de3d40" id="r_ga15847d5dea93f29bceddd20234de3d40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__ds__heap.html#ga15847d5dea93f29bceddd20234de3d40">JunoDs_Heap_Init</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, const <a class="el" href="heap__api_8h.html#ad0eaf1ead4ae27dadc98a387b398b933">JUNO_DS_HEAP_POINTER_API_T</a> *ptHeapPointerApi, <a class="el" href="array__api_8h.html#a41c3dcd3aa4c045b5ca6794251257183">JUNO_DS_ARRAY_ROOT_T</a> *ptHeapArray, <a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHdlr, <a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvUserData)</td></tr>
+<tr class="memdesc:ga15847d5dea93f29bceddd20234de3d40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a heap over a backing array and element pointer API.  <br /></td></tr>
+<tr class="separator:ga15847d5dea93f29bceddd20234de3d40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga017b8a58b71beb498cb344e077048f18" id="r_ga017b8a58b71beb498cb344e077048f18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__ds__heap.html#ga017b8a58b71beb498cb344e077048f18">JunoDs_Heap_SiftDown</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap, size_t iStart)</td></tr>
+<tr class="memdesc:ga017b8a58b71beb498cb344e077048f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sift down from a starting index to restore the heap property.  <br /></td></tr>
+<tr class="separator:ga017b8a58b71beb498cb344e077048f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1d6ded6b0bce2507665ed722c1535f28" id="r_ga1d6ded6b0bce2507665ed722c1535f28"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__ds__heap.html#ga1d6ded6b0bce2507665ed722c1535f28">JunoDs_Heap_Verify</a> (<a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *ptHeap)</td></tr>
+<tr class="memdesc:ga1d6ded6b0bce2507665ed722c1535f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify heap configuration and dependent APIs.  <br /></td></tr>
+<tr class="separator:ga1d6ded6b0bce2507665ed722c1535f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>A binary heap interface parameterized by element-level comparison and swap callbacks over an underlying Array. The heap stores elements in a contiguous array (JUNO_DS_ARRAY_ROOT_T) and maintains either a max-heap or min-heap property depending on the user-provided Compare function.</p>
+<p>Characteristics</p><ul>
+<li>Deterministic operations with no dynamic allocation; capacity is defined by the backing array.</li>
+<li>Time complexity: Insert O(log n), Pop O(log n), Update O(log n), SiftDown O(log n), Heapify O(n).</li>
+<li>Non-thread-safe by default; protect externally as needed.</li>
+</ul>
+<p>Invariants (enforced by implementation and Verify):</p><ul>
+<li>0 &lt;= zLength &lt;= ptHeapArray-&gt;zCapacity</li>
+<li>All required function pointers are non-NULL (heap API, pointer API, array API)</li>
+<li>Backing array verifies via JunoDs_ArrayVerify.</li>
+</ul>
+<p>Ordering semantics:</p><ul>
+<li>The user provides Compare(parent, child) that returns true when the heap property holds for that pair. Example: max-heap uses parent &gt;= child; min-heap uses parent &lt;= child. Swap exchanges two elements in storage.</li>
+</ul>
+<p>Element ownership:</p><ul>
+<li>Elements are copied into/out of the heap using the JUNO_POINTER_T API (Copy/Reset). Callers must provide valid pointer descriptors describing storage location, size, and alignment. </li>
+</ul>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="gafa0eef4b3c7a410578313d56b887d17f" name="gafa0eef4b3c7a410578313d56b887d17f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafa0eef4b3c7a410578313d56b887d17f">&#9670;&#160;</a></span>JUNO_MODULE_ROOT()</h2>
 
-<p>A parameterized binary heap that operates on user-managed storage.  
-</p>
-<p>A parameterized binary heap that operates on user-managed storage. </p>
-<p>The heap works over a user-defined array and element type. You supply the comparator and data movement logic (Swap/Reset) via JUNO_DS_HEAP_API_T. The root maintains only capacity/length counters and an API pointer, keeping it freestanding and portable.</p>
-<p>Invariants and terminology:</p><ul>
-<li>0 &lt;= zLength &lt;= zCapacity.</li>
-<li>Children indices: left = 2*i + 1, right = 2*i + 2.</li>
-<li>Parent index: (i - 1)/2.</li>
-<li>Compare(parent, child) returns true if the heap property holds between those positions (e.g., for a max-heap: parent &gt;= child; min-heap: parent &lt;= child).</li>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct JUNO_DS_HEAP_ROOT_TAG JUNO_MODULE_ROOT </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="heap__api_8h.html#ac0941facbb2cb5c815a1e743656877ec">JUNO_DS_HEAP_API_T</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="heap__api_8h.html#ad0eaf1ead4ae27dadc98a387b398b933">JUNO_DS_HEAP_POINTER_API_T</a> *ptHeapPointerApi;<a class="el" href="array__api_8h.html#a41c3dcd3aa4c045b5ca6794251257183">JUNO_DS_ARRAY_ROOT_T</a> *ptHeapArray;size_t zLength;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Heap root instance and state. </p>
+
+</div>
+</div>
+<a id="ga8e9d01df61e5921671dc835a25dc459e" name="ga8e9d01df61e5921671dc835a25dc459e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8e9d01df61e5921671dc835a25dc459e">&#9670;&#160;</a></span>JunoDs_Heap_Heapify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoDs_Heap_Heapify </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform the underlying array into a heap. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptHeap</td><td>Heap instance with zLength set to the count of initialized elements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR when zLength == 0; or propagation of errors from SiftDown. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Complexity O(n).</dd></dl>
+<p>Transform the underlying array into a heap.</p>
+<p>Set zLength to the number of initialized elements, then call Heapify.</p>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR when zLength == 0 or if SiftDown reports an error. </dd></dl>
+
+</div>
+</div>
+<a id="ga15847d5dea93f29bceddd20234de3d40" name="ga15847d5dea93f29bceddd20234de3d40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga15847d5dea93f29bceddd20234de3d40">&#9670;&#160;</a></span>JunoDs_Heap_Init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoDs_Heap_Init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="heap__api_8h.html#ad0eaf1ead4ae27dadc98a387b398b933">JUNO_DS_HEAP_POINTER_API_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeapPointerApi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="array__api_8h.html#a41c3dcd3aa4c045b5ca6794251257183">JUNO_DS_ARRAY_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeapArray</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td>
+          <td class="paramname"><em>pfcnFailureHdlr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td>
+          <td class="paramname"><em>pvUserData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize a heap over a backing array and element pointer API. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptHeap</td><td>Heap instance to initialize (output). </td></tr>
+    <tr><td class="paramname">ptHeapPointerApi</td><td>Element-level callbacks (Compare/Swap) defining ordering. </td></tr>
+    <tr><td class="paramname">ptHeapArray</td><td>Backing array providing capacity and element storage ops. </td></tr>
+    <tr><td class="paramname">pfcnFailureHdlr</td><td>Optional failure handler for assertions in this module (can be NULL). </td></tr>
+    <tr><td class="paramname">pvUserData</td><td>Optional user data passed to the failure handler (can be NULL). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Result of JunoDs_Heap_Verify on the configured heap (SUCCESS on valid configuration, otherwise an error code such as JUNO_STATUS_NULLPTR_ERROR or array verification failures). </dd></dl>
+
+</div>
+</div>
+<a id="ga8d7addf40518163587ae24beca4fa3f3" name="ga8d7addf40518163587ae24beca4fa3f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8d7addf40518163587ae24beca4fa3f3">&#9670;&#160;</a></span>JunoDs_Heap_Insert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoDs_Heap_Insert </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="pointer__api_8h.html#a3caf7d5b9c47228dcbb289ab1f8a6045">JUNO_POINTER_T</a>&#160;</td>
+          <td class="paramname"><em>tValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Insert a new element into the heap. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptHeap</td><td>Heap instance. </td></tr>
+    <tr><td class="paramname">tValue</td><td>Pointer descriptor for the element to copy into the heap. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if full; or pointer/array errors from SetAt/Compare/Swap/Update. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Complexity O(log n). Capacity is bounded by ptHeapArray-&gt;zCapacity.</dd></dl>
+<p>Insert a new element into the heap.</p>
+<p>After a successful insert, you must write the element to the returned index in your storage, then call JunoDs_Heap_Update(...) to bubble it up.</p>
+<dl class="section return"><dt>Returns</dt><dd>A result where:<ul>
+<li>tStatus = SUCCESS and tOk = new index when there is capacity.</li>
+<li>tStatus = ERR when zLength &gt;= zCapacity (no more space). </li>
 </ul>
-<p>Error conventions:</p><ul>
-<li>Functions return JUNO_STATUS_T directly or wrapped in a result struct.</li>
-<li>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR on logical/runtime errors (e.g., capacity overflow), and JUNO_STATUS_NULLPTR_ERROR when the root or required members are missing.</li>
-<li>Many helpers return an Option-like payload (bIsSome flag) so your code can distinguish between "valid but not present" and actual errors.</li>
+</dd></dl>
+
+</div>
+</div>
+<a id="gaf0f401a509bcef408ae94e6e4a7d8e17" name="gaf0f401a509bcef408ae94e6e4a7d8e17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf0f401a509bcef408ae94e6e4a7d8e17">&#9670;&#160;</a></span>JunoDs_Heap_Pop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoDs_Heap_Pop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="pointer__api_8h.html#a3caf7d5b9c47228dcbb289ab1f8a6045">JUNO_POINTER_T</a>&#160;</td>
+          <td class="paramname"><em>tReturn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pop the root element into <code>tReturn</code>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptHeap</td><td>Heap instance. </td></tr>
+    <tr><td class="paramname">tReturn</td><td>Pointer descriptor receiving a copy of the popped root value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if the heap is empty; or propagation of errors from Swap/Copy/RemoveAt/SiftDown. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Complexity O(log n).</dd></dl>
+<p>Pop the root element into <code>tReturn</code>.</p>
+<p>Algorithm:</p><ul>
+<li>Swap the root and the last element.</li>
+<li>Call Reset on the last index.</li>
+<li>Decrement zLength and SiftDown from the root.</li>
 </ul>
-<p>Usage flow for insert:</p><ul>
-<li>Call JunoDs_Heap_Insert(...) to obtain an index.</li>
-<li>Write your element to that index in your storage.</li>
-<li>Call JunoDs_Heap_Update(...) to restore heap order by bubbling up.</li>
+<p>Error propagation:</p><ul>
+<li>If Reset returns an error, the delete operation returns that error (it is not ignored).</li>
 </ul>
-<p>Usage flow for delete-min/max:</p><ul>
-<li>Call JunoDs_Heap_Delete(...). The implementation swaps the root with the last element, calls Reset on the vacated last slot, decrements length, and SiftDowns from the root to restore ordering.</li>
-<li>Note: Reset errors are ignored; delete still succeeds. See tests/test_heap.c.</li>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if zLength == 0 or if Swap/Reset/SiftDown report an error. </dd></dl>
+
+</div>
+</div>
+<a id="ga017b8a58b71beb498cb344e077048f18" name="ga017b8a58b71beb498cb344e077048f18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga017b8a58b71beb498cb344e077048f18">&#9670;&#160;</a></span>JunoDs_Heap_SiftDown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoDs_Heap_SiftDown </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>iStart</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sift down from a starting index to restore the heap property. </p>
+<p>Typical usage:</p><ul>
+<li>Used internally by Pop and Heapify. You can also call it directly if you overwrite the root or another node and need to restore ordering.</li>
 </ul>
-<p>Building from an existing array:</p><ul>
-<li>Set zLength to the number of initialized elements and call JunoDs_Heap_Heapify(...). For some parents whose children would exceed capacity, the heapify pass simply skips them. </li>
+<p>Returns:</p><ul>
+<li>JUNO_STATUS_SUCCESS on success.</li>
+<li>JUNO_STATUS_ERR if zLength == 0, if child indices exceed capacity, or if Compare/Swap report an error.</li>
 </ul>
+<p>Sift the element at <code>iStart</code> downward until the heap property holds.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptHeap</td><td>Heap instance. </td></tr>
+    <tr><td class="paramname">iStart</td><td>Start index for sifting (commonly 0 after a pop). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if zLength == 0; or propagation of errors from Compare/Swap. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Complexity O(log n). </dd></dl>
+
+</div>
+</div>
+<a id="ga1d6ded6b0bce2507665ed722c1535f28" name="ga1d6ded6b0bce2507665ed722c1535f28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1d6ded6b0bce2507665ed722c1535f28">&#9670;&#160;</a></span>JunoDs_Heap_Verify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoDs_Heap_Verify </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="heap__api_8h.html#a4cb8218db00474101fe06d5db7472ae4">JUNO_DS_HEAP_ROOT_T</a> *&#160;</td>
+          <td class="paramname"><em>ptHeap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Verify heap configuration and dependent APIs. </p>
+<p>Ensures the heap instance and all required API pointers are set, then delegates to JunoDs_ArrayVerify for the backing array. Used by all heap operations to guard preconditions. </p><dl class="section return"><dt>Returns</dt><dd>JUNO_STATUS_SUCCESS on valid configuration; an error (e.g., NULLPTR, INVALID_TYPE) otherwise. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

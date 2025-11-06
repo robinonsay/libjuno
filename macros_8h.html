@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -126,6 +126,9 @@ $(document).ready(function(){initNavTree('macros_8h.html',''); initResizable(); 
   <div class="headertitle"><div class="title">macros.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Common assertion and helper macros for LibJuno modules.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -143,131 +146,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a30286e0b0863a08e3a9c0151c698acc4" id="r_a30286e0b0863a08e3a9c0151c698acc4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a>(ptr)</td></tr>
-<tr class="separator:a30286e0b0863a08e3a9c0151c698acc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab83ef58e969b9daaafea0bb5b84db5d8" id="r_ab83ef58e969b9daaafea0bb5b84db5d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="macros_8h.html#ab83ef58e969b9daaafea0bb5b84db5d8">JUNO_JUNO_ASSERT_EXISTS_MODULE</a>(ptr,  ptMod,  str)</td></tr>
-<tr class="separator:ab83ef58e969b9daaafea0bb5b84db5d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d804d01e107d36eb7fbd228a03c064d" id="r_a9d804d01e107d36eb7fbd228a03c064d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="macros_8h.html#a9d804d01e107d36eb7fbd228a03c064d">JUNO_ASSERT_SUCCESS</a>(tStatus,  failOp)</td></tr>
-<tr class="separator:a9d804d01e107d36eb7fbd228a03c064d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga30286e0b0863a08e3a9c0151c698acc4" id="r_ga30286e0b0863a08e3a9c0151c698acc4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__macros.html#ga30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a>(ptr)</td></tr>
+<tr class="memdesc:ga30286e0b0863a08e3a9c0151c698acc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns JUNO_STATUS_NULLPTR_ERROR if the expression is falsy.  <br /></td></tr>
+<tr class="separator:ga30286e0b0863a08e3a9c0151c698acc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga66c0cdce818768d381d0e8e480ea24aa" id="r_ga66c0cdce818768d381d0e8e480ea24aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__macros.html#ga66c0cdce818768d381d0e8e480ea24aa">JUNO_ASSERT_EXISTS_MODULE</a>(ptr,  ptMod,  str)</td></tr>
+<tr class="memdesc:ga66c0cdce818768d381d0e8e480ea24aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like JUNO_ASSERT_EXISTS but also calls the module's failure handler.  <br /></td></tr>
+<tr class="separator:ga66c0cdce818768d381d0e8e480ea24aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef99be367bacf32d7c30b34e43a475b3" id="r_gaef99be367bacf32d7c30b34e43a475b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__macros.html#gaef99be367bacf32d7c30b34e43a475b3">JUNO_ASSERT_SUCCESS</a>(tStatus, ...)</td></tr>
+<tr class="memdesc:gaef99be367bacf32d7c30b34e43a475b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the provided failure operation(s) if status is not success.  <br /></td></tr>
+<tr class="separator:gaef99be367bacf32d7c30b34e43a475b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a30286e0b0863a08e3a9c0151c698acc4" name="a30286e0b0863a08e3a9c0151c698acc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30286e0b0863a08e3a9c0151c698acc4">&#9670;&#160;</a></span>JUNO_ASSERT_EXISTS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define JUNO_ASSERT_EXISTS</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">ptr</td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">if</span>(!(ptr)) \</div>
-<div class="line">{ \</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>; \</div>
-<div class="line">}</div>
-<div class="ttc" id="astatus_8h_html_a4ae7478f0e9875995d1e1430c39752ff"><div class="ttname"><a href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a></div><div class="ttdeci">#define JUNO_STATUS_NULLPTR_ERROR</div><div class="ttdef"><b>Definition</b> status.h:26</div></div>
-</div><!-- fragment --><p>Assert if <code>ptr</code> exists. For example <code><a class="el" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS(ptMyPointerFoo)</a></code> or <a class="el" href="macros_8h.html#a30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS(ptMyPointerFoo &amp;&amp; ptMyPointerBar)</a> </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptr</td><td>A pointer or pointers concatinated with &amp;&amp; </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a9d804d01e107d36eb7fbd228a03c064d" name="a9d804d01e107d36eb7fbd228a03c064d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d804d01e107d36eb7fbd228a03c064d">&#9670;&#160;</a></span>JUNO_ASSERT_SUCCESS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define JUNO_ASSERT_SUCCESS</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">tStatus, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">failOp&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">if</span>(tStatus != <a class="code hl_define" href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>) \</div>
-<div class="line">{ \</div>
-<div class="line">    failOp; \</div>
-<div class="line">}</div>
-<div class="ttc" id="astatus_8h_html_ad89a3ea5be5fc21a4b97e2b1e761c084"><div class="ttname"><a href="status_8h.html#ad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">#define JUNO_STATUS_SUCCESS</div><div class="ttdef"><b>Definition</b> status.h:24</div></div>
-</div><!-- fragment --><p>Assert the status is a success, if not perform <code>failOp</code> </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tStatus</td><td>The status to assert </td></tr>
-    <tr><td class="paramname">failOp</td><td>The failure operation </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ab83ef58e969b9daaafea0bb5b84db5d8" name="ab83ef58e969b9daaafea0bb5b84db5d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab83ef58e969b9daaafea0bb5b84db5d8">&#9670;&#160;</a></span>JUNO_JUNO_ASSERT_EXISTS_MODULE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define JUNO_JUNO_ASSERT_EXISTS_MODULE</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">ptr, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">ptMod, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">str&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">if</span>(!(ptr)) \</div>
-<div class="line">{ \</div>
-<div class="line">    JUNO_FAIL_MODULE(<a class="code hl_define" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>, ptMod, str); \</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="status_8h.html#a4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>; \</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Assert if a module's dependencies exist </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ptr</td><td>the Module dependecy or dependencies to assert (similar to <code>JUNO_ASSERT_EXISTS</code>) </td></tr>
-    <tr><td class="paramname">ptMod</td><td>The module </td></tr>
-    <tr><td class="paramname">str</td><td>The error message if <code>ptr</code> fails assertion </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Common assertion and helper macros for LibJuno modules. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

@@ -1,6 +1,6 @@
 var structJUNO__DS__HEAP__API__TAG =
 [
-    [ "Compare", "structJUNO__DS__HEAP__API__TAG.html#aca4817d64fd1732853031f18a7cac4f8", null ],
-    [ "Reset", "structJUNO__DS__HEAP__API__TAG.html#ab154a3bb1b0600d9130856fae4efb810", null ],
-    [ "Swap", "structJUNO__DS__HEAP__API__TAG.html#aa3f594c730f17c7193ea678062e2edca", null ]
+    [ "Heapify", "structJUNO__DS__HEAP__API__TAG.html#a77047c846432b278a0f1f3dfd66c4431", null ],
+    [ "Insert", "structJUNO__DS__HEAP__API__TAG.html#a9be3e16a78cbfbe1a09a7b7785a66eaf", null ],
+    [ "Pop", "structJUNO__DS__HEAP__API__TAG.html#ab9ac713ca61d7a336ed222812f3b554a", null ]
 ];

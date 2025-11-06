@@ -1,15 +1,18 @@
 var searchData=
 [
-  ['gas_20powered_20engine_3a_20engine_5fv6_20h_20engine_5fv8_20h_0',['3.2. Deriving a Gas-Powered Engine: engine_v6.h &amp; engine_v8.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md57',1,'']]],
-  ['gas_20tank_1',['2. Defining a Simple Module API: The Gas Tank',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md50',1,'']]],
-  ['gastank_5fapi_20h_2',['2.1. gastank_api.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md51',1,'']]],
-  ['gastank_5fimpl_20h_3',['2.2. gastank_impl.h',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md52',1,'']]],
-  ['get_4',['get',['../structJUNO__MAP__API__TAG.html#a810e5ff083e7bea1ccdedff9fc1b6368',1,'JUNO_MAP_API_TAG::Get'],['../structJUNO__MEMORY__ALLOC__API__TAG.html#a0ac4d16586e6e5ae36a13889bacc8ee7',1,'JUNO_MEMORY_ALLOC_API_TAG::Get']]],
-  ['getbuffer_5',['GetBuffer',['../structJUNO__MSG__API__TAG.html#a044f174e3fbe8269a8287be8b5e85753',1,'JUNO_MSG_API_TAG']]],
-  ['getmajorframeperiod_6',['GetMajorFramePeriod',['../structJUNO__SCH__API__TAG.html#a081aceb704219323d5ff1ed71330864b',1,'JUNO_SCH_API_TAG']]],
-  ['getminorframeperiod_7',['GetMinorFramePeriod',['../structJUNO__SCH__API__TAG.html#a1866c5537247a5337e8617362b848cb9',1,'JUNO_SCH_API_TAG']]],
-  ['getpublisherid_8',['GetPublisherId',['../structJUNO__PUBLISHER__API__TAG.html#ae4ec076d361bad121a10448fd5157a3f',1,'JUNO_PUBLISHER_API_TAG']]],
-  ['getsize_9',['GetSize',['../structJUNO__STRING__API__TAG.html#a75d02b815e5225c87bfbaada096e2d1e',1,'JUNO_STRING_API_TAG']]],
-  ['getting_20started_10',['Getting Started',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md5',1,'']]],
-  ['gisubsecs_5fmax_11',['giSUBSECS_MAX',['../juno__time_8c.html#aa122a53fca584785c3b9cd2521307e06',1,'juno_time.c']]]
+  ['libjuno_0',['libjuno',['../index.html',1,'LibJuno'],['../index.html#autotoc_md40',1,'LibJuno'],['../index.html#autotoc_md47',1,'Using LibJuno']]],
+  ['libjuno_20examples_1',['LibJuno Examples',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html',1,'']]],
+  ['libjuno_20module_20system_20dependency_20injection_2',['LibJuno Module System &amp; Dependency Injection',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html',1,'']]],
+  ['libjuno_20tutorial_3',['LibJuno Tutorial',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html',1,'']]],
+  ['libjuno_5ftutorial_2emd_4',['LibJuno_Tutorial.md',['../LibJuno__Tutorial_8md.html',1,'']]],
+  ['library_20of_20everything_20problem_5',['The &quot;Library of Everything&quot; Problem',['../index.html#autotoc_md41',1,'']]],
+  ['like_20the_20tests_6',['Minimal end-to-end example (compiles like the tests)',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md17',1,'']]],
+  ['lock_7',['Lock',['../structJUNO__MP__MTX__API__TAG.html#a5d4628ebde6208e2e116ef2617367e96',1,'JUNO_MP_MTX_API_TAG']]],
+  ['log_5fapi_2eh_8',['log_api.h',['../log__api_8h.html',1,'']]],
+  ['logdebug_9',['logdebug',['../main_8c.html#ae3acb5446cc3d129a21c2d00863399cc',1,'LogDebug():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#aeb29dca837a71395af86864e6a7f9ed5',1,'JUNO_LOG_API_TAG::LogDebug']]],
+  ['logerror_10',['logerror',['../main_8c.html#a4c5799027873b5e412bbc794bd2cad2a',1,'LogError():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#aba52d1328f47ffc5b921a43b4bbe2802',1,'JUNO_LOG_API_TAG::LogError']]],
+  ['logging_11',['logging',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md77',1,'Logging'],['../main_8c.html#autotoc_md109',1,'Logging']]],
+  ['logging_20api_12',['Logging API',['../group__juno__log.html',1,'']]],
+  ['loginfo_13',['loginfo',['../main_8c.html#afdf60c17632e976e381e981f5c019c01',1,'LogInfo():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#aefd3b900918e78f012a8637e9533a3df',1,'JUNO_LOG_API_TAG::LogInfo']]],
+  ['logwarning_14',['logwarning',['../main_8c.html#a1952bfaed98132c9bbf0e27e30cd4fb3',1,'LogWarning():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#abdac8927055d98dfd7be63c2b7a9c647',1,'JUNO_LOG_API_TAG::LogWarning']]]
 ];

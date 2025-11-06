@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -128,6 +128,9 @@ $(document).ready(function(){initNavTree('sm__api_8h.html',''); initResizable();
   <div class="headertitle"><div class="title">sm_api.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Minimal state machine (SM) framework with explicit states.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="macros_8h_source.html">juno/macros.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="status_8h_source.html">juno/status.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
@@ -138,6 +141,11 @@ $(document).ready(function(){initNavTree('sm__api_8h.html',''); initResizable();
 Include dependency graph for sm_api.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="sm__api_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2sm_2sm__api_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="sm__api_8h__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2sm_2sm__api_8hdep" alt=""/></div>
 </div>
 </div>
 <p><a href="sm__api_8h_source.html">Go to the source code of this file.</a></p>
@@ -158,43 +166,46 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af929306593ac19bbb8fc5f4ce3d600f7" id="r_af929306593ac19bbb8fc5f4ce3d600f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#af929306593ac19bbb8fc5f4ce3d600f7">JUNO_MODULE_DECLARE</a> (JUNO_SM_STATE_T)</td></tr>
-<tr class="separator:af929306593ac19bbb8fc5f4ce3d600f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64d384314dd3d28eb2c2a54aa57228fb" id="r_a64d384314dd3d28eb2c2a54aa57228fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a64d384314dd3d28eb2c2a54aa57228fb">JUNO_MODULE_DECLARE</a> (JUNO_SM_T)</td></tr>
-<tr class="separator:a64d384314dd3d28eb2c2a54aa57228fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8ab54a2cc37ebea3e7d049187aee765" id="r_ac8ab54a2cc37ebea3e7d049187aee765"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#ac8ab54a2cc37ebea3e7d049187aee765">JUNO_MODULE_RESULT</a> (JUNO_SM_RESULT_STATE_ROOT_T, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *)</td></tr>
 <tr class="memdesc:ac8ab54a2cc37ebea3e7d049187aee765"><td class="mdescLeft">&#160;</td><td class="mdescRight">A result type for returning a SM state.  <br /></td></tr>
 <tr class="separator:ac8ab54a2cc37ebea3e7d049187aee765"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac388ee65bd9c3509ced6977e422d0bef" id="r_ac388ee65bd9c3509ced6977e422d0bef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#ac388ee65bd9c3509ced6977e422d0bef">JUNO_MODULE_RESULT</a> (JUNO_SM_RESULT_STATE_T, JUNO_SM_STATE_T *)</td></tr>
-<tr class="separator:ac388ee65bd9c3509ced6977e422d0bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4de421e985949c63bb679e403c6e455f" id="r_a4de421e985949c63bb679e403c6e455f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a4de421e985949c63bb679e403c6e455f">JUNO_MODULE_RESULT</a> (JUNO_SM_RESULT_STATE_T, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *)</td></tr>
+<tr class="separator:a4de421e985949c63bb679e403c6e455f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f752aca6cd3d6d3d609d56bd08765b8" id="r_a8f752aca6cd3d6d3d609d56bd08765b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a8f752aca6cd3d6d3d609d56bd08765b8">JUNO_MODULE_OPTION</a> (JUNO_SM_OPTION_STATE_ROOT_T, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *)</td></tr>
 <tr class="separator:a8f752aca6cd3d6d3d609d56bd08765b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78a7e14116a21f6af3009c30c6871ca2" id="r_a78a7e14116a21f6af3009c30c6871ca2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a78a7e14116a21f6af3009c30c6871ca2">JUNO_MODULE_OPTION</a> (JUNO_SM_OPTION_STATE_T, JUNO_SM_STATE_T *)</td></tr>
-<tr class="separator:a78a7e14116a21f6af3009c30c6871ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd549fdf4bee80006bc88f42b2fc19d9" id="r_afd549fdf4bee80006bc88f42b2fc19d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#afd549fdf4bee80006bc88f42b2fc19d9">JUNO_MODULE_OPTION</a> (JUNO_SM_OPTION_STATE_T, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *)</td></tr>
+<tr class="separator:afd549fdf4bee80006bc88f42b2fc19d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a018650a06754081700b5e8513161a1f4" id="r_a018650a06754081700b5e8513161a1f4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a018650a06754081700b5e8513161a1f4">JUNO_MODULE_RESULT</a> (JUNO_SM_RESULT_OPTION_STATE_ROOT_T, JUNO_SM_OPTION_STATE_ROOT_T)</td></tr>
 <tr class="separator:a018650a06754081700b5e8513161a1f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a504296dedc67fdb0bc972552a6ed386d" id="r_a504296dedc67fdb0bc972552a6ed386d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a504296dedc67fdb0bc972552a6ed386d">JUNO_MODULE_RESULT</a> (JUNO_SM_RESULT_OPTION_STATE_T, JUNO_SM_OPTION_STATE_T)</td></tr>
 <tr class="separator:a504296dedc67fdb0bc972552a6ed386d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cf1c506cb2de3966e271cb21319bf60" id="r_a2cf1c506cb2de3966e271cb21319bf60"><td class="memItemLeft" align="right" valign="top">struct JUNO_SM_STATE_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a2cf1c506cb2de3966e271cb21319bf60">JUNO_MODULE_ROOT</a> (<a class="el" href="sm__api_8h.html#a4adee65d577a133ed313e21e2109bddb">JUNO_SM_STATE_API_T</a>, JUNO_SM_T *ptSm;JUNO_SM_OPTION_STATE_T tOptionNextState;)</td></tr>
-<tr class="memdesc:a2cf1c506cb2de3966e271cb21319bf60"><td class="mdescLeft">&#160;</td><td class="mdescRight">A State Machine State.  <br /></td></tr>
-<tr class="separator:a2cf1c506cb2de3966e271cb21319bf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0d8f375d4ed1be9b5973003df6d68a4" id="r_af0d8f375d4ed1be9b5973003df6d68a4"><td class="memItemLeft" align="right" valign="top">struct JUNO_SM_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#af0d8f375d4ed1be9b5973003df6d68a4">JUNO_MODULE_ROOT</a> (void, JUNO_SM_STATE_T *ptCurrentState;)</td></tr>
-<tr class="separator:af0d8f375d4ed1be9b5973003df6d68a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab85c60357e6bc5130b41f70f9f26cbf8" id="r_ab85c60357e6bc5130b41f70f9f26cbf8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#ab85c60357e6bc5130b41f70f9f26cbf8">JunoSm_Verify</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSmRoot)</td></tr>
+<tr class="memitem:a4b80d92b451207147b49228ac5de2990" id="r_a4b80d92b451207147b49228ac5de2990"><td class="memItemLeft" align="right" valign="top">struct JUNO_SM_STATE_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a4b80d92b451207147b49228ac5de2990">JUNO_MODULE_ROOT</a> (<a class="el" href="sm__api_8h.html#a4adee65d577a133ed313e21e2109bddb">JUNO_SM_STATE_API_T</a>, <a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSm;JUNO_SM_OPTION_STATE_T tOptionNextState;)</td></tr>
+<tr class="memdesc:a4b80d92b451207147b49228ac5de2990"><td class="mdescLeft">&#160;</td><td class="mdescRight">A State Machine State.  <br /></td></tr>
+<tr class="separator:a4b80d92b451207147b49228ac5de2990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6afecdd0c8838f90e0f0e894457e8259" id="r_a6afecdd0c8838f90e0f0e894457e8259"><td class="memItemLeft" align="right" valign="top">struct JUNO_SM_ROOT_TAG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a6afecdd0c8838f90e0f0e894457e8259">JUNO_MODULE_ROOT</a> (void, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptCurrentState;)</td></tr>
+<tr class="separator:a6afecdd0c8838f90e0f0e894457e8259"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab85c60357e6bc5130b41f70f9f26cbf8" id="r_ab85c60357e6bc5130b41f70f9f26cbf8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#ab85c60357e6bc5130b41f70f9f26cbf8">JunoSm_Verify</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSmRoot)</td></tr>
 <tr class="memdesc:ab85c60357e6bc5130b41f70f9f26cbf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify if this is a valid state machine.  <br /></td></tr>
 <tr class="separator:ab85c60357e6bc5130b41f70f9f26cbf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c268748e91a1e666f526c9551e499cb" id="r_a3c268748e91a1e666f526c9551e499cb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a3c268748e91a1e666f526c9551e499cb">JunoSm_StateVerify</a> (<a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptSmState)</td></tr>
+<tr class="memitem:a3c268748e91a1e666f526c9551e499cb" id="r_a3c268748e91a1e666f526c9551e499cb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a3c268748e91a1e666f526c9551e499cb">JunoSm_StateVerify</a> (<a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptSmState)</td></tr>
 <tr class="separator:a3c268748e91a1e666f526c9551e499cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaccf62d2865a897c30188f23eccba91b" id="r_aaccf62d2865a897c30188f23eccba91b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#aaccf62d2865a897c30188f23eccba91b">JunoSm_StateInit</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSm, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptStateRoot, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptNextState, const <a class="el" href="sm__api_8h.html#a4adee65d577a133ed313e21e2109bddb">JUNO_SM_STATE_API_T</a> *ptStateApi, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memitem:aaccf62d2865a897c30188f23eccba91b" id="r_aaccf62d2865a897c30188f23eccba91b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#aaccf62d2865a897c30188f23eccba91b">JunoSm_StateInit</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSm, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptStateRoot, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptNextState, const <a class="el" href="sm__api_8h.html#a4adee65d577a133ed313e21e2109bddb">JUNO_SM_STATE_API_T</a> *ptStateApi, <a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memdesc:aaccf62d2865a897c30188f23eccba91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a state, linking it to the SM and optional next state.  <br /></td></tr>
 <tr class="separator:aaccf62d2865a897c30188f23eccba91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f599ec55e6174f02a1fc4e169974fb0" id="r_a4f599ec55e6174f02a1fc4e169974fb0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a4f599ec55e6174f02a1fc4e169974fb0">JunoSm_Init</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSmRoot, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptStartState, <a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memitem:a4f599ec55e6174f02a1fc4e169974fb0" id="r_a4f599ec55e6174f02a1fc4e169974fb0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#a4f599ec55e6174f02a1fc4e169974fb0">JunoSm_Init</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSmRoot, <a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptStartState, <a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a> pfcnFailureHandler, <a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData)</td></tr>
+<tr class="memdesc:a4f599ec55e6174f02a1fc4e169974fb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the state machine with a start state.  <br /></td></tr>
 <tr class="separator:a4f599ec55e6174f02a1fc4e169974fb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8837494d6d113ba3a12210318b7c16f" id="r_ab8837494d6d113ba3a12210318b7c16f"><td class="memItemLeft" align="right" valign="top">static JUNO_SM_RESULT_STATE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#ab8837494d6d113ba3a12210318b7c16f">JunoSm_GetCurrentState</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSmRoot)</td></tr>
+<tr class="memdesc:ab8837494d6d113ba3a12210318b7c16f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current state pointer.  <br /></td></tr>
 <tr class="separator:ab8837494d6d113ba3a12210318b7c16f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab65b9baf052391ef55ade5b551a8b4d3" id="r_ab65b9baf052391ef55ade5b551a8b4d3"><td class="memItemLeft" align="right" valign="top">static JUNO_SM_RESULT_OPTION_STATE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sm__api_8h.html#ab65b9baf052391ef55ade5b551a8b4d3">JunoSm_TransitionState</a> (<a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSmRoot)</td></tr>
+<tr class="memdesc:ab65b9baf052391ef55ade5b551a8b4d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transition to the next state if present; return the new state option.  <br /></td></tr>
 <tr class="separator:ab65b9baf052391ef55ade5b551a8b4d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Minimal state machine (SM) framework with explicit states. </p>
+<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> </p>
+</div><h2 class="groupheader">Typedef Documentation</h2>
 <a id="af712b2e2046cc51c1a5cb03c2fb84dae" name="af712b2e2046cc51c1a5cb03c2fb84dae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af712b2e2046cc51c1a5cb03c2fb84dae">&#9670;&#160;</a></span>JUNO_SM_ROOT_T</h2>
 
@@ -206,7 +217,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This API has been generated by LibJuno: <a href="https://www.robinonsay.com/libjuno/">https://www.robinonsay.com/libjuno/</a> This header contains the juno_sm library API </p><dl class="section author"><dt>Author</dt><dd>Robin Onsay </dd></dl>
 
 </div>
 </div>
@@ -239,42 +249,6 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="af929306593ac19bbb8fc5f4ce3d600f7" name="af929306593ac19bbb8fc5f4ce3d600f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af929306593ac19bbb8fc5f4ce3d600f7">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_SM_STATE_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a64d384314dd3d28eb2c2a54aa57228fb" name="a64d384314dd3d28eb2c2a54aa57228fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64d384314dd3d28eb2c2a54aa57228fb">&#9670;&#160;</a></span>JUNO_MODULE_DECLARE() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_DECLARE </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_SM_T&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a8f752aca6cd3d6d3d609d56bd08765b8" name="a8f752aca6cd3d6d3d609d56bd08765b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8f752aca6cd3d6d3d609d56bd08765b8">&#9670;&#160;</a></span>JUNO_MODULE_OPTION() <span class="overload">[1/2]</span></h2>
 
@@ -303,8 +277,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a78a7e14116a21f6af3009c30c6871ca2" name="a78a7e14116a21f6af3009c30c6871ca2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78a7e14116a21f6af3009c30c6871ca2">&#9670;&#160;</a></span>JUNO_MODULE_OPTION() <span class="overload">[2/2]</span></h2>
+<a id="afd549fdf4bee80006bc88f42b2fc19d9" name="afd549fdf4bee80006bc88f42b2fc19d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd549fdf4bee80006bc88f42b2fc19d9">&#9670;&#160;</a></span>JUNO_MODULE_OPTION() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -318,7 +292,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">JUNO_SM_STATE_T *&#160;</td>
+          <td class="paramtype"><a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -417,8 +391,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac388ee65bd9c3509ced6977e422d0bef" name="ac388ee65bd9c3509ced6977e422d0bef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac388ee65bd9c3509ced6977e422d0bef">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[4/4]</span></h2>
+<a id="a4de421e985949c63bb679e403c6e455f" name="a4de421e985949c63bb679e403c6e455f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4de421e985949c63bb679e403c6e455f">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -432,7 +406,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">JUNO_SM_STATE_T *&#160;</td>
+          <td class="paramtype"><a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -445,8 +419,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2cf1c506cb2de3966e271cb21319bf60" name="a2cf1c506cb2de3966e271cb21319bf60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cf1c506cb2de3966e271cb21319bf60">&#9670;&#160;</a></span>JUNO_MODULE_ROOT() <span class="overload">[1/2]</span></h2>
+<a id="a4b80d92b451207147b49228ac5de2990" name="a4b80d92b451207147b49228ac5de2990"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b80d92b451207147b49228ac5de2990">&#9670;&#160;</a></span>JUNO_MODULE_ROOT() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -460,7 +434,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">JUNO_SM_T *ptSm;JUNO_SM_OPTION_STATE_T tOptionNextState;&#160;</td>
+          <td class="paramtype"><a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *ptSm;JUNO_SM_OPTION_STATE_T tOptionNextState;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -475,8 +449,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af0d8f375d4ed1be9b5973003df6d68a4" name="af0d8f375d4ed1be9b5973003df6d68a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0d8f375d4ed1be9b5973003df6d68a4">&#9670;&#160;</a></span>JUNO_MODULE_ROOT() <span class="overload">[2/2]</span></h2>
+<a id="a6afecdd0c8838f90e0f0e894457e8259" name="a6afecdd0c8838f90e0f0e894457e8259"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6afecdd0c8838f90e0f0e894457e8259">&#9670;&#160;</a></span>JUNO_MODULE_ROOT() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -490,7 +464,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">JUNO_SM_STATE_T *ptCurrentState;&#160;</td>
+          <td class="paramtype"><a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *ptCurrentState;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -527,6 +501,8 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get the current state pointer. </p>
+
 </div>
 </div>
 <a id="a4f599ec55e6174f02a1fc4e169974fb0" name="a4f599ec55e6174f02a1fc4e169974fb0"></a>
@@ -539,7 +515,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_Init </td>
+          <td class="memname">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_Init </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptSmRoot</em>, </td>
@@ -553,13 +529,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td>
           <td class="paramname"><em>pfcnFailureHandler</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td>
           <td class="paramname"><em>pvFailureUserData</em>&#160;</td>
         </tr>
         <tr>
@@ -575,6 +551,8 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Initialize the state machine with a start state. </p>
+
 </div>
 </div>
 <a id="aaccf62d2865a897c30188f23eccba91b" name="aaccf62d2865a897c30188f23eccba91b"></a>
@@ -587,7 +565,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_StateInit </td>
+          <td class="memname">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_StateInit </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptSm</em>, </td>
@@ -613,13 +591,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="status_8h.html#a0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a>&#160;</td>
           <td class="paramname"><em>pfcnFailureHandler</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="status_8h.html#af575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *&#160;</td>
           <td class="paramname"><em>pvFailureUserData</em>&#160;</td>
         </tr>
         <tr>
@@ -635,6 +613,8 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Initialize a state, linking it to the SM and optional next state. </p>
+
 </div>
 </div>
 <a id="a3c268748e91a1e666f526c9551e499cb" name="a3c268748e91a1e666f526c9551e499cb"></a>
@@ -647,7 +627,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_StateVerify </td>
+          <td class="memname">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_StateVerify </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="sm__api_8h.html#a5ff51fd5cd187337b04b5a5db2b9a824">JUNO_SM_STATE_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptSmState</em></td><td>)</td>
@@ -687,6 +667,8 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Transition to the next state if present; return the new state option. </p>
+
 </div>
 </div>
 <a id="ab85c60357e6bc5130b41f70f9f26cbf8" name="ab85c60357e6bc5130b41f70f9f26cbf8"></a>
@@ -699,7 +681,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="status_8h.html#a37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_Verify </td>
+          <td class="memname">static <a class="el" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> JunoSm_Verify </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="sm__api_8h.html#af712b2e2046cc51c1a5cb03c2fb84dae">JUNO_SM_ROOT_T</a> *&#160;</td>
           <td class="paramname"><em>ptSmRoot</em></td><td>)</td>

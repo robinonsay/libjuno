@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -125,85 +125,159 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__2home_2runner_2work_2libjuno_2libjuno_2README"></a> <img src="https://raw.githubusercontent.com/robinonsay/libjuno/b710f2f363f589a5da475543f53a22d3d030cc26/assets/juno_logo_rect.svg" alt="drawing" style="pointer-events: none;" width="400em" class="inline"/></p>
-<p><img src="https://github.com/robinonsay/libjuno/actions/workflows/ctest.yml/badge.svg" alt="GitHub Actions Workflow Status" style="pointer-events: none;" class="inline"/> <img src="https://img.shields.io/badge/License-MIT%202.0-blue.svg" alt="License: MIT" style="pointer-events: none;" class="inline"/> <img src="https://img.shields.io/github/v/tag/robinonsay/libjuno" alt="GitHub Tag" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md84"></a>
+<p><img src="https://github.com/robinonsay/libjuno/actions/workflows/ctest.yml/badge.svg" alt="GitHub Actions Workflow Status" style="pointer-events: none;" class="inline"/> <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" style="pointer-events: none;" class="inline"/> <img src="https://img.shields.io/github/v/tag/robinonsay/libjuno" alt="GitHub Tag" class="inline"/></p>
+<h1><a class="anchor" id="autotoc_md40"></a>
 LibJuno</h1>
 <ul>
 <li><a href="https://github.com/robinonsay/libjuno">LibJuno GitHub</a></li>
-<li>LibJuno is a lightweight C99 library designed specifically for embedded systems.</li>
-<li>LibJuno enables embedded systems developers to utilize dependency injection within C99 in a memory-safe manner</li>
-<li>LibJuno provides essential functionalities like memory management and more all without dynamic memory allocation!</li>
-<li>LibJuno optimizes for memory safety, determinism and efficiency in constrained environments.</li>
-<li>LibJuno is compiled without the standard library to maximize portability.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md85"></a>
-Using LibJuno</h2>
-<ul>
-<li>By default, LibJuno will compile both a shared and static library</li>
+<p>LibJuno is a lightweight C11 embedded systems micro-framework designed to provide developers with common capabilities and interfaces commonly used in embedded systems development.</p>
+<p><b>Key Features:</b></p><ul>
+<li><b>Dependency Injection in C11</b>: Enable modular, testable embedded software with explicit dependencies</li>
+<li><b>Memory Safety</b>: Static memory allocation with type-safe pointer APIs - no dynamic allocation</li>
+<li><b>Freestanding Support</b>: Can build without hosted C standard library (<code>-DJUNO_FREESTANDING=ON</code>)</li>
+<li><b>Deterministic</b>: Predictable behavior and explicit error paths for real-time systems</li>
+<li><b>Modular</b>: Use the whole library or cherry-pick individual components</li>
+<li><b>Portable</b>: C11 standard with minimal platform assumptions</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md86"></a>
-Documentation</h3>
+<h1><a class="anchor" id="autotoc_md41"></a>
+The "Library of Everything" Problem</h1>
+<p>Many developers try to write the "Library of Everything". This is a library that promises to solve all the problems that every developer has and does absolutely everything. It claims to meet the needs of everyone and will lead to a glorious software future. It sounds great on paper but is fundamentally flawed. Library developers have no idea what the user's requirements are and the assumptions made about the user's requirements will be wrong for many users. It's impossible to write a library that can meet every developer's needs. When library developers write the "Library of Everything" they often prescribe developers to a specific architecture and run-time. A "Library of Everything" can be spotted when they dictate a "central executive" and convoluted abstraction layers with specific implementations designed with a specific system in mind. This pigeon holes them to the framework and does not scale when a developer has different requirements than what the library assumed.</p>
+<p>LibJuno makes the assumption that it doesn't know how you're going to use it. It's designed to be easy to change and adapt to your specific requirements. That's why LibJuno doesn't implement a run-time and heavily utilizes dependency injection. Developers know their system better than anyone. This library attempts to impower users with a set of tools they can choose to use or leave on the table and create a solution that meets their requirements. LibJuno differs from other frameworks because this library makes it easy for developers to make that choice.</p>
+<h1><a class="anchor" id="autotoc_md42"></a>
+Core Philosophy</h1>
+<p>LibJuno prioritizes the following:</p><ol type="1">
+<li>Memory Safety &ndash; Memory needs to be accessed safely. This means <b>no dynamic memory allocation</b> and <b>no heap allocated memory</b> within this library.</li>
+<li>Software Scalability &ndash; Software should be maintainable as the codebase grows.</li>
+<li>Shareability &ndash; Small software components should be easy to share from one codebase to another.</li>
+<li>Transparency &ndash; Capabilities need to be transparent about the dependencies they have.</li>
+</ol>
+<p>In order to implement this philosophy LibJuno heavily utilizes the Dependency Injection paradigm. This enables these software systems to be scalable and easier to test. Additionally, LibJuno injects memory use instead of allocating it. This enables developers to safely access their memory.</p>
+<p>Finally, LibJuno aims to make few assumptions about developer's intended use-case. LibJuno understands that developers and software architects are the experts of their system, not this library. The intent is for this micro-framework to fit within developers software systems, not for a software system to conform to this library. Developers can flexibly use the whole library or a single function with little project overhead.</p>
+<h2><a class="anchor" id="autotoc_md43"></a>
+Memory Safety, Pointers, and Arrays</h2>
+<p>At first, the LibJuno Pointer and Array systems may seem complex, or boilerplate heavy. It's worth asking the question "Why not *just* use
+`void *` and take a size?". The answer is memory safety. <code>void *</code>'s are inherently unsafe. Many memory bugs and segfaults are a result of complex pointer math and type erasure. LibJuno does not know your type. It doesn't know what size, alignment, copy requirements your type has. It doesn't know if you need a linked list, static array, or some secret third data structure. Instead LibJuno says "Tell
+me how to copy and reset your type and how to access your data". With the answer to that question LibJuno can provide many tools at your disposal. The alternative is either compromise on memory safety, or implement the same queue function for every single type. The trade this library makes is a little boilerplate for a lot of functionality. The nice thing about LibJuno is that if you don't like the implementation, you don't need to use it. You can always roll your own implementation if that's what your project requires.</p>
+<h1><a class="anchor" id="autotoc_md44"></a>
+Templates and Scripts</h1>
+<p>LibJuno provides many boilerplate generators in the <code>scripts</code> directory. This makes it easy and effortless to generate structures and implementations for arrays, pointers, apps, messages, and more.</p>
+<h1><a class="anchor" id="autotoc_md45"></a>
+Tutorial</h1>
+<p>See <a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html">the LibJuno Tutorial</a> for a tutorial on how to use LibJuno. This is a complete toy-project that is used to explain and demonstrate many concepts and core capabilities within LibJuno.</p>
+<h1><a class="anchor" id="autotoc_md46"></a>
+Version and API Stability</h1>
+<p><b>Current Version</b>: 1.0.0</p>
+<p>LibJuno follows semantic versioning. While we strive for API stability and aim to minimize breaking changes, we prioritize correctness and safety. Future releases will follow semantic versioning practices:</p><ul>
+<li><b>Patch releases</b> (1.0.x): Bug fixes, no API changes</li>
+<li><b>Minor releases</b> (1.x.0): New features, backward compatible</li>
+<li><b>Major releases</b> (2.0.0): May include breaking changes when necessary</li>
+</ul>
+<p>The public API includes all headers in <code>include/juno/</code>. Internal implementation details in <code>src/</code> are subject to change.</p>
+<h1><a class="anchor" id="autotoc_md47"></a>
+Using LibJuno</h1>
 <ul>
-<li><a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html">Dependency Injection</a></li>
+<li>By default, LibJuno builds a static library (<code>libjuno.a</code>). To also build a shared library, pass <code>-DJUNO_SHARED=ON</code>.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md48"></a>
+Documentation</h2>
+<ul>
+<li><a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html">Module System &amp; Dependency Injection</a></li>
 <li><a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html">Memory Module</a></li>
+<li><a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html">Examples Guide</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md87"></a>
+<h2><a class="anchor" id="autotoc_md49"></a>
 Dependencies</h2>
-<ul>
-<li>LibJuno is aims to minimze dependencies, including dependencies on the C standard library</li>
-<li>Dependencies of LibJuno are listed here<ul>
-<li>This does not include dependencies on compilers or build scripting/tooling</li>
-</ul>
-</li>
-</ul>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Dependency Name   </th><th class="markdownTableHeadNone">Rationale    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">&lt;math.h&gt;   </td><td class="markdownTableBodyNone">Math is required for math lib   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md88"></a>
+<p>LibJuno is designed to minimize external dependencies for maximum portability.</p>
+<p><b>Core Library</b>: No external dependencies (can build freestanding with <code>-DJUNO_FREESTANDING=ON</code>)</p>
+<p><b>Testing Only</b>: Unity test framework (included in <code>deps/unity/</code>)</p>
+<p><b>Note</b>: Examples and tutorials may use standard library features (printf, etc.) for demonstration purposes, but the core library supports true freestanding operation where you provide your own I/O implementations.</p>
+<h2><a class="anchor" id="autotoc_md50"></a>
 Building and Testing</h2>
 <ol type="1">
-<li>Generate build files:<ul>
-<li><code>cmake -B build .</code></li>
+<li>Configure (static library by default):<ul>
+<li><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo</code></li>
 </ul>
 </li>
-<li>Compile the project:<ul>
-<li><code>make -C build</code></li>
+<li>Build:<ul>
+<li><code>cmake --build build -j</code></li>
 </ul>
 </li>
-<li>Run unit-tests:<ul>
-<li><code>cmake -B build . -DJUNO_TESTS=ON</code></li>
-<li><code>make -C build</code></li>
-<li><code>cd build</code></li>
-<li><code>ctest</code></li>
+<li>Run unit tests (optional):<ul>
+<li><code>cmake -S . -B build -DJUNO_TESTS=ON -DCMAKE_BUILD_TYPE=Debug</code></li>
+<li><code>cmake --build build -j</code></li>
+<li><code>ctest --test-dir build --output-on-failure</code></li>
 </ul>
 </li>
 </ol>
-<h3><a class="anchor" id="autotoc_md89"></a>
-CMake Build Option</h3>
-<ul>
-<li><code>-DJUNO_TESTS=On</code> (Default <code>Off</code>): Enable unit testing</li>
-<li><code>-DJUNO_COVERAGE=On</code> (Default <code>Off</code>): Compile Juno with code coverage</li>
-<li><code>-DJUNO_DOCS=On</code> (Default <code>Off</code>): Enable doxygen docs</li>
-<li><code>-DJUNO_PIC=On</code> (Default <code>On</code>): Compile Juno with Position Independent Code</li>
-<li><code>-DJUNO_SHARED=On</code> (Default <code>Off</code>): Compile the juno shared library</li>
+<h3><a class="anchor" id="autotoc_md51"></a>
+CMake Build Options</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">Default   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>JUNO_TESTS</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Enable unit testing with Unity framework    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>JUNO_COVERAGE</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Compile with code coverage instrumentation    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>JUNO_DOCS</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Generate Doxygen API documentation    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>JUNO_PIC</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Compile with Position Independent Code    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>JUNO_SHARED</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Build shared library in addition to static    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>JUNO_FREESTANDING</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone"><b>Freestanding mode</b>: Adds <code>-ffreestanding -nostdlib</code> flags for bare-metal targets    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>JUNO_ASAN</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Enable AddressSanitizer (host debugging only)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>JUNO_UBSAN</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Enable UndefinedBehaviorSanitizer (host debugging only)    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>JUNO_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Build example programs (requires hosted environment)   </td></tr>
+</table>
+<h4><a class="anchor" id="autotoc_md52"></a>
+Freestanding Mode</h4>
+<p>LibJuno is designed to support <b>true freestanding builds</b> for bare-metal and RTOS environments:</p>
+<div class="fragment"><div class="line">cmake -S . -B build -DJUNO_FREESTANDING=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo</div>
+<div class="line">cmake --build build -j</div>
+</div><!-- fragment --><p>In freestanding mode:</p><ul>
+<li>No standard library headers are used (except freestanding ones like <code>&lt;stdint.h&gt;</code>, <code>&lt;stdbool.h&gt;</code>, <code>&lt;stddef.h&gt;</code>)</li>
+<li>Links with <code>-nostdlib</code></li>
+<li>Core library APIs remain fully functional</li>
+<li>You provide platform-specific implementations (time, logging, I/O) via dependency injection</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md90"></a>
-Current Modules</h2>
-<ul>
-<li><b>Memory Management</b>: Provides block-based allocation, deallocation, and memory tracking.</li>
-<li><b>String Operations</b>: Handles string initialization, manipulation, concatenation, and cleanup.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md91"></a>
-Future Modules</h2>
-<ul>
-<li>Filesystem interactions</li>
-<li>Networking support</li>
-<li>Additional utility libraries for embedded applications</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md92"></a>
+<p><b>Note</b>: Tests and examples require a hosted environment and cannot be built in freestanding mode.</p>
+<h4><a class="anchor" id="autotoc_md53"></a>
+Development and Testing Workflow</h4>
+<p>For comprehensive testing with sanitizers:</p>
+<div class="fragment"><div class="line"># Configure with tests and sanitizers</div>
+<div class="line">cmake -S . -B build -DJUNO_TESTS=ON -DJUNO_ASAN=ON -DJUNO_UBSAN=ON -DCMAKE_BUILD_TYPE=Debug</div>
+<div class="line"> </div>
+<div class="line"># Build</div>
+<div class="line">cmake --build build -j</div>
+<div class="line"> </div>
+<div class="line"># Run tests</div>
+<div class="line">ctest --test-dir build --output-on-failure</div>
+</div><!-- fragment --><p>For code coverage analysis:</p>
+<div class="fragment"><div class="line">cmake -S . -B build -DJUNO_TESTS=ON -DJUNO_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug</div>
+<div class="line">cmake --build build -j</div>
+<div class="line">ctest --test-dir build</div>
+<div class="line"># Generate coverage report with lcov/genhtml</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md54"></a>
+Installation</h2>
+<p>Install headers and library to a system or staging prefix:</p>
+<div class="fragment"><div class="line">cmake --install build --prefix /path/to/install</div>
+</div><!-- fragment --><p>For CMake-based projects, LibJuno provides package configuration files:</p>
+<div class="fragment"><div class="line">find_package(juno REQUIRED)</div>
+<div class="line">target_link_libraries(your_target PRIVATE juno::juno)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md55"></a>
+Contributing</h2>
+<p>Contributions are welcome! Please:</p><ol type="1">
+<li>Ensure all tests pass with sanitizers enabled</li>
+<li>Verify freestanding compatibility for core library changes</li>
+<li>Update documentation for API changes</li>
+<li>Follow existing code style and conventions</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md56"></a>
 Inspiration for the Name</h2>
 <p>Juno is the name of my wonderful dog and she has brought me so much comfort and stability throughout the years. I wanted to honor her legacy by naming an open-source library after her. </p>
 </div></div><!-- PageDoc -->

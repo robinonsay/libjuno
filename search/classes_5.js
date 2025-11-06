@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['stack_5fapi_5ft_0',['STACK_API_T',['../structjuno_1_1buff_1_1STACK__API__T.html',1,'juno::buff']]],
-  ['stack_5ft_1',['STACK_T',['../unionjuno_1_1buff_1_1STACK__T.html',1,'juno::buff']]]
+  ['result_5ft_0',['RESULT_T',['../structjuno_1_1RESULT__T.html',1,'juno']]],
+  ['result_5ft_3c_20t_20_2a_20_3e_1',['RESULT_T&lt; T * &gt;',['../structjuno_1_1RESULT__T.html',1,'juno']]]
 ];

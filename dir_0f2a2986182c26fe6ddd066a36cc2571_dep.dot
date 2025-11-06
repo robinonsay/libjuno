@@ -1,0 +1,18 @@
+digraph "/home/runner/work/libjuno/libjuno/examples/example_project/system_manager/src"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  compound=true
+  subgraph clusterdir_4eb049269379b92c85bb44c431ed255b {
+    graph [ bgcolor="#edf0f7", pencolor="grey50", label="system_manager", fontname=Helvetica,fontsize=10 style="filled,dashed", URL="dir_4eb049269379b92c85bb44c431ed255b.html",tooltip=""]
+  dir_21ffde085e80dea3afb802d67e926a06 [label="include", fillcolor="#a2b4d6", color="red", style="filled", URL="dir_21ffde085e80dea3afb802d67e926a06.html",tooltip=""];
+  dir_0f2a2986182c26fe6ddd066a36cc2571 [label="src", fillcolor="#edf0f7", color="grey25", style="filled,bold", URL="dir_0f2a2986182c26fe6ddd066a36cc2571.html",tooltip=""];
+  }
+  dir_1f5417f6f28478589e6e706f38a58164 [label="engine", fillcolor="#edf0f7", color="red", style="filled,dashed", URL="dir_1f5417f6f28478589e6e706f38a58164.html",tooltip=""];
+  dir_d44c64559bbebec7f509842c48db8b23 [label="include", fillcolor="#edf0f7", color="red", style="filled", URL="dir_d44c64559bbebec7f509842c48db8b23.html",tooltip=""];
+  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_1f5417f6f28478589e6e706f38a58164 [headlabel="2", labeldistance=1.5 headhref="dir_000022_000004.html" href="dir_000022_000004.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_21ffde085e80dea3afb802d67e926a06 [headlabel="1", labeldistance=1.5 headhref="dir_000022_000010.html" href="dir_000022_000010.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="7", labeldistance=1.5 headhref="dir_000022_000011.html" href="dir_000022_000011.html" color="steelblue1" fontcolor="steelblue1"];
+}

@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;0.42.0</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.0</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C99 library designed specifically for embedded systems.</div>
   </td>
@@ -126,7 +126,10 @@ $(document).ready(function(){initNavTree('types_8h.html',''); initResizable(); }
   <div class="headertitle"><div class="title">types.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="module_8h_source.html">module.h</a>&quot;</code><br />
+
+<p>Common module result type aliases used throughout LibJuno.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="module_8h_source.html">juno/module.h</a>&quot;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
@@ -145,129 +148,25 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a84d87b6941bd409771bee41999d837c6" id="r_a84d87b6941bd409771bee41999d837c6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#a84d87b6941bd409771bee41999d837c6">JUNO_MODULE_RESULT</a> (JUNO_RESULT_BOOL_T, bool)</td></tr>
-<tr class="separator:a84d87b6941bd409771bee41999d837c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb8fbdaa455d2d6e3a80c59a7348ced9" id="r_adb8fbdaa455d2d6e3a80c59a7348ced9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#adb8fbdaa455d2d6e3a80c59a7348ced9">JUNO_MODULE_RESULT</a> (JUNO_RESULT_UINT32_T, uint32_t)</td></tr>
-<tr class="separator:adb8fbdaa455d2d6e3a80c59a7348ced9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdcd6bbf227987e1a31ce99264f426b5" id="r_acdcd6bbf227987e1a31ce99264f426b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#acdcd6bbf227987e1a31ce99264f426b5">JUNO_MODULE_RESULT</a> (JUNO_RESULT_F64_T, double)</td></tr>
-<tr class="separator:acdcd6bbf227987e1a31ce99264f426b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fe2e3cba5a0b79eae41a3059f297ecb" id="r_a4fe2e3cba5a0b79eae41a3059f297ecb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#a4fe2e3cba5a0b79eae41a3059f297ecb">JUNO_MODULE_RESULT</a> (JUNO_RESULT_SIZE_T, size_t)</td></tr>
-<tr class="separator:a4fe2e3cba5a0b79eae41a3059f297ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga84d87b6941bd409771bee41999d837c6" id="r_ga84d87b6941bd409771bee41999d837c6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__types.html#ga84d87b6941bd409771bee41999d837c6">JUNO_MODULE_RESULT</a> (JUNO_RESULT_BOOL_T, bool)</td></tr>
+<tr class="memdesc:ga84d87b6941bd409771bee41999d837c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result type carrying a bool payload.  <br /></td></tr>
+<tr class="separator:ga84d87b6941bd409771bee41999d837c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb8fbdaa455d2d6e3a80c59a7348ced9" id="r_gadb8fbdaa455d2d6e3a80c59a7348ced9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__types.html#gadb8fbdaa455d2d6e3a80c59a7348ced9">JUNO_MODULE_RESULT</a> (JUNO_RESULT_UINT32_T, uint32_t)</td></tr>
+<tr class="memdesc:gadb8fbdaa455d2d6e3a80c59a7348ced9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result type carrying a 32-bit unsigned integer payload.  <br /></td></tr>
+<tr class="separator:gadb8fbdaa455d2d6e3a80c59a7348ced9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacdcd6bbf227987e1a31ce99264f426b5" id="r_gacdcd6bbf227987e1a31ce99264f426b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__types.html#gacdcd6bbf227987e1a31ce99264f426b5">JUNO_MODULE_RESULT</a> (JUNO_RESULT_F64_T, double)</td></tr>
+<tr class="memdesc:gacdcd6bbf227987e1a31ce99264f426b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result type carrying a double-precision floating-point payload.  <br /></td></tr>
+<tr class="separator:gacdcd6bbf227987e1a31ce99264f426b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4fe2e3cba5a0b79eae41a3059f297ecb" id="r_ga4fe2e3cba5a0b79eae41a3059f297ecb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__types.html#ga4fe2e3cba5a0b79eae41a3059f297ecb">JUNO_MODULE_RESULT</a> (JUNO_RESULT_SIZE_T, size_t)</td></tr>
+<tr class="memdesc:ga4fe2e3cba5a0b79eae41a3059f297ecb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result type carrying a size_t payload.  <br /></td></tr>
+<tr class="separator:ga4fe2e3cba5a0b79eae41a3059f297ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga29429f8cc8226e736099dbe62e6c5bbd" id="r_ga29429f8cc8226e736099dbe62e6c5bbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__juno__types.html#ga29429f8cc8226e736099dbe62e6c5bbd">JUNO_MODULE_RESULT</a> (JUNO_RESULT_VOID_PTR_T, void *)</td></tr>
+<tr class="memdesc:ga29429f8cc8226e736099dbe62e6c5bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result type carrying a void* payload.  <br /></td></tr>
+<tr class="separator:ga29429f8cc8226e736099dbe62e6c5bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a84d87b6941bd409771bee41999d837c6" name="a84d87b6941bd409771bee41999d837c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84d87b6941bd409771bee41999d837c6">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[1/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_RESULT_BOOL_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="acdcd6bbf227987e1a31ce99264f426b5" name="acdcd6bbf227987e1a31ce99264f426b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acdcd6bbf227987e1a31ce99264f426b5">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[2/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_RESULT_F64_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4fe2e3cba5a0b79eae41a3059f297ecb" name="a4fe2e3cba5a0b79eae41a3059f297ecb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fe2e3cba5a0b79eae41a3059f297ecb">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[3/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_RESULT_SIZE_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adb8fbdaa455d2d6e3a80c59a7348ced9" name="adb8fbdaa455d2d6e3a80c59a7348ced9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb8fbdaa455d2d6e3a80c59a7348ced9">&#9670;&#160;</a></span>JUNO_MODULE_RESULT() <span class="overload">[4/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JUNO_MODULE_RESULT </td>
-          <td>(</td>
-          <td class="paramtype">JUNO_RESULT_UINT32_T&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Common module result type aliases used throughout LibJuno. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

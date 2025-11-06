@@ -1,4 +1,27 @@
 var topics =
 [
-    [ "Binary Heap (index-based)", "group__juno__ds__heap.html", null ]
+    [ "Application API", "group__juno__app.html", null ],
+    [ "Array API", "group__juno__ds__array.html", "group__juno__ds__array" ],
+    [ "Heap API", "group__juno__ds__heap.html", "group__juno__ds__heap" ],
+    [ "Map API", "group__juno__ds__map.html", "group__juno__ds__map" ],
+    [ "Queue API", "group__juno__ds__queue.html", "group__juno__ds__queue" ],
+    [ "Stack API", "group__juno__ds__stack.html", "group__juno__ds__stack" ],
+    [ "Hash Utilities", "group__juno__hash.html", null ],
+    [ "Async IO API", "group__juno__io__async.html", null ],
+    [ "I2C IO API", "group__juno__io__i2c.html", null ],
+    [ "SPI IO API", "group__juno__io__spi.html", null ],
+    [ "Logging API", "group__juno__log.html", null ],
+    [ "Assertions and helpers", "group__juno__macros.html", "group__juno__macros" ],
+    [ "Math Core", "group__juno__math.html", "group__juno__math" ],
+    [ "Memory allocation API", "group__juno__memory__alloc.html", "group__juno__memory__alloc" ],
+    [ "Fixed block allocator", "group__juno__memory__block.html", "group__juno__memory__block" ],
+    [ "Pointer API", "group__juno__memory__pointer.html", "group__juno__memory__pointer" ],
+    [ "Module system and DI", "group__juno__module.html", "group__juno__module" ],
+    [ "Mutex API", "group__juno__mp__mtx.html", null ],
+    [ "Software Bus Broker", "group__juno__sb.html", null ],
+    [ "Scheduler API", "group__juno__sch.html", null ],
+    [ "State Machine API", "group__juno__sm.html", null ],
+    [ "Status and error handling", "group__juno__status.html", "group__juno__status" ],
+    [ "Time module", "group__juno__time.html", "group__juno__time" ],
+    [ "Common result types", "group__juno__types.html", "group__juno__types" ]
 ];
