@@ -315,7 +315,7 @@ static void test_stack_push_overflow(void)
     TEST_STACK_DATA_T tData = CreateTestData(999, false, 99);
     JUNO_POINTER_T tPointer = TestStackData_PointerInit(&tData);
     tStatus = JunoDs_StackPush(&gtTestStack.tRoot, tPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
     TEST_ASSERT_EQUAL(TEST_STACK_CAPACITY, gtTestStack.tRoot.zLength);
 }
 
@@ -401,7 +401,7 @@ static void test_stack_pop_empty_stack(void)
     TEST_STACK_DATA_T tPopData = {0};
     JUNO_POINTER_T tPopPointer = TestStackData_PointerInit(&tPopData);
     tStatus = JunoDs_StackPop(&gtTestStack.tRoot, tPopPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
 static void test_stack_pop_null_stack(void)
@@ -513,7 +513,7 @@ static void test_stack_peek_empty_stack(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     JUNO_RESULT_POINTER_T tResult = JunoDs_StackPeek(&gtTestStack.tRoot);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tResult.tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
 static void test_stack_peek_null_stack(void)
@@ -767,7 +767,7 @@ static void test_stack_single_element_capacity(void)
     
     /* Stack is full */
     tStatus = JunoDs_StackPush(&gtTestStack.tRoot, tPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
     
     /* Peek at item */
     JUNO_RESULT_POINTER_T tPeekResult = JunoDs_StackPeek(&gtTestStack.tRoot);
@@ -783,7 +783,7 @@ static void test_stack_single_element_capacity(void)
     
     /* Stack is empty */
     tStatus = JunoDs_StackPop(&gtTestStack.tRoot, tPopPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
 static void test_stack_data_integrity_after_operations(void)
@@ -947,7 +947,7 @@ static void test_stack_push_at_exact_capacity(void)
     TEST_STACK_DATA_T tData = CreateTestData(999, false, 99);
     JUNO_POINTER_T tPointer = TestStackData_PointerInit(&tData);
     tStatus = JunoDs_StackPush(&gtTestStack.tRoot, tPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
 static void test_stack_pop_until_empty(void)
@@ -982,7 +982,7 @@ static void test_stack_pop_until_empty(void)
     TEST_STACK_DATA_T tPopData = {0};
     JUNO_POINTER_T tPopPointer = TestStackData_PointerInit(&tPopData);
     tStatus = JunoDs_StackPop(&gtTestStack.tRoot, tPopPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
 /* ============================================================================

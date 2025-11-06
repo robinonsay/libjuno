@@ -316,7 +316,7 @@ static void test_queue_push_overflow(void)
     TEST_QUEUE_DATA_T tData = CreateTestData(999, false, 99);
     JUNO_POINTER_T tPointer = TestQueueData_PointerInit(&tData);
     tStatus = JunoDs_QueuePush(&gtTestQueue, tPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
     TEST_ASSERT_EQUAL(TEST_QUEUE_CAPACITY, gtTestQueue.zLength);
 }
 
@@ -402,7 +402,7 @@ static void test_queue_pop_empty_queue(void)
     TEST_QUEUE_DATA_T tPopData = {0};
     JUNO_POINTER_T tPopPointer = TestQueueData_PointerInit(&tPopData);
     tStatus = JunoDs_QueuePop(&gtTestQueue, tPopPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
 static void test_queue_pop_null_queue(void)
@@ -491,7 +491,7 @@ static void test_queue_peek_empty_queue(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     
     JUNO_RESULT_POINTER_T tResult = JunoDs_QueuePeek(&gtTestQueue);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tResult.tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
 static void test_queue_peek_null_queue(void)
@@ -783,7 +783,7 @@ static void test_queue_single_element_capacity(void)
     
     /* Queue is full */
     tStatus = JunoDs_QueuePush(&gtTestQueue, tPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_SIZE_ERROR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
     
     /* Pop the item */
     TEST_QUEUE_DATA_T tPopData = {0};
@@ -794,7 +794,7 @@ static void test_queue_single_element_capacity(void)
     
     /* Queue is empty */
     tStatus = JunoDs_QueuePop(&gtTestQueue, tPopPointer);
-    TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
 static void test_queue_boundary_index_calculation(void)
