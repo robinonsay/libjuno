@@ -57,6 +57,7 @@ JUNO_STATUS_T JunoTime_SubtractTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTA
         JUNO_FAIL_ROOT(JUNO_STATUS_INVALID_DATA_ERROR, ptTimeRoot, "Subtracting invalid time");
         return JUNO_STATUS_INVALID_DATA_ERROR;
     }
+    ptRetTime->iSeconds -= tTimeToSubtract.iSeconds;
     // Check if we need to decrement seconds
     if(ptRetTime->iSubSeconds < tTimeToSubtract.iSubSeconds)
     {
@@ -69,7 +70,6 @@ JUNO_STATUS_T JunoTime_SubtractTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTA
         // Just subtract
         ptRetTime->iSubSeconds -= tTimeToSubtract.iSubSeconds;
     }
-    ptRetTime->iSeconds -= tTimeToSubtract.iSeconds;
     return JUNO_STATUS_SUCCESS;
 }
 

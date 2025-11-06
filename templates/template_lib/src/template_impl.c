@@ -48,7 +48,7 @@ static const TEMPLATE_API_T tTemplateImplApi = {
 
 static inline JUNO_STATUS_T Verify(TEMPLATE_ROOT_T *ptTemplate)
 {
-    JUNO_STATUS_T tStatus = Template_Verify(&ptTemplate);
+    JUNO_STATUS_T tStatus = Template_Verify(ptTemplate);
     if(ptTemplateImpl->tRoot.ptApi != &tTemplateImplApi)
     {
         JUNO_FAIL_MODULE(JUNO_STATUS_INVALID_TYPE_ERROR, ptTemplateImpl, "Module has invalid API");
