@@ -216,9 +216,9 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart)
         {
             tResultCurrent = ptArrayApi->GetAt(ptArray, iCurrentIndex);
             JUNO_ASSERT_OK(tResultCurrent, return tResultCurrent.tStatus);
-            JUNO_RESULT_POINTER_T tResulRight = ptArrayApi->GetAt(ptArray, iRight);
-            JUNO_ASSERT_OK(tResulRight, return tResulRight.tStatus);
-            tCompareResult = ptHeap->ptHeapPointerApi->Compare(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResulRight));
+            JUNO_RESULT_POINTER_T tResultRight = ptArrayApi->GetAt(ptArray, iRight);
+            JUNO_ASSERT_OK(tResultRight, return tResultRight.tStatus);
+            tCompareResult = ptHeap->ptHeapPointerApi->Compare(ptHeap, JUNO_OK(tResultCurrent), JUNO_OK(tResultRight));
             JUNO_ASSERT_SUCCESS(tCompareResult.tStatus, return tCompareResult.tStatus);
             if(!tCompareResult.tOk)
             {

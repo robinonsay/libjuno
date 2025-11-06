@@ -46,7 +46,7 @@ struct TEMPLATE_IMPL_TAG JUNO_MODULE_DERIVE(TEMPLATE_ROOT_T,
 );
 
 /* TODO: Insert initialization arguments for module members here*/
-JUNO_STATUS_T Template_ImplApi(TEMPLATE_IMPL_T *ptTemplate, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
+JUNO_STATUS_T Template_ImplInit(TEMPLATE_IMPL_T *ptTemplate, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData);
 #ifdef __cplusplus
 }
 #endif

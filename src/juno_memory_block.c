@@ -163,7 +163,7 @@ static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, J
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     JUNO_MEMORY_ALLOC_BLOCK_T *ptMemBlk = (JUNO_MEMORY_ALLOC_BLOCK_T *)(ptJunoMemory);
     JUNO_ASSERT_EXISTS(ptMemory && ptMemory->pvAddr);
-    if((uintptr_t) ptMemory->pvAddr % (uintptr_t)ptMemBlk->zAlignment != 0)
+    if((uintptr_t) ptMemory->pvAddr % (size_t)ptMemBlk->zAlignment != 0)
     {
         tStatus = JUNO_STATUS_MEMFREE_ERROR;
         // Log error if invalid address detected

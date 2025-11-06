@@ -56,15 +56,14 @@ static inline JUNO_STATUS_T Verify(TEMPLATE_APP_T *ptTemplateApp)
 }
 
 
-JUNO_STATUS_T TemplateApp_Init(TEMPLATE_APP_T *ptJunoApp, const JUNO_LOG_ROOT_T *ptLogger, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
+JUNO_STATUS_T TemplateApp_Init(TEMPLATE_APP_T *ptTemplateApp, const JUNO_LOG_ROOT_T *ptLogger, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
-    JUNO_ASSERT_EXISTS(ptJunoApp);
-    TEMPLATE_APP_T *ptTemplateApp = (TEMPLATE_APP_T *)(ptJunoApp);
+    JUNO_ASSERT_EXISTS(ptTemplateApp);
     ptTemplateApp->tRoot.ptApi = &tTemplateAppApi;
     ptTemplateApp->tRoot.JUNO_FAILURE_HANDLER = pfcnFailureHandler;
     ptTemplateApp->tRoot.JUNO_FAILURE_USER_DATA = pvFailureUserData;
     ptTemplateApp->ptLogger = ptLogger;
-    JUNO_STATUS_T tStatus = Verify(ptJunoApp);
+    JUNO_STATUS_T tStatus = Verify(ptTemplateApp);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
     return tStatus;
 }
