@@ -34,9 +34,10 @@ if not m:
 # Compute the “new version” string (so that we can print it later)
 old_major = int(m.group(2))
 old_minor = int(m.group(3))
+old_patch = int(m.group(4))
 new_major = old_major
-new_minor = old_minor + 1
-new_patch = 0
+new_minor = old_minor
+new_patch = old_patch + 1
 new_version = f"{new_major}.{new_minor}.{new_patch}"
 
 # Apply the substitution
