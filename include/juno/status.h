@@ -88,6 +88,8 @@ typedef int32_t JUNO_STATUS_T;
 #define JUNO_STATUS_TIMEOUT_ERROR       16
 /** @brief Index or pointer was out of bounds. */
 #define JUNO_STATUS_OOB_ERROR           17
+/** @breif Custom error index. */
+#define JUNO_STATUS_CUSTOM_ERROR        1000
 /** @} */
 
 /** @brief Opaque user data type for failure callbacks.
