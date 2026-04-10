@@ -106,7 +106,7 @@ sequenceDiagram
 
 === RegisterSubscriber
 
-. Check capacity: if `zRegistryLength >= zRegistryCapacity`, return `JUNO_STATUS_TABLE_FULL_ERROR`.
+. Check capacity: if `zRegistryLength >= zRegistryCapacity`, return `JUNO_STATUS_ERR`.
 . Store pipe pointer in `ptPipeRegistry[zRegistryLength]`.
 . Increment `zRegistryLength`.
 
@@ -115,7 +115,7 @@ sequenceDiagram
 == Error Handling
 
 * `Publish` propagates queue enqueue errors (e.g., pipe full → `JUNO_STATUS_INVALID_SIZE_ERROR`).
-* `RegisterSubscriber` returns `JUNO_STATUS_TABLE_FULL_ERROR` when the registry is full.
+* `RegisterSubscriber` returns `JUNO_STATUS_ERR` when the registry is full.
 * All operations call `Verify` at entry.
 * `JunoSb_PipeInit` propagates `JunoDs_QueueInit` errors.
 

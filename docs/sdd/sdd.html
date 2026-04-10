@@ -937,6 +937,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_design_rationale_cyclic_executive">27.8. Design Rationale: Cyclic Executive</a></li>
 </ul>
 </li>
+<li><a href="#_requirements_allocation_and_provenance">28. Requirements Allocation and Provenance</a>
+<ul class="sectlevel2">
+<li><a href="#_requirements_allocation_strategy">28.1. Requirements Allocation Strategy</a></li>
+<li><a href="#_documentation_generation_provenance">28.2. Documentation Generation Provenance</a></li>
+</ul>
+</li>
+<li><a href="#_audit_snapshot_source_tests_and_examples">29. Audit Snapshot: Source, Tests, and Examples</a>
+<ul class="sectlevel2">
+<li><a href="#_audit_scope_and_method">29.1. Audit Scope and Method</a></li>
+<li><a href="#_source_design_consistency_checks">29.2. Source ↔ Design Consistency Checks</a></li>
+<li><a href="#_example_module_coverage">29.3. Example ↔ Module Coverage</a></li>
+<li><a href="#_test_traceability_spot_check">29.4. Test Traceability Spot Check</a></li>
+<li><a href="#_full_module_status_code_audit_iteration_3">29.5. Full Module Status-Code Audit (Iteration 3)</a></li>
+</ul>
+</li>
+<li><a href="#_public_header_reference">Appendix A: Public Header Reference</a></li>
 </ul>
 </div>
 </div>
@@ -2479,7 +2495,7 @@ Wires the vtable into the root. Counters <code>zUsed</code> and <code>zFreed</co
 <div class="ulist">
 <ul>
 <li>
-<p><code>Get</code>: returns <code>JUNO_STATUS_MEMALLOC_ERROR</code> when the pool is full or size exceeds element size. Returns <code>JUNO_STATUS_NULLPTR_ERROR</code> for zero-size requests.</p>
+<p><code>Get</code>: returns <code>JUNO_STATUS_MEMALLOC_ERROR</code> when the pool is full or size exceeds element size. Returns <code>JUNO_STATUS_INVALID_SIZE_ERROR</code> for zero-size requests.</p>
 </li>
 <li>
 <p><code>Put</code>: returns <code>JUNO_STATUS_MEMFREE_ERROR</code> for unaligned, out-of-range, or double-freed addresses. Restores the descriptor on failure.</p>
@@ -5659,7 +5675,7 @@ It inherits all queue operations (Enqueue, Dequeue, Peek) via the queue root.</p
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Check capacity: if <code>zRegistryLength &gt;= zRegistryCapacity</code>, return <code>JUNO_STATUS_TABLE_FULL_ERROR</code>.</p>
+<p>Check capacity: if <code>zRegistryLength &gt;= zRegistryCapacity</code>, return <code>JUNO_STATUS_ERR</code>.</p>
 </li>
 <li>
 <p>Store pipe pointer in <code>ptPipeRegistry[zRegistryLength]</code>.</p>
@@ -5682,7 +5698,7 @@ It inherits all queue operations (Enqueue, Dequeue, Peek) via the queue root.</p
 <p><code>Publish</code> propagates queue enqueue errors (e.g., pipe full → <code>JUNO_STATUS_INVALID_SIZE_ERROR</code>).</p>
 </li>
 <li>
-<p><code>RegisterSubscriber</code> returns <code>JUNO_STATUS_TABLE_FULL_ERROR</code> when the registry is full.</p>
+<p><code>RegisterSubscriber</code> returns <code>JUNO_STATUS_ERR</code> when the registry is full.</p>
 </li>
 <li>
 <p>All operations call <code>Verify</code> at entry.</p>
@@ -6521,11 +6537,398 @@ The split follows DI: inject what varies, provide what&#8217;s universal.</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_requirements_allocation_and_provenance">28. Requirements Allocation and Provenance</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_requirements_allocation_strategy">28.1. Requirements Allocation Strategy</h3>
+<div class="paragraph">
+<p>LibJuno allocates requirements across design artifacts using the following rule:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>System-level requirements (<code>REQ-SYS-*</code>) are allocated to <code>docs/sdd/sdd.adoc</code>.</p>
+</li>
+<li>
+<p>Module-level requirements (<code>REQ-&lt;MODULE&gt;-<strong></code>) are allocated to <code>docs/sdd/modules/</strong>.adoc</code>.</p>
+</li>
+<li>
+<p>Generated SRS and RTM artifacts are derived from <code>requirements/*/requirements.json</code> and traceability annotations in code, tests, and design files.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This allocation model preserves deterministic traceability from requirement IDs to design sections and avoids duplicate ownership of requirement statements.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_documentation_generation_provenance">28.2. Documentation Generation Provenance</h3>
+<div class="paragraph">
+<p>The SRS and RTM are generated artifacts located under <code>docs/generated/</code>.
+For release-quality outputs, regenerate documentation from current source annotations and requirements before publication.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">python3 scripts/generate_docs.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generated artifacts are treated as build outputs; the design source of record remains <code>docs/sdd/</code> and the requirement source of record remains <code>requirements/*/requirements.json</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_audit_snapshot_source_tests_and_examples">29. Audit Snapshot: Source, Tests, and Examples</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_audit_scope_and_method">29.1. Audit Scope and Method</h3>
+<div class="paragraph">
+<p>This snapshot audits design accuracy against the current repository state by cross-checking:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Source implementation files under <code>src/</code> and <code>include/juno/</code></p>
+</li>
+<li>
+<p>Requirement-verification tests under <code>tests/</code></p>
+</li>
+<li>
+<p>Learning and integration examples under <code>examples/</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Audit date: <code>2026-04-10</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_source_design_consistency_checks">29.2. Source ↔ Design Consistency Checks</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Area</th>
+<th class="tableblock halign-left valign-top">Evidence Checked</th>
+<th class="tableblock halign-left valign-top">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory error semantics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/juno_memory_block.c</code> (<code>Juno_MemoryBlkGet</code>) vs <code>docs/sdd/modules/memory.adoc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Corrected: zero-size allocation status is <code>JUNO_STATUS_INVALID_SIZE_ERROR</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scheduler behavioral model</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docs/sdd/modules/scheduler.adoc</code> algorithm/sequence and <code>tests/test_sch.c</code> execution expectations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consistent: major-frame execution and period queries align with test double behavior.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">State machine transition model</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docs/sdd/modules/state_machine.adoc</code> transition/step flow and <code>tests/test_sm.c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consistent: explicit transition via option semantics (<code>SOME/NONE</code>) matches verification tags.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Queue operational behavior</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docs/sdd/modules/queue.adoc</code> and <code>tests/test_queue.c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consistent: FIFO operations, empty/full behaviors, and verify-path assertions are covered by tests.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_example_module_coverage">29.3. Example ↔ Module Coverage</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Example Artifact</th>
+<th class="tableblock halign-left valign-top">Primary APIs Exercised</th>
+<th class="tableblock halign-left valign-top">Covered Design Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>examples/minimal_memory_example.c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JunoMemory_BlockInit</code>, allocator <code>Get</code>/<code>Put</code>, pointer verification path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memory.adoc</code>, <code>pointer.adoc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>examples/minimal_queue_example.c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JunoDs_ArrayInit</code>, <code>JunoDs_QueueInit</code>, queue <code>Enqueue</code>/<code>Dequeue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>array.adoc</code>, <code>queue.adoc</code>, <code>pointer.adoc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>examples/example_state_machine.c</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JunoSm_Init</code>, <code>JunoSm_StateInit</code>, <code>JunoSm_GetCurrentState</code>, <code>JunoSm_TransitionState</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>state_machine.adoc</code>, <code>module_system.adoc</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_test_traceability_spot_check">29.4. Test Traceability Spot Check</h3>
+<div class="paragraph">
+<p>The following tagged tests were explicitly reviewed in this audit pass:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>tests/test_memory.c</code> — verifies <code>REQ-MEMORY-*</code></p>
+</li>
+<li>
+<p><code>tests/test_queue.c</code> — verifies <code>REQ-QUEUE-*</code></p>
+</li>
+<li>
+<p><code>tests/test_sm.c</code> — verifies <code>REQ-SM-*</code></p>
+</li>
+<li>
+<p><code>tests/test_sch.c</code> — verifies <code>REQ-SCH-004..006</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This spot check confirms that requirement-linked verification artifacts exist and align with the behavioral descriptions in the SDD module sections.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_full_module_status_code_audit_iteration_3">29.5. Full Module Status-Code Audit (Iteration 3)</h3>
+<div class="paragraph">
+<p>A full pass was performed across <code>docs/sdd/modules/*.adoc</code> comparing documented status-code behavior to implementation evidence in:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>src/*.c</code> runtime modules (array-dependent containers, memory, broker, time, crc/hash)</p>
+</li>
+<li>
+<p>Inline/<code>static</code> API logic in public headers under <code>include/juno/</code></p>
+</li>
+<li>
+<p>Requirement-tagged unit tests in <code>tests/*.c</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Result summary:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Confirmed and corrected mismatch: <code>docs/sdd/modules/software_bus.adoc</code> previously documented broker registry-full as <code>JUNO_STATUS_TABLE_FULL_ERROR</code>; implementation in <code>src/juno_broker.c</code> returns <code>JUNO_STATUS_ERR</code>.</p>
+</li>
+<li>
+<p>Previously corrected mismatch retained: <code>docs/sdd/modules/memory.adoc</code> zero-size <code>Get</code> uses <code>JUNO_STATUS_INVALID_SIZE_ERROR</code> per <code>src/juno_memory_block.c</code>.</p>
+</li>
+<li>
+<p>Remaining status-code wording reviewed in this pass was consistent with available source/test evidence.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_public_header_reference">Appendix A: Public Header Reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table lists all public C headers shipped with LibJuno and their purpose.
+C++11 wrapper headers (<code>.hpp</code>) are included for completeness but are not covered in the detailed design sections of this SDD.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Header</th>
+<th class="tableblock halign-left valign-top">Subsystem</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/status.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Status codes, failure handler type, <code>JUNO_FAIL*</code> macros</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/module.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module root/derivation/union macros, Result/Option types</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/macros.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JUNO_ASSERT_EXISTS</code>, <code>JUNO_ASSERT_SUCCESS</code> assertion macros</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/types.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-defined Result specializations (<code>JUNO_RESULT_BOOL_T</code>, etc.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/memory/pointer_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fat pointer trait, <code>JUNO_POINTER_T</code>, Copy/Reset API</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/memory/memory_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Abstract allocator interface (<code>Get</code>/<code>Put</code>/<code>Update</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/memory/memory_block.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block allocator derivation with fixed-size pools</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/ds/array_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Structures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed-capacity array (<code>SetAt</code>/<code>GetAt</code>/<code>RemoveAt</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/ds/heap_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Structures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Binary heap with injected Compare/Swap</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/ds/queue_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Structures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Circular-buffer FIFO queue</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/ds/stack_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Structures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LIFO stack</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/ds/map_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Structures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open-addressed hash map with linear probing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/crc/crc.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CRC-16/32 streaming update functions (ARC, BinHex, CCITT, CCITT32, Kermit, ZIP)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/hash/hash_djb2.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">djb2 hash function</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/math/juno_math.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generic math macros (Abs, Max, Min, Clamp)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/math/juno_vec.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vector operations (Add, Sub, Scale, Dot, Cross, Norm, Normalize)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/math/juno_vec_types.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vector and quaternion type definitions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/math/juno_math_types.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scalar type aliases (F32, F64)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/time/time_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time interface, timestamp type, math and conversion functions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/io/async_io_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Asynchronous byte-stream IO interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/io/i2c_io_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">I2C bus transfer interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/io/spi_io_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPI transaction interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/log/log_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging facade (Debug/Info/Warning/Error)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/mp/mtx_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mutex interface (TryLock/Lock/Free)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/sm/sm_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frameworks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">State machine with explicit state transitions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/sb/broker_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frameworks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Software Bus broker (Publish/RegisterSubscriber)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/app/app_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frameworks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application lifecycle (OnStart/OnProcess/OnExit)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/sch/juno_sch_api.h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frameworks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cyclic executive scheduler</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/module.hpp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++ Wrappers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++11 module system helpers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/types.hpp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++ Wrappers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++11 type wrappers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/ds/buff_api.hpp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++ Wrappers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++11 queue buffer template</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>juno/ds/juno_buff.hpp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++ Wrappers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C++11 buffer implementation</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.1<br>
-Last updated 2026-04-10 13:18:35 -0500
+Last updated 2026-04-10 13:33:35 -0500
 </div>
 </div>
 </body>

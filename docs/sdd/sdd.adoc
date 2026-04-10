@@ -677,6 +677,109 @@ Complements RTOS preemption rather than replacing it.
 Time math (add, subtract, conversions) is universal and provided by LibJuno.
 The split follows DI: inject what varies, provide what's universal.
 
+== Requirements Allocation and Provenance
+
+=== Requirements Allocation Strategy
+
+LibJuno allocates requirements across design artifacts using the following rule:
+
+* System-level requirements (`REQ-SYS-*`) are allocated to `docs/sdd/sdd.adoc`.
+* Module-level requirements (`REQ-<MODULE>-*`) are allocated to `docs/sdd/modules/*.adoc`.
+* Generated SRS and RTM artifacts are derived from `requirements/*/requirements.json` and traceability annotations in code, tests, and design files.
+
+This allocation model preserves deterministic traceability from requirement IDs to design sections and avoids duplicate ownership of requirement statements.
+
+=== Documentation Generation Provenance
+
+The SRS and RTM are generated artifacts located under `docs/generated/`.
+For release-quality outputs, regenerate documentation from current source annotations and requirements before publication.
+
+[source,bash]
+----
+python3 scripts/generate_docs.py
+----
+
+Generated artifacts are treated as build outputs; the design source of record remains `docs/sdd/` and the requirement source of record remains `requirements/*/requirements.json`.
+
+== Audit Snapshot: Source, Tests, and Examples
+
+=== Audit Scope and Method
+
+This snapshot audits design accuracy against the current repository state by cross-checking:
+
+* Source implementation files under `src/` and `include/juno/`
+* Requirement-verification tests under `tests/`
+* Learning and integration examples under `examples/`
+
+Audit date: `2026-04-10`.
+
+=== Source ↔ Design Consistency Checks
+
+[cols="1,2,2"]
+|===
+| Area | Evidence Checked | Result
+
+| Memory error semantics
+| `src/juno_memory_block.c` (`Juno_MemoryBlkGet`) vs `docs/sdd/modules/memory.adoc`
+| Corrected: zero-size allocation status is `JUNO_STATUS_INVALID_SIZE_ERROR`.
+
+| Scheduler behavioral model
+| `docs/sdd/modules/scheduler.adoc` algorithm/sequence and `tests/test_sch.c` execution expectations
+| Consistent: major-frame execution and period queries align with test double behavior.
+
+| State machine transition model
+| `docs/sdd/modules/state_machine.adoc` transition/step flow and `tests/test_sm.c`
+| Consistent: explicit transition via option semantics (`SOME/NONE`) matches verification tags.
+
+| Queue operational behavior
+| `docs/sdd/modules/queue.adoc` and `tests/test_queue.c`
+| Consistent: FIFO operations, empty/full behaviors, and verify-path assertions are covered by tests.
+|===
+
+=== Example ↔ Module Coverage
+
+[cols="1,2,2"]
+|===
+| Example Artifact | Primary APIs Exercised | Covered Design Modules
+
+| `examples/minimal_memory_example.c`
+| `JunoMemory_BlockInit`, allocator `Get`/`Put`, pointer verification path
+| `memory.adoc`, `pointer.adoc`
+
+| `examples/minimal_queue_example.c`
+| `JunoDs_ArrayInit`, `JunoDs_QueueInit`, queue `Enqueue`/`Dequeue`
+| `array.adoc`, `queue.adoc`, `pointer.adoc`
+
+| `examples/example_state_machine.c`
+| `JunoSm_Init`, `JunoSm_StateInit`, `JunoSm_GetCurrentState`, `JunoSm_TransitionState`
+| `state_machine.adoc`, `module_system.adoc`
+|===
+
+=== Test Traceability Spot Check
+
+The following tagged tests were explicitly reviewed in this audit pass:
+
+* `tests/test_memory.c` — verifies `REQ-MEMORY-*`
+* `tests/test_queue.c` — verifies `REQ-QUEUE-*`
+* `tests/test_sm.c` — verifies `REQ-SM-*`
+* `tests/test_sch.c` — verifies `REQ-SCH-004..006`
+
+This spot check confirms that requirement-linked verification artifacts exist and align with the behavioral descriptions in the SDD module sections.
+
+=== Full Module Status-Code Audit (Iteration 3)
+
+A full pass was performed across `docs/sdd/modules/*.adoc` comparing documented status-code behavior to implementation evidence in:
+
+* `src/*.c` runtime modules (array-dependent containers, memory, broker, time, crc/hash)
+* Inline/`static` API logic in public headers under `include/juno/`
+* Requirement-tagged unit tests in `tests/*.c`
+
+Result summary:
+
+* Confirmed and corrected mismatch: `docs/sdd/modules/software_bus.adoc` previously documented broker registry-full as `JUNO_STATUS_TABLE_FULL_ERROR`; implementation in `src/juno_broker.c` returns `JUNO_STATUS_ERR`.
+* Previously corrected mismatch retained: `docs/sdd/modules/memory.adoc` zero-size `Get` uses `JUNO_STATUS_INVALID_SIZE_ERROR` per `src/juno_memory_block.c`.
+* Remaining status-code wording reviewed in this pass was consistent with available source/test evidence.
+
 [appendix]
 == Public Header Reference
 

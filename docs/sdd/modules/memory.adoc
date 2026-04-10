@@ -143,7 +143,7 @@ Green blocks are allocated; red blocks have been freed and are on the free stack
 
 == Error Handling
 
-* `Get`: returns `JUNO_STATUS_MEMALLOC_ERROR` when the pool is full or size exceeds element size. Returns `JUNO_STATUS_NULLPTR_ERROR` for zero-size requests.
+* `Get`: returns `JUNO_STATUS_MEMALLOC_ERROR` when the pool is full or size exceeds element size. Returns `JUNO_STATUS_INVALID_SIZE_ERROR` for zero-size requests.
 * `Put`: returns `JUNO_STATUS_MEMFREE_ERROR` for unaligned, out-of-range, or double-freed addresses. Restores the descriptor on failure.
 * `Update`: returns `JUNO_STATUS_MEMALLOC_ERROR` if the new size exceeds element capacity.
 * All operations call `Verify` at entry.
