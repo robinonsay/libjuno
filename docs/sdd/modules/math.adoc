@@ -1,3 +1,4 @@
+// @{"design": ["REQ-MATH-001", "REQ-MATH-002", "REQ-MATH-003", "REQ-MATH-004", "REQ-MATH-005", "REQ-MATH-006", "REQ-MATH-007", "REQ-MATH-008", "REQ-MATH-009", "REQ-MATH-010", "REQ-MATH-011", "REQ-MATH-012", "REQ-MATH-013", "REQ-MATH-014", "REQ-MATH-015", "REQ-MATH-016", "REQ-MATH-017", "REQ-MATH-018"]}
 = Math Module
 
 == Purpose
@@ -83,7 +84,6 @@ The math module uses C11 `_Generic` for compile-time type dispatch because math 
 This is the one place where `_Generic` is appropriate in LibJuno: it provides type safety and ergonomic dispatch without needing vtables.
 The macro-based generic approach keeps the API consistent across precisions and dimensions.
 
-// @{"design": ["REQ-MATH-001", "REQ-MATH-002", "REQ-MATH-003", "REQ-MATH-004", "REQ-MATH-005", "REQ-MATH-006", "REQ-MATH-007", "REQ-MATH-008", "REQ-MATH-009", "REQ-MATH-010", "REQ-MATH-011", "REQ-MATH-012", "REQ-MATH-013", "REQ-MATH-014", "REQ-MATH-015", "REQ-MATH-016", "REQ-MATH-017", "REQ-MATH-018"]}
 == Requirements Traceability
 
 [cols="1,3"]

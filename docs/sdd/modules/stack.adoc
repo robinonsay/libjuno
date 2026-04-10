@@ -1,3 +1,4 @@
+// @{"design": ["REQ-STACK-001", "REQ-STACK-002", "REQ-STACK-003", "REQ-STACK-004", "REQ-STACK-005", "REQ-STACK-006", "REQ-STACK-007", "REQ-STACK-008"]}
 = Stack Module
 
 == Purpose
@@ -72,7 +73,6 @@ All operations are O(1).
 Like the Queue, the Stack reuses the Array for storage.
 The top-of-stack is always the last used index, so no circular arithmetic is needed — just a simple length counter.
 
-// @{"design": ["REQ-STACK-001", "REQ-STACK-002", "REQ-STACK-003", "REQ-STACK-004", "REQ-STACK-005", "REQ-STACK-006", "REQ-STACK-007", "REQ-STACK-008"]}
 == Requirements Traceability
 
 [cols="1,3"]

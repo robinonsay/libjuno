@@ -118,11 +118,28 @@ void test_heap_init_success(void) {
 }
 ```
 
+### Design documents (`.adoc` files)
+
+Tag SDD module files with the requirements they address:
+
+```asciidoc
+// @{"design": ["REQ-HEAP-001", "REQ-HEAP-002", "REQ-HEAP-003"]}
+= Heap Module
+
+== Purpose
+...
+```
+
+Design annotations live at the top of each `docs/sdd/modules/*.adoc` file.
+System-level requirements (REQ-SYS-*) are annotated in `docs/sdd/sdd.adoc`
+above the `== System Architecture` section.
+
 ### Placement Rules
 
-- Tags are placed **immediately above the function definition** (one line above).
-- A single function may trace to **multiple requirements**.
-- Tags use standard C line comments (`//`).
+- **Code/Test tags** are placed **immediately above the function definition**.
+- **Design tags** are placed **at the top of the SDD file** they cover.
+- A single annotation may trace to **multiple requirements**.
+- Tags use C-style line comments (`//`) which AsciiDoc treats as invisible comments.
 
 ## Hierarchy Model (Two-Tier)
 
@@ -147,14 +164,15 @@ Detailed Requirement (e.g., REQ-HEAP-001)
 
 ### RTM Matrix Columns
 
-| Requirement | Code Location | Test Location | Verification Method | Status |
-|-------------|--------------|---------------|---------------------|--------|
+| Requirement | Code Location | Design Location | Test Location | Verification Method | Status |
+|-------------|--------------|-----------------|---------------|---------------------|--------|
 
 ### Consistency Validation
 
 The Python tool validates:
 - Every requirement in `requirements.json` has at least one code annotation
+- Every requirement has at least one design annotation
 - Every requirement has at least one test annotation (if verification = Test)
-- No orphaned code/test tags referencing nonexistent requirements
+- No orphaned code/test/design tags referencing nonexistent requirements
 - All `uses`/`implements` links resolve to valid requirement IDs
 - Warnings are produced for traceability gaps

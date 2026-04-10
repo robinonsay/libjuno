@@ -150,11 +150,19 @@ def load_requirements(requirements_dir: Path,
 # ---------------------------------------------------------------------------
 
 def _find_section_name_before(lines: list[str], tag_line_idx: int) -> str:
-    """Find the nearest AsciiDoc section heading above the tag line.
+    """Find the nearest AsciiDoc section heading near the tag line.
 
-    Looks backwards for lines starting with '=' (AsciiDoc heading syntax).
-    Returns the heading text or the filename stem as fallback.
+    First checks lines immediately after the tag (the common case where the
+    annotation precedes the section it covers), then falls back to searching
+    backwards.
     """
+    # Look forward first (up to 3 lines) for a heading right after the tag
+    for offset in range(1, min(4, len(lines) - tag_line_idx)):
+        line = lines[tag_line_idx + offset].strip()
+        m = re.match(r'^=+\s+(.+)$', line)
+        if m:
+            return m.group(1).strip()
+    # Fall back to searching backwards
     for offset in range(tag_line_idx, -1, -1):
         line = lines[offset].strip()
         m = re.match(r'^=+\s+(.+)$', line)

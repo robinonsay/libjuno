@@ -55,28 +55,28 @@
 
 | REQ-APP-001: Application Root Structure
 | include/juno/app/app_api.h:52 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/application.adoc:59 (Design Rationale)
+| docs/sdd/modules/application.adoc:1 (Application Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-APP-002: OnStart Lifecycle Hook
 | include/juno/app/app_api.h:58 (JUNO_STATUS_T)
-| docs/sdd/modules/application.adoc:59 (Design Rationale)
+| docs/sdd/modules/application.adoc:1 (Application Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-APP-003: OnProcess Lifecycle Hook
 | include/juno/app/app_api.h:61 (JUNO_STATUS_T)
-| docs/sdd/modules/application.adoc:59 (Design Rationale)
+| docs/sdd/modules/application.adoc:1 (Application Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-APP-004: OnExit Lifecycle Hook
 | include/juno/app/app_api.h:64 (JUNO_STATUS_T)
-| docs/sdd/modules/application.adoc:59 (Design Rationale)
+| docs/sdd/modules/application.adoc:1 (Application Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -91,7 +91,7 @@
 
 | REQ-ARRAY-001: Array Initialization
 | include/juno/ds/array_api.h:163 (JunoDs_ArrayInit)
-| docs/sdd/modules/array.adoc:64 (Design Rationale)
+| docs/sdd/modules/array.adoc:1 (Array Module)
 | tests/test_array.c:150 (test_array_init_success) +
 tests/test_array.c:162 (test_array_init_null_array)
 | Test
@@ -99,28 +99,28 @@ tests/test_array.c:162 (test_array_init_null_array)
 
 | REQ-ARRAY-002: Array SetAt
 | include/juno/ds/array_api.h:82 (JUNO_STATUS_T)
-| docs/sdd/modules/array.adoc:64 (Design Rationale)
+| docs/sdd/modules/array.adoc:1 (Array Module)
 | tests/test_array.c:174 (test_array_set_at)
 | Test
 | ✓ Complete
 
 | REQ-ARRAY-003: Array GetAt
 | include/juno/ds/array_api.h:89 (JUNO_RESULT_POINTER_T)
-| docs/sdd/modules/array.adoc:64 (Design Rationale)
+| docs/sdd/modules/array.adoc:1 (Array Module)
 | tests/test_array.c:184 (test_array_get_at)
 | Test
 | ✓ Complete
 
 | REQ-ARRAY-004: Array RemoveAt
 | include/juno/ds/array_api.h:96 (JUNO_STATUS_T)
-| docs/sdd/modules/array.adoc:64 (Design Rationale)
+| docs/sdd/modules/array.adoc:1 (Array Module)
 | tests/test_array.c:195 (test_array_remove_at)
 | Test
 | ✓ Complete
 
 | REQ-ARRAY-005: Array Bounds Checking
 | include/juno/ds/array_api.h:140 (JunoDs_ArrayVerifyIndex)
-| docs/sdd/modules/array.adoc:64 (Design Rationale)
+| docs/sdd/modules/array.adoc:1 (Array Module)
 | tests/test_array.c:208 (test_array_set_at_oob) +
 tests/test_array.c:218 (test_array_get_at_oob) +
 tests/test_array.c:226 (test_array_remove_at_oob) +
@@ -133,7 +133,7 @@ tests/test_stack.c:936 (test_stack_array_api_remove_at_out_of_bounds)
 
 | REQ-ARRAY-006: Array Vtable Validation
 | include/juno/ds/array_api.h:120 (JunoDs_ArrayVerify)
-| docs/sdd/modules/array.adoc:64 (Design Rationale)
+| docs/sdd/modules/array.adoc:1 (Array Module)
 | tests/test_array.c:238 (test_array_verify_null_api) +
 tests/test_queue.c:892 (test_queue_array_api_set_at_invalid_api) +
 tests/test_stack.c:905 (test_stack_array_api_set_at_invalid_api) +
@@ -144,7 +144,7 @@ tests/test_stack.c:946 (test_stack_array_api_null_array)
 | REQ-ARRAY-007: Array Capacity Validation
 | include/juno/ds/array_api.h:120 (JunoDs_ArrayVerify) +
 include/juno/ds/array_api.h:163 (JunoDs_ArrayInit)
-| docs/sdd/modules/array.adoc:64 (Design Rationale)
+| docs/sdd/modules/array.adoc:1 (Array Module)
 | tests/test_array.c:253 (test_array_verify_zero_capacity) +
 tests/test_array.c:264 (test_array_init_zero_capacity)
 | Test
@@ -165,7 +165,7 @@ src/juno_ccitt.c:21 (Juno_CrcCcittUpdate) +
 src/juno_ccitt32.c:20 (Juno_CrcCcitt32Update) +
 src/juno_kermit.c:21 (Juno_CrcKermitUpdate) +
 src/juno_zip.c:20 (Juno_CrcZipUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:81 (test_various_crc_behaviour)
 | Test
 | ✓ Complete
@@ -177,7 +177,7 @@ src/juno_ccitt.c:21 (Juno_CrcCcittUpdate) +
 src/juno_ccitt32.c:20 (Juno_CrcCcitt32Update) +
 src/juno_kermit.c:21 (Juno_CrcKermitUpdate) +
 src/juno_zip.c:20 (Juno_CrcZipUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:70 (test_empty_crc_all)
 | Test
 | ✓ Complete
@@ -189,56 +189,56 @@ src/juno_ccitt.c:21 (Juno_CrcCcittUpdate) +
 src/juno_ccitt32.c:20 (Juno_CrcCcitt32Update) +
 src/juno_kermit.c:21 (Juno_CrcKermitUpdate) +
 src/juno_zip.c:20 (Juno_CrcZipUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:70 (test_empty_crc_all)
 | Test
 | ✓ Complete
 
 | REQ-CRC-004: CRC-16 ARC
 | src/juno_arc.c:21 (Juno_CrcArcUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:81 (test_various_crc_behaviour)
 | Test
 | ✓ Complete
 
 | REQ-CRC-005: CRC-16 BinHex
 | src/juno_binhex.c:21 (Juno_CrcBinhexUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:81 (test_various_crc_behaviour)
 | Test
 | ✓ Complete
 
 | REQ-CRC-006: CRC-16 CCITT
 | src/juno_ccitt.c:21 (Juno_CrcCcittUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:56 (test_ccitt_crc)
 | Test
 | ✓ Complete
 
 | REQ-CRC-007: CRC-16 Kermit
 | src/juno_kermit.c:21 (Juno_CrcKermitUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:81 (test_various_crc_behaviour)
 | Test
 | ✓ Complete
 
 | REQ-CRC-008: CRC-32 CCITT32
 | src/juno_ccitt32.c:20 (Juno_CrcCcitt32Update)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:81 (test_various_crc_behaviour)
 | Test
 | ✓ Complete
 
 | REQ-CRC-009: CRC-32 ZIP
 | src/juno_zip.c:20 (Juno_CrcZipUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:37 (test_zip_crc)
 | Test
 | ✓ Complete
 
 | REQ-CRC-010: CRC-32 ZIP Final XOR
 | src/juno_zip.c:20 (Juno_CrcZipUpdate)
-| docs/sdd/modules/crc.adoc:75 (Design Rationale)
+| docs/sdd/modules/crc.adoc:1 (CRC Module)
 | tests/test_crc.c:37 (test_zip_crc)
 | Test
 | ✓ Complete
@@ -253,7 +253,7 @@ src/juno_zip.c:20 (Juno_CrcZipUpdate)
 
 | REQ-HASH-001: DJB2 Hash Computation
 | include/juno/hash/hash_djb2.h:47 (JunoHash_Djb2)
-| docs/sdd/modules/hash.adoc:48 (Design Rationale)
+| docs/sdd/modules/hash.adoc:1 (Hash Module)
 | tests/test_hash.c:37 (test_hash_djb2_known_value) +
 tests/test_hash.c:52 (test_hash_djb2_empty_buffer) +
 tests/test_hash.c:62 (test_hash_djb2_different_inputs_differ)
@@ -262,14 +262,14 @@ tests/test_hash.c:62 (test_hash_djb2_different_inputs_differ)
 
 | REQ-HASH-002: DJB2 Null Buffer Rejection
 | include/juno/hash/hash_djb2.h:47 (JunoHash_Djb2)
-| docs/sdd/modules/hash.adoc:48 (Design Rationale)
+| docs/sdd/modules/hash.adoc:1 (Hash Module)
 | tests/test_hash.c:78 (test_hash_djb2_null_buffer)
 | Test
 | ✓ Complete
 
 | REQ-HASH-003: DJB2 Result Type
 | include/juno/hash/hash_djb2.h:47 (JunoHash_Djb2)
-| docs/sdd/modules/hash.adoc:48 (Design Rationale)
+| docs/sdd/modules/hash.adoc:1 (Hash Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -284,7 +284,7 @@ tests/test_hash.c:62 (test_hash_djb2_different_inputs_differ)
 
 | REQ-HEAP-001: Heap Initialization
 | src/juno_heap.c:32 (JunoDs_Heap_Init)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:353 (test_heap_init_nominal) +
 tests/test_heap.c:363 (test_heap_init_null_heap) +
 tests/test_heap.c:373 (test_heap_init_null_api) +
@@ -294,7 +294,7 @@ tests/test_heap.c:383 (test_heap_init_zero_capacity)
 
 | REQ-HEAP-002: Heap Element Comparison Injection
 | src/juno_heap.c:32 (JunoDs_Heap_Init)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:526 (test_heap_min_heap_insert_and_property) +
 tests/test_heap.c:709 (test_heap_update_with_compare_error) +
 tests/test_heap.c:727 (test_heap_update_with_swap_error) +
@@ -308,7 +308,7 @@ tests/test_heap.c:994 (test_heap_mixed_min_max_operations)
 
 | REQ-HEAP-003: Heap Insert
 | src/juno_heap.c:258 (JunoDs_Heap_Insert)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:415 (test_heap_insert_single_item_max_heap) +
 tests/test_heap.c:432 (test_heap_insert_multiple_items_max_heap) +
 tests/test_heap.c:453 (test_heap_insert_to_full_capacity) +
@@ -329,7 +329,7 @@ tests/test_heap.c:1058 (test_heap_data_integrity_after_operations)
 
 | REQ-HEAP-004: Heap Pop
 | src/juno_heap.c:325 (JunoDs_Heap_Pop)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:550 (test_heap_pop_single_item_max_heap) +
 tests/test_heap.c:574 (test_heap_pop_multiple_items_max_heap) +
 tests/test_heap.c:610 (test_heap_pop_empty_heap) +
@@ -349,7 +349,7 @@ tests/test_heap.c:1058 (test_heap_data_integrity_after_operations)
 
 | REQ-HEAP-005: Heap Pop Output
 | src/juno_heap.c:325 (JunoDs_Heap_Pop)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:550 (test_heap_pop_single_item_max_heap) +
 tests/test_heap.c:574 (test_heap_pop_multiple_items_max_heap) +
 tests/test_heap.c:1058 (test_heap_data_integrity_after_operations)
@@ -358,7 +358,7 @@ tests/test_heap.c:1058 (test_heap_data_integrity_after_operations)
 
 | REQ-HEAP-006: Heap Heapify
 | src/juno_heap.c:284 (JunoDs_Heap_Heapify)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:867 (test_heap_heapify_from_unsorted_array) +
 tests/test_heap.c:886 (test_heap_heapify_empty_heap) +
 tests/test_heap.c:898 (test_heap_heapify_null_heap)
@@ -367,7 +367,7 @@ tests/test_heap.c:898 (test_heap_heapify_null_heap)
 
 | REQ-HEAP-007: Heap Vtable Validation
 | include/juno/ds/heap_api.h:227 (JunoDs_Heap_Verify)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:397 (test_heap_verify_null_heap) +
 tests/test_heap.c:403 (test_heap_verify_invalid_api)
 | Test
@@ -375,7 +375,7 @@ tests/test_heap.c:403 (test_heap_verify_invalid_api)
 
 | REQ-HEAP-008: Heap Dependency Validation
 | include/juno/ds/heap_api.h:227 (JunoDs_Heap_Verify)
-| docs/sdd/modules/heap.adoc:101 (Design Rationale)
+| docs/sdd/modules/heap.adoc:1 (Heap Module)
 | tests/test_heap.c:373 (test_heap_init_null_api) +
 tests/test_heap.c:383 (test_heap_init_zero_capacity)
 | Test
@@ -391,98 +391,98 @@ tests/test_heap.c:383 (test_heap_init_zero_capacity)
 
 | REQ-IO-001: Async IO Root Structure
 | include/juno/io/async_io_api.h:47 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-002: Async IO Read
 | include/juno/io/async_io_api.h:53 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-003: Async IO TryRead
 | include/juno/io/async_io_api.h:56 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-004: Async IO ReadUntil
 | include/juno/io/async_io_api.h:59 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-005: Async IO TryReadUntil
 | include/juno/io/async_io_api.h:62 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-006: Async IO Write
 | include/juno/io/async_io_api.h:65 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-007: Async IO TryWrite
 | include/juno/io/async_io_api.h:68 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-008: Async IO Poll
 | include/juno/io/async_io_api.h:71 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-009: I2C IO Root Structure
 | include/juno/io/i2c_io_api.h:108 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-010: I2C Transfer Operation
 | include/juno/io/i2c_io_api.h:134 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-011: I2C Message Type Discrimination
 | include/juno/io/i2c_io_api.h:58 (<unknown>)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-012: I2C Device Address
 | include/juno/io/i2c_io_api.h:58 (<unknown>)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-013: SPI IO Root Structure
 | include/juno/io/spi_io_api.h:46 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-IO-014: SPI Transaction Operation
 | include/juno/io/spi_io_api.h:58 (JUNO_STATUS_T)
-| docs/sdd/modules/io.adoc:80 (Design Rationale)
+| docs/sdd/modules/io.adoc:1 (IO Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -497,42 +497,42 @@ tests/test_heap.c:383 (test_heap_init_zero_capacity)
 
 | REQ-LOG-001: Log Root Structure
 | include/juno/log/log_api.h:51 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/log.adoc:55 (Design Rationale)
+| docs/sdd/modules/log.adoc:1 (Log Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-LOG-002: Debug Level Logging
 | include/juno/log/log_api.h:57 (JUNO_STATUS_T)
-| docs/sdd/modules/log.adoc:55 (Design Rationale)
+| docs/sdd/modules/log.adoc:1 (Log Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-LOG-003: Info Level Logging
 | include/juno/log/log_api.h:60 (JUNO_STATUS_T)
-| docs/sdd/modules/log.adoc:55 (Design Rationale)
+| docs/sdd/modules/log.adoc:1 (Log Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-LOG-004: Warning Level Logging
 | include/juno/log/log_api.h:63 (JUNO_STATUS_T)
-| docs/sdd/modules/log.adoc:55 (Design Rationale)
+| docs/sdd/modules/log.adoc:1 (Log Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-LOG-005: Error Level Logging
 | include/juno/log/log_api.h:66 (JUNO_STATUS_T)
-| docs/sdd/modules/log.adoc:55 (Design Rationale)
+| docs/sdd/modules/log.adoc:1 (Log Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-LOG-006: Log Initialization
 | include/juno/log/log_api.h:71 (JunoLog_LogInit)
-| docs/sdd/modules/log.adoc:55 (Design Rationale)
+| docs/sdd/modules/log.adoc:1 (Log Module)
 | tests/test_log.c:94 (test_log_init_success) +
 tests/test_log.c:102 (test_log_init_null_root)
 | Test
@@ -543,7 +543,7 @@ tests/test_log.c:102 (test_log_init_null_root)
 include/juno/log/log_api.h:60 (JUNO_STATUS_T) +
 include/juno/log/log_api.h:63 (JUNO_STATUS_T) +
 include/juno/log/log_api.h:66 (JUNO_STATUS_T)
-| docs/sdd/modules/log.adoc:55 (Design Rationale)
+| docs/sdd/modules/log.adoc:1 (Log Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -558,7 +558,7 @@ include/juno/log/log_api.h:66 (JUNO_STATUS_T)
 
 | REQ-MAP-001: Map Initialization
 | src/juno_map.c:34 (JunoDs_MapInit)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:322 (test_map_init_nominal) +
 tests/test_map.c:336 (test_map_init_null_map) +
 tests/test_map.c:343 (test_map_init_null_api) +
@@ -568,7 +568,7 @@ tests/test_map.c:351 (test_map_init_zero_capacity)
 
 | REQ-MAP-002: Map Hash Function Injection
 | src/juno_map.c:34 (JunoDs_MapInit)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:322 (test_map_init_nominal) +
 tests/test_map.c:901 (test_map_entry_hash_nominal) +
 tests/test_map.c:912 (test_map_entry_is_null_true) +
@@ -578,7 +578,7 @@ tests/test_map.c:923 (test_map_entry_is_null_false)
 
 | REQ-MAP-003: Map Equality Injection
 | src/juno_map.c:34 (JunoDs_MapInit)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:322 (test_map_init_nominal) +
 tests/test_map.c:873 (test_map_entry_equals_same_key) +
 tests/test_map.c:887 (test_map_entry_equals_different_key)
@@ -587,7 +587,7 @@ tests/test_map.c:887 (test_map_entry_equals_different_key)
 
 | REQ-MAP-004: Map Set
 | src/juno_map.c:135 (JunoDs_MapSet)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:365 (test_map_set_single_item) +
 tests/test_map.c:384 (test_map_set_multiple_items) +
 tests/test_map.c:406 (test_map_set_update_existing) +
@@ -602,14 +602,14 @@ tests/test_map.c:776 (test_map_set_get_remove_cycle)
 
 | REQ-MAP-005: Map Table Full Rejection
 | src/juno_map.c:135 (JunoDs_MapSet)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:465 (test_map_set_table_full)
 | Test
 | ✓ Complete
 
 | REQ-MAP-006: Map Get
 | src/juno_map.c:109 (JunoDs_MapGet)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:490 (test_map_get_existing_item) +
 tests/test_map.c:528 (test_map_get_after_collision) +
 tests/test_map.c:556 (test_map_get_null_map) +
@@ -622,14 +622,14 @@ tests/test_map.c:776 (test_map_set_get_remove_cycle)
 
 | REQ-MAP-007: Map Key Not Found
 | src/juno_map.c:109 (JunoDs_MapGet)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:515 (test_map_get_nonexistent_item)
 | Test
 | ✓ Complete
 
 | REQ-MAP-008: Map Remove
 | src/juno_map.c:156 (JunoDs_MapRemove)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:570 (test_map_remove_existing_item) +
 tests/test_map.c:593 (test_map_remove_nonexistent_item) +
 tests/test_map.c:620 (test_map_remove_after_collision) +
@@ -640,7 +640,7 @@ tests/test_map.c:776 (test_map_set_get_remove_cycle)
 
 | REQ-MAP-009: Map Vtable Validation
 | include/juno/ds/map_api.h:130 (JunoDs_MapVerify)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:810 (test_map_verify_valid_map) +
 tests/test_map.c:820 (test_map_verify_null_map)
 | Test
@@ -648,7 +648,7 @@ tests/test_map.c:820 (test_map_verify_null_map)
 
 | REQ-MAP-010: Map Dependency Validation
 | include/juno/ds/map_api.h:130 (JunoDs_MapVerify)
-| docs/sdd/modules/map.adoc:92 (Design Rationale)
+| docs/sdd/modules/map.adoc:1 (Map Module)
 | tests/test_map.c:343 (test_map_init_null_api) +
 tests/test_map.c:351 (test_map_init_zero_capacity)
 | Test
@@ -664,28 +664,28 @@ tests/test_map.c:351 (test_map_init_zero_capacity)
 
 | REQ-MATH-001: Math Constants
 | include/juno/math/juno_math_constants.h:33 (Pi)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MATH-002: Vector Types
 | include/juno/math/juno_vec_types.h:64 (<unknown>)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MATH-003: Vector Coordinate Access
 | include/juno/math/juno_vec_types.h:64 (<unknown>)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MATH-004: Quaternion Type
 | include/juno/math/juno_vec_types.h:674 (<unknown>)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -697,7 +697,7 @@ include/juno/math/juno_vec.h:201 (Juno_Vec2_I32_Add) +
 include/juno/math/juno_vec.h:264 (Juno_Vec3_F64_Add) +
 include/juno/math/juno_vec.h:335 (Juno_Vec3_F32_Add) +
 include/juno/math/juno_vec.h:405 (Juno_Vec3_I32_Add)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:35 (test_vec2_f64_add) +
 tests/test_math.c:102 (test_vec2_f32_add) +
 tests/test_math.c:169 (test_vec2_i32_add) +
@@ -714,7 +714,7 @@ include/juno/math/juno_vec.h:213 (Juno_Vec2_I32_Sub) +
 include/juno/math/juno_vec.h:277 (Juno_Vec3_F64_Sub) +
 include/juno/math/juno_vec.h:348 (Juno_Vec3_F32_Sub) +
 include/juno/math/juno_vec.h:418 (Juno_Vec3_I32_Sub)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:48 (test_vec2_f64_sub) +
 tests/test_math.c:115 (test_vec2_f32_sub) +
 tests/test_math.c:182 (test_vec2_i32_sub) +
@@ -731,7 +731,7 @@ include/juno/math/juno_vec.h:224 (Juno_Vec2_I32_Mult) +
 include/juno/math/juno_vec.h:289 (Juno_Vec3_F64_Mult) +
 include/juno/math/juno_vec.h:360 (Juno_Vec3_F32_Mult) +
 include/juno/math/juno_vec.h:430 (Juno_Vec3_I32_Mult)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:61 (test_vec2_f64_mult) +
 tests/test_math.c:128 (test_vec2_f32_mult) +
 tests/test_math.c:195 (test_vec2_i32_mult) +
@@ -748,7 +748,7 @@ include/juno/math/juno_vec.h:235 (Juno_Vec2_I32_Dot) +
 include/juno/math/juno_vec.h:301 (Juno_Vec3_F64_Dot) +
 include/juno/math/juno_vec.h:372 (Juno_Vec3_F32_Dot) +
 include/juno/math/juno_vec.h:442 (Juno_Vec3_I32_Dot)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:73 (test_vec2_f64_dot) +
 tests/test_math.c:140 (test_vec2_f32_dot) +
 tests/test_math.c:207 (test_vec2_i32_dot) +
@@ -762,7 +762,7 @@ tests/test_math.c:414 (test_vec3_i32_dot)
 | include/juno/math/juno_vec.h:119 (Juno_Vec2_F64_Cross) +
 include/juno/math/juno_vec.h:182 (Juno_Vec2_F32_Cross) +
 include/juno/math/juno_vec.h:244 (Juno_Vec2_I32_Cross)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:83 (test_vec2_f64_cross) +
 tests/test_math.c:150 (test_vec2_f32_cross) +
 tests/test_math.c:217 (test_vec2_i32_cross)
@@ -773,7 +773,7 @@ tests/test_math.c:217 (test_vec2_i32_cross)
 | include/juno/math/juno_vec.h:311 (Juno_Vec3_F64_Cross) +
 include/juno/math/juno_vec.h:381 (Juno_Vec3_F32_Cross) +
 include/juno/math/juno_vec.h:451 (Juno_Vec3_I32_Cross)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:284 (test_vec3_f64_cross) +
 tests/test_math.c:354 (test_vec3_f32_cross) +
 tests/test_math.c:424 (test_vec3_i32_cross)
@@ -787,7 +787,7 @@ include/juno/math/juno_vec.h:254 (Juno_Vec2_I32_L2Norm2) +
 include/juno/math/juno_vec.h:325 (Juno_Vec3_F64_L2Norm2) +
 include/juno/math/juno_vec.h:395 (Juno_Vec3_F32_L2Norm2) +
 include/juno/math/juno_vec.h:465 (Juno_Vec3_I32_L2Norm2)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:93 (test_vec2_f64_L2) +
 tests/test_math.c:160 (test_vec2_f32_L2) +
 tests/test_math.c:227 (test_vec2_i32_L2) +
@@ -799,28 +799,28 @@ tests/test_math.c:437 (test_vec3_i32_L2)
 
 | REQ-MATH-012: Quaternion Addition
 | include/juno/math/juno_vec.h:476 (Juno_RQuat_F64_Add)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:446 (test_rquat_f64_add)
 | Test
 | ✓ Complete
 
 | REQ-MATH-013: Quaternion Subtraction
 | include/juno/math/juno_vec.h:490 (Juno_RQuat_F64_Sub)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:458 (test_rquat_f64_sub)
 | Test
 | ✓ Complete
 
 | REQ-MATH-014: Quaternion Scalar Multiplication
 | include/juno/math/juno_vec.h:503 (Juno_RQuat_F64_Mult)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:470 (test_rquat_f64_mult_scalar)
 | Test
 | ✓ Complete
 
 | REQ-MATH-015: Hamilton Product
 | include/juno/math/juno_vec.h:523 (Juno_RQuat_F64_HamProd)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:482 (test_rquat_f64_hamprod) +
 tests/test_math.c:495 (test_rquat_f64_hamprod_general)
 | Test
@@ -828,21 +828,21 @@ tests/test_math.c:495 (test_rquat_f64_hamprod_general)
 
 | REQ-MATH-016: Quaternion Conjugate
 | include/juno/math/juno_vec.h:539 (Juno_RQuat_F64_Conj)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:509 (test_rquat_f64_conj)
 | Test
 | ✓ Complete
 
 | REQ-MATH-017: Quaternion Reciprocal
 | include/juno/math/juno_vec.h:562 (Juno_RQuat_F64_Recip)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:538 (test_rquat_f64_recip)
 | Test
 | ✓ Complete
 
 | REQ-MATH-018: Quaternion Squared Norm
 | include/juno/math/juno_vec.h:551 (Juno_RQuat_F64_L2Norm2)
-| docs/sdd/modules/math.adoc:86 (Design Rationale)
+| docs/sdd/modules/math.adoc:1 (Math Module)
 | tests/test_math.c:520 (test_rquat_f64_l2norm2) +
 tests/test_math.c:529 (test_rquat_f64_l2norm)
 | Test
@@ -858,21 +858,21 @@ tests/test_math.c:529 (test_rquat_f64_l2norm)
 
 | REQ-MEMORY-001: Memory Allocator Interface
 | include/juno/memory/memory_api.h:80 (<unknown>)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MEMORY-002: Allocator Pointer API Dependency
 | include/juno/memory/memory_api.h:72 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MEMORY-003: Block Allocator Initialization
 | src/juno_memory_block.c:248 (JunoMemory_BlockInit)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:272 (test_invalid_init_parameters) +
 tests/test_memory.c:428 (test_bad_api)
 | Test
@@ -880,7 +880,7 @@ tests/test_memory.c:428 (test_bad_api)
 
 | REQ-MEMORY-004: Block Allocator Get
 | src/juno_memory_block.c:65 (Juno_MemoryBlkGet)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:83 (test_nominal_single_alloc_and_free) +
 tests/test_memory.c:123 (test_nominal_multiple_alloc_and_free) +
 tests/test_memory.c:185 (test_negative_memory_empty) +
@@ -892,14 +892,14 @@ tests/test_memory.c:406 (test_zero_size_allocation)
 
 | REQ-MEMORY-005: Block Allocator Free Block Reuse
 | src/juno_memory_block.c:65 (Juno_MemoryBlkGet)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:123 (test_nominal_multiple_alloc_and_free)
 | Test
 | ✓ Complete
 
 | REQ-MEMORY-006: Block Allocator Put
 | src/juno_memory_block.c:158 (Juno_MemoryBlkPut)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:83 (test_nominal_single_alloc_and_free) +
 tests/test_memory.c:123 (test_nominal_multiple_alloc_and_free) +
 tests/test_memory.c:373 (test_generic_memory_get_put)
@@ -908,14 +908,14 @@ tests/test_memory.c:373 (test_generic_memory_get_put)
 
 | REQ-MEMORY-007: Block Allocator Double Free Rejection
 | src/juno_memory_block.c:158 (Juno_MemoryBlkPut)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:290 (test_double_free)
 | Test
 | ✓ Complete
 
 | REQ-MEMORY-008: Block Allocator Invalid Address Rejection
 | src/juno_memory_block.c:158 (Juno_MemoryBlkPut)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:319 (test_free_unallocated) +
 tests/test_memory.c:464 (test_invalid_size_and_addr)
 | Test
@@ -923,14 +923,14 @@ tests/test_memory.c:464 (test_invalid_size_and_addr)
 
 | REQ-MEMORY-009: Block Allocator Update
 | src/juno_memory_block.c:139 (Juno_MemoryBlkUpdate)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:341 (test_update_memory)
 | Test
 | ✓ Complete
 
 | REQ-MEMORY-010: Block Allocator No Memory Move
 | src/juno_memory_block.c:139 (Juno_MemoryBlkUpdate)
-| docs/sdd/modules/memory.adoc:118 (Design Rationale)
+| docs/sdd/modules/memory.adoc:1 (Memory Module)
 | tests/test_memory.c:341 (test_update_memory)
 | Test
 | ✓ Complete
@@ -945,43 +945,43 @@ tests/test_memory.c:464 (test_invalid_size_and_addr)
 
 | REQ-MODULE-001: Module Root Structure
 | include/juno/module.h:128 (<unknown>)
-| docs/sdd/modules/module_system.adoc:114 (Design Rationale)
+| docs/sdd/modules/module_system.adoc:1 (Module System)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MODULE-002: Module Root Failure Handler
 | include/juno/module.h:128 (<unknown>)
-| docs/sdd/modules/module_system.adoc:114 (Design Rationale)
+| docs/sdd/modules/module_system.adoc:1 (Module System)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MODULE-003: Module Derivation
 | include/juno/module.h:160 (<unknown>)
-| docs/sdd/modules/module_system.adoc:114 (Design Rationale)
+| docs/sdd/modules/module_system.adoc:1 (Module System)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MODULE-004: Module Union
 | include/juno/module.h:111 (<unknown>)
-| docs/sdd/modules/module_system.adoc:114 (Design Rationale)
+| docs/sdd/modules/module_system.adoc:1 (Module System)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MODULE-005: Result Type
 | include/juno/module.h:197 (<unknown>)
-| docs/sdd/modules/module_system.adoc:114 (Design Rationale) +
-docs/sdd/modules/types.adoc:37 (Design Rationale)
+| docs/sdd/modules/module_system.adoc:1 (Module System) +
+docs/sdd/modules/types.adoc:1 (Common Types Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MODULE-006: Option Type
 | include/juno/module.h:241 (<unknown>)
-| docs/sdd/modules/module_system.adoc:114 (Design Rationale)
+| docs/sdd/modules/module_system.adoc:1 (Module System)
 | _none_
 | Inspection
 | ✓ Complete
@@ -996,35 +996,35 @@ docs/sdd/modules/types.adoc:37 (Design Rationale)
 
 | REQ-MTX-001: Mutex Root Structure
 | include/juno/mp/mtx_api.h:44 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/mutex.adoc:53 (Design Rationale)
+| docs/sdd/modules/mutex.adoc:1 (Mutex Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MTX-002: TryLock Operation
 | include/juno/mp/mtx_api.h:50 (JUNO_RESULT_BOOL_T)
-| docs/sdd/modules/mutex.adoc:53 (Design Rationale)
+| docs/sdd/modules/mutex.adoc:1 (Mutex Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MTX-003: Lock Operation
 | include/juno/mp/mtx_api.h:53 (JUNO_STATUS_T)
-| docs/sdd/modules/mutex.adoc:53 (Design Rationale)
+| docs/sdd/modules/mutex.adoc:1 (Mutex Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MTX-004: Free Operation
 | include/juno/mp/mtx_api.h:56 (JUNO_STATUS_T)
-| docs/sdd/modules/mutex.adoc:53 (Design Rationale)
+| docs/sdd/modules/mutex.adoc:1 (Mutex Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-MTX-005: Mutex Vtable Validation
 | include/juno/mp/mtx_api.h:61 (JunoMp_MtxVerify)
-| docs/sdd/modules/mutex.adoc:53 (Design Rationale)
+| docs/sdd/modules/mutex.adoc:1 (Mutex Module)
 | tests/test_mtx.c:77 (test_mtx_verify_valid) +
 tests/test_mtx.c:84 (test_mtx_verify_null_root) +
 tests/test_mtx.c:91 (test_mtx_verify_null_api) +
@@ -1042,14 +1042,14 @@ tests/test_mtx.c:99 (test_mtx_verify_null_trylock)
 
 | REQ-POINTER-001: Pointer Descriptor Structure
 | include/juno/memory/pointer_api.h:55 (JUNO_TRAIT_ROOT)
-| docs/sdd/modules/pointer.adoc:98 (Design Rationale)
+| docs/sdd/modules/pointer.adoc:1 (Pointer Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-POINTER-002: Pointer Copy
 | include/juno/memory/pointer_api.h:156 (JunoMemory_PointerApiVerify)
-| docs/sdd/modules/pointer.adoc:98 (Design Rationale)
+| docs/sdd/modules/pointer.adoc:1 (Pointer Module)
 | tests/test_map.c:833 (test_map_entry_copy_nominal) +
 tests/test_map.c:849 (test_map_entry_copy_null_dest) +
 tests/test_pointer.c:89 (test_pointer_copy_success) +
@@ -1061,7 +1061,7 @@ tests/test_stack.c:1043 (test_stack_pointer_copy_invalid_src)
 
 | REQ-POINTER-003: Pointer Reset
 | include/juno/memory/pointer_api.h:156 (JunoMemory_PointerApiVerify)
-| docs/sdd/modules/pointer.adoc:98 (Design Rationale)
+| docs/sdd/modules/pointer.adoc:1 (Pointer Module)
 | tests/test_map.c:860 (test_map_entry_reset_nominal) +
 tests/test_pointer.c:113 (test_pointer_reset_success) +
 tests/test_pointer.c:123 (test_pointer_reset_null_addr) +
@@ -1072,7 +1072,7 @@ tests/test_stack.c:1062 (test_stack_pointer_reset_valid)
 
 | REQ-POINTER-004: Pointer Descriptor Validation
 | include/juno/memory/pointer_api.h:188 (JunoMemory_PointerVerify)
-| docs/sdd/modules/pointer.adoc:98 (Design Rationale)
+| docs/sdd/modules/pointer.adoc:1 (Pointer Module)
 | tests/test_pointer.c:135 (test_pointer_verify_valid) +
 tests/test_pointer.c:143 (test_pointer_verify_null_api) +
 tests/test_pointer.c:151 (test_pointer_verify_null_addr) +
@@ -1082,7 +1082,7 @@ tests/test_pointer.c:159 (test_pointer_verify_zero_size)
 
 | REQ-POINTER-005: Pointer Type Verification
 | include/juno/memory/pointer_api.h:129 (JunoMemory_PointerVerify)
-| docs/sdd/modules/pointer.adoc:98 (Design Rationale)
+| docs/sdd/modules/pointer.adoc:1 (Pointer Module)
 | tests/test_pointer.c:172 (test_pointer_verify_type_match) +
 tests/test_pointer.c:180 (test_pointer_verify_type_wrong_size) +
 tests/test_pointer.c:189 (test_pointer_verify_type_wrong_alignment)
@@ -1100,7 +1100,7 @@ tests/test_pointer.c:189 (test_pointer_verify_type_wrong_alignment)
 | REQ-QUEUE-001: Queue Initialization
 | src/juno_buff_queue.c:106 (JunoDs_QueueInit) +
 include/juno/ds/queue_api.h:116 (JunoDs_QueueVerify)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:209 (test_queue_init_nominal) +
 tests/test_queue.c:220 (test_queue_init_null_queue) +
 tests/test_queue.c:230 (test_queue_init_null_array) +
@@ -1116,14 +1116,14 @@ tests/test_queue.c:776 (test_queue_api_verify_missing_functions)
 
 | REQ-QUEUE-002: Queue Initial State
 | src/juno_buff_queue.c:106 (JunoDs_QueueInit)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:209 (test_queue_init_nominal)
 | Test
 | ✓ Complete
 
 | REQ-QUEUE-003: Queue Enqueue
 | src/juno_buff_queue.c:24 (JunoDs_QueuePush)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:249 (test_queue_push_single_item) +
 tests/test_queue.c:266 (test_queue_push_multiple_items) +
 tests/test_queue.c:290 (test_queue_push_to_full_capacity) +
@@ -1141,14 +1141,14 @@ tests/test_queue.c:860 (test_queue_data_integrity_after_operations)
 
 | REQ-QUEUE-004: Queue Full Rejection
 | src/juno_buff_queue.c:24 (JunoDs_QueuePush)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:308 (test_queue_push_overflow)
 | Test
 | ✓ Complete
 
 | REQ-QUEUE-005: Queue Dequeue
 | src/juno_buff_queue.c:50 (JunoDs_QueuePop)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:356 (test_queue_pop_single_item) +
 tests/test_queue.c:379 (test_queue_pop_multiple_items_fifo_order) +
 tests/test_queue.c:421 (test_queue_pop_null_queue) +
@@ -1164,14 +1164,14 @@ tests/test_queue.c:860 (test_queue_data_integrity_after_operations)
 
 | REQ-QUEUE-006: Queue Empty Dequeue Rejection
 | src/juno_buff_queue.c:50 (JunoDs_QueuePop)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:409 (test_queue_pop_empty_queue)
 | Test
 | ✓ Complete
 
 | REQ-QUEUE-007: Queue Peek
 | src/juno_buff_queue.c:78 (JunoDs_QueuePeek)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:452 (test_queue_peek_single_item) +
 tests/test_queue.c:478 (test_queue_peek_multiple_times) +
 tests/test_queue.c:515 (test_queue_peek_null_queue) +
@@ -1181,7 +1181,7 @@ tests/test_queue.c:522 (test_queue_peek_after_pop)
 
 | REQ-QUEUE-008: Queue Empty Peek Rejection
 | src/juno_buff_queue.c:78 (JunoDs_QueuePeek)
-| docs/sdd/modules/queue.adoc:81 (Design Rationale)
+| docs/sdd/modules/queue.adoc:1 (Queue Module)
 | tests/test_queue.c:505 (test_queue_peek_empty_queue)
 | Test
 | ✓ Complete
@@ -1196,21 +1196,21 @@ tests/test_queue.c:522 (test_queue_peek_after_pop)
 
 | REQ-SB-001: Broker Root Structure
 | include/juno/sb/broker_api.h:79 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SB-002: Broker API Interface
 | include/juno/sb/broker_api.h:89 (<unknown>)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SB-003: Broker Initialization
 | src/juno_broker.c:35 (JunoSb_BrokerInit)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:190 (test_sb_broker_init_success) +
 tests/test_sb.c:203 (test_sb_broker_init_null_broker) +
 tests/test_sb.c:212 (test_sb_broker_init_null_registry)
@@ -1219,14 +1219,14 @@ tests/test_sb.c:212 (test_sb_broker_init_null_registry)
 
 | REQ-SB-004: Pipe Derivation
 | include/juno/sb/broker_api.h:72 (JUNO_MODULE_DERIVE)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SB-005: Pipe Initialization
 | include/juno/sb/broker_api.h:138 (JunoSb_PipeInit)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:225 (test_sb_pipe_init_success) +
 tests/test_sb.c:234 (test_sb_pipe_init_null_pipe)
 | Test
@@ -1234,42 +1234,42 @@ tests/test_sb.c:234 (test_sb_pipe_init_null_pipe)
 
 | REQ-SB-006: Publish Fan-Out
 | src/juno_broker.c:50 (Publish)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:280 (test_sb_publish_fan_out)
 | Test
 | ✓ Complete
 
 | REQ-SB-007: Publish Non-Matching Skip
 | src/juno_broker.c:50 (Publish)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:309 (test_sb_publish_skip_non_matching)
 | Test
 | ✓ Complete
 
 | REQ-SB-008: Register Subscriber
 | src/juno_broker.c:75 (RegisterSubscriber)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:246 (test_sb_register_subscriber)
 | Test
 | ✓ Complete
 
 | REQ-SB-009: Registry Full Rejection
 | src/juno_broker.c:75 (RegisterSubscriber)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:259 (test_sb_register_full_rejection)
 | Test
 | ✓ Complete
 
 | REQ-SB-010: Broker Vtable Validation
 | include/juno/sb/broker_api.h:113 (JunoSb_BrokerVerify)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:336 (test_sb_broker_verify_null_api)
 | Test
 | ✓ Complete
 
 | REQ-SB-011: Broker Registry Validation
 | include/juno/sb/broker_api.h:113 (JunoSb_BrokerVerify)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:346 (test_sb_broker_verify_null_registry) +
 tests/test_sb.c:356 (test_sb_broker_verify_zero_capacity)
 | Test
@@ -1277,7 +1277,7 @@ tests/test_sb.c:356 (test_sb_broker_verify_zero_capacity)
 
 | REQ-SB-012: Pipe Validation
 | include/juno/sb/broker_api.h:125 (JunoSb_PipeVerify)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | tests/test_sb.c:366 (test_sb_pipe_verify_valid) +
 tests/test_sb.c:374 (test_sb_pipe_verify_null)
 | Test
@@ -1285,7 +1285,7 @@ tests/test_sb.c:374 (test_sb_pipe_verify_null)
 
 | REQ-SB-013: Single Thread Scope
 | include/juno/sb/broker_api.h:50 (<unknown>)
-| docs/sdd/modules/software_bus.adoc:105 (Design Rationale)
+| docs/sdd/modules/software_bus.adoc:1 (Software Bus (Broker) Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -1300,28 +1300,28 @@ tests/test_sb.c:374 (test_sb_pipe_verify_null)
 
 | REQ-SCH-001: Scheduler Root Structure
 | include/juno/sch/juno_sch_api.h:61 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/scheduler.adoc:105 (Design Rationale)
+| docs/sdd/modules/scheduler.adoc:1 (Scheduler Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SCH-002: Scheduler API Interface
 | include/juno/sch/juno_sch_api.h:70 (<unknown>)
-| docs/sdd/modules/scheduler.adoc:105 (Design Rationale)
+| docs/sdd/modules/scheduler.adoc:1 (Scheduler Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SCH-003: Schedule Table Layout
 | include/juno/sch/juno_sch_api.h:56 (<unknown>)
-| docs/sdd/modules/scheduler.adoc:105 (Design Rationale)
+| docs/sdd/modules/scheduler.adoc:1 (Scheduler Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SCH-004: Execute Major Frame
 | include/juno/sch/juno_sch_api.h:74 (JUNO_STATUS_T)
-| docs/sdd/modules/scheduler.adoc:105 (Design Rationale)
+| docs/sdd/modules/scheduler.adoc:1 (Scheduler Module)
 | tests/test_sch.c:153 (test_sch_execute_invokes_all_apps) +
 tests/test_sch.c:162 (test_sch_execute_skips_null_slot)
 | Test
@@ -1329,21 +1329,21 @@ tests/test_sch.c:162 (test_sch_execute_skips_null_slot)
 
 | REQ-SCH-005: Minor Frame Period Query
 | include/juno/sch/juno_sch_api.h:77 (JUNO_TIMESTAMP_RESULT_T)
-| docs/sdd/modules/scheduler.adoc:105 (Design Rationale)
+| docs/sdd/modules/scheduler.adoc:1 (Scheduler Module)
 | tests/test_sch.c:177 (test_sch_get_minor_frame_period)
 | Test
 | ✓ Complete
 
 | REQ-SCH-006: Major Frame Period Computation
 | include/juno/sch/juno_sch_api.h:80 (JUNO_TIMESTAMP_RESULT_T)
-| docs/sdd/modules/scheduler.adoc:105 (Design Rationale)
+| docs/sdd/modules/scheduler.adoc:1 (Scheduler Module)
 | tests/test_sch.c:190 (test_sch_get_major_frame_period)
 | Test
 | ✓ Complete
 
 | REQ-SCH-007: Time Source Dependency
 | include/juno/sch/juno_sch_api.h:61 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/scheduler.adoc:105 (Design Rationale)
+| docs/sdd/modules/scheduler.adoc:1 (Scheduler Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -1358,28 +1358,28 @@ tests/test_sch.c:162 (test_sch_execute_skips_null_slot)
 
 | REQ-SM-001: SM Root Structure
 | include/juno/sm/sm_api.h:76 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SM-002: State Root Structure
 | include/juno/sm/sm_api.h:59 (JUNO_MODULE_ROOT)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SM-003: State API Interface
 | include/juno/sm/sm_api.h:65 (JUNO_STATUS_T)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SM-004: SM Initialization
 | include/juno/sm/sm_api.h:126 (JunoSm_Init)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:91 (test_sm_init_success) +
 tests/test_sm.c:103 (test_sm_init_null_root) +
 tests/test_sm.c:110 (test_sm_init_null_start_state)
@@ -1388,7 +1388,7 @@ tests/test_sm.c:110 (test_sm_init_null_start_state)
 
 | REQ-SM-005: State Initialization
 | include/juno/sm/sm_api.h:104 (JunoSm_StateInit)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:121 (test_sm_state_init_with_next) +
 tests/test_sm.c:136 (test_sm_state_init_without_next) +
 tests/test_sm.c:148 (test_sm_state_init_null_state) +
@@ -1398,7 +1398,7 @@ tests/test_sm.c:156 (test_sm_state_init_null_api)
 
 | REQ-SM-006: Get Current State
 | include/juno/sm/sm_api.h:139 (JunoSm_GetCurrentState)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:168 (test_sm_get_current_state) +
 tests/test_sm.c:179 (test_sm_get_current_state_null_root)
 | Test
@@ -1406,7 +1406,7 @@ tests/test_sm.c:179 (test_sm_get_current_state_null_root)
 
 | REQ-SM-007: State Transition
 | include/juno/sm/sm_api.h:151 (JunoSm_TransitionState)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:190 (test_sm_transition_to_next) +
 tests/test_sm.c:220 (test_sm_transition_null_root)
 | Test
@@ -1414,14 +1414,14 @@ tests/test_sm.c:220 (test_sm_transition_null_root)
 
 | REQ-SM-008: No Transition When None
 | include/juno/sm/sm_api.h:151 (JunoSm_TransitionState)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:207 (test_sm_transition_stays_when_none)
 | Test
 | ✓ Complete
 
 | REQ-SM-009: SM Verification
 | include/juno/sm/sm_api.h:83 (JunoSm_Verify)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:231 (test_sm_verify_valid) +
 tests/test_sm.c:241 (test_sm_verify_null_root) +
 tests/test_sm.c:248 (test_sm_verify_null_current_state)
@@ -1430,7 +1430,7 @@ tests/test_sm.c:248 (test_sm_verify_null_current_state)
 
 | REQ-SM-010: State Verification
 | include/juno/sm/sm_api.h:91 (JunoSm_StateVerify)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:260 (test_sm_state_verify_valid) +
 tests/test_sm.c:270 (test_sm_state_verify_null_state) +
 tests/test_sm.c:277 (test_sm_state_verify_null_api) +
@@ -1440,7 +1440,7 @@ tests/test_sm.c:286 (test_sm_state_verify_null_sm)
 
 | REQ-SM-011: Next State Pointer Verification
 | include/juno/sm/sm_api.h:91 (JunoSm_StateVerify)
-| docs/sdd/modules/state_machine.adoc:105 (Design Rationale)
+| docs/sdd/modules/state_machine.adoc:1 (State Machine Module)
 | tests/test_sm.c:295 (test_sm_state_verify_next_null_when_some) +
 tests/test_sm.c:306 (test_sm_state_verify_next_valid_when_some)
 | Test
@@ -1456,7 +1456,7 @@ tests/test_sm.c:306 (test_sm_state_verify_next_valid_when_some)
 
 | REQ-STACK-001: Stack Initialization
 | src/juno_buff_stack.c:101 (JunoDs_StackInit)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:211 (test_stack_init_nominal) +
 tests/test_stack.c:221 (test_stack_init_null_stack) +
 tests/test_stack.c:228 (test_stack_init_null_api) +
@@ -1473,14 +1473,14 @@ tests/test_stack.c:1170 (test_stack_init_with_array_verify_failure)
 
 | REQ-STACK-002: Stack Initial State
 | src/juno_buff_stack.c:101 (JunoDs_StackInit)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:211 (test_stack_init_nominal)
 | Test
 | ✓ Complete
 
 | REQ-STACK-003: Stack Push
 | src/juno_buff_stack.c:27 (JunoDs_StackPush)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:248 (test_stack_push_single_item) +
 tests/test_stack.c:265 (test_stack_push_multiple_items) +
 tests/test_stack.c:289 (test_stack_push_to_full_capacity) +
@@ -1499,7 +1499,7 @@ tests/test_stack.c:1079 (test_stack_push_with_setAt_failure)
 
 | REQ-STACK-004: Stack Full Rejection
 | src/juno_buff_stack.c:27 (JunoDs_StackPush)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:307 (test_stack_push_overflow) +
 tests/test_stack.c:966 (test_stack_push_at_exact_capacity)
 | Test
@@ -1507,7 +1507,7 @@ tests/test_stack.c:966 (test_stack_push_at_exact_capacity)
 
 | REQ-STACK-005: Stack Pop
 | src/juno_buff_stack.c:52 (JunoDs_StackPop)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:355 (test_stack_pop_single_item) +
 tests/test_stack.c:378 (test_stack_pop_multiple_items_lifo_order) +
 tests/test_stack.c:420 (test_stack_pop_null_stack) +
@@ -1526,7 +1526,7 @@ tests/test_stack.c:1148 (test_stack_pop_copy_failure)
 
 | REQ-STACK-006: Stack Empty Pop Rejection
 | src/juno_buff_stack.c:52 (JunoDs_StackPop)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:408 (test_stack_pop_empty_stack) +
 tests/test_stack.c:992 (test_stack_pop_until_empty)
 | Test
@@ -1534,7 +1534,7 @@ tests/test_stack.c:992 (test_stack_pop_until_empty)
 
 | REQ-STACK-007: Stack Peek
 | src/juno_buff_stack.c:77 (JunoDs_StackPeek)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:451 (test_stack_peek_single_item) +
 tests/test_stack.c:477 (test_stack_peek_top_element) +
 tests/test_stack.c:501 (test_stack_peek_multiple_times) +
@@ -1547,7 +1547,7 @@ tests/test_stack.c:1125 (test_stack_peek_with_getAt_failure)
 
 | REQ-STACK-008: Stack Empty Peek Rejection
 | src/juno_buff_stack.c:77 (JunoDs_StackPeek)
-| docs/sdd/modules/stack.adoc:75 (Design Rationale)
+| docs/sdd/modules/stack.adoc:1 (Stack Module)
 | tests/test_stack.c:528 (test_stack_peek_empty_stack)
 | Test
 | ✓ Complete
@@ -1562,28 +1562,28 @@ tests/test_stack.c:1125 (test_stack_peek_with_getAt_failure)
 
 | REQ-STATUS-001: Unified Status Type
 | include/juno/status.h:50 (<unknown>)
-| docs/sdd/modules/status.adoc:76 (Design Rationale)
+| docs/sdd/modules/status.adoc:1 (Status Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-STATUS-002: Canonical Status Codes
 | include/juno/status.h:57 (<unknown>)
-| docs/sdd/modules/status.adoc:76 (Design Rationale)
+| docs/sdd/modules/status.adoc:1 (Status Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-STATUS-003: Failure Handler Callback Type
 | include/juno/status.h:107 (<unknown>)
-| docs/sdd/modules/status.adoc:76 (Design Rationale)
+| docs/sdd/modules/status.adoc:1 (Status Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-STATUS-004: Failure Handler Non-Interference
 | include/juno/status.h:127 (<unknown>)
-| docs/sdd/modules/status.adoc:76 (Design Rationale)
+| docs/sdd/modules/status.adoc:1 (Status Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -1598,49 +1598,49 @@ tests/test_stack.c:1125 (test_stack_peek_with_getAt_failure)
 
 | REQ-SYS-001: Zero Dynamic Allocation
 | CMakeLists.txt:75 (list)
-| docs/sdd/sdd.adoc:58 (References)
+| docs/sdd/sdd.adoc:58 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-002: Caller-Owned Memory
 | include/juno/module.h:54 (JUNO_MODULE_DECLARE)
-| docs/sdd/sdd.adoc:58 (References)
+| docs/sdd/sdd.adoc:58 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-003: Freestanding C11 Compatibility
 | CMakeLists.txt:75 (list)
-| docs/sdd/sdd.adoc:58 (References)
+| docs/sdd/sdd.adoc:58 (System Architecture)
 | _none_
 | Analysis
 | ✓ Complete
 
 | REQ-SYS-004: Explicit Status Code Returns
 | include/juno/status.h:40 (<unknown>)
-| docs/sdd/sdd.adoc:58 (References)
+| docs/sdd/sdd.adoc:58 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-005: No Silent Failures
 | include/juno/status.h:40 (<unknown>)
-| docs/sdd/sdd.adoc:58 (References)
+| docs/sdd/sdd.adoc:58 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-006: Dependency Injection via Vtables
 | include/juno/module.h:54 (JUNO_MODULE_DECLARE)
-| docs/sdd/sdd.adoc:58 (References)
+| docs/sdd/sdd.adoc:58 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-007: No Global Dependencies
 | include/juno/macros.h:50 (<unknown>)
-| docs/sdd/modules/macros.adoc:50 (Design Rationale)
+| docs/sdd/modules/macros.adoc:1 (Macros Module)
 | _none_
 | Inspection
 | ✓ Complete
@@ -1648,28 +1648,28 @@ tests/test_stack.c:1125 (test_stack_peek_with_getAt_failure)
 | REQ-SYS-008: Precondition Verification
 | include/juno/macros.h:50 (<unknown>) +
 include/juno/macros.h:88 (<unknown>)
-| docs/sdd/modules/macros.adoc:50 (Design Rationale)
+| docs/sdd/modules/macros.adoc:1 (Macros Module)
 | tests/test_pointer.c:151 (test_pointer_verify_null_addr)
 | Test
 | ✓ Complete
 
 | REQ-SYS-009: No Global Mutable State
 | include/juno/module.h:54 (JUNO_MODULE_DECLARE)
-| docs/sdd/sdd.adoc:58 (References)
+| docs/sdd/sdd.adoc:58 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-010: API Vtable Validation
 | include/juno/macros.h:50 (<unknown>)
-| docs/sdd/modules/macros.adoc:50 (Design Rationale)
+| docs/sdd/modules/macros.adoc:1 (Macros Module)
 | tests/test_array.c:238 (test_array_verify_null_api)
 | Test
 | ✓ Complete
 
 | REQ-SYS-011: Injected Dependency Validation
 | include/juno/macros.h:50 (<unknown>)
-| docs/sdd/modules/macros.adoc:50 (Design Rationale)
+| docs/sdd/modules/macros.adoc:1 (Macros Module)
 | tests/test_sb.c:346 (test_sb_broker_verify_null_registry)
 | Test
 | ✓ Complete
@@ -1684,49 +1684,49 @@ include/juno/macros.h:88 (<unknown>)
 
 | REQ-TIME-001: Timestamp Representation
 | include/juno/time/time_api.h:104 (<unknown>)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-TIME-002: Time API Interface
 | include/juno/time/time_api.h:128 (JUNO_TIMESTAMP_RESULT_T)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-TIME-003: AddTime Operation
 | src/juno_time.c:26 (JunoTime_AddTime)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:86 (test_AddTime_no_subseconds_overflow)
 | Test
 | ✓ Complete
 
 | REQ-TIME-004: AddTime Subsecond Carry-Over
 | src/juno_time.c:26 (JunoTime_AddTime)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:97 (test_AddTime_with_subseconds_overflow)
 | Test
 | ✓ Complete
 
 | REQ-TIME-005: SubtractTime Operation
 | src/juno_time.c:49 (JunoTime_SubtractTime)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:110 (test_SubtractTime_no_borrow)
 | Test
 | ✓ Complete
 
 | REQ-TIME-006: SubtractTime Subsecond Borrow
 | src/juno_time.c:49 (JunoTime_SubtractTime)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:122 (test_SubtractTime_borrow_subseconds)
 | Test
 | ✓ Complete
 
 | REQ-TIME-007: SubtractTime Negative Saturation
 | src/juno_time.c:49 (JunoTime_SubtractTime)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:135 (test_SubtractTime_invalid_lower_seconds) +
 tests/test_time.c:146 (test_SubtractTime_invalid_zero_seconds_insufficient_subseconds)
 | Test
@@ -1734,7 +1734,7 @@ tests/test_time.c:146 (test_SubtractTime_invalid_zero_seconds_insufficient_subse
 
 | REQ-TIME-008: SubtractTime Negative Error
 | src/juno_time.c:49 (JunoTime_SubtractTime)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:135 (test_SubtractTime_invalid_lower_seconds) +
 tests/test_time.c:146 (test_SubtractTime_invalid_zero_seconds_insufficient_subseconds)
 | Test
@@ -1742,7 +1742,7 @@ tests/test_time.c:146 (test_SubtractTime_invalid_zero_seconds_insufficient_subse
 
 | REQ-TIME-009: Timestamp to Nanoseconds Conversion
 | src/juno_time.c:78 (JunoTime_TimestampToNanos)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:157 (test_TimestampToNanos_success_integer) +
 tests/test_time.c:166 (test_TimestampToNanos_success_fractional)
 | Test
@@ -1750,7 +1750,7 @@ tests/test_time.c:166 (test_TimestampToNanos_success_fractional)
 
 | REQ-TIME-010: Timestamp to Microseconds Conversion
 | src/juno_time.c:115 (JunoTime_TimestampToMicros)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:177 (test_TimestampToMicros_success_integer) +
 tests/test_time.c:186 (test_TimestampToMicros_success_fractional)
 | Test
@@ -1758,7 +1758,7 @@ tests/test_time.c:186 (test_TimestampToMicros_success_fractional)
 
 | REQ-TIME-011: Timestamp to Milliseconds Conversion
 | src/juno_time.c:149 (JunoTime_TimestampToMillis)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:196 (test_TimestampToMillis_success_integer) +
 tests/test_time.c:205 (test_TimestampToMillis_success_fractional)
 | Test
@@ -1766,7 +1766,7 @@ tests/test_time.c:205 (test_TimestampToMillis_success_fractional)
 
 | REQ-TIME-012: Nanoseconds to Timestamp Conversion
 | src/juno_time.c:184 (JunoTime_NanosToTimestamp)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:215 (test_NanosToTimestamp_zero) +
 tests/test_time.c:225 (test_NanosToTimestamp_integer_and_fractional)
 | Test
@@ -1774,7 +1774,7 @@ tests/test_time.c:225 (test_NanosToTimestamp_integer_and_fractional)
 
 | REQ-TIME-013: Microseconds to Timestamp Conversion
 | src/juno_time.c:202 (JunoTime_MicrosToTimestamp)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:240 (test_MicrosToTimestamp_zero) +
 tests/test_time.c:250 (test_MicrosToTimestamp_integer_and_fractional)
 | Test
@@ -1782,7 +1782,7 @@ tests/test_time.c:250 (test_MicrosToTimestamp_integer_and_fractional)
 
 | REQ-TIME-014: Milliseconds to Timestamp Conversion
 | src/juno_time.c:220 (JunoTime_MillisToTimestamp)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:265 (test_MillisToTimestamp_zero) +
 tests/test_time.c:275 (test_MillisToTimestamp_integer_and_fractional)
 | Test
@@ -1790,14 +1790,14 @@ tests/test_time.c:275 (test_MillisToTimestamp_integer_and_fractional)
 
 | REQ-TIME-015: Timestamp to Double Conversion
 | src/juno_time.c:239 (JunoTime_TimestampToDouble)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:314 (test_timestamp_to_double)
 | Test
 | ✓ Complete
 
 | REQ-TIME-016: Double to Timestamp Conversion
 | src/juno_time.c:254 (JunoTime_DoubleToTimestamp)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:324 (test_double_to_timestamp_success) +
 tests/test_time.c:333 (test_double_to_timestamp_zero)
 | Test
@@ -1805,7 +1805,7 @@ tests/test_time.c:333 (test_double_to_timestamp_zero)
 
 | REQ-TIME-017: Double to Timestamp Range Rejection
 | src/juno_time.c:254 (JunoTime_DoubleToTimestamp)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:342 (test_double_to_timestamp_negative_rejected)
 | Test
 | ✓ Complete
@@ -1814,7 +1814,7 @@ tests/test_time.c:333 (test_double_to_timestamp_zero)
 | src/juno_time.c:78 (JunoTime_TimestampToNanos) +
 src/juno_time.c:115 (JunoTime_TimestampToMicros) +
 src/juno_time.c:149 (JunoTime_TimestampToMillis)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:349 (test_timestamp_to_nanos_overflow)
 | Test
 | ✓ Complete
@@ -1828,7 +1828,7 @@ src/juno_time.c:202 (JunoTime_MicrosToTimestamp) +
 src/juno_time.c:220 (JunoTime_MillisToTimestamp) +
 src/juno_time.c:239 (JunoTime_TimestampToDouble) +
 src/juno_time.c:254 (JunoTime_DoubleToTimestamp)
-| docs/sdd/modules/time.adoc:105 (Design Rationale)
+| docs/sdd/modules/time.adoc:1 (Time Module)
 | tests/test_time.c:362 (test_double_to_timestamp_null_root)
 | Test
 | ✓ Complete

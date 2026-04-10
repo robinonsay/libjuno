@@ -1,3 +1,4 @@
+// @{"design": ["REQ-TIME-001", "REQ-TIME-002", "REQ-TIME-003", "REQ-TIME-004", "REQ-TIME-005", "REQ-TIME-006", "REQ-TIME-007", "REQ-TIME-008", "REQ-TIME-009", "REQ-TIME-010", "REQ-TIME-011", "REQ-TIME-012", "REQ-TIME-013", "REQ-TIME-014", "REQ-TIME-015", "REQ-TIME-016", "REQ-TIME-017", "REQ-TIME-018", "REQ-TIME-019"]}
 = Time Module
 
 == Purpose
@@ -102,7 +103,6 @@ This follows the same DI principle: inject what varies, provide what's universal
 The fixed-point subsecond representation was chosen over floating-point for deterministic arithmetic on targets without an FPU.
 The full-scale divisor (`giSUBSECS_MAX`) provides maximum fractional resolution within a 32-bit field.
 
-// @{"design": ["REQ-TIME-001", "REQ-TIME-002", "REQ-TIME-003", "REQ-TIME-004", "REQ-TIME-005", "REQ-TIME-006", "REQ-TIME-007", "REQ-TIME-008", "REQ-TIME-009", "REQ-TIME-010", "REQ-TIME-011", "REQ-TIME-012", "REQ-TIME-013", "REQ-TIME-014", "REQ-TIME-015", "REQ-TIME-016", "REQ-TIME-017", "REQ-TIME-018", "REQ-TIME-019"]}
 == Requirements Traceability
 
 [cols="1,3"]

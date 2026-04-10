@@ -1,3 +1,4 @@
+// @{"design": ["REQ-SYS-007", "REQ-SYS-008", "REQ-SYS-010", "REQ-SYS-011"]}
 = Macros Module
 
 == Purpose
@@ -47,7 +48,6 @@ The ASSERT macro family was chosen over raw `if` checks for three reasons:
 . **Ergonomic variadic propagation** — `JUNO_ASSERT_SUCCESS(s, return s)` is concise and prevents forgetting error checks.
 . **Self-documenting** — reading `JUNO_ASSERT_EXISTS(ptArray)` clearly states the obligation without additional comments.
 
-// @{"design": ["REQ-SYS-007", "REQ-SYS-008", "REQ-SYS-010", "REQ-SYS-011"]}
 == Requirements Traceability
 
 [cols="1,3"]

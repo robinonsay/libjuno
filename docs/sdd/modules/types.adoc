@@ -1,3 +1,4 @@
+// @{"design": ["REQ-MODULE-005"]}
 = Common Types Module
 
 == Purpose
@@ -34,7 +35,6 @@ Callers use `JUNO_ASSERT_OK(result, return result.tStatus)` to validate before a
 Pre-defined specializations avoid repetitive `JUNO_MODULE_RESULT` invocations across modules.
 The set covers the most common C value types used in embedded contexts: boolean flags, 32-bit counts, double-precision floats, sizes, and opaque pointers.
 
-// @{"design": ["REQ-MODULE-005"]}
 == Requirements Traceability
 
 [cols="1,3"]

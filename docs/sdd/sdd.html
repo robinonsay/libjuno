@@ -2532,6 +2532,14 @@ The block allocator provides O(1) deterministic operations suitable for hard rea
 <td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MEMORY-008</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Verification of allocator and pointer API</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MEMORY-009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block allocator Update operation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MEMORY-010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block allocator no memory move guarantee</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -3167,6 +3175,14 @@ This avoids duplicating contiguous-storage logic and benefits from the Array&#82
 <td class="tableblock halign-left valign-top"><p class="tableblock">REQ-QUEUE-006</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Circular-buffer index arithmetic</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-QUEUE-007</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Peek</code> — queue non-destructive front access</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-QUEUE-008</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Queue empty peek rejection</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -3357,6 +3373,18 @@ The top-of-stack is always the last used index, so no circular arithmetic is nee
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">REQ-STACK-005</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>JunoDs_StackVerify</code> — stack invariant validation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-STACK-006</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stack empty pop rejection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-STACK-007</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Peek</code> — stack non-destructive top access</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-STACK-008</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stack empty peek rejection</p></td>
 </tr>
 </tbody>
 </table>
@@ -3824,6 +3852,14 @@ Multiple CRC variants are provided because embedded protocols commonly require s
 <td class="tableblock halign-left valign-top"><p class="tableblock">REQ-CRC-008</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Streaming multi-chunk CRC support</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-CRC-009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ZIP CRC-32 update function</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-CRC-010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ZIP CRC-32 final XOR</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -4179,6 +4215,46 @@ The macro-based generic approach keeps the API consistent across precisions and 
 <td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-008</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Result type wrappers for all operations</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2D cross product</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3D cross product</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-011</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Squared L2 norm</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-012</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quaternion addition</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-013</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quaternion subtraction</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-014</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quaternion scalar multiplication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-015</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hamilton product</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-016</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quaternion conjugate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-017</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quaternion reciprocal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-MATH-018</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quaternion squared norm</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -4488,6 +4564,18 @@ The full-scale divisor (<code>giSUBSECS_MAX</code>) provides maximum fractional 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">REQ-TIME-016</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>JunoTime_TimeApiInit</code> — API initialization macro</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-TIME-017</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DoubleToTimestamp</code> — range rejection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-TIME-018</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conversion overflow detection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQ-TIME-019</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Null pointer rejection</p></td>
 </tr>
 </tbody>
 </table>
@@ -6187,7 +6275,7 @@ The split follows DI: inject what varies, provide what&#8217;s universal.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2026-04-10 12:33:50 -0500
+Last updated 2026-04-10 12:55:28 -0500
 </div>
 </div>
 </body>

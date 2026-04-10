@@ -1,3 +1,4 @@
+// @{"design": ["REQ-MODULE-001", "REQ-MODULE-002", "REQ-MODULE-003", "REQ-MODULE-004", "REQ-MODULE-005", "REQ-MODULE-006"]}
 = Module System
 
 == Purpose
@@ -111,7 +112,6 @@ The union provides stack-allocation sizing with type erasure.
 `JUNO_TRAIT_ROOT` omits failure handler fields for lightweight, ephemeral interfaces (see Pointer trait rationale in Section 5).
 Result/Option types provide structural error checking without `errno`, `longjmp`, or exceptions — suitable for freestanding C11.
 
-// @{"design": ["REQ-MODULE-001", "REQ-MODULE-002", "REQ-MODULE-003", "REQ-MODULE-004", "REQ-MODULE-005", "REQ-MODULE-006"]}
 == Requirements Traceability
 
 [cols="1,3"]

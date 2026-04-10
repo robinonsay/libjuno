@@ -24,8 +24,10 @@ untraced requirements, orphaned tags, missing annotations, and broken
 1. Define the audit checklist:
    - [ ] Every requirement in `requirements.json` has at least one `@{"req": ...}` in source
    - [ ] Every requirement with `verification_method: "Test"` has `@{"verify": ...}` in tests
+   - [ ] Every requirement has at least one `@{"design": ...}` in SDD
    - [ ] No `@{"req": ...}` tags reference nonexistent requirement IDs
    - [ ] No `@{"verify": ...}` tags reference nonexistent requirement IDs
+   - [ ] No `@{"design": ...}` tags reference nonexistent requirement IDs
    - [ ] All `uses` links resolve to valid requirement IDs
    - [ ] All `implements` links resolve to valid requirement IDs
    - [ ] No circular `uses`/`implements` dependencies
@@ -39,23 +41,26 @@ untraced requirements, orphaned tags, missing annotations, and broken
 4. Scan all source files (`src/`, `include/`) for `@{"req": [...]}` annotations.
 5. Scan build system files (`CMakeLists.txt`, `cmake/`) for `@{"req": [...]}` annotations.
 6. Scan all test files (`tests/`) for `@{"verify": [...]}` annotations.
-7. Cross-reference and produce:
+7. Scan all design files (`docs/sdd/`) for `@{"design": [...]}` annotations.
+8. Cross-reference and produce:
    - **Untraced requirements**: REQ IDs with no code annotation
+   - **Undesigned requirements**: REQ IDs with no design annotation
    - **Untested requirements**: REQ IDs (with verification_method=Test) with no test annotation
    - **Orphaned code tags**: `@{"req": ...}` referencing nonexistent REQ IDs
    - **Orphaned test tags**: `@{"verify": ...}` referencing nonexistent REQ IDs
+   - **Orphaned design tags**: `@{"design": ...}` referencing nonexistent REQ IDs
    - **Broken links**: `uses`/`implements` pointing to nonexistent IDs
-   - **Coverage statistics**: % traced, % tested
-8. Submit report to Coach.
+   - **Coverage statistics**: % traced, % designed, % tested
+9. Submit report to Coach.
 
 ### Coach Verification
 
-9. Review the report for accuracy.
-10. Prioritize gaps by severity:
+10. Review the report for accuracy.
+11. Prioritize gaps by severity:
    - **Error**: orphaned tags, broken links, duplicate IDs
-   - **Warning**: untraced requirements, untested requirements
+   - **Warning**: untraced requirements, undesigned requirements, untested requirements
    - **Info**: coverage statistics
-11. **Present the report to the Program with recommended actions.**
+12. **Present the report to the Program with recommended actions.**
 
 ## Lessons Learned
 
@@ -65,8 +70,8 @@ untraced requirements, orphaned tags, missing annotations, and broken
    the constraint. The annotation belongs where the requirement is **enforced**.
 
 2. **The scanner must cover all traceable file types.** Annotations may
-   legitimately appear in `.c`, `.h`, `CMakeLists.txt`, or `.cmake` files.
-   The tag pattern must support both `//` and `#` comment styles.
+   legitimately appear in `.c`, `.h`, `.adoc`, `CMakeLists.txt`, or `.cmake`
+   files. The tag pattern must support both `//` and `#` comment styles.
 
 ## Constraints
 
@@ -82,6 +87,7 @@ untraced requirements, orphaned tags, missing annotations, and broken
 ### Summary
 - Total requirements: N
 - Traced to code: N (X%)
+- Traced to design: N (X%)
 - Traced to tests: N (X%)
 
 ### Errors
@@ -90,11 +96,12 @@ untraced requirements, orphaned tags, missing annotations, and broken
 
 ### Warnings
 - [WARN] REQ-HEAP-003 has no code annotation
+- [WARN] REQ-HEAP-003 has no design annotation
 - [WARN] REQ-CRC-002 (verification_method=Test) has no test annotation
 
 ### Info
-- Module HEAP: 5/5 traced, 4/5 tested
-- Module CRC: 3/4 traced, 2/4 tested
+- Module HEAP: 5/5 coded, 5/5 designed, 4/5 tested
+- Module CRC: 3/4 coded, 4/4 designed, 2/4 tested
 ```
 
 ## Example Invocation

@@ -1,3 +1,4 @@
+// @{"design": ["REQ-APP-001", "REQ-APP-002", "REQ-APP-003", "REQ-APP-004"]}
 = Application Module
 
 == Purpose
@@ -56,7 +57,6 @@ The Application module is the thinnest possible lifecycle abstraction — three 
 It does not prescribe initialization strategy, thread ownership, or resource management — these are implementation concerns handled by derivations.
 The module root pattern enables the Scheduler to call `OnProcess` through a uniform `JUNO_APP_ROOT_T *` without knowing the concrete application type.
 
-// @{"design": ["REQ-APP-001", "REQ-APP-002", "REQ-APP-003", "REQ-APP-004"]}
 == Requirements Traceability
 
 [cols="1,3"]

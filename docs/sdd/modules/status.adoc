@@ -1,3 +1,4 @@
+// @{"design": ["REQ-STATUS-001", "REQ-STATUS-002", "REQ-STATUS-003", "REQ-STATUS-004"]}
 = Status Module
 
 == Purpose
@@ -73,7 +74,6 @@ The failure handler is diagnostic-only; it has no return value and does not affe
 Status codes are `int32_t` rather than an enum to allow extensibility beyond the pre-defined set while maintaining a fixed-size ABI across compilation units.
 Failure handlers are callback-based (not `abort` or `longjmp`) to ensure deterministic control flow suitable for safety-critical embedded systems.
 
-// @{"design": ["REQ-STATUS-001", "REQ-STATUS-002", "REQ-STATUS-003", "REQ-STATUS-004"]}
 == Requirements Traceability
 
 [cols="1,3"]

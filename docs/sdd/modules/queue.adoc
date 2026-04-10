@@ -1,3 +1,4 @@
+// @{"design": ["REQ-QUEUE-001", "REQ-QUEUE-002", "REQ-QUEUE-003", "REQ-QUEUE-004", "REQ-QUEUE-005", "REQ-QUEUE-006", "REQ-QUEUE-007", "REQ-QUEUE-008"]}
 = Queue Module
 
 == Purpose
@@ -78,7 +79,6 @@ All operations are O(1).
 The Queue reuses the Array abstraction for storage, adding only circular-index arithmetic.
 This avoids duplicating contiguous-storage logic and benefits from the Array's existing verification and pointer-based element access.
 
-// @{"design": ["REQ-QUEUE-001", "REQ-QUEUE-002", "REQ-QUEUE-003", "REQ-QUEUE-004", "REQ-QUEUE-005", "REQ-QUEUE-006", "REQ-QUEUE-007", "REQ-QUEUE-008"]}
 == Requirements Traceability
 
 [cols="1,3"]

@@ -1,3 +1,4 @@
+// @{"design": ["REQ-IO-001", "REQ-IO-002", "REQ-IO-003", "REQ-IO-004", "REQ-IO-005", "REQ-IO-006", "REQ-IO-007", "REQ-IO-008", "REQ-IO-009", "REQ-IO-010", "REQ-IO-011", "REQ-IO-012", "REQ-IO-013", "REQ-IO-014"]}
 = IO Module
 
 == Purpose
@@ -77,7 +78,6 @@ IO interfaces are intentionally minimal — they define the contract, not the im
 Hardware IO is inherently platform-specific; the vtable pattern allows injecting UART, USB, network, or mock implementations without changing application code.
 The I2C message-array pattern (`Transfer` with an array of read/write descriptors) mirrors common I2C hardware APIs (Linux `i2c_msg`, Zephyr `i2c_msg`) and enables multi-message transactions (write-then-read) in a single call.
 
-// @{"design": ["REQ-IO-001", "REQ-IO-002", "REQ-IO-003", "REQ-IO-004", "REQ-IO-005", "REQ-IO-006", "REQ-IO-007", "REQ-IO-008", "REQ-IO-009", "REQ-IO-010", "REQ-IO-011", "REQ-IO-012", "REQ-IO-013", "REQ-IO-014"]}
 == Requirements Traceability
 
 [cols="1,3"]

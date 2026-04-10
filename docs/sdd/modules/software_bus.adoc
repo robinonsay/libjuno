@@ -1,3 +1,4 @@
+// @{"design": ["REQ-SB-001", "REQ-SB-002", "REQ-SB-003", "REQ-SB-004", "REQ-SB-005", "REQ-SB-006", "REQ-SB-007", "REQ-SB-008", "REQ-SB-009", "REQ-SB-010", "REQ-SB-011", "REQ-SB-012", "REQ-SB-013"]}
 = Software Bus (Broker) Module
 
 == Purpose
@@ -102,7 +103,6 @@ The broker solves intra-thread fan-out portably; inter-thread transport belongs 
 **Multi-threaded integration pattern.** One broker per thread, bridged by a user-written bridge app that forwards messages between brokers via platform IPC.
 The broker is a routing table, not a transport.
 
-// @{"design": ["REQ-SB-001", "REQ-SB-002", "REQ-SB-003", "REQ-SB-004", "REQ-SB-005", "REQ-SB-006", "REQ-SB-007", "REQ-SB-008", "REQ-SB-009", "REQ-SB-010", "REQ-SB-011", "REQ-SB-012", "REQ-SB-013"]}
 == Requirements Traceability
 
 [cols="1,3"]

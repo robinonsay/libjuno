@@ -1,3 +1,4 @@
+// @{"design": ["REQ-CRC-001", "REQ-CRC-002", "REQ-CRC-003", "REQ-CRC-004", "REQ-CRC-005", "REQ-CRC-006", "REQ-CRC-007", "REQ-CRC-008", "REQ-CRC-009", "REQ-CRC-010"]}
 = CRC Module
 
 == Purpose
@@ -72,7 +73,6 @@ CRC functions are standalone (no module root or vtable) because they are statele
 The streaming update pattern allows incremental CRC calculation over multiple chunks without buffering the full message.
 Multiple CRC variants are provided because embedded protocols commonly require specific polynomials (CCITT for XMODEM, ZIP for file integrity, Kermit for serial protocols).
 
-// @{"design": ["REQ-CRC-001", "REQ-CRC-002", "REQ-CRC-003", "REQ-CRC-004", "REQ-CRC-005", "REQ-CRC-006", "REQ-CRC-007", "REQ-CRC-008", "REQ-CRC-009", "REQ-CRC-010"]}
 == Requirements Traceability
 
 [cols="1,3"]

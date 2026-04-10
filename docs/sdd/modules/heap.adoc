@@ -1,3 +1,4 @@
+// @{"design": ["REQ-HEAP-001", "REQ-HEAP-002", "REQ-HEAP-003", "REQ-HEAP-004", "REQ-HEAP-005", "REQ-HEAP-006", "REQ-HEAP-007", "REQ-HEAP-008"]}
 = Heap Module
 
 == Purpose
@@ -98,7 +99,6 @@ Delegates to `JunoDs_ArrayVerify` for the backing array.
 The heap is parameterized by Compare/Swap rather than hardcoding a comparison operator, allowing the same heap implementation to serve max-heaps, min-heaps, and priority queues with arbitrary key types.
 The backing Array provides storage; the Pointer API provides element copying — keeping the heap logic type-agnostic.
 
-// @{"design": ["REQ-HEAP-001", "REQ-HEAP-002", "REQ-HEAP-003", "REQ-HEAP-004", "REQ-HEAP-005", "REQ-HEAP-006", "REQ-HEAP-007", "REQ-HEAP-008"]}
 == Requirements Traceability
 
 [cols="1,3"]

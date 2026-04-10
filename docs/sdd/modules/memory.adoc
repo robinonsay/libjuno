@@ -1,3 +1,4 @@
+// @{"design": ["REQ-MEMORY-001", "REQ-MEMORY-002", "REQ-MEMORY-003", "REQ-MEMORY-004", "REQ-MEMORY-005", "REQ-MEMORY-006", "REQ-MEMORY-007", "REQ-MEMORY-008", "REQ-MEMORY-009", "REQ-MEMORY-010"]}
 = Memory Module
 
 == Purpose
@@ -115,7 +116,6 @@ Declares a static metadata array of `JUNO_MEMORY_BLOCK_METADATA_T[length]`.
 The abstract `JUNO_MEMORY_ALLOC_API_T` separates the allocation interface from the block allocator implementation, allowing future allocator strategies (slab, buddy) to be injected through the same root type.
 The block allocator provides O(1) deterministic operations suitable for hard real-time systems with fixed-capacity pools.
 
-// @{"design": ["REQ-MEMORY-001", "REQ-MEMORY-002", "REQ-MEMORY-003", "REQ-MEMORY-004", "REQ-MEMORY-005", "REQ-MEMORY-006", "REQ-MEMORY-007", "REQ-MEMORY-008", "REQ-MEMORY-009", "REQ-MEMORY-010"]}
 == Requirements Traceability
 
 [cols="1,3"]
