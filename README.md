@@ -103,6 +103,15 @@ The public API includes all headers in `include/juno/`. Internal implementation 
 * [Memory Module](include/juno/memory/README.md)
 * [Examples Guide](examples/README.md)
 
+### Requirements Traceability Artifacts
+
+LibJuno maintains a **bi-directional traceability system** linking requirements, design, code, and tests.
+
+* [SRS (Software Requirements Specification)](docs/generated/srs/srs.html)
+* [RTM (Requirements Traceability Matrix)](docs/generated/rtm/rtm.html)
+* [SDD (Software Design Description)](docs/sdd/sdd.html)
+* [Traceability System Overview](ai/memory/traceability.md)
+
 ## Dependencies
 LibJuno is designed to minimize external dependencies for maximum portability.
 
