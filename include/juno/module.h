@@ -38,7 +38,7 @@
  *    to the root type for API dispatch and failure handling.
  *  - The root contains `ptApi` and failure handler fields and should avoid
  *    hosted dependencies to preserve freestanding portability.
- *  APIs (vtables) receive a pointer to the root (or compatible view) for
+ *  - APIs (vtables) receive a pointer to the root (or compatible view) for
  *    dispatch.
  *
  *  Example (defining a module union):
