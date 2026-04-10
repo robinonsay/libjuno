@@ -209,7 +209,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>DOC </p>
-<h3><a class="anchor" id="autotoc_md113"></a>
+<h3><a class="anchor" id="autotoc_md112"></a>
 Failure Handler</h3>
 <p>LibJuno utilizes a failure handler callback. This is a function that is automatically called by downstream code when a failure occurs. In an embedded system, you might not have a terminal or console log running. This enables developers to have a single implementation and methodology for handling failure within the software. The <code>JUNO_FAIL...</code> macros will automatically call the failure handler if one is provided. </p>
 
@@ -257,7 +257,7 @@ Failure Handler</h3>
 <p>DOC The purpose of this tutorial is to show new users how to use LibJuno as a embedded software micro-framework. LibJuno is intended to provide developers and software architects the freedom to implement their software system according to their use case, instead of users conforming to our library.</p>
 <p>This means users will need to define their own entry point. On systems with an OS, this would be a main function.</p>
 <p>Additionally, users will need to implement project specific functions like logging and time management since LibJuno doesn't assume your OS or time use-case.</p>
-<h3><a class="anchor" id="autotoc_md110"></a>
+<h3><a class="anchor" id="autotoc_md109"></a>
 Logging</h3>
 <p>In this case, we are going to implement the logging functions using <code>printf</code>. A fixed size buffer is utilized with <code>vsnprintf</code> to ensure the logger doesn't see any memory overruns. </p>
 
@@ -405,21 +405,21 @@ Logging</h3>
       </table>
 </div><div class="memdoc">
 <p>DOC </p>
-<h3><a class="anchor" id="autotoc_md114"></a>
+<h3><a class="anchor" id="autotoc_md113"></a>
 The Entry Point</h3>
 <p>This example project assumes its running on a POSIX system. Therefore, we can use a main method as the entry point. Many microcontrollers have different architectures for their entry point so you'll need to consult with your architecture documentation on how to implement the entry point. </p>
 <p>DOC </p>
-<h3><a class="anchor" id="autotoc_md115"></a>
+<h3><a class="anchor" id="autotoc_md114"></a>
 Dependency Injection in Action</h3>
 <p>The core principle of dependency injection is "inversion of control". This is a fancy term for saying that modules don't allocate resources, up stream users do. This is done at the "composition root", or the spot in the code where all the dependencies get implemented. In this case, the main function is the composition root. Here we need to instantiate the time, logger, registry modules.</p>
 <p>Applications in LibJuno are actually derived modules of <code>JUNO_APP_ROOT_T</code>. Here we will need to instantiate the engine, and system manager application modules.</p>
 <p>DOC </p>
-<h3><a class="anchor" id="autotoc_md116"></a>
+<h3><a class="anchor" id="autotoc_md115"></a>
 Module Initialization</h3>
 <p>Modules typically have an <code>Init</code> function that specifies the required fields to initialize a module. Modules also utilize a <code>Verify</code> function to verify they've been initialzed. Most modules will return a <code>JUNO_STATUS_NULLPTR_ERROR</code> if they have not been initalized and a function has been called on them.</p>
 <p>DOC Notice how the broker, engine, and system manager take initialized modules as dependencies to their initialization. This is DI in action. For example, the engine app is provided with a logger, time, and broker instead of instantiating it itself.</p>
 <p>DOC </p>
-<h3><a class="anchor" id="autotoc_md117"></a>
+<h3><a class="anchor" id="autotoc_md116"></a>
 Runtime</h3>
 <p>For this example we are going to create a very simple "schedule table" or table of applications that will run in a specific order. This schedule table will run at best-effort. This means that when one application is done, the next will start.</p>
 <p>DOC Since all applications have the same interface, we can run their init function in a for-loop and run the application <code>OnProcess</code> function in a <code>while(true)</code> loop.</p>
@@ -452,7 +452,7 @@ Runtime</h3>
 
 <p>Get the current time as specified by the implementation. </p>
 <p>DOC </p>
-<h3><a class="anchor" id="autotoc_md111"></a>
+<h3><a class="anchor" id="autotoc_md110"></a>
 Time</h3>
 <p>In this example project we will need a timestamp, so we'll implement the <code>Now</code> function. We don't need <code>Sleep</code> or <code>SleepTo</code> so we'll provide mocks to those functions. LibJuno provides time math functions that we can utilize so we only need to provide implementations to these three time functions. </p>
 
@@ -565,7 +565,7 @@ Time</h3>
 <div class="ttc" id="amain_8c_html_ae3acb5446cc3d129a21c2d00863399cc"><div class="ttname"><a href="main_8c.html#ae3acb5446cc3d129a21c2d00863399cc">LogDebug</a></div><div class="ttdeci">static JUNO_STATUS_T LogDebug(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg,...)</div><div class="ttdef"><b>Definition</b> main.c:49</div></div>
 <div class="ttc" id="amain_8c_html_afdf60c17632e976e381e981f5c019c01"><div class="ttname"><a href="main_8c.html#afdf60c17632e976e381e981f5c019c01">LogInfo</a></div><div class="ttdeci">static JUNO_STATUS_T LogInfo(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg,...)</div><div class="ttdef"><b>Definition</b> main.c:60</div></div>
 </div><!-- fragment --><p>DOC </p>
-<h3><a class="anchor" id="autotoc_md112"></a>
+<h3><a class="anchor" id="autotoc_md111"></a>
 Instantiating APIs</h3>
 <p>LibJuno utilizes a vtable, or a table of function pointers to the specific implementation, that is passed to the LibJuno module. This vtable is called an "API" in LibJuno nomenclature and it provides a standard interface to the capabilities. LibJuno is implemented as a set of capabilities, or software components that perform a set functionality. These capabilities are called "Modules" and can be extened through derivation. Additionally APIs can be extended through derivation. When a module or API is extended its called "derived".</p>
 <p>Below is the API instantiation of the logger and time APIs for this project. We are providing our logging implementations and time implementations. You'll notice that the time API provides a helper macro to instantiate the API. Some APIs offer existing implementations, so a helper macro is used to inform users which functions they need to implement. </p>
