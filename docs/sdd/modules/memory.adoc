@@ -163,10 +163,10 @@ The block allocator provides O(1) deterministic operations suitable for hard rea
 | REQ-MEMORY-002 | `JUNO_MEMORY_ALLOC_ROOT_T` — root with pointer API dependency
 | REQ-MEMORY-003 | `JunoMemory_BlockInit` — block allocator initialization
 | REQ-MEMORY-004 | Block Get — O(1) allocation from pool
-| REQ-MEMORY-005 | Block Put — O(1) deallocation with free-stack
-| REQ-MEMORY-006 | Block Update — in-place size adjustment
-| REQ-MEMORY-007 | Block metadata tracks free list
-| REQ-MEMORY-008 | Verification of allocator and pointer API
+| REQ-MEMORY-005 | Block Get — freed block reuse via LIFO free list
+| REQ-MEMORY-006 | Block Put — O(1) deallocation
+| REQ-MEMORY-007 | Block Put — double-free rejection
+| REQ-MEMORY-008 | Block Put — invalid/misaligned address rejection
 | REQ-MEMORY-009 | Block allocator Update operation
 | REQ-MEMORY-010 | Block allocator no memory move guarantee
 |===

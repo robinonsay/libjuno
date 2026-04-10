@@ -80,11 +80,11 @@ The top-of-stack is always the last used index, so no circular arithmetic is nee
 | Requirement | Coverage
 
 | REQ-STACK-001 | `JunoDs_StackInit` — initialization with backing array
-| REQ-STACK-002 | `Push` — LIFO insertion
-| REQ-STACK-003 | `Pop` — LIFO extraction
-| REQ-STACK-004 | `Peek` — non-destructive top access
-| REQ-STACK-005 | `JunoDs_StackVerify` — stack invariant validation
+| REQ-STACK-002 | `JunoDs_StackInit` — initial state sets `zLength` to zero
+| REQ-STACK-003 | `Push` — LIFO insertion
+| REQ-STACK-004 | `Push` full-stack rejection (`JUNO_STATUS_INVALID_SIZE_ERROR`)
+| REQ-STACK-005 | `Pop` — LIFO extraction/removal
 | REQ-STACK-006 | Stack empty pop rejection
-| REQ-STACK-007 | `Peek` — stack non-destructive top access
+| REQ-STACK-007 | `Peek` — non-destructive top access
 | REQ-STACK-008 | Stack empty peek rejection
 |===

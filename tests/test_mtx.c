@@ -105,6 +105,24 @@ static void test_mtx_verify_null_trylock(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MTX-005"]}
+static void test_mtx_verify_null_lock(void)
+{
+    JUNO_MP_MTX_API_T tBadApi = {TestMtx_TryLock, NULL, TestMtx_Free};
+    gtMtx.ptApi = &tBadApi;
+    JUNO_STATUS_T tStatus = JunoMp_MtxVerify(&gtMtx);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
+// @{"verify": ["REQ-MTX-005"]}
+static void test_mtx_verify_null_free(void)
+{
+    JUNO_MP_MTX_API_T tBadApi = {TestMtx_TryLock, TestMtx_Lock, NULL};
+    gtMtx.ptApi = &tBadApi;
+    JUNO_STATUS_T tStatus = JunoMp_MtxVerify(&gtMtx);
+    TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
+}
+
 /* ============================================================================
  * Main
  * ============================================================================ */
@@ -116,5 +134,7 @@ int main(void)
     RUN_TEST(test_mtx_verify_null_root);
     RUN_TEST(test_mtx_verify_null_api);
     RUN_TEST(test_mtx_verify_null_trylock);
+    RUN_TEST(test_mtx_verify_null_lock);
+    RUN_TEST(test_mtx_verify_null_free);
     return UNITY_END();
 }

@@ -37,11 +37,11 @@ void tearDown(void) {}
 // @{"verify": ["REQ-HASH-001"]}
 static void test_hash_djb2_known_value(void)
 {
-    /* "abc" -> djb2: h = ((5381*33+97)*33+98)*33+99
-     * We just verify determinism and seed = 5381 */
+    /* "abc" -> djb2: h = ((5381*33+97)*33+98)*33+99 = 193485963 */
     const uint8_t acBuf[] = {'a', 'b', 'c'};
     JUNO_RESULT_SIZE_T tResult = JunoHash_Djb2(acBuf, sizeof(acBuf));
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_EQUAL(193485963u, tResult.tOk);
 
     /* Verify determinism: same input produces same output */
     JUNO_RESULT_SIZE_T tResult2 = JunoHash_Djb2(acBuf, sizeof(acBuf));
