@@ -52,6 +52,7 @@ typedef struct JUNO_VALUE_POINTER_API_TAG JUNO_VALUE_POINTER_API_T;
 
 
 /// @brief Structure describing an address, its size and alignment.
+// @{"req": ["REQ-POINTER-001"]}
 struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
     /// Address of the memory region.
     void *pvAddr;

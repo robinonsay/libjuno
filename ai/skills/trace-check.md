@@ -37,24 +37,36 @@ untraced requirements, orphaned tags, missing annotations, and broken
 
 3. Scan all `requirements/<module>/requirements.json` files.
 4. Scan all source files (`src/`, `include/`) for `@{"req": [...]}` annotations.
-5. Scan all test files (`tests/`) for `@{"verify": [...]}` annotations.
-6. Cross-reference and produce:
+5. Scan build system files (`CMakeLists.txt`, `cmake/`) for `@{"req": [...]}` annotations.
+6. Scan all test files (`tests/`) for `@{"verify": [...]}` annotations.
+7. Cross-reference and produce:
    - **Untraced requirements**: REQ IDs with no code annotation
    - **Untested requirements**: REQ IDs (with verification_method=Test) with no test annotation
    - **Orphaned code tags**: `@{"req": ...}` referencing nonexistent REQ IDs
    - **Orphaned test tags**: `@{"verify": ...}` referencing nonexistent REQ IDs
    - **Broken links**: `uses`/`implements` pointing to nonexistent IDs
    - **Coverage statistics**: % traced, % tested
-7. Submit report to Coach.
+8. Submit report to Coach.
 
 ### Coach Verification
 
-8. Review the report for accuracy.
-9. Prioritize gaps by severity:
+9. Review the report for accuracy.
+10. Prioritize gaps by severity:
    - **Error**: orphaned tags, broken links, duplicate IDs
    - **Warning**: untraced requirements, untested requirements
    - **Info**: coverage statistics
-10. **Present the report to the Program with recommended actions.**
+11. **Present the report to the Program with recommended actions.**
+
+## Lessons Learned
+
+1. **Trace to the enforcement mechanism.** System-level requirements enforced
+   by compiler flags or build configuration must be traced to the build system
+   file (e.g., `CMakeLists.txt`), not to a header that merely benefits from
+   the constraint. The annotation belongs where the requirement is **enforced**.
+
+2. **The scanner must cover all traceable file types.** Annotations may
+   legitimately appear in `.c`, `.h`, `CMakeLists.txt`, or `.cmake` files.
+   The tag pattern must support both `//` and `#` comment styles.
 
 ## Constraints
 

@@ -1,0 +1,3211 @@
+= LibJuno Software Requirements Specification (SRS)
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+
+== Introduction
+
+=== Purpose
+This Software Requirements Specification (SRS) defines the functional and non-functional requirements for LibJuno, a freestanding C11 embedded systems micro-framework.
+
+This document follows the IEEE 830-1998 standard structure.
+
+=== Scope
+LibJuno provides data structures, memory management primitives, CRC algorithms, and other utilities for embedded systems development. It requires zero dynamic memory allocation and supports freestanding C11 environments.
+
+=== Definitions and Acronyms
+
+[cols="1,3"]
+|===
+| Term | Definition
+
+| Freestanding | A C implementation that does not require a hosted standard library
+| DI | Dependency Injection — a pattern where dependencies are provided to a component rather than created internally
+| Vtable | A struct of function pointers enabling polymorphic dispatch
+| SRS | Software Requirements Specification
+| RTM | Requirements Traceability Matrix
+|===
+
+=== References
+
+* IEEE 830-1998: Recommended Practice for Software Requirements Specifications
+* LibJuno README and documentation
+
+== Overall Description
+
+=== Product Perspective
+LibJuno is a standalone C11 library designed to be used as a dependency in embedded systems projects. It makes no assumptions about the target platform and uses dependency injection to remain adaptable.
+
+=== Design Constraints
+
+* No dynamic memory allocation (`malloc`, `calloc`, `realloc`, `free`)
+* All memory is caller-owned and injected
+* Must compile as freestanding C11 (`-nostdlib -ffreestanding`)
+* All warnings treated as errors (`-Werror`)
+
+=== Assumptions and Dependencies
+
+* A C11-compliant compiler is available
+* CMake ≥ 3.10 is available for building
+* Unity test framework is available for testing (build-time only)
+
+== Specific Requirements
+
+=== Module: APP
+
+==== REQ-APP-001: Application Root Structure
+
+**Description**:: The application root shall embed a module root with an API vtable pointer.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-006, REQ-SYS-007, REQ-SYS-009, REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/app/app_api.h:52` (JUNO_MODULE_ROOT)
+
+==== REQ-APP-002: OnStart Lifecycle Hook
+
+**Description**:: The application API vtable shall define an OnStart operation called once to initialize resources.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-APP-001
+
+**Code Traces**::
+  * `include/juno/app/app_api.h:58` (JUNO_STATUS_T)
+
+==== REQ-APP-003: OnProcess Lifecycle Hook
+
+**Description**:: The application API vtable shall define an OnProcess operation that may be invoked repeatedly.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-APP-001
+
+**Code Traces**::
+  * `include/juno/app/app_api.h:61` (JUNO_STATUS_T)
+
+==== REQ-APP-004: OnExit Lifecycle Hook
+
+**Description**:: The application API vtable shall define an OnExit operation called once prior to shutdown.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-APP-001
+
+**Code Traces**::
+  * `include/juno/app/app_api.h:64` (JUNO_STATUS_T)
+
+=== Module: ARRAY
+
+==== REQ-ARRAY-001: Array Initialization
+
+**Description**:: The array module shall initialize from a caller-provided API vtable and capacity.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-006, REQ-SYS-007, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/ds/array_api.h:163` (JunoDs_ArrayInit)
+
+**Test Traces**::
+  * `tests/test_array.c:150` (test_array_init_success)
+  * `tests/test_array.c:162` (test_array_init_null_array)
+
+==== REQ-ARRAY-002: Array SetAt
+
+**Description**:: The array shall copy a value into a slot at a given index in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-ARRAY-001
+
+**Code Traces**::
+  * `include/juno/ds/array_api.h:82` (JUNO_STATUS_T)
+
+**Test Traces**::
+  * `tests/test_array.c:174` (test_array_set_at)
+
+==== REQ-ARRAY-003: Array GetAt
+
+**Description**:: The array shall return a pointer descriptor to the slot at a given index in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-ARRAY-001
+
+**Code Traces**::
+  * `include/juno/ds/array_api.h:89` (JUNO_RESULT_POINTER_T)
+
+**Test Traces**::
+  * `tests/test_array.c:184` (test_array_get_at)
+
+==== REQ-ARRAY-004: Array RemoveAt
+
+**Description**:: The array shall clear the slot at a given index in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-ARRAY-001
+
+**Code Traces**::
+  * `include/juno/ds/array_api.h:96` (JUNO_STATUS_T)
+
+**Test Traces**::
+  * `tests/test_array.c:195` (test_array_remove_at)
+
+==== REQ-ARRAY-005: Array Bounds Checking
+
+**Description**:: The array shall return JUNO_STATUS_OOB_ERROR when an index is outside its capacity.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Code Traces**::
+  * `include/juno/ds/array_api.h:140` (JunoDs_ArrayVerifyIndex)
+
+**Test Traces**::
+  * `tests/test_array.c:208` (test_array_set_at_oob)
+  * `tests/test_array.c:218` (test_array_get_at_oob)
+  * `tests/test_array.c:226` (test_array_remove_at_oob)
+  * `tests/test_queue.c:913` (test_queue_array_api_get_at_out_of_bounds)
+  * `tests/test_queue.c:923` (test_queue_array_api_remove_at_out_of_bounds)
+  * `tests/test_stack.c:926` (test_stack_array_api_get_at_out_of_bounds)
+  * `tests/test_stack.c:936` (test_stack_array_api_remove_at_out_of_bounds)
+
+==== REQ-ARRAY-006: Array Vtable Validation
+
+**Description**:: The array module shall verify that the array API vtable entries are non-null.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/ds/array_api.h:120` (JunoDs_ArrayVerify)
+
+**Test Traces**::
+  * `tests/test_array.c:238` (test_array_verify_null_api)
+  * `tests/test_queue.c:892` (test_queue_array_api_set_at_invalid_api)
+  * `tests/test_stack.c:905` (test_stack_array_api_set_at_invalid_api)
+  * `tests/test_stack.c:946` (test_stack_array_api_null_array)
+
+==== REQ-ARRAY-007: Array Capacity Validation
+
+**Description**:: The array module shall verify that the array capacity is non-zero.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Code Traces**::
+  * `include/juno/ds/array_api.h:120` (JunoDs_ArrayVerify)
+  * `include/juno/ds/array_api.h:163` (JunoDs_ArrayInit)
+
+**Test Traces**::
+  * `tests/test_array.c:253` (test_array_verify_zero_capacity)
+  * `tests/test_array.c:264` (test_array_init_zero_capacity)
+
+=== Module: CRC
+
+==== REQ-CRC-001: CRC Streaming Update
+
+**Description**:: Each CRC function shall accept a running CRC value, data buffer, and size, returning the updated CRC value.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-009
+
+**Code Traces**::
+  * `src/juno_arc.c:21` (Juno_CrcArcUpdate)
+  * `src/juno_binhex.c:21` (Juno_CrcBinhexUpdate)
+  * `src/juno_ccitt.c:21` (Juno_CrcCcittUpdate)
+  * `src/juno_ccitt32.c:20` (Juno_CrcCcitt32Update)
+  * `src/juno_kermit.c:21` (Juno_CrcKermitUpdate)
+  * `src/juno_zip.c:20` (Juno_CrcZipUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:81` (test_various_crc_behaviour)
+
+==== REQ-CRC-002: CRC Null Safety
+
+**Description**:: Each CRC function shall return 0 when passed a NULL data pointer.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-005
+
+**Code Traces**::
+  * `src/juno_arc.c:21` (Juno_CrcArcUpdate)
+  * `src/juno_binhex.c:21` (Juno_CrcBinhexUpdate)
+  * `src/juno_ccitt.c:21` (Juno_CrcCcittUpdate)
+  * `src/juno_ccitt32.c:20` (Juno_CrcCcitt32Update)
+  * `src/juno_kermit.c:21` (Juno_CrcKermitUpdate)
+  * `src/juno_zip.c:20` (Juno_CrcZipUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:70` (test_empty_crc_all)
+
+==== REQ-CRC-003: CRC Zero Length Safety
+
+**Description**:: Each CRC function shall return 0 when passed a zero data size.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-005
+
+**Code Traces**::
+  * `src/juno_arc.c:21` (Juno_CrcArcUpdate)
+  * `src/juno_binhex.c:21` (Juno_CrcBinhexUpdate)
+  * `src/juno_ccitt.c:21` (Juno_CrcCcittUpdate)
+  * `src/juno_ccitt32.c:20` (Juno_CrcCcitt32Update)
+  * `src/juno_kermit.c:21` (Juno_CrcKermitUpdate)
+  * `src/juno_zip.c:20` (Juno_CrcZipUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:70` (test_empty_crc_all)
+
+==== REQ-CRC-004: CRC-16 ARC
+
+**Description**:: The CRC module shall compute a CRC-16/ARC update with initial seed 0.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-CRC-001
+
+**Code Traces**::
+  * `src/juno_arc.c:21` (Juno_CrcArcUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:81` (test_various_crc_behaviour)
+
+==== REQ-CRC-005: CRC-16 BinHex
+
+**Description**:: The CRC module shall compute a BinHex 16-bit CRC update with initial seed 0.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-CRC-001
+
+**Code Traces**::
+  * `src/juno_binhex.c:21` (Juno_CrcBinhexUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:81` (test_various_crc_behaviour)
+
+==== REQ-CRC-006: CRC-16 CCITT
+
+**Description**:: The CRC module shall compute a CRC-16/CCITT update with initial seed 0xFFFF.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-CRC-001
+
+**Code Traces**::
+  * `src/juno_ccitt.c:21` (Juno_CrcCcittUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:56` (test_ccitt_crc)
+
+==== REQ-CRC-007: CRC-16 Kermit
+
+**Description**:: The CRC module shall compute a CRC-16/Kermit update with initial seed 0.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-CRC-001
+
+**Code Traces**::
+  * `src/juno_kermit.c:21` (Juno_CrcKermitUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:81` (test_various_crc_behaviour)
+
+==== REQ-CRC-008: CRC-32 CCITT32
+
+**Description**:: The CRC module shall compute a 32-bit CCITT CRC update with initial seed 0xFFFFFFFF.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-CRC-001
+
+**Code Traces**::
+  * `src/juno_ccitt32.c:20` (Juno_CrcCcitt32Update)
+
+**Test Traces**::
+  * `tests/test_crc.c:81` (test_various_crc_behaviour)
+
+==== REQ-CRC-009: CRC-32 ZIP
+
+**Description**:: The CRC module shall compute a CRC-32/ZIP update with initial seed 0xFFFFFFFF.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-CRC-001
+
+**Code Traces**::
+  * `src/juno_zip.c:20` (Juno_CrcZipUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:37` (test_zip_crc)
+
+==== REQ-CRC-010: CRC-32 ZIP Final XOR
+
+**Description**:: The CRC-32/ZIP function shall apply a final XOR of 0xFFFFFFFF to the computed value when data is processed.
+
+**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-CRC-009
+
+**Code Traces**::
+  * `src/juno_zip.c:20` (Juno_CrcZipUpdate)
+
+**Test Traces**::
+  * `tests/test_crc.c:37` (test_zip_crc)
+
+=== Module: HASH
+
+==== REQ-HASH-001: DJB2 Hash Computation
+
+**Description**:: The hash module shall compute the djb2 hash over a byte buffer with initial seed 5381.
+
+**Rationale**:: Provides data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-008, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/hash/hash_djb2.h:47` (JunoHash_Djb2)
+
+**Test Traces**::
+  * `tests/test_hash.c:37` (test_hash_djb2_known_value)
+  * `tests/test_hash.c:52` (test_hash_djb2_empty_buffer)
+  * `tests/test_hash.c:62` (test_hash_djb2_different_inputs_differ)
+
+==== REQ-HASH-002: DJB2 Null Buffer Rejection
+
+**Description**:: The hash module shall return JUNO_STATUS_NULLPTR_ERROR when passed a NULL data pointer.
+
+**Rationale**:: Provides data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Code Traces**::
+  * `include/juno/hash/hash_djb2.h:47` (JunoHash_Djb2)
+
+**Test Traces**::
+  * `tests/test_hash.c:78` (test_hash_djb2_null_buffer)
+
+==== REQ-HASH-003: DJB2 Result Type
+
+**Description**:: The hash module shall return the hash value in a result type combining a status code with a size_t payload.
+
+**Rationale**:: Provides data integrity verification for communication and storage in embedded systems.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-004
+
+**Code Traces**::
+  * `include/juno/hash/hash_djb2.h:47` (JunoHash_Djb2)
+
+=== Module: HEAP
+
+==== REQ-HEAP-001: Heap Initialization
+
+**Description**:: The heap module shall initialize from a caller-provided backing array.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-007, REQ-SYS-008, REQ-SYS-009, REQ-ARRAY-001
+
+**Code Traces**::
+  * `src/juno_heap.c:32` (JunoDs_Heap_Init)
+
+**Test Traces**::
+  * `tests/test_heap.c:353` (test_heap_init_nominal)
+  * `tests/test_heap.c:363` (test_heap_init_null_heap)
+  * `tests/test_heap.c:373` (test_heap_init_null_api)
+  * `tests/test_heap.c:383` (test_heap_init_zero_capacity)
+
+==== REQ-HEAP-002: Heap Element Comparison Injection
+
+**Description**:: The heap module shall accept an injected element pointer API with Compare and Swap operations.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-007, REQ-HEAP-001
+
+**Code Traces**::
+  * `src/juno_heap.c:32` (JunoDs_Heap_Init)
+
+**Test Traces**::
+  * `tests/test_heap.c:526` (test_heap_min_heap_insert_and_property)
+  * `tests/test_heap.c:709` (test_heap_update_with_compare_error)
+  * `tests/test_heap.c:727` (test_heap_update_with_swap_error)
+  * `tests/test_heap.c:825` (test_heap_siftdown_with_compare_error)
+  * `tests/test_heap.c:844` (test_heap_siftdown_with_swap_error)
+  * `tests/test_heap.c:909` (test_heap_compare_function_error)
+  * `tests/test_heap.c:931` (test_heap_swap_function_error)
+  * `tests/test_heap.c:994` (test_heap_mixed_min_max_operations)
+
+==== REQ-HEAP-003: Heap Insert
+
+**Description**:: The heap shall insert an element and restore the heap property in O(log n) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-HEAP-001
+
+**Code Traces**::
+  * `src/juno_heap.c:258` (JunoDs_Heap_Insert)
+
+**Test Traces**::
+  * `tests/test_heap.c:415` (test_heap_insert_single_item_max_heap)
+  * `tests/test_heap.c:432` (test_heap_insert_multiple_items_max_heap)
+  * `tests/test_heap.c:453` (test_heap_insert_to_full_capacity)
+  * `tests/test_heap.c:472` (test_heap_insert_overflow)
+  * `tests/test_heap.c:495` (test_heap_insert_null_heap)
+  * `tests/test_heap.c:505` (test_heap_insert_invalid_pointer)
+  * `tests/test_heap.c:526` (test_heap_min_heap_insert_and_property)
+  * `tests/test_heap.c:653` (test_heap_update_single_element)
+  * `tests/test_heap.c:669` (test_heap_update_bubble_up)
+  * `tests/test_heap.c:691` (test_heap_update_empty_heap)
+  * `tests/test_heap.c:702` (test_heap_update_null_heap)
+  * `tests/test_heap.c:957` (test_heap_stress_insert_pop_cycles)
+  * `tests/test_heap.c:994` (test_heap_mixed_min_max_operations)
+  * `tests/test_heap.c:1033` (test_heap_single_element_capacity)
+  * `tests/test_heap.c:1058` (test_heap_data_integrity_after_operations)
+
+==== REQ-HEAP-004: Heap Pop
+
+**Description**:: The heap shall remove the root element and restore the heap property in O(log n) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-HEAP-001
+
+**Code Traces**::
+  * `src/juno_heap.c:325` (JunoDs_Heap_Pop)
+
+**Test Traces**::
+  * `tests/test_heap.c:550` (test_heap_pop_single_item_max_heap)
+  * `tests/test_heap.c:574` (test_heap_pop_multiple_items_max_heap)
+  * `tests/test_heap.c:610` (test_heap_pop_empty_heap)
+  * `tests/test_heap.c:622` (test_heap_pop_null_heap)
+  * `tests/test_heap.c:631` (test_heap_pop_invalid_pointer)
+  * `tests/test_heap.c:749` (test_heap_siftdown_from_root)
+  * `tests/test_heap.c:767` (test_heap_siftdown_from_middle)
+  * `tests/test_heap.c:787` (test_heap_siftdown_leaf_node)
+  * `tests/test_heap.c:807` (test_heap_siftdown_empty_heap)
+  * `tests/test_heap.c:818` (test_heap_siftdown_null_heap)
+  * `tests/test_heap.c:957` (test_heap_stress_insert_pop_cycles)
+  * `tests/test_heap.c:994` (test_heap_mixed_min_max_operations)
+  * `tests/test_heap.c:1033` (test_heap_single_element_capacity)
+  * `tests/test_heap.c:1058` (test_heap_data_integrity_after_operations)
+
+==== REQ-HEAP-005: Heap Pop Output
+
+**Description**:: The heap Pop operation shall copy the removed root element into a caller-provided pointer descriptor.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-HEAP-004
+
+**Code Traces**::
+  * `src/juno_heap.c:325` (JunoDs_Heap_Pop)
+
+**Test Traces**::
+  * `tests/test_heap.c:550` (test_heap_pop_single_item_max_heap)
+  * `tests/test_heap.c:574` (test_heap_pop_multiple_items_max_heap)
+  * `tests/test_heap.c:1058` (test_heap_data_integrity_after_operations)
+
+==== REQ-HEAP-006: Heap Heapify
+
+**Description**:: The heap shall transform the underlying array into a valid heap in O(n) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-HEAP-001
+
+**Code Traces**::
+  * `src/juno_heap.c:284` (JunoDs_Heap_Heapify)
+
+**Test Traces**::
+  * `tests/test_heap.c:867` (test_heap_heapify_from_unsorted_array)
+  * `tests/test_heap.c:886` (test_heap_heapify_empty_heap)
+  * `tests/test_heap.c:898` (test_heap_heapify_null_heap)
+
+==== REQ-HEAP-007: Heap Vtable Validation
+
+**Description**:: The heap module shall verify that the heap API vtable entries are non-null before each operation.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/ds/heap_api.h:227` (JunoDs_Heap_Verify)
+
+**Test Traces**::
+  * `tests/test_heap.c:397` (test_heap_verify_null_heap)
+  * `tests/test_heap.c:403` (test_heap_verify_invalid_api)
+
+==== REQ-HEAP-008: Heap Dependency Validation
+
+**Description**:: The heap module shall verify that the backing array and heap pointer API dependencies are valid before each operation.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-011
+
+**Code Traces**::
+  * `include/juno/ds/heap_api.h:227` (JunoDs_Heap_Verify)
+
+**Test Traces**::
+  * `tests/test_heap.c:373` (test_heap_init_null_api)
+  * `tests/test_heap.c:383` (test_heap_init_zero_capacity)
+
+=== Module: IO
+
+==== REQ-IO-001: Async IO Root Structure
+
+**Description**:: The async IO root shall embed a module root with an API vtable pointer.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-006, REQ-SYS-007, REQ-SYS-009, REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:47` (JUNO_MODULE_ROOT)
+
+==== REQ-IO-002: Async IO Read
+
+**Description**:: The async IO API vtable shall define a Read operation that reads up to the requested number of bytes and updates the size with bytes actually read.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-001
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:53` (JUNO_STATUS_T)
+
+==== REQ-IO-003: Async IO TryRead
+
+**Description**:: The async IO API vtable shall define a TryRead operation that reads with a timeout in microseconds.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-001
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:56` (JUNO_STATUS_T)
+
+==== REQ-IO-004: Async IO ReadUntil
+
+**Description**:: The async IO API vtable shall define a ReadUntil operation that reads until any stop character is received.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-001
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:59` (JUNO_STATUS_T)
+
+==== REQ-IO-005: Async IO TryReadUntil
+
+**Description**:: The async IO API vtable shall define a TryReadUntil operation that reads until a stop character or timeout.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-001
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:62` (JUNO_STATUS_T)
+
+==== REQ-IO-006: Async IO Write
+
+**Description**:: The async IO API vtable shall define a Write operation that writes up to the requested number of bytes and updates the size with bytes actually written.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-001
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:65` (JUNO_STATUS_T)
+
+==== REQ-IO-007: Async IO TryWrite
+
+**Description**:: The async IO API vtable shall define a TryWrite operation that writes with a timeout in microseconds.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-001
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:68` (JUNO_STATUS_T)
+
+==== REQ-IO-008: Async IO Poll
+
+**Description**:: The async IO API vtable shall define a Poll operation that checks for input readiness within a timeout.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-001
+
+**Code Traces**::
+  * `include/juno/io/async_io_api.h:71` (JUNO_STATUS_T)
+
+==== REQ-IO-009: I2C IO Root Structure
+
+**Description**:: The I2C IO root shall embed a module root with an API vtable pointer.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-006
+
+**Code Traces**::
+  * `include/juno/io/i2c_io_api.h:108` (JUNO_MODULE_ROOT)
+
+==== REQ-IO-010: I2C Transfer Operation
+
+**Description**:: The I2C IO API vtable shall define a Transfer operation that processes an array of read/write messages.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-009
+
+**Code Traces**::
+  * `include/juno/io/i2c_io_api.h:134` (JUNO_STATUS_T)
+
+==== REQ-IO-011: I2C Message Type Discrimination
+
+**Description**:: Each I2C message shall contain a header with a type field distinguishing read from write messages.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-010
+
+**Code Traces**::
+  * `include/juno/io/i2c_io_api.h:58` (<unknown>)
+
+==== REQ-IO-012: I2C Device Address
+
+**Description**:: Each I2C message header shall contain the target device address.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-011
+
+**Code Traces**::
+  * `include/juno/io/i2c_io_api.h:58` (<unknown>)
+
+==== REQ-IO-013: SPI IO Root Structure
+
+**Description**:: The SPI IO root shall embed a module root with an API vtable pointer.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-006
+
+**Code Traces**::
+  * `include/juno/io/spi_io_api.h:46` (JUNO_MODULE_ROOT)
+
+==== REQ-IO-014: SPI Transaction Operation
+
+**Description**:: The SPI IO API vtable shall define a Transaction operation for full-duplex read/write.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-IO-013
+
+**Code Traces**::
+  * `include/juno/io/spi_io_api.h:58` (JUNO_STATUS_T)
+
+=== Module: LOG
+
+==== REQ-LOG-001: Log Root Structure
+
+**Description**:: The log root shall embed a module root with an API vtable pointer.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-006, REQ-SYS-009, REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/log/log_api.h:51` (JUNO_MODULE_ROOT)
+
+==== REQ-LOG-002: Debug Level Logging
+
+**Description**:: The log API vtable shall define a LogDebug operation for debug-level messages.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-LOG-001
+
+**Code Traces**::
+  * `include/juno/log/log_api.h:57` (JUNO_STATUS_T)
+
+==== REQ-LOG-003: Info Level Logging
+
+**Description**:: The log API vtable shall define a LogInfo operation for info-level messages.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-LOG-001
+
+**Code Traces**::
+  * `include/juno/log/log_api.h:60` (JUNO_STATUS_T)
+
+==== REQ-LOG-004: Warning Level Logging
+
+**Description**:: The log API vtable shall define a LogWarning operation for warning-level messages.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-LOG-001
+
+**Code Traces**::
+  * `include/juno/log/log_api.h:63` (JUNO_STATUS_T)
+
+==== REQ-LOG-005: Error Level Logging
+
+**Description**:: The log API vtable shall define a LogError operation for error-level messages.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-LOG-001
+
+**Code Traces**::
+  * `include/juno/log/log_api.h:66` (JUNO_STATUS_T)
+
+==== REQ-LOG-006: Log Initialization
+
+**Description**:: The log module shall initialize with an injected API vtable and failure handler.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-002, REQ-SYS-007, REQ-LOG-001
+
+**Code Traces**::
+  * `include/juno/log/log_api.h:71` (JunoLog_LogInit)
+
+**Test Traces**::
+  * `tests/test_log.c:94` (test_log_init_success)
+  * `tests/test_log.c:102` (test_log_init_null_root)
+
+==== REQ-LOG-007: Variadic Message Format
+
+**Description**:: Each log operation shall accept a printf-like format string with variadic arguments.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-LOG-001
+
+**Code Traces**::
+  * `include/juno/log/log_api.h:57` (JUNO_STATUS_T)
+  * `include/juno/log/log_api.h:60` (JUNO_STATUS_T)
+  * `include/juno/log/log_api.h:63` (JUNO_STATUS_T)
+  * `include/juno/log/log_api.h:66` (JUNO_STATUS_T)
+
+=== Module: MAP
+
+==== REQ-MAP-001: Map Initialization
+
+**Description**:: The map module shall initialize from a caller-provided backing array.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-007, REQ-SYS-008, REQ-SYS-009, REQ-ARRAY-001
+
+**Code Traces**::
+  * `src/juno_map.c:34` (JunoDs_MapInit)
+
+**Test Traces**::
+  * `tests/test_map.c:322` (test_map_init_nominal)
+  * `tests/test_map.c:336` (test_map_init_null_map)
+  * `tests/test_map.c:343` (test_map_init_null_api)
+  * `tests/test_map.c:351` (test_map_init_zero_capacity)
+
+==== REQ-MAP-002: Map Hash Function Injection
+
+**Description**:: The map module shall accept an injected hashable pointer API with Hash and IsValueNull operations.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-007, REQ-MAP-001
+
+**Code Traces**::
+  * `src/juno_map.c:34` (JunoDs_MapInit)
+
+**Test Traces**::
+  * `tests/test_map.c:322` (test_map_init_nominal)
+  * `tests/test_map.c:901` (test_map_entry_hash_nominal)
+  * `tests/test_map.c:912` (test_map_entry_is_null_true)
+  * `tests/test_map.c:923` (test_map_entry_is_null_false)
+
+==== REQ-MAP-003: Map Equality Injection
+
+**Description**:: The map module shall accept an injected value pointer API with an Equals operation for key comparison.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-007, REQ-MAP-001
+
+**Code Traces**::
+  * `src/juno_map.c:34` (JunoDs_MapInit)
+
+**Test Traces**::
+  * `tests/test_map.c:322` (test_map_init_nominal)
+  * `tests/test_map.c:873` (test_map_entry_equals_same_key)
+  * `tests/test_map.c:887` (test_map_entry_equals_different_key)
+
+==== REQ-MAP-004: Map Set
+
+**Description**:: The map shall insert or update a key-value pair using linear probing.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MAP-001
+
+**Code Traces**::
+  * `src/juno_map.c:135` (JunoDs_MapSet)
+
+**Test Traces**::
+  * `tests/test_map.c:365` (test_map_set_single_item)
+  * `tests/test_map.c:384` (test_map_set_multiple_items)
+  * `tests/test_map.c:406` (test_map_set_update_existing)
+  * `tests/test_map.c:430` (test_map_set_with_collision)
+  * `tests/test_map.c:455` (test_map_set_null_map)
+  * `tests/test_map.c:663` (test_map_multiple_collisions_linear_probing)
+  * `tests/test_map.c:714` (test_map_wraparound_probing)
+  * `tests/test_map.c:741` (test_map_single_element_capacity)
+  * `tests/test_map.c:776` (test_map_set_get_remove_cycle)
+
+==== REQ-MAP-005: Map Table Full Rejection
+
+**Description**:: The map shall return JUNO_STATUS_TABLE_FULL_ERROR when no empty slot exists during a Set operation.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MAP-004
+
+**Code Traces**::
+  * `src/juno_map.c:135` (JunoDs_MapSet)
+
+**Test Traces**::
+  * `tests/test_map.c:465` (test_map_set_table_full)
+
+==== REQ-MAP-006: Map Get
+
+**Description**:: The map shall retrieve an entry by key using linear probing.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MAP-001
+
+**Code Traces**::
+  * `src/juno_map.c:109` (JunoDs_MapGet)
+
+**Test Traces**::
+  * `tests/test_map.c:490` (test_map_get_existing_item)
+  * `tests/test_map.c:528` (test_map_get_after_collision)
+  * `tests/test_map.c:556` (test_map_get_null_map)
+  * `tests/test_map.c:663` (test_map_multiple_collisions_linear_probing)
+  * `tests/test_map.c:714` (test_map_wraparound_probing)
+  * `tests/test_map.c:741` (test_map_single_element_capacity)
+  * `tests/test_map.c:776` (test_map_set_get_remove_cycle)
+
+==== REQ-MAP-007: Map Key Not Found
+
+**Description**:: The map shall return JUNO_STATUS_DNE_ERROR when a Get operation does not find the key.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MAP-006
+
+**Code Traces**::
+  * `src/juno_map.c:109` (JunoDs_MapGet)
+
+**Test Traces**::
+  * `tests/test_map.c:515` (test_map_get_nonexistent_item)
+
+==== REQ-MAP-008: Map Remove
+
+**Description**:: The map shall remove an entry by key using linear probing, resetting the slot.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MAP-001
+
+**Code Traces**::
+  * `src/juno_map.c:156` (JunoDs_MapRemove)
+
+**Test Traces**::
+  * `tests/test_map.c:570` (test_map_remove_existing_item)
+  * `tests/test_map.c:593` (test_map_remove_nonexistent_item)
+  * `tests/test_map.c:620` (test_map_remove_after_collision)
+  * `tests/test_map.c:649` (test_map_remove_null_map)
+  * `tests/test_map.c:776` (test_map_set_get_remove_cycle)
+
+==== REQ-MAP-009: Map Vtable Validation
+
+**Description**:: The map module shall verify that its API vtable entries are non-null before each operation.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/ds/map_api.h:130` (JunoDs_MapVerify)
+
+**Test Traces**::
+  * `tests/test_map.c:810` (test_map_verify_valid_map)
+  * `tests/test_map.c:820` (test_map_verify_null_map)
+
+==== REQ-MAP-010: Map Dependency Validation
+
+**Description**:: The map module shall verify that the backing array, hashable pointer API, and value pointer API dependencies are valid before each operation.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-011
+
+**Code Traces**::
+  * `include/juno/ds/map_api.h:130` (JunoDs_MapVerify)
+
+**Test Traces**::
+  * `tests/test_map.c:343` (test_map_init_null_api)
+  * `tests/test_map.c:351` (test_map_init_zero_capacity)
+
+=== Module: MATH
+
+==== REQ-MATH-001: Math Constants
+
+**Description**:: The math module shall define double-precision constants for π, π/2, π/4, and e.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/math/juno_math_constants.h:33` (Pi)
+
+==== REQ-MATH-002: Vector Types
+
+**Description**:: The math module shall define 2D and 3D vector types in double, float, and int32 precisions.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-003
+
+**Code Traces**::
+  * `include/juno/math/juno_vec_types.h:64` (<unknown>)
+
+==== REQ-MATH-003: Vector Coordinate Access
+
+**Description**:: Each vector type shall support both named Cartesian field access and raw array indexing.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec_types.h:64` (<unknown>)
+
+==== REQ-MATH-004: Quaternion Type
+
+**Description**:: The math module shall define a real quaternion type with [s, i, j, k] component order in double precision.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-003
+
+**Code Traces**::
+  * `include/juno/math/juno_vec_types.h:674` (<unknown>)
+
+==== REQ-MATH-005: Vector Addition
+
+**Description**:: The math module shall compute component-wise vector addition for each vector type.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:67` (Juno_Vec2_F64_Add)
+  * `include/juno/math/juno_vec.h:139` (Juno_Vec2_F32_Add)
+  * `include/juno/math/juno_vec.h:201` (Juno_Vec2_I32_Add)
+  * `include/juno/math/juno_vec.h:264` (Juno_Vec3_F64_Add)
+  * `include/juno/math/juno_vec.h:335` (Juno_Vec3_F32_Add)
+  * `include/juno/math/juno_vec.h:405` (Juno_Vec3_I32_Add)
+
+**Test Traces**::
+  * `tests/test_math.c:35` (test_vec2_f64_add)
+  * `tests/test_math.c:102` (test_vec2_f32_add)
+  * `tests/test_math.c:169` (test_vec2_i32_add)
+  * `tests/test_math.c:236` (test_vec3_f64_add)
+  * `tests/test_math.c:306` (test_vec3_f32_add)
+  * `tests/test_math.c:376` (test_vec3_i32_add)
+
+==== REQ-MATH-006: Vector Subtraction
+
+**Description**:: The math module shall compute component-wise vector subtraction for each vector type.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:82` (Juno_Vec2_F64_Sub)
+  * `include/juno/math/juno_vec.h:151` (Juno_Vec2_F32_Sub)
+  * `include/juno/math/juno_vec.h:213` (Juno_Vec2_I32_Sub)
+  * `include/juno/math/juno_vec.h:277` (Juno_Vec3_F64_Sub)
+  * `include/juno/math/juno_vec.h:348` (Juno_Vec3_F32_Sub)
+  * `include/juno/math/juno_vec.h:418` (Juno_Vec3_I32_Sub)
+
+**Test Traces**::
+  * `tests/test_math.c:48` (test_vec2_f64_sub)
+  * `tests/test_math.c:115` (test_vec2_f32_sub)
+  * `tests/test_math.c:182` (test_vec2_i32_sub)
+  * `tests/test_math.c:249` (test_vec3_f64_sub)
+  * `tests/test_math.c:319` (test_vec3_f32_sub)
+  * `tests/test_math.c:389` (test_vec3_i32_sub)
+
+==== REQ-MATH-007: Vector Scalar Multiplication
+
+**Description**:: The math module shall compute component-wise scalar multiplication for each vector type.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:96` (Juno_Vec2_F64_Mult)
+  * `include/juno/math/juno_vec.h:162` (Juno_Vec2_F32_Mult)
+  * `include/juno/math/juno_vec.h:224` (Juno_Vec2_I32_Mult)
+  * `include/juno/math/juno_vec.h:289` (Juno_Vec3_F64_Mult)
+  * `include/juno/math/juno_vec.h:360` (Juno_Vec3_F32_Mult)
+  * `include/juno/math/juno_vec.h:430` (Juno_Vec3_I32_Mult)
+
+**Test Traces**::
+  * `tests/test_math.c:61` (test_vec2_f64_mult)
+  * `tests/test_math.c:128` (test_vec2_f32_mult)
+  * `tests/test_math.c:195` (test_vec2_i32_mult)
+  * `tests/test_math.c:262` (test_vec3_f64_mult)
+  * `tests/test_math.c:332` (test_vec3_f32_mult)
+  * `tests/test_math.c:402` (test_vec3_i32_mult)
+
+==== REQ-MATH-008: Vector Dot Product
+
+**Description**:: The math module shall compute the dot product for each vector type.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:108` (Juno_Vec2_F64_Dot)
+  * `include/juno/math/juno_vec.h:173` (Juno_Vec2_F32_Dot)
+  * `include/juno/math/juno_vec.h:235` (Juno_Vec2_I32_Dot)
+  * `include/juno/math/juno_vec.h:301` (Juno_Vec3_F64_Dot)
+  * `include/juno/math/juno_vec.h:372` (Juno_Vec3_F32_Dot)
+  * `include/juno/math/juno_vec.h:442` (Juno_Vec3_I32_Dot)
+
+**Test Traces**::
+  * `tests/test_math.c:73` (test_vec2_f64_dot)
+  * `tests/test_math.c:140` (test_vec2_f32_dot)
+  * `tests/test_math.c:207` (test_vec2_i32_dot)
+  * `tests/test_math.c:274` (test_vec3_f64_dot)
+  * `tests/test_math.c:344` (test_vec3_f32_dot)
+  * `tests/test_math.c:414` (test_vec3_i32_dot)
+
+==== REQ-MATH-009: 2D Cross Product
+
+**Description**:: The math module shall compute the pseudoscalar z-component of the 2D cross product.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:119` (Juno_Vec2_F64_Cross)
+  * `include/juno/math/juno_vec.h:182` (Juno_Vec2_F32_Cross)
+  * `include/juno/math/juno_vec.h:244` (Juno_Vec2_I32_Cross)
+
+**Test Traces**::
+  * `tests/test_math.c:83` (test_vec2_f64_cross)
+  * `tests/test_math.c:150` (test_vec2_f32_cross)
+  * `tests/test_math.c:217` (test_vec2_i32_cross)
+
+==== REQ-MATH-010: 3D Cross Product
+
+**Description**:: The math module shall compute the 3D cross product returning an orthogonal vector.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:311` (Juno_Vec3_F64_Cross)
+  * `include/juno/math/juno_vec.h:381` (Juno_Vec3_F32_Cross)
+  * `include/juno/math/juno_vec.h:451` (Juno_Vec3_I32_Cross)
+
+**Test Traces**::
+  * `tests/test_math.c:284` (test_vec3_f64_cross)
+  * `tests/test_math.c:354` (test_vec3_f32_cross)
+  * `tests/test_math.c:424` (test_vec3_i32_cross)
+
+==== REQ-MATH-011: Squared L2 Norm
+
+**Description**:: The math module shall compute the squared L2 norm for each vector type.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-002
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:129` (Juno_Vec2_F64_L2Norm2)
+  * `include/juno/math/juno_vec.h:191` (Juno_Vec2_F32_L2Norm2)
+  * `include/juno/math/juno_vec.h:254` (Juno_Vec2_I32_L2Norm2)
+  * `include/juno/math/juno_vec.h:325` (Juno_Vec3_F64_L2Norm2)
+  * `include/juno/math/juno_vec.h:395` (Juno_Vec3_F32_L2Norm2)
+  * `include/juno/math/juno_vec.h:465` (Juno_Vec3_I32_L2Norm2)
+
+**Test Traces**::
+  * `tests/test_math.c:93` (test_vec2_f64_L2)
+  * `tests/test_math.c:160` (test_vec2_f32_L2)
+  * `tests/test_math.c:227` (test_vec2_i32_L2)
+  * `tests/test_math.c:297` (test_vec3_f64_L2)
+  * `tests/test_math.c:367` (test_vec3_f32_L2)
+  * `tests/test_math.c:437` (test_vec3_i32_L2)
+
+==== REQ-MATH-012: Quaternion Addition
+
+**Description**:: The math module shall compute component-wise quaternion addition.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-004
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:476` (Juno_RQuat_F64_Add)
+
+**Test Traces**::
+  * `tests/test_math.c:446` (test_rquat_f64_add)
+
+==== REQ-MATH-013: Quaternion Subtraction
+
+**Description**:: The math module shall compute component-wise quaternion subtraction.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-004
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:490` (Juno_RQuat_F64_Sub)
+
+**Test Traces**::
+  * `tests/test_math.c:458` (test_rquat_f64_sub)
+
+==== REQ-MATH-014: Quaternion Scalar Multiplication
+
+**Description**:: The math module shall compute component-wise quaternion scalar multiplication.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-004
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:503` (Juno_RQuat_F64_Mult)
+
+**Test Traces**::
+  * `tests/test_math.c:470` (test_rquat_f64_mult_scalar)
+
+==== REQ-MATH-015: Hamilton Product
+
+**Description**:: The math module shall compute the right-handed Hamilton product of two quaternions.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-004
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:523` (Juno_RQuat_F64_HamProd)
+
+**Test Traces**::
+  * `tests/test_math.c:482` (test_rquat_f64_hamprod)
+  * `tests/test_math.c:495` (test_rquat_f64_hamprod_general)
+
+==== REQ-MATH-016: Quaternion Conjugate
+
+**Description**:: The math module shall compute the conjugate of a quaternion by negating the vector part.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-004
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:539` (Juno_RQuat_F64_Conj)
+
+**Test Traces**::
+  * `tests/test_math.c:509` (test_rquat_f64_conj)
+
+==== REQ-MATH-017: Quaternion Reciprocal
+
+**Description**:: The math module shall compute the multiplicative inverse of a quaternion as conj(q) divided by the squared norm.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-016, REQ-MATH-018
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:562` (Juno_RQuat_F64_Recip)
+
+**Test Traces**::
+  * `tests/test_math.c:538` (test_rquat_f64_recip)
+
+==== REQ-MATH-018: Quaternion Squared Norm
+
+**Description**:: The math module shall compute the squared L2 norm of a quaternion.
+
+**Rationale**:: Provides core math primitives for embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MATH-004
+
+**Code Traces**::
+  * `include/juno/math/juno_vec.h:551` (Juno_RQuat_F64_L2Norm2)
+
+**Test Traces**::
+  * `tests/test_math.c:520` (test_rquat_f64_l2norm2)
+  * `tests/test_math.c:529` (test_rquat_f64_l2norm)
+
+=== Module: MEMORY
+
+==== REQ-MEMORY-001: Memory Allocator Interface
+
+**Description**:: The memory module shall define an abstract allocator API with Get, Update, and Put operations.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-009, REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/memory/memory_api.h:80` (<unknown>)
+
+==== REQ-MEMORY-002: Allocator Pointer API Dependency
+
+**Description**:: The memory allocator root shall hold an injected pointer API for internal memory operations.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-007, REQ-POINTER-001
+
+**Code Traces**::
+  * `include/juno/memory/memory_api.h:72` (JUNO_MODULE_ROOT)
+
+==== REQ-MEMORY-003: Block Allocator Initialization
+
+**Description**:: The block allocator shall initialize from caller-provided backing memory, metadata array, type size, alignment, and length.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-002, REQ-SYS-007, REQ-SYS-008, REQ-SYS-011, REQ-MEMORY-001
+
+**Code Traces**::
+  * `src/juno_memory_block.c:248` (JunoMemory_BlockInit)
+
+**Test Traces**::
+  * `tests/test_memory.c:272` (test_invalid_init_parameters)
+  * `tests/test_memory.c:428` (test_bad_api)
+
+==== REQ-MEMORY-004: Block Allocator Get
+
+**Description**:: The block allocator shall allocate a block of the configured element size in O(1) time.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MEMORY-001
+
+**Code Traces**::
+  * `src/juno_memory_block.c:65` (Juno_MemoryBlkGet)
+
+**Test Traces**::
+  * `tests/test_memory.c:83` (test_nominal_single_alloc_and_free)
+  * `tests/test_memory.c:123` (test_nominal_multiple_alloc_and_free)
+  * `tests/test_memory.c:185` (test_negative_memory_empty)
+  * `tests/test_memory.c:234` (test_negative_memory_full)
+  * `tests/test_memory.c:373` (test_generic_memory_get_put)
+  * `tests/test_memory.c:406` (test_zero_size_allocation)
+
+==== REQ-MEMORY-005: Block Allocator Free Block Reuse
+
+**Description**:: The block allocator shall reuse freed blocks via a LIFO free list when available.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MEMORY-004
+
+**Code Traces**::
+  * `src/juno_memory_block.c:65` (Juno_MemoryBlkGet)
+
+**Test Traces**::
+  * `tests/test_memory.c:123` (test_nominal_multiple_alloc_and_free)
+
+==== REQ-MEMORY-006: Block Allocator Put
+
+**Description**:: The block allocator shall free a previously allocated block in O(1) time.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MEMORY-001
+
+**Code Traces**::
+  * `src/juno_memory_block.c:158` (Juno_MemoryBlkPut)
+
+**Test Traces**::
+  * `tests/test_memory.c:83` (test_nominal_single_alloc_and_free)
+  * `tests/test_memory.c:123` (test_nominal_multiple_alloc_and_free)
+  * `tests/test_memory.c:373` (test_generic_memory_get_put)
+
+==== REQ-MEMORY-007: Block Allocator Double Free Rejection
+
+**Description**:: The block allocator shall reject double frees with an error status.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MEMORY-006
+
+**Code Traces**::
+  * `src/juno_memory_block.c:158` (Juno_MemoryBlkPut)
+
+**Test Traces**::
+  * `tests/test_memory.c:290` (test_double_free)
+
+==== REQ-MEMORY-008: Block Allocator Invalid Address Rejection
+
+**Description**:: The block allocator shall reject frees of invalid or misaligned addresses with an error status.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MEMORY-006
+
+**Code Traces**::
+  * `src/juno_memory_block.c:158` (Juno_MemoryBlkPut)
+
+**Test Traces**::
+  * `tests/test_memory.c:319` (test_free_unallocated)
+  * `tests/test_memory.c:464` (test_invalid_size_and_addr)
+
+==== REQ-MEMORY-009: Block Allocator Update
+
+**Description**:: The block allocator shall adjust a descriptor's size in-place up to the configured element size.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MEMORY-001
+
+**Code Traces**::
+  * `src/juno_memory_block.c:139` (Juno_MemoryBlkUpdate)
+
+**Test Traces**::
+  * `tests/test_memory.c:341` (test_update_memory)
+
+==== REQ-MEMORY-010: Block Allocator No Memory Move
+
+**Description**:: The block allocator Update shall not move memory when adjusting descriptor size.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-MEMORY-009
+
+**Code Traces**::
+  * `src/juno_memory_block.c:139` (Juno_MemoryBlkUpdate)
+
+**Test Traces**::
+  * `tests/test_memory.c:341` (test_update_memory)
+
+=== Module: MODULE
+
+==== REQ-MODULE-001: Module Root Structure
+
+**Description**:: The module system shall define a module root struct containing an API vtable pointer.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-006, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/module.h:128` (<unknown>)
+
+==== REQ-MODULE-002: Module Root Failure Handler
+
+**Description**:: The module root shall contain a failure handler pointer and user data pointer.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-STATUS-003
+
+**Code Traces**::
+  * `include/juno/module.h:128` (<unknown>)
+
+==== REQ-MODULE-003: Module Derivation
+
+**Description**:: Derived module structs shall embed the root as their first member, enabling safe upcasting to the root type.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-006
+
+**Code Traces**::
+  * `include/juno/module.h:160` (<unknown>)
+
+==== REQ-MODULE-004: Module Union
+
+**Description**:: A module union shall contain the root and all derivation types for polymorphic storage.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-006
+
+**Code Traces**::
+  * `include/juno/module.h:111` (<unknown>)
+
+==== REQ-MODULE-005: Result Type
+
+**Description**:: The module system shall define a result type combining a status code with a typed success payload.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-004
+
+**Code Traces**::
+  * `include/juno/module.h:197` (<unknown>)
+
+==== REQ-MODULE-006: Option Type
+
+**Description**:: The module system shall define an option type combining a presence flag with a typed payload.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-004
+
+**Code Traces**::
+  * `include/juno/module.h:241` (<unknown>)
+
+=== Module: MTX
+
+==== REQ-MTX-001: Mutex Root Structure
+
+**Description**:: The mutex root shall embed a module root with an API vtable pointer.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-006, REQ-SYS-007, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/mp/mtx_api.h:44` (JUNO_MODULE_ROOT)
+
+==== REQ-MTX-002: TryLock Operation
+
+**Description**:: The mutex API vtable shall define a TryLock operation that attempts to acquire the lock and returns immediately with a boolean result.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-MTX-001
+
+**Code Traces**::
+  * `include/juno/mp/mtx_api.h:50` (JUNO_RESULT_BOOL_T)
+
+==== REQ-MTX-003: Lock Operation
+
+**Description**:: The mutex API vtable shall define a Lock operation that blocks until the lock is acquired.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-MTX-001
+
+**Code Traces**::
+  * `include/juno/mp/mtx_api.h:53` (JUNO_STATUS_T)
+
+==== REQ-MTX-004: Free Operation
+
+**Description**:: The mutex API vtable shall define a Free operation that releases the lock.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-MTX-001
+
+**Code Traces**::
+  * `include/juno/mp/mtx_api.h:56` (JUNO_STATUS_T)
+
+==== REQ-MTX-005: Mutex Vtable Validation
+
+**Description**:: The mutex module shall verify that its API vtable and all function pointers within it are non-NULL.
+
+**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/mp/mtx_api.h:61` (JunoMp_MtxVerify)
+
+**Test Traces**::
+  * `tests/test_mtx.c:77` (test_mtx_verify_valid)
+  * `tests/test_mtx.c:84` (test_mtx_verify_null_root)
+  * `tests/test_mtx.c:91` (test_mtx_verify_null_api)
+  * `tests/test_mtx.c:99` (test_mtx_verify_null_trylock)
+
+=== Module: POINTER
+
+==== REQ-POINTER-001: Pointer Descriptor Structure
+
+**Description**:: The pointer module shall define a pointer trait (JUNO_POINTER_T) containing an API vtable pointer, memory address, size, and alignment.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/memory/pointer_api.h:55` (JUNO_TRAIT_ROOT)
+
+==== REQ-POINTER-002: Pointer Copy
+
+**Description**:: The pointer API shall copy the value referenced by a source descriptor into a destination descriptor's storage location.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-POINTER-001
+
+**Code Traces**::
+  * `include/juno/memory/pointer_api.h:156` (JunoMemory_PointerApiVerify)
+
+**Test Traces**::
+  * `tests/test_map.c:833` (test_map_entry_copy_nominal)
+  * `tests/test_map.c:849` (test_map_entry_copy_null_dest)
+  * `tests/test_pointer.c:89` (test_pointer_copy_success)
+  * `tests/test_pointer.c:100` (test_pointer_copy_null_src_addr)
+  * `tests/test_stack.c:1032` (test_stack_pointer_copy_invalid_dest)
+  * `tests/test_stack.c:1043` (test_stack_pointer_copy_invalid_src)
+
+==== REQ-POINTER-003: Pointer Reset
+
+**Description**:: The pointer API shall reset the memory at a pointer descriptor to a defined empty state.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-POINTER-001
+
+**Code Traces**::
+  * `include/juno/memory/pointer_api.h:156` (JunoMemory_PointerApiVerify)
+
+**Test Traces**::
+  * `tests/test_map.c:860` (test_map_entry_reset_nominal)
+  * `tests/test_pointer.c:113` (test_pointer_reset_success)
+  * `tests/test_pointer.c:123` (test_pointer_reset_null_addr)
+  * `tests/test_stack.c:1054` (test_stack_pointer_reset_invalid)
+  * `tests/test_stack.c:1062` (test_stack_pointer_reset_valid)
+
+==== REQ-POINTER-004: Pointer Descriptor Validation
+
+**Description**:: The pointer module shall validate that a pointer descriptor's API, address, and size are non-null/non-zero.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008, REQ-SYS-010, REQ-POINTER-001
+
+**Code Traces**::
+  * `include/juno/memory/pointer_api.h:188` (JunoMemory_PointerVerify)
+
+**Test Traces**::
+  * `tests/test_pointer.c:135` (test_pointer_verify_valid)
+  * `tests/test_pointer.c:143` (test_pointer_verify_null_api)
+  * `tests/test_pointer.c:151` (test_pointer_verify_null_addr)
+  * `tests/test_pointer.c:159` (test_pointer_verify_zero_size)
+
+==== REQ-POINTER-005: Pointer Type Verification
+
+**Description**:: The pointer module shall verify that a pointer descriptor's size and alignment match an expected type.
+
+**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008, REQ-POINTER-004
+
+**Code Traces**::
+  * `include/juno/memory/pointer_api.h:129` (JunoMemory_PointerVerify)
+
+**Test Traces**::
+  * `tests/test_pointer.c:172` (test_pointer_verify_type_match)
+  * `tests/test_pointer.c:180` (test_pointer_verify_type_wrong_size)
+  * `tests/test_pointer.c:189` (test_pointer_verify_type_wrong_alignment)
+
+=== Module: QUEUE
+
+==== REQ-QUEUE-001: Queue Initialization
+
+**Description**:: The queue module shall initialize from a caller-provided backing array.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-009, REQ-SYS-010, REQ-ARRAY-001
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:106` (JunoDs_QueueInit)
+  * `include/juno/ds/queue_api.h:116` (JunoDs_QueueVerify)
+
+**Test Traces**::
+  * `tests/test_queue.c:209` (test_queue_init_nominal)
+  * `tests/test_queue.c:220` (test_queue_init_null_queue)
+  * `tests/test_queue.c:230` (test_queue_init_null_array)
+  * `tests/test_queue.c:237` (test_queue_init_zero_capacity)
+  * `tests/test_queue.c:729` (test_queue_verify_valid_queue)
+  * `tests/test_queue.c:739` (test_queue_verify_null_queue)
+  * `tests/test_queue.c:746` (test_queue_verify_invalid_api)
+  * `tests/test_queue.c:759` (test_queue_api_verify_valid)
+  * `tests/test_queue.c:769` (test_queue_api_verify_null)
+  * `tests/test_queue.c:776` (test_queue_api_verify_missing_functions)
+
+==== REQ-QUEUE-002: Queue Initial State
+
+**Description**:: The queue shall set start index and length to zero on initialization.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-002, REQ-SYS-007, REQ-SYS-008, REQ-SYS-011, REQ-QUEUE-001
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:106` (JunoDs_QueueInit)
+
+**Test Traces**::
+  * `tests/test_queue.c:209` (test_queue_init_nominal)
+
+==== REQ-QUEUE-003: Queue Enqueue
+
+**Description**:: The queue shall copy an element to the back of the circular buffer in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-QUEUE-001
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:24` (JunoDs_QueuePush)
+
+**Test Traces**::
+  * `tests/test_queue.c:249` (test_queue_push_single_item)
+  * `tests/test_queue.c:266` (test_queue_push_multiple_items)
+  * `tests/test_queue.c:290` (test_queue_push_to_full_capacity)
+  * `tests/test_queue.c:331` (test_queue_push_null_queue)
+  * `tests/test_queue.c:341` (test_queue_push_invalid_pointer)
+  * `tests/test_queue.c:554` (test_queue_circular_wraparound)
+  * `tests/test_queue.c:605` (test_queue_wraparound_at_boundary)
+  * `tests/test_queue.c:642` (test_queue_stress_push_pop_cycles)
+  * `tests/test_queue.c:673` (test_queue_interleaved_operations)
+  * `tests/test_queue.c:803` (test_queue_single_element_capacity)
+  * `tests/test_queue.c:831` (test_queue_boundary_index_calculation)
+  * `tests/test_queue.c:860` (test_queue_data_integrity_after_operations)
+
+==== REQ-QUEUE-004: Queue Full Rejection
+
+**Description**:: The queue shall return JUNO_STATUS_INVALID_SIZE_ERROR when enqueue is attempted on a full queue.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-QUEUE-003
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:24` (JunoDs_QueuePush)
+
+**Test Traces**::
+  * `tests/test_queue.c:308` (test_queue_push_overflow)
+
+==== REQ-QUEUE-005: Queue Dequeue
+
+**Description**:: The queue shall remove and copy out the front element in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-QUEUE-001
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:50` (JunoDs_QueuePop)
+
+**Test Traces**::
+  * `tests/test_queue.c:356` (test_queue_pop_single_item)
+  * `tests/test_queue.c:379` (test_queue_pop_multiple_items_fifo_order)
+  * `tests/test_queue.c:421` (test_queue_pop_null_queue)
+  * `tests/test_queue.c:430` (test_queue_pop_invalid_pointer)
+  * `tests/test_queue.c:554` (test_queue_circular_wraparound)
+  * `tests/test_queue.c:605` (test_queue_wraparound_at_boundary)
+  * `tests/test_queue.c:642` (test_queue_stress_push_pop_cycles)
+  * `tests/test_queue.c:673` (test_queue_interleaved_operations)
+  * `tests/test_queue.c:803` (test_queue_single_element_capacity)
+  * `tests/test_queue.c:860` (test_queue_data_integrity_after_operations)
+
+==== REQ-QUEUE-006: Queue Empty Dequeue Rejection
+
+**Description**:: The queue shall return JUNO_STATUS_ERR when dequeue is attempted on an empty queue.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-QUEUE-005
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:50` (JunoDs_QueuePop)
+
+**Test Traces**::
+  * `tests/test_queue.c:409` (test_queue_pop_empty_queue)
+
+==== REQ-QUEUE-007: Queue Peek
+
+**Description**:: The queue shall return a pointer descriptor to the front element without removing it in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-QUEUE-001
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:78` (JunoDs_QueuePeek)
+
+**Test Traces**::
+  * `tests/test_queue.c:452` (test_queue_peek_single_item)
+  * `tests/test_queue.c:478` (test_queue_peek_multiple_times)
+  * `tests/test_queue.c:515` (test_queue_peek_null_queue)
+  * `tests/test_queue.c:522` (test_queue_peek_after_pop)
+
+==== REQ-QUEUE-008: Queue Empty Peek Rejection
+
+**Description**:: The queue shall return JUNO_STATUS_INVALID_SIZE_ERROR when peek is attempted on an empty queue.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-QUEUE-007
+
+**Code Traces**::
+  * `src/juno_buff_queue.c:78` (JunoDs_QueuePeek)
+
+**Test Traces**::
+  * `tests/test_queue.c:505` (test_queue_peek_empty_queue)
+
+=== Module: SB
+
+==== REQ-SB-001: Broker Root Structure
+
+**Description**:: The broker root shall hold a pipe registry pointer, registry length, and registry capacity.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:79` (JUNO_MODULE_ROOT)
+
+==== REQ-SB-002: Broker API Interface
+
+**Description**:: The broker API vtable shall define Publish and RegisterSubscriber operations.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SB-001
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:89` (<unknown>)
+
+==== REQ-SB-003: Broker Initialization
+
+**Description**:: The broker shall initialize from a caller-provided pipe registry array and capacity.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-002, REQ-SYS-007, REQ-SYS-008, REQ-SB-001
+
+**Code Traces**::
+  * `src/juno_broker.c:35` (JunoSb_BrokerInit)
+
+**Test Traces**::
+  * `tests/test_sb.c:190` (test_sb_broker_init_success)
+  * `tests/test_sb.c:203` (test_sb_broker_init_null_broker)
+  * `tests/test_sb.c:212` (test_sb_broker_init_null_registry)
+
+==== REQ-SB-004: Pipe Derivation
+
+**Description**:: A pipe shall derive from the queue module root with an additional message ID field.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-MODULE-003, REQ-QUEUE-001
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:72` (JUNO_MODULE_DERIVE)
+
+==== REQ-SB-005: Pipe Initialization
+
+**Description**:: A pipe shall initialize with a message ID and a backing queue array.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SB-004, REQ-SYS-002
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:138` (JunoSb_PipeInit)
+
+**Test Traces**::
+  * `tests/test_sb.c:225` (test_sb_pipe_init_success)
+  * `tests/test_sb.c:234` (test_sb_pipe_init_null_pipe)
+
+==== REQ-SB-006: Publish Fan-Out
+
+**Description**:: The broker shall enqueue a message into every registered pipe whose message ID matches the published message ID.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SB-002
+
+**Code Traces**::
+  * `src/juno_broker.c:50` (Publish)
+
+**Test Traces**::
+  * `tests/test_sb.c:280` (test_sb_publish_fan_out)
+
+==== REQ-SB-007: Publish Non-Matching Skip
+
+**Description**:: The broker shall skip pipes whose message ID does not match the published message ID.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SB-006
+
+**Code Traces**::
+  * `src/juno_broker.c:50` (Publish)
+
+**Test Traces**::
+  * `tests/test_sb.c:309` (test_sb_publish_skip_non_matching)
+
+==== REQ-SB-008: Register Subscriber
+
+**Description**:: The broker shall append a pipe pointer to the registry on registration.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SB-002
+
+**Code Traces**::
+  * `src/juno_broker.c:75` (RegisterSubscriber)
+
+**Test Traces**::
+  * `tests/test_sb.c:246` (test_sb_register_subscriber)
+
+==== REQ-SB-009: Registry Full Rejection
+
+**Description**:: The broker shall return an error status when registration is attempted on a full registry.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SB-008
+
+**Code Traces**::
+  * `src/juno_broker.c:75` (RegisterSubscriber)
+
+**Test Traces**::
+  * `tests/test_sb.c:259` (test_sb_register_full_rejection)
+
+==== REQ-SB-010: Broker Vtable Validation
+
+**Description**:: The broker shall verify that its API vtable entries are non-null before each operation.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-010, REQ-SYS-011
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:113` (JunoSb_BrokerVerify)
+
+**Test Traces**::
+  * `tests/test_sb.c:336` (test_sb_broker_verify_null_api)
+
+==== REQ-SB-011: Broker Registry Validation
+
+**Description**:: The broker shall verify that its pipe registry pointer and capacity are valid before each operation.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-011
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:113` (JunoSb_BrokerVerify)
+
+**Test Traces**::
+  * `tests/test_sb.c:346` (test_sb_broker_verify_null_registry)
+  * `tests/test_sb.c:356` (test_sb_broker_verify_zero_capacity)
+
+==== REQ-SB-012: Pipe Validation
+
+**Description**:: The broker shall verify each pipe via the queue verification before publishing to it.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SB-006, REQ-SYS-008
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:125` (JunoSb_PipeVerify)
+
+**Test Traces**::
+  * `tests/test_sb.c:366` (test_sb_pipe_verify_valid)
+  * `tests/test_sb.c:374` (test_sb_pipe_verify_null)
+
+==== REQ-SB-013: Single Thread Scope
+
+**Description**:: The broker shall operate within a single thread without thread-safety mechanisms.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Code Traces**::
+  * `include/juno/sb/broker_api.h:50` (<unknown>)
+
+=== Module: SCH
+
+==== REQ-SCH-001: Scheduler Root Structure
+
+**Description**:: The scheduler root shall hold a time source pointer, a flattened schedule table, apps-per-minor-frame count, minor-frame count, and minor-frame period.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-006, REQ-SYS-007, REQ-SYS-009, REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/sch/juno_sch_api.h:61` (JUNO_MODULE_ROOT)
+
+==== REQ-SCH-002: Scheduler API Interface
+
+**Description**:: The scheduler API vtable shall define Execute, GetMinorFramePeriod, and GetMajorFramePeriod operations.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SCH-001
+
+**Code Traces**::
+  * `include/juno/sch/juno_sch_api.h:70` (<unknown>)
+
+==== REQ-SCH-003: Schedule Table Layout
+
+**Description**:: The schedule table shall be a flattened 2D array of application pointers with dimensions minor-frame count by apps-per-minor-frame.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SCH-001, REQ-SYS-002
+
+**Code Traces**::
+  * `include/juno/sch/juno_sch_api.h:56` (<unknown>)
+
+==== REQ-SCH-004: Execute Major Frame
+
+**Description**:: The scheduler Execute operation shall invoke each application's OnProcess hook across all minor frames in one major frame.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SCH-002, REQ-APP-003
+
+**Code Traces**::
+  * `include/juno/sch/juno_sch_api.h:74` (JUNO_STATUS_T)
+
+**Test Traces**::
+  * `tests/test_sch.c:153` (test_sch_execute_invokes_all_apps)
+  * `tests/test_sch.c:162` (test_sch_execute_skips_null_slot)
+
+==== REQ-SCH-005: Minor Frame Period Query
+
+**Description**:: The scheduler shall return the configured minor frame period as a timestamp.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SCH-002
+
+**Code Traces**::
+  * `include/juno/sch/juno_sch_api.h:77` (JUNO_TIMESTAMP_RESULT_T)
+
+**Test Traces**::
+  * `tests/test_sch.c:177` (test_sch_get_minor_frame_period)
+
+==== REQ-SCH-006: Major Frame Period Computation
+
+**Description**:: The scheduler shall compute the major frame period as the product of the minor frame period and the minor-frame count.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SCH-005
+
+**Code Traces**::
+  * `include/juno/sch/juno_sch_api.h:80` (JUNO_TIMESTAMP_RESULT_T)
+
+**Test Traces**::
+  * `tests/test_sch.c:190` (test_sch_get_major_frame_period)
+
+==== REQ-SCH-007: Time Source Dependency
+
+**Description**:: The scheduler shall use an injected time module for timing operations.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-007, REQ-TIME-002
+
+**Code Traces**::
+  * `include/juno/sch/juno_sch_api.h:61` (JUNO_MODULE_ROOT)
+
+=== Module: SM
+
+==== REQ-SM-001: SM Root Structure
+
+**Description**:: The state machine root shall hold a pointer to the current state.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-009, REQ-SYS-010
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:76` (JUNO_MODULE_ROOT)
+
+==== REQ-SM-002: State Root Structure
+
+**Description**:: Each state shall embed a module root with an API vtable, a pointer to the owning SM, and a next-state option.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-006, REQ-MODULE-003
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:59` (JUNO_MODULE_ROOT)
+
+==== REQ-SM-003: State API Interface
+
+**Description**:: Each state API vtable shall define StateAction, ShouldExit, and ResetState operations.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SM-002
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:65` (JUNO_STATUS_T)
+
+==== REQ-SM-004: SM Initialization
+
+**Description**:: The state machine shall initialize with a start state and failure handler.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-002, REQ-SYS-007, REQ-SM-001
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:126` (JunoSm_Init)
+
+**Test Traces**::
+  * `tests/test_sm.c:91` (test_sm_init_success)
+  * `tests/test_sm.c:103` (test_sm_init_null_root)
+  * `tests/test_sm.c:110` (test_sm_init_null_start_state)
+
+==== REQ-SM-005: State Initialization
+
+**Description**:: A state shall initialize with a link to its owning SM, an API vtable, and an optional next state.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SM-002, REQ-SYS-007
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:104` (JunoSm_StateInit)
+
+**Test Traces**::
+  * `tests/test_sm.c:121` (test_sm_state_init_with_next)
+  * `tests/test_sm.c:136` (test_sm_state_init_without_next)
+  * `tests/test_sm.c:148` (test_sm_state_init_null_state)
+  * `tests/test_sm.c:156` (test_sm_state_init_null_api)
+
+==== REQ-SM-006: Get Current State
+
+**Description**:: The state machine shall return the current state pointer.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SM-001
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:139` (JunoSm_GetCurrentState)
+
+**Test Traces**::
+  * `tests/test_sm.c:168` (test_sm_get_current_state)
+  * `tests/test_sm.c:179` (test_sm_get_current_state_null_root)
+
+==== REQ-SM-007: State Transition
+
+**Description**:: The state machine shall transition to the next state when the current state's next-state option is present.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SM-001
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:151` (JunoSm_TransitionState)
+
+**Test Traces**::
+  * `tests/test_sm.c:190` (test_sm_transition_to_next)
+  * `tests/test_sm.c:220` (test_sm_transition_null_root)
+
+==== REQ-SM-008: No Transition When None
+
+**Description**:: The state machine shall remain in the current state when the next-state option is absent.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SM-007
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:151` (JunoSm_TransitionState)
+
+**Test Traces**::
+  * `tests/test_sm.c:207` (test_sm_transition_stays_when_none)
+
+==== REQ-SM-009: SM Verification
+
+**Description**:: The state machine shall verify that its root and current state pointer are non-NULL.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:83` (JunoSm_Verify)
+
+**Test Traces**::
+  * `tests/test_sm.c:231` (test_sm_verify_valid)
+  * `tests/test_sm.c:241` (test_sm_verify_null_root)
+  * `tests/test_sm.c:248` (test_sm_verify_null_current_state)
+
+==== REQ-SM-010: State Verification
+
+**Description**:: Each state shall verify that its API vtable and owning SM pointer are non-NULL.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-010, REQ-SYS-011
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:91` (JunoSm_StateVerify)
+
+**Test Traces**::
+  * `tests/test_sm.c:260` (test_sm_state_verify_valid)
+  * `tests/test_sm.c:270` (test_sm_state_verify_null_state)
+  * `tests/test_sm.c:277` (test_sm_state_verify_null_api)
+  * `tests/test_sm.c:286` (test_sm_state_verify_null_sm)
+
+==== REQ-SM-011: Next State Pointer Verification
+
+**Description**:: Each state shall verify that the next-state pointer is non-NULL when the next-state option is marked present.
+
+**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Code Traces**::
+  * `include/juno/sm/sm_api.h:91` (JunoSm_StateVerify)
+
+**Test Traces**::
+  * `tests/test_sm.c:295` (test_sm_state_verify_next_null_when_some)
+  * `tests/test_sm.c:306` (test_sm_state_verify_next_valid_when_some)
+
+=== Module: STACK
+
+==== REQ-STACK-001: Stack Initialization
+
+**Description**:: The stack module shall initialize from a caller-provided backing array.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-009, REQ-SYS-010, REQ-ARRAY-001
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:101` (JunoDs_StackInit)
+
+**Test Traces**::
+  * `tests/test_stack.c:211` (test_stack_init_nominal)
+  * `tests/test_stack.c:221` (test_stack_init_null_stack)
+  * `tests/test_stack.c:228` (test_stack_init_null_api)
+  * `tests/test_stack.c:236` (test_stack_init_zero_capacity)
+  * `tests/test_stack.c:705` (test_stack_verify_valid_stack)
+  * `tests/test_stack.c:715` (test_stack_verify_null_stack)
+  * `tests/test_stack.c:722` (test_stack_verify_invalid_api)
+  * `tests/test_stack.c:735` (test_stack_verify_missing_push_function)
+  * `tests/test_stack.c:751` (test_stack_verify_missing_pop_function)
+  * `tests/test_stack.c:767` (test_stack_verify_missing_peek_function)
+  * `tests/test_stack.c:1170` (test_stack_init_with_array_verify_failure)
+
+==== REQ-STACK-002: Stack Initial State
+
+**Description**:: The stack shall set length to zero on initialization.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-002, REQ-SYS-007, REQ-SYS-008, REQ-SYS-011, REQ-STACK-001
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:101` (JunoDs_StackInit)
+
+**Test Traces**::
+  * `tests/test_stack.c:211` (test_stack_init_nominal)
+
+==== REQ-STACK-003: Stack Push
+
+**Description**:: The stack shall copy an element to the top in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-STACK-001
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:27` (JunoDs_StackPush)
+
+**Test Traces**::
+  * `tests/test_stack.c:248` (test_stack_push_single_item)
+  * `tests/test_stack.c:265` (test_stack_push_multiple_items)
+  * `tests/test_stack.c:289` (test_stack_push_to_full_capacity)
+  * `tests/test_stack.c:330` (test_stack_push_null_stack)
+  * `tests/test_stack.c:340` (test_stack_push_invalid_pointer)
+  * `tests/test_stack.c:578` (test_stack_stress_push_pop_cycles)
+  * `tests/test_stack.c:609` (test_stack_interleaved_operations)
+  * `tests/test_stack.c:667` (test_stack_fill_empty_cycles)
+  * `tests/test_stack.c:787` (test_stack_single_element_capacity)
+  * `tests/test_stack.c:820` (test_stack_data_integrity_after_operations)
+  * `tests/test_stack.c:848` (test_stack_alternating_push_pop)
+  * `tests/test_stack.c:966` (test_stack_push_at_exact_capacity)
+  * `tests/test_stack.c:1079` (test_stack_push_with_setAt_failure)
+
+==== REQ-STACK-004: Stack Full Rejection
+
+**Description**:: The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when push is attempted on a full stack.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-STACK-003
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:27` (JunoDs_StackPush)
+
+**Test Traces**::
+  * `tests/test_stack.c:307` (test_stack_push_overflow)
+  * `tests/test_stack.c:966` (test_stack_push_at_exact_capacity)
+
+==== REQ-STACK-005: Stack Pop
+
+**Description**:: The stack shall remove and copy out the top element in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-STACK-001
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:52` (JunoDs_StackPop)
+
+**Test Traces**::
+  * `tests/test_stack.c:355` (test_stack_pop_single_item)
+  * `tests/test_stack.c:378` (test_stack_pop_multiple_items_lifo_order)
+  * `tests/test_stack.c:420` (test_stack_pop_null_stack)
+  * `tests/test_stack.c:429` (test_stack_pop_invalid_pointer)
+  * `tests/test_stack.c:578` (test_stack_stress_push_pop_cycles)
+  * `tests/test_stack.c:609` (test_stack_interleaved_operations)
+  * `tests/test_stack.c:667` (test_stack_fill_empty_cycles)
+  * `tests/test_stack.c:787` (test_stack_single_element_capacity)
+  * `tests/test_stack.c:820` (test_stack_data_integrity_after_operations)
+  * `tests/test_stack.c:848` (test_stack_alternating_push_pop)
+  * `tests/test_stack.c:992` (test_stack_pop_until_empty)
+  * `tests/test_stack.c:1099` (test_stack_pop_with_getAt_failure)
+  * `tests/test_stack.c:1148` (test_stack_pop_copy_failure)
+
+==== REQ-STACK-006: Stack Empty Pop Rejection
+
+**Description**:: The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when pop is attempted on an empty stack.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-STACK-005
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:52` (JunoDs_StackPop)
+
+**Test Traces**::
+  * `tests/test_stack.c:408` (test_stack_pop_empty_stack)
+  * `tests/test_stack.c:992` (test_stack_pop_until_empty)
+
+==== REQ-STACK-007: Stack Peek
+
+**Description**:: The stack shall return a pointer descriptor to the top element without removing it in O(1) time.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-STACK-001
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:77` (JunoDs_StackPeek)
+
+**Test Traces**::
+  * `tests/test_stack.c:451` (test_stack_peek_single_item)
+  * `tests/test_stack.c:477` (test_stack_peek_top_element)
+  * `tests/test_stack.c:501` (test_stack_peek_multiple_times)
+  * `tests/test_stack.c:538` (test_stack_peek_null_stack)
+  * `tests/test_stack.c:545` (test_stack_peek_after_pop)
+  * `tests/test_stack.c:880` (test_stack_peek_consistency_during_operations)
+  * `tests/test_stack.c:1125` (test_stack_peek_with_getAt_failure)
+
+==== REQ-STACK-008: Stack Empty Peek Rejection
+
+**Description**:: The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when peek is attempted on an empty stack.
+
+**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-STACK-007
+
+**Code Traces**::
+  * `src/juno_buff_stack.c:77` (JunoDs_StackPeek)
+
+**Test Traces**::
+  * `tests/test_stack.c:528` (test_stack_peek_empty_stack)
+
+=== Module: STATUS
+
+==== REQ-STATUS-001: Unified Status Type
+
+**Description**:: The status module shall define a single 32-bit integer status type (JUNO_STATUS_T) for error propagation.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-003, REQ-SYS-004, REQ-SYS-009
+
+**Code Traces**::
+  * `include/juno/status.h:50` (<unknown>)
+
+==== REQ-STATUS-002: Canonical Status Codes
+
+**Description**:: The status module shall define distinct status codes for each error condition category (success, null pointer, memory, type, size, table full, does-not-exist, I/O, CRC, reference, data, timeout, out-of-bounds).
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-004
+
+**Code Traces**::
+  * `include/juno/status.h:57` (<unknown>)
+
+==== REQ-STATUS-003: Failure Handler Callback Type
+
+**Description**:: The status module shall define an optional failure handler callback type that receives a status code, message, and user data.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-004
+
+**Code Traces**::
+  * `include/juno/status.h:107` (<unknown>)
+
+==== REQ-STATUS-004: Failure Handler Non-Interference
+
+**Description**:: The failure handler shall not alter control flow when invoked.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-STATUS-003
+
+**Code Traces**::
+  * `include/juno/status.h:127` (<unknown>)
+
+=== Module: SYS
+
+==== REQ-SYS-001: Zero Dynamic Allocation
+
+**Description**:: The library shall not use malloc, calloc, realloc, or free.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Implements (children)**:: REQ-APP-001, REQ-ARRAY-001, REQ-CRC-001, REQ-HASH-001, REQ-HEAP-001, REQ-IO-001, REQ-LOG-001, REQ-MAP-001, REQ-MATH-001, REQ-MEMORY-001, REQ-MODULE-001, REQ-MTX-001, REQ-POINTER-001, REQ-QUEUE-001, REQ-SB-001, REQ-SCH-001, REQ-SM-001, REQ-STACK-001, REQ-STATUS-001, REQ-TIME-001
+
+**Code Traces**::
+  * `CMakeLists.txt:75` (list)
+
+==== REQ-SYS-002: Caller-Owned Memory
+
+**Description**:: All memory used by the library shall be caller-owned and injected via initialization functions.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Implements (children)**:: REQ-APP-001, REQ-ARRAY-001, REQ-HEAP-001, REQ-IO-001, REQ-LOG-006, REQ-MAP-001, REQ-MEMORY-003, REQ-MTX-001, REQ-QUEUE-001, REQ-QUEUE-002, REQ-SB-003, REQ-SB-005, REQ-SCH-001, REQ-SCH-003, REQ-SM-004, REQ-STACK-001, REQ-STACK-002, REQ-TIME-001
+
+**Code Traces**::
+  * `include/juno/module.h:54` (JUNO_MODULE_DECLARE)
+
+==== REQ-SYS-003: Freestanding C11 Compatibility
+
+**Description**:: The library shall compile under -std=c11 -nostdlib -ffreestanding without hosted C standard library dependencies.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Analysis
+
+**Implements (children)**:: REQ-APP-001, REQ-ARRAY-001, REQ-CRC-001, REQ-HASH-001, REQ-HEAP-001, REQ-IO-001, REQ-LOG-001, REQ-MAP-001, REQ-MATH-001, REQ-MATH-002, REQ-MATH-004, REQ-MEMORY-001, REQ-MODULE-001, REQ-MTX-001, REQ-POINTER-001, REQ-QUEUE-001, REQ-SB-001, REQ-SCH-001, REQ-SM-001, REQ-STACK-001, REQ-STATUS-001, REQ-TIME-001
+
+**Code Traces**::
+  * `CMakeLists.txt:75` (list)
+
+==== REQ-SYS-004: Explicit Status Code Returns
+
+**Description**:: All fallible functions shall return explicit status codes (JUNO_STATUS_T).
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Implements (children)**:: REQ-HASH-001, REQ-HASH-003, REQ-HEAP-001, REQ-MAP-001, REQ-MEMORY-001, REQ-MODULE-005, REQ-MODULE-006, REQ-POINTER-001, REQ-QUEUE-001, REQ-SB-001, REQ-SM-001, REQ-STACK-001, REQ-STATUS-001, REQ-STATUS-002, REQ-STATUS-003, REQ-TIME-001
+
+**Code Traces**::
+  * `include/juno/status.h:40` (<unknown>)
+
+==== REQ-SYS-005: No Silent Failures
+
+**Description**:: The library shall not silently swallow errors or produce undefined behavior on error paths.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Implements (children)**:: REQ-CRC-002, REQ-CRC-003, REQ-HASH-001, REQ-HEAP-001, REQ-MAP-001, REQ-MEMORY-001, REQ-POINTER-001, REQ-QUEUE-001, REQ-SB-001, REQ-SM-001, REQ-STACK-001, REQ-TIME-001, REQ-TIME-018
+
+**Code Traces**::
+  * `include/juno/status.h:40` (<unknown>)
+
+==== REQ-SYS-006: Dependency Injection via Vtables
+
+**Description**:: All modules shall use the vtable/module-root/derivation pattern for dependency injection.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Implements (children)**:: REQ-APP-001, REQ-ARRAY-001, REQ-HEAP-001, REQ-IO-001, REQ-IO-009, REQ-IO-013, REQ-LOG-001, REQ-MAP-001, REQ-MEMORY-001, REQ-MODULE-001, REQ-MODULE-003, REQ-MODULE-004, REQ-MTX-001, REQ-POINTER-001, REQ-QUEUE-001, REQ-SB-001, REQ-SCH-001, REQ-SM-001, REQ-SM-002, REQ-STACK-001, REQ-TIME-001, REQ-TIME-002
+
+**Code Traces**::
+  * `include/juno/module.h:54` (JUNO_MODULE_DECLARE)
+
+==== REQ-SYS-007: No Global Dependencies
+
+**Description**:: Dependencies shall be injected via initialization functions, never globally referenced.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Implements (children)**:: REQ-APP-001, REQ-ARRAY-001, REQ-HEAP-001, REQ-HEAP-002, REQ-IO-001, REQ-LOG-006, REQ-MAP-001, REQ-MAP-002, REQ-MAP-003, REQ-MEMORY-002, REQ-MEMORY-003, REQ-MTX-001, REQ-QUEUE-002, REQ-SB-003, REQ-SCH-001, REQ-SCH-007, REQ-SM-004, REQ-SM-005, REQ-STACK-002, REQ-TIME-001
+
+**Code Traces**::
+  * `include/juno/macros.h:50` (<unknown>)
+
+==== REQ-SYS-008: Precondition Verification
+
+**Description**:: All public API functions shall verify their preconditions at entry.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Test
+
+**Implements (children)**:: REQ-ARRAY-005, REQ-ARRAY-007, REQ-HASH-001, REQ-HASH-002, REQ-HEAP-001, REQ-MAP-001, REQ-MEMORY-003, REQ-POINTER-004, REQ-POINTER-005, REQ-QUEUE-002, REQ-SB-003, REQ-SB-012, REQ-SM-009, REQ-SM-011, REQ-STACK-002, REQ-TIME-001, REQ-TIME-019
+
+**Code Traces**::
+  * `include/juno/macros.h:50` (<unknown>)
+  * `include/juno/macros.h:88` (<unknown>)
+
+**Test Traces**::
+  * `tests/test_pointer.c:151` (test_pointer_verify_null_addr)
+
+==== REQ-SYS-009: No Global Mutable State
+
+**Description**:: The library shall contain no global mutable state.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Inspection
+
+**Implements (children)**:: REQ-APP-001, REQ-ARRAY-001, REQ-CRC-001, REQ-HASH-001, REQ-HEAP-001, REQ-IO-001, REQ-LOG-001, REQ-MAP-001, REQ-MATH-001, REQ-MEMORY-001, REQ-MODULE-001, REQ-MTX-001, REQ-POINTER-001, REQ-QUEUE-001, REQ-SB-001, REQ-SCH-001, REQ-SM-001, REQ-STACK-001, REQ-STATUS-001, REQ-TIME-001
+
+**Code Traces**::
+  * `include/juno/module.h:54` (JUNO_MODULE_DECLARE)
+
+==== REQ-SYS-010: API Vtable Validation
+
+**Description**:: All modules shall verify that their API vtable and all function pointers within it reference valid (non-NULL) memory before performing any operation.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Implements (children)**:: REQ-APP-001, REQ-ARRAY-006, REQ-HEAP-007, REQ-IO-001, REQ-LOG-001, REQ-MAP-009, REQ-MEMORY-001, REQ-MTX-005, REQ-POINTER-004, REQ-QUEUE-001, REQ-SB-010, REQ-SCH-001, REQ-SM-001, REQ-SM-010, REQ-STACK-001, REQ-TIME-001
+
+**Code Traces**::
+  * `include/juno/macros.h:50` (<unknown>)
+
+**Test Traces**::
+  * `tests/test_array.c:238` (test_array_verify_null_api)
+
+==== REQ-SYS-011: Injected Dependency Validation
+
+**Description**:: All modules shall verify that all injected dependency pointers are valid (non-NULL) before performing any operation.
+
+**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Implements (children)**:: REQ-HEAP-008, REQ-MAP-010, REQ-MEMORY-003, REQ-QUEUE-002, REQ-SB-010, REQ-SB-011, REQ-SM-010, REQ-STACK-002, REQ-TIME-001
+
+**Code Traces**::
+  * `include/juno/macros.h:50` (<unknown>)
+
+**Test Traces**::
+  * `tests/test_sb.c:346` (test_sb_broker_verify_null_registry)
+
+=== Module: TIME
+
+==== REQ-TIME-001: Timestamp Representation
+
+**Description**:: The time module shall represent time as a struct with integer seconds and fixed-point fractional subseconds fields.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-001, REQ-SYS-002, REQ-SYS-003, REQ-SYS-004, REQ-SYS-005, REQ-SYS-006, REQ-SYS-007, REQ-SYS-008, REQ-SYS-009, REQ-SYS-010, REQ-SYS-011
+
+**Code Traces**::
+  * `include/juno/time/time_api.h:104` (<unknown>)
+
+==== REQ-TIME-002: Time API Interface
+
+**Description**:: The time module shall define a vtable-based API with Now, AddTime, SubtractTime, SleepTo, Sleep, and conversion operations.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Inspection
+
+**Uses (parent)**:: REQ-SYS-006
+
+**Code Traces**::
+  * `include/juno/time/time_api.h:128` (JUNO_TIMESTAMP_RESULT_T)
+
+==== REQ-TIME-003: AddTime Operation
+
+**Description**:: The time module shall add a duration to a timestamp in-place.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:26` (JunoTime_AddTime)
+
+**Test Traces**::
+  * `tests/test_time.c:86` (test_AddTime_no_subseconds_overflow)
+
+==== REQ-TIME-004: AddTime Subsecond Carry-Over
+
+**Description**:: The time module shall carry over subseconds to seconds when subsecond addition overflows.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-003
+
+**Code Traces**::
+  * `src/juno_time.c:26` (JunoTime_AddTime)
+
+**Test Traces**::
+  * `tests/test_time.c:97` (test_AddTime_with_subseconds_overflow)
+
+==== REQ-TIME-005: SubtractTime Operation
+
+**Description**:: The time module shall subtract a duration from a timestamp in-place.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:49` (JunoTime_SubtractTime)
+
+**Test Traces**::
+  * `tests/test_time.c:110` (test_SubtractTime_no_borrow)
+
+==== REQ-TIME-006: SubtractTime Subsecond Borrow
+
+**Description**:: The time module shall borrow from seconds when subsecond subtraction underflows.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-005
+
+**Code Traces**::
+  * `src/juno_time.c:49` (JunoTime_SubtractTime)
+
+**Test Traces**::
+  * `tests/test_time.c:122` (test_SubtractTime_borrow_subseconds)
+
+==== REQ-TIME-007: SubtractTime Negative Saturation
+
+**Description**:: The time module shall saturate the result to zero seconds and zero subseconds when subtraction would produce negative time.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-005
+
+**Code Traces**::
+  * `src/juno_time.c:49` (JunoTime_SubtractTime)
+
+**Test Traces**::
+  * `tests/test_time.c:135` (test_SubtractTime_invalid_lower_seconds)
+  * `tests/test_time.c:146` (test_SubtractTime_invalid_zero_seconds_insufficient_subseconds)
+
+==== REQ-TIME-008: SubtractTime Negative Error
+
+**Description**:: The time module shall return JUNO_STATUS_INVALID_DATA_ERROR when subtraction would produce negative time.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-007
+
+**Code Traces**::
+  * `src/juno_time.c:49` (JunoTime_SubtractTime)
+
+**Test Traces**::
+  * `tests/test_time.c:135` (test_SubtractTime_invalid_lower_seconds)
+  * `tests/test_time.c:146` (test_SubtractTime_invalid_zero_seconds_insufficient_subseconds)
+
+==== REQ-TIME-009: Timestamp to Nanoseconds Conversion
+
+**Description**:: The time module shall convert a timestamp to nanoseconds using half-up rounding.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:78` (JunoTime_TimestampToNanos)
+
+**Test Traces**::
+  * `tests/test_time.c:157` (test_TimestampToNanos_success_integer)
+  * `tests/test_time.c:166` (test_TimestampToNanos_success_fractional)
+
+==== REQ-TIME-010: Timestamp to Microseconds Conversion
+
+**Description**:: The time module shall convert a timestamp to microseconds using half-up rounding.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:115` (JunoTime_TimestampToMicros)
+
+**Test Traces**::
+  * `tests/test_time.c:177` (test_TimestampToMicros_success_integer)
+  * `tests/test_time.c:186` (test_TimestampToMicros_success_fractional)
+
+==== REQ-TIME-011: Timestamp to Milliseconds Conversion
+
+**Description**:: The time module shall convert a timestamp to milliseconds using half-up rounding.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:149` (JunoTime_TimestampToMillis)
+
+**Test Traces**::
+  * `tests/test_time.c:196` (test_TimestampToMillis_success_integer)
+  * `tests/test_time.c:205` (test_TimestampToMillis_success_fractional)
+
+==== REQ-TIME-012: Nanoseconds to Timestamp Conversion
+
+**Description**:: The time module shall convert nanoseconds to a timestamp with integer seconds and fractional subseconds.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:184` (JunoTime_NanosToTimestamp)
+
+**Test Traces**::
+  * `tests/test_time.c:215` (test_NanosToTimestamp_zero)
+  * `tests/test_time.c:225` (test_NanosToTimestamp_integer_and_fractional)
+
+==== REQ-TIME-013: Microseconds to Timestamp Conversion
+
+**Description**:: The time module shall convert microseconds to a timestamp with integer seconds and fractional subseconds.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:202` (JunoTime_MicrosToTimestamp)
+
+**Test Traces**::
+  * `tests/test_time.c:240` (test_MicrosToTimestamp_zero)
+  * `tests/test_time.c:250` (test_MicrosToTimestamp_integer_and_fractional)
+
+==== REQ-TIME-014: Milliseconds to Timestamp Conversion
+
+**Description**:: The time module shall convert milliseconds to a timestamp with integer seconds and fractional subseconds.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:220` (JunoTime_MillisToTimestamp)
+
+**Test Traces**::
+  * `tests/test_time.c:265` (test_MillisToTimestamp_zero)
+  * `tests/test_time.c:275` (test_MillisToTimestamp_integer_and_fractional)
+
+==== REQ-TIME-015: Timestamp to Double Conversion
+
+**Description**:: The time module shall convert a timestamp to a double-precision floating-point seconds value.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:239` (JunoTime_TimestampToDouble)
+
+**Test Traces**::
+  * `tests/test_time.c:314` (test_timestamp_to_double)
+
+==== REQ-TIME-016: Double to Timestamp Conversion
+
+**Description**:: The time module shall convert a non-negative double-precision seconds value to a timestamp.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-002
+
+**Code Traces**::
+  * `src/juno_time.c:254` (JunoTime_DoubleToTimestamp)
+
+**Test Traces**::
+  * `tests/test_time.c:324` (test_double_to_timestamp_success)
+  * `tests/test_time.c:333` (test_double_to_timestamp_zero)
+
+==== REQ-TIME-017: Double to Timestamp Range Rejection
+
+**Description**:: The time module shall return JUNO_STATUS_INVALID_DATA_ERROR for negative or out-of-range double inputs.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-TIME-016
+
+**Code Traces**::
+  * `src/juno_time.c:254` (JunoTime_DoubleToTimestamp)
+
+**Test Traces**::
+  * `tests/test_time.c:342` (test_double_to_timestamp_negative_rejected)
+
+==== REQ-TIME-018: Conversion Overflow Detection
+
+**Description**:: The time module shall return JUNO_STATUS_INVALID_DATA_ERROR when a timestamp-to-integer conversion would overflow.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-005
+
+**Code Traces**::
+  * `src/juno_time.c:78` (JunoTime_TimestampToNanos)
+  * `src/juno_time.c:115` (JunoTime_TimestampToMicros)
+  * `src/juno_time.c:149` (JunoTime_TimestampToMillis)
+
+**Test Traces**::
+  * `tests/test_time.c:349` (test_timestamp_to_nanos_overflow)
+
+==== REQ-TIME-019: Null Pointer Rejection
+
+**Description**:: The time module shall return JUNO_STATUS_NULLPTR_ERROR when the time root pointer is NULL.
+
+**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+
+**Verification Method**:: Test
+
+**Uses (parent)**:: REQ-SYS-008
+
+**Code Traces**::
+  * `src/juno_time.c:78` (JunoTime_TimestampToNanos)
+  * `src/juno_time.c:115` (JunoTime_TimestampToMicros)
+  * `src/juno_time.c:149` (JunoTime_TimestampToMillis)
+  * `src/juno_time.c:184` (JunoTime_NanosToTimestamp)
+  * `src/juno_time.c:202` (JunoTime_MicrosToTimestamp)
+  * `src/juno_time.c:220` (JunoTime_MillisToTimestamp)
+  * `src/juno_time.c:239` (JunoTime_TimestampToDouble)
+  * `src/juno_time.c:254` (JunoTime_DoubleToTimestamp)
+
+**Test Traces**::
+  * `tests/test_time.c:362` (test_double_to_timestamp_null_root)
+
+== Traceability Validation Summary
+
+✓ All traceability checks passed.

@@ -69,6 +69,7 @@ extern "C"
 typedef struct JUNO_MEMORY_ALLOC_API_TAG JUNO_MEMORY_ALLOC_API_T;
 typedef struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MEMORY_ALLOC_ROOT_T;
 
+// @{"req": ["REQ-MEMORY-002"]}
 struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
     const JUNO_POINTER_API_T *ptPointerApi;
 );
@@ -76,6 +77,7 @@ struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
 /** @brief Vtable for memory allocation operations.
  *  @ingroup juno_memory_alloc
   */
+// @{"req": ["REQ-MEMORY-001"]}
 struct JUNO_MEMORY_ALLOC_API_TAG
 {
     /// @brief Allocate a memory region of at least zSize bytes.

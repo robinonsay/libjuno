@@ -37,6 +37,7 @@
  *   enumerated by the constants in this module. Optional failure callbacks let
  *   applications log or collect diagnostics without affecting control flow.
  */
+// @{"req": ["REQ-SYS-004", "REQ-SYS-005"]}
 #ifndef JUNO_STATUS_H
 #define JUNO_STATUS_H
 #include <stdint.h>
@@ -46,12 +47,14 @@ extern "C" {
 /** @brief Canonical status type for LibJuno functions.
  *  @ingroup juno_status
  */
+// @{"req": ["REQ-STATUS-001"]}
 typedef int32_t JUNO_STATUS_T;
 /** @defgroup juno_status_codes Status codes
  *  @ingroup juno_status
  *  @brief Well-defined error and success codes used by LibJuno.
  *  @{ 
  */
+// @{"req": ["REQ-STATUS-002"]}
 /** @brief Operation completed successfully. */
 #define JUNO_STATUS_SUCCESS             0
 /** @brief Unspecified error. */
@@ -101,6 +104,7 @@ typedef void JUNO_USER_DATA_T;
  * @param pcCustomMessage Optional, human-readable message with context (may be NULL).
  * @param pvUserData Opaque user data pointer supplied by the caller (may be NULL).
  */
+// @{"req": ["REQ-STATUS-003"]}
 typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData);
 
 /** @brief Recommended maximum length for failure messages.
@@ -120,6 +124,7 @@ typedef void (*JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCust
  * @note This macro does not alter control flow; callers should still return
  *       or handle the error as appropriate.
  */
+// @{"req": ["REQ-STATUS-004"]}
 #define JUNO_FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage) \
 if(pfcnFailureHandler){pfcnFailureHandler(tStatus, pcMessage, pvFailureUserData);}
 

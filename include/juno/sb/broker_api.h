@@ -47,6 +47,7 @@
  *  
  *  @see examples/example_project for single-threaded usage
  */
+// @{"req": ["REQ-SB-013"]}
 #ifndef JUNO_SB_API_H
 #define JUNO_SB_API_H
 #include "juno/ds/array_api.h"
@@ -68,12 +69,14 @@ typedef struct JUNO_SB_PIPE_TAG JUNO_SB_PIPE_T;
 typedef uint32_t JUNO_SB_MID_T;
 
 /// A subscriber pipe that carries messages for a specific MID.
+// @{"req": ["REQ-SB-004"]}
 struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE(JUNO_DS_QUEUE_ROOT_T,
     /// The pipe Id (Message ID / topic).
     JUNO_SB_MID_T iMsgId;
 );
 
 /// Broker root containing the registry of subscriber pipes.
+// @{"req": ["REQ-SB-001"]}
 struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
     /// The pipe registry (array of pointers to pipes).
     JUNO_SB_PIPE_T **ptPipeRegistry;
@@ -83,6 +86,7 @@ struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
     size_t zRegistryCapacity;
 );
 
+// @{"req": ["REQ-SB-002"]}
 struct JUNO_SB_BROKER_API_TAG
 {
     /// @brief Publish a message to all subscribers of tMid.

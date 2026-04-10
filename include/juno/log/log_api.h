@@ -48,17 +48,22 @@ typedef struct JUNO_LOG_API_TAG JUNO_LOG_API_T;
 
 typedef struct JUNO_LOG_ROOT_TAG JUNO_LOG_ROOT_T;
 
+// @{"req": ["REQ-LOG-001"]}
 struct JUNO_LOG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_LOG_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_LOG_API_TAG
 {
     /// @brief Log a debug-level message (most verbose).
+    // @{"req": ["REQ-LOG-002", "REQ-LOG-007"]}
     JUNO_STATUS_T (*LogDebug)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
     /// @brief Log an info-level message.
+    // @{"req": ["REQ-LOG-003", "REQ-LOG-007"]}
     JUNO_STATUS_T (*LogInfo)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
     /// @brief Log a warning-level message.
+    // @{"req": ["REQ-LOG-004", "REQ-LOG-007"]}
     JUNO_STATUS_T (*LogWarning)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
     /// @brief Log an error-level message.
+    // @{"req": ["REQ-LOG-005", "REQ-LOG-007"]}
     JUNO_STATUS_T (*LogError)(const JUNO_LOG_ROOT_T *ptJunoLog, const char *pcMsg, ...);
 };
 

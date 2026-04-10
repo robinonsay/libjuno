@@ -38,7 +38,7 @@
  *    to the root type for API dispatch and failure handling.
  *  - The root contains `ptApi` and failure handler fields and should avoid
  *    hosted dependencies to preserve freestanding portability.
- *  - APIs (vtables) receive a pointer to the root (or compatible view) for
+ *  APIs (vtables) receive a pointer to the root (or compatible view) for
  *    dispatch.
  *
  *  Example (defining a module union):
@@ -51,6 +51,7 @@
  *  @endcode
  *  @{ 
  */
+// @{"req": ["REQ-SYS-002", "REQ-SYS-006", "REQ-SYS-009"]}
 
 
 /**
@@ -107,6 +108,7 @@
  * @note The first member of the union is always the root, accessible via
  *       the alias JUNO_MODULE_SUPER.
  */
+// @{"req": ["REQ-MODULE-004"]}
 #define JUNO_MODULE(API_T, ROOT_T, ...) \
 { \
     ROOT_T JUNO_MODULE_SUPER; \
@@ -123,6 +125,7 @@
  *       `const API_T *ptApi;`, failure handler pointer, and user-data pointer,
  *       followed by user-specified members.
  */
+// @{"req": ["REQ-MODULE-001", "REQ-MODULE-002"]}
 #define JUNO_MODULE_ROOT(API_T, ...) \
 { \
     const API_T *ptApi; \
@@ -154,6 +157,7 @@
  * @note The first member is always the embedded root, accessible via
  *       JUNO_MODULE_SUPER.
  */
+// @{"req": ["REQ-MODULE-003"]}
 #define JUNO_MODULE_DERIVE(ROOT_T, ...) \
 { \
     ROOT_T JUNO_MODULE_SUPER; \
@@ -190,6 +194,7 @@
  *          - `JUNO_STATUS_T tStatus;`
  *          - `OK_T tOk;`
  */
+// @{"req": ["REQ-MODULE-005"]}
 #define JUNO_MODULE_RESULT(NAME_T, OK_T) \
 typedef struct NAME_T \
 { \
@@ -233,6 +238,7 @@ typedef struct NAME_T \
  *          - `bool bIsSome;`
  *          - `SOME_T tSome;`
  */
+// @{"req": ["REQ-MODULE-006"]}
 #define JUNO_MODULE_OPTION(NAME_T, SOME_T) \
 typedef struct NAME_T \
 { \

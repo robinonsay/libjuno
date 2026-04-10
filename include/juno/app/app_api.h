@@ -49,15 +49,19 @@ typedef struct JUNO_APP_API_TAG JUNO_APP_API_T;
 /// The application module
 typedef struct JUNO_APP_ROOT_TAG JUNO_APP_ROOT_T;
 
+// @{"req": ["REQ-APP-001"]}
 struct JUNO_APP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_APP_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_APP_API_TAG
 {
     /// @brief Called once to initialize resources before processing.
+    // @{"req": ["REQ-APP-002"]}
     JUNO_STATUS_T (*OnStart)(JUNO_APP_ROOT_T *ptJunoApp);
     /// @brief Main processing routine; may be invoked repeatedly.
+    // @{"req": ["REQ-APP-003"]}
     JUNO_STATUS_T (*OnProcess)(JUNO_APP_ROOT_T *ptJunoApp);
     /// @brief Called once prior to shutdown to release resources.
+    // @{"req": ["REQ-APP-004"]}
     JUNO_STATUS_T (*OnExit)(JUNO_APP_ROOT_T *ptJunoApp);
 };
 

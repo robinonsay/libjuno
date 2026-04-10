@@ -38,10 +38,11 @@ TESTS_DIR = PROJECT_DIR / "tests"
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / "docs" / "generated"
 
 # Regex for annotation tags in source and test files
-# Matches: // @{"req": ["REQ-XXX-001", ...]}
+# Matches: // @{"req": ["REQ-XXX-001", ...]}   (C/C++ style)
+# Matches: # @{"req": ["REQ-XXX-001", ...]}    (CMake/Python style)
 # Matches: // @{"verify": ["REQ-XXX-001", ...]}
 TAG_PATTERN = re.compile(
-    r'//\s*@(\{.*?\})', re.DOTALL
+    r'(?://|#)\s*@(\{.*?\})', re.DOTALL
 )
 
 
@@ -172,9 +173,43 @@ def _find_function_name_after(lines: list[str], tag_line_idx: int) -> str:
     return "<unknown>"
 
 
+def _scan_file(fpath: Path, tag_key: str) -> list:
+    """Scan a single file for annotation tags and return trace entries."""
+    traces = []
+    with open(fpath, "r", encoding="utf-8") as f:
+        content = f.read()
+    lines = content.splitlines()
+    for i, line in enumerate(lines):
+        m = TAG_PATTERN.search(line)
+        if not m:
+            continue
+        try:
+            tag_data = json.loads(m.group(1))
+        except json.JSONDecodeError:
+            continue
+        ids = tag_data.get(tag_key, [])
+        if not ids:
+            continue
+        func_name = _find_function_name_after(lines, i)
+        try:
+            rel_path = str(fpath.relative_to(PROJECT_DIR))
+        except ValueError:
+            rel_path = str(fpath)
+        trace_cls = TestTrace if tag_key == "verify" else CodeTrace
+        traces.append(trace_cls(
+            file=rel_path,
+            line=i + 1,
+            function=func_name,
+            req_ids=ids,
+        ))
+    return traces
+
+
 def scan_annotations(directories: list[Path],
                      extensions: tuple[str, ...] = (".c", ".h", ".cpp", ".hpp"),
-                     tag_key: str = "req"
+                     tag_key: str = "req",
+                     extra_files: Optional[list[Path]] = None,
+                     filenames: Optional[tuple[str, ...]] = None,
                      ) -> list:
     """Scan source files for @{"req": [...]} or @{"verify": [...]} annotations.
 
@@ -186,6 +221,10 @@ def scan_annotations(directories: list[Path],
         File extensions to include.
     tag_key : str
         The JSON key to look for ("req" or "verify").
+    extra_files : list[Path] | None
+        Additional individual files to scan (any extension).
+    filenames : tuple[str, ...] | None
+        Additional exact filenames to match (e.g. ``("CMakeLists.txt",)``).
 
     Returns
     -------
@@ -197,44 +236,31 @@ def scan_annotations(directories: list[Path],
             continue
         for root, _dirs, files in os.walk(directory):
             for fname in sorted(files):
-                if not fname.endswith(extensions):
+                matches_ext = fname.endswith(extensions)
+                matches_name = filenames and fname in filenames
+                if not (matches_ext or matches_name):
                     continue
                 fpath = Path(root) / fname
-                with open(fpath, "r", encoding="utf-8") as f:
-                    content = f.read()
-                lines = content.splitlines()
-                for i, line in enumerate(lines):
-                    m = TAG_PATTERN.search(line)
-                    if not m:
-                        continue
-                    try:
-                        tag_data = json.loads(m.group(1))
-                    except json.JSONDecodeError:
-                        continue
-                    ids = tag_data.get(tag_key, [])
-                    if not ids:
-                        continue
-                    func_name = _find_function_name_after(lines, i)
-                    try:
-                        rel_path = str(fpath.relative_to(PROJECT_DIR))
-                    except ValueError:
-                        rel_path = str(fpath)
-                    trace_cls = TestTrace if tag_key == "verify" else CodeTrace
-                    traces.append(trace_cls(
-                        file=rel_path,
-                        line=i + 1,
-                        function=func_name,
-                        req_ids=ids,
-                    ))
+                traces.extend(_scan_file(fpath, tag_key))
+    # Scan individual extra files
+    for fpath in (extra_files or []):
+        if fpath.is_file():
+            traces.extend(_scan_file(fpath, tag_key))
     return traces
 
 
 def scan_code_traces(module_filter: Optional[str] = None) -> list[CodeTrace]:
-    """Scan src/ and include/ for @{"req": [...]} annotations."""
+    """Scan src/, include/, and cmake/ for @{"req": [...]} annotations.
+
+    Also scans the top-level CMakeLists.txt.
+    """
+    cmake_dir = PROJECT_DIR / "cmake"
     traces = scan_annotations(
-        [SRC_DIR, INCLUDE_DIR],
+        [SRC_DIR, INCLUDE_DIR, cmake_dir],
         extensions=(".c", ".h"),
         tag_key="req",
+        extra_files=[PROJECT_DIR / "CMakeLists.txt"],
+        filenames=("CMakeLists.txt",),
     )
     if module_filter:
         mod = module_filter.upper()
@@ -872,10 +898,13 @@ Examples:
         )
 
     print("Scanning code annotations...", file=sys.stderr)
+    cmake_dir = project_dir / "cmake"
     code_traces = scan_annotations(
-        [src_dir, include_dir],
+        [src_dir, include_dir, cmake_dir],
         extensions=(".c", ".h"),
         tag_key="req",
+        extra_files=[project_dir / "CMakeLists.txt"],
+        filenames=("CMakeLists.txt",),
     )
     if args.module:
         mod = args.module.upper()

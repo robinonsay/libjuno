@@ -68,8 +68,10 @@ consistency and produce AsciiDoc, HTML, and PDF outputs.
 
 The Python tool must:
 - Scan `requirements/` for all `requirements.json` files
-- Scan `src/`, `include/` for `@{"req": [...]}` annotations
+- Scan `src/`, `include/` for `@{"req": [...]}` annotations (`.c`, `.h` files)
 - Scan `tests/` for `@{"verify": [...]}` annotations
+- Scan build system files (`CMakeLists.txt`, `cmake/`) for `@{"req": [...]}` annotations
+- Support both `//` (C/C++) and `#` (CMake/Python) comment-style annotations
 - Parse and cross-reference all data
 - Validate consistency (report warnings/errors)
 - Generate AsciiDoc output files
@@ -77,6 +79,22 @@ The Python tool must:
 - Invoke `asciidoctor-pdf` for PDF output
 - Accept CLI arguments: `--type srs|sdd|rtm|all`, `--format adoc|html|pdf|all`,
   `--module <name>`, `--output-dir <path>`
+
+## Lessons Learned
+
+1. **Trace to the enforcement mechanism, not the design philosophy.** When a
+   requirement is enforced by compiler flags (e.g., `-nostdlib -ffreestanding`),
+   trace it to the build system file that sets those flags — not to a header
+   that conceptually embodies the constraint. The trace must point to the thing
+   that **makes the requirement true**.
+
+2. **Fix the tooling, don't work around it.** If the scanner can't see a file
+   where a trace legitimately belongs, improve the scanner. Never move a trace
+   to a less-accurate location just to satisfy the tool.
+
+3. **Verify all call sites after modifying a shared function.** If a utility
+   function like `scan_annotations()` is called from multiple places (e.g., a
+   helper wrapper AND `main()`), update every call site — not just the wrapper.
 
 ## Constraints
 

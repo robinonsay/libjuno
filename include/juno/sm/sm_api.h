@@ -56,11 +56,13 @@ JUNO_MODULE_RESULT(JUNO_SM_RESULT_OPTION_STATE_ROOT_T, JUNO_SM_OPTION_STATE_ROOT
 JUNO_MODULE_RESULT(JUNO_SM_RESULT_OPTION_STATE_T, JUNO_SM_OPTION_STATE_T);
 
 /// A State Machine State
+// @{"req": ["REQ-SM-002"]}
 struct JUNO_SM_STATE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SM_STATE_API_T,
     JUNO_SM_ROOT_T *ptSm;
     JUNO_SM_OPTION_STATE_T tOptionNextState;
 );
 
+// @{"req": ["REQ-SM-003"]}
 struct JUNO_SM_STATE_API_TAG
 {
     /// @brief Action executed while in this state.
@@ -71,6 +73,7 @@ struct JUNO_SM_STATE_API_TAG
     JUNO_STATUS_T (*ResetState)(JUNO_SM_STATE_ROOT_T *ptJunoSm);
 };
 
+// @{"req": ["REQ-SM-001"]}
 struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(void,
     /// The current state
     JUNO_SM_STATE_ROOT_T *ptCurrentState;

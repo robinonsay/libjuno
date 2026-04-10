@@ -64,6 +64,7 @@ const JUNO_TIME_API_T tTimeApi =
     .MicrosToTimestamp = JunoTime_MicrosToTimestamp,
     .MillisToTimestamp = JunoTime_MillisToTimestamp,
     .TimestampToDouble = JunoTime_TimestampToDouble,
+    .DoubleToTimestamp = JunoTime_DoubleToTimestamp,
 };
 
 // Global module instance
@@ -320,6 +321,51 @@ static void test_timestamp_to_double(void)
     TEST_ASSERT_EQUAL(2.0, tResult.tOk);
 }
 
+// @{"verify": ["REQ-TIME-016"]}
+static void test_double_to_timestamp_success(void)
+{
+    JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->DoubleToTimestamp(&tTimeMod, 1.5);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_EQUAL(1, tResult.tOk.iSeconds);
+    TEST_ASSERT_TRUE(tResult.tOk.iSubSeconds > 0);
+}
+
+// @{"verify": ["REQ-TIME-016"]}
+static void test_double_to_timestamp_zero(void)
+{
+    JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->DoubleToTimestamp(&tTimeMod, 0.0);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    TEST_ASSERT_EQUAL(0, tResult.tOk.iSeconds);
+    TEST_ASSERT_EQUAL(0, tResult.tOk.iSubSeconds);
+}
+
+// @{"verify": ["REQ-TIME-017"]}
+static void test_double_to_timestamp_negative_rejected(void)
+{
+    JUNO_TIMESTAMP_RESULT_T tResult = tTimeMod.ptApi->DoubleToTimestamp(&tTimeMod, -1.0);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_INVALID_DATA_ERROR, tResult.tStatus);
+}
+
+// @{"verify": ["REQ-TIME-018"]}
+static void test_timestamp_to_nanos_overflow(void)
+{
+    /* With uint32 seconds and uint64 nanos, UINT32_MAX seconds in nanos
+     * (4294967295 * 1e9 ≈ 4.3e18) fits in uint64, so the overflow guard
+     * does not trigger.  Verify the guard does not false-positive at max. */
+    JUNO_TIMESTAMP_T tMax = { .iSeconds = UINT32_MAX, .iSubSeconds = 0 };
+    JUNO_TIME_NANOS_RESULT_T tResult = tTimeMod.ptApi->TimestampToNanos(&tTimeMod, tMax);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
+    /* Verify the value is reasonable */
+    TEST_ASSERT_TRUE(tResult.tOk > 0);
+}
+
+// @{"verify": ["REQ-TIME-019"]}
+static void test_double_to_timestamp_null_root(void)
+{
+    JUNO_TIMESTAMP_RESULT_T tResult = JunoTime_DoubleToTimestamp(NULL, 1.0);
+    TEST_ASSERT_EQUAL(JUNO_STATUS_NULLPTR_ERROR, tResult.tStatus);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -345,5 +391,10 @@ int main(void)
     RUN_TEST(test_SleepTo_returns_success);
     RUN_TEST(test_Sleep_returns_success);
     RUN_TEST(test_timestamp_to_double);
+    RUN_TEST(test_double_to_timestamp_success);
+    RUN_TEST(test_double_to_timestamp_zero);
+    RUN_TEST(test_double_to_timestamp_negative_rejected);
+    RUN_TEST(test_timestamp_to_nanos_overflow);
+    RUN_TEST(test_double_to_timestamp_null_root);
     return UNITY_END();
 }
