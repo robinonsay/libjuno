@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.2</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -159,7 +159,7 @@ Core Concepts</h1>
 <div class="line">    <a class="code hl_typedef" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> (*Operation)(MY_ROOT_T *ptModule, ...);</div>
 <div class="line">    JUNO_RESULT_T (*Query)(<span class="keyword">const</span> MY_ROOT_T *ptModule, ...);</div>
 <div class="line">} MY_API_T;</div>
-<div class="ttc" id="agroup__juno__status_html_ga37f8e6b135f0c1a21a3a34b19d1772aa"><div class="ttname"><a href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></div><div class="ttdeci">int32_t JUNO_STATUS_T</div><div class="ttdoc">Canonical status type for LibJuno functions.</div><div class="ttdef"><b>Definition</b> status.h:49</div></div>
+<div class="ttc" id="agroup__juno__status_html_ga37f8e6b135f0c1a21a3a34b19d1772aa"><div class="ttname"><a href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></div><div class="ttdeci">int32_t JUNO_STATUS_T</div><div class="ttdoc">Canonical status type for LibJuno functions.</div><div class="ttdef"><b>Definition</b> status.h:51</div></div>
 </div><!-- fragment --><p>This pattern enables:</p><ul>
 <li><b>Runtime polymorphism</b>: Different implementations behind the same interface</li>
 <li><b>Dependency injection</b>: Modules receive their dependencies as API pointers</li>
@@ -232,9 +232,9 @@ Define a Module</h2>
 <div class="line"><span class="keyword">union </span>MY_MODULE_T <a class="code hl_define" href="group__juno__module.html#ga1fa4102a6ee89d1a323fff7a29e33d47">JUNO_MODULE</a>(MY_API_T, MY_ROOT_T,</div>
 <div class="line">    MY_IMPL_T tImpl;</div>
 <div class="line">);</div>
-<div class="ttc" id="agroup__juno__module_html_ga1fa4102a6ee89d1a323fff7a29e33d47"><div class="ttname"><a href="group__juno__module.html#ga1fa4102a6ee89d1a323fff7a29e33d47">JUNO_MODULE</a></div><div class="ttdeci">#define JUNO_MODULE(API_T, ROOT_T,...)</div><div class="ttdoc">Define a module union consisting of the root and all derivations.</div><div class="ttdef"><b>Definition</b> module.h:110</div></div>
-<div class="ttc" id="agroup__juno__module_html_gad75a2500587693c7790d082005932ffc"><div class="ttname"><a href="group__juno__module.html#gad75a2500587693c7790d082005932ffc">JUNO_MODULE_DERIVE</a></div><div class="ttdeci">#define JUNO_MODULE_DERIVE(ROOT_T,...)</div><div class="ttdoc">Implement a derived module embedding the root as the first member.</div><div class="ttdef"><b>Definition</b> module.h:157</div></div>
-<div class="ttc" id="agroup__juno__module_html_gad90d24375445f98866a7d7d7f99e684f"><div class="ttname"><a href="group__juno__module.html#gad90d24375445f98866a7d7d7f99e684f">JUNO_MODULE_ROOT</a></div><div class="ttdeci">#define JUNO_MODULE_ROOT(API_T,...)</div><div class="ttdoc">Implement a module root struct containing ptApi and failure fields.</div><div class="ttdef"><b>Definition</b> module.h:126</div></div>
+<div class="ttc" id="agroup__juno__module_html_ga1fa4102a6ee89d1a323fff7a29e33d47"><div class="ttname"><a href="group__juno__module.html#ga1fa4102a6ee89d1a323fff7a29e33d47">JUNO_MODULE</a></div><div class="ttdeci">#define JUNO_MODULE(API_T, ROOT_T,...)</div><div class="ttdoc">Define a module union consisting of the root and all derivations.</div><div class="ttdef"><b>Definition</b> module.h:112</div></div>
+<div class="ttc" id="agroup__juno__module_html_gad75a2500587693c7790d082005932ffc"><div class="ttname"><a href="group__juno__module.html#gad75a2500587693c7790d082005932ffc">JUNO_MODULE_DERIVE</a></div><div class="ttdeci">#define JUNO_MODULE_DERIVE(ROOT_T,...)</div><div class="ttdoc">Implement a derived module embedding the root as the first member.</div><div class="ttdef"><b>Definition</b> module.h:161</div></div>
+<div class="ttc" id="agroup__juno__module_html_gad90d24375445f98866a7d7d7f99e684f"><div class="ttname"><a href="group__juno__module.html#gad90d24375445f98866a7d7d7f99e684f">JUNO_MODULE_ROOT</a></div><div class="ttdeci">#define JUNO_MODULE_ROOT(API_T,...)</div><div class="ttdoc">Implement a module root struct containing ptApi and failure fields.</div><div class="ttdef"><b>Definition</b> module.h:129</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md31"></a>
 Initialize and Use</h2>
 <div class="fragment"><div class="line"><span class="comment">// Implementation</span></div>
@@ -264,7 +264,7 @@ Initialize and Use</h2>
 <div class="line"><span class="keywordtype">void</span> UseModule(MY_ROOT_T *ptModule) {</div>
 <div class="line">    ptModule-&gt;ptApi-&gt;DoWork(ptModule);</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__juno__status__codes_html_gad89a3ea5be5fc21a4b97e2b1e761c084"><div class="ttname"><a href="group__juno__status__codes.html#gad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">#define JUNO_STATUS_SUCCESS</div><div class="ttdoc">Operation completed successfully.</div><div class="ttdef"><b>Definition</b> status.h:56</div></div>
+<div class="ttc" id="agroup__juno__status__codes_html_gad89a3ea5be5fc21a4b97e2b1e761c084"><div class="ttname"><a href="group__juno__status__codes.html#gad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">#define JUNO_STATUS_SUCCESS</div><div class="ttdoc">Operation completed successfully.</div><div class="ttdef"><b>Definition</b> status.h:59</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md32"></a>
 Traits vs Modules</h1>
 <p>LibJuno distinguishes between <b>modules</b> and <b>traits</b>:</p>

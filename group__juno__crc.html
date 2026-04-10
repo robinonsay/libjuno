@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.2</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -144,10 +144,10 @@ Collaboration diagram for CRC utilities:</div>
 <div class="line">uint32_t zip = <a class="code hl_define" href="crc_8h.html#a898fcba043598d58c4e1801191e767cb">JUNO_ZIP_CRC_INIT</a>;</div>
 <div class="line">zip = <a class="code hl_function" href="crc_8h.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a>(zip, chunk1, len1);           <span class="comment">// returns XOR&#39;ed</span></div>
 <div class="line">zip = <a class="code hl_function" href="crc_8h.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a>(zip ^ 0xFFFFFFFF, chunk2, len2); <span class="comment">// undo XOR first</span></div>
-<div class="ttc" id="acrc_8h_html_a0aa54f766ef152dc09579979a81d59da"><div class="ttname"><a href="crc_8h.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdoc">Update ZIP CRC (CRC-32) with new data.</div><div class="ttdef"><b>Definition</b> juno_zip.c:20</div></div>
+<div class="ttc" id="acrc_8h_html_a0aa54f766ef152dc09579979a81d59da"><div class="ttname"><a href="crc_8h.html#a0aa54f766ef152dc09579979a81d59da">Juno_CrcZipUpdate</a></div><div class="ttdeci">uint32_t Juno_CrcZipUpdate(uint32_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdoc">Update ZIP CRC (CRC-32) with new data.</div><div class="ttdef"><b>Definition</b> juno_zip.c:21</div></div>
 <div class="ttc" id="acrc_8h_html_a433468a6dfe3d9560452e392ec78bd51"><div class="ttname"><a href="crc_8h.html#a433468a6dfe3d9560452e392ec78bd51">JUNO_ARC_CRC_INIT</a></div><div class="ttdeci">#define JUNO_ARC_CRC_INIT</div><div class="ttdoc">Initial seed for CRC-16/ARC (IBM-16) computations.</div><div class="ttdef"><b>Definition</b> crc.h:76</div></div>
 <div class="ttc" id="acrc_8h_html_a898fcba043598d58c4e1801191e767cb"><div class="ttname"><a href="crc_8h.html#a898fcba043598d58c4e1801191e767cb">JUNO_ZIP_CRC_INIT</a></div><div class="ttdeci">#define JUNO_ZIP_CRC_INIT</div><div class="ttdoc">Initial seed for ZIP/PKZIP CRC-32 computations (0xFFFFFFFF).</div><div class="ttdef"><b>Definition</b> crc.h:156</div></div>
-<div class="ttc" id="acrc_8h_html_aab923f1b240886f9d39c82768c76c9cd"><div class="ttname"><a href="crc_8h.html#aab923f1b240886f9d39c82768c76c9cd">Juno_CrcArcUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcArcUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdoc">Update ARC CRC with new data.</div><div class="ttdef"><b>Definition</b> juno_arc.c:21</div></div>
+<div class="ttc" id="acrc_8h_html_aab923f1b240886f9d39c82768c76c9cd"><div class="ttname"><a href="crc_8h.html#aab923f1b240886f9d39c82768c76c9cd">Juno_CrcArcUpdate</a></div><div class="ttdeci">uint16_t Juno_CrcArcUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)</div><div class="ttdoc">Update ARC CRC with new data.</div><div class="ttdef"><b>Definition</b> juno_arc.c:22</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

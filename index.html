@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.2</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -186,13 +186,22 @@ Documentation</h2>
 <li><a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html">Memory Module</a></li>
 <li><a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html">Examples Guide</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md49"></a>
+<h3><a class="anchor" id="autotoc_md49"></a>
+Requirements Traceability Artifacts</h3>
+<p>LibJuno maintains a <b>bi-directional traceability system</b> linking requirements, design, code, and tests.</p>
+<ul>
+<li><a href="docs/generated/srs/srs.html">SRS (Software Requirements Specification)</a></li>
+<li><a href="docs/generated/rtm/rtm.html">RTM (Requirements Traceability Matrix)</a></li>
+<li><a href="docs/sdd/sdd.html">SDD (Software Design Description)</a></li>
+<li>Traceability System Overview</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md50"></a>
 Dependencies</h2>
 <p>LibJuno is designed to minimize external dependencies for maximum portability.</p>
 <p><b>Core Library</b>: No external dependencies (can build freestanding with <code>-DJUNO_FREESTANDING=ON</code>)</p>
 <p><b>Testing Only</b>: Unity test framework (included in <code>deps/unity/</code>)</p>
 <p><b>Note</b>: Examples and tutorials may use standard library features (printf, etc.) for demonstration purposes, but the core library supports true freestanding operation where you provide your own I/O implementations.</p>
-<h2><a class="anchor" id="autotoc_md50"></a>
+<h2><a class="anchor" id="autotoc_md51"></a>
 Building and Testing</h2>
 <ol type="1">
 <li>Configure (static library by default):<ul>
@@ -210,7 +219,7 @@ Building and Testing</h2>
 </ul>
 </li>
 </ol>
-<h3><a class="anchor" id="autotoc_md51"></a>
+<h3><a class="anchor" id="autotoc_md52"></a>
 CMake Build Options</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -234,7 +243,7 @@ CMake Build Options</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>JUNO_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Build example programs (requires hosted environment)   </td></tr>
 </table>
-<h4><a class="anchor" id="autotoc_md52"></a>
+<h4><a class="anchor" id="autotoc_md53"></a>
 Freestanding Mode</h4>
 <p>LibJuno is designed to support <b>true freestanding builds</b> for bare-metal and RTOS environments:</p>
 <div class="fragment"><div class="line">cmake -S . -B build -DJUNO_FREESTANDING=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo</div>
@@ -246,7 +255,7 @@ Freestanding Mode</h4>
 <li>You provide platform-specific implementations (time, logging, I/O) via dependency injection</li>
 </ul>
 <p><b>Note</b>: Tests and examples require a hosted environment and cannot be built in freestanding mode.</p>
-<h4><a class="anchor" id="autotoc_md53"></a>
+<h4><a class="anchor" id="autotoc_md54"></a>
 Development and Testing Workflow</h4>
 <p>For comprehensive testing with sanitizers:</p>
 <div class="fragment"><div class="line"># Configure with tests and sanitizers</div>
@@ -262,14 +271,14 @@ Development and Testing Workflow</h4>
 <div class="line">cmake --build build -j</div>
 <div class="line">ctest --test-dir build</div>
 <div class="line"># Generate coverage report with lcov/genhtml</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md54"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md55"></a>
 Installation</h2>
 <p>Install headers and library to a system or staging prefix:</p>
 <div class="fragment"><div class="line">cmake --install build --prefix /path/to/install</div>
 </div><!-- fragment --><p>For CMake-based projects, LibJuno provides package configuration files:</p>
 <div class="fragment"><div class="line">find_package(juno REQUIRED)</div>
 <div class="line">target_link_libraries(your_target PRIVATE juno::juno)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md55"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md56"></a>
 Contributing</h2>
 <p>Contributions are welcome! Please:</p><ol type="1">
 <li>Ensure all tests pass with sanitizers enabled</li>
@@ -277,7 +286,7 @@ Contributing</h2>
 <li>Update documentation for API changes</li>
 <li>Follow existing code style and conventions</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 Inspiration for the Name</h2>
 <p>Juno is the name of my wonderful dog and she has brought me so much comfort and stability throughout the years. I wanted to honor her legacy by naming an open-source library after her. </p>
 </div></div><!-- PageDoc -->

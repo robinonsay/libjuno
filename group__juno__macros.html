@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.2</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -161,7 +161,7 @@ Macros</h2></td></tr>
 <div class="line">{ \</div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="group__juno__status__codes.html#ga4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a>; \</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__juno__status__codes_html_ga4ae7478f0e9875995d1e1430c39752ff"><div class="ttname"><a href="group__juno__status__codes.html#ga4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a></div><div class="ttdeci">#define JUNO_STATUS_NULLPTR_ERROR</div><div class="ttdoc">A required pointer argument was NULL or invalid.</div><div class="ttdef"><b>Definition</b> status.h:60</div></div>
+<div class="ttc" id="agroup__juno__status__codes_html_ga4ae7478f0e9875995d1e1430c39752ff"><div class="ttname"><a href="group__juno__status__codes.html#ga4ae7478f0e9875995d1e1430c39752ff">JUNO_STATUS_NULLPTR_ERROR</a></div><div class="ttdeci">#define JUNO_STATUS_NULLPTR_ERROR</div><div class="ttdoc">A required pointer argument was NULL or invalid.</div><div class="ttdef"><b>Definition</b> status.h:63</div></div>
 </div><!-- fragment -->
 <p>Returns JUNO_STATUS_NULLPTR_ERROR if the expression is falsy. </p>
 <p>Use to validate required pointers or expressions. Typical usage within a function that returns JUNO_STATUS_T: </p><div class="fragment"><div class="line"><a class="code hl_typedef" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> f(<span class="keywordtype">void</span> *p) {</div>
@@ -169,9 +169,9 @@ Macros</h2></td></tr>
 <div class="line">    <span class="comment">// safe to use p</span></div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_define" href="group__juno__status__codes.html#gad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a>;</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__juno__macros_html_ga30286e0b0863a08e3a9c0151c698acc4"><div class="ttname"><a href="group__juno__macros.html#ga30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a></div><div class="ttdeci">#define JUNO_ASSERT_EXISTS(ptr)</div><div class="ttdoc">Returns JUNO_STATUS_NULLPTR_ERROR if the expression is falsy.</div><div class="ttdef"><b>Definition</b> macros.h:50</div></div>
-<div class="ttc" id="agroup__juno__status__codes_html_gad89a3ea5be5fc21a4b97e2b1e761c084"><div class="ttname"><a href="group__juno__status__codes.html#gad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">#define JUNO_STATUS_SUCCESS</div><div class="ttdoc">Operation completed successfully.</div><div class="ttdef"><b>Definition</b> status.h:56</div></div>
-<div class="ttc" id="agroup__juno__status_html_ga37f8e6b135f0c1a21a3a34b19d1772aa"><div class="ttname"><a href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></div><div class="ttdeci">int32_t JUNO_STATUS_T</div><div class="ttdoc">Canonical status type for LibJuno functions.</div><div class="ttdef"><b>Definition</b> status.h:49</div></div>
+<div class="ttc" id="agroup__juno__macros_html_ga30286e0b0863a08e3a9c0151c698acc4"><div class="ttname"><a href="group__juno__macros.html#ga30286e0b0863a08e3a9c0151c698acc4">JUNO_ASSERT_EXISTS</a></div><div class="ttdeci">#define JUNO_ASSERT_EXISTS(ptr)</div><div class="ttdoc">Returns JUNO_STATUS_NULLPTR_ERROR if the expression is falsy.</div><div class="ttdef"><b>Definition</b> macros.h:51</div></div>
+<div class="ttc" id="agroup__juno__status__codes_html_gad89a3ea5be5fc21a4b97e2b1e761c084"><div class="ttname"><a href="group__juno__status__codes.html#gad89a3ea5be5fc21a4b97e2b1e761c084">JUNO_STATUS_SUCCESS</a></div><div class="ttdeci">#define JUNO_STATUS_SUCCESS</div><div class="ttdoc">Operation completed successfully.</div><div class="ttdef"><b>Definition</b> status.h:59</div></div>
+<div class="ttc" id="agroup__juno__status_html_ga37f8e6b135f0c1a21a3a34b19d1772aa"><div class="ttname"><a href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a></div><div class="ttdeci">int32_t JUNO_STATUS_T</div><div class="ttdoc">Canonical status type for LibJuno functions.</div><div class="ttdef"><b>Definition</b> status.h:51</div></div>
 </div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ptr</td><td>Pointer/expression to validate (may combine with &amp;&amp;). </td></tr>
@@ -263,7 +263,7 @@ Macros</h2></td></tr>
 <p>Execute the provided failure operation(s) if status is not success. </p>
 <p>Intended for early-returns and cleanup in error paths: </p><div class="fragment"><div class="line"><a class="code hl_typedef" href="group__juno__status.html#ga37f8e6b135f0c1a21a3a34b19d1772aa">JUNO_STATUS_T</a> t = do_something();</div>
 <div class="line"><a class="code hl_define" href="group__juno__macros.html#gaef99be367bacf32d7c30b34e43a475b3">JUNO_ASSERT_SUCCESS</a>(t, <span class="keywordflow">return</span> t);</div>
-<div class="ttc" id="agroup__juno__macros_html_gaef99be367bacf32d7c30b34e43a475b3"><div class="ttname"><a href="group__juno__macros.html#gaef99be367bacf32d7c30b34e43a475b3">JUNO_ASSERT_SUCCESS</a></div><div class="ttdeci">#define JUNO_ASSERT_SUCCESS(tStatus,...)</div><div class="ttdoc">Execute the provided failure operation(s) if status is not success.</div><div class="ttdef"><b>Definition</b> macros.h:87</div></div>
+<div class="ttc" id="agroup__juno__macros_html_gaef99be367bacf32d7c30b34e43a475b3"><div class="ttname"><a href="group__juno__macros.html#gaef99be367bacf32d7c30b34e43a475b3">JUNO_ASSERT_SUCCESS</a></div><div class="ttdeci">#define JUNO_ASSERT_SUCCESS(tStatus,...)</div><div class="ttdoc">Execute the provided failure operation(s) if status is not success.</div><div class="ttdef"><b>Definition</b> macros.h:89</div></div>
 </div><!-- fragment --><p> The variadic statements are emitted verbatim inside the error branch; ensure they are valid in the enclosing scope. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tStatus</td><td>Status value to check. </td></tr>
