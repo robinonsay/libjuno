@@ -1,0 +1,87 @@
+{
+  "module": "ARRAY",
+  "requirements": [
+    {
+      "id": "REQ-ARRAY-001",
+      "title": "Array Initialization",
+      "description": "The array module shall initialize from a caller-provided API vtable and capacity.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-002",
+      "title": "Array SetAt",
+      "description": "The array shall copy a value into a slot at a given index in O(1) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-003",
+      "title": "Array GetAt",
+      "description": "The array shall return a pointer descriptor to the slot at a given index in O(1) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-004",
+      "title": "Array RemoveAt",
+      "description": "The array shall clear the slot at a given index in O(1) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-005",
+      "title": "Array Bounds Checking",
+      "description": "The array shall return JUNO_STATUS_OOB_ERROR when an index is outside its capacity.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-006",
+      "title": "Array Vtable Validation",
+      "description": "The array module shall verify that the array API vtable entries are non-null.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-007",
+      "title": "Array Capacity Validation",
+      "description": "The array module shall verify that the array capacity is non-zero.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    }
+  ]
+}

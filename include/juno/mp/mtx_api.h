@@ -54,6 +54,7 @@ struct JUNO_MP_MTX_API_TAG
 };
 
 /// @brief Verify a mutex instance and its API table.
+// @{"req": ["REQ-MTX-005"]}
 static inline JUNO_STATUS_T JunoMp_MtxVerify(const JUNO_MP_MTX_ROOT_T *ptMtx)
 {
     JUNO_ASSERT_EXISTS(

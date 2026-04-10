@@ -1,0 +1,126 @@
+{
+  "module": "MEMORY",
+  "requirements": [
+    {
+      "id": "REQ-MEMORY-001",
+      "title": "Memory Allocator Interface",
+      "description": "The memory module shall define an abstract allocator API with Get, Update, and Put operations.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-002",
+      "title": "Allocator Pointer API Dependency",
+      "description": "The memory allocator root shall hold an injected pointer API for internal memory operations.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-007",
+        "REQ-POINTER-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-003",
+      "title": "Block Allocator Initialization",
+      "description": "The block allocator shall initialize from caller-provided backing memory, metadata array, type size, alignment, and length.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SYS-011",
+        "REQ-MEMORY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-004",
+      "title": "Block Allocator Get",
+      "description": "The block allocator shall allocate a block of the configured element size in O(1) time.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-005",
+      "title": "Block Allocator Free Block Reuse",
+      "description": "The block allocator shall reuse freed blocks via a LIFO free list when available.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-006",
+      "title": "Block Allocator Put",
+      "description": "The block allocator shall free a previously allocated block in O(1) time.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-007",
+      "title": "Block Allocator Double Free Rejection",
+      "description": "The block allocator shall reject double frees with an error status.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-008",
+      "title": "Block Allocator Invalid Address Rejection",
+      "description": "The block allocator shall reject frees of invalid or misaligned addresses with an error status.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-009",
+      "title": "Block Allocator Update",
+      "description": "The block allocator shall adjust a descriptor's size in-place up to the configured element size.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-010",
+      "title": "Block Allocator No Memory Move",
+      "description": "The block allocator Update shall not move memory when adjusting descriptor size.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-009"
+      ],
+      "implements": []
+    }
+  ]
+}

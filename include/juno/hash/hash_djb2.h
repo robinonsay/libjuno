@@ -44,6 +44,7 @@ extern "C"
  * @param zBuffSize Number of bytes to hash.
  * @return Result containing the hash value or an error for invalid input.
  */
+// @{"req": ["REQ-HASH-001", "REQ-HASH-002", "REQ-HASH-003"]}
 static inline JUNO_RESULT_SIZE_T JunoHash_Djb2(const uint8_t *pcBuff, size_t zBuffSize)
 {
     JUNO_RESULT_SIZE_T tResult = {0, 0};

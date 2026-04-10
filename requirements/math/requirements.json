@@ -1,0 +1,206 @@
+{
+  "module": "MATH",
+  "requirements": [
+    {
+      "id": "REQ-MATH-001",
+      "title": "Math Constants",
+      "description": "The math module shall define double-precision constants for \u03c0, \u03c0/2, \u03c0/4, and e.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-002",
+      "title": "Vector Types",
+      "description": "The math module shall define 2D and 3D vector types in double, float, and int32 precisions.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-003",
+      "title": "Vector Coordinate Access",
+      "description": "Each vector type shall support both named Cartesian field access and raw array indexing.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-004",
+      "title": "Quaternion Type",
+      "description": "The math module shall define a real quaternion type with [s, i, j, k] component order in double precision.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-005",
+      "title": "Vector Addition",
+      "description": "The math module shall compute component-wise vector addition for each vector type.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-006",
+      "title": "Vector Subtraction",
+      "description": "The math module shall compute component-wise vector subtraction for each vector type.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-007",
+      "title": "Vector Scalar Multiplication",
+      "description": "The math module shall compute component-wise scalar multiplication for each vector type.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-008",
+      "title": "Vector Dot Product",
+      "description": "The math module shall compute the dot product for each vector type.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-009",
+      "title": "2D Cross Product",
+      "description": "The math module shall compute the pseudoscalar z-component of the 2D cross product.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-010",
+      "title": "3D Cross Product",
+      "description": "The math module shall compute the 3D cross product returning an orthogonal vector.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-011",
+      "title": "Squared L2 Norm",
+      "description": "The math module shall compute the squared L2 norm for each vector type.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-012",
+      "title": "Quaternion Addition",
+      "description": "The math module shall compute component-wise quaternion addition.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-013",
+      "title": "Quaternion Subtraction",
+      "description": "The math module shall compute component-wise quaternion subtraction.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-014",
+      "title": "Quaternion Scalar Multiplication",
+      "description": "The math module shall compute component-wise quaternion scalar multiplication.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-015",
+      "title": "Hamilton Product",
+      "description": "The math module shall compute the right-handed Hamilton product of two quaternions.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-016",
+      "title": "Quaternion Conjugate",
+      "description": "The math module shall compute the conjugate of a quaternion by negating the vector part.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-017",
+      "title": "Quaternion Reciprocal",
+      "description": "The math module shall compute the multiplicative inverse of a quaternion as conj(q) divided by the squared norm.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-016",
+        "REQ-MATH-018"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-018",
+      "title": "Quaternion Squared Norm",
+      "description": "The math module shall compute the squared L2 norm of a quaternion.",
+      "rationale": "Provides core math primitives for embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "module": "APP",
+  "requirements": [
+    {
+      "id": "REQ-APP-001",
+      "title": "Application Root Structure",
+      "description": "The application root shall embed a module root with an API vtable pointer.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-APP-002",
+      "title": "OnStart Lifecycle Hook",
+      "description": "The application API vtable shall define an OnStart operation called once to initialize resources.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-APP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-APP-003",
+      "title": "OnProcess Lifecycle Hook",
+      "description": "The application API vtable shall define an OnProcess operation that may be invoked repeatedly.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-APP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-APP-004",
+      "title": "OnExit Lifecycle Hook",
+      "description": "The application API vtable shall define an OnExit operation called once prior to shutdown.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-APP-001"
+      ],
+      "implements": []
+    }
+  ]
+}

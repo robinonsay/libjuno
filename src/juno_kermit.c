@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include "crc/kermit.h"
 
+// @{"req": ["REQ-CRC-001", "REQ-CRC-002", "REQ-CRC-003", "REQ-CRC-007"]}
 uint16_t Juno_CrcKermitUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
     if(!(pcData && zDataSize))

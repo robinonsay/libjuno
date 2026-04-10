@@ -63,6 +63,7 @@ struct JUNO_LOG_API_TAG
 };
 
 /// @brief Initialize a log instance with an API implementation and failure handler.
+// @{"req": ["REQ-LOG-006"]}
 static inline JUNO_STATUS_T JunoLog_LogInit(JUNO_LOG_ROOT_T *ptLog, const JUNO_LOG_API_T *ptApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptLog);

@@ -1,0 +1,65 @@
+{
+  "module": "MTX",
+  "requirements": [
+    {
+      "id": "REQ-MTX-001",
+      "title": "Mutex Root Structure",
+      "description": "The mutex root shall embed a module root with an API vtable pointer.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MTX-002",
+      "title": "TryLock Operation",
+      "description": "The mutex API vtable shall define a TryLock operation that attempts to acquire the lock and returns immediately with a boolean result.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MTX-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MTX-003",
+      "title": "Lock Operation",
+      "description": "The mutex API vtable shall define a Lock operation that blocks until the lock is acquired.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MTX-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MTX-004",
+      "title": "Free Operation",
+      "description": "The mutex API vtable shall define a Free operation that releases the lock.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MTX-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MTX-005",
+      "title": "Mutex Vtable Validation",
+      "description": "The mutex module shall verify that its API vtable and all function pointers within it are non-NULL.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    }
+  ]
+}

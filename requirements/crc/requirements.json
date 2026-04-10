@@ -1,0 +1,117 @@
+{
+  "module": "CRC",
+  "requirements": [
+    {
+      "id": "REQ-CRC-001",
+      "title": "CRC Streaming Update",
+      "description": "Each CRC function shall accept a running CRC value, data buffer, and size, returning the updated CRC value.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-002",
+      "title": "CRC Null Safety",
+      "description": "Each CRC function shall return 0 when passed a NULL data pointer.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-005"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-003",
+      "title": "CRC Zero Length Safety",
+      "description": "Each CRC function shall return 0 when passed a zero data size.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-005"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-004",
+      "title": "CRC-16 ARC",
+      "description": "The CRC module shall compute a CRC-16/ARC update with initial seed 0.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-CRC-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-005",
+      "title": "CRC-16 BinHex",
+      "description": "The CRC module shall compute a BinHex 16-bit CRC update with initial seed 0.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-CRC-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-006",
+      "title": "CRC-16 CCITT",
+      "description": "The CRC module shall compute a CRC-16/CCITT update with initial seed 0xFFFF.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-CRC-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-007",
+      "title": "CRC-16 Kermit",
+      "description": "The CRC module shall compute a CRC-16/Kermit update with initial seed 0.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-CRC-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-008",
+      "title": "CRC-32 CCITT32",
+      "description": "The CRC module shall compute a 32-bit CCITT CRC update with initial seed 0xFFFFFFFF.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-CRC-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-009",
+      "title": "CRC-32 ZIP",
+      "description": "The CRC module shall compute a CRC-32/ZIP update with initial seed 0xFFFFFFFF.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-CRC-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-CRC-010",
+      "title": "CRC-32 ZIP Final XOR",
+      "description": "The CRC-32/ZIP function shall apply a final XOR of 0xFFFFFFFF to the computed value when data is processed.",
+      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-CRC-009"
+      ],
+      "implements": []
+    }
+  ]
+}

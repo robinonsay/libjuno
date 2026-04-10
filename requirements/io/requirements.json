@@ -1,0 +1,165 @@
+{
+  "module": "IO",
+  "requirements": [
+    {
+      "id": "REQ-IO-001",
+      "title": "Async IO Root Structure",
+      "description": "The async IO root shall embed a module root with an API vtable pointer.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-002",
+      "title": "Async IO Read",
+      "description": "The async IO API vtable shall define a Read operation that reads up to the requested number of bytes and updates the size with bytes actually read.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-003",
+      "title": "Async IO TryRead",
+      "description": "The async IO API vtable shall define a TryRead operation that reads with a timeout in microseconds.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-004",
+      "title": "Async IO ReadUntil",
+      "description": "The async IO API vtable shall define a ReadUntil operation that reads until any stop character is received.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-005",
+      "title": "Async IO TryReadUntil",
+      "description": "The async IO API vtable shall define a TryReadUntil operation that reads until a stop character or timeout.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-006",
+      "title": "Async IO Write",
+      "description": "The async IO API vtable shall define a Write operation that writes up to the requested number of bytes and updates the size with bytes actually written.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-007",
+      "title": "Async IO TryWrite",
+      "description": "The async IO API vtable shall define a TryWrite operation that writes with a timeout in microseconds.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-008",
+      "title": "Async IO Poll",
+      "description": "The async IO API vtable shall define a Poll operation that checks for input readiness within a timeout.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-009",
+      "title": "I2C IO Root Structure",
+      "description": "The I2C IO root shall embed a module root with an API vtable pointer.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-010",
+      "title": "I2C Transfer Operation",
+      "description": "The I2C IO API vtable shall define a Transfer operation that processes an array of read/write messages.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-011",
+      "title": "I2C Message Type Discrimination",
+      "description": "Each I2C message shall contain a header with a type field distinguishing read from write messages.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-012",
+      "title": "I2C Device Address",
+      "description": "Each I2C message header shall contain the target device address.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-013",
+      "title": "SPI IO Root Structure",
+      "description": "The SPI IO root shall embed a module root with an API vtable pointer.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-014",
+      "title": "SPI Transaction Operation",
+      "description": "The SPI IO API vtable shall define a Transaction operation for full-duplex read/write.",
+      "rationale": "Provides a portable abstraction interface for platform-specific capabilities.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-013"
+      ],
+      "implements": []
+    }
+  ]
+}

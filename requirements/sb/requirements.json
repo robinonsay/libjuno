@@ -1,0 +1,158 @@
+{
+  "module": "SB",
+  "requirements": [
+    {
+      "id": "REQ-SB-001",
+      "title": "Broker Root Structure",
+      "description": "The broker root shall hold a pipe registry pointer, registry length, and registry capacity.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-002",
+      "title": "Broker API Interface",
+      "description": "The broker API vtable shall define Publish and RegisterSubscriber operations.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SB-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-003",
+      "title": "Broker Initialization",
+      "description": "The broker shall initialize from a caller-provided pipe registry array and capacity.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SB-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-004",
+      "title": "Pipe Derivation",
+      "description": "A pipe shall derive from the queue module root with an additional message ID field.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MODULE-003",
+        "REQ-QUEUE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-005",
+      "title": "Pipe Initialization",
+      "description": "A pipe shall initialize with a message ID and a backing queue array.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-004",
+        "REQ-SYS-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-006",
+      "title": "Publish Fan-Out",
+      "description": "The broker shall enqueue a message into every registered pipe whose message ID matches the published message ID.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-007",
+      "title": "Publish Non-Matching Skip",
+      "description": "The broker shall skip pipes whose message ID does not match the published message ID.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-008",
+      "title": "Register Subscriber",
+      "description": "The broker shall append a pipe pointer to the registry on registration.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-009",
+      "title": "Registry Full Rejection",
+      "description": "The broker shall return an error status when registration is attempted on a full registry.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-010",
+      "title": "Broker Vtable Validation",
+      "description": "The broker shall verify that its API vtable entries are non-null before each operation.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010",
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-011",
+      "title": "Broker Registry Validation",
+      "description": "The broker shall verify that its pipe registry pointer and capacity are valid before each operation.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-012",
+      "title": "Pipe Validation",
+      "description": "The broker shall verify each pipe via the queue verification before publishing to it.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-006",
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-013",
+      "title": "Single Thread Scope",
+      "description": "The broker shall operate within a single thread without thread-safety mechanisms.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [],
+      "implements": []
+    }
+  ]
+}

@@ -1,137 +1,72 @@
-# LibJuno — Copilot review playbook (repo-specific)
+# Copilot Instructions — LibJuno
 
-Purpose: Enable thorough MR reviews for LibJuno, a lightweight C11 library for embedded/freestanding targets, with emphasis on memory safety, determinism, developer experience, and deployability.
+## Project Summary
 
-Trust this file first. Search the repo only when a step is unclear or fails.
+LibJuno is a freestanding C11 embedded systems micro-framework with zero dynamic
+memory allocation. It uses dependency injection via vtables and struct embedding.
+All memory is caller-owned and injected.
 
----
+## Key Rules
 
-## 1) What LibJuno is (and is not)
+1. **No dynamic allocation** — never use `malloc`, `calloc`, `realloc`, `free`.
+2. **Freestanding C11** — all library code must compile with `-nostdlib -ffreestanding`.
+3. **Module pattern** — use vtable/DI: module root → derivation → API struct → union.
+4. **Error handling** — return `JUNO_STATUS_T` or `JUNO_MODULE_RESULT`. Use `JUNO_ASSERT_*` macros.
+5. **Naming** — Types: `SCREAMING_SNAKE_T`, Functions: `PascalCase`, Variables: Hungarian notation.
+6. **Documentation** — Doxygen on all public API elements.
+7. **Testing** — Unity framework, vtable-injected test doubles, no mock framework.
+8. **Traceability** — all requirements, code, and tests must be linked (see below).
 
-- Lightweight C11 library designed for embedded systems; can build freestanding (no libc) and emphasizes memory safety and determinism.
-- Core themes:
-  - A small module system with dependency-injection (DI) via API vtables and macros (see `include/juno/README.md`).
-  - Deterministic memory utilities: block-based allocator with reference counting (no malloc required) and helpers (see `include/juno/memory/README.md`).
-  - Utility algorithms and containers (CRC variants, buffers/queues/stacks, maps, time, etc.).
-- Tests use the Unity framework vendored in `deps/unity/`.
+## AI Workflow: Coach / Player / Program
 
----
+The AI operates in two roles:
 
-## 2) Build, test, docs — how to run here
+- **Coach**: Plans tasks, sets acceptance criteria, verifies quality, asks the
+  user (Program) for domain knowledge and approval.
+- **Player**: Executes the task following the Coach's plan and project constraints.
 
-Preconditions
-- Use out-of-tree builds (`build/`). Initialize submodules if added in future.
-- C standard is enforced as C11; warnings are enabled and treated as errors.
+The **Program** (user) provides:
+- Design rationale and domain knowledge
+- Final approval on all outputs
+- Override authority on any AI decision
 
-Common CMake flows
-- Configure (static lib by default):
-  - Debug + tests: `cmake -S . -B build -DJUNO_TESTS=ON -DCMAKE_BUILD_TYPE=Debug`
-  - Release: `cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo`
-- Sanitizers (host review): add any of
-  - `-DJUNO_ASAN=ON`, `-DJUNO_UBSAN=ON`
-- Freestanding (no hosted libc):
-  - `-DJUNO_FREESTANDING=ON` (adds `-ffreestanding -nostdlib`; ensure no hosted headers in changes)
-- Coverage (host):
-  - `-DJUNO_COVERAGE=ON` (links `gcov`, enables coverage flags)
-- Examples: `-DJUNO_EXAMPLES=ON` to build samples in `examples/`.
-- Shared library: `-DJUNO_SHARED=ON` to also build a shared artifact.
+The Coach and Player must **proactively ask the Program** rather than make
+assumptions. This avoids hallucinations, miscommunication, and incorrect decisions.
 
-Build and test
-- Build: `cmake --build build -j`
-- Run tests (when `JUNO_TESTS=ON`):
-  - `ctest --test-dir build --output-on-failure`
-  - Tests are auto-discovered from `tests/` and link `unity` and `m`.
+## Traceability System
 
-Docs
-- Doxygen: configure with `-DJUNO_DOCS=ON`, then `cmake --build build --target docs`.
+- Requirements live in `requirements/<module>/requirements.json`
+- Source code tags: `// @{"req": ["REQ-MODULE-NNN"]}`
+- Test function tags: `// @{"verify": ["REQ-MODULE-NNN"]}`
+- `"uses"` points UP (to parent requirement)
+- `"implements"` points DOWN (to child requirement)
+- Verification methods: Test, Inspection, Analysis, Demonstration
 
-Install/package
-- Install headers and libs: `cmake --install build --prefix <staging>`
-- CMake package export: `cmake/junoConfig.cmake.in` is provided; verify `find_package(juno)` consumers as part of packaging checks.
+## Available AI Skills
 
----
+Invoke a skill by saying: **"Use skill: `<skill-name>`"**
 
-## 3) Directory map (quick mental model)
+| Skill                  | Purpose                                                    |
+|------------------------|------------------------------------------------------------|
+| `derive-requirements`  | Extract requirements from existing code and tests          |
+| `write-requirements`   | Author new requirements before code exists                 |
+| `write-tests`          | Generate Unity tests with traceability tags                |
+| `generate-docs`        | Produce SRS (IEEE 830), RTM with consistency validation    |
+| `generate-sdd`         | Produce SDD (IEEE 1016) from code + user rationale         |
+| `trace-check`          | Audit traceability completeness and consistency            |
+| `code-review`          | Review code against all project standards                  |
+| `write-module`         | Scaffold a new module with all conventions                 |
 
-- `include/juno/` — public headers (module system, memory, status, APIs). See `include/juno/README.md` and `include/juno/memory/README.md`.
-- `src/` — implementation: CRCs (`juno_ccitt*.c`, `juno_kermit.c`, `juno_zip.c`), buffers/queues/stacks, memory block/heap, maps, time, etc.
-- `tests/` — unit tests compiled when `JUNO_TESTS=ON`; `deps/unity` vendored test framework.
-- `examples/` — minimal usage and DI demos; gated by `JUNO_EXAMPLES`.
-- `docs/` + `Doxyfile.in` — documentation assets and template.
-- `cmake/` — packaging config.
-- `scripts/` — helper generators (templates, docs, versioning).
+## Memory Files
 
----
+Detailed project knowledge is stored in `ai/memory/`:
 
-## 4) Validation pipeline for this repo
+| File                  | Contents                                        |
+|-----------------------|-------------------------------------------------|
+| `project-overview.md` | Project description, philosophy, module catalog |
+| `coding-standards.md` | Naming, style, documentation, error handling    |
+| `architecture.md`     | Module system, vtable DI, initialization pattern|
+| `constraints.md`      | Hard technical and traceability constraints      |
+| `traceability.md`     | Requirements JSON schema, annotation format     |
 
-Run locally in this order and record results:
-1) Configure + build (Debug) with sanitizers (when host review):
-   - `-DJUNO_TESTS=ON -DJUNO_ASAN=ON -DJUNO_UBSAN=ON -DCMAKE_BUILD_TYPE=Debug`
-2) Run all tests via `ctest --output-on-failure`.
-3) Build Release (`RelWithDebInfo`) and ensure no warnings (warnings are `-Werror`).
-4) Optional: Coverage (`-DJUNO_COVERAGE=ON`) and generate reports (`lcov/genhtml`).
-5) Docs build (`-DJUNO_DOCS=ON`, target `docs`).
-6) Install/package sanity: `cmake --install` into a staging prefix; smoke check `junoConfig.cmake` and includes.
-
-Notes
-- Compilers: GCC/Clang expected. Project sets strict warnings (e.g., `-Wall -Wextra -Werror -Wshadow -Wcast-align -Wundef -Wswitch -Wmissing-field-initializers -fno-common -fno-strict-aliasing`).
-- For freestanding builds, ensure added code avoids hosted headers and syscalls.
-
----
-
-## 5) LibJuno-focused code review checklist
-
-Memory safety & UB
-- Block allocator: verify bounds, reuse of freed blocks, and reference counting semantics. Ensure:
-  - `JunoMemory_BlockInit` parameters are validated; type sizes match usage.
-  - `Get/Put/Update` respect element size and block limits; reject double-free; `Put` fails when refs > 1.
-  - All return codes (`JUNO_STATUS_T`) are checked at call sites.
-- Avoid libc when `JUNO_FREESTANDING=ON`; no hidden dynamic allocation in hot paths.
-- Integer and pointer hygiene: no narrowing, no invalid shifts, alignments explicit; observe strict aliasing rules.
-
-Module system & DI (see `include/juno/README.md`)
-- Every module sets `ptApi` to a valid vtable during init; failure handler (`JUNO_FAILURE_HANDLER`) and user data wired.
-- Derived types overlay base via `JUNO_MODULE/JUNO_MODULE_DERIVE`; ensure member access uses the correct view and alignment.
-- API contracts are clear: inputs validated, null checks present, and failure paths call the failure handler with actionable messages.
-
-Concurrency/real-time
-- No blocking I/O or heap in ISR-sensitive paths; minimal critical sections; volatile and barriers when required by shared state.
-
-Portability & build flags
-- Code builds clean with the project’s warning set; no reliance on compiler-specific extensions unless guarded.
-- When `JUNO_SHARED=ON`, confirm symbol visibility and no accidental ABI leaks from private headers.
-
-Tests & examples
-- Unit tests cover edge cases for allocators (empty/full pool, refcounting, invalid free), containers (under/overflow), and CRC correctness against vectors.
-- Examples compile with `JUNO_EXAMPLES=ON` and match documented usage in READMEs.
-
-Docs & DX
-- Public headers are self-documenting; Doxygen groups render without warnings.
-- Namespaces/prefixes consistent (`Juno*`, `JUNO_*`); error codes and macro usage are discoverable from headers.
-
----
-
-## 6) Common pitfalls seen in this repo
-
-- Freestanding mode requires avoiding hosted headers even in helpers/tests; gate usage with `#if !JUNO_FREESTANDING` where necessary.
-- Tests link `m` (math); ensure new tests include only headers available on host.
-- Watch for off-by-one in buffer/queue/stack implementations and mixing of signed/unsigned indices.
-- When updating install/package, validate `cmake/junoConfig.cmake.in` and the exported targets; run a small consumer CMake to `find_package(juno)`.
-
----
-
-## 7) What to record in MR reviews
-
-- Exact configure/build/test commands and outcomes (pass/fail), compiler versions, sanitizer results.
-- Any deviations from README or CI, including steps required to build docs or examples.
-- Specific file/line issues with concrete suggestions or diffs (headers first, then sources, then tests).
-- Packaging/install verification notes (what installed, include paths, and find_package smoke test results).
-
----
-
-## 8) When to search the repo
-
-- If something is unclear or fails, consult: `README.md`, `include/juno/README.md`, `include/juno/memory/README.md`, top-level `CMakeLists.txt`, `tests/CMakeLists.txt`, `cmake/junoConfig.cmake.in`, `docs/`, `examples/`, `scripts/`.
-
-Final instruction: Prefer these sequences and checklists for LibJuno. If a command fails, document the failure, adjust minimally, and continue the review using the closest equivalent in this repository.
+**Always read the relevant memory files before performing any task.**

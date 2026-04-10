@@ -1,0 +1,74 @@
+{
+  "module": "MODULE",
+  "requirements": [
+    {
+      "id": "REQ-MODULE-001",
+      "title": "Module Root Structure",
+      "description": "The module system shall define a module root struct containing an API vtable pointer.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-002",
+      "title": "Module Root Failure Handler",
+      "description": "The module root shall contain a failure handler pointer and user data pointer.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-STATUS-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-003",
+      "title": "Module Derivation",
+      "description": "Derived module structs shall embed the root as their first member, enabling safe upcasting to the root type.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-004",
+      "title": "Module Union",
+      "description": "A module union shall contain the root and all derivation types for polymorphic storage.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-005",
+      "title": "Result Type",
+      "description": "The module system shall define a result type combining a status code with a typed success payload.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-006",
+      "title": "Option Type",
+      "description": "The module system shall define an option type combining a presence flag with a typed payload.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    }
+  ]
+}

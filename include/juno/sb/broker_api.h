@@ -106,6 +106,7 @@ static inline JUNO_STATUS_T JunoSb_BrokerApiVerify(const JUNO_SB_BROKER_API_T *p
 }
 
 /// @brief Verify a broker instance and basic registry invariants.
+// @{"req": ["REQ-SB-010", "REQ-SB-011"]}
 static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptBroker)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
@@ -117,6 +118,7 @@ static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptB
 }
 
 /// @brief Verify a pipe instance.
+// @{"req": ["REQ-SB-012"]}
 static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 {
     JUNO_ASSERT_EXISTS(ptPipe);
@@ -129,6 +131,7 @@ static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T **ptPipeRegistry, size_t iRegistryCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 /// @brief Initialize a pipe for a specific MID backed by a queue over ptArray.
+// @{"req": ["REQ-SB-005"]}
 static inline JUNO_STATUS_T JunoSb_PipeInit(JUNO_SB_PIPE_T *ptPipe, JUNO_SB_MID_T iMid, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptPipe);

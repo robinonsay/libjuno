@@ -79,18 +79,21 @@ struct JUNO_DS_ARRAY_API_TAG
     /// @param iIndex Index into the backing storage (0 <= iIndex < zCapacity).
     /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_OOB_ERROR on invalid index;
     ///         or implementation-specific pointer errors (e.g., INVALID_SIZE).
+    // @{"req": ["REQ-ARRAY-002"]}
     JUNO_STATUS_T (*SetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_POINTER_T tItem, size_t iIndex);
     /// @brief Get the value at an index.
     /// @param ptArray Array instance.
     /// @param iIndex Index into the backing storage.
     /// @return Result containing a pointer descriptor to the slot on success;
     ///         JUNO_STATUS_OOB_ERROR on invalid index; or implementation-specific errors.
+    // @{"req": ["REQ-ARRAY-003"]}
     JUNO_RESULT_POINTER_T (*GetAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
     /// @brief Remove a value at an index.
     /// @param ptArray Array instance.
     /// @param iIndex Index into the backing storage.
     /// @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_OOB_ERROR on invalid index;
     ///         or implementation-specific errors (e.g., Reset failures).
+    // @{"req": ["REQ-ARRAY-004"]}
     JUNO_STATUS_T (*RemoveAt)(JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex);
 };
 
@@ -114,6 +117,7 @@ static inline JUNO_STATUS_T JunoDs_ArrayApiVerify(const JUNO_DS_ARRAY_API_T *ptA
  * @details Ensures ptArray is non-NULL, capacity is non-zero, and required
  *  vtable entries are present.
  */
+// @{"req": ["REQ-ARRAY-006", "REQ-ARRAY-007"]}
 static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_DS_ARRAY_ROOT_T *ptArray)
 {
     JUNO_ASSERT_EXISTS(ptArray);
@@ -133,6 +137,7 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerify(const JUNO_DS_ARRAY_ROOT_T *ptArr
  * @return JUNO_STATUS_SUCCESS when 0 <= iIndex < zCapacity; otherwise
  *         JUNO_STATUS_OOB_ERROR (and invokes the failure handler, if provided).
  */
+// @{"req": ["REQ-ARRAY-005"]}
 static inline JUNO_STATUS_T JunoDs_ArrayVerifyIndex(const JUNO_DS_ARRAY_ROOT_T *ptArray, size_t iIndex)
 {
     JUNO_STATUS_T tStatus = JunoDs_ArrayVerify(ptArray);
@@ -155,6 +160,7 @@ static inline JUNO_STATUS_T JunoDs_ArrayVerifyIndex(const JUNO_DS_ARRAY_ROOT_T *
  * @param pvUserData Optional user data passed to the failure handler (can be NULL).
  * @return Result of JunoDs_ArrayVerify on the configured array.
  */
+// @{"req": ["REQ-ARRAY-001", "REQ-ARRAY-007"]}
 static inline JUNO_STATUS_T JunoDs_ArrayInit(JUNO_DS_ARRAY_ROOT_T *ptArray, const JUNO_DS_ARRAY_API_T *ptArrayApi, size_t iCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptArray && iCapacity && ptArrayApi);

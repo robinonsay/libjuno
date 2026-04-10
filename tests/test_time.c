@@ -82,7 +82,7 @@ void tearDown(void)
     tTimeMod = (JUNO_TIME_ROOT_T){0};
 }
 
-// Positive test: AddTime without subseconds overflow
+// @{"verify": ["REQ-TIME-003"]}
 static void test_AddTime_no_subseconds_overflow(void)
 {
     JUNO_TIMESTAMP_T ret = { .iSeconds = 2, .iSubSeconds = 100 };
@@ -93,7 +93,7 @@ static void test_AddTime_no_subseconds_overflow(void)
     TEST_ASSERT_EQUAL_UINT32(150, ret.iSubSeconds); // 100 + 50
 }
 
-// Positive test: AddTime with subseconds overflow
+// @{"verify": ["REQ-TIME-004"]}
 static void test_AddTime_with_subseconds_overflow(void)
 {
     const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
@@ -106,7 +106,7 @@ static void test_AddTime_with_subseconds_overflow(void)
     TEST_ASSERT_EQUAL_UINT32(5, ret.iSubSeconds);      // 10 - 5
 }
 
-// Positive test: SubtractTime without borrow
+// @{"verify": ["REQ-TIME-005"]}
 static void test_SubtractTime_no_borrow(void)
 {
     JUNO_TIMESTAMP_T ret = { .iSeconds = 10, .iSubSeconds = 1000 };
@@ -118,7 +118,7 @@ static void test_SubtractTime_no_borrow(void)
     TEST_ASSERT_EQUAL_UINT32(900, ret.iSubSeconds);  // 1000 - 100
 }
 
-// Positive test: SubtractTime with subseconds borrow
+// @{"verify": ["REQ-TIME-006"]}
 static void test_SubtractTime_borrow_subseconds(void)
 {
     const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
@@ -131,7 +131,7 @@ static void test_SubtractTime_borrow_subseconds(void)
     TEST_ASSERT_EQUAL_UINT32(max_sub - 98, ret.iSubSeconds);     // max - (100 - 2)
 }
 
-// Negative test: SubtractTime when subtracting more seconds than available
+// @{"verify": ["REQ-TIME-007", "REQ-TIME-008"]}
 static void test_SubtractTime_invalid_lower_seconds(void)
 {
     JUNO_TIMESTAMP_T ret = { .iSeconds = 1, .iSubSeconds = 10 };
@@ -142,7 +142,7 @@ static void test_SubtractTime_invalid_lower_seconds(void)
     TEST_ASSERT_EQUAL_UINT32(0, ret.iSubSeconds);
 }
 
-// Negative test: SubtractTime when seconds = 0 but subseconds < subtract
+// @{"verify": ["REQ-TIME-007", "REQ-TIME-008"]}
 static void test_SubtractTime_invalid_zero_seconds_insufficient_subseconds(void)
 {
     JUNO_TIMESTAMP_T ret = { .iSeconds = 0, .iSubSeconds = 5 };
@@ -153,7 +153,7 @@ static void test_SubtractTime_invalid_zero_seconds_insufficient_subseconds(void)
     TEST_ASSERT_EQUAL_UINT32(0, ret.iSubSeconds);
 }
 
-// Positive test: TimestampToNanos integer seconds
+// @{"verify": ["REQ-TIME-009"]}
 static void test_TimestampToNanos_success_integer(void)
 {
     JUNO_TIMESTAMP_T t = { .iSeconds = 3, .iSubSeconds = 0 };
@@ -162,7 +162,7 @@ static void test_TimestampToNanos_success_integer(void)
     TEST_ASSERT_EQUAL_UINT64(3000000000ULL, tResult.tOk);
 }
 
-// Positive test: TimestampToNanos fractional subseconds
+// @{"verify": ["REQ-TIME-009"]}
 static void test_TimestampToNanos_success_fractional(void)
 {
     const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
@@ -173,7 +173,7 @@ static void test_TimestampToNanos_success_fractional(void)
 }
 
 
-// Positive test: TimestampToMicros integer seconds
+// @{"verify": ["REQ-TIME-010"]}
 static void test_TimestampToMicros_success_integer(void)
 {
     JUNO_TIMESTAMP_T t = { .iSeconds = 2, .iSubSeconds = 0 };
@@ -182,7 +182,7 @@ static void test_TimestampToMicros_success_integer(void)
     TEST_ASSERT_EQUAL_UINT64(2000000ULL, tResult.tOk);
 }
 
-// Positive test: TimestampToMicros fractional subseconds
+// @{"verify": ["REQ-TIME-010"]}
 static void test_TimestampToMicros_success_fractional(void)
 {
     const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
@@ -192,7 +192,7 @@ static void test_TimestampToMicros_success_fractional(void)
     TEST_ASSERT_EQUAL_UINT64(1000000ULL, tResult.tOk);
 }
 
-// Positive test: TimestampToMillis integer seconds
+// @{"verify": ["REQ-TIME-011"]}
 static void test_TimestampToMillis_success_integer(void)
 {
     JUNO_TIMESTAMP_T t = { .iSeconds = 5, .iSubSeconds = 0 };
@@ -201,7 +201,7 @@ static void test_TimestampToMillis_success_integer(void)
     TEST_ASSERT_EQUAL_UINT64(5000ULL, tResult.tOk);
 }
 
-// Positive test: TimestampToMillis fractional subseconds
+// @{"verify": ["REQ-TIME-011"]}
 static void test_TimestampToMillis_success_fractional(void)
 {
     const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);
@@ -211,7 +211,7 @@ static void test_TimestampToMillis_success_fractional(void)
     TEST_ASSERT_EQUAL_UINT64(1000ULL, tResult.tOk);
 }
 
-// Positive test: NanosToTimestamp with zero input
+// @{"verify": ["REQ-TIME-012"]}
 static void test_NanosToTimestamp_zero(void)
 {
     JUNO_TIME_NANOS_T input = 0;
@@ -221,7 +221,7 @@ static void test_NanosToTimestamp_zero(void)
     TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSubSeconds);
 }
 
-// Positive test: NanosToTimestamp integer and fractional parts
+// @{"verify": ["REQ-TIME-012"]}
 static void test_NanosToTimestamp_integer_and_fractional(void)
 {
     const JUNO_TIME_NANOS_T NANO_PER_SEC = 1000000000ULL;
@@ -236,7 +236,7 @@ static void test_NanosToTimestamp_integer_and_fractional(void)
     TEST_ASSERT_EQUAL_UINT32(expected, tResult.tOk.iSubSeconds);
 }
 
-// Positive test: MicrosToTimestamp with zero input
+// @{"verify": ["REQ-TIME-013"]}
 static void test_MicrosToTimestamp_zero(void)
 {
     JUNO_TIME_MICROS_T input = 0;
@@ -246,7 +246,7 @@ static void test_MicrosToTimestamp_zero(void)
     TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSubSeconds);
 }
 
-// Positive test: MicrosToTimestamp integer and fractional parts
+// @{"verify": ["REQ-TIME-013"]}
 static void test_MicrosToTimestamp_integer_and_fractional(void)
 {
     const JUNO_TIME_MICROS_T MICRO_PER_SEC = 1000000ULL;
@@ -261,7 +261,7 @@ static void test_MicrosToTimestamp_integer_and_fractional(void)
     TEST_ASSERT_EQUAL_UINT32(expected, tResult.tOk.iSubSeconds);
 }
 
-// Positive test: MillisToTimestamp with zero input
+// @{"verify": ["REQ-TIME-014"]}
 static void test_MillisToTimestamp_zero(void)
 {
     JUNO_TIME_MILLIS_T input = 0;
@@ -271,7 +271,7 @@ static void test_MillisToTimestamp_zero(void)
     TEST_ASSERT_EQUAL_UINT32(0, tResult.tOk.iSubSeconds);
 }
 
-// Positive test: MillisToTimestamp integer and fractional parts
+// @{"verify": ["REQ-TIME-014"]}
 static void test_MillisToTimestamp_integer_and_fractional(void)
 {
     const JUNO_TIME_MILLIS_T MILLI_PER_SEC = 1000ULL;
@@ -310,7 +310,7 @@ static void test_Sleep_returns_success(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, status);
 }
 
-// Test Sleep stub returns success
+// @{"verify": ["REQ-TIME-015"]}
 static void test_timestamp_to_double(void)
 {
     const JUNO_TIME_SUBSECONDS_T max_sub = (JUNO_TIME_SUBSECONDS_T)(-1);

@@ -80,6 +80,7 @@ void tearDown(void)
     // No teardown required.
 }
 
+// @{"verify": ["REQ-MEMORY-004", "REQ-MEMORY-006"]}
 static void test_nominal_single_alloc_and_free(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -119,6 +120,7 @@ static void test_nominal_single_alloc_and_free(void)
     TEST_ASSERT_EQUAL(0, tMemory.pvAddr);
 }
 
+// @{"verify": ["REQ-MEMORY-004", "REQ-MEMORY-005", "REQ-MEMORY-006"]}
 static void test_nominal_multiple_alloc_and_free(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -180,6 +182,7 @@ static void test_nominal_multiple_alloc_and_free(void)
     }
 }
 
+// @{"verify": ["REQ-MEMORY-004"]}
 static void test_negative_memory_empty(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -228,6 +231,7 @@ static void test_negative_memory_empty(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MEMORY-004"]}
 static void test_negative_memory_full(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -265,6 +269,7 @@ static void test_negative_memory_full(void)
 
 /* New tests for higher code coverage */
 
+// @{"verify": ["REQ-MEMORY-003"]}
 static void test_invalid_init_parameters(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -282,6 +287,7 @@ static void test_invalid_init_parameters(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MEMORY-007"]}
 static void test_double_free(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -310,6 +316,7 @@ static void test_double_free(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MEMORY-008"]}
 static void test_free_unallocated(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -331,6 +338,7 @@ static void test_free_unallocated(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MEMORY-009", "REQ-MEMORY-010"]}
 static void test_update_memory(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -362,6 +370,7 @@ static void test_update_memory(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MEMORY-004", "REQ-MEMORY-006"]}
 static void test_generic_memory_get_put(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -394,6 +403,7 @@ static void test_generic_memory_get_put(void)
     TEST_ASSERT_NULL(tMemory.pvAddr);
 }
 
+// @{"verify": ["REQ-MEMORY-004"]}
 static void test_zero_size_allocation(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -415,6 +425,7 @@ static void test_zero_size_allocation(void)
     tStatus = tPointerResult.tStatus;
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
+// @{"verify": ["REQ-MEMORY-003"]}
 static void test_bad_api(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};
@@ -450,6 +461,7 @@ static void test_bad_api(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MEMORY-008"]}
 static void test_invalid_size_and_addr(void)
 {
     JUNO_MEMORY_ALLOC_BLOCK_T tMem = {0};

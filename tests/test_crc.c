@@ -34,6 +34,7 @@ void tearDown(void)
 
 }
 
+// @{"verify": ["REQ-CRC-009", "REQ-CRC-010"]}
 static void test_zip_crc(void)
 {
    char pcTestZipData[32] = "helloworld";
@@ -52,6 +53,7 @@ static void test_zip_crc(void)
    }
 }
 
+// @{"verify": ["REQ-CRC-006"]}
 static void test_ccitt_crc(void)
 {
    char pcTestZipData[32] = "helloworld";
@@ -65,6 +67,7 @@ static void test_ccitt_crc(void)
    }
 }
 
+// @{"verify": ["REQ-CRC-002", "REQ-CRC-003"]}
 static void test_empty_crc_all(void)
 {
     // Empty data should return initial CRC values
@@ -75,6 +78,7 @@ static void test_empty_crc_all(void)
     TEST_ASSERT_EQUAL_UINT32(0u, Juno_CrcZipUpdate(JUNO_ZIP_CRC_INIT, NULL, 0));
 }
 
+// @{"verify": ["REQ-CRC-001", "REQ-CRC-004", "REQ-CRC-005", "REQ-CRC-007", "REQ-CRC-008"]}
 static void test_various_crc_behaviour(void)
 {
     const char data1[] = "test";

@@ -32,6 +32,7 @@ void tearDown(void)
 
 }
 
+// @{"verify": ["REQ-MATH-005"]}
 static void test_vec2_f64_add(void)
 {
 	JUNO_VEC2_F64_T tVec1 = {{1, 2}};
@@ -44,6 +45,7 @@ static void test_vec2_f64_add(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-006"]}
 static void test_vec2_f64_sub(void)
 {
 	JUNO_VEC2_F64_T tVec1 = {{1, 2}};
@@ -56,6 +58,7 @@ static void test_vec2_f64_sub(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-007"]}
 static void test_vec2_f64_mult(void)
 {
 	JUNO_VEC2_F64_T tVec1 = {{1, 2}};
@@ -67,6 +70,7 @@ static void test_vec2_f64_mult(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-008"]}
 static void test_vec2_f64_dot(void)
 {
 	JUNO_VEC2_F64_T tVec1 = {{1, 2}};
@@ -76,6 +80,7 @@ static void test_vec2_f64_dot(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-009"]}
 static void test_vec2_f64_cross(void)
 {
 	JUNO_VEC2_F64_T tVec1 = {{1, 2}};
@@ -85,6 +90,7 @@ static void test_vec2_f64_cross(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-011"]}
 static void test_vec2_f64_L2(void)
 {
 	JUNO_VEC2_F64_T tVec1 = {{3, 4}};
@@ -93,6 +99,7 @@ static void test_vec2_f64_L2(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-005"]}
 static void test_vec2_f32_add(void)
 {
 	JUNO_VEC2_F32_T tVec1 = {{1, 2}};
@@ -105,6 +112,7 @@ static void test_vec2_f32_add(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-006"]}
 static void test_vec2_f32_sub(void)
 {
 	JUNO_VEC2_F32_T tVec1 = {{1, 2}};
@@ -117,6 +125,7 @@ static void test_vec2_f32_sub(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-007"]}
 static void test_vec2_f32_mult(void)
 {
 	JUNO_VEC2_F32_T tVec1 = {{1, 2}};
@@ -128,6 +137,7 @@ static void test_vec2_f32_mult(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-008"]}
 static void test_vec2_f32_dot(void)
 {
 	JUNO_VEC2_F32_T tVec1 = {{1, 2}};
@@ -137,6 +147,7 @@ static void test_vec2_f32_dot(void)
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-009"]}
 static void test_vec2_f32_cross(void)
 {
 	JUNO_VEC2_F32_T tVec1 = {{1, 2}};
@@ -146,6 +157,7 @@ static void test_vec2_f32_cross(void)
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-011"]}
 static void test_vec2_f32_L2(void)
 {
 	JUNO_VEC2_F32_T tVec1 = {{3, 4}};
@@ -154,6 +166,7 @@ static void test_vec2_f32_L2(void)
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-005"]}
 static void test_vec2_i32_add(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {{1, 2}};
@@ -166,6 +179,7 @@ static void test_vec2_i32_add(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-006"]}
 static void test_vec2_i32_sub(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {{1, 2}};
@@ -178,6 +192,7 @@ static void test_vec2_i32_sub(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-007"]}
 static void test_vec2_i32_mult(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {{1, 2}};
@@ -189,6 +204,7 @@ static void test_vec2_i32_mult(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-008"]}
 static void test_vec2_i32_dot(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {{1, 2}};
@@ -198,6 +214,7 @@ static void test_vec2_i32_dot(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-009"]}
 static void test_vec2_i32_cross(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {{1, 2}};
@@ -207,6 +224,7 @@ static void test_vec2_i32_cross(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-011"]}
 static void test_vec2_i32_L2(void)
 {
 	JUNO_VEC2_I32_T tVec1 = {{3, 4}};
@@ -215,6 +233,7 @@ static void test_vec2_i32_L2(void)
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-005"]}
 static void test_vec3_f64_add(void)
 {
 	JUNO_VEC3_F64_T tVec1 = {{1, 2, 3}};
@@ -227,6 +246,7 @@ static void test_vec3_f64_add(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-006"]}
 static void test_vec3_f64_sub(void)
 {
 	JUNO_VEC3_F64_T tVec1 = {{1, 2, 3}};
@@ -239,6 +259,7 @@ static void test_vec3_f64_sub(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-007"]}
 static void test_vec3_f64_mult(void)
 {
 	JUNO_VEC3_F64_T tVec1 = {{1, 2, 3}};
@@ -250,6 +271,7 @@ static void test_vec3_f64_mult(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-008"]}
 static void test_vec3_f64_dot(void)
 {
 	JUNO_VEC3_F64_T tVec1 = {{1, 2, 3}};
@@ -259,6 +281,7 @@ static void test_vec3_f64_dot(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-010"]}
 static void test_vec3_f64_cross(void)
 {
 	JUNO_VEC3_F64_T tVec1 = {{1, 2, 3}};
@@ -271,6 +294,7 @@ static void test_vec3_f64_cross(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-011"]}
 static void test_vec3_f64_L2(void)
 {
 	JUNO_VEC3_F64_T tVec1 = {{1, 2, 2}};
@@ -279,6 +303,7 @@ static void test_vec3_f64_L2(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-005"]}
 static void test_vec3_f32_add(void)
 {
 	JUNO_VEC3_F32_T tVec1 = {{1, 2, 3}};
@@ -291,6 +316,7 @@ static void test_vec3_f32_add(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-006"]}
 static void test_vec3_f32_sub(void)
 {
 	JUNO_VEC3_F32_T tVec1 = {{1, 2, 3}};
@@ -303,6 +329,7 @@ static void test_vec3_f32_sub(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-007"]}
 static void test_vec3_f32_mult(void)
 {
 	JUNO_VEC3_F32_T tVec1 = {{1, 2, 3}};
@@ -314,6 +341,7 @@ static void test_vec3_f32_mult(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-008"]}
 static void test_vec3_f32_dot(void)
 {
 	JUNO_VEC3_F32_T tVec1 = {{1, 2, 3}};
@@ -323,6 +351,7 @@ static void test_vec3_f32_dot(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-010"]}
 static void test_vec3_f32_cross(void)
 {
 	JUNO_VEC3_F32_T tVec1 = {{1, 2, 3}};
@@ -335,6 +364,7 @@ static void test_vec3_f32_cross(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-011"]}
 static void test_vec3_f32_L2(void)
 {
 	JUNO_VEC3_F32_T tVec1 = {{1, 2, 2}};
@@ -343,6 +373,7 @@ static void test_vec3_f32_L2(void)
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-005"]}
 static void test_vec3_i32_add(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {{1, 2, 3}};
@@ -355,6 +386,7 @@ static void test_vec3_i32_add(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-006"]}
 static void test_vec3_i32_sub(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {{1, 2, 3}};
@@ -367,6 +399,7 @@ static void test_vec3_i32_sub(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-007"]}
 static void test_vec3_i32_mult(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {{1, 2, 3}};
@@ -378,6 +411,7 @@ static void test_vec3_i32_mult(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-008"]}
 static void test_vec3_i32_dot(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {{1, 2, 3}};
@@ -387,6 +421,7 @@ static void test_vec3_i32_dot(void)
 	TEST_ASSERT_EQUAL_DOUBLE(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-010"]}
 static void test_vec3_i32_cross(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {{1, 2, 3}};
@@ -399,6 +434,7 @@ static void test_vec3_i32_cross(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-011"]}
 static void test_vec3_i32_L2(void)
 {
 	JUNO_VEC3_I32_T tVec1 = {{1, 2, 2}};
@@ -407,6 +443,7 @@ static void test_vec3_i32_L2(void)
 	TEST_ASSERT_EQUAL_FLOAT(tTruth, tRes);
 }
 
+// @{"verify": ["REQ-MATH-012"]}
 static void test_rquat_f64_add(void)
 {
     JUNO_RQUAT_F64_T q0 = {{1.0,  2.0,  3.0,  4.0}};
@@ -418,6 +455,7 @@ static void test_rquat_f64_add(void)
     }
 }
 
+// @{"verify": ["REQ-MATH-013"]}
 static void test_rquat_f64_sub(void)
 {
     JUNO_RQUAT_F64_T q0 = {{5.0, 6.0, 7.0, 8.0}};
@@ -429,6 +467,7 @@ static void test_rquat_f64_sub(void)
     }
 }
 
+// @{"verify": ["REQ-MATH-014"]}
 static void test_rquat_f64_mult_scalar(void)
 {
     JUNO_RQUAT_F64_T q  = {{1.0, -2.0, 3.0, -4.0}};
@@ -440,6 +479,7 @@ static void test_rquat_f64_mult_scalar(void)
     }
 }
 
+// @{"verify": ["REQ-MATH-015"]}
 static void test_rquat_f64_hamprod(void)
 {
     // use identity quaternion so q * identity == q
@@ -452,6 +492,7 @@ static void test_rquat_f64_hamprod(void)
     }
 }
 
+// @{"verify": ["REQ-MATH-015"]}
 static void test_rquat_f64_hamprod_general(void)
 {
 	// General case check against canonical Hamilton product
@@ -465,6 +506,7 @@ static void test_rquat_f64_hamprod_general(void)
 	}
 }
 
+// @{"verify": ["REQ-MATH-016"]}
 static void test_rquat_f64_conj(void)
 {
     JUNO_RQUAT_F64_T q = {{1.0, 2.0, -3.0, 4.0}};
@@ -475,6 +517,7 @@ static void test_rquat_f64_conj(void)
     }
 }
 
+// @{"verify": ["REQ-MATH-018"]}
 static void test_rquat_f64_l2norm2(void)
 {
     JUNO_RQUAT_F64_T q = {{1.0, 2.0, 3.0, 4.0}};
@@ -483,6 +526,7 @@ static void test_rquat_f64_l2norm2(void)
     TEST_ASSERT_EQUAL_DOUBLE(30.0, n2);
 }
 
+// @{"verify": ["REQ-MATH-018"]}
 static void test_rquat_f64_l2norm(void)
 {
     JUNO_RQUAT_F64_T q = {{1.0, 2.0, 3.0, 4.0}};
@@ -491,6 +535,7 @@ static void test_rquat_f64_l2norm(void)
     TEST_ASSERT_DOUBLE_WITHIN(1e-12, 30.0, n);
 }
 
+// @{"verify": ["REQ-MATH-017"]}
 static void test_rquat_f64_recip(void)
 {
     JUNO_RQUAT_F64_T q = {{1.0, 2.0, 3.0, 4.0}};

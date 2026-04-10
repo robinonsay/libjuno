@@ -29,6 +29,7 @@ static const JUNO_DS_HEAP_API_T tHeapApi = {
     JunoDs_Heap_Pop,
 };
 
+// @{"req": ["REQ-HEAP-001", "REQ-HEAP-002"]}
 JUNO_STATUS_T JunoDs_Heap_Init(JUNO_DS_HEAP_ROOT_T *ptHeap, const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi, JUNO_DS_ARRAY_ROOT_T *ptHeapArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptHeap);
@@ -254,6 +255,7 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart)
  *  - tStatus = SUCCESS and tOk = new index when there is capacity.
  *  - tStatus = ERR when zLength >= zCapacity (no more space).
  */
+// @{"req": ["REQ-HEAP-003"]}
 JUNO_STATUS_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tValue)
 {
     JUNO_STATUS_T tStatus = JunoDs_Heap_Verify(ptHeap);
@@ -279,6 +281,7 @@ JUNO_STATUS_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tVa
  * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR when zLength == 0 or
  *         if SiftDown reports an error.
  */
+// @{"req": ["REQ-HEAP-006"]}
 JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
@@ -319,6 +322,7 @@ JUNO_STATUS_T JunoDs_Heap_Heapify(JUNO_DS_HEAP_ROOT_T *ptHeap)
  * @return JUNO_STATUS_SUCCESS on success; JUNO_STATUS_ERR if zLength == 0 or
  *         if Swap/Reset/SiftDown report an error.
  */
+// @{"req": ["REQ-HEAP-004", "REQ-HEAP-005"]}
 JUNO_STATUS_T JunoDs_Heap_Pop(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tReturn)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;;

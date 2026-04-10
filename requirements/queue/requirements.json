@@ -1,0 +1,105 @@
+{
+  "module": "QUEUE",
+  "requirements": [
+    {
+      "id": "REQ-QUEUE-001",
+      "title": "Queue Initialization",
+      "description": "The queue module shall initialize from a caller-provided backing array.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009",
+        "REQ-SYS-010",
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-QUEUE-002",
+      "title": "Queue Initial State",
+      "description": "The queue shall set start index and length to zero on initialization.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SYS-011",
+        "REQ-QUEUE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-QUEUE-003",
+      "title": "Queue Enqueue",
+      "description": "The queue shall copy an element to the back of the circular buffer in O(1) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-QUEUE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-QUEUE-004",
+      "title": "Queue Full Rejection",
+      "description": "The queue shall return JUNO_STATUS_INVALID_SIZE_ERROR when enqueue is attempted on a full queue.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-QUEUE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-QUEUE-005",
+      "title": "Queue Dequeue",
+      "description": "The queue shall remove and copy out the front element in O(1) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-QUEUE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-QUEUE-006",
+      "title": "Queue Empty Dequeue Rejection",
+      "description": "The queue shall return JUNO_STATUS_ERR when dequeue is attempted on an empty queue.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-QUEUE-005"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-QUEUE-007",
+      "title": "Queue Peek",
+      "description": "The queue shall return a pointer descriptor to the front element without removing it in O(1) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-QUEUE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-QUEUE-008",
+      "title": "Queue Empty Peek Rejection",
+      "description": "The queue shall return JUNO_STATUS_INVALID_SIZE_ERROR when peek is attempted on an empty queue.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-QUEUE-007"
+      ],
+      "implements": []
+    }
+  ]
+}

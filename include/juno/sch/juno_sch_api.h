@@ -68,10 +68,13 @@ struct JUNO_SCH_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SCH_API_T,
 struct JUNO_SCH_API_TAG
 {
     /// @brief Run the scheduler for one major frame.
+    // @{"req": ["REQ-SCH-004"]}
     JUNO_STATUS_T (*Execute)(JUNO_SCH_ROOT_T *ptJunoSch);
     /// @brief Get the configured minor frame period.
+    // @{"req": ["REQ-SCH-005"]}
     JUNO_TIMESTAMP_RESULT_T (*GetMinorFramePeriod)(JUNO_SCH_ROOT_T *ptJunoSch);
     /// @brief Compute the major frame period (minor * count).
+    // @{"req": ["REQ-SCH-006"]}
     JUNO_TIMESTAMP_RESULT_T (*GetMajorFramePeriod)(JUNO_SCH_ROOT_T *ptJunoSch);
 };
 

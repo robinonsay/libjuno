@@ -47,6 +47,7 @@
  *  @endcode
  * @param ptr Pointer/expression to validate (may combine with &&).
  */
+// @{"req": ["REQ-SYS-007", "REQ-SYS-008", "REQ-SYS-010", "REQ-SYS-011"]}
 #define JUNO_ASSERT_EXISTS(ptr) \
 if(!(ptr)) \
 { \
@@ -84,6 +85,7 @@ if(!(ptr)) \
  * @param tStatus Status value to check.
  * @param ... Statements to execute when tStatus != JUNO_STATUS_SUCCESS.
  */
+// @{"req": ["REQ-SYS-008"]}
 #define JUNO_ASSERT_SUCCESS(tStatus, ...) if(tStatus != JUNO_STATUS_SUCCESS) \
 { \
     __VA_ARGS__; \

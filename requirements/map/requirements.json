@@ -1,0 +1,126 @@
+{
+  "module": "MAP",
+  "requirements": [
+    {
+      "id": "REQ-MAP-001",
+      "title": "Map Initialization",
+      "description": "The map module shall initialize from a caller-provided backing array.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SYS-009",
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-002",
+      "title": "Map Hash Function Injection",
+      "description": "The map module shall accept an injected hashable pointer API with Hash and IsValueNull operations.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-007",
+        "REQ-MAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-003",
+      "title": "Map Equality Injection",
+      "description": "The map module shall accept an injected value pointer API with an Equals operation for key comparison.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-007",
+        "REQ-MAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-004",
+      "title": "Map Set",
+      "description": "The map shall insert or update a key-value pair using linear probing.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-005",
+      "title": "Map Table Full Rejection",
+      "description": "The map shall return JUNO_STATUS_TABLE_FULL_ERROR when no empty slot exists during a Set operation.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MAP-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-006",
+      "title": "Map Get",
+      "description": "The map shall retrieve an entry by key using linear probing.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-007",
+      "title": "Map Key Not Found",
+      "description": "The map shall return JUNO_STATUS_DNE_ERROR when a Get operation does not find the key.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MAP-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-008",
+      "title": "Map Remove",
+      "description": "The map shall remove an entry by key using linear probing, resetting the slot.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-009",
+      "title": "Map Vtable Validation",
+      "description": "The map module shall verify that its API vtable entries are non-null before each operation.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MAP-010",
+      "title": "Map Dependency Validation",
+      "description": "The map module shall verify that the backing array, hashable pointer API, and value pointer API dependencies are valid before each operation.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    }
+  ]
+}

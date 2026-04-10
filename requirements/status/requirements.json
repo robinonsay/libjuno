@@ -1,0 +1,52 @@
+{
+  "module": "STATUS",
+  "requirements": [
+    {
+      "id": "REQ-STATUS-001",
+      "title": "Unified Status Type",
+      "description": "The status module shall define a single 32-bit integer status type (JUNO_STATUS_T) for error propagation.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-STATUS-002",
+      "title": "Canonical Status Codes",
+      "description": "The status module shall define distinct status codes for each error condition category (success, null pointer, memory, type, size, table full, does-not-exist, I/O, CRC, reference, data, timeout, out-of-bounds).",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-STATUS-003",
+      "title": "Failure Handler Callback Type",
+      "description": "The status module shall define an optional failure handler callback type that receives a status code, message, and user data.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-STATUS-004",
+      "title": "Failure Handler Non-Interference",
+      "description": "The failure handler shall not alter control flow when invoked.",
+      "rationale": "Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-STATUS-003"
+      ],
+      "implements": []
+    }
+  ]
+}

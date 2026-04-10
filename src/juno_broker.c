@@ -32,6 +32,7 @@ static const JUNO_SB_BROKER_API_T gtBrokerApi =
     RegisterSubscriber
 };
 
+// @{"req": ["REQ-SB-003"]}
 JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T **ptPipeRegistry, size_t iRegistryCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptBroker);
@@ -46,6 +47,7 @@ JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T 
     return tStatus;
 }
 
+// @{"req": ["REQ-SB-006", "REQ-SB-007"]}
 static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MID_T tMid, JUNO_POINTER_T tMsg)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
@@ -70,6 +72,7 @@ static JUNO_STATUS_T Publish(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_MID_T tMid
     return tStatus;
 }
 
+// @{"req": ["REQ-SB-008", "REQ-SB-009"]}
 static JUNO_STATUS_T RegisterSubscriber(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T *ptPipe)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;

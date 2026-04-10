@@ -1,0 +1,68 @@
+{
+  "module": "POINTER",
+  "requirements": [
+    {
+      "id": "REQ-POINTER-001",
+      "title": "Pointer Descriptor Structure",
+      "description": "The pointer module shall define a pointer trait (JUNO_POINTER_T) containing an API vtable pointer, memory address, size, and alignment.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-POINTER-002",
+      "title": "Pointer Copy",
+      "description": "The pointer API shall copy the value referenced by a source descriptor into a destination descriptor's storage location.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-POINTER-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-POINTER-003",
+      "title": "Pointer Reset",
+      "description": "The pointer API shall reset the memory at a pointer descriptor to a defined empty state.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-POINTER-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-POINTER-004",
+      "title": "Pointer Descriptor Validation",
+      "description": "The pointer module shall validate that a pointer descriptor's API, address, and size are non-null/non-zero.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008",
+        "REQ-SYS-010",
+        "REQ-POINTER-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-POINTER-005",
+      "title": "Pointer Type Verification",
+      "description": "The pointer module shall verify that a pointer descriptor's size and alignment match an expected type.",
+      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008",
+        "REQ-POINTER-004"
+      ],
+      "implements": []
+    }
+  ]
+}

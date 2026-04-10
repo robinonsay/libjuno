@@ -1,0 +1,137 @@
+{
+  "module": "SM",
+  "requirements": [
+    {
+      "id": "REQ-SM-001",
+      "title": "SM Root Structure",
+      "description": "The state machine root shall hold a pointer to the current state.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-002",
+      "title": "State Root Structure",
+      "description": "Each state shall embed a module root with an API vtable, a pointer to the owning SM, and a next-state option.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006",
+        "REQ-MODULE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-003",
+      "title": "State API Interface",
+      "description": "Each state API vtable shall define StateAction, ShouldExit, and ResetState operations.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SM-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-004",
+      "title": "SM Initialization",
+      "description": "The state machine shall initialize with a start state and failure handler.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-SM-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-005",
+      "title": "State Initialization",
+      "description": "A state shall initialize with a link to its owning SM, an API vtable, and an optional next state.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-002",
+        "REQ-SYS-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-006",
+      "title": "Get Current State",
+      "description": "The state machine shall return the current state pointer.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-007",
+      "title": "State Transition",
+      "description": "The state machine shall transition to the next state when the current state's next-state option is present.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-008",
+      "title": "No Transition When None",
+      "description": "The state machine shall remain in the current state when the next-state option is absent.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-009",
+      "title": "SM Verification",
+      "description": "The state machine shall verify that its root and current state pointer are non-NULL.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-010",
+      "title": "State Verification",
+      "description": "Each state shall verify that its API vtable and owning SM pointer are non-NULL.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010",
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-011",
+      "title": "Next State Pointer Verification",
+      "description": "Each state shall verify that the next-state pointer is non-NULL when the next-state option is marked present.",
+      "rationale": "Provides a reusable application framework pattern for structured embedded software.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    }
+  ]
+}

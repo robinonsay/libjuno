@@ -319,6 +319,7 @@ static TEST_MAP_ENTRY_T CreateTestEntry(uint32_t iKey, uint32_t iValue)
  * Test Cases: Initialization
  * ============================================================================ */
 
+// @{"verify": ["REQ-MAP-001", "REQ-MAP-002", "REQ-MAP-003"]}
 static void test_map_init_nominal(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -332,12 +333,14 @@ static void test_map_init_nominal(void)
     }
 }
 
+// @{"verify": ["REQ-MAP-001"]}
 static void test_map_init_null_map(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_MapInit(NULL, &gtTestMapEntryHashablePointerApi, &gtTestMapEntryValuePointerApi, NULL, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MAP-001", "REQ-MAP-010"]}
 static void test_map_init_null_api(void)
 {
     gtTestMap.ptBuffer = gtTestMapBuffer;
@@ -345,6 +348,7 @@ static void test_map_init_null_api(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MAP-001", "REQ-MAP-010"]}
 static void test_map_init_zero_capacity(void)
 {
     gtTestMap.ptBuffer = gtTestMapBuffer;
@@ -358,6 +362,7 @@ static void test_map_init_zero_capacity(void)
  * Test Cases: Set Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-MAP-004"]}
 static void test_map_set_single_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -376,6 +381,7 @@ static void test_map_set_single_item(void)
     TEST_ASSERT_EQUAL(100, gtTestMapBuffer[iExpectedIndex].iValue);
 }
 
+// @{"verify": ["REQ-MAP-004"]}
 static void test_map_set_multiple_items(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -397,6 +403,7 @@ static void test_map_set_multiple_items(void)
     }
 }
 
+// @{"verify": ["REQ-MAP-004"]}
 static void test_map_set_update_existing(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -420,6 +427,7 @@ static void test_map_set_update_existing(void)
     TEST_ASSERT_EQUAL(200, gtTestMapBuffer[iExpectedIndex].iValue);
 }
 
+// @{"verify": ["REQ-MAP-004"]}
 static void test_map_set_with_collision(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -444,6 +452,7 @@ static void test_map_set_with_collision(void)
     TEST_ASSERT_EQUAL(200, gtTestMapBuffer[6].iValue);
 }
 
+// @{"verify": ["REQ-MAP-004"]}
 static void test_map_set_null_map(void)
 {
     TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
@@ -453,6 +462,7 @@ static void test_map_set_null_map(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MAP-005"]}
 static void test_map_set_table_full(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -477,6 +487,7 @@ static void test_map_set_table_full(void)
  * Test Cases: Get Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-MAP-006"]}
 static void test_map_get_existing_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -501,6 +512,7 @@ static void test_map_get_existing_item(void)
     TEST_ASSERT_FALSE(ptRetrieved->bIsNull);
 }
 
+// @{"verify": ["REQ-MAP-007"]}
 static void test_map_get_nonexistent_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -513,6 +525,7 @@ static void test_map_get_nonexistent_item(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_DNE_ERROR, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-MAP-006"]}
 static void test_map_get_after_collision(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -540,6 +553,7 @@ static void test_map_get_after_collision(void)
     TEST_ASSERT_EQUAL(200, ptRetrieved->iValue);
 }
 
+// @{"verify": ["REQ-MAP-006"]}
 static void test_map_get_null_map(void)
 {
     TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 0);
@@ -553,6 +567,7 @@ static void test_map_get_null_map(void)
  * Test Cases: Remove Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-MAP-008"]}
 static void test_map_remove_existing_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -575,6 +590,7 @@ static void test_map_remove_existing_item(void)
     TEST_ASSERT_TRUE(gtTestMapBuffer[iExpectedIndex].bIsNull);
 }
 
+// @{"verify": ["REQ-MAP-008"]}
 static void test_map_remove_nonexistent_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -601,6 +617,7 @@ static void test_map_remove_nonexistent_item(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MAP-008"]}
 static void test_map_remove_after_collision(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -629,6 +646,7 @@ static void test_map_remove_after_collision(void)
     TEST_ASSERT_TRUE(gtTestMapBuffer[6].bIsNull);
 }
 
+// @{"verify": ["REQ-MAP-008"]}
 static void test_map_remove_null_map(void)
 {
     TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 0);
@@ -642,6 +660,7 @@ static void test_map_remove_null_map(void)
  * Test Cases: Collision Handling & Linear Probing
  * ============================================================================ */
 
+// @{"verify": ["REQ-MAP-004", "REQ-MAP-006"]}
 static void test_map_multiple_collisions_linear_probing(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -692,6 +711,7 @@ static void test_map_multiple_collisions_linear_probing(void)
     TEST_ASSERT_EQUAL(23, ((TEST_MAP_ENTRY_T *)tResult3.tOk.pvAddr)->iKey);
 }
 
+// @{"verify": ["REQ-MAP-004", "REQ-MAP-006"]}
 static void test_map_wraparound_probing(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -718,6 +738,7 @@ static void test_map_wraparound_probing(void)
  * Test Cases: Edge Cases
  * ============================================================================ */
 
+// @{"verify": ["REQ-MAP-004", "REQ-MAP-006"]}
 static void test_map_single_element_capacity(void)
 {
     TEST_MAP_T tSmallMap;
@@ -752,6 +773,7 @@ static void test_map_single_element_capacity(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_TABLE_FULL_ERROR, tStatus);
 }
 
+// @{"verify": ["REQ-MAP-004", "REQ-MAP-006", "REQ-MAP-008"]}
 static void test_map_set_get_remove_cycle(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -785,6 +807,7 @@ static void test_map_set_get_remove_cycle(void)
  * Test Cases: API Verification
  * ============================================================================ */
 
+// @{"verify": ["REQ-MAP-009"]}
 static void test_map_verify_valid_map(void)
 {
     JUNO_STATUS_T tStatus = InitTestMap(&gtTestMap, TEST_MAP_CAPACITY);
@@ -794,6 +817,7 @@ static void test_map_verify_valid_map(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-MAP-009"]}
 static void test_map_verify_null_map(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_MapVerify(NULL);
@@ -806,6 +830,7 @@ static void test_map_verify_null_map(void)
  * Test Cases: Pointer API Functions
  * ============================================================================ */
 
+// @{"verify": ["REQ-POINTER-002"]}
 static void test_map_entry_copy_nominal(void)
 {
     TEST_MAP_ENTRY_T tSrc = CreateTestEntry(42, 100);
@@ -821,6 +846,7 @@ static void test_map_entry_copy_nominal(void)
     TEST_ASSERT_FALSE(tDest.bIsNull);
 }
 
+// @{"verify": ["REQ-POINTER-002"]}
 static void test_map_entry_copy_null_dest(void)
 {
     TEST_MAP_ENTRY_T tSrc = CreateTestEntry(42, 100);
@@ -831,6 +857,7 @@ static void test_map_entry_copy_null_dest(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-POINTER-003"]}
 static void test_map_entry_reset_nominal(void)
 {
     TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
@@ -843,6 +870,7 @@ static void test_map_entry_reset_nominal(void)
     TEST_ASSERT_TRUE(tEntry.bIsNull);
 }
 
+// @{"verify": ["REQ-MAP-003"]}
 static void test_map_entry_equals_same_key(void)
 {
     TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(42, 100);
@@ -856,6 +884,7 @@ static void test_map_entry_equals_same_key(void)
     TEST_ASSERT_TRUE(tResult.tOk);
 }
 
+// @{"verify": ["REQ-MAP-003"]}
 static void test_map_entry_equals_different_key(void)
 {
     TEST_MAP_ENTRY_T tEntry1 = CreateTestEntry(42, 100);
@@ -869,6 +898,7 @@ static void test_map_entry_equals_different_key(void)
     TEST_ASSERT_FALSE(tResult.tOk);
 }
 
+// @{"verify": ["REQ-MAP-002"]}
 static void test_map_entry_hash_nominal(void)
 {
     TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);
@@ -879,6 +909,7 @@ static void test_map_entry_hash_nominal(void)
     TEST_ASSERT_EQUAL(42, tResult.tOk);
 }
 
+// @{"verify": ["REQ-MAP-002"]}
 static void test_map_entry_is_null_true(void)
 {
     TEST_MAP_ENTRY_T tEntry = {0, 0, true};
@@ -889,6 +920,7 @@ static void test_map_entry_is_null_true(void)
     TEST_ASSERT_TRUE(tResult.tOk);
 }
 
+// @{"verify": ["REQ-MAP-002"]}
 static void test_map_entry_is_null_false(void)
 {
     TEST_MAP_ENTRY_T tEntry = CreateTestEntry(42, 100);

@@ -77,6 +77,7 @@ struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(void,
 );
 
 /// @brief Verify if this is a valid state machine.
+// @{"req": ["REQ-SM-009"]}
 static inline JUNO_STATUS_T JunoSm_Verify(JUNO_SM_ROOT_T *ptSmRoot)
 {
     JUNO_ASSERT_EXISTS(ptSmRoot);
@@ -84,6 +85,7 @@ static inline JUNO_STATUS_T JunoSm_Verify(JUNO_SM_ROOT_T *ptSmRoot)
     return JUNO_STATUS_SUCCESS;
 }
 
+// @{"req": ["REQ-SM-010", "REQ-SM-011"]}
 static inline JUNO_STATUS_T JunoSm_StateVerify(JUNO_SM_STATE_ROOT_T *ptSmState)
 {
     JUNO_ASSERT_EXISTS(ptSmState);
@@ -96,6 +98,7 @@ static inline JUNO_STATUS_T JunoSm_StateVerify(JUNO_SM_STATE_ROOT_T *ptSmState)
 }
 
 /// @brief Initialize a state, linking it to the SM and optional next state.
+// @{"req": ["REQ-SM-005"]}
 static inline JUNO_STATUS_T JunoSm_StateInit(JUNO_SM_ROOT_T *ptSm, JUNO_SM_STATE_ROOT_T *ptStateRoot, JUNO_SM_STATE_ROOT_T *ptNextState, const JUNO_SM_STATE_API_T *ptStateApi, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptStateRoot && ptStateApi && ptSm);
@@ -117,6 +120,7 @@ static inline JUNO_STATUS_T JunoSm_StateInit(JUNO_SM_ROOT_T *ptSm, JUNO_SM_STATE
 }
 
 /// @brief Initialize the state machine with a start state.
+// @{"req": ["REQ-SM-004"]}
 static inline JUNO_STATUS_T JunoSm_Init(JUNO_SM_ROOT_T *ptSmRoot, JUNO_SM_STATE_ROOT_T *ptStartState, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptSmRoot);
@@ -129,6 +133,7 @@ static inline JUNO_STATUS_T JunoSm_Init(JUNO_SM_ROOT_T *ptSmRoot, JUNO_SM_STATE_
 }
 
 /// @brief Get the current state pointer.
+// @{"req": ["REQ-SM-006"]}
 static inline JUNO_SM_RESULT_STATE_T JunoSm_GetCurrentState(JUNO_SM_ROOT_T *ptSmRoot)
 {
     JUNO_SM_RESULT_STATE_T tResult = {JUNO_STATUS_ERR, NULL};
@@ -140,6 +145,7 @@ static inline JUNO_SM_RESULT_STATE_T JunoSm_GetCurrentState(JUNO_SM_ROOT_T *ptSm
 }
 
 /// @brief Transition to the next state if present; return the new state option.
+// @{"req": ["REQ-SM-007", "REQ-SM-008"]}
 static inline JUNO_SM_RESULT_OPTION_STATE_T JunoSm_TransitionState(JUNO_SM_ROOT_T *ptSmRoot)
 {
     JUNO_SM_RESULT_OPTION_STATE_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR,

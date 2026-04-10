@@ -1,0 +1,103 @@
+{
+  "module": "HEAP",
+  "requirements": [
+    {
+      "id": "REQ-HEAP-001",
+      "title": "Heap Initialization",
+      "description": "The heap module shall initialize from a caller-provided backing array.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SYS-009",
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-HEAP-002",
+      "title": "Heap Element Comparison Injection",
+      "description": "The heap module shall accept an injected element pointer API with Compare and Swap operations.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-007",
+        "REQ-HEAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-HEAP-003",
+      "title": "Heap Insert",
+      "description": "The heap shall insert an element and restore the heap property in O(log n) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-HEAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-HEAP-004",
+      "title": "Heap Pop",
+      "description": "The heap shall remove the root element and restore the heap property in O(log n) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-HEAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-HEAP-005",
+      "title": "Heap Pop Output",
+      "description": "The heap Pop operation shall copy the removed root element into a caller-provided pointer descriptor.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-HEAP-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-HEAP-006",
+      "title": "Heap Heapify",
+      "description": "The heap shall transform the underlying array into a valid heap in O(n) time.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-HEAP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-HEAP-007",
+      "title": "Heap Vtable Validation",
+      "description": "The heap module shall verify that the heap API vtable entries are non-null before each operation.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-HEAP-008",
+      "title": "Heap Dependency Validation",
+      "description": "The heap module shall verify that the backing array and heap pointer API dependencies are valid before each operation.",
+      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    }
+  ]
+}
