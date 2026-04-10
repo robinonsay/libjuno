@@ -1,0 +1,87 @@
+{
+  "module": "ARRAY",
+  "requirements": [
+    {
+      "id": "REQ-ARRAY-001",
+      "title": "Array Initialization",
+      "description": "The array module shall initialize from a caller-provided API vtable and capacity.",
+      "rationale": "The array is the foundational data structure upon which queue, stack, heap, and map are built; it must initialize from caller-provided storage to satisfy the zero-allocation constraint.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-002",
+      "title": "Array SetAt",
+      "description": "The array shall copy a value into a slot at a given index in O(1) time.",
+      "rationale": "SetAt is the fundamental write operation, using the pointer API to copy values into slots in a type-safe manner.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-003",
+      "title": "Array GetAt",
+      "description": "The array shall return a pointer descriptor to the slot at a given index in O(1) time.",
+      "rationale": "GetAt returns a pointer descriptor rather than a raw pointer, maintaining the type-safe access model throughout the data structure hierarchy.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-004",
+      "title": "Array RemoveAt",
+      "description": "The array shall clear the slot at a given index in O(1) time.",
+      "rationale": "Clearing a slot via the pointer Reset operation ensures no stale data remains, preventing downstream consumers from reading invalid values.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-ARRAY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-005",
+      "title": "Array Bounds Checking",
+      "description": "The array shall return JUNO_STATUS_OOB_ERROR when an index is outside its capacity.",
+      "rationale": "Explicit bounds checking prevents out-of-bounds memory access, which would cause silent corruption or undefined behavior on bare-metal targets lacking an MMU.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-006",
+      "title": "Array Vtable Validation",
+      "description": "The array module shall verify that the array API vtable entries are non-null.",
+      "rationale": "Validates the vtable at runtime to ensure memory safety before dispatching any operation through function pointers.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-ARRAY-007",
+      "title": "Array Capacity Validation",
+      "description": "The array module shall verify that the array capacity is non-zero.",
+      "rationale": "A zero-capacity array has no backing storage and cannot perform any useful operation; rejecting it early prevents division-by-zero or empty-loop errors in dependent modules.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    }
+  ]
+}

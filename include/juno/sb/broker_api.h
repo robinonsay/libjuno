@@ -47,6 +47,7 @@
  *  
  *  @see examples/example_project for single-threaded usage
  */
+// @{"req": ["REQ-SB-013"]}
 #ifndef JUNO_SB_API_H
 #define JUNO_SB_API_H
 #include "juno/ds/array_api.h"
@@ -68,12 +69,14 @@ typedef struct JUNO_SB_PIPE_TAG JUNO_SB_PIPE_T;
 typedef uint32_t JUNO_SB_MID_T;
 
 /// A subscriber pipe that carries messages for a specific MID.
+// @{"req": ["REQ-SB-004"]}
 struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE(JUNO_DS_QUEUE_ROOT_T,
     /// The pipe Id (Message ID / topic).
     JUNO_SB_MID_T iMsgId;
 );
 
 /// Broker root containing the registry of subscriber pipes.
+// @{"req": ["REQ-SB-001"]}
 struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
     /// The pipe registry (array of pointers to pipes).
     JUNO_SB_PIPE_T **ptPipeRegistry;
@@ -83,6 +86,7 @@ struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
     size_t zRegistryCapacity;
 );
 
+// @{"req": ["REQ-SB-002"]}
 struct JUNO_SB_BROKER_API_TAG
 {
     /// @brief Publish a message to all subscribers of tMid.
@@ -106,6 +110,7 @@ static inline JUNO_STATUS_T JunoSb_BrokerApiVerify(const JUNO_SB_BROKER_API_T *p
 }
 
 /// @brief Verify a broker instance and basic registry invariants.
+// @{"req": ["REQ-SB-010", "REQ-SB-011"]}
 static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptBroker)
 {
     JUNO_STATUS_T tStatus = JUNO_STATUS_SUCCESS;
@@ -117,6 +122,7 @@ static inline JUNO_STATUS_T JunoSb_BrokerVerify(const JUNO_SB_BROKER_ROOT_T *ptB
 }
 
 /// @brief Verify a pipe instance.
+// @{"req": ["REQ-SB-012"]}
 static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 {
     JUNO_ASSERT_EXISTS(ptPipe);
@@ -129,6 +135,7 @@ static inline JUNO_STATUS_T JunoSb_PipeVerify(const JUNO_SB_PIPE_T *ptPipe)
 JUNO_STATUS_T JunoSb_BrokerInit(JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_SB_PIPE_T **ptPipeRegistry, size_t iRegistryCapacity, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData);
 
 /// @brief Initialize a pipe for a specific MID backed by a queue over ptArray.
+// @{"req": ["REQ-SB-005"]}
 static inline JUNO_STATUS_T JunoSb_PipeInit(JUNO_SB_PIPE_T *ptPipe, JUNO_SB_MID_T iMid, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptPipe);

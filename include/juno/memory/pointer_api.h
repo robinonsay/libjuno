@@ -52,6 +52,7 @@ typedef struct JUNO_VALUE_POINTER_API_TAG JUNO_VALUE_POINTER_API_T;
 
 
 /// @brief Structure describing an address, its size and alignment.
+// @{"req": ["REQ-POINTER-001"]}
 struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
     /// Address of the memory region.
     void *pvAddr;
@@ -125,6 +126,7 @@ JUNO_MODULE_OPTION(JUNO_OPTION_POINTER_T, JUNO_POINTER_T);
  * @param tApi The expected JUNO_POINTER_API_T symbol.
  * @return JUNO_STATUS_SUCCESS if the descriptor is valid and matches, error otherwise.
  */
+// @{"req": ["REQ-POINTER-005"]}
 #define JunoMemory_PointerVerifyType(pointer, type, tApi) \
 (( \
     JunoMemory_PointerVerify(pointer) == JUNO_STATUS_SUCCESS && \
@@ -151,6 +153,7 @@ JUNO_MODULE_OPTION(JUNO_OPTION_POINTER_T, JUNO_POINTER_T);
  * @param ptPointerApi Pointer to the API vtable.
  * @return JUNO_STATUS_SUCCESS if all required functions are present.
  */
+// @{"req": ["REQ-POINTER-002", "REQ-POINTER-003"]}
 static inline JUNO_STATUS_T JunoMemory_PointerApiVerify(const JUNO_POINTER_API_T *ptPointerApi)
 {
     JUNO_ASSERT_EXISTS(
@@ -182,6 +185,7 @@ static inline JUNO_STATUS_T JunoMemory_ValuePointerApiVerify(const JUNO_VALUE_PO
  * @param tPointer The pointer descriptor to check.
  * @return JUNO_STATUS_SUCCESS if valid; error otherwise.
  */
+// @{"req": ["REQ-POINTER-004"]}
 static inline JUNO_STATUS_T JunoMemory_PointerVerify(const JUNO_POINTER_T tPointer)
 {
     JUNO_ASSERT_EXISTS(

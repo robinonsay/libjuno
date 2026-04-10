@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include "crc/ccitt.h"
 
+// @{"req": ["REQ-CRC-001", "REQ-CRC-002", "REQ-CRC-003", "REQ-CRC-006"]}
 uint16_t Juno_CrcCcittUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
     if(!(pcData && zDataSize))

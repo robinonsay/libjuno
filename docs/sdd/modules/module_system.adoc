@@ -1,0 +1,128 @@
+// @{"design": ["REQ-MODULE-001", "REQ-MODULE-002", "REQ-MODULE-003", "REQ-MODULE-004", "REQ-MODULE-005", "REQ-MODULE-006"]}
+= Module System
+
+== Purpose
+
+The Module System (`module.h`) provides the structural primitives for vtable-based dependency injection in LibJuno.
+It defines macros for declaring module roots, derivations, and unions, as well as Result and Option wrapper types for deterministic error propagation.
+
+== Data Structures
+
+=== Module Root (`JUNO_MODULE_ROOT`)
+
+Expands to a struct body with fields:
+
+[source,c]
+----
+const API_T *ptApi;                    // Vtable pointer (shared, const)
+JUNO_FAILURE_HANDLER_T _pfcnFailureHandler;  // Optional failure callback
+JUNO_USER_DATA_T *_pvFailureUserData;        // Opaque user data for handler
+// ... caller-specified additional members
+----
+
+=== Module Derivation (`JUNO_MODULE_DERIVE`)
+
+Expands to a struct body whose first member is the root:
+
+[source,c]
+----
+ROOT_T tRoot;   // Embedded root (via JUNO_MODULE_SUPER)
+// ... implementation-specific members
+----
+
+The first-member embedding guarantees that casting `DERIVATION_T *` to `ROOT_T *` is valid per C11 §6.7.2.1¶15.
+
+=== Module Union (`JUNO_MODULE`)
+
+Expands to a union containing the root and all derivations:
+
+[source,c]
+----
+union {
+    ROOT_T tRoot;           // Common view (via JUNO_MODULE_SUPER)
+    DERIVATION_1_T tImpl1;  // Sized for this variant
+    DERIVATION_2_T tImpl2;  // Sized for this variant
+};
+----
+
+The union is sized to the largest derivation, enabling caller-side stack allocation without knowing the concrete type at runtime.
+
+=== Trait Root (`JUNO_TRAIT_ROOT`)
+
+A lightweight variant of `JUNO_MODULE_ROOT` that omits the failure handler fields:
+
+[source,c]
+----
+const API_T *ptApi;
+// ... trait-specific members (no failure handler)
+----
+
+Used for ephemeral, pass-by-value types like `JUNO_POINTER_T`.
+
+=== Result Types (`JUNO_MODULE_RESULT`)
+
+Generates a struct with fields `{JUNO_STATUS_T tStatus; OK_T tOk;}`.
+Pre-defined specializations in `types.h`: `JUNO_RESULT_BOOL_T`, `JUNO_RESULT_UINT32_T`, `JUNO_RESULT_F64_T`, `JUNO_RESULT_SIZE_T`, `JUNO_RESULT_VOID_PTR_T`.
+
+=== Option Types (`JUNO_MODULE_OPTION`)
+
+Generates a struct with fields `{bool bIsSome; SOME_T tSome;}`.
+Models optional presence where absence is a legitimate state.
+
+== Interface Design
+
+=== Construction Macros
+
+`JUNO_MODULE_DECLARE(NAME_T)`:: Forward-declare a module union type.
+`JUNO_MODULE_ROOT_DECLARE(NAME_T)`:: Forward-declare a root struct type.
+`JUNO_MODULE_DERIVE_DECLARE(NAME_T)`:: Forward-declare a derivation struct type.
+`JUNO_TRAIT_DERIVE(ROOT_T, ...)`:: Define a trait derivation struct that embeds a trait root as its first member. Alias for `JUNO_MODULE_DERIVE` — provided for naming symmetry with `JUNO_TRAIT_ROOT`.
+
+=== Access Macros
+
+`JUNO_MODULE_SUPER`:: Standard field name (`tRoot`) for the embedded root in derivations/unions.
+`JUNO_MODULE_GET_API(ptModule, ROOT_T)`:: Cast to `ROOT_T *` and retrieve `ptApi`.
+
+=== Result/Option Macros
+
+`JUNO_OK(result)`:: Access `result.tOk`.
+`JUNO_ASSERT_OK(result, ...)`:: Execute fallback statements if `result.tStatus != SUCCESS`.
+`JUNO_OK_RESULT(value)`:: Construct a success result literal.
+`JUNO_ERR_RESULT(err, value)`:: Construct an error result literal.
+`JUNO_SOME(result)`:: Access `result.tSome`.
+`JUNO_ASSERT_SOME(result, ...)`:: Execute fallback statements if `result.bIsSome` is false.
+`JUNO_SOME_OPTION(value)`:: Construct a present option literal.
+`JUNO_NONE_OPTION(default_value)`:: Construct an absent option literal.
+
+== Algorithm Descriptions
+
+No algorithms.
+The module system is purely structural — all operations are compile-time macro expansions.
+
+== Error Handling
+
+Result types enforce check-before-use via `JUNO_ASSERT_OK`.
+Option types enforce presence-checking via `JUNO_ASSERT_SOME`.
+Both macros support variadic failure actions that the caller provides inline (typically `return status`).
+
+== Design Rationale
+
+The module system implements the root/derivation/union pattern described in Section 2 of this SDD.
+The root carries the vtable pointer as its first logical field, enabling safe upcast from any derivation or union view.
+The union provides stack-allocation sizing with type erasure.
+`JUNO_TRAIT_ROOT` omits failure handler fields for lightweight, ephemeral interfaces (see Pointer trait rationale in Section 5).
+Result/Option types provide structural error checking without `errno`, `longjmp`, or exceptions — suitable for freestanding C11.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-MODULE-001 | `JUNO_MODULE_ROOT` — root struct with `ptApi` field
+| REQ-MODULE-002 | `JUNO_MODULE_ROOT` — failure handler and user data fields
+| REQ-MODULE-003 | `JUNO_MODULE_DERIVE` — first-member root embedding
+| REQ-MODULE-004 | `JUNO_MODULE` — union of root and derivations
+| REQ-MODULE-005 | `JUNO_MODULE_RESULT` — Result type definition
+| REQ-MODULE-006 | `JUNO_MODULE_OPTION` — Option type definition
+|===

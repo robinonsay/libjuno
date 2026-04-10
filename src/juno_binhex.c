@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include "crc/binhex.h"
 
+// @{"req": ["REQ-CRC-001", "REQ-CRC-002", "REQ-CRC-003", "REQ-CRC-005"]}
 uint16_t Juno_CrcBinhexUpdate(uint16_t iCrc, const void *pcData, size_t zDataSize)
 {
     if(!(pcData && zDataSize))

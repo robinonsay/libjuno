@@ -1,0 +1,88 @@
+{
+  "module": "LOG",
+  "requirements": [
+    {
+      "id": "REQ-LOG-001",
+      "title": "Log Root Structure",
+      "description": "The log root shall embed a module root with an API vtable pointer.",
+      "rationale": "An abstract log interface decouples application diagnostic output from platform-specific logging backends (UART, semihosting, telemetry), enabling portability and testability.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-LOG-002",
+      "title": "Debug Level Logging",
+      "description": "The log API vtable shall define a LogDebug operation for debug-level messages.",
+      "rationale": "Debug-level messages provide verbose diagnostic information useful during development and integration testing.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-LOG-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-LOG-003",
+      "title": "Info Level Logging",
+      "description": "The log API vtable shall define a LogInfo operation for info-level messages.",
+      "rationale": "Info-level messages communicate normal operational status and milestones, useful for runtime monitoring.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-LOG-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-LOG-004",
+      "title": "Warning Level Logging",
+      "description": "The log API vtable shall define a LogWarning operation for warning-level messages.",
+      "rationale": "Warning-level messages flag recoverable anomalies that may require operator attention but do not halt execution.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-LOG-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-LOG-005",
+      "title": "Error Level Logging",
+      "description": "The log API vtable shall define a LogError operation for error-level messages.",
+      "rationale": "Error-level messages flag critical failures that may require corrective action or system recovery.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-LOG-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-LOG-006",
+      "title": "Log Initialization",
+      "description": "The log module shall initialize with an injected API vtable and failure handler.",
+      "rationale": "Initialization with an injected vtable and failure handler wires the log module to a platform-specific backend while maintaining the dependency injection pattern.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-LOG-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-LOG-007",
+      "title": "Variadic Message Format",
+      "description": "Each log operation shall accept a printf-like format string with variadic arguments.",
+      "rationale": "Printf-like variadic formatting is the standard embedded logging convention, allowing callers to compose messages inline without pre-formatting into a separate buffer.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-LOG-001"
+      ],
+      "implements": []
+    }
+  ]
+}

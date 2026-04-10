@@ -1,0 +1,120 @@
+// @{"design": ["REQ-QUEUE-001", "REQ-QUEUE-002", "REQ-QUEUE-003", "REQ-QUEUE-004", "REQ-QUEUE-005", "REQ-QUEUE-006", "REQ-QUEUE-007", "REQ-QUEUE-008"]}
+= Queue Module
+
+== Purpose
+
+The Queue module (`queue_api.h`) provides a fixed-capacity FIFO queue built on the Array abstraction.
+Elements are stored in a circular buffer pattern with O(1) enqueue, dequeue, and peek operations.
+
+== Data Structures
+
+=== Queue Root (`JUNO_DS_QUEUE_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_DS_QUEUE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_QUEUE_API_T,
+    JUNO_DS_ARRAY_ROOT_T *ptQueueArray;  // Backing array
+    size_t iStartIndex;                   // Index of logical front
+    size_t zLength;                       // Current element count
+);
+----
+
+=== Queue API (`JUNO_DS_QUEUE_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Enqueue(ptQueue, tItem)` | Copy element into the back slot.
+| `Dequeue(ptQueue, tReturn)` | Copy front element out, advance front.
+| `Peek(ptQueue)` | Return pointer descriptor to the front element without removal.
+|===
+
+== Interface Design
+
+`JunoDs_QueueInit(ptQueue, ptQueueArray, pfcnFailureHdlr, pvFailureUserData)`::
+Wires the queue vtable, stores the backing array, and validates via `JunoDs_QueueVerify`.
+`iStartIndex` and `zLength` are initialized to 0.
+
+`JunoDs_QueuePush(ptQueue, tItem)`:: Implementation of `Enqueue`.
+`JunoDs_QueuePop(ptQueue, tReturn)`:: Implementation of `Dequeue`.
+`JunoDs_QueuePeek(ptQueue)`:: Implementation of `Peek`.
+
+`JunoDs_QueueVerify(ptQueue)`::
+Inline verification: checks queue root, delegates to `JunoDs_ArrayVerify` for the backing array, then verifies the queue API.
+
+`JunoDs_QueueApiVerify(ptQueueApi)`::
+Inline verification that Enqueue, Dequeue, and Peek are non-NULL.
+
+== Algorithm Descriptions
+
+=== Enqueue
+
+. Compute back index: `(iStartIndex + zLength) % capacity`.
+. Copy `tItem` into the backing array at that index via `SetAt`.
+. Increment `zLength`.
+
+=== Dequeue
+
+. Copy the element at `iStartIndex` into `tReturn` via the pointer API.
+. Remove the element at `iStartIndex` via `RemoveAt`.
+. Advance `iStartIndex = (iStartIndex + 1) % capacity`.
+. Decrement `zLength`.
+
+=== Peek
+
+. Return the pointer descriptor at `iStartIndex` via `GetAt`.
+
+All operations are O(1).
+
+== Error Handling
+
+* `Enqueue` returns `JUNO_STATUS_INVALID_SIZE_ERROR` when full (`zLength == capacity`).
+* `Dequeue` returns `JUNO_STATUS_ERR` when empty (`zLength == 0`).
+* `Peek` returns `JUNO_STATUS_INVALID_SIZE_ERROR` when empty.
+* All operations call `Verify` at entry and propagate array/pointer errors.
+
+== Design Rationale
+
+The Queue reuses the Array abstraction for storage, adding only circular-index arithmetic.
+This avoids duplicating contiguous-storage logic and benefits from the Array's existing verification and pointer-based element access.
+
+== Usage Example
+
+[source,c]
+----
+// 1. Declare backing storage
+MY_MSG_T atMsgStorage[8];
+JUNO_DS_ARRAY_ROOT_T tArray;
+JUNO_DS_QUEUE_ROOT_T tQueue;
+
+// 2. Initialize array and queue
+JunoDs_ArrayInit(&tArray, &gtMsgArrayApi, 8, NULL, NULL);
+JunoDs_QueueInit(&tQueue, &tArray, NULL, NULL);
+
+// 3. Enqueue a message
+MY_MSG_T tMsg = { .iCmd = 42 };
+JUNO_POINTER_T tMsgPtr = JunoMemory_PointerInit(&gtMsgPointerApi, MY_MSG_T, &tMsg);
+JunoDs_QueuePush(&tQueue, tMsgPtr);
+
+// 4. Dequeue
+MY_MSG_T tOut;
+JUNO_POINTER_T tOutPtr = JunoMemory_PointerInit(&gtMsgPointerApi, MY_MSG_T, &tOut);
+JunoDs_QueuePop(&tQueue, tOutPtr);
+----
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-QUEUE-001 | `JunoDs_QueueInit` — initialization with caller-provided backing array
+| REQ-QUEUE-002 | Queue initial state — start index and length zeroed on init
+| REQ-QUEUE-003 | `Enqueue` — O(1) circular-buffer FIFO insertion
+| REQ-QUEUE-004 | Enqueue full rejection — returns `JUNO_STATUS_INVALID_SIZE_ERROR`
+| REQ-QUEUE-005 | `Dequeue` — O(1) FIFO front element extraction
+| REQ-QUEUE-006 | Dequeue empty rejection — returns `JUNO_STATUS_ERR`
+| REQ-QUEUE-007 | `Peek` — O(1) non-destructive front element access
+| REQ-QUEUE-008 | Peek empty rejection — returns `JUNO_STATUS_INVALID_SIZE_ERROR`
+|===

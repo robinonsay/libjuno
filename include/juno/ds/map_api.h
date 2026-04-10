@@ -127,6 +127,7 @@ struct JUNO_MAP_API_TAG
  * @return JUNO_STATUS_SUCCESS on valid configuration; otherwise an error
  *         (e.g., NULLPTR or INVALID_TYPE from dependencies).
  */
+// @{"req": ["REQ-MAP-009", "REQ-MAP-010"]}
 static inline JUNO_STATUS_T JunoDs_MapVerify(JUNO_MAP_ROOT_T *ptMap)
 {
     JUNO_ASSERT_EXISTS(

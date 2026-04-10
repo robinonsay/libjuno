@@ -1,0 +1,165 @@
+{
+  "module": "IO",
+  "requirements": [
+    {
+      "id": "REQ-IO-001",
+      "title": "Async IO Root Structure",
+      "description": "The async IO root shall embed a module root with an API vtable pointer.",
+      "rationale": "An abstract async IO interface decouples application-level communication logic from platform-specific UART, socket, or DMA implementations, enabling portability and testability.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-002",
+      "title": "Async IO Read",
+      "description": "The async IO API vtable shall define a Read operation that reads up to the requested number of bytes and updates the size with bytes actually read.",
+      "rationale": "Read with actual-bytes-read feedback allows callers to handle partial reads, which is the norm for non-blocking and DMA-based IO on embedded targets.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-003",
+      "title": "Async IO TryRead",
+      "description": "The async IO API vtable shall define a TryRead operation that reads with a timeout in microseconds.",
+      "rationale": "TryRead with a timeout enables bounded-time read attempts, which is essential for real-time systems that cannot block indefinitely on IO.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-004",
+      "title": "Async IO ReadUntil",
+      "description": "The async IO API vtable shall define a ReadUntil operation that reads until any stop character is received.",
+      "rationale": "ReadUntil enables delimiter-based framing (e.g., newline-terminated protocols) without requiring the caller to implement byte-by-byte polling.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-005",
+      "title": "Async IO TryReadUntil",
+      "description": "The async IO API vtable shall define a TryReadUntil operation that reads until a stop character or timeout.",
+      "rationale": "TryReadUntil combines delimiter-based framing with a timeout, preventing indefinite blocking when the delimiter never arrives.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-006",
+      "title": "Async IO Write",
+      "description": "The async IO API vtable shall define a Write operation that writes up to the requested number of bytes and updates the size with bytes actually written.",
+      "rationale": "Write with actual-bytes-written feedback allows callers to handle partial writes, which is common with buffered or DMA-based IO on embedded targets.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-007",
+      "title": "Async IO TryWrite",
+      "description": "The async IO API vtable shall define a TryWrite operation that writes with a timeout in microseconds.",
+      "rationale": "TryWrite with a timeout enables bounded-time write attempts, preventing real-time tasks from stalling on a full output buffer.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-008",
+      "title": "Async IO Poll",
+      "description": "The async IO API vtable shall define a Poll operation that checks for input readiness within a timeout.",
+      "rationale": "Poll enables non-blocking readiness checks, allowing applications to multiplex across IO channels or perform other work while waiting for input.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-009",
+      "title": "I2C IO Root Structure",
+      "description": "The I2C IO root shall embed a module root with an API vtable pointer.",
+      "rationale": "An abstract I2C interface decouples sensor and peripheral drivers from platform-specific I2C hardware, enabling portability and testability across different MCU families.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-010",
+      "title": "I2C Transfer Operation",
+      "description": "The I2C IO API vtable shall define a Transfer operation that processes an array of read/write messages.",
+      "rationale": "A multi-message transfer operation enables compound I2C transactions (e.g., write-then-read) in a single call, which is the standard pattern for register-based peripherals.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-011",
+      "title": "I2C Message Type Discrimination",
+      "description": "Each I2C message shall contain a header with a type field distinguishing read from write messages.",
+      "rationale": "A type field in the message header enables the transfer operation to dispatch read vs. write behavior without requiring separate API calls for each direction.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-012",
+      "title": "I2C Device Address",
+      "description": "Each I2C message header shall contain the target device address.",
+      "rationale": "Including the device address in each message header allows a single transfer call to address multiple devices on the same bus, supporting multi-device transactions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-013",
+      "title": "SPI IO Root Structure",
+      "description": "The SPI IO root shall embed a module root with an API vtable pointer.",
+      "rationale": "An abstract SPI interface decouples sensor and peripheral drivers from platform-specific SPI hardware, enabling portability and testability across different MCU families.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-IO-014",
+      "title": "SPI Transaction Operation",
+      "description": "The SPI IO API vtable shall define a Transaction operation for full-duplex read/write.",
+      "rationale": "Full-duplex transaction is the native SPI operation model; providing it as a single call allows the platform backend to optimize DMA or hardware-level simultaneous read/write.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-IO-013"
+      ],
+      "implements": []
+    }
+  ]
+}

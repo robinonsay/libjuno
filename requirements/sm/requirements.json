@@ -1,0 +1,137 @@
+{
+  "module": "SM",
+  "requirements": [
+    {
+      "id": "REQ-SM-001",
+      "title": "SM Root Structure",
+      "description": "The state machine root shall hold a pointer to the current state.",
+      "rationale": "The state machine root holds the current state pointer, which is the minimal state needed to drive a state machine without dynamic allocation or global state.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-002",
+      "title": "State Root Structure",
+      "description": "Each state shall embed a module root with an API vtable, a pointer to the owning SM, and a next-state option.",
+      "rationale": "Embedding a module root in each state enables polymorphic dispatch of state actions through the vtable, allowing different state implementations to share the same interface.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006",
+        "REQ-MODULE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-003",
+      "title": "State API Interface",
+      "description": "Each state API vtable shall define StateAction, ShouldExit, and ResetState operations.",
+      "rationale": "StateAction, ShouldExit, and ResetState define the minimal lifecycle hooks needed to execute, terminate, and reinitialize a state, keeping the interface simple and composable.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SM-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-004",
+      "title": "SM Initialization",
+      "description": "The state machine shall initialize with a start state and failure handler.",
+      "rationale": "Initializing with a start state and failure handler establishes the SM in a valid, runnable configuration with diagnostic support from the first invocation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-SM-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-005",
+      "title": "State Initialization",
+      "description": "A state shall initialize with a link to its owning SM, an API vtable, and an optional next state.",
+      "rationale": "Linking a state to its owning SM enables the state to trigger transitions and query SM-level context without global references.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-002",
+        "REQ-SYS-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-006",
+      "title": "Get Current State",
+      "description": "The state machine shall return the current state pointer.",
+      "rationale": "Exposing the current state pointer allows external logic to inspect SM status, which is useful for diagnostics, telemetry, and conditional behavior.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-007",
+      "title": "State Transition",
+      "description": "The state machine shall transition to the next state when the current state's next-state option is present.",
+      "rationale": "Option-driven transitions decouple transition logic from the SM engine; a state signals a transition by setting the next-state option, keeping the transition protocol explicit and deterministic.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-008",
+      "title": "No Transition When None",
+      "description": "The state machine shall remain in the current state when the next-state option is absent.",
+      "rationale": "Remaining in the current state when no transition is requested is the safe default, preventing unintended state changes due to uninitialized option fields.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SM-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-009",
+      "title": "SM Verification",
+      "description": "The state machine shall verify that its root and current state pointer are non-NULL.",
+      "rationale": "Verifying root and state pointer validity at runtime ensures memory safety before the SM engine dereferences any internal pointers.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-010",
+      "title": "State Verification",
+      "description": "Each state shall verify that its API vtable and owning SM pointer are non-NULL.",
+      "rationale": "Validating each state's vtable and owning-SM pointer at runtime catches misconfigured states before they produce undefined behavior through invalid dispatch or null dereference.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010",
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SM-011",
+      "title": "Next State Pointer Verification",
+      "description": "Each state shall verify that the next-state pointer is non-NULL when the next-state option is marked present.",
+      "rationale": "A present option with a NULL pointer would cause a null dereference during transition; validating this precondition prevents that undefined behavior.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    }
+  ]
+}

@@ -41,19 +41,24 @@ extern "C"
 typedef struct JUNO_MP_MTX_ROOT_TAG JUNO_MP_MTX_ROOT_T;
 typedef struct JUNO_MP_MTX_API_TAG JUNO_MP_MTX_API_T;
 
+// @{"req": ["REQ-MTX-001"]}
 struct JUNO_MP_MTX_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MP_MTX_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_MP_MTX_API_TAG
 {
     /// @brief Attempt to acquire the lock and return immediately.
+    // @{"req": ["REQ-MTX-002"]}
     JUNO_RESULT_BOOL_T (*TryLock)(JUNO_MP_MTX_ROOT_T *ptMtx);
     /// @brief Busy-wait until the lock is acquired.
+    // @{"req": ["REQ-MTX-003"]}
     JUNO_STATUS_T (*Lock)(JUNO_MP_MTX_ROOT_T *ptMtx);
     /// @brief Release the lock.
+    // @{"req": ["REQ-MTX-004"]}
     JUNO_STATUS_T (*Free)(JUNO_MP_MTX_ROOT_T *ptMtx);
 };
 
 /// @brief Verify a mutex instance and its API table.
+// @{"req": ["REQ-MTX-005"]}
 static inline JUNO_STATUS_T JunoMp_MtxVerify(const JUNO_MP_MTX_ROOT_T *ptMtx)
 {
     JUNO_ASSERT_EXISTS(

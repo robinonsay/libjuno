@@ -350,6 +350,7 @@ static void assert_min_heap_property(TEST_HEAP_T *ptHeap)
  * Test Cases: Initialization
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-001"]}
 static void test_heap_init_nominal(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -359,6 +360,7 @@ static void test_heap_init_nominal(void)
     TEST_ASSERT_NOT_NULL(gtTestHeap.tRoot.ptApi);
 }
 
+// @{"verify": ["REQ-HEAP-001"]}
 static void test_heap_init_null_heap(void)
 {
     TEST_HEAP_ARRAY_T tArray = {0};
@@ -368,6 +370,7 @@ static void test_heap_init_null_heap(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-001", "REQ-HEAP-008"]}
 static void test_heap_init_null_api(void)
 {
     gtTestHeap.tArray.ptBuffer = gtTestHeapBuffer;
@@ -377,6 +380,7 @@ static void test_heap_init_null_api(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-001", "REQ-HEAP-008"]}
 static void test_heap_init_zero_capacity(void)
 {
     gtTestHeap.tArray.ptBuffer = gtTestHeapBuffer;
@@ -390,11 +394,13 @@ static void test_heap_init_zero_capacity(void)
  * Test Cases: Verification
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-007"]}
 static void test_heap_verify_null_heap(void)
 {
     TEST_ASSERT_EQUAL(JUNO_STATUS_NULLPTR_ERROR, JunoDs_Heap_Verify(NULL));
 }
 
+// @{"verify": ["REQ-HEAP-007"]}
 static void test_heap_verify_invalid_api(void)
 {
     TEST_HEAP_T tHeap = {0};
@@ -406,6 +412,7 @@ static void test_heap_verify_invalid_api(void)
  * Test Cases: Insert Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_insert_single_item_max_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -422,6 +429,7 @@ static void test_heap_insert_single_item_max_heap(void)
     TEST_ASSERT_EQUAL(1, gtTestHeapBuffer[0].iCounter);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_insert_multiple_items_max_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -442,6 +450,7 @@ static void test_heap_insert_multiple_items_max_heap(void)
     TEST_ASSERT_EQUAL(N, gtTestHeap.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_insert_to_full_capacity(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -460,6 +469,7 @@ static void test_heap_insert_to_full_capacity(void)
     assert_max_heap_property(&gtTestHeap);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_insert_overflow(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -482,6 +492,7 @@ static void test_heap_insert_overflow(void)
     TEST_ASSERT_EQUAL(TEST_HEAP_CAPACITY, gtTestHeap.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_insert_null_heap(void)
 {
     TEST_HEAP_DATA_T tData = CreateTestData(42, true, 1);
@@ -491,6 +502,7 @@ static void test_heap_insert_null_heap(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_insert_invalid_pointer(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -511,6 +523,7 @@ static void test_heap_insert_invalid_pointer(void)
  * Test Cases: Min Heap Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-002", "REQ-HEAP-003"]}
 static void test_heap_min_heap_insert_and_property(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMinHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -534,6 +547,7 @@ static void test_heap_min_heap_insert_and_property(void)
  * Test Cases: Pop Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-004", "REQ-HEAP-005"]}
 static void test_heap_pop_single_item_max_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -557,6 +571,7 @@ static void test_heap_pop_single_item_max_heap(void)
     TEST_ASSERT_EQUAL(5, tPopData.iCounter);
 }
 
+// @{"verify": ["REQ-HEAP-004", "REQ-HEAP-005"]}
 static void test_heap_pop_multiple_items_max_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -592,6 +607,7 @@ static void test_heap_pop_multiple_items_max_heap(void)
     TEST_ASSERT_EQUAL(0, gtTestHeap.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_pop_empty_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -603,6 +619,7 @@ static void test_heap_pop_empty_heap(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_pop_null_heap(void)
 {
     TEST_HEAP_DATA_T tPopData = {0};
@@ -611,6 +628,7 @@ static void test_heap_pop_null_heap(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_pop_invalid_pointer(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -632,6 +650,7 @@ static void test_heap_pop_invalid_pointer(void)
  * Test Cases: Update Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_update_single_element(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -647,6 +666,7 @@ static void test_heap_update_single_element(void)
     TEST_ASSERT_EQUAL(42, gtTestHeapBuffer[0].iValue);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_update_bubble_up(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -668,6 +688,7 @@ static void test_heap_update_bubble_up(void)
     assert_max_heap_property(&gtTestHeap);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_update_empty_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -678,12 +699,14 @@ static void test_heap_update_empty_heap(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-003"]}
 static void test_heap_update_null_heap(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_Heap_Update(NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-002"]}
 static void test_heap_update_with_compare_error(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -701,6 +724,7 @@ static void test_heap_update_with_compare_error(void)
     gtTestHeap.bFailCompare = false;
 }
 
+// @{"verify": ["REQ-HEAP-002"]}
 static void test_heap_update_with_swap_error(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -722,6 +746,7 @@ static void test_heap_update_with_swap_error(void)
  * Test Cases: SiftDown Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_siftdown_from_root(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -739,6 +764,7 @@ static void test_heap_siftdown_from_root(void)
     assert_max_heap_property(&gtTestHeap);
 }
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_siftdown_from_middle(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -758,6 +784,7 @@ static void test_heap_siftdown_from_middle(void)
     assert_max_heap_property(&gtTestHeap);
 }
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_siftdown_leaf_node(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -777,6 +804,7 @@ static void test_heap_siftdown_leaf_node(void)
     TEST_ASSERT_EQUAL(25, gtTestHeapBuffer[2].iValue);
 }
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_siftdown_empty_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -787,12 +815,14 @@ static void test_heap_siftdown_empty_heap(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-004"]}
 static void test_heap_siftdown_null_heap(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_Heap_SiftDown(NULL, 0);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-002"]}
 static void test_heap_siftdown_with_compare_error(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -811,6 +841,7 @@ static void test_heap_siftdown_with_compare_error(void)
     gtTestHeap.bFailCompare = false;
 }
 
+// @{"verify": ["REQ-HEAP-002"]}
 static void test_heap_siftdown_with_swap_error(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -833,6 +864,7 @@ static void test_heap_siftdown_with_swap_error(void)
  * Test Cases: Heapify Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-006"]}
 static void test_heap_heapify_from_unsorted_array(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -851,6 +883,7 @@ static void test_heap_heapify_from_unsorted_array(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
     assert_max_heap_property(&gtTestHeap);
 }
+// @{"verify": ["REQ-HEAP-006"]}
 static void test_heap_heapify_empty_heap(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -862,6 +895,7 @@ static void test_heap_heapify_empty_heap(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_ERR, tStatus);
 }
 
+// @{"verify": ["REQ-HEAP-006"]}
 static void test_heap_heapify_null_heap(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_Heap_Heapify(NULL);
@@ -872,6 +906,7 @@ static void test_heap_heapify_null_heap(void)
  * Test Cases: Error Path Testing
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-002"]}
 static void test_heap_compare_function_error(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -893,6 +928,7 @@ static void test_heap_compare_function_error(void)
     gtTestHeap.bFailCompare = false;
 }
 
+// @{"verify": ["REQ-HEAP-002"]}
 static void test_heap_swap_function_error(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -918,6 +954,7 @@ static void test_heap_swap_function_error(void)
  * Test Cases: Stress Testing
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-003", "REQ-HEAP-004"]}
 static void test_heap_stress_insert_pop_cycles(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);
@@ -954,6 +991,7 @@ static void test_heap_stress_insert_pop_cycles(void)
     }
 }
 
+// @{"verify": ["REQ-HEAP-002", "REQ-HEAP-003", "REQ-HEAP-004"]}
 static void test_heap_mixed_min_max_operations(void)
 {
     /* Test min heap operations */
@@ -992,6 +1030,7 @@ static void test_heap_mixed_min_max_operations(void)
  * Test Cases: Edge Cases
  * ============================================================================ */
 
+// @{"verify": ["REQ-HEAP-003", "REQ-HEAP-004"]}
 static void test_heap_single_element_capacity(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, 1);
@@ -1016,6 +1055,7 @@ static void test_heap_single_element_capacity(void)
     TEST_ASSERT_EQUAL(0, gtTestHeap.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-HEAP-003", "REQ-HEAP-004", "REQ-HEAP-005"]}
 static void test_heap_data_integrity_after_operations(void)
 {
     JUNO_STATUS_T tStatus = InitTestHeap(&gtTestHeap, &gtTestMaxHeapPointerApi, TEST_HEAP_CAPACITY);

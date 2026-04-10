@@ -72,6 +72,7 @@ if(JUNO_COVERAGE)
 endif()
 
 
+# @{"req": ["REQ-SYS-001", "REQ-SYS-003"]}
 if(JUNO_FREESTANDING)
     list(APPEND JUNO_COMPILE_C_OPTIONS
         -nostdlib

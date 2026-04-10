@@ -55,6 +55,7 @@ typedef enum JUNO_I2C_IO_MSG_TYPE_TAG
     JUNO_I2C_IO_MSG_TYPE_R = 2,
 } JUNO_I2C_IO_MSG_TYPE_T;
 
+// @{"req": ["REQ-IO-011", "REQ-IO-012"]}
 struct JUNO_I2C_IO_MSG_HDR_TAG
 {
     JUNO_I2C_IO_MSG_TYPE_T tType;
@@ -104,6 +105,7 @@ union JUNO_I2C_IO_MSG_TAG
     } \
 }
 
+// @{"req": ["REQ-IO-009"]}
 struct JUNO_I2C_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_I2C_IO_API_T, JUNO_MODULE_EMPTY);
 
 #define JUNO_I2C_IO_TRANSFER(...) (JUNO_I2C_IO_MSG_T[]){__VA_ARGS__}
@@ -129,6 +131,7 @@ struct JUNO_I2C_IO_API_TAG
      * @param ptArrMsgs Pointer to message array created with JUNO_I2C_IO_TRANSFER(...).
      * @param zMsgArrLen Number of messages in the array.
      */
+    // @{"req": ["REQ-IO-010"]}
     JUNO_STATUS_T (*Transfer)(JUNO_I2C_IO_ROOT_T *ptI2c, const JUNO_I2C_IO_MSG_T *ptArrMsgs, size_t zMsgArrLen);
 };
 

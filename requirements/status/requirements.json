@@ -1,0 +1,52 @@
+{
+  "module": "STATUS",
+  "requirements": [
+    {
+      "id": "REQ-STATUS-001",
+      "title": "Unified Status Type",
+      "description": "The status module shall define a single 32-bit integer status type (JUNO_STATUS_T) for error propagation.",
+      "rationale": "A single, fixed-width status type ensures consistent error propagation across all modules and is portable to any target with stdint.h support.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-STATUS-002",
+      "title": "Canonical Status Codes",
+      "description": "The status module shall define distinct status codes for each error condition category (success, null pointer, memory, type, size, table full, does-not-exist, I/O, CRC, reference, data, timeout, out-of-bounds).",
+      "rationale": "Distinct status codes for each error category enable precise diagnosis of failure causes, which is critical on embedded targets where printf-style debugging may be unavailable.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-STATUS-003",
+      "title": "Failure Handler Callback Type",
+      "description": "The status module shall define an optional failure handler callback type that receives a status code, message, and user data.",
+      "rationale": "An optional callback type allows integrators to hook diagnostic logging, telemetry, or breakpoint triggers into the error path without modifying library code.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-STATUS-004",
+      "title": "Failure Handler Non-Interference",
+      "description": "The failure handler shall not alter control flow when invoked.",
+      "rationale": "Failure handlers must be diagnostic-only to preserve deterministic control flow; allowing handlers to alter execution would introduce unpredictable branching that undermines safety and testability.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-STATUS-003"
+      ],
+      "implements": []
+    }
+  ]
+}

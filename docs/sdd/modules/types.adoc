@@ -1,0 +1,45 @@
+// @{"design": ["REQ-MODULE-005"]}
+= Common Types Module
+
+== Purpose
+
+The Types module (`types.h`) provides convenience specializations of the generic `JUNO_MODULE_RESULT` macro for frequently used payload types.
+These result types are used across all LibJuno modules to return a status alongside a typed value in a single aggregate.
+
+== Data Structures
+
+`JUNO_RESULT_BOOL_T`:: `{JUNO_STATUS_T tStatus; bool tOk;}`
+`JUNO_RESULT_UINT32_T`:: `{JUNO_STATUS_T tStatus; uint32_t tOk;}`
+`JUNO_RESULT_F64_T`:: `{JUNO_STATUS_T tStatus; double tOk;}`
+`JUNO_RESULT_SIZE_T`:: `{JUNO_STATUS_T tStatus; size_t tOk;}`
+`JUNO_RESULT_VOID_PTR_T`:: `{JUNO_STATUS_T tStatus; void *tOk;}`
+
+All types follow the `JUNO_MODULE_RESULT` pattern: access via `JUNO_OK(r)` and validate via `JUNO_ASSERT_OK(r, ...)`.
+
+== Interface Design
+
+No functions or macros beyond the type definitions.
+Types are used as return values by other modules' API functions.
+
+== Algorithm Descriptions
+
+No algorithms.
+
+== Error Handling
+
+Each result type embeds `JUNO_STATUS_T` for structural check-before-use.
+Callers use `JUNO_ASSERT_OK(result, return result.tStatus)` to validate before accessing `tOk`.
+
+== Design Rationale
+
+Pre-defined specializations avoid repetitive `JUNO_MODULE_RESULT` invocations across modules.
+The set covers the most common C value types used in embedded contexts: boolean flags, 32-bit counts, double-precision floats, sizes, and opaque pointers.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-MODULE-005 | All types defined via `JUNO_MODULE_RESULT` macro
+|===

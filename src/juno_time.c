@@ -23,6 +23,7 @@
 static const JUNO_TIME_SUBSECONDS_T giSUBSECS_MAX = (~(JUNO_TIME_SUBSECONDS_T)0);
 static const JUNO_TIME_SECONDS_T giSECS_MAX = (~(JUNO_TIME_SECONDS_T)0);
 
+// @{"req": ["REQ-TIME-003", "REQ-TIME-004"]}
 JUNO_STATUS_T JunoTime_AddTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToAdd)
 {
     JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
@@ -45,6 +46,7 @@ JUNO_STATUS_T JunoTime_AddTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T 
     return JUNO_STATUS_SUCCESS;
 }
 
+// @{"req": ["REQ-TIME-005", "REQ-TIME-006", "REQ-TIME-007", "REQ-TIME-008"]}
 JUNO_STATUS_T JunoTime_SubtractTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T *ptRetTime, JUNO_TIMESTAMP_T tTimeToSubtract)
 {
     JUNO_ASSERT_EXISTS(ptTime && ptRetTime);
@@ -73,6 +75,7 @@ JUNO_STATUS_T JunoTime_SubtractTime(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTA
     return JUNO_STATUS_SUCCESS;
 }
 
+// @{"req": ["REQ-TIME-009", "REQ-TIME-018", "REQ-TIME-019"]}
 JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_NANOS_RESULT_T tResult = {0};
@@ -109,6 +112,7 @@ JUNO_TIME_NANOS_RESULT_T JunoTime_TimestampToNanos(const JUNO_TIME_ROOT_T *ptTim
     return tResult;
 }
 
+// @{"req": ["REQ-TIME-010", "REQ-TIME-018", "REQ-TIME-019"]}
 JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_MICROS_RESULT_T tResult = {0};
@@ -142,6 +146,7 @@ JUNO_TIME_MICROS_RESULT_T JunoTime_TimestampToMicros(const JUNO_TIME_ROOT_T *ptT
     return tResult;
 }
 
+// @{"req": ["REQ-TIME-011", "REQ-TIME-018", "REQ-TIME-019"]}
 JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTime)
 {
     JUNO_TIME_MILLIS_RESULT_T tResult = {0};
@@ -176,6 +181,7 @@ JUNO_TIME_MILLIS_RESULT_T JunoTime_TimestampToMillis(const JUNO_TIME_ROOT_T *ptT
     return tResult;
 }
 
+// @{"req": ["REQ-TIME-012", "REQ-TIME-019"]}
 JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_NANOS_T iNanos)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
@@ -193,6 +199,7 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_NanosToTimestamp(const JUNO_TIME_ROOT_T *ptTime
     return tResult;
 }
 
+// @{"req": ["REQ-TIME-013", "REQ-TIME-019"]}
 JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MICROS_T iMicros)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
@@ -210,6 +217,7 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MicrosToTimestamp(const JUNO_TIME_ROOT_T *ptTim
     return tResult;
 }
 
+// @{"req": ["REQ-TIME-014", "REQ-TIME-019"]}
 JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIME_MILLIS_T iMillis)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};
@@ -228,6 +236,7 @@ JUNO_TIMESTAMP_RESULT_T JunoTime_MillisToTimestamp(const JUNO_TIME_ROOT_T *ptTim
 }
 
 
+// @{"req": ["REQ-TIME-015", "REQ-TIME-019"]}
 JUNO_RESULT_F64_T JunoTime_TimestampToDouble(const JUNO_TIME_ROOT_T *ptTime, JUNO_TIMESTAMP_T tTimestamp)
 {
     JUNO_RESULT_F64_T tResult = {0};
@@ -242,6 +251,7 @@ JUNO_RESULT_F64_T JunoTime_TimestampToDouble(const JUNO_TIME_ROOT_T *ptTime, JUN
     return tResult;
 }
 
+// @{"req": ["REQ-TIME-016", "REQ-TIME-017", "REQ-TIME-019"]}
 JUNO_TIMESTAMP_RESULT_T JunoTime_DoubleToTimestamp(const JUNO_TIME_ROOT_T *ptTime, double dTimestamp)
 {
     JUNO_TIMESTAMP_RESULT_T tResult = {0};

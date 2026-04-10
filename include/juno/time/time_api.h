@@ -101,6 +101,7 @@ struct JUNO_TIME_ROOT_TAG JUNO_MODULE_ROOT(JUNO_TIME_API_T, JUNO_MODULE_EMPTY);
 /** @brief Timestamp consisting of whole seconds and fixed-point subseconds.
  *  @ingroup juno_time
  */
+// @{"req": ["REQ-TIME-001"]}
 struct JUNO_TIMESTAMP_TAG
 {
     /// Whole seconds component of time
@@ -124,6 +125,7 @@ JUNO_MODULE_RESULT(JUNO_TIME_NANOS_RESULT_T, JUNO_TIME_NANOS_T);
 JUNO_MODULE_RESULT(JUNO_TIME_SUBSECONDS_RESULT_T, JUNO_TIME_SUBSECONDS_T);
 
 /** @brief Vtable for time operations and conversions. @ingroup juno_time */
+// @{"req": ["REQ-TIME-002"]}
 struct JUNO_TIME_API_TAG
 {
     /// Get the current time as specified by the implementation

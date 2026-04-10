@@ -1,0 +1,61 @@
+// @{"design": ["REQ-SYS-007", "REQ-SYS-008", "REQ-SYS-010", "REQ-SYS-011"]}
+= Macros Module
+
+== Purpose
+
+The Macros module (`macros.h`) provides lightweight, freestanding-friendly assertion macros used throughout LibJuno.
+They return error codes rather than aborting, supporting deterministic error propagation without exceptions or `longjmp`.
+
+== Data Structures
+
+No standalone data structures.
+The macros operate on `JUNO_STATUS_T` values and module pointers defined by the Status and Module System modules.
+
+== Interface Design
+
+`JUNO_ASSERT_EXISTS(ptr)`::
+Returns `JUNO_STATUS_NULLPTR_ERROR` if the expression `ptr` evaluates to false (NULL, zero).
+Intended for validating required pointers within functions that return `JUNO_STATUS_T`.
+
+`JUNO_ASSERT_EXISTS_MODULE(ptr, ptMod, str)`::
+Like `JUNO_ASSERT_EXISTS` but also invokes the module's failure handler via `JUNO_FAIL_MODULE` before returning.
+Provides diagnostic context via the `str` message.
+
+`JUNO_ASSERT_SUCCESS(tStatus, ...)`::
+Executes the variadic statements (typically `return tStatus`) if `tStatus != JUNO_STATUS_SUCCESS`.
+Used for ergonomic error propagation in call chains.
+
+== Algorithm Descriptions
+
+No algorithms.
+All macros are O(1) conditional checks that expand inline.
+
+== Error Handling
+
+Each macro is itself an error-handling primitive:
+
+* `JUNO_ASSERT_EXISTS` maps NULL pointers to `JUNO_STATUS_NULLPTR_ERROR` by construction.
+* `JUNO_ASSERT_SUCCESS` propagates any non-success status using caller-supplied actions.
+* `JUNO_ASSERT_EXISTS_MODULE` combines null-checking with diagnostic notification.
+
+The macro names are self-documenting proof obligations: `ASSERT_EXISTS` reads as "this pointer must exist."
+
+== Design Rationale
+
+The ASSERT macro family was chosen over raw `if` checks for three reasons:
+
+. **Correct status by construction** — each macro maps to a specific `JUNO_STATUS_T` code, preventing mismatched return values.
+. **Ergonomic variadic propagation** — `JUNO_ASSERT_SUCCESS(s, return s)` is concise and prevents forgetting error checks.
+. **Self-documenting** — reading `JUNO_ASSERT_EXISTS(ptArray)` clearly states the obligation without additional comments.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-SYS-007 | `JUNO_ASSERT_EXISTS` — null-pointer validation
+| REQ-SYS-008 | `JUNO_ASSERT_EXISTS` + `JUNO_ASSERT_SUCCESS` — error propagation
+| REQ-SYS-010 | `JUNO_ASSERT_EXISTS` — precondition validation
+| REQ-SYS-011 | `JUNO_ASSERT_EXISTS` — status return on violation
+|===
