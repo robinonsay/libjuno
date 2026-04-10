@@ -52,6 +52,7 @@ Formatting and output are implementation-specific.
 The logging interface is minimal (four severity levels, printf-like format) to remain portable and lightweight.
 No filtering, buffering, or thread-safety guarantees are imposed at the interface level — these are implementation concerns that vary drastically between targets.
 
+// @{"design": ["REQ-LOG-001", "REQ-LOG-002", "REQ-LOG-003", "REQ-LOG-004", "REQ-LOG-005", "REQ-LOG-006", "REQ-LOG-007"]}
 == Requirements Traceability
 
 [cols="1,3"]

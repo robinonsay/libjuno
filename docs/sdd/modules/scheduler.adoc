@@ -102,6 +102,7 @@ The scheduler complements RTOS preemption rather than replacing it — it fills 
 Time math (add, subtract, conversions) is universal and provided by LibJuno.
 The split follows the DI principle: inject what varies, provide what's universal.
 
+// @{"design": ["REQ-SCH-001", "REQ-SCH-002", "REQ-SCH-003", "REQ-SCH-004", "REQ-SCH-005", "REQ-SCH-006", "REQ-SCH-007"]}
 == Requirements Traceability
 
 [cols="1,3"]

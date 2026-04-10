@@ -61,6 +61,7 @@ The Array module is deliberately thin — it provides only indexed access withou
 Higher-level data structures (Heap, Queue, Stack, Map) compose the Array for storage and add their own invariants.
 This separation keeps the Array reusable and avoids duplicating contiguous-storage logic across multiple modules.
 
+// @{"design": ["REQ-ARRAY-001", "REQ-ARRAY-002", "REQ-ARRAY-003", "REQ-ARRAY-004", "REQ-ARRAY-005", "REQ-ARRAY-006", "REQ-ARRAY-007"]}
 == Requirements Traceability
 
 [cols="1,3"]

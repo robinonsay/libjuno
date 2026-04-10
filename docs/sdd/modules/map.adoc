@@ -89,6 +89,7 @@ All operations are O(1) average, O(n) worst-case under high load or clustered co
 Open addressing with linear probing was chosen for cache-friendliness and zero-allocation operation over a single contiguous array.
 The map is parameterized by three callback APIs (hash, equality, null-check) rather than hard-coding a specific key type, keeping it type-agnostic and reusable.
 
+// @{"design": ["REQ-MAP-001", "REQ-MAP-002", "REQ-MAP-003", "REQ-MAP-004", "REQ-MAP-005", "REQ-MAP-006", "REQ-MAP-007", "REQ-MAP-008", "REQ-MAP-009", "REQ-MAP-010"]}
 == Requirements Traceability
 
 [cols="1,3"]

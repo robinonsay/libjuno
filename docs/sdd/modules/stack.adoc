@@ -72,6 +72,7 @@ All operations are O(1).
 Like the Queue, the Stack reuses the Array for storage.
 The top-of-stack is always the last used index, so no circular arithmetic is needed — just a simple length counter.
 
+// @{"design": ["REQ-STACK-001", "REQ-STACK-002", "REQ-STACK-003", "REQ-STACK-004", "REQ-STACK-005", "REQ-STACK-006", "REQ-STACK-007", "REQ-STACK-008"]}
 == Requirements Traceability
 
 [cols="1,3"]
@@ -83,4 +84,7 @@ The top-of-stack is always the last used index, so no circular arithmetic is nee
 | REQ-STACK-003 | `Pop` — LIFO extraction
 | REQ-STACK-004 | `Peek` — non-destructive top access
 | REQ-STACK-005 | `JunoDs_StackVerify` — stack invariant validation
+| REQ-STACK-006 | Stack empty pop rejection
+| REQ-STACK-007 | `Peek` — stack non-destructive top access
+| REQ-STACK-008 | Stack empty peek rejection
 |===

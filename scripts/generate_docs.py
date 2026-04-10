@@ -85,6 +85,15 @@ class TestTrace:
 
 
 @dataclass
+class DesignTrace:
+    """A design annotation linking an SDD section to requirement IDs."""
+    file: str
+    line: int
+    section: str
+    req_ids: list = field(default_factory=list)
+
+
+@dataclass
 class ValidationMessage:
     """A validation finding."""
     level: str  # ERROR, WARN, INFO
@@ -140,6 +149,20 @@ def load_requirements(requirements_dir: Path,
 # Parsing: source and test annotations
 # ---------------------------------------------------------------------------
 
+def _find_section_name_before(lines: list[str], tag_line_idx: int) -> str:
+    """Find the nearest AsciiDoc section heading above the tag line.
+
+    Looks backwards for lines starting with '=' (AsciiDoc heading syntax).
+    Returns the heading text or the filename stem as fallback.
+    """
+    for offset in range(tag_line_idx, -1, -1):
+        line = lines[offset].strip()
+        m = re.match(r'^=+\s+(.+)$', line)
+        if m:
+            return m.group(1).strip()
+    return "<unknown section>"
+
+
 def _find_function_name_after(lines: list[str], tag_line_idx: int) -> str:
     """Heuristically find the C function name after a tag line.
 
@@ -193,18 +216,27 @@ def _scan_file(fpath: Path, tag_key: str) -> list:
         ids = tag_data.get(tag_key, [])
         if not ids:
             continue
-        func_name = _find_function_name_after(lines, i)
         try:
             rel_path = str(fpath.relative_to(PROJECT_DIR))
         except ValueError:
             rel_path = str(fpath)
-        trace_cls = TestTrace if tag_key == "verify" else CodeTrace
-        traces.append(trace_cls(
-            file=rel_path,
-            line=i + 1,
-            function=func_name,
-            req_ids=ids,
-        ))
+        if tag_key == "design":
+            section = _find_section_name_before(lines, i)
+            traces.append(DesignTrace(
+                file=rel_path,
+                line=i + 1,
+                section=section,
+                req_ids=ids,
+            ))
+        else:
+            func_name = _find_function_name_after(lines, i)
+            trace_cls = TestTrace if tag_key == "verify" else CodeTrace
+            traces.append(trace_cls(
+                file=rel_path,
+                line=i + 1,
+                function=func_name,
+                req_ids=ids,
+            ))
     return traces
 
 
@@ -290,6 +322,23 @@ def scan_test_traces(module_filter: Optional[str] = None) -> list[TestTrace]:
     return traces
 
 
+def scan_design_traces(module_filter: Optional[str] = None
+                      ) -> list[DesignTrace]:
+    """Scan docs/sdd/ for @{"design": [...]} annotations."""
+    traces = scan_annotations(
+        [SDD_SOURCE_DIR],
+        extensions=(".adoc",),
+        tag_key="design",
+    )
+    if module_filter:
+        mod = module_filter.upper()
+        traces = [
+            t for t in traces
+            if any(mod in rid for rid in t.req_ids)
+        ]
+    return traces
+
+
 # ---------------------------------------------------------------------------
 # Validation
 # ---------------------------------------------------------------------------
@@ -298,16 +347,20 @@ def validate_traceability(
     modules: dict[str, list[Requirement]],
     code_traces: list[CodeTrace],
     test_traces: list[TestTrace],
+    design_traces: Optional[list[DesignTrace]] = None,
 ) -> list[ValidationMessage]:
     """Validate traceability consistency.
 
     Checks:
     - Every requirement has at least one code annotation
     - Every requirement with verification_method=Test has a test annotation
-    - No orphaned code/test tags referencing nonexistent requirements
+    - Every requirement has at least one design annotation
+    - No orphaned code/test/design tags referencing nonexistent requirements
     - All uses/implements links resolve to valid requirement IDs
     - No duplicate requirement IDs
     """
+    if design_traces is None:
+        design_traces = []
     messages = []
 
     # Build lookup of all known requirement IDs
@@ -372,6 +425,31 @@ def validate_traceability(
                     f"in {trace.file}:{trace.line} — requirement does not exist"
                 ))
 
+    # Build lookup of design-traced IDs
+    design_traced_ids = set()
+    for trace in design_traces:
+        for rid in trace.req_ids:
+            design_traced_ids.add(rid)
+
+    # Check: every requirement has design annotation
+    for rid in sorted(all_req_ids):
+        if rid not in design_traced_ids:
+            messages.append(ValidationMessage(
+                "WARN",
+                f"{rid} has no design annotation "
+                f"(@{{\"design\": [...]}})"
+            ))
+
+    # Check: orphaned design tags
+    for trace in design_traces:
+        for rid in trace.req_ids:
+            if rid not in all_req_ids:
+                messages.append(ValidationMessage(
+                    "ERROR",
+                    f"Orphaned design tag @{{\"design\": [\"{rid}\"]}} "
+                    f"in {trace.file}:{trace.line} — requirement does not exist"
+                ))
+
     # Check: uses/implements links resolve
     for reqs in modules.values():
         for req in reqs:
@@ -398,8 +476,11 @@ def print_validation_report(
     modules: dict[str, list[Requirement]],
     code_traces: list[CodeTrace],
     test_traces: list[TestTrace],
+    design_traces: Optional[list[DesignTrace]] = None,
 ):
     """Print a human-readable validation report to stderr."""
+    if design_traces is None:
+        design_traces = []
     total_reqs = sum(len(reqs) for reqs in modules.values())
     code_traced_ids = set()
     for t in code_traces:
@@ -407,6 +488,9 @@ def print_validation_report(
     test_traced_ids = set()
     for t in test_traces:
         test_traced_ids.update(t.req_ids)
+    design_traced_ids = set()
+    for t in design_traces:
+        design_traced_ids.update(t.req_ids)
 
     all_req_ids = set()
     for reqs in modules.values():
@@ -415,6 +499,7 @@ def print_validation_report(
 
     traced_count = len(all_req_ids & code_traced_ids)
     tested_count = len(all_req_ids & test_traced_ids)
+    designed_count = len(all_req_ids & design_traced_ids)
 
     errors = [m for m in messages if m.level == "ERROR"]
     warnings = [m for m in messages if m.level == "WARN"]
@@ -423,13 +508,18 @@ def print_validation_report(
     print(f"  Total requirements: {total_reqs}", file=sys.stderr)
     if total_reqs > 0:
         print(
-            f"  Traced to code:  {traced_count}/{total_reqs} "
+            f"  Traced to code:   {traced_count}/{total_reqs} "
             f"({100*traced_count//total_reqs}%)",
             file=sys.stderr,
         )
         print(
-            f"  Traced to tests: {tested_count}/{total_reqs} "
+            f"  Traced to tests:  {tested_count}/{total_reqs} "
             f"({100*tested_count//total_reqs}%)",
+            file=sys.stderr,
+        )
+        print(
+            f"  Traced to design: {designed_count}/{total_reqs} "
+            f"({100*designed_count//total_reqs}%)",
             file=sys.stderr,
         )
     print(f"  Errors:   {len(errors)}", file=sys.stderr)
@@ -624,8 +714,11 @@ def generate_rtm_adoc(
     code_traces: list[CodeTrace],
     test_traces: list[TestTrace],
     messages: list[ValidationMessage],
+    design_traces: Optional[list[DesignTrace]] = None,
 ) -> str:
     """Generate a Requirements Traceability Matrix in AsciiDoc format."""
+    if design_traces is None:
+        design_traces = []
 
     # Build trace lookups
     code_map: dict[str, list[str]] = {}
@@ -639,6 +732,12 @@ def generate_rtm_adoc(
         for rid in t.req_ids:
             test_map.setdefault(rid, []).append(
                 f"{t.file}:{t.line} ({t.function})"
+            )
+    design_map: dict[str, list[str]] = {}
+    for t in design_traces:
+        for rid in t.req_ids:
+            design_map.setdefault(rid, []).append(
+                f"{t.file}:{t.line} ({t.section})"
             )
 
     lines = []
@@ -669,11 +768,15 @@ def generate_rtm_adoc(
     test_traced_ids = set()
     for t in test_traces:
         test_traced_ids.update(t.req_ids)
+    design_traced_ids = set()
+    for t in design_traces:
+        design_traced_ids.update(t.req_ids)
 
     total = len(all_req_ids)
     traced = len(all_req_ids & code_traced_ids)
     tested = len(test_required_ids & test_traced_ids)
     test_total = len(test_required_ids)
+    designed = len(all_req_ids & design_traced_ids)
 
     w("[cols=\"2,1,1\"]")
     w("|===")
@@ -682,8 +785,10 @@ def generate_rtm_adoc(
     w(f"| Total requirements | {total} | —")
     if total > 0:
         w(f"| Traced to code | {traced} | {100*traced//total}%")
+        w(f"| Traced to design | {designed} | {100*designed//total}%")
     else:
         w("| Traced to code | 0 | —")
+        w("| Traced to design | 0 | —")
     if test_total > 0:
         w(f"| Traced to tests (of test-verified) | {tested} "
           f"| {100*tested//test_total}%")
@@ -695,16 +800,19 @@ def generate_rtm_adoc(
     # --- Per-module summary ---
     w("== Per-Module Summary")
     w("")
-    w("[cols=\"1,1,1,1\"]")
+    w("[cols=\"1,1,1,1,1\"]")
     w("|===")
-    w("| Module | Requirements | Traced to Code | Traced to Tests")
+    w("| Module | Requirements | Traced to Code | Traced to Design "
+      "| Traced to Tests")
     w("")
     for module_name in sorted(modules.keys()):
         reqs = modules[module_name]
         mod_ids = {r.id for r in reqs}
         mod_code = len(mod_ids & code_traced_ids)
+        mod_design = len(mod_ids & design_traced_ids)
         mod_test = len(mod_ids & test_traced_ids)
-        w(f"| {module_name} | {len(reqs)} | {mod_code} | {mod_test}")
+        w(f"| {module_name} | {len(reqs)} | {mod_code} "
+          f"| {mod_design} | {mod_test}")
     w("|===")
     w("")
 
@@ -716,26 +824,31 @@ def generate_rtm_adoc(
         reqs = modules[module_name]
         w(f"=== Module: {module_name}")
         w("")
-        w("[cols=\"1,2,2,1,1\", options=\"header\"]")
+        w("[cols=\"1,2,2,2,1,1\", options=\"header\"]")
         w("|===")
-        w("| Requirement | Code Location | Test Location "
-          "| Verification Method | Status")
+        w("| Requirement | Code Location | Design Location "
+          "| Test Location | Verification Method | Status")
         w("")
 
         for req in reqs:
             code_locs = code_map.get(req.id, [])
             test_locs = test_map.get(req.id, [])
+            design_locs = design_map.get(req.id, [])
 
             code_str = " +\n".join(code_locs) if code_locs else "_none_"
             test_str = " +\n".join(test_locs) if test_locs else "_none_"
+            design_str = " +\n".join(design_locs) if design_locs else "_none_"
 
             # Determine status
             has_code = bool(code_locs)
             has_test = bool(test_locs)
+            has_design = bool(design_locs)
             needs_test = req.verification_method == "Test"
 
-            if has_code and (has_test or not needs_test):
+            if has_code and has_design and (has_test or not needs_test):
                 status = "✓ Complete"
+            elif has_code and not has_design:
+                status = "⚠ Missing design"
             elif has_code and needs_test and not has_test:
                 status = "⚠ Missing test"
             elif not has_code:
@@ -745,6 +858,7 @@ def generate_rtm_adoc(
 
             w(f"| {req.id}: {req.title}")
             w(f"| {code_str}")
+            w(f"| {design_str}")
             w(f"| {test_str}")
             w(f"| {req.verification_method}")
             w(f"| {status}")
@@ -968,10 +1082,28 @@ Examples:
         ]
     print(f"  Found {len(test_traces)} test trace(s).", file=sys.stderr)
 
+    print("Scanning design annotations...", file=sys.stderr)
+    design_traces = scan_annotations(
+        [project_dir / "docs" / "sdd"],
+        extensions=(".adoc",),
+        tag_key="design",
+    )
+    if args.module:
+        mod = args.module.upper()
+        design_traces = [
+            t for t in design_traces
+            if any(mod in rid for rid in t.req_ids)
+        ]
+    print(f"  Found {len(design_traces)} design trace(s).", file=sys.stderr)
+
     # --- Validate ---
     print("Validating traceability...", file=sys.stderr)
-    messages = validate_traceability(modules, code_traces, test_traces)
-    print_validation_report(messages, modules, code_traces, test_traces)
+    messages = validate_traceability(
+        modules, code_traces, test_traces, design_traces
+    )
+    print_validation_report(
+        messages, modules, code_traces, test_traces, design_traces
+    )
 
     if args.validate_only:
         errors = [m for m in messages if m.level == "ERROR"]
@@ -1005,7 +1137,8 @@ Examples:
             adoc_path = output_dir / "srs" / "srs.adoc"
         elif doc_type == "rtm":
             content = generate_rtm_adoc(
-                modules, code_traces, test_traces, messages
+                modules, code_traces, test_traces, messages,
+                design_traces
             )
             adoc_path = output_dir / "rtm" / "rtm.adoc"
         else:

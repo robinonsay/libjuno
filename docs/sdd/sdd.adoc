@@ -55,6 +55,7 @@ This SDD covers all modules of LibJuno:
 * [[[RTM]]] LibJuno Requirements Traceability Matrix (generated from code/test annotations).
 * [[[DOXYGEN]]] LibJuno API Reference Documentation (generated via Doxygen).
 
+// @{"design": ["REQ-SYS-001", "REQ-SYS-002", "REQ-SYS-003", "REQ-SYS-004", "REQ-SYS-005", "REQ-SYS-006", "REQ-SYS-009"]}
 == System Architecture
 
 === Architectural Overview

@@ -45,6 +45,7 @@ djb2 was selected for its simplicity, small code size, and adequate distribution
 The function is `static inline` in the header to avoid link-time overhead and enable inlining by the compiler.
 It returns a `JUNO_RESULT_SIZE_T` (rather than a raw `size_t`) to maintain the library's structural error-checking convention.
 
+// @{"design": ["REQ-HASH-001", "REQ-HASH-002", "REQ-HASH-003"]}
 == Requirements Traceability
 
 [cols="1,3"]

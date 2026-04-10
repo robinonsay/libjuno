@@ -102,6 +102,7 @@ The SM is deliberately minimal — it provides state storage, transitions, and v
 The user calls `StateAction`, `ShouldExit`, and `TransitionState` explicitly, allowing integration into any scheduling scheme (cyclic executive, event-driven, RTOS task).
 States are full module roots with their own failure handlers, enabling per-state error reporting.
 
+// @{"design": ["REQ-SM-001", "REQ-SM-002", "REQ-SM-003", "REQ-SM-004", "REQ-SM-005", "REQ-SM-006", "REQ-SM-007", "REQ-SM-008", "REQ-SM-009", "REQ-SM-010", "REQ-SM-011"]}
 == Requirements Traceability
 
 [cols="1,3"]

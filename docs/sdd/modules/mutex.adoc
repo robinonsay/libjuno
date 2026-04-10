@@ -50,6 +50,7 @@ The mutex interface is deliberately minimal — three operations covering the es
 No priority inheritance, recursive locking, or timeout parameters are specified at the interface level because these semantics vary fundamentally between platforms.
 The vtable pattern allows injecting platform mutexes (FreeRTOS, Zephyr, POSIX, bare-metal spin locks) or test doubles.
 
+// @{"design": ["REQ-MTX-001", "REQ-MTX-002", "REQ-MTX-003", "REQ-MTX-004", "REQ-MTX-005"]}
 == Requirements Traceability
 
 [cols="1,3"]

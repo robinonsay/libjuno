@@ -95,6 +95,7 @@ Data structures remain type-agnostic; adding a new element type requires only a 
 Adding failure handler fields (+16 bytes on 64-bit) would bloat every data structure call's stack frame.
 Failure reporting belongs to the owning module.
 
+// @{"design": ["REQ-POINTER-001", "REQ-POINTER-002", "REQ-POINTER-003", "REQ-POINTER-004", "REQ-POINTER-005"]}
 == Requirements Traceability
 
 [cols="1,3"]
