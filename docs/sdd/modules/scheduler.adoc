@@ -1,0 +1,118 @@
+= Scheduler Module
+
+== Purpose
+
+The Scheduler module (`juno_sch_api.h`) provides a table-driven cyclic executive that executes application `OnProcess` hooks in minor frames of fixed duration.
+It is the top-level framework component that composes Applications, Time, and the module system into a deterministic execution schedule.
+
+== Data Structures
+
+=== Scheduler Root (`JUNO_SCH_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_SCH_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SCH_API_T,
+    JUNO_TIME_ROOT_T *ptTime;            // Injected time source
+    JUNO_APP_ROOT_T **ptArrSchTable;     // Flattened 2D schedule table
+    size_t zAppsPerMinorFrame;            // Slots per minor frame
+    size_t zNumMinorFrames;               // Minor frames per major frame
+    JUNO_TIMESTAMP_T tMinorFramePeriod;   // Duration of each minor frame
+);
+----
+
+=== Scheduler API (`JUNO_SCH_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Execute(ptJunoSch)` | Run the scheduler for one major frame.
+| `GetMinorFramePeriod(ptJunoSch)` | Return the configured minor frame period.
+| `GetMajorFramePeriod(ptJunoSch)` | Compute and return the major frame period.
+|===
+
+=== Schedule Table Macro
+
+`JUNO_SCH_TABLE_NEW(ptArrName, zAppsPerMinorFrame, zNumMinorFrames, ...)`::
+Declares a static array of `JUNO_APP_ROOT_T *` with the given dimensions.
+NULL entries indicate empty slots in variable-length frames.
+
+== Interface Design
+
+The scheduler is initialized by populating a `JUNO_SCH_ROOT_T` with:
+
+. A time module instance (for `Now`, `SleepTo`, time math).
+. A flattened schedule table array.
+. Frame dimensions and period.
+
+`Execute` runs one major frame (all minor frames in sequence).
+
+== Algorithm Descriptions
+
+=== Execute (One Major Frame)
+
+[source]
+----
+tFrameStart = Now()
+for each minor frame i in [0, zNumMinorFrames):
+    tDeadline = tFrameStart + tMinorFramePeriod * (i + 1)
+    for each slot j in [0, zAppsPerMinorFrame):
+        ptApp = ptArrSchTable[i * zAppsPerMinorFrame + j]
+        if ptApp != NULL:
+            ptApp->ptApi->OnProcess(ptApp)
+    SleepTo(tDeadline)
+----
+
+. Get the major frame start time via `Now`.
+. For each minor frame, compute the deadline by adding `(i + 1) * tMinorFramePeriod`.
+. Execute all non-NULL apps in the minor frame sequentially.
+. Sleep until the minor frame deadline via `SleepTo`.
+
+*Complexity*: O(F × A) per major frame, where F = minor frames and A = apps per frame.
+
+=== GetMajorFramePeriod
+
+Computes `tMinorFramePeriod × zNumMinorFrames` using `AddTime`.
+
+=== Flattened 2D Indexing
+
+The schedule table is a 1D array with index arithmetic:
+
+$$\text{index}(i, j) = i \times \texttt{zAppsPerMinorFrame} + j$$
+
+where $i$ is the minor frame index and $j$ is the app slot within the frame.
+NULL entries indicate unused slots, allowing variable-length minor frames within a fixed-width table.
+
+== Error Handling
+
+* `Execute` propagates errors from `Now`, `AddTime`, `SleepTo`, and each `OnProcess` call.
+* NULL app pointers in the table are silently skipped (not errors).
+* `GetMinorFramePeriod` and `GetMajorFramePeriod` return Result types with status codes.
+
+== Design Rationale
+
+**Static cyclic executive.** Deterministic timing by construction — execution order and frame boundaries are fixed at compile time.
+No OS dependency (works on bare metal with a single timer).
+Certifiable by inspection (DO-178C, MISRA, IEC 61508).
+The scheduler complements RTOS preemption rather than replacing it — it fills the intra-thread scheduling gap.
+
+**Flattened 2D array.** Zero dynamic allocation (single caller-owned buffer), cache-friendly sequential access, O(1) index arithmetic, NULL slots for variable-length frames without complex data structures.
+
+**Injected Time module.** Clock hardware (`Now`) and blocking primitives (`Sleep`, `SleepTo`) are platform-specific.
+Time math (add, subtract, conversions) is universal and provided by LibJuno.
+The split follows the DI principle: inject what varies, provide what's universal.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-SCH-001 | `JUNO_SCH_ROOT_T` — scheduler root with time and table dependencies
+| REQ-SCH-002 | `JUNO_SCH_API_T` — scheduler vtable (Execute, periods)
+| REQ-SCH-003 | `JUNO_SCH_TABLE_NEW` — static table declaration macro
+| REQ-SCH-004 | `Execute` — one major frame execution loop
+| REQ-SCH-005 | `GetMinorFramePeriod` — period query
+| REQ-SCH-006 | `GetMajorFramePeriod` — computed major frame period
+| REQ-SCH-007 | Time module dependency injection
+|===

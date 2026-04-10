@@ -1,0 +1,122 @@
+= State Machine Module
+
+== Purpose
+
+The State Machine (SM) module (`sm_api.h`) provides a minimal state machine framework where each state is a module with actions, exit checks, and explicit transitions.
+The SM root holds the current state pointer; transitions occur via an optional next-state stored in each state root.
+
+== Data Structures
+
+=== SM Root (`JUNO_SM_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(void,
+    JUNO_SM_STATE_ROOT_T *ptCurrentState;  // Pointer to the active state
+);
+----
+
+Note: the SM root uses `void` as the API type — it has no vtable of its own.
+All dispatch goes through the state's API.
+
+=== State Root (`JUNO_SM_STATE_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_SM_STATE_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SM_STATE_API_T,
+    JUNO_SM_ROOT_T *ptSm;                          // Back-pointer to owning SM
+    JUNO_SM_OPTION_STATE_T tOptionNextState;        // Optional next state
+);
+----
+
+=== State API (`JUNO_SM_STATE_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `StateAction(ptState)` | Execute the state's behavior.
+| `ShouldExit(ptState)` | Return whether the state should exit (Result<bool>).
+| `ResetState(ptState)` | Reset any state-local data.
+|===
+
+=== Result/Option Types
+
+`JUNO_SM_RESULT_STATE_T`:: Result carrying a state pointer.
+`JUNO_SM_OPTION_STATE_T`:: Option carrying a state pointer.
+`JUNO_SM_RESULT_OPTION_STATE_T`:: Result carrying an option of a state pointer.
+
+== Interface Design
+
+`JunoSm_Init(ptSmRoot, ptStartState, pfcnFailureHandler, pvFailureUserData)`::
+Initializes the SM with a start state. Validates via `JunoSm_Verify`.
+
+`JunoSm_StateInit(ptSm, ptStateRoot, ptNextState, ptStateApi, pfcnFailureHandler, pvFailureUserData)`::
+Initializes a state, linking it to the SM and an optional next state.
+If `ptNextState` is NULL, the option is set to `NONE`.
+
+`JunoSm_GetCurrentState(ptSmRoot)`::
+Returns a Result containing the current state pointer.
+
+`JunoSm_TransitionState(ptSmRoot)`::
+If the current state has a next state (option is `SOME`), transitions the SM to that state.
+Returns a Result<Option<State>> — `SOME` with the new state, or `NONE` if no transition occurred.
+
+`JunoSm_Verify(ptSmRoot)`::
+Validates SM root is non-NULL and has a current state.
+
+`JunoSm_StateVerify(ptSmState)`::
+Validates state root, API, back-pointer, and next-state pointer (if present).
+
+== Algorithm Descriptions
+
+=== State Machine Execution Loop (User-Driven)
+
+The SM module does not enforce an execution loop — the user drives it:
+
+. Call `GetCurrentState` to get the active state.
+. Call `StateAction` on the state.
+. Call `ShouldExit` to check for transition.
+. If exiting: call `TransitionState` to move to the next state.
+. If next state is `SOME`: call `ResetState` on the new state.
+
+This gives the user full control over when and how often to step the machine.
+
+=== Transition
+
+. Read `ptCurrentState->tOptionNextState`.
+. If `bIsSome`: set `ptSmRoot->ptCurrentState = tSome`. Return `SOME(newState)`.
+. If not: return `NONE`. No change.
+
+== Error Handling
+
+* `JunoSm_Init` returns `JUNO_STATUS_NULLPTR_ERROR` if the SM root or start state is NULL.
+* `JunoSm_StateInit` returns `JUNO_STATUS_NULLPTR_ERROR` if required parameters are NULL.
+* `JunoSm_GetCurrentState` propagates `Verify` errors.
+* `JunoSm_TransitionState` propagates `Verify` errors. Returns `NONE` option (not error) when no next state is set.
+* All functions use `JUNO_ASSERT_EXISTS` for precondition checking.
+
+== Design Rationale
+
+The SM is deliberately minimal — it provides state storage, transitions, and verification but does not enforce an execution model.
+The user calls `StateAction`, `ShouldExit`, and `TransitionState` explicitly, allowing integration into any scheduling scheme (cyclic executive, event-driven, RTOS task).
+States are full module roots with their own failure handlers, enabling per-state error reporting.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-SM-001 | `JUNO_SM_ROOT_T` — SM root with current state pointer
+| REQ-SM-002 | `JUNO_SM_STATE_ROOT_T` — state root with SM back-pointer and next-state option
+| REQ-SM-003 | `JUNO_SM_STATE_API_T` — state vtable (Action, ShouldExit, ResetState)
+| REQ-SM-004 | `JunoSm_Init` — SM initialization
+| REQ-SM-005 | `JunoSm_StateInit` — state initialization with linking
+| REQ-SM-006 | `JunoSm_GetCurrentState` — current state access
+| REQ-SM-007 | `JunoSm_TransitionState` — state transition
+| REQ-SM-008 | `JunoSm_TransitionState` — NONE when no next state
+| REQ-SM-009 | `JunoSm_Verify` — SM root validation
+| REQ-SM-010 | `JunoSm_StateVerify` — state root validation
+| REQ-SM-011 | `JunoSm_StateVerify` — next-state pointer validation
+|===

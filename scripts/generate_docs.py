@@ -2,14 +2,16 @@
 """
 generate_docs.py — LibJuno Requirements Document Generator
 
-Generates AsciiDoc SRS (IEEE 830), RTM, and validates traceability
-consistency from requirements.json files and source/test annotations.
+Generates AsciiDoc SRS (IEEE 830), RTM, SDD (IEEE 1016), and validates
+traceability consistency from requirements.json files and source/test
+annotations.
 
 Supports output in AsciiDoc (.adoc), HTML, and PDF formats.
 
 Usage:
     python generate_docs.py --type srs --format all
     python generate_docs.py --type rtm --format html
+    python generate_docs.py --type sdd --format pdf
     python generate_docs.py --type all --module heap
     python generate_docs.py --validate-only
 """
@@ -36,6 +38,7 @@ SRC_DIR = PROJECT_DIR / "src"
 INCLUDE_DIR = PROJECT_DIR / "include"
 TESTS_DIR = PROJECT_DIR / "tests"
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / "docs" / "generated"
+SDD_SOURCE_DIR = PROJECT_DIR / "docs" / "sdd"
 
 # Regex for annotation tags in source and test files
 # Matches: // @{"req": ["REQ-XXX-001", ...]}   (C/C++ style)
@@ -776,6 +779,42 @@ def generate_rtm_adoc(
 # Output: write AsciiDoc and convert
 # ---------------------------------------------------------------------------
 
+def generate_sdd(sdd_source_dir: Path, formats: list[str]):
+    """Convert the hand-authored SDD AsciiDoc into HTML and/or PDF.
+
+    The SDD source lives at docs/sdd/sdd.adoc and uses include::
+    directives for per-module subsections.  Unlike the SRS and RTM,
+    the SDD content is maintained directly in AsciiDoc rather than
+    generated from requirements.json, so this function only performs
+    format conversion.
+
+    Parameters
+    ----------
+    sdd_source_dir : Path
+        Directory containing sdd.adoc and modules/ subdirectory.
+    formats : list[str]
+        Target formats: any of "adoc", "html", "pdf".
+    """
+    adoc_path = sdd_source_dir / "sdd.adoc"
+    if not adoc_path.is_file():
+        print(
+            f"  ERROR: SDD source not found at {adoc_path}",
+            file=sys.stderr,
+        )
+        return
+
+    print(f"  SDD source: {adoc_path}", file=sys.stderr)
+
+    if "html" in formats:
+        convert_adoc(adoc_path, "html")
+    if "pdf" in formats:
+        convert_adoc(adoc_path, "pdf")
+
+    # "adoc" is a no-op for the SDD since the source already exists
+    if "adoc" in formats:
+        print(f"  AsciiDoc source already at: {adoc_path}", file=sys.stderr)
+
+
 def write_adoc(content: str, output_path: Path):
     """Write AsciiDoc content to a file."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -837,13 +876,14 @@ def main():
 Examples:
   %(prog)s --type srs --format adoc
   %(prog)s --type rtm --format all
+  %(prog)s --type sdd --format pdf
   %(prog)s --type all --format html --module heap
   %(prog)s --validate-only
         """,
     )
     parser.add_argument(
         "--type",
-        choices=["srs", "rtm", "all"],
+        choices=["srs", "rtm", "sdd", "all"],
         default="all",
         help="Document type to generate (default: all)",
     )
@@ -947,13 +987,18 @@ Examples:
     # --- Generate documents ---
     doc_types = []
     if args.type == "all":
-        doc_types = ["srs", "rtm"]
+        doc_types = ["srs", "rtm", "sdd"]
     else:
         doc_types = [args.type]
 
     for doc_type in doc_types:
         print(f"\nGenerating {doc_type.upper()}...", file=sys.stderr)
-        if doc_type == "srs":
+        if doc_type == "sdd":
+            # SDD is hand-authored AsciiDoc; only convert formats
+            sdd_dir = project_dir / "docs" / "sdd"
+            generate_sdd(sdd_dir, formats)
+            continue
+        elif doc_type == "srs":
             content = generate_srs_adoc(
                 modules, code_traces, test_traces, messages
             )

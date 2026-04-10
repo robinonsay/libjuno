@@ -58,7 +58,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The application root shall embed a module root with an API vtable pointer.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: The application root provides the standard vtable-based interface that the scheduler and other framework components use to invoke application lifecycle hooks polymorphically.
 
 **Verification Method**:: Inspection
 
@@ -71,7 +71,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The application API vtable shall define an OnStart operation called once to initialize resources.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: OnStart provides a one-time initialization point for applications to set up resources before the scheduler begins periodic execution.
 
 **Verification Method**:: Inspection
 
@@ -84,7 +84,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The application API vtable shall define an OnProcess operation that may be invoked repeatedly.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: OnProcess is the primary execution hook invoked by the scheduler on each minor frame, providing the periodic processing entry point for application logic.
 
 **Verification Method**:: Inspection
 
@@ -97,7 +97,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The application API vtable shall define an OnExit operation called once prior to shutdown.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: OnExit provides a cleanup point for applications to release or reset resources before shutdown, ensuring orderly termination.
 
 **Verification Method**:: Inspection
 
@@ -112,7 +112,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The array module shall initialize from a caller-provided API vtable and capacity.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: The array is the foundational data structure upon which queue, stack, heap, and map are built; it must initialize from caller-provided storage to satisfy the zero-allocation constraint.
 
 **Verification Method**:: Test
 
@@ -129,7 +129,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The array shall copy a value into a slot at a given index in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: SetAt is the fundamental write operation, using the pointer API to copy values into slots in a type-safe manner.
 
 **Verification Method**:: Test
 
@@ -145,7 +145,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The array shall return a pointer descriptor to the slot at a given index in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: GetAt returns a pointer descriptor rather than a raw pointer, maintaining the type-safe access model throughout the data structure hierarchy.
 
 **Verification Method**:: Test
 
@@ -161,7 +161,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The array shall clear the slot at a given index in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Clearing a slot via the pointer Reset operation ensures no stale data remains, preventing downstream consumers from reading invalid values.
 
 **Verification Method**:: Test
 
@@ -177,7 +177,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The array shall return JUNO_STATUS_OOB_ERROR when an index is outside its capacity.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit bounds checking prevents out-of-bounds memory access, which would cause silent corruption or undefined behavior on bare-metal targets lacking an MMU.
 
 **Verification Method**:: Test
 
@@ -199,7 +199,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The array module shall verify that the array API vtable entries are non-null.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Validates the vtable at runtime to ensure memory safety before dispatching any operation through function pointers.
 
 **Verification Method**:: Test
 
@@ -218,7 +218,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The array module shall verify that the array capacity is non-zero.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: A zero-capacity array has no backing storage and cannot perform any useful operation; rejecting it early prevents division-by-zero or empty-loop errors in dependent modules.
 
 **Verification Method**:: Test
 
@@ -238,7 +238,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each CRC function shall accept a running CRC value, data buffer, and size, returning the updated CRC value.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: Streaming CRC computation allows data integrity checks over arbitrarily large or fragmented data without requiring the entire payload to be buffered in memory.
 
 **Verification Method**:: Test
 
@@ -259,7 +259,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each CRC function shall return 0 when passed a NULL data pointer.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: Returning a defined value for NULL input ensures the function is safe to call unconditionally, aligning with the no-silent-failures constraint by producing a predictable result rather than crashing.
 
 **Verification Method**:: Test
 
@@ -280,7 +280,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each CRC function shall return 0 when passed a zero data size.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: Returning a defined value for zero-length input ensures the function is safe to call on empty buffers without special-casing at the call site.
 
 **Verification Method**:: Test
 
@@ -301,7 +301,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The CRC module shall compute a CRC-16/ARC update with initial seed 0.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: CRC-16/ARC is a widely used 16-bit CRC variant in legacy serial protocols and embedded communication stacks.
 
 **Verification Method**:: Test
 
@@ -317,7 +317,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The CRC module shall compute a BinHex 16-bit CRC update with initial seed 0.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: BinHex CRC is used in Macintosh file encoding and certain archive formats that embedded systems may need to interoperate with.
 
 **Verification Method**:: Test
 
@@ -333,7 +333,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The CRC module shall compute a CRC-16/CCITT update with initial seed 0xFFFF.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: CRC-16/CCITT is a standard integrity check in telecommunications (X.25, HDLC) and is commonly required for embedded communication interfaces.
 
 **Verification Method**:: Test
 
@@ -349,7 +349,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The CRC module shall compute a CRC-16/Kermit update with initial seed 0.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: CRC-16/Kermit is used in the Kermit file transfer protocol and certain embedded serial communication stacks.
 
 **Verification Method**:: Test
 
@@ -365,7 +365,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The CRC module shall compute a 32-bit CCITT CRC update with initial seed 0xFFFFFFFF.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: A 32-bit CCITT CRC provides stronger error detection than 16-bit variants and is needed for larger data payloads and storage integrity checks.
 
 **Verification Method**:: Test
 
@@ -381,7 +381,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The CRC module shall compute a CRC-32/ZIP update with initial seed 0xFFFFFFFF.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: CRC-32/ZIP is the de facto standard for file and stream integrity (ZIP, PNG, Ethernet FCS) and is commonly required for interoperability.
 
 **Verification Method**:: Test
 
@@ -397,7 +397,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The CRC-32/ZIP function shall apply a final XOR of 0xFFFFFFFF to the computed value when data is processed.
 
-**Rationale**:: Enables data integrity verification for communication and storage in embedded systems.
+**Rationale**:: The final XOR is part of the CRC-32/ZIP specification and is required for the computed value to match reference implementations and standard test vectors.
 
 **Verification Method**:: Test
 
@@ -415,7 +415,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The hash module shall compute the djb2 hash over a byte buffer with initial seed 5381.
 
-**Rationale**:: Provides data integrity verification for communication and storage in embedded systems.
+**Rationale**:: DJB2 is a simple, fast hash function suitable for hash map key distribution in resource-constrained environments where cryptographic strength is not required.
 
 **Verification Method**:: Test
 
@@ -433,7 +433,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The hash module shall return JUNO_STATUS_NULLPTR_ERROR when passed a NULL data pointer.
 
-**Rationale**:: Provides data integrity verification for communication and storage in embedded systems.
+**Rationale**:: Rejecting NULL input prevents undefined behavior from dereferencing an invalid buffer pointer, ensuring runtime memory safety.
 
 **Verification Method**:: Test
 
@@ -449,7 +449,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The hash module shall return the hash value in a result type combining a status code with a size_t payload.
 
-**Rationale**:: Provides data integrity verification for communication and storage in embedded systems.
+**Rationale**:: Returning the hash in a result type couples the computed value with a status code, enabling callers to distinguish between a valid hash and an error without ambiguity.
 
 **Verification Method**:: Inspection
 
@@ -464,7 +464,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap module shall initialize from a caller-provided backing array.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: A priority queue is essential for scheduling and event-driven systems; initializing from a caller-provided array satisfies the zero-allocation constraint.
 
 **Verification Method**:: Test
 
@@ -483,7 +483,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap module shall accept an injected element pointer API with Compare and Swap operations.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Injecting Compare and Swap operations allows the heap to be generic over element type, supporting min-heaps, max-heaps, and custom orderings without code duplication.
 
 **Verification Method**:: Test
 
@@ -506,7 +506,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap shall insert an element and restore the heap property in O(log n) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: O(log n) insertion maintains the heap property efficiently, providing predictable worst-case timing for real-time priority queue operations.
 
 **Verification Method**:: Test
 
@@ -536,7 +536,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap shall remove the root element and restore the heap property in O(log n) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: O(log n) removal of the root element enables efficient extraction of the highest-priority item, which is the primary operation for priority-queue consumers.
 
 **Verification Method**:: Test
 
@@ -565,7 +565,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap Pop operation shall copy the removed root element into a caller-provided pointer descriptor.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Copying the removed element into a caller-provided descriptor ensures the caller receives the value without exposing internal array storage or requiring dynamic allocation for the output.
 
 **Verification Method**:: Test
 
@@ -583,7 +583,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap shall transform the underlying array into a valid heap in O(n) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: O(n) heapify enables efficient bulk construction of a heap from an existing array, which is asymptotically faster than n individual insertions.
 
 **Verification Method**:: Test
 
@@ -601,7 +601,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap module shall verify that the heap API vtable entries are non-null before each operation.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Validates the vtable at runtime to ensure memory safety before dispatching any heap operation through function pointers.
 
 **Verification Method**:: Test
 
@@ -618,7 +618,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The heap module shall verify that the backing array and heap pointer API dependencies are valid before each operation.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Validates the injected backing array and comparison API at runtime to catch misconfigured or partially initialized heap instances before they cause undefined behavior.
 
 **Verification Method**:: Test
 
@@ -637,7 +637,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO root shall embed a module root with an API vtable pointer.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: An abstract async IO interface decouples application-level communication logic from platform-specific UART, socket, or DMA implementations, enabling portability and testability.
 
 **Verification Method**:: Inspection
 
@@ -650,7 +650,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO API vtable shall define a Read operation that reads up to the requested number of bytes and updates the size with bytes actually read.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Read with actual-bytes-read feedback allows callers to handle partial reads, which is the norm for non-blocking and DMA-based IO on embedded targets.
 
 **Verification Method**:: Inspection
 
@@ -663,7 +663,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO API vtable shall define a TryRead operation that reads with a timeout in microseconds.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: TryRead with a timeout enables bounded-time read attempts, which is essential for real-time systems that cannot block indefinitely on IO.
 
 **Verification Method**:: Inspection
 
@@ -676,7 +676,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO API vtable shall define a ReadUntil operation that reads until any stop character is received.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: ReadUntil enables delimiter-based framing (e.g., newline-terminated protocols) without requiring the caller to implement byte-by-byte polling.
 
 **Verification Method**:: Inspection
 
@@ -689,7 +689,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO API vtable shall define a TryReadUntil operation that reads until a stop character or timeout.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: TryReadUntil combines delimiter-based framing with a timeout, preventing indefinite blocking when the delimiter never arrives.
 
 **Verification Method**:: Inspection
 
@@ -702,7 +702,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO API vtable shall define a Write operation that writes up to the requested number of bytes and updates the size with bytes actually written.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Write with actual-bytes-written feedback allows callers to handle partial writes, which is common with buffered or DMA-based IO on embedded targets.
 
 **Verification Method**:: Inspection
 
@@ -715,7 +715,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO API vtable shall define a TryWrite operation that writes with a timeout in microseconds.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: TryWrite with a timeout enables bounded-time write attempts, preventing real-time tasks from stalling on a full output buffer.
 
 **Verification Method**:: Inspection
 
@@ -728,7 +728,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The async IO API vtable shall define a Poll operation that checks for input readiness within a timeout.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Poll enables non-blocking readiness checks, allowing applications to multiplex across IO channels or perform other work while waiting for input.
 
 **Verification Method**:: Inspection
 
@@ -741,7 +741,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The I2C IO root shall embed a module root with an API vtable pointer.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: An abstract I2C interface decouples sensor and peripheral drivers from platform-specific I2C hardware, enabling portability and testability across different MCU families.
 
 **Verification Method**:: Inspection
 
@@ -754,7 +754,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The I2C IO API vtable shall define a Transfer operation that processes an array of read/write messages.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: A multi-message transfer operation enables compound I2C transactions (e.g., write-then-read) in a single call, which is the standard pattern for register-based peripherals.
 
 **Verification Method**:: Inspection
 
@@ -767,7 +767,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each I2C message shall contain a header with a type field distinguishing read from write messages.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: A type field in the message header enables the transfer operation to dispatch read vs. write behavior without requiring separate API calls for each direction.
 
 **Verification Method**:: Inspection
 
@@ -780,7 +780,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each I2C message header shall contain the target device address.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Including the device address in each message header allows a single transfer call to address multiple devices on the same bus, supporting multi-device transactions.
 
 **Verification Method**:: Inspection
 
@@ -793,7 +793,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The SPI IO root shall embed a module root with an API vtable pointer.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: An abstract SPI interface decouples sensor and peripheral drivers from platform-specific SPI hardware, enabling portability and testability across different MCU families.
 
 **Verification Method**:: Inspection
 
@@ -806,7 +806,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The SPI IO API vtable shall define a Transaction operation for full-duplex read/write.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Full-duplex transaction is the native SPI operation model; providing it as a single call allows the platform backend to optimize DMA or hardware-level simultaneous read/write.
 
 **Verification Method**:: Inspection
 
@@ -821,7 +821,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The log root shall embed a module root with an API vtable pointer.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: An abstract log interface decouples application diagnostic output from platform-specific logging backends (UART, semihosting, telemetry), enabling portability and testability.
 
 **Verification Method**:: Inspection
 
@@ -834,7 +834,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The log API vtable shall define a LogDebug operation for debug-level messages.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Debug-level messages provide verbose diagnostic information useful during development and integration testing.
 
 **Verification Method**:: Inspection
 
@@ -847,7 +847,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The log API vtable shall define a LogInfo operation for info-level messages.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Info-level messages communicate normal operational status and milestones, useful for runtime monitoring.
 
 **Verification Method**:: Inspection
 
@@ -860,7 +860,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The log API vtable shall define a LogWarning operation for warning-level messages.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Warning-level messages flag recoverable anomalies that may require operator attention but do not halt execution.
 
 **Verification Method**:: Inspection
 
@@ -873,7 +873,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The log API vtable shall define a LogError operation for error-level messages.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Error-level messages flag critical failures that may require corrective action or system recovery.
 
 **Verification Method**:: Inspection
 
@@ -886,7 +886,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The log module shall initialize with an injected API vtable and failure handler.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Initialization with an injected vtable and failure handler wires the log module to a platform-specific backend while maintaining the dependency injection pattern.
 
 **Verification Method**:: Test
 
@@ -903,7 +903,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each log operation shall accept a printf-like format string with variadic arguments.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Printf-like variadic formatting is the standard embedded logging convention, allowing callers to compose messages inline without pre-formatting into a separate buffer.
 
 **Verification Method**:: Inspection
 
@@ -921,7 +921,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map module shall initialize from a caller-provided backing array.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: A hash map provides O(1) average-case key-value lookup, which is essential for configuration registries, symbol tables, and message routing in embedded systems; initializing from a caller-provided array satisfies the zero-allocation constraint.
 
 **Verification Method**:: Test
 
@@ -940,7 +940,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map module shall accept an injected hashable pointer API with Hash and IsValueNull operations.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Injecting the hash function decouples the map from a specific hash algorithm, allowing integrators to choose an algorithm suited to their key type and collision characteristics.
 
 **Verification Method**:: Test
 
@@ -959,7 +959,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map module shall accept an injected value pointer API with an Equals operation for key comparison.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Injecting the equality operation decouples the map from a specific key type, allowing arbitrary key comparisons without hard-coded logic.
 
 **Verification Method**:: Test
 
@@ -977,7 +977,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map shall insert or update a key-value pair using linear probing.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Linear probing provides a simple, cache-friendly collision resolution strategy that works within the fixed-size backing array without dynamic bucket chains.
 
 **Verification Method**:: Test
 
@@ -1001,7 +1001,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map shall return JUNO_STATUS_TABLE_FULL_ERROR when no empty slot exists during a Set operation.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit rejection on a full table surfaces the capacity limit to the caller rather than silently overwriting existing entries or entering an infinite probe loop.
 
 **Verification Method**:: Test
 
@@ -1017,7 +1017,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map shall retrieve an entry by key using linear probing.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Get is the primary read operation; using the same linear probing strategy as Set ensures consistent key lookup behavior.
 
 **Verification Method**:: Test
 
@@ -1039,7 +1039,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map shall return JUNO_STATUS_DNE_ERROR when a Get operation does not find the key.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Returning a distinct not-found status enables the caller to distinguish between a missing key and a key with a zero/null value.
 
 **Verification Method**:: Test
 
@@ -1055,7 +1055,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map shall remove an entry by key using linear probing, resetting the slot.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Remove with slot reset ensures that freed slots are returned to the null state expected by the probing algorithm, maintaining map integrity.
 
 **Verification Method**:: Test
 
@@ -1075,7 +1075,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map module shall verify that its API vtable entries are non-null before each operation.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Validates the vtable at runtime to ensure memory safety before dispatching any map operation through function pointers.
 
 **Verification Method**:: Test
 
@@ -1092,7 +1092,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The map module shall verify that the backing array, hashable pointer API, and value pointer API dependencies are valid before each operation.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Validates all injected dependencies at runtime to catch misconfigured or partially initialized map instances before they produce undefined behavior.
 
 **Verification Method**:: Test
 
@@ -1111,7 +1111,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall define double-precision constants for π, π/2, π/4, and e.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Pre-defined constants avoid repeated magic numbers and ensure consistent precision across all math operations in the library.
 
 **Verification Method**:: Inspection
 
@@ -1124,7 +1124,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall define 2D and 3D vector types in double, float, and int32 precisions.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Multiple precision variants allow embedded applications to choose the appropriate trade-off between precision and memory/computation cost for their target platform.
 
 **Verification Method**:: Inspection
 
@@ -1137,7 +1137,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each vector type shall support both named Cartesian field access and raw array indexing.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Dual access via named fields (x, y, z) and raw array indexing enables both readable application code and loop-based generic algorithms over vector components.
 
 **Verification Method**:: Inspection
 
@@ -1150,7 +1150,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall define a real quaternion type with [s, i, j, k] component order in double precision.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Quaternions provide singularity-free rotation representation, which is critical for attitude determination and control in embedded navigation and robotics applications.
 
 **Verification Method**:: Inspection
 
@@ -1163,7 +1163,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute component-wise vector addition for each vector type.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Vector addition is a fundamental linear algebra operation used in position accumulation, force summation, and signal combination.
 
 **Verification Method**:: Test
 
@@ -1189,7 +1189,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute component-wise vector subtraction for each vector type.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Vector subtraction is used for computing displacements, error vectors, and relative quantities between two points or measurements.
 
 **Verification Method**:: Test
 
@@ -1215,7 +1215,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute component-wise scalar multiplication for each vector type.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Scalar multiplication is used for scaling vectors by gain factors, time steps, or unit conversions.
 
 **Verification Method**:: Test
 
@@ -1241,7 +1241,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the dot product for each vector type.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The dot product computes projection and angle-related quantities, which are fundamental to geometry, physics, and signal processing.
 
 **Verification Method**:: Test
 
@@ -1267,7 +1267,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the pseudoscalar z-component of the 2D cross product.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The 2D cross product (pseudoscalar z-component) determines signed area and winding direction, which is useful for 2D geometry and path planning.
 
 **Verification Method**:: Test
 
@@ -1287,7 +1287,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the 3D cross product returning an orthogonal vector.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The 3D cross product computes torque, angular momentum, and surface normals, which are fundamental to 3D kinematics and dynamics.
 
 **Verification Method**:: Test
 
@@ -1307,7 +1307,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the squared L2 norm for each vector type.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The squared norm avoids a square-root computation, providing an efficient magnitude comparison and normalization building block for resource-constrained targets.
 
 **Verification Method**:: Test
 
@@ -1333,7 +1333,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute component-wise quaternion addition.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Quaternion addition is used in interpolation schemes (e.g., SLERP numerator) and filter state updates.
 
 **Verification Method**:: Test
 
@@ -1349,7 +1349,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute component-wise quaternion subtraction.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Quaternion subtraction is used for computing rotation error and difference quaternions in attitude estimation.
 
 **Verification Method**:: Test
 
@@ -1365,7 +1365,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute component-wise quaternion scalar multiplication.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: Scalar multiplication is used for scaling quaternion corrections and blending interpolation weights.
 
 **Verification Method**:: Test
 
@@ -1381,7 +1381,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the right-handed Hamilton product of two quaternions.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The Hamilton product composes rotations, which is the core operation for attitude propagation and frame transformation in navigation systems.
 
 **Verification Method**:: Test
 
@@ -1398,7 +1398,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the conjugate of a quaternion by negating the vector part.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The conjugate of a unit quaternion is its inverse rotation, providing an efficient way to compute reverse transformations without division.
 
 **Verification Method**:: Test
 
@@ -1414,7 +1414,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the multiplicative inverse of a quaternion as conj(q) divided by the squared norm.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The reciprocal generalizes the inverse to non-unit quaternions, which is needed for quaternion division and certain filter update equations.
 
 **Verification Method**:: Test
 
@@ -1430,7 +1430,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The math module shall compute the squared L2 norm of a quaternion.
 
-**Rationale**:: Provides core math primitives for embedded software.
+**Rationale**:: The squared norm is the denominator in the reciprocal computation and provides an efficient normalization check without requiring a square root.
 
 **Verification Method**:: Test
 
@@ -1449,7 +1449,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The memory module shall define an abstract allocator API with Get, Update, and Put operations.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: An abstract allocator interface decouples data structures from a specific allocation strategy, enabling the integrator to provide pool-based, slab, or custom allocators suited to their target's memory constraints.
 
 **Verification Method**:: Inspection
 
@@ -1462,7 +1462,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The memory allocator root shall hold an injected pointer API for internal memory operations.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Injecting the pointer API ensures the allocator can perform type-safe copy and reset operations on allocated blocks without depending on a specific pointer implementation.
 
 **Verification Method**:: Inspection
 
@@ -1475,7 +1475,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator shall initialize from caller-provided backing memory, metadata array, type size, alignment, and length.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Initialization from caller-provided memory ensures the block allocator operates without dynamic allocation and that all backing storage is under integrator control.
 
 **Verification Method**:: Test
 
@@ -1492,7 +1492,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator shall allocate a block of the configured element size in O(1) time.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: O(1) allocation time guarantees deterministic performance, which is essential for real-time embedded applications with strict timing budgets.
 
 **Verification Method**:: Test
 
@@ -1513,7 +1513,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator shall reuse freed blocks via a LIFO free list when available.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: LIFO free-list reuse maximizes block utilization without fragmentation, keeping the allocator's memory footprint bounded to the initial caller-provided pool.
 
 **Verification Method**:: Test
 
@@ -1529,7 +1529,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator shall free a previously allocated block in O(1) time.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: O(1) deallocation time guarantees deterministic performance and complements the O(1) allocation guarantee.
 
 **Verification Method**:: Test
 
@@ -1547,7 +1547,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator shall reject double frees with an error status.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Detecting double frees at runtime prevents free-list corruption that would otherwise cause silent data corruption or unbounded allocation behavior.
 
 **Verification Method**:: Test
 
@@ -1563,7 +1563,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator shall reject frees of invalid or misaligned addresses with an error status.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Rejecting invalid or misaligned addresses prevents corruption of the free list and ensures that only addresses within the original backing memory are returned to the pool.
 
 **Verification Method**:: Test
 
@@ -1580,7 +1580,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator shall adjust a descriptor's size in-place up to the configured element size.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: In-place size adjustment allows a descriptor to shrink or grow within its fixed block without triggering a new allocation or data copy, which is useful for variable-length payloads within fixed-size slots.
 
 **Verification Method**:: Test
 
@@ -1596,7 +1596,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The block allocator Update shall not move memory when adjusting descriptor size.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Guaranteeing no memory movement during Update ensures that existing pointers to the block remain valid, which is critical for data structures that hold references to allocated blocks.
 
 **Verification Method**:: Test
 
@@ -1614,7 +1614,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The module system shall define a module root struct containing an API vtable pointer.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: The module root struct is the foundation of the vtable-based dependency injection system, enabling polymorphic dispatch across all LibJuno modules.
 
 **Verification Method**:: Inspection
 
@@ -1627,7 +1627,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The module root shall contain a failure handler pointer and user data pointer.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Provides a diagnostic callback mechanism so integrators can observe failures without altering control flow, which is essential for debugging on targets with limited instrumentation.
 
 **Verification Method**:: Inspection
 
@@ -1640,7 +1640,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Derived module structs shall embed the root as their first member, enabling safe upcasting to the root type.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Struct embedding with the root as the first member enables safe upcasting in C, providing polymorphism without dynamic allocation or language extensions.
 
 **Verification Method**:: Inspection
 
@@ -1653,7 +1653,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: A module union shall contain the root and all derivation types for polymorphic storage.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: The union enables caller-allocated polymorphic storage that is correctly sized for any derivation, without requiring the caller to know which concrete type will be used at compile time.
 
 **Verification Method**:: Inspection
 
@@ -1666,7 +1666,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The module system shall define a result type combining a status code with a typed success payload.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Combines a status code with a typed payload in a single return value, enabling functions to communicate both success data and error conditions without out-parameters or global state.
 
 **Verification Method**:: Inspection
 
@@ -1679,7 +1679,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The module system shall define an option type combining a presence flag with a typed payload.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Provides explicit representation of optional values, eliminating sentinel-value conventions and making the presence or absence of a value type-safe and self-documenting.
 
 **Verification Method**:: Inspection
 
@@ -1694,7 +1694,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The mutex root shall embed a module root with an API vtable pointer.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: An abstract mutex interface decouples synchronization logic from platform-specific locking primitives (RTOS mutexes, spinlocks, etc.), enabling portability and testability.
 
 **Verification Method**:: Inspection
 
@@ -1707,7 +1707,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The mutex API vtable shall define a TryLock operation that attempts to acquire the lock and returns immediately with a boolean result.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: TryLock enables non-blocking lock acquisition, which is essential for real-time tasks that cannot afford to block indefinitely on a contended resource.
 
 **Verification Method**:: Inspection
 
@@ -1720,7 +1720,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The mutex API vtable shall define a Lock operation that blocks until the lock is acquired.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Blocking Lock provides the standard synchronization primitive for tasks that can afford to wait, complementing the non-blocking TryLock.
 
 **Verification Method**:: Inspection
 
@@ -1733,7 +1733,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The mutex API vtable shall define a Free operation that releases the lock.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Free releases the lock, enabling other tasks to acquire it; without Free the mutex would be permanently held.
 
 **Verification Method**:: Inspection
 
@@ -1746,7 +1746,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The mutex module shall verify that its API vtable and all function pointers within it are non-NULL.
 
-**Rationale**:: Provides a portable abstraction interface for platform-specific capabilities.
+**Rationale**:: Validates the vtable at runtime to ensure memory safety before dispatching any mutex operation through function pointers.
 
 **Verification Method**:: Test
 
@@ -1767,7 +1767,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The pointer module shall define a pointer trait (JUNO_POINTER_T) containing an API vtable pointer, memory address, size, and alignment.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: A fat pointer descriptor enables type-safe, size-aware memory access so that data structures can operate on arbitrary element types without unsafe void-pointer arithmetic.
 
 **Verification Method**:: Inspection
 
@@ -1780,7 +1780,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The pointer API shall copy the value referenced by a source descriptor into a destination descriptor's storage location.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Copy is the fundamental value-transfer operation for data structures, enabling element insertion and extraction without exposing raw memory addresses to callers.
 
 **Verification Method**:: Test
 
@@ -1801,7 +1801,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The pointer API shall reset the memory at a pointer descriptor to a defined empty state.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Reset provides a deterministic way to clear memory slots, ensuring that data structures can return elements to a known-empty state without leaking stale data.
 
 **Verification Method**:: Test
 
@@ -1821,7 +1821,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The pointer module shall validate that a pointer descriptor's API, address, and size are non-null/non-zero.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Validates descriptor integrity at runtime to ensure memory safety before any copy or reset operation dereferences the address.
 
 **Verification Method**:: Test
 
@@ -1840,7 +1840,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The pointer module shall verify that a pointer descriptor's size and alignment match an expected type.
 
-**Rationale**:: Enables deterministic, pool-based memory management for resource-constrained embedded systems.
+**Rationale**:: Verifying size and alignment against an expected type catches type mismatches at runtime, preventing silent memory corruption when descriptors are used with the wrong element type.
 
 **Verification Method**:: Test
 
@@ -1860,7 +1860,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue module shall initialize from a caller-provided backing array.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: FIFO queues are essential for message passing, event buffering, and inter-module communication in embedded systems; initializing from a caller-provided array satisfies the zero-allocation constraint.
 
 **Verification Method**:: Test
 
@@ -1886,7 +1886,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue shall set start index and length to zero on initialization.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Zeroing the start index and length on initialization establishes a known-empty state, ensuring the queue is immediately usable without undefined behavior from uninitialized fields.
 
 **Verification Method**:: Test
 
@@ -1902,7 +1902,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue shall copy an element to the back of the circular buffer in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: O(1) enqueue via a circular buffer provides deterministic timing for real-time message producers.
 
 **Verification Method**:: Test
 
@@ -1929,7 +1929,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue shall return JUNO_STATUS_INVALID_SIZE_ERROR when enqueue is attempted on a full queue.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit rejection on a full queue surfaces the overflow condition to the caller rather than silently dropping or overwriting data.
 
 **Verification Method**:: Test
 
@@ -1945,7 +1945,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue shall remove and copy out the front element in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: O(1) dequeue via a circular buffer provides deterministic timing for real-time message consumers.
 
 **Verification Method**:: Test
 
@@ -1970,7 +1970,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue shall return JUNO_STATUS_ERR when dequeue is attempted on an empty queue.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit rejection on an empty queue surfaces the underflow condition rather than returning stale or uninitialized data.
 
 **Verification Method**:: Test
 
@@ -1986,7 +1986,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue shall return a pointer descriptor to the front element without removing it in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Peek allows consumers to inspect the next element without consuming it, which is useful for conditional dequeue logic and priority-based processing.
 
 **Verification Method**:: Test
 
@@ -2005,7 +2005,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The queue shall return JUNO_STATUS_INVALID_SIZE_ERROR when peek is attempted on an empty queue.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit rejection on empty peek prevents the caller from receiving a descriptor to uninitialized or stale memory.
 
 **Verification Method**:: Test
 
@@ -2023,7 +2023,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker root shall hold a pipe registry pointer, registry length, and registry capacity.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: The broker root holds the pipe registry that enables publish/subscribe message routing, providing the core data needed to fan out messages to subscribers.
 
 **Verification Method**:: Inspection
 
@@ -2036,7 +2036,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker API vtable shall define Publish and RegisterSubscriber operations.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Publish and RegisterSubscriber are the minimal operations needed for a publish/subscribe software bus: producers publish messages and consumers register pipes to receive them.
 
 **Verification Method**:: Inspection
 
@@ -2049,7 +2049,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall initialize from a caller-provided pipe registry array and capacity.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Initialization from a caller-provided registry array ensures the broker operates without dynamic allocation and that the registry capacity is under integrator control.
 
 **Verification Method**:: Test
 
@@ -2067,7 +2067,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: A pipe shall derive from the queue module root with an additional message ID field.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Deriving a pipe from the queue root reuses the existing FIFO implementation and adds only the message ID field needed for topic-based routing, minimizing code duplication.
 
 **Verification Method**:: Inspection
 
@@ -2080,7 +2080,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: A pipe shall initialize with a message ID and a backing queue array.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Initializing a pipe with a message ID and backing queue establishes the subscription topic and buffer in a single step, with all memory caller-owned.
 
 **Verification Method**:: Test
 
@@ -2097,7 +2097,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall enqueue a message into every registered pipe whose message ID matches the published message ID.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Fan-out delivery to all matching pipes is the defining behavior of a publish/subscribe bus, decoupling producers from consumers by message topic.
 
 **Verification Method**:: Test
 
@@ -2113,7 +2113,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall skip pipes whose message ID does not match the published message ID.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Skipping non-matching pipes ensures that subscribers only receive messages for their registered topic, preventing cross-contamination between message channels.
 
 **Verification Method**:: Test
 
@@ -2129,7 +2129,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall append a pipe pointer to the registry on registration.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Appending a pipe to the registry is the mechanism by which consumers subscribe to the software bus, establishing the routing table for future publish operations.
 
 **Verification Method**:: Test
 
@@ -2145,7 +2145,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall return an error status when registration is attempted on a full registry.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Explicit rejection on a full registry surfaces the capacity limit to the caller rather than silently failing to register a subscriber.
 
 **Verification Method**:: Test
 
@@ -2161,7 +2161,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall verify that its API vtable entries are non-null before each operation.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Validates the vtable and registry dependency at runtime to ensure memory safety before dispatching any broker operation.
 
 **Verification Method**:: Test
 
@@ -2177,7 +2177,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall verify that its pipe registry pointer and capacity are valid before each operation.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Validates the registry pointer and capacity at runtime to catch uninitialized or misconfigured broker instances before they produce undefined behavior.
 
 **Verification Method**:: Test
 
@@ -2194,7 +2194,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall verify each pipe via the queue verification before publishing to it.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Verifying each pipe before publishing to it prevents the broker from enqueuing messages into uninitialized or corrupted queue instances.
 
 **Verification Method**:: Test
 
@@ -2211,7 +2211,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The broker shall operate within a single thread without thread-safety mechanisms.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Single-thread scope avoids the complexity and overhead of synchronization primitives, which aligns with the deterministic, freestanding design philosophy; thread safety can be layered externally via the mutex module if needed.
 
 **Verification Method**:: Inspection
 
@@ -2224,7 +2224,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The scheduler root shall hold a time source pointer, a flattened schedule table, apps-per-minor-frame count, minor-frame count, and minor-frame period.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: The scheduler root holds all configuration needed to execute a time-triggered schedule: the time source for pacing, and the table layout defining which applications run in which minor frames.
 
 **Verification Method**:: Inspection
 
@@ -2237,7 +2237,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The scheduler API vtable shall define Execute, GetMinorFramePeriod, and GetMajorFramePeriod operations.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Execute, GetMinorFramePeriod, and GetMajorFramePeriod are the minimal API surface needed to run and query a time-triggered schedule.
 
 **Verification Method**:: Inspection
 
@@ -2250,7 +2250,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The schedule table shall be a flattened 2D array of application pointers with dimensions minor-frame count by apps-per-minor-frame.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: A flattened 2D array avoids pointer-to-pointer indirection and dynamic allocation, keeping the schedule table in a single contiguous caller-provided buffer.
 
 **Verification Method**:: Inspection
 
@@ -2263,7 +2263,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The scheduler Execute operation shall invoke each application's OnProcess hook across all minor frames in one major frame.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Executing all minor frames in sequence completes one major frame, which is the standard time-triggered scheduling pattern used in flight software and real-time control systems.
 
 **Verification Method**:: Test
 
@@ -2280,7 +2280,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The scheduler shall return the configured minor frame period as a timestamp.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Exposing the minor frame period allows applications and diagnostics to query the scheduler's timing granularity without accessing internal fields.
 
 **Verification Method**:: Test
 
@@ -2296,7 +2296,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The scheduler shall compute the major frame period as the product of the minor frame period and the minor-frame count.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: The major frame period is a derived quantity that callers need for cycle-level timing and telemetry; computing it from the minor frame period and count ensures consistency.
 
 **Verification Method**:: Test
 
@@ -2312,7 +2312,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The scheduler shall use an injected time module for timing operations.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Injecting the time source decouples the scheduler from any specific platform clock, enabling both real hardware timing and deterministic test clocks.
 
 **Verification Method**:: Inspection
 
@@ -2327,7 +2327,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The state machine root shall hold a pointer to the current state.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: The state machine root holds the current state pointer, which is the minimal state needed to drive a state machine without dynamic allocation or global state.
 
 **Verification Method**:: Inspection
 
@@ -2340,7 +2340,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each state shall embed a module root with an API vtable, a pointer to the owning SM, and a next-state option.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Embedding a module root in each state enables polymorphic dispatch of state actions through the vtable, allowing different state implementations to share the same interface.
 
 **Verification Method**:: Inspection
 
@@ -2353,7 +2353,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each state API vtable shall define StateAction, ShouldExit, and ResetState operations.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: StateAction, ShouldExit, and ResetState define the minimal lifecycle hooks needed to execute, terminate, and reinitialize a state, keeping the interface simple and composable.
 
 **Verification Method**:: Inspection
 
@@ -2366,7 +2366,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The state machine shall initialize with a start state and failure handler.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Initializing with a start state and failure handler establishes the SM in a valid, runnable configuration with diagnostic support from the first invocation.
 
 **Verification Method**:: Test
 
@@ -2384,7 +2384,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: A state shall initialize with a link to its owning SM, an API vtable, and an optional next state.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Linking a state to its owning SM enables the state to trigger transitions and query SM-level context without global references.
 
 **Verification Method**:: Test
 
@@ -2403,7 +2403,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The state machine shall return the current state pointer.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Exposing the current state pointer allows external logic to inspect SM status, which is useful for diagnostics, telemetry, and conditional behavior.
 
 **Verification Method**:: Test
 
@@ -2420,7 +2420,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The state machine shall transition to the next state when the current state's next-state option is present.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Option-driven transitions decouple transition logic from the SM engine; a state signals a transition by setting the next-state option, keeping the transition protocol explicit and deterministic.
 
 **Verification Method**:: Test
 
@@ -2437,7 +2437,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The state machine shall remain in the current state when the next-state option is absent.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Remaining in the current state when no transition is requested is the safe default, preventing unintended state changes due to uninitialized option fields.
 
 **Verification Method**:: Test
 
@@ -2453,7 +2453,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The state machine shall verify that its root and current state pointer are non-NULL.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Verifying root and state pointer validity at runtime ensures memory safety before the SM engine dereferences any internal pointers.
 
 **Verification Method**:: Test
 
@@ -2471,7 +2471,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each state shall verify that its API vtable and owning SM pointer are non-NULL.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: Validating each state's vtable and owning-SM pointer at runtime catches misconfigured states before they produce undefined behavior through invalid dispatch or null dereference.
 
 **Verification Method**:: Test
 
@@ -2490,7 +2490,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Each state shall verify that the next-state pointer is non-NULL when the next-state option is marked present.
 
-**Rationale**:: Provides a reusable application framework pattern for structured embedded software.
+**Rationale**:: A present option with a NULL pointer would cause a null dereference during transition; validating this precondition prevents that undefined behavior.
 
 **Verification Method**:: Test
 
@@ -2509,7 +2509,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack module shall initialize from a caller-provided backing array.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: LIFO stacks are essential for undo buffers, expression evaluation, and depth-first traversal in embedded systems; initializing from a caller-provided array satisfies the zero-allocation constraint.
 
 **Verification Method**:: Test
 
@@ -2535,7 +2535,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack shall set length to zero on initialization.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Zeroing the length on initialization establishes a known-empty state, ensuring the stack is immediately usable without undefined behavior from uninitialized fields.
 
 **Verification Method**:: Test
 
@@ -2551,7 +2551,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack shall copy an element to the top in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: O(1) push provides deterministic timing for real-time producers.
 
 **Verification Method**:: Test
 
@@ -2579,7 +2579,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when push is attempted on a full stack.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit rejection on a full stack surfaces the overflow condition to the caller rather than silently corrupting adjacent memory.
 
 **Verification Method**:: Test
 
@@ -2596,7 +2596,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack shall remove and copy out the top element in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: O(1) pop provides deterministic timing for real-time consumers.
 
 **Verification Method**:: Test
 
@@ -2624,7 +2624,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when pop is attempted on an empty stack.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit rejection on an empty stack surfaces the underflow condition rather than returning stale or uninitialized data.
 
 **Verification Method**:: Test
 
@@ -2641,7 +2641,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack shall return a pointer descriptor to the top element without removing it in O(1) time.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Peek allows consumers to inspect the top element without consuming it, which is useful for lookahead and conditional pop logic.
 
 **Verification Method**:: Test
 
@@ -2663,7 +2663,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when peek is attempted on an empty stack.
 
-**Rationale**:: Enables fundamental data structure capabilities for embedded applications without dynamic allocation.
+**Rationale**:: Explicit rejection on empty peek prevents the caller from receiving a descriptor to uninitialized or stale memory.
 
 **Verification Method**:: Test
 
@@ -2681,7 +2681,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The status module shall define a single 32-bit integer status type (JUNO_STATUS_T) for error propagation.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: A single, fixed-width status type ensures consistent error propagation across all modules and is portable to any target with stdint.h support.
 
 **Verification Method**:: Inspection
 
@@ -2694,7 +2694,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The status module shall define distinct status codes for each error condition category (success, null pointer, memory, type, size, table full, does-not-exist, I/O, CRC, reference, data, timeout, out-of-bounds).
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Distinct status codes for each error category enable precise diagnosis of failure causes, which is critical on embedded targets where printf-style debugging may be unavailable.
 
 **Verification Method**:: Inspection
 
@@ -2707,7 +2707,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The status module shall define an optional failure handler callback type that receives a status code, message, and user data.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: An optional callback type allows integrators to hook diagnostic logging, telemetry, or breakpoint triggers into the error path without modifying library code.
 
 **Verification Method**:: Inspection
 
@@ -2720,7 +2720,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The failure handler shall not alter control flow when invoked.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Failure handlers must be diagnostic-only to preserve deterministic control flow; allowing handlers to alter execution would introduce unpredictable branching that undermines safety and testability.
 
 **Verification Method**:: Inspection
 
@@ -2735,7 +2735,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The library shall not use malloc, calloc, realloc, or free.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Ensures deterministic behavior with no heap fragmentation or unpredictable timing, enables portability to bare-metal targets that lack a heap, and eliminates heap-related safety defects such as use-after-free, double-free, and memory leaks.
 
 **Verification Method**:: Inspection
 
@@ -2748,7 +2748,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: All memory used by the library shall be caller-owned and injected via initialization functions.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Gives the integrator full control over memory placement (e.g., specific RAM sections), makes memory usage statically analyzable, and avoids hidden coupling between the library and any platform allocator.
 
 **Verification Method**:: Inspection
 
@@ -2761,7 +2761,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The library shall compile under -std=c11 -nostdlib -ffreestanding without hosted C standard library dependencies.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Targets MCUs, DSPs, and safety-critical platforms that lack a hosted C runtime, while leveraging C11 features such as _Static_assert, _Alignof, and guaranteed fixed-width integer types from stdint.h.
 
 **Verification Method**:: Analysis
 
@@ -2774,7 +2774,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: All fallible functions shall return explicit status codes (JUNO_STATUS_T).
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Provides predictable, deterministic error propagation without platform-dependent mechanisms such as errno, exceptions, or longjmp, which are unavailable or unsafe in freestanding environments.
 
 **Verification Method**:: Inspection
 
@@ -2787,7 +2787,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The library shall not silently swallow errors or produce undefined behavior on error paths.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Aligns with the fundamental assumption that all code is fallible; every error must be surfaced so that integrators can observe, diagnose, and handle failures rather than encountering silent data corruption or undefined behavior.
 
 **Verification Method**:: Inspection
 
@@ -2800,7 +2800,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: All modules shall use the vtable/module-root/derivation pattern for dependency injection.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Enables modularity by allowing implementations to be swapped at initialization time, and enables testability by allowing injection of test doubles through the same vtable interface.
 
 **Verification Method**:: Inspection
 
@@ -2813,7 +2813,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: Dependencies shall be injected via initialization functions, never globally referenced.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Eliminates hidden coupling between modules, enables multiple independent instances of the same module type, and supports testability by making all dependencies explicit and injectable.
 
 **Verification Method**:: Inspection
 
@@ -2826,7 +2826,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: All public API functions shall verify their preconditions at entry.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Ensures runtime memory safety by failing fast on invalid inputs rather than allowing undefined behavior, which is critical in embedded systems where hardware watchdogs and debuggers may be the only diagnostic tools.
 
 **Verification Method**:: Test
 
@@ -2843,7 +2843,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The library shall contain no global mutable state.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Guarantees reentrancy, avoids hidden coupling between module instances, and enables multiple independent instances to coexist safely in the same address space.
 
 **Verification Method**:: Inspection
 
@@ -2856,7 +2856,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: All modules shall verify that their API vtable and all function pointers within it reference valid (non-NULL) memory before performing any operation.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Ensures runtime memory safety by validating dispatch targets before invocation, preventing jumps through NULL or uninitialized function pointers that would cause undefined behavior on bare-metal targets.
 
 **Verification Method**:: Test
 
@@ -2874,7 +2874,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: All modules shall verify that all injected dependency pointers are valid (non-NULL) before performing any operation.
 
-**Rationale**:: Required to ensure LibJuno operates reliably on bare-metal and freestanding targets without hosted OS assumptions.
+**Rationale**:: Ensures runtime memory safety by validating injected dependencies before use, catching misconfigured or partially initialized module graphs before they produce undefined behavior.
 
 **Verification Method**:: Test
 
@@ -2894,7 +2894,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall represent time as a struct with integer seconds and fixed-point fractional subseconds fields.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Integer seconds with fixed-point subseconds provides deterministic, lossless time representation without floating-point rounding, which is essential for real-time scheduling and time-triggered architectures.
 
 **Verification Method**:: Inspection
 
@@ -2907,7 +2907,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall define a vtable-based API with Now, AddTime, SubtractTime, SleepTo, Sleep, and conversion operations.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: A vtable-based time API decouples the scheduler and application logic from platform-specific clock hardware, enabling both real hardware clocks and deterministic test clocks.
 
 **Verification Method**:: Inspection
 
@@ -2920,7 +2920,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall add a duration to a timestamp in-place.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: In-place addition avoids allocating a new timestamp, and is the fundamental operation for computing deadlines and advancing time.
 
 **Verification Method**:: Test
 
@@ -2936,7 +2936,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall carry over subseconds to seconds when subsecond addition overflows.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Correct carry-over from subseconds to seconds is essential for accurate time arithmetic; without it, subsecond accumulation would overflow and produce incorrect timestamps.
 
 **Verification Method**:: Test
 
@@ -2952,7 +2952,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall subtract a duration from a timestamp in-place.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: In-place subtraction is the fundamental operation for computing elapsed time and remaining durations.
 
 **Verification Method**:: Test
 
@@ -2968,7 +2968,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall borrow from seconds when subsecond subtraction underflows.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Correct borrow from seconds to subseconds is essential for accurate time subtraction; without it, subsecond underflow would produce incorrect timestamps.
 
 **Verification Method**:: Test
 
@@ -2984,7 +2984,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall saturate the result to zero seconds and zero subseconds when subtraction would produce negative time.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Saturating to zero prevents negative time values, which have no physical meaning in the library's time model and would cause undefined behavior in unsigned arithmetic.
 
 **Verification Method**:: Test
 
@@ -3001,7 +3001,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall return JUNO_STATUS_INVALID_DATA_ERROR when subtraction would produce negative time.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Returning an error status when saturation occurs allows callers to detect and handle the underflow condition rather than silently receiving a clamped result.
 
 **Verification Method**:: Test
 
@@ -3018,7 +3018,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert a timestamp to nanoseconds using half-up rounding.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Nanosecond conversion enables interfacing with platform APIs and POSIX timespec structures that use nanosecond resolution.
 
 **Verification Method**:: Test
 
@@ -3035,7 +3035,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert a timestamp to microseconds using half-up rounding.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Microsecond conversion enables interfacing with platform timers and IO timeout APIs that use microsecond resolution.
 
 **Verification Method**:: Test
 
@@ -3052,7 +3052,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert a timestamp to milliseconds using half-up rounding.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Millisecond conversion enables interfacing with RTOS tick-based APIs and human-readable timing displays.
 
 **Verification Method**:: Test
 
@@ -3069,7 +3069,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert nanoseconds to a timestamp with integer seconds and fractional subseconds.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Conversion from nanoseconds enables constructing timestamps from platform clock reads and POSIX timespec values.
 
 **Verification Method**:: Test
 
@@ -3086,7 +3086,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert microseconds to a timestamp with integer seconds and fractional subseconds.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Conversion from microseconds enables constructing timestamps from timer registers and IO timeout values.
 
 **Verification Method**:: Test
 
@@ -3103,7 +3103,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert milliseconds to a timestamp with integer seconds and fractional subseconds.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Conversion from milliseconds enables constructing timestamps from RTOS tick counts and human-specified delays.
 
 **Verification Method**:: Test
 
@@ -3120,7 +3120,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert a timestamp to a double-precision floating-point seconds value.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Double-precision conversion provides a convenient floating-point representation for algorithms that require fractional seconds, such as control loops and telemetry formatting.
 
 **Verification Method**:: Test
 
@@ -3136,7 +3136,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall convert a non-negative double-precision seconds value to a timestamp.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Conversion from double enables constructing timestamps from floating-point time sources and configuration values.
 
 **Verification Method**:: Test
 
@@ -3153,7 +3153,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall return JUNO_STATUS_INVALID_DATA_ERROR for negative or out-of-range double inputs.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Rejecting negative and out-of-range double inputs prevents construction of timestamps with undefined or physically meaningless values.
 
 **Verification Method**:: Test
 
@@ -3169,7 +3169,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall return JUNO_STATUS_INVALID_DATA_ERROR when a timestamp-to-integer conversion would overflow.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Detecting overflow before it occurs prevents silent truncation or wraparound, which would produce incorrect timing values in downstream consumers.
 
 **Verification Method**:: Test
 
@@ -3187,7 +3187,7 @@ LibJuno is a standalone C11 library designed to be used as a dependency in embed
 
 **Description**:: The time module shall return JUNO_STATUS_NULLPTR_ERROR when the time root pointer is NULL.
 
-**Rationale**:: Enables deterministic time arithmetic and conversion for real-time embedded applications.
+**Rationale**:: Rejecting a NULL time root pointer prevents null dereference, ensuring runtime memory safety at the module entry point.
 
 **Verification Method**:: Test
 

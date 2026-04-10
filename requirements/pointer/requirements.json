@@ -5,7 +5,7 @@
       "id": "REQ-POINTER-001",
       "title": "Pointer Descriptor Structure",
       "description": "The pointer module shall define a pointer trait (JUNO_POINTER_T) containing an API vtable pointer, memory address, size, and alignment.",
-      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "rationale": "A fat pointer descriptor enables type-safe, size-aware memory access so that data structures can operate on arbitrary element types without unsafe void-pointer arithmetic.",
       "verification_method": "Inspection",
       "uses": [
         "REQ-SYS-001",
@@ -21,7 +21,7 @@
       "id": "REQ-POINTER-002",
       "title": "Pointer Copy",
       "description": "The pointer API shall copy the value referenced by a source descriptor into a destination descriptor's storage location.",
-      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "rationale": "Copy is the fundamental value-transfer operation for data structures, enabling element insertion and extraction without exposing raw memory addresses to callers.",
       "verification_method": "Test",
       "uses": [
         "REQ-POINTER-001"
@@ -32,7 +32,7 @@
       "id": "REQ-POINTER-003",
       "title": "Pointer Reset",
       "description": "The pointer API shall reset the memory at a pointer descriptor to a defined empty state.",
-      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "rationale": "Reset provides a deterministic way to clear memory slots, ensuring that data structures can return elements to a known-empty state without leaking stale data.",
       "verification_method": "Test",
       "uses": [
         "REQ-POINTER-001"
@@ -43,7 +43,7 @@
       "id": "REQ-POINTER-004",
       "title": "Pointer Descriptor Validation",
       "description": "The pointer module shall validate that a pointer descriptor's API, address, and size are non-null/non-zero.",
-      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "rationale": "Validates descriptor integrity at runtime to ensure memory safety before any copy or reset operation dereferences the address.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-008",
@@ -56,7 +56,7 @@
       "id": "REQ-POINTER-005",
       "title": "Pointer Type Verification",
       "description": "The pointer module shall verify that a pointer descriptor's size and alignment match an expected type.",
-      "rationale": "Enables deterministic, pool-based memory management for resource-constrained embedded systems.",
+      "rationale": "Verifying size and alignment against an expected type catches type mismatches at runtime, preventing silent memory corruption when descriptors are used with the wrong element type.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-008",

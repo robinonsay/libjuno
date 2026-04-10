@@ -1,0 +1,77 @@
+= Array Module
+
+== Purpose
+
+The Array module (`array_api.h`) provides a minimal, fixed-capacity array abstraction used as the foundational storage layer by higher-level data structures (Heap, Queue, Stack, Map).
+It defines three core operations — SetAt, GetAt, RemoveAt — over caller-owned, contiguous storage.
+
+== Data Structures
+
+=== Array Root (`JUNO_DS_ARRAY_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_DS_ARRAY_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_ARRAY_API_T,
+    size_t zCapacity;  // Fixed capacity defined at initialization
+);
+----
+
+=== Array API (`JUNO_DS_ARRAY_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `SetAt(ptArray, tItem, iIndex)` | Copy `tItem` into slot `iIndex` via the pointer API.
+| `GetAt(ptArray, iIndex)` | Return a `JUNO_RESULT_POINTER_T` describing the slot at `iIndex`.
+| `RemoveAt(ptArray, iIndex)` | Reset the slot at `iIndex` via the pointer API.
+|===
+
+== Interface Design
+
+`JunoDs_ArrayInit(ptArray, ptArrayApi, iCapacity, pfcnFailureHdlr, pvUserData)`::
+Wires the vtable, sets capacity, and calls `JunoDs_ArrayVerify` to validate the configuration.
+Returns `JUNO_STATUS_NULLPTR_ERROR` if any required parameter is NULL or zero.
+
+`JunoDs_ArrayVerify(ptArray)`::
+Inline verification: checks ptArray non-NULL, capacity non-zero, and all API function pointers present.
+
+`JunoDs_ArrayApiVerify(ptArrayApi)`::
+Inline verification of the vtable entries.
+
+`JunoDs_ArrayVerifyIndex(ptArray, iIndex)`::
+Validates index within capacity. Returns `JUNO_STATUS_OOB_ERROR` and invokes failure handler on out-of-bounds.
+
+== Algorithm Descriptions
+
+All operations are O(1) index-based access into contiguous storage.
+No sorting, searching, or rebalancing is performed at this layer.
+
+== Error Handling
+
+* `SetAt`: returns `JUNO_STATUS_OOB_ERROR` for invalid indices; pointer errors from Copy.
+* `GetAt`: returns `JUNO_STATUS_OOB_ERROR` for invalid indices.
+* `RemoveAt`: returns `JUNO_STATUS_OOB_ERROR` for invalid indices; pointer errors from Reset.
+* All functions call `JunoDs_ArrayVerify` at entry.
+* `JunoDs_ArrayVerifyIndex` invokes the root's failure handler on OOB.
+
+== Design Rationale
+
+The Array module is deliberately thin — it provides only indexed access without length tracking, ordering, or growth semantics.
+Higher-level data structures (Heap, Queue, Stack, Map) compose the Array for storage and add their own invariants.
+This separation keeps the Array reusable and avoids duplicating contiguous-storage logic across multiple modules.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-ARRAY-001 | `JunoDs_ArrayInit` — initialization with capacity and API
+| REQ-ARRAY-002 | `SetAt` — copy element into indexed slot
+| REQ-ARRAY-003 | `GetAt` — retrieve pointer descriptor for indexed slot
+| REQ-ARRAY-004 | `RemoveAt` — reset indexed slot
+| REQ-ARRAY-005 | `JunoDs_ArrayVerifyIndex` — bounds checking
+| REQ-ARRAY-006 | `JunoDs_ArrayVerify` — capacity validation
+| REQ-ARRAY-007 | `JunoDs_ArrayVerify` — API completeness check
+|===

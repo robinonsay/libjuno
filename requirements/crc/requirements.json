@@ -5,7 +5,7 @@
       "id": "REQ-CRC-001",
       "title": "CRC Streaming Update",
       "description": "Each CRC function shall accept a running CRC value, data buffer, and size, returning the updated CRC value.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "Streaming CRC computation allows data integrity checks over arbitrarily large or fragmented data without requiring the entire payload to be buffered in memory.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-001",
@@ -18,7 +18,7 @@
       "id": "REQ-CRC-002",
       "title": "CRC Null Safety",
       "description": "Each CRC function shall return 0 when passed a NULL data pointer.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "Returning a defined value for NULL input ensures the function is safe to call unconditionally, aligning with the no-silent-failures constraint by producing a predictable result rather than crashing.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-005"
@@ -29,7 +29,7 @@
       "id": "REQ-CRC-003",
       "title": "CRC Zero Length Safety",
       "description": "Each CRC function shall return 0 when passed a zero data size.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "Returning a defined value for zero-length input ensures the function is safe to call on empty buffers without special-casing at the call site.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-005"
@@ -40,7 +40,7 @@
       "id": "REQ-CRC-004",
       "title": "CRC-16 ARC",
       "description": "The CRC module shall compute a CRC-16/ARC update with initial seed 0.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "CRC-16/ARC is a widely used 16-bit CRC variant in legacy serial protocols and embedded communication stacks.",
       "verification_method": "Test",
       "uses": [
         "REQ-CRC-001"
@@ -51,7 +51,7 @@
       "id": "REQ-CRC-005",
       "title": "CRC-16 BinHex",
       "description": "The CRC module shall compute a BinHex 16-bit CRC update with initial seed 0.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "BinHex CRC is used in Macintosh file encoding and certain archive formats that embedded systems may need to interoperate with.",
       "verification_method": "Test",
       "uses": [
         "REQ-CRC-001"
@@ -62,7 +62,7 @@
       "id": "REQ-CRC-006",
       "title": "CRC-16 CCITT",
       "description": "The CRC module shall compute a CRC-16/CCITT update with initial seed 0xFFFF.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "CRC-16/CCITT is a standard integrity check in telecommunications (X.25, HDLC) and is commonly required for embedded communication interfaces.",
       "verification_method": "Test",
       "uses": [
         "REQ-CRC-001"
@@ -73,7 +73,7 @@
       "id": "REQ-CRC-007",
       "title": "CRC-16 Kermit",
       "description": "The CRC module shall compute a CRC-16/Kermit update with initial seed 0.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "CRC-16/Kermit is used in the Kermit file transfer protocol and certain embedded serial communication stacks.",
       "verification_method": "Test",
       "uses": [
         "REQ-CRC-001"
@@ -84,7 +84,7 @@
       "id": "REQ-CRC-008",
       "title": "CRC-32 CCITT32",
       "description": "The CRC module shall compute a 32-bit CCITT CRC update with initial seed 0xFFFFFFFF.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "A 32-bit CCITT CRC provides stronger error detection than 16-bit variants and is needed for larger data payloads and storage integrity checks.",
       "verification_method": "Test",
       "uses": [
         "REQ-CRC-001"
@@ -95,7 +95,7 @@
       "id": "REQ-CRC-009",
       "title": "CRC-32 ZIP",
       "description": "The CRC module shall compute a CRC-32/ZIP update with initial seed 0xFFFFFFFF.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "CRC-32/ZIP is the de facto standard for file and stream integrity (ZIP, PNG, Ethernet FCS) and is commonly required for interoperability.",
       "verification_method": "Test",
       "uses": [
         "REQ-CRC-001"
@@ -106,7 +106,7 @@
       "id": "REQ-CRC-010",
       "title": "CRC-32 ZIP Final XOR",
       "description": "The CRC-32/ZIP function shall apply a final XOR of 0xFFFFFFFF to the computed value when data is processed.",
-      "rationale": "Enables data integrity verification for communication and storage in embedded systems.",
+      "rationale": "The final XOR is part of the CRC-32/ZIP specification and is required for the computed value to match reference implementations and standard test vectors.",
       "verification_method": "Test",
       "uses": [
         "REQ-CRC-009"

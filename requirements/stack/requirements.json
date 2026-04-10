@@ -5,7 +5,7 @@
       "id": "REQ-STACK-001",
       "title": "Stack Initialization",
       "description": "The stack module shall initialize from a caller-provided backing array.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "LIFO stacks are essential for undo buffers, expression evaluation, and depth-first traversal in embedded systems; initializing from a caller-provided array satisfies the zero-allocation constraint.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-001",
@@ -24,7 +24,7 @@
       "id": "REQ-STACK-002",
       "title": "Stack Initial State",
       "description": "The stack shall set length to zero on initialization.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "Zeroing the length on initialization establishes a known-empty state, ensuring the stack is immediately usable without undefined behavior from uninitialized fields.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-002",
@@ -39,7 +39,7 @@
       "id": "REQ-STACK-003",
       "title": "Stack Push",
       "description": "The stack shall copy an element to the top in O(1) time.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "O(1) push provides deterministic timing for real-time producers.",
       "verification_method": "Test",
       "uses": [
         "REQ-STACK-001"
@@ -50,7 +50,7 @@
       "id": "REQ-STACK-004",
       "title": "Stack Full Rejection",
       "description": "The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when push is attempted on a full stack.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "Explicit rejection on a full stack surfaces the overflow condition to the caller rather than silently corrupting adjacent memory.",
       "verification_method": "Test",
       "uses": [
         "REQ-STACK-003"
@@ -61,7 +61,7 @@
       "id": "REQ-STACK-005",
       "title": "Stack Pop",
       "description": "The stack shall remove and copy out the top element in O(1) time.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "O(1) pop provides deterministic timing for real-time consumers.",
       "verification_method": "Test",
       "uses": [
         "REQ-STACK-001"
@@ -72,7 +72,7 @@
       "id": "REQ-STACK-006",
       "title": "Stack Empty Pop Rejection",
       "description": "The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when pop is attempted on an empty stack.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "Explicit rejection on an empty stack surfaces the underflow condition rather than returning stale or uninitialized data.",
       "verification_method": "Test",
       "uses": [
         "REQ-STACK-005"
@@ -83,7 +83,7 @@
       "id": "REQ-STACK-007",
       "title": "Stack Peek",
       "description": "The stack shall return a pointer descriptor to the top element without removing it in O(1) time.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "Peek allows consumers to inspect the top element without consuming it, which is useful for lookahead and conditional pop logic.",
       "verification_method": "Test",
       "uses": [
         "REQ-STACK-001"
@@ -94,7 +94,7 @@
       "id": "REQ-STACK-008",
       "title": "Stack Empty Peek Rejection",
       "description": "The stack shall return JUNO_STATUS_INVALID_SIZE_ERROR when peek is attempted on an empty stack.",
-      "rationale": "Enables fundamental data structure capabilities for embedded applications without dynamic allocation.",
+      "rationale": "Explicit rejection on empty peek prevents the caller from receiving a descriptor to uninitialized or stale memory.",
       "verification_method": "Test",
       "uses": [
         "REQ-STACK-007"

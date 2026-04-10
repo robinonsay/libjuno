@@ -1,0 +1,127 @@
+= Time Module
+
+== Purpose
+
+The Time module (`time_api.h`) defines the time interface and provides reference implementations for time math (add, subtract) and conversions (timestamp ↔ nanos/micros/millis/double).
+Platform-specific operations (Now, Sleep, SleepTo) are injected via the vtable.
+
+== Data Structures
+
+=== Timestamp (`JUNO_TIMESTAMP_T`)
+
+[source,c]
+----
+struct JUNO_TIMESTAMP_TAG {
+    JUNO_TIME_SECONDS_T iSeconds;       // uint32_t whole seconds
+    JUNO_TIME_SUBSECONDS_T iSubSeconds; // uint32_t fixed-point fraction
+};
+----
+
+The fractional field represents `(double)iSubSeconds / giSUBSECS_MAX` seconds, where `giSUBSECS_MAX` is the maximum value of `JUNO_TIME_SUBSECONDS_T` (0xFFFFFFFF).
+
+=== Time Root (`JUNO_TIME_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_TIME_ROOT_TAG JUNO_MODULE_ROOT(JUNO_TIME_API_T, JUNO_MODULE_EMPTY);
+----
+
+=== Time API (`JUNO_TIME_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Now(ptTime)` | Get current time *(platform-injected)*.
+| `AddTime(ptTime, ptRetTime, tTimeToAdd)` | In-place timestamp addition.
+| `SubtractTime(ptTime, ptRetTime, tTimeToSubtract)` | In-place timestamp subtraction.
+| `SleepTo(ptTime, tTimeToWakeup)` | Sleep until a specific time *(platform-injected)*.
+| `Sleep(ptTime, tDuration)` | Sleep for a duration *(platform-injected)*.
+| `TimestampToNanos / Micros / Millis` | Convert timestamp to integer durations.
+| `NanosToTimestamp / MicrosToTimestamp / MillisToTimestamp` | Convert integer durations to timestamp.
+| `TimestampToDouble / DoubleToTimestamp` | Convert between timestamp and `double`.
+|===
+
+=== Result Types
+
+`JUNO_TIMESTAMP_RESULT_T`, `JUNO_TIME_SECONDS_RESULT_T`, `JUNO_TIME_MILLIS_RESULT_T`, `JUNO_TIME_MICROS_RESULT_T`, `JUNO_TIME_NANOS_RESULT_T`, `JUNO_TIME_SUBSECONDS_RESULT_T`.
+
+== Interface Design
+
+`JunoTime_TimeApiInit(Now, SleepTo, Sleep)`::
+Macro that constructs a `JUNO_TIME_API_T` literal with user-supplied platform functions and LibJuno's reference math/conversion implementations.
+
+=== LibJuno-Provided Functions
+
+`JunoTime_AddTime(ptTime, ptRetTime, tTimeToAdd)`:: Add duration to timestamp.
+`JunoTime_SubtractTime(ptTime, ptRetTime, tTimeToSubtract)`:: Subtract duration from timestamp.
+`JunoTime_TimestampToNanos/Micros/Millis(ptTime, tTime)`:: Convert timestamp to integer duration.
+`JunoTime_NanosToTimestamp/MicrosToTimestamp/MillisToTimestamp(ptTime, iDuration)`:: Convert integer duration to timestamp.
+`JunoTime_TimestampToDouble(ptTime, tTimestamp)`:: Convert timestamp to `double`.
+`JunoTime_DoubleToTimestamp(ptTime, dTimestamp)`:: Convert `double` to timestamp.
+
+== Algorithm Descriptions
+
+=== AddTime
+
+. Add subseconds: `carry = (result overflows uint32_t)`.
+. Add seconds with carry.
+. No overflow detection on seconds (wraps at UINT32_MAX).
+
+=== SubtractTime
+
+. If subtraction would underflow: saturate to `{0, 0}`, return `JUNO_STATUS_INVALID_DATA_ERROR`.
+. Otherwise: subtract subseconds with borrow, subtract seconds.
+
+=== TimestampToNanos
+
+. Compute `iSeconds * 1e9 + (iSubSeconds * 1e9) / giSUBSECS_MAX`.
+. Round to nearest (half-up) for the fractional component.
+. Detect overflow on the `uint64_t` result.
+
+=== DoubleToTimestamp
+
+. Integer part → `iSeconds`.
+. Fractional part → `iSubSeconds = (uint32_t)(frac * giSUBSECS_MAX)`.
+. If `frac >= 1 - 1/giSUBSECS_MAX`: round up to next whole second.
+
+All operations are O(1).
+
+== Error Handling
+
+* `SubtractTime`: returns `JUNO_STATUS_INVALID_DATA_ERROR` and saturates to zero on underflow.
+* Integer conversions: return `JUNO_STATUS_INVALID_DATA_ERROR` on overflow.
+* All functions validate the module pointer via `JUNO_ASSERT_EXISTS`.
+
+== Design Rationale
+
+The time module splits platform-specific operations (Now, Sleep, SleepTo) from universal time math (add, subtract, conversions) via DI.
+Users inject their hardware clock through `JunoTime_TimeApiInit` and get all math for free.
+This follows the same DI principle: inject what varies, provide what's universal.
+
+The fixed-point subsecond representation was chosen over floating-point for deterministic arithmetic on targets without an FPU.
+The full-scale divisor (`giSUBSECS_MAX`) provides maximum fractional resolution within a 32-bit field.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-TIME-001 | `JUNO_TIMESTAMP_T` — timestamp struct with seconds/subseconds
+| REQ-TIME-002 | `JUNO_TIME_API_T` — time vtable definition
+| REQ-TIME-003 | `Now` — current time (platform-injected)
+| REQ-TIME-004 | `AddTime` — timestamp addition
+| REQ-TIME-005 | `SubtractTime` — timestamp subtraction with saturation
+| REQ-TIME-006 | `SleepTo` — sleep until time (platform-injected)
+| REQ-TIME-007 | `Sleep` — sleep for duration (platform-injected)
+| REQ-TIME-008 | `TimestampToNanos` — conversion to nanoseconds
+| REQ-TIME-009 | `TimestampToMicros` — conversion to microseconds
+| REQ-TIME-010 | `TimestampToMillis` — conversion to milliseconds
+| REQ-TIME-011 | `NanosToTimestamp` — conversion from nanoseconds
+| REQ-TIME-012 | `MicrosToTimestamp` — conversion from microseconds
+| REQ-TIME-013 | `MillisToTimestamp` — conversion from milliseconds
+| REQ-TIME-014 | `TimestampToDouble` — conversion to double
+| REQ-TIME-015 | `DoubleToTimestamp` — conversion from double
+| REQ-TIME-016 | `JunoTime_TimeApiInit` — API initialization macro
+|===

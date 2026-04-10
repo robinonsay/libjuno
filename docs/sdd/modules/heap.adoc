@@ -1,0 +1,115 @@
+= Heap Module
+
+== Purpose
+
+The Heap module (`heap_api.h`) provides a binary heap built on the Array abstraction.
+It supports Insert, Pop, Heapify, Update, and SiftDown operations, parameterized by user-supplied Compare and Swap callbacks.
+The heap can be configured as a max-heap or min-heap depending on the Compare implementation.
+
+== Data Structures
+
+=== Heap Root (`JUNO_DS_HEAP_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_DS_HEAP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_HEAP_API_T,
+    const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi;  // Compare/Swap callbacks
+    JUNO_DS_ARRAY_ROOT_T *ptHeapArray;                    // Backing array
+    size_t zLength;                                       // Current element count
+);
+----
+
+=== Heap Pointer API (`JUNO_DS_HEAP_POINTER_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Compare(ptHeap, tParent, tChild)` | Returns `true` if heap property holds for (parent, child).
+| `Swap(ptHeap, tLeft, tRight)` | Exchanges two elements in the backing storage.
+|===
+
+=== Heap API (`JUNO_DS_HEAP_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Insert(ptHeap, tValue)` | Copy element, increment length, bubble up.
+| `Heapify(ptHeap)` | Transform backing array into a heap in-place.
+| `Pop(ptHeap, tReturn)` | Copy root to tReturn, swap with last, decrement, sift down.
+|===
+
+=== Helper Result/Option Types
+
+`JUNO_DS_HEAP_INDEX_RESULT_T`, `JUNO_DS_HEAP_INDEX_OPTION_T`, `JUNO_DS_HEAP_INDEX_OPTION_RESULT_T`, `JUNO_DS_HEAP_COMPARE_RESULT_T` — internal types for index arithmetic and comparison results.
+
+== Interface Design
+
+`JunoDs_Heap_Init(ptHeap, ptHeapPointerApi, ptHeapArray, pfcnFailureHdlr, pvUserData)`::
+Wires the heap vtable, stores dependencies, and calls `JunoDs_Heap_Verify`.
+
+`JunoDs_Heap_Insert(ptHeap, tValue)`:: O(log n) insert with bubble-up.
+`JunoDs_Heap_Pop(ptHeap, tReturn)`:: O(log n) pop with sift-down.
+`JunoDs_Heap_Heapify(ptHeap)`:: O(n) in-place heapification via repeated sift-down from the last parent.
+`JunoDs_Heap_Update(ptHeap)`:: O(log n) bubble-up of the last element.
+`JunoDs_Heap_SiftDown(ptHeap, iStart)`:: O(log n) sift-down from a starting index.
+
+`JunoDs_Heap_Verify(ptHeap)`::
+Inline function verifying heap root, array, pointer API (Compare/Swap), and all heap API function pointers.
+Delegates to `JunoDs_ArrayVerify` for the backing array.
+
+== Algorithm Descriptions
+
+=== Insert
+
+. Copy `tValue` into slot `zLength` via `SetAt`.
+. Increment `zLength`.
+. Bubble up: compare element with parent; swap if heap property violated; repeat until root or property holds.
+
+=== Pop
+
+. Copy root element (index 0) into `tReturn` via `Copy`.
+. Swap root with last element (index `zLength - 1`).
+. Remove last slot; decrement `zLength`.
+. Sift down from index 0.
+
+=== Heapify
+
+. For `i` from `(zLength / 2 - 1)` down to 0: call `SiftDown(i)`.
+. This produces a valid heap in O(n) by bottom-up construction.
+
+=== SiftDown
+
+. Starting at `iStart`, compare with left and right children.
+. Swap with the child that violates the heap property (if any).
+. Repeat until no swap or leaf reached.
+
+== Error Handling
+
+* `Insert` returns `JUNO_STATUS_ERR` when the heap is full (`zLength == capacity`).
+* `Pop` returns `JUNO_STATUS_ERR` when empty (`zLength == 0`).
+* `Heapify` returns `JUNO_STATUS_ERR` when empty.
+* All operations propagate errors from Compare, Swap, SetAt, GetAt, and RemoveAt.
+* `Verify` is called at the start of every public function.
+
+== Design Rationale
+
+The heap is parameterized by Compare/Swap rather than hardcoding a comparison operator, allowing the same heap implementation to serve max-heaps, min-heaps, and priority queues with arbitrary key types.
+The backing Array provides storage; the Pointer API provides element copying — keeping the heap logic type-agnostic.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-HEAP-001 | `JunoDs_Heap_Init` — initialization with array and pointer API
+| REQ-HEAP-002 | `Insert` — O(log n) insertion
+| REQ-HEAP-003 | `Pop` — O(log n) root extraction
+| REQ-HEAP-004 | `Heapify` — O(n) in-place construction
+| REQ-HEAP-005 | `SiftDown` — O(log n) downward restoration
+| REQ-HEAP-006 | `Update` — O(log n) upward restoration
+| REQ-HEAP-007 | `JunoDs_Heap_Verify` — configuration validation
+| REQ-HEAP-008 | `JunoDs_Heap_Verify` — API completeness check
+|===

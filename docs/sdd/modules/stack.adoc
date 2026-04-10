@@ -1,0 +1,86 @@
+= Stack Module
+
+== Purpose
+
+The Stack module (`stack_api.h`) provides a fixed-capacity LIFO stack built on the Array abstraction.
+It supports O(1) push, pop, and peek operations.
+
+== Data Structures
+
+=== Stack Root (`JUNO_DS_STACK_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_DS_STACK_ROOT_TAG JUNO_MODULE_ROOT(JUNO_DS_STACK_API_T,
+    JUNO_DS_ARRAY_ROOT_T *ptStackArray;  // Backing array
+    size_t zLength;                       // Current element count
+);
+----
+
+=== Stack API (`JUNO_DS_STACK_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Push(ptStack, tItem)` | Copy element onto the top.
+| `Pop(ptStack, tReturn)` | Copy top element out and remove.
+| `Peek(ptStack)` | Return pointer descriptor to the top element.
+|===
+
+== Interface Design
+
+`JunoDs_StackInit(ptStack, ptStackArray, pfcnFailureHdlr, pvFailureUserData)`::
+Wires the stack vtable, stores the backing array, and validates via `JunoDs_StackVerify`.
+`zLength` is initialized to 0.
+
+`JunoDs_StackPush(ptStack, tItem)`:: Implementation of `Push`.
+`JunoDs_StackPop(ptStack, tReturn)`:: Implementation of `Pop`.
+`JunoDs_StackPeek(ptStack)`:: Implementation of `Peek`.
+
+`JunoDs_StackVerify(ptStack)`::
+Inline verification: checks stack root, backing array pointer, all API function pointers, and delegates to `JunoDs_ArrayVerify`.
+
+== Algorithm Descriptions
+
+=== Push
+
+. Copy `tItem` into the backing array at index `zLength` via `SetAt`.
+. Increment `zLength`.
+
+=== Pop
+
+. Copy the element at index `zLength - 1` into `tReturn` via the pointer API.
+. Remove the element at index `zLength - 1` via `RemoveAt`.
+. Decrement `zLength`.
+
+=== Peek
+
+. Return the pointer descriptor at index `zLength - 1` via `GetAt`.
+
+All operations are O(1).
+
+== Error Handling
+
+* `Push` returns `JUNO_STATUS_INVALID_SIZE_ERROR` when full (`zLength == capacity`).
+* `Pop` returns `JUNO_STATUS_INVALID_SIZE_ERROR` when empty (`zLength == 0`).
+* `Peek` returns `JUNO_STATUS_INVALID_SIZE_ERROR` when empty.
+* All operations call `Verify` at entry and propagate array/pointer errors.
+
+== Design Rationale
+
+Like the Queue, the Stack reuses the Array for storage.
+The top-of-stack is always the last used index, so no circular arithmetic is needed — just a simple length counter.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-STACK-001 | `JunoDs_StackInit` — initialization with backing array
+| REQ-STACK-002 | `Push` — LIFO insertion
+| REQ-STACK-003 | `Pop` — LIFO extraction
+| REQ-STACK-004 | `Peek` — non-destructive top access
+| REQ-STACK-005 | `JunoDs_StackVerify` — stack invariant validation
+|===

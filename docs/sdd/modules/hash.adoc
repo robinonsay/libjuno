@@ -1,0 +1,57 @@
+= Hash Module
+
+== Purpose
+
+The Hash module (`hash_djb2.h`) provides the djb2 hash function, a simple and effective hash algorithm used by the Map module for key hashing.
+
+== Data Structures
+
+No module types.
+The function operates on byte buffers and returns `JUNO_RESULT_SIZE_T`.
+
+== Interface Design
+
+`JunoHash_Djb2(pcBuff, zBuffSize)`::
+Inline function that computes the djb2 hash over `zBuffSize` bytes starting at `pcBuff`.
+
+* Returns `{JUNO_STATUS_SUCCESS, hash_value}` on success.
+* Returns `{JUNO_STATUS_NULLPTR_ERROR, 0}` if `pcBuff` is NULL.
+
+== Algorithm Descriptions
+
+=== djb2
+
+[source,c]
+----
+size_t zHash = 5381;
+for (size_t i = 0; i < zBuffSize; i++) {
+    zHash = ((zHash << 5) + zHash) + pcBuff[i];  // zHash * 33 + byte
+}
+----
+
+The recurrence `h = h * 33 + x` with seed 5381 was proposed by Daniel J. Bernstein.
+It provides good distribution for typical key data (strings, byte sequences) with minimal computation.
+
+*Complexity*: O(n) where n = `zBuffSize`.
+
+== Error Handling
+
+* NULL buffer: returns `JUNO_STATUS_NULLPTR_ERROR` without accessing memory.
+* Zero-length buffer: returns the seed value (5381) as the hash.
+
+== Design Rationale
+
+djb2 was selected for its simplicity, small code size, and adequate distribution for hash-table usage in embedded systems.
+The function is `static inline` in the header to avoid link-time overhead and enable inlining by the compiler.
+It returns a `JUNO_RESULT_SIZE_T` (rather than a raw `size_t`) to maintain the library's structural error-checking convention.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-HASH-001 | `JunoHash_Djb2` — djb2 hash computation
+| REQ-HASH-002 | NULL-pointer error handling
+| REQ-HASH-003 | Result type with status code
+|===

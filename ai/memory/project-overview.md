@@ -45,7 +45,7 @@ injection as its core architectural paradigm.
 | `time/`         | Time abstractions                                        |
 | `io/`           | I/O abstractions                                         |
 | `sm/`           | State machine                                            |
-| `sb/`           | String builder                                           |
+| `sb/`           | Software bus (publish/subscribe message broker)          |
 | `sch/`          | Scheduler                                                |
 | `mp/`           | Message passing                                          |
 | `app/`          | Application framework                                    |

@@ -1,0 +1,109 @@
+= Pointer Module
+
+== Purpose
+
+The Pointer module (`pointer_api.h`) defines the fat pointer trait (`JUNO_POINTER_T`) and associated APIs used by all data structures and memory modules in LibJuno.
+It provides self-describing memory descriptors that carry address, size, alignment, and operations — enabling type-safe, `memcpy`-free element manipulation in freestanding environments.
+
+== Data Structures
+
+=== `JUNO_POINTER_T` (Trait Root)
+
+[source,c]
+----
+struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
+    void *pvAddr;       // Address of the memory region
+    size_t zSize;       // Size in bytes
+    size_t zAlignment;  // Required alignment in bytes
+);
+----
+
+A pass-by-value descriptor.
+Uses `JUNO_TRAIT_ROOT` (no failure handler fields) for minimal size.
+
+=== `JUNO_POINTER_API_T`
+
+[source,c]
+----
+struct JUNO_POINTER_API_TAG {
+    JUNO_STATUS_T (*Copy)(JUNO_POINTER_T tDest, const JUNO_POINTER_T tSrc);
+    JUNO_STATUS_T (*Reset)(JUNO_POINTER_T tPointer);
+};
+----
+
+* **Copy**: copies the value from `tSrc` to `tDest` storage.
+* **Reset**: resets the pointee to a defined empty state (e.g., zero-init).
+
+=== `JUNO_VALUE_POINTER_API_T`
+
+[source,c]
+----
+struct JUNO_VALUE_POINTER_API_TAG {
+    JUNO_RESULT_BOOL_T (*Equals)(const JUNO_POINTER_T tLeft, const JUNO_POINTER_T tRight);
+};
+----
+
+Content-based equality comparison used by associative containers (Map).
+
+=== Result/Option Types
+
+`JUNO_RESULT_POINTER_T`:: `{JUNO_STATUS_T tStatus; JUNO_POINTER_T tOk;}`
+`JUNO_OPTION_POINTER_T`:: `{bool bIsSome; JUNO_POINTER_T tSome;}`
+
+== Interface Design
+
+`JunoMemory_PointerInit(ptApi, TYPE_T, pvAddr)`::
+Macro that constructs a `JUNO_POINTER_T` literal from an API, C type (for `sizeof`/`alignof`), and address.
+
+`JunoMemory_PointerVerifyType(pointer, type, tApi)`::
+Macro that verifies a pointer descriptor matches an expected type and API identity.
+Returns `JUNO_STATUS_SUCCESS` on match, `JUNO_STATUS_ERR` otherwise.
+Also checks alignment via `(uintptr_t)pvAddr % zAlignment == 0`.
+
+`JUNO_ASSERT_POINTER_TYPE(tStatus, tPointer, tType, tApi)`::
+Macro that asserts a pointer's type and API, returning on failure.
+
+`JunoMemory_PointerApiVerify(ptPointerApi)`::
+Inline function that verifies `Copy` and `Reset` are non-NULL.
+
+`JunoMemory_ValuePointerApiVerify(ptPointerApi)`::
+Inline function that verifies `Equals` is non-NULL.
+
+`JunoMemory_PointerVerify(tPointer)`::
+Inline function that validates API, address, and size are non-NULL/non-zero, then delegates to `JunoMemory_PointerApiVerify`.
+
+== Algorithm Descriptions
+
+No algorithms.
+All operations are O(1) verification checks or literal construction.
+
+== Error Handling
+
+* `JunoMemory_PointerVerify` returns `JUNO_STATUS_NULLPTR_ERROR` if API, address, or size is invalid.
+* `JunoMemory_PointerVerifyType` returns `JUNO_STATUS_ERR` on any mismatch (size, alignment, API identity, alignment of address).
+* No failure handler is invoked — the pointer is a trait root without failure handler fields.
+
+== Design Rationale
+
+**Fat pointer with vtable.** `JUNO_POINTER_T` binds `{pvAddr, zSize, zAlignment, ptApi}` into a self-describing, self-validating value type.
+In freestanding environments, `memcpy` is not guaranteed; by placing `Copy` behind a vtable, the element knows how to copy itself — data structures never require `memcpy`.
+
+**Copy/Reset on the pointer, not per-data-structure.** One Copy/Reset implementation per element type, reused by every data structure (Array, Heap, Queue, Stack, Map).
+Data structures remain type-agnostic; adding a new element type requires only a new `JUNO_POINTER_API_T` implementation.
+
+**`JUNO_TRAIT_ROOT` (no failure handler).** The pointer is a pass-by-value ephemeral descriptor, not a stateful module instance.
+Adding failure handler fields (+16 bytes on 64-bit) would bloat every data structure call's stack frame.
+Failure reporting belongs to the owning module.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-POINTER-001 | `JUNO_POINTER_T` struct definition with addr/size/alignment
+| REQ-POINTER-002 | `JunoMemory_PointerApiVerify` — Copy function present
+| REQ-POINTER-003 | `JunoMemory_PointerApiVerify` — Reset function present
+| REQ-POINTER-004 | `JunoMemory_PointerVerify` — full descriptor validation
+| REQ-POINTER-005 | `JunoMemory_PointerVerifyType` — type/API/alignment match
+|===

@@ -1,0 +1,124 @@
+= Software Bus (Broker) Module
+
+== Purpose
+
+The Software Bus module (`broker_api.h`) provides a single-threaded publish/subscribe message broker.
+It solves intra-thread message fan-out: "A message arrived in my thread — who needs a copy?"
+The broker maintains a registry of subscriber pipes (queues) keyed by Message ID (MID) and fans out published messages to all matching pipes.
+
+== Data Structures
+
+=== Broker Root (`JUNO_SB_BROKER_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_SB_BROKER_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SB_BROKER_API_T,
+    JUNO_SB_PIPE_T **ptPipeRegistry;  // Array of pipe pointers
+    size_t zRegistryLength;            // Current registered pipe count
+    size_t zRegistryCapacity;          // Max pipes
+);
+----
+
+=== Pipe (`JUNO_SB_PIPE_T`)
+
+[source,c]
+----
+struct JUNO_SB_PIPE_TAG JUNO_MODULE_DERIVE(JUNO_DS_QUEUE_ROOT_T,
+    JUNO_SB_MID_T iMsgId;  // Message ID / topic
+);
+----
+
+A pipe is a queue derivation carrying a topic identifier.
+It inherits all queue operations (Enqueue, Dequeue, Peek) via the queue root.
+
+=== Message ID (`JUNO_SB_MID_T`)
+
+`uint32_t` topic identifier used to route messages to matching pipes.
+
+=== Broker API (`JUNO_SB_BROKER_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Publish(ptBroker, tMid, tMsg)` | Enqueue `tMsg` into all pipes matching `tMid`.
+| `RegisterSubscriber(ptBroker, ptPipe)` | Add a pipe to the registry.
+|===
+
+== Interface Design
+
+`JunoSb_BrokerInit(ptBroker, ptPipeRegistry, iRegistryCapacity, pfcnFailureHdlr, pvFailureUserData)`::
+Initializes the broker with a caller-owned pipe registry array.
+`zRegistryLength` starts at 0.
+
+`JunoSb_PipeInit(ptPipe, iMid, ptArray, pfcnFailureHandler, pvUserData)`::
+Inline function that sets the pipe's MID and delegates to `JunoDs_QueueInit` for the underlying queue.
+
+`JunoSb_BrokerVerify(ptBroker)`::
+Validates broker root, API (Publish, RegisterSubscriber), pipe registry pointer, and capacity.
+
+`JunoSb_BrokerApiVerify(ptBrokerApi)`::
+Validates that Publish and RegisterSubscriber are non-NULL.
+
+`JunoSb_PipeVerify(ptPipe)`::
+Validates the pipe and delegates to `JunoDs_QueueVerify` for the underlying queue.
+
+== Algorithm Descriptions
+
+=== Publish
+
+. For each pipe in the registry (`0..zRegistryLength`):
+.. If `pipe->iMsgId == tMid`: enqueue `tMsg` into the pipe via the queue API.
+. Return status (propagate first error encountered).
+
+*Complexity*: O(k) where k = registry length.
+
+=== RegisterSubscriber
+
+. Check capacity: if `zRegistryLength >= zRegistryCapacity`, return `JUNO_STATUS_TABLE_FULL_ERROR`.
+. Store pipe pointer in `ptPipeRegistry[zRegistryLength]`.
+. Increment `zRegistryLength`.
+
+*Complexity*: O(1).
+
+== Error Handling
+
+* `Publish` propagates queue enqueue errors (e.g., pipe full → `JUNO_STATUS_INVALID_SIZE_ERROR`).
+* `RegisterSubscriber` returns `JUNO_STATUS_TABLE_FULL_ERROR` when the registry is full.
+* All operations call `Verify` at entry.
+* `JunoSb_PipeInit` propagates `JunoDs_QueueInit` errors.
+
+== Design Rationale
+
+**Single-threaded by design.** IPC mechanisms are platform-specific and non-abstractable without losing the properties that make them useful (blocking semantics, copy vs. zero-copy, priority inheritance, WCET guarantees).
+The broker solves intra-thread fan-out portably; inter-thread transport belongs to the integrator.
+
+**Pipes (queues) over callbacks.** Three reasons:
+
+. **Temporal decoupling** — `Publish` does O(1) enqueue per pipe; subscribers process on their own schedule.
+. **Bounded backpressure** — each pipe has fixed capacity; overflow returns an error status.
+. **Subscriber control** — subscribers inspect, batch, and prioritize message consumption.
+
+**Multi-threaded integration pattern.** One broker per thread, bridged by a user-written bridge app that forwards messages between brokers via platform IPC.
+The broker is a routing table, not a transport.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-SB-001 | `JUNO_SB_BROKER_ROOT_T` — broker root with pipe registry
+| REQ-SB-002 | `JUNO_SB_BROKER_API_T` — Publish and RegisterSubscriber vtable
+| REQ-SB-003 | Publish fan-out to matching MIDs
+| REQ-SB-004 | `JUNO_SB_PIPE_T` — pipe derivation of queue with MID
+| REQ-SB-005 | `JunoSb_PipeInit` — pipe initialization
+| REQ-SB-006 | Subscriber dequeue via queue API
+| REQ-SB-007 | Registry capacity enforcement
+| REQ-SB-008 | Bounded pipe capacity (queue-based backpressure)
+| REQ-SB-009 | Single-threaded scope
+| REQ-SB-010 | `JunoSb_BrokerVerify` — broker validation
+| REQ-SB-011 | `JunoSb_BrokerVerify` — registry pointer and capacity check
+| REQ-SB-012 | `JunoSb_PipeVerify` — pipe validation
+| REQ-SB-013 | Thread-safety documentation and scope declaration
+|===

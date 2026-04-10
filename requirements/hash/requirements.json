@@ -5,7 +5,7 @@
       "id": "REQ-HASH-001",
       "title": "DJB2 Hash Computation",
       "description": "The hash module shall compute the djb2 hash over a byte buffer with initial seed 5381.",
-      "rationale": "Provides data integrity verification for communication and storage in embedded systems.",
+      "rationale": "DJB2 is a simple, fast hash function suitable for hash map key distribution in resource-constrained environments where cryptographic strength is not required.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-001",
@@ -21,7 +21,7 @@
       "id": "REQ-HASH-002",
       "title": "DJB2 Null Buffer Rejection",
       "description": "The hash module shall return JUNO_STATUS_NULLPTR_ERROR when passed a NULL data pointer.",
-      "rationale": "Provides data integrity verification for communication and storage in embedded systems.",
+      "rationale": "Rejecting NULL input prevents undefined behavior from dereferencing an invalid buffer pointer, ensuring runtime memory safety.",
       "verification_method": "Test",
       "uses": [
         "REQ-SYS-008"
@@ -32,7 +32,7 @@
       "id": "REQ-HASH-003",
       "title": "DJB2 Result Type",
       "description": "The hash module shall return the hash value in a result type combining a status code with a size_t payload.",
-      "rationale": "Provides data integrity verification for communication and storage in embedded systems.",
+      "rationale": "Returning the hash in a result type couples the computed value with a status code, enabling callers to distinguish between a valid hash and an error without ambiguity.",
       "verification_method": "Inspection",
       "uses": [
         "REQ-SYS-004"
