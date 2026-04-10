@@ -83,6 +83,47 @@ The SM module does not enforce an execution loop — the user drives it:
 
 This gives the user full control over when and how often to step the machine.
 
+.State Machine Execution Flow
+[mermaid]
+....
+stateDiagram-v2
+    [*] --> StateA : JunoSm_Init(ptSm, ptStartState)
+    StateA --> StateA : StateAction() / ShouldExit() == false
+    StateA --> StateB : ShouldExit() == true\nTransitionState()\nResetState(StateB)
+    StateB --> StateB : StateAction() / ShouldExit() == false
+    StateB --> StateC : ShouldExit() == true\nTransitionState()\nResetState(StateC)
+    StateC --> StateC : StateAction() / ShouldExit() == false
+    StateC --> [*] : No next state (NONE)
+....
+
+.SM Step Sequence
+[mermaid]
+....
+sequenceDiagram
+    participant User as User / Scheduler
+    participant SM as JUNO_SM_ROOT_T
+    participant State as Current State (STATE_ROOT_T)
+    participant API as State API (vtable)
+
+    User->>SM: JunoSm_GetCurrentState()
+    SM-->>User: Result<State*>
+    User->>API: StateAction(ptState)
+    API-->>User: JUNO_STATUS_T
+    User->>API: ShouldExit(ptState)
+    API-->>User: Result<bool>
+    alt ShouldExit == true
+        User->>SM: JunoSm_TransitionState()
+        SM->>SM: Read tOptionNextState
+        alt next state is SOME
+            SM->>SM: ptCurrentState = tSome
+            SM-->>User: Result<Option<SOME(newState)>>
+            User->>API: ResetState(ptNewState)
+        else next state is NONE
+            SM-->>User: Result<Option<NONE>>
+        end
+    end
+....
+
 === Transition
 
 . Read `ptCurrentState->tOptionNextState`.
@@ -102,6 +143,31 @@ This gives the user full control over when and how often to step the machine.
 The SM is deliberately minimal — it provides state storage, transitions, and verification but does not enforce an execution model.
 The user calls `StateAction`, `ShouldExit`, and `TransitionState` explicitly, allowing integration into any scheduling scheme (cyclic executive, event-driven, RTOS task).
 States are full module roots with their own failure handlers, enabling per-state error reporting.
+
+== Usage Example
+
+[source,c]
+----
+// 1. Define states
+static JUNO_SM_STATE_ROOT_T tStateIdle;
+static JUNO_SM_STATE_ROOT_T tStateRunning;
+static JUNO_SM_ROOT_T tSm;
+
+// 2. Initialize SM and states with linking
+JunoSm_Init(&tSm, &tStateIdle, NULL, NULL);
+JunoSm_StateInit(&tSm, &tStateIdle, &tStateRunning, &gtIdleApi, NULL, NULL);
+JunoSm_StateInit(&tSm, &tStateRunning, NULL, &gtRunningApi, NULL, NULL);
+
+// 3. Step the machine (typically in a scheduler OnProcess)
+JUNO_SM_RESULT_STATE_T tCurrent = JunoSm_GetCurrentState(&tSm);
+JUNO_ASSERT_OK(tCurrent, return tCurrent.tStatus);
+
+tCurrent.tOk->ptApi->StateAction(tCurrent.tOk);
+JUNO_RESULT_BOOL_T tExit = tCurrent.tOk->ptApi->ShouldExit(tCurrent.tOk);
+if (JUNO_OK(tExit)) {
+    JunoSm_TransitionState(&tSm);
+}
+----
 
 == Requirements Traceability
 

@@ -72,10 +72,16 @@ Inline verification: checks all API pointers (Hash, IsValueNull, Equals, Set, Ge
 === Remove
 
 . Compute `index = Hash(key) % capacity`.
-. Probe linearly: if slot matches key, reset via `RemoveAt` and return success.
-. If empty slot encountered before match, key was not present — return success (no-op).
+. Probe linearly: if slot matches key (`Equals`), reset via `RemoveAt` and return success.
+. If empty slot encountered before match, key was not present — return `JUNO_STATUS_SUCCESS` (no-op).
+. If full traversal without match, return `JUNO_STATUS_TABLE_FULL_ERROR`.
 
 All operations are O(1) average, O(n) worst-case under high load or clustered collisions.
+
+IMPORTANT: The map uses simple slot clearing (not tombstoning) for removal.
+Clearing a slot may break an existing linear-probe chain, causing subsequent `Get` operations for keys that were inserted past that slot to incorrectly return `JUNO_STATUS_DNE_ERROR`.
+Integrators should be aware of this behavior when using Remove in maps with high occupancy or clustered keys.
+For use cases requiring frequent insertions and deletions, consider rebuilding (re-inserting) affected entries or limiting load factor.
 
 == Error Handling
 
@@ -89,6 +95,30 @@ All operations are O(1) average, O(n) worst-case under high load or clustered co
 
 Open addressing with linear probing was chosen for cache-friendliness and zero-allocation operation over a single contiguous array.
 The map is parameterized by three callback APIs (hash, equality, null-check) rather than hard-coding a specific key type, keeping it type-agnostic and reusable.
+
+== Usage Example
+
+[source,c]
+----
+// 1. Declare backing storage (key-value pair entries)
+MY_KV_T atMapStorage[32];
+JUNO_DS_ARRAY_ROOT_T tArray;
+JUNO_MAP_ROOT_T tMap;
+
+// 2. Initialize array and map with hash/equality/null-check APIs
+JunoDs_ArrayInit(&tArray, &gtKvArrayApi, 32, NULL, NULL);
+JunoDs_MapInit(&tMap, &gtHashableApi, &gtValuePtrApi, &tArray, NULL, NULL);
+
+// 3. Set a key-value pair
+MY_KV_T tEntry = { .pcKey = "sensor_id", .iValue = 7 };
+JUNO_POINTER_T tEntryPtr = JunoMemory_PointerInit(&gtKvPointerApi, MY_KV_T, &tEntry);
+JunoDs_MapSet(&tMap, tEntryPtr);
+
+// 4. Get by key
+MY_KV_T tLookup = { .pcKey = "sensor_id" };
+JUNO_POINTER_T tLookupPtr = JunoMemory_PointerInit(&gtKvPointerApi, MY_KV_T, &tLookup);
+JUNO_RESULT_POINTER_T tResult = JunoDs_MapGet(&tMap, tLookupPtr);
+----
 
 == Requirements Traceability
 

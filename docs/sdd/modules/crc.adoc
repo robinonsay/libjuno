@@ -79,14 +79,14 @@ Multiple CRC variants are provided because embedded protocols commonly require s
 |===
 | Requirement | Coverage
 
-| REQ-CRC-001 | ARC CRC-16 update function
-| REQ-CRC-002 | BinHex CRC-16 update function
-| REQ-CRC-003 | CCITT CRC-16 update function
-| REQ-CRC-004 | CCITT32 CRC-32 update function
-| REQ-CRC-005 | Kermit CRC-16 update function
-| REQ-CRC-006 | ZIP CRC-32 update function
-| REQ-CRC-007 | Table-driven CRC computation
-| REQ-CRC-008 | Streaming multi-chunk CRC support
-| REQ-CRC-009 | ZIP CRC-32 update function
-| REQ-CRC-010 | ZIP CRC-32 final XOR
+| REQ-CRC-001 | Streaming CRC update pattern — running CRC, data buffer, and size
+| REQ-CRC-002 | CRC null safety — returns 0 for NULL data pointer
+| REQ-CRC-003 | CRC zero-length safety — returns 0 for zero data size
+| REQ-CRC-004 | CRC-16/ARC update function with seed 0
+| REQ-CRC-005 | BinHex 16-bit CRC update function with seed 0
+| REQ-CRC-006 | CRC-16/CCITT update function with seed 0xFFFF
+| REQ-CRC-007 | CRC-16/Kermit update function with seed 0
+| REQ-CRC-008 | CRC-32/CCITT32 update function with seed 0xFFFFFFFF
+| REQ-CRC-009 | CRC-32/ZIP update function with seed 0xFFFFFFFF
+| REQ-CRC-010 | CRC-32/ZIP final XOR of 0xFFFFFFFF
 |===

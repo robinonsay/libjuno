@@ -76,6 +76,7 @@ Models optional presence where absence is a legitimate state.
 `JUNO_MODULE_DECLARE(NAME_T)`:: Forward-declare a module union type.
 `JUNO_MODULE_ROOT_DECLARE(NAME_T)`:: Forward-declare a root struct type.
 `JUNO_MODULE_DERIVE_DECLARE(NAME_T)`:: Forward-declare a derivation struct type.
+`JUNO_TRAIT_DERIVE(ROOT_T, ...)`:: Define a trait derivation struct that embeds a trait root as its first member. Alias for `JUNO_MODULE_DERIVE` — provided for naming symmetry with `JUNO_TRAIT_ROOT`.
 
 === Access Macros
 

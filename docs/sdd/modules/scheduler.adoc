@@ -71,6 +71,52 @@ for each minor frame i in [0, zNumMinorFrames):
 
 *Complexity*: O(F × A) per major frame, where F = minor frames and A = apps per frame.
 
+.Scheduler Major Frame Execution
+[mermaid]
+....
+sequenceDiagram
+    participant SCH as Scheduler
+    participant Time as Time Module
+    participant AppA as App A
+    participant AppB as App B
+    participant AppC as App C
+
+    SCH->>Time: Now()
+    Time-->>SCH: tFrameStart
+
+    rect rgb(230, 245, 255)
+        Note over SCH: Minor Frame 0
+        SCH->>Time: AddTime(tFrameStart, 1×Period)
+        Time-->>SCH: tDeadline₀
+        SCH->>AppA: OnProcess()
+        AppA-->>SCH: status
+        SCH->>AppB: OnProcess()
+        AppB-->>SCH: status
+        SCH->>Time: SleepTo(tDeadline₀)
+    end
+
+    rect rgb(230, 255, 230)
+        Note over SCH: Minor Frame 1
+        SCH->>Time: AddTime(tFrameStart, 2×Period)
+        Time-->>SCH: tDeadline₁
+        SCH->>AppA: OnProcess()
+        AppA-->>SCH: status
+        Note over SCH: NULL slot — skip
+        SCH->>Time: SleepTo(tDeadline₁)
+    end
+
+    rect rgb(255, 245, 230)
+        Note over SCH: Minor Frame 2
+        SCH->>Time: AddTime(tFrameStart, 3×Period)
+        Time-->>SCH: tDeadline₂
+        SCH->>AppC: OnProcess()
+        AppC-->>SCH: status
+        SCH->>AppB: OnProcess()
+        AppB-->>SCH: status
+        SCH->>Time: SleepTo(tDeadline₂)
+    end
+....
+
 === GetMajorFramePeriod
 
 Computes `tMinorFramePeriod × zNumMinorFrames` using `AddTime`.
@@ -102,6 +148,40 @@ The scheduler complements RTOS preemption rather than replacing it — it fills 
 **Injected Time module.** Clock hardware (`Now`) and blocking primitives (`Sleep`, `SleepTo`) are platform-specific.
 Time math (add, subtract, conversions) is universal and provided by LibJuno.
 The split follows the DI principle: inject what varies, provide what's universal.
+
+== Usage Example
+
+[source,c]
+----
+// 1. Initialize the Time module with platform-specific hooks
+static const JUNO_TIME_API_T gtTimeApi = JunoTime_TimeApiInit(
+    PlatformNow, PlatformSleepTo, PlatformSleep
+);
+JUNO_TIME_ROOT_T tTime = { .ptApi = &gtTimeApi };
+
+// 2. Declare applications
+JUNO_APP_ROOT_T tSensorApp = { .ptApi = &gtSensorApi };
+JUNO_APP_ROOT_T tControlApp = { .ptApi = &gtControlApi };
+JUNO_APP_ROOT_T tTelemetryApp = { .ptApi = &gtTelemetryApi };
+
+// 3. Define the schedule table (2 apps/frame, 3 minor frames)
+JUNO_SCH_TABLE_NEW(ptTable, 2, 3,
+    &tSensorApp, &tControlApp,     // Minor frame 0
+    &tSensorApp, NULL,              // Minor frame 1
+    &tTelemetryApp, &tControlApp,  // Minor frame 2
+);
+
+// 4. Configure and run the scheduler
+JUNO_SCH_ROOT_T tSch = {
+    .ptApi = &gtSchApi,
+    .ptTime = &tTime,
+    .ptArrSchTable = ptTable,
+    .zAppsPerMinorFrame = 2,
+    .zNumMinorFrames = 3,
+    .tMinorFramePeriod = { .iSeconds = 0, .iSubSeconds = 0x33333333 } // ~200ms
+};
+tSch.ptApi->Execute(&tSch);
+----
 
 == Requirements Traceability
 

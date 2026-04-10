@@ -78,6 +78,43 @@ Declares a static metadata array of `JUNO_MEMORY_BLOCK_METADATA_T[length]`.
 
 == Algorithm Descriptions
 
+The following diagram illustrates the block allocator's memory layout and internal structure:
+
+.Block Allocator Memory Layout
+[mermaid]
+....
+flowchart TD
+    subgraph BLOCK_ALLOC["JUNO_MEMORY_ALLOC_BLOCK_T"]
+        ROOT["JUNO_MEMORY_ALLOC_ROOT_T\n(ptApi, ptPointerApi)"]
+        PVMEM["pvMemory: uint8_t*\n(Backing Buffer)"]
+        PTMETA["ptMetadata: METADATA_T*\n(Free Stack)"]
+        FIELDS["zTypeSize, zAlignment\nzLength, zUsed, zFreed"]
+    end
+
+    subgraph BACKING["Caller-Owned Backing Buffer"]
+        BLK0["Block 0\n(zTypeSize bytes)"]
+        BLK1["Block 1\n(zTypeSize bytes)"]
+        BLK2["Block 2\n(zTypeSize bytes)"]
+        BLKN["...\nBlock N-1"]
+    end
+
+    subgraph FREESTACK["Free Stack (Metadata Array)"]
+        FS0["[0]: addr of freed block"]
+        FS1["[1]: addr of freed block"]
+        FSE["... (zFreed entries)"]
+    end
+
+    PVMEM --> BACKING
+    PTMETA --> FREESTACK
+
+    style BLK0 fill:#90EE90
+    style BLK1 fill:#FFB6C1
+    style BLK2 fill:#90EE90
+    style BLKN fill:#D3D3D3
+....
+
+Green blocks are allocated; red blocks have been freed and are on the free stack; gray blocks are unallocated.
+
 === Block Get (Allocation)
 
 . If a freed block exists (`zFreed > 0`): pop from free stack (LIFO), decrement `zFreed`.

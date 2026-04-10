@@ -99,18 +99,43 @@ Delegates to `JunoDs_ArrayVerify` for the backing array.
 The heap is parameterized by Compare/Swap rather than hardcoding a comparison operator, allowing the same heap implementation to serve max-heaps, min-heaps, and priority queues with arbitrary key types.
 The backing Array provides storage; the Pointer API provides element copying — keeping the heap logic type-agnostic.
 
+== Usage Example
+
+[source,c]
+----
+// 1. Declare backing storage
+int32_t aiHeapStorage[16];
+JUNO_DS_ARRAY_ROOT_T tArray;
+JUNO_DS_HEAP_ROOT_T tHeap;
+
+// 2. Initialize the array (caller-owned storage)
+JunoDs_ArrayInit(&tArray, &gtIntArrayApi, 16, NULL, NULL);
+
+// 3. Initialize the heap with Compare/Swap callbacks
+JunoDs_Heap_Init(&tHeap, &gtMaxHeapPointerApi, &tArray, NULL, NULL);
+
+// 4. Insert elements
+JUNO_POINTER_T tVal = JunoMemory_PointerInit(&gtIntPointerApi, int32_t, &iValue);
+JunoDs_Heap_Insert(&tHeap, tVal);
+
+// 5. Pop the root (max or min, depending on Compare)
+int32_t iResult;
+JUNO_POINTER_T tReturn = JunoMemory_PointerInit(&gtIntPointerApi, int32_t, &iResult);
+JunoDs_Heap_Pop(&tHeap, tReturn);
+----
+
 == Requirements Traceability
 
 [cols="1,3"]
 |===
 | Requirement | Coverage
 
-| REQ-HEAP-001 | `JunoDs_Heap_Init` — initialization with array and pointer API
-| REQ-HEAP-002 | `Insert` — O(log n) insertion
-| REQ-HEAP-003 | `Pop` — O(log n) root extraction
-| REQ-HEAP-004 | `Heapify` — O(n) in-place construction
-| REQ-HEAP-005 | `SiftDown` — O(log n) downward restoration
-| REQ-HEAP-006 | `Update` — O(log n) upward restoration
-| REQ-HEAP-007 | `JunoDs_Heap_Verify` — configuration validation
-| REQ-HEAP-008 | `JunoDs_Heap_Verify` — API completeness check
+| REQ-HEAP-001 | `JunoDs_Heap_Init` — initialization with backing array and pointer API
+| REQ-HEAP-002 | `JUNO_DS_HEAP_POINTER_API_T` — injected Compare and Swap operations
+| REQ-HEAP-003 | `Insert` — O(log n) element insertion with heap property restoration
+| REQ-HEAP-004 | `Pop` — O(log n) root extraction with heap property restoration
+| REQ-HEAP-005 | `Pop` — copies removed root element into caller-provided pointer descriptor
+| REQ-HEAP-006 | `Heapify` — O(n) in-place heap construction
+| REQ-HEAP-007 | `JunoDs_Heap_Verify` — vtable entry validation
+| REQ-HEAP-008 | `JunoDs_Heap_Verify` — backing array and pointer API dependency validation
 |===

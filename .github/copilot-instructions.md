@@ -56,6 +56,7 @@ Invoke a skill by saying: **"Use skill: `<skill-name>`"**
 | `trace-check`          | Audit traceability completeness and consistency            |
 | `code-review`          | Review code against all project standards                  |
 | `write-module`         | Scaffold a new module with all conventions                 |
+| `improve-docs`         | Closed-loop iterative evaluation & improvement of docs     |
 
 ## Memory Files
 

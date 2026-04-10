@@ -79,18 +79,42 @@ All operations are O(1).
 The Queue reuses the Array abstraction for storage, adding only circular-index arithmetic.
 This avoids duplicating contiguous-storage logic and benefits from the Array's existing verification and pointer-based element access.
 
+== Usage Example
+
+[source,c]
+----
+// 1. Declare backing storage
+MY_MSG_T atMsgStorage[8];
+JUNO_DS_ARRAY_ROOT_T tArray;
+JUNO_DS_QUEUE_ROOT_T tQueue;
+
+// 2. Initialize array and queue
+JunoDs_ArrayInit(&tArray, &gtMsgArrayApi, 8, NULL, NULL);
+JunoDs_QueueInit(&tQueue, &tArray, NULL, NULL);
+
+// 3. Enqueue a message
+MY_MSG_T tMsg = { .iCmd = 42 };
+JUNO_POINTER_T tMsgPtr = JunoMemory_PointerInit(&gtMsgPointerApi, MY_MSG_T, &tMsg);
+JunoDs_QueuePush(&tQueue, tMsgPtr);
+
+// 4. Dequeue
+MY_MSG_T tOut;
+JUNO_POINTER_T tOutPtr = JunoMemory_PointerInit(&gtMsgPointerApi, MY_MSG_T, &tOut);
+JunoDs_QueuePop(&tQueue, tOutPtr);
+----
+
 == Requirements Traceability
 
 [cols="1,3"]
 |===
 | Requirement | Coverage
 
-| REQ-QUEUE-001 | `JunoDs_QueueVerify` — queue invariant validation
-| REQ-QUEUE-002 | `JunoDs_QueueInit` — initialization with backing array
-| REQ-QUEUE-003 | `Enqueue` — FIFO insertion
-| REQ-QUEUE-004 | `Dequeue` — FIFO extraction
-| REQ-QUEUE-005 | `Peek` — non-destructive front access
-| REQ-QUEUE-006 | Circular-buffer index arithmetic
-| REQ-QUEUE-007 | `Peek` — queue non-destructive front access
-| REQ-QUEUE-008 | Queue empty peek rejection
+| REQ-QUEUE-001 | `JunoDs_QueueInit` — initialization with caller-provided backing array
+| REQ-QUEUE-002 | Queue initial state — start index and length zeroed on init
+| REQ-QUEUE-003 | `Enqueue` — O(1) circular-buffer FIFO insertion
+| REQ-QUEUE-004 | Enqueue full rejection — returns `JUNO_STATUS_INVALID_SIZE_ERROR`
+| REQ-QUEUE-005 | `Dequeue` — O(1) FIFO front element extraction
+| REQ-QUEUE-006 | Dequeue empty rejection — returns `JUNO_STATUS_ERR`
+| REQ-QUEUE-007 | `Peek` — O(1) non-destructive front element access
+| REQ-QUEUE-008 | Peek empty rejection — returns `JUNO_STATUS_INVALID_SIZE_ERROR`
 |===

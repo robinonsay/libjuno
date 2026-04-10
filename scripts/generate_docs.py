@@ -956,9 +956,17 @@ def convert_adoc(adoc_path: Path, fmt: str):
         "html" or "pdf".
     """
     if fmt == "html":
-        cmd = ["asciidoctor", str(adoc_path)]
+        cmd = [
+            "asciidoctor",
+            "-r", "asciidoctor-diagram",
+            str(adoc_path),
+        ]
     elif fmt == "pdf":
-        cmd = ["asciidoctor-pdf", str(adoc_path)]
+        cmd = [
+            "asciidoctor-pdf",
+            "-r", "asciidoctor-diagram",
+            str(adoc_path),
+        ]
     else:
         print(f"  Unknown format: {fmt}", file=sys.stderr)
         return
@@ -974,11 +982,15 @@ def convert_adoc(adoc_path: Path, fmt: str):
             f"{fmt.upper()} output.",
             file=sys.stderr,
         )
+        gems = "asciidoctor asciidoctor-diagram"
+        if fmt == "pdf":
+            gems += " asciidoctor-pdf"
+        print(f"    gem install {gems}", file=sys.stderr)
         print(
-            f"    gem install asciidoctor"
-            + (" asciidoctor-pdf" if fmt == "pdf" else ""),
+            "    For Mermaid diagram rendering, also install mermaid-cli:",
             file=sys.stderr,
         )
+        print("    npm install -g @mermaid-js/mermaid-cli", file=sys.stderr)
     except subprocess.CalledProcessError as e:
         print(
             f"  ERROR running {cmd[0]}: {e.stderr}",

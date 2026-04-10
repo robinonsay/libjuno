@@ -1598,42 +1598,42 @@ tests/test_stack.c:1125 (test_stack_peek_with_getAt_failure)
 
 | REQ-SYS-001: Zero Dynamic Allocation
 | CMakeLists.txt:75 (list)
-| docs/sdd/sdd.adoc:58 (System Architecture)
+| docs/sdd/sdd.adoc:85 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-002: Caller-Owned Memory
 | include/juno/module.h:54 (JUNO_MODULE_DECLARE)
-| docs/sdd/sdd.adoc:58 (System Architecture)
+| docs/sdd/sdd.adoc:85 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-003: Freestanding C11 Compatibility
 | CMakeLists.txt:75 (list)
-| docs/sdd/sdd.adoc:58 (System Architecture)
+| docs/sdd/sdd.adoc:85 (System Architecture)
 | _none_
 | Analysis
 | ✓ Complete
 
 | REQ-SYS-004: Explicit Status Code Returns
 | include/juno/status.h:40 (<unknown>)
-| docs/sdd/sdd.adoc:58 (System Architecture)
+| docs/sdd/sdd.adoc:85 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-005: No Silent Failures
 | include/juno/status.h:40 (<unknown>)
-| docs/sdd/sdd.adoc:58 (System Architecture)
+| docs/sdd/sdd.adoc:85 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
 
 | REQ-SYS-006: Dependency Injection via Vtables
 | include/juno/module.h:54 (JUNO_MODULE_DECLARE)
-| docs/sdd/sdd.adoc:58 (System Architecture)
+| docs/sdd/sdd.adoc:85 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete
@@ -1655,7 +1655,7 @@ include/juno/macros.h:88 (<unknown>)
 
 | REQ-SYS-009: No Global Mutable State
 | include/juno/module.h:54 (JUNO_MODULE_DECLARE)
-| docs/sdd/sdd.adoc:58 (System Architecture)
+| docs/sdd/sdd.adoc:85 (System Architecture)
 | _none_
 | Inspection
 | ✓ Complete

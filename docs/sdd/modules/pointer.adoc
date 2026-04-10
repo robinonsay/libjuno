@@ -78,6 +78,44 @@ Inline function that validates API, address, and size are non-NULL/non-zero, the
 No algorithms.
 All operations are O(1) verification checks or literal construction.
 
+.Pointer Verification Flow
+[mermaid]
+....
+flowchart TD
+    START["JunoMemory_PointerVerify(tPointer)"] --> CHK_API{"ptApi != NULL?"}
+    CHK_API -- No --> ERR_NULL["Return JUNO_STATUS_NULLPTR_ERROR"]
+    CHK_API -- Yes --> CHK_ADDR{"pvAddr != NULL?"}
+    CHK_ADDR -- No --> ERR_NULL
+    CHK_ADDR -- Yes --> CHK_SIZE{"zSize != 0?"}
+    CHK_SIZE -- No --> ERR_NULL
+    CHK_SIZE -- Yes --> CHK_COPY{"ptApi->Copy != NULL?"}
+    CHK_COPY -- No --> ERR_NULL
+    CHK_COPY -- Yes --> CHK_RESET{"ptApi->Reset != NULL?"}
+    CHK_RESET -- No --> ERR_NULL
+    CHK_RESET -- Yes --> OK["Return JUNO_STATUS_SUCCESS"]
+
+    style ERR_NULL fill:#FFB6C1
+    style OK fill:#90EE90
+....
+
+.Pointer Type Verification Flow
+[mermaid]
+....
+flowchart TD
+    START2["JunoMemory_PointerVerifyType(pointer, type, tApi)"] --> CHK_SZ{"zSize == sizeof(type)?"}
+    CHK_SZ -- No --> ERR_TYPE["Return JUNO_STATUS_ERR"]
+    CHK_SZ -- Yes --> CHK_ALIGN{"zAlignment == alignof(type)?"}
+    CHK_ALIGN -- No --> ERR_TYPE
+    CHK_ALIGN -- Yes --> CHK_API2{"ptApi == &tApi?"}
+    CHK_API2 -- No --> ERR_TYPE
+    CHK_API2 -- Yes --> CHK_ADDRALIGN{"(uintptr_t)pvAddr % zAlignment == 0?"}
+    CHK_ADDRALIGN -- No --> ERR_TYPE
+    CHK_ADDRALIGN -- Yes --> OK2["Return JUNO_STATUS_SUCCESS"]
+
+    style ERR_TYPE fill:#FFB6C1
+    style OK2 fill:#90EE90
+....
+
 == Error Handling
 
 * `JunoMemory_PointerVerify` returns `JUNO_STATUS_NULLPTR_ERROR` if API, address, or size is invalid.

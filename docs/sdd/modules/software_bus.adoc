@@ -74,6 +74,36 @@ Validates the pipe and delegates to `JunoDs_QueueVerify` for the underlying queu
 
 *Complexity*: O(k) where k = registry length.
 
+.Publish Fan-Out Sequence
+[mermaid]
+....
+sequenceDiagram
+    participant Pub as Publisher
+    participant Broker as JUNO_SB_BROKER_ROOT_T
+    participant Registry as Pipe Registry
+    participant PipeA as Pipe A (MID=0x01)
+    participant PipeB as Pipe B (MID=0x02)
+    participant PipeC as Pipe C (MID=0x01)
+
+    Pub->>Broker: Publish(MID=0x01, tMsg)
+    Broker->>Broker: Verify()
+    loop For each pipe in registry
+        Broker->>Registry: Check pipe[i].iMsgId
+        alt MID matches (Pipe A)
+            Registry->>PipeA: Enqueue(tMsg)
+            PipeA-->>Broker: JUNO_STATUS_SUCCESS
+        else MID does not match (Pipe B)
+            Registry->>Registry: Skip
+        else MID matches (Pipe C)
+            Registry->>PipeC: Enqueue(tMsg)
+            PipeC-->>Broker: JUNO_STATUS_SUCCESS
+        end
+    end
+    Broker-->>Pub: JUNO_STATUS_T
+
+    Note over PipeA,PipeC: Subscribers dequeue on their own schedule
+....
+
 === RegisterSubscriber
 
 . Check capacity: if `zRegistryLength >= zRegistryCapacity`, return `JUNO_STATUS_TABLE_FULL_ERROR`.
@@ -102,6 +132,38 @@ The broker solves intra-thread fan-out portably; inter-thread transport belongs 
 
 **Multi-threaded integration pattern.** One broker per thread, bridged by a user-written bridge app that forwards messages between brokers via platform IPC.
 The broker is a routing table, not a transport.
+
+== Usage Example
+
+[source,c]
+----
+// 1. Declare broker and pipe storage
+JUNO_SB_BROKER_ROOT_T tBroker;
+JUNO_SB_PIPE_T *aptPipeRegistry[4];
+
+// 2. Declare subscriber pipes with backing queues
+JUNO_SB_PIPE_T tCmdPipe;
+JUNO_DS_ARRAY_ROOT_T tCmdArray;
+// ... allocate backing array storage for the pipe's queue
+
+// 3. Initialize broker
+JunoSb_BrokerInit(&tBroker, aptPipeRegistry, 4, NULL, NULL);
+
+// 4. Initialize pipe for MID=0x01 and register with broker
+#define ENGINE_CMD_MID 0x01
+JunoSb_PipeInit(&tCmdPipe, ENGINE_CMD_MID, &tCmdArray, NULL, NULL);
+tBroker.ptApi->RegisterSubscriber(&tBroker, &tCmdPipe);
+
+// 5. Publish a message (all pipes with matching MID receive a copy)
+MY_CMD_T tCmd = { .iThrottle = 75 };
+JUNO_POINTER_T tMsgPtr = JunoMemory_PointerInit(&gtCmdPtrApi, MY_CMD_T, &tCmd);
+tBroker.ptApi->Publish(&tBroker, ENGINE_CMD_MID, tMsgPtr);
+
+// 6. Subscriber dequeues on its own schedule
+MY_CMD_T tReceived;
+JUNO_POINTER_T tRecvPtr = JunoMemory_PointerInit(&gtCmdPtrApi, MY_CMD_T, &tReceived);
+JunoDs_QueuePop(&tCmdPipe.tRoot, tRecvPtr);
+----
 
 == Requirements Traceability
 

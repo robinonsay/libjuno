@@ -1,6 +1,6 @@
 = LibJuno Software Design Document
 Robin A. Onsay
-:revnumber: 1.0.0
+:revnumber: 1.0.1
 :revdate: 2026-04-10
 :toc: left
 :toclevels: 3
@@ -26,6 +26,10 @@ This SDD covers all modules of LibJuno:
 * System services: Time, IO (Async, I2C, SPI), Log, Mutex
 * Frameworks: State Machine, Software Bus Broker, Application, Scheduler
 
+NOTE: LibJuno also provides C++11 template wrappers for the Queue and Stack data structures (`buff_api.hpp`, `juno_buff.hpp`).
+These wrappers are thin convenience layers over the C API and are not covered in this SDD.
+Refer to the Doxygen API reference for their interface documentation.
+
 === Definitions, Acronyms, and Abbreviations
 
 [cols="1,3"]
@@ -44,6 +48,9 @@ This SDD covers all modules of LibJuno:
 | WCET | Worst-Case Execution Time.
 | MID | Message ID — a topic identifier used by the Software Bus broker.
 | Pipe | A queue-based subscriber channel in the Software Bus, carrying messages for a specific MID.
+| Major Frame | One complete cycle of all minor frames in the Scheduler; the total scheduling period.
+| Minor Frame | A fixed-duration time slot within the Scheduler's major frame during which a set of applications are executed sequentially.
+| Cyclic Executive | A deterministic scheduling strategy where execution order is defined by a static table of application references.
 |===
 
 === References
@@ -54,6 +61,26 @@ This SDD covers all modules of LibJuno:
 * [[[SRS]]] LibJuno Software Requirements Specification (generated from `requirements/` directory).
 * [[[RTM]]] LibJuno Requirements Traceability Matrix (generated from code/test annotations).
 * [[[DOXYGEN]]] LibJuno API Reference Documentation (generated via Doxygen).
+
+=== Document Conventions
+
+This document uses the following conventions:
+
+* **Section structure**: Each module's detailed design follows a consistent template: Purpose, Data Structures, Interface Design, Algorithm Descriptions, Error Handling, Design Rationale, Usage Example (where applicable), and Requirements Traceability.
+* **Code listings**: Inline code and types are rendered in monospace. C source excerpts are syntax-highlighted.
+* **Diagrams**: All diagrams use Mermaid syntax. Class diagrams show struct layouts and relationships. Sequence diagrams show runtime interactions. Flowcharts show data flow and control flow.
+* **Traceability tags**: Each module section begins with a comment `// @{"design": ["REQ-...", ...]}` linking the design description to the requirements it addresses.
+* **Naming conventions**: Types use `SCREAMING_SNAKE_CASE_T`; functions use `PascalCase` with module prefix; variables use Hungarian notation (see Coding Standards).
+* **Complexity notation**: Algorithm complexity is stated using big-O notation. All data structure operations document worst-case and average-case where they differ.
+
+=== Revision History
+
+[cols="1,1,2,2"]
+|===
+| Version | Date | Author | Description
+
+| 1.0.1 | 2026-04-10 | Robin A. Onsay | Initial SDD release covering all LibJuno 1.0.1 modules
+|===
 
 // @{"design": ["REQ-SYS-001", "REQ-SYS-002", "REQ-SYS-003", "REQ-SYS-004", "REQ-SYS-005", "REQ-SYS-006", "REQ-SYS-009"]}
 == System Architecture
@@ -116,6 +143,48 @@ union MY_MODULE_T JUNO_MODULE(MY_API_T, MY_ROOT_T,
 );
 ----
 
+The following diagram illustrates the structural relationship between these three parts:
+
+[mermaid]
+....
+classDiagram
+    class ROOT_T {
+        +const API_T *ptApi
+        +JUNO_FAILURE_HANDLER_T _pfcnFailureHandler
+        +JUNO_USER_DATA_T *_pvFailureUserData
+        +... additional root state
+    }
+
+    class DERIVATION_T {
+        +ROOT_T tRoot
+        +... implementation-specific state
+    }
+
+    class MODULE_UNION_T {
+        «union»
+        +ROOT_T tRoot
+        +DERIVATION_A_T tImplA
+        +DERIVATION_B_T tImplB
+    }
+
+    class API_T {
+        «vtable / const»
+        +DoSomething(ROOT_T *ptRoot, ...) JUNO_STATUS_T
+        +GetValue(ROOT_T *ptRoot, ...) RESULT_T
+    }
+
+    class TRAIT_ROOT_T {
+        +const TRAIT_API_T *ptApi
+        +... trait-specific members
+    }
+
+    ROOT_T --> API_T : ptApi points to
+    DERIVATION_T --|> ROOT_T : embeds as first member
+    MODULE_UNION_T o-- ROOT_T : common view
+    MODULE_UNION_T o-- DERIVATION_T : sized for largest
+    TRAIT_ROOT_T --> API_T : ptApi points to
+....
+
 === Design Rationale: Root/Derivation/Union Layering
 
 **Why the root/derivation split.** API functions accept `ROOT_T *` — the common base type.
@@ -159,35 +228,133 @@ LibJuno is organized into the following subsystems:
 
 The dependency graph flows from high-level frameworks down to core primitives:
 
-----
-Scheduler ──► Application ──► Module System
-    │                             │
-    ├──► Time                     ├──► Status
-    │                             └──► Macros
-Software Bus ──► Queue ──► Array ──► Pointer
-    │                                    │
-    │                                    └──► Status
-Map ──► Array ──► Pointer
-    │
-    ├──► Hash
-    └──► Value Pointer API
+[mermaid]
+....
+flowchart TD
+    subgraph Frameworks
+        SCH[Scheduler]
+        APP[Application]
+        SM[State Machine]
+        SB[Software Bus / Broker]
+    end
 
-Heap ──► Array ──► Pointer
+    subgraph Data Structures
+        HEAP[Heap]
+        QUEUE[Queue]
+        STACK[Stack]
+        MAP[Map]
+        ARRAY[Array]
+    end
 
-Stack ──► Array ──► Pointer
+    subgraph Memory
+        PTR[Pointer / Fat Pointer]
+        BLKALLOC[Block Allocator]
+        MEMAPI[Memory Allocator API]
+    end
 
-Block Allocator ──► Memory Allocator API ──► Pointer
+    subgraph Core
+        MOD[Module System]
+        STATUS[Status]
+        MACROS[Macros]
+        TYPES[Common Types]
+    end
 
-State Machine ──► Module System
+    subgraph Algorithms
+        CRC[CRC]
+        HASH[Hash / DJB2]
+        MATH[Math / Vectors / Quaternions]
+    end
 
-CRC, Math, Hash ──► (freestanding, no module dependencies)
+    subgraph System Services
+        TIME[Time]
+        IO[IO / Async / I2C / SPI]
+        LOG[Log]
+        MTX[Mutex]
+    end
 
-IO (Async, I2C, SPI) ──► Module System, Time (Async only)
+    SCH --> APP
+    SCH --> TIME
+    APP --> MOD
 
-Log ──► Module System
+    SB --> QUEUE
 
-Mutex ──► Module System
-----
+    SM --> MOD
+
+    HEAP --> ARRAY
+    QUEUE --> ARRAY
+    STACK --> ARRAY
+    MAP --> ARRAY
+    MAP --> HASH
+    MAP -.-> PTR
+
+    ARRAY --> PTR
+
+    BLKALLOC --> MEMAPI
+    MEMAPI --> PTR
+
+    PTR --> STATUS
+
+    MOD --> STATUS
+    MOD --> MACROS
+
+    IO --> MOD
+    LOG --> MOD
+    MTX --> MOD
+
+    TYPES --> MOD
+....
+
+Arrows indicate "depends on" relationships.
+Dashed arrows indicate optional or trait-level dependencies.
+Algorithm modules (CRC, Math, Hash) are freestanding with no module dependencies.
+
+=== Data Structure Composition Chain
+
+The data structure subsystem is layered: higher-level containers compose lower-level ones, with the Pointer trait providing type-safe element operations at every layer.
+
+[mermaid]
+....
+flowchart TD
+    subgraph ElementAccess["Element Layer"]
+        PTR_API["JUNO_POINTER_API_T\n(Copy / Reset)"]
+        VAL_API["JUNO_VALUE_POINTER_API_T\n(Equals)"]
+        HEAP_PTR["JUNO_DS_HEAP_POINTER_API_T\n(Compare / Swap)"]
+    end
+
+    subgraph Storage["Storage Layer"]
+        ARRAY["Array\n(SetAt / GetAt / RemoveAt)\nFixed-capacity contiguous storage"]
+    end
+
+    subgraph Containers["Container Layer"]
+        HEAP["Heap\n(Insert / Pop / Heapify)\nBinary heap with O(log n) ops"]
+        QUEUE["Queue\n(Enqueue / Dequeue / Peek)\nCircular buffer FIFO"]
+        STACK["Stack\n(Push / Pop / Peek)\nLIFO with index counter"]
+        MAP["Map\n(Set / Get / Remove)\nOpen-addressed linear probing"]
+    end
+
+    subgraph Frameworks["Framework Layer"]
+        PIPE["SB Pipe\n(Queue derivation + MID)"]
+        BROKER["SB Broker\n(Publish / RegisterSubscriber)\nFan-out to matching pipes"]
+    end
+
+    HEAP --> ARRAY
+    QUEUE --> ARRAY
+    STACK --> ARRAY
+    MAP --> ARRAY
+
+    HEAP --> HEAP_PTR
+    MAP --> VAL_API
+
+    ARRAY --> PTR_API
+
+    PIPE --> QUEUE
+    BROKER --> PIPE
+....
+
+Each container delegates element storage to the Array.
+The Array delegates element copying and resetting to the Pointer API.
+The Broker's pipes are queue derivations, inheriting all queue operations and adding topic-based routing.
+This layering means adding a new container type requires only composing the Array — no storage logic duplication.
 
 == Detailed Design
 
@@ -268,6 +435,36 @@ All memory in LibJuno is **caller-owned and injected**:
 No module in LibJuno calls `malloc`, `calloc`, `realloc`, or `free`.
 Memory pools (block allocator) operate on caller-provided backing buffers.
 
+.Memory Ownership Flow
+[mermaid]
+....
+flowchart LR
+    subgraph Caller["Caller / Integrator"]
+        ALLOC["Allocate Storage\n(stack, static, or pool)"]
+        DEPS["Allocate Dependencies\n(arrays, APIs, etc.)"]
+    end
+
+    subgraph Init["Module_Init()"]
+        WIRE["Wire vtable pointer"]
+        STORE["Store dependency pointers"]
+        VERIFY["Verify configuration"]
+    end
+
+    subgraph Runtime["Module Operations"]
+        OP["Read/write only\ninjected storage"]
+    end
+
+    subgraph CallerEnd["Caller Responsibility"]
+        LIFETIME["Manage lifetime\nof all storage"]
+    end
+
+    ALLOC --> Init
+    DEPS --> Init
+    WIRE --> STORE --> VERIFY
+    Init --> Runtime
+    Runtime --> CallerEnd
+....
+
 === Design Rationale: Result/Option Types and Error Handling
 
 **Why Rust-style Result/Option in C11.** `errno` is a hosted-only thread-local global unavailable in freestanding builds and violates the "no global mutable state" constraint.
@@ -328,6 +525,47 @@ JUNO_MODULE_GET_API(ptModule, ROOT_T)->DoSomething((ROOT_T *)ptModule, args...);
 The vtable is `const` and typically `static` — enabling ROM placement.
 Dispatch requires one pointer dereference through `ptApi`, then a function pointer call.
 
+.Vtable Dispatch Sequence
+[mermaid]
+....
+sequenceDiagram
+    participant Caller
+    participant Module as Module Instance (Union/Root)
+    participant Vtable as const API_T (Vtable)
+    participant Impl as Implementation Function
+
+    Caller->>Module: Access ptApi field
+    Module->>Vtable: Dereference ptApi pointer
+    Caller->>Vtable: Select function pointer (e.g., DoSomething)
+    Vtable->>Impl: Call via function pointer, passing ROOT_T*
+    Impl->>Impl: Cast ROOT_T* to DERIVATION_T* (first-member guarantee)
+    Impl->>Impl: Execute implementation logic
+    Impl-->>Caller: Return JUNO_STATUS_T
+....
+
+.Module Initialization Sequence
+[mermaid]
+....
+sequenceDiagram
+    participant Caller
+    participant Init as Module_Init()
+    participant Verify as Module_Verify()
+    participant DepVerify as Dependency Verify
+
+    Caller->>Caller: Allocate storage (stack/static)
+    Caller->>Caller: Allocate dependencies (arrays, APIs, etc.)
+    Caller->>Init: Pass instance + all dependencies + failure handler
+    Init->>Init: Wire ptApi to static const vtable
+    Init->>Init: Store dependency pointers in root/derivation
+    Init->>Verify: Validate configuration
+    Verify->>Verify: Check ptApi non-NULL
+    Verify->>Verify: Check all dependency pointers non-NULL
+    Verify->>DepVerify: Validate each injected dependency
+    DepVerify-->>Verify: JUNO_STATUS_T
+    Verify-->>Init: JUNO_STATUS_T
+    Init-->>Caller: JUNO_STATUS_T
+....
+
 === Trait System (JUNO_TRAIT_ROOT)
 
 Traits are lightweight interfaces without failure handler fields:
@@ -340,6 +578,40 @@ struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
     size_t zAlignment;
 );
 ----
+
+.Fat Pointer Trait Structure
+[mermaid]
+....
+classDiagram
+    class JUNO_POINTER_T {
+        «trait root»
+        +const JUNO_POINTER_API_T *ptApi
+        +void *pvAddr
+        +size_t zSize
+        +size_t zAlignment
+    }
+
+    class JUNO_POINTER_API_T {
+        «vtable / const»
+        +Copy(tDest, tSrc) JUNO_STATUS_T
+        +Reset(tPointer) JUNO_STATUS_T
+    }
+
+    class JUNO_VALUE_POINTER_API_T {
+        «vtable / const»
+        +Equals(tLeft, tRight) JUNO_RESULT_BOOL_T
+    }
+
+    class DataStructure {
+        «Heap / Queue / Stack / Map»
+        Operates on JUNO_POINTER_T
+        without knowing element type
+    }
+
+    JUNO_POINTER_T --> JUNO_POINTER_API_T : ptApi
+    DataStructure ..> JUNO_POINTER_T : receives elements as
+    DataStructure ..> JUNO_POINTER_API_T : delegates Copy/Reset to
+....
 
 === Design Rationale: Pointer Trait System
 
@@ -404,3 +676,47 @@ Complements RTOS preemption rather than replacing it.
 **Why injected Time module.** Clock hardware (`Now`) and blocking primitives (`Sleep`, `SleepTo`) are platform-specific.
 Time math (add, subtract, conversions) is universal and provided by LibJuno.
 The split follows DI: inject what varies, provide what's universal.
+
+[appendix]
+== Public Header Reference
+
+The following table lists all public C headers shipped with LibJuno and their purpose.
+C++11 wrapper headers (`.hpp`) are included for completeness but are not covered in the detailed design sections of this SDD.
+
+[cols="2,1,3"]
+|===
+| Header | Subsystem | Description
+
+| `juno/status.h` | Core | Status codes, failure handler type, `JUNO_FAIL*` macros
+| `juno/module.h` | Core | Module root/derivation/union macros, Result/Option types
+| `juno/macros.h` | Core | `JUNO_ASSERT_EXISTS`, `JUNO_ASSERT_SUCCESS` assertion macros
+| `juno/types.h` | Core | Pre-defined Result specializations (`JUNO_RESULT_BOOL_T`, etc.)
+| `juno/memory/pointer_api.h` | Memory | Fat pointer trait, `JUNO_POINTER_T`, Copy/Reset API
+| `juno/memory/memory_api.h` | Memory | Abstract allocator interface (`Get`/`Put`/`Update`)
+| `juno/memory/memory_block.h` | Memory | Block allocator derivation with fixed-size pools
+| `juno/ds/array_api.h` | Data Structures | Fixed-capacity array (`SetAt`/`GetAt`/`RemoveAt`)
+| `juno/ds/heap_api.h` | Data Structures | Binary heap with injected Compare/Swap
+| `juno/ds/queue_api.h` | Data Structures | Circular-buffer FIFO queue
+| `juno/ds/stack_api.h` | Data Structures | LIFO stack
+| `juno/ds/map_api.h` | Data Structures | Open-addressed hash map with linear probing
+| `juno/crc/crc.h` | Algorithms | CRC-16/32 streaming update functions (ARC, BinHex, CCITT, CCITT32, Kermit, ZIP)
+| `juno/hash/hash_djb2.h` | Algorithms | djb2 hash function
+| `juno/math/juno_math.h` | Algorithms | Generic math macros (Abs, Max, Min, Clamp)
+| `juno/math/juno_vec.h` | Algorithms | Vector operations (Add, Sub, Scale, Dot, Cross, Norm, Normalize)
+| `juno/math/juno_vec_types.h` | Algorithms | Vector and quaternion type definitions
+| `juno/math/juno_math_types.h` | Algorithms | Scalar type aliases (F32, F64)
+| `juno/time/time_api.h` | System Services | Time interface, timestamp type, math and conversion functions
+| `juno/io/async_io_api.h` | System Services | Asynchronous byte-stream IO interface
+| `juno/io/i2c_io_api.h` | System Services | I2C bus transfer interface
+| `juno/io/spi_io_api.h` | System Services | SPI transaction interface
+| `juno/log/log_api.h` | System Services | Logging facade (Debug/Info/Warning/Error)
+| `juno/mp/mtx_api.h` | System Services | Mutex interface (TryLock/Lock/Free)
+| `juno/sm/sm_api.h` | Frameworks | State machine with explicit state transitions
+| `juno/sb/broker_api.h` | Frameworks | Software Bus broker (Publish/RegisterSubscriber)
+| `juno/app/app_api.h` | Frameworks | Application lifecycle (OnStart/OnProcess/OnExit)
+| `juno/sch/juno_sch_api.h` | Frameworks | Cyclic executive scheduler
+| `juno/module.hpp` | C++ Wrappers | C++11 module system helpers
+| `juno/types.hpp` | C++ Wrappers | C++11 type wrappers
+| `juno/ds/buff_api.hpp` | C++ Wrappers | C++11 queue buffer template
+| `juno/ds/juno_buff.hpp` | C++ Wrappers | C++11 buffer implementation
+|===

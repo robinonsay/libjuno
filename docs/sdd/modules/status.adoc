@@ -44,6 +44,11 @@ Invoked for diagnostic purposes only — never alters control flow.
 `JUNO_USER_DATA_T`::
 Opaque `void` type for user-supplied context passed to failure handlers.
 
+`JUNO_FAIL_MESSAGE_LEN`::
+Preprocessor constant (default 256) defining the recommended maximum length for failure handler messages.
+User-overridable via `#define` before including `status.h`.
+Not enforced by the library — serves as guidance for implementations that format diagnostic strings.
+
 == Interface Design
 
 `JUNO_FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)`::
