@@ -17,15 +17,20 @@ All memory is caller-owned and injected.
 7. **Testing** — Unity framework, vtable-injected test doubles, no mock framework.
 8. **Traceability** — all requirements, code, and tests must be linked (see below).
 
-## AI Workflow: Software Lead / Software Developer / Project Manager
+## AI Workflow: Software Lead / Software Developer / Junior Software Developer / Project Manager
 
-The AI operates in two roles:
+The AI operates in three roles:
 
 - **Software Lead**: Plans tasks, sets acceptance criteria, delegates work to
-  Software Developer sub-agents, verifies quality, and asks the Project Manager
-  (user) for domain knowledge and approval.
+  Software Developer and Junior Software Developer sub-agents, verifies quality,
+  and asks the Project Manager (user) for domain knowledge and approval.
 - **Software Developer**: Executes the task following the Software Lead's plan
-  and project constraints.
+  and project constraints. May delegate routine sub-tasks to Junior Software
+  Developers.
+- **Junior Software Developer**: Executes well-scoped, routine sub-tasks
+  (boilerplate, repetitive edits, drafts, search-and-summarize) under the
+  direction of a Software Lead or Software Developer. Uses a cost-efficient
+  model (GPT-4o). Output must always be reviewed by the delegating agent.
 
 The **Project Manager** (user) provides:
 - Design rationale and domain knowledge
@@ -34,7 +39,8 @@ The **Project Manager** (user) provides:
 
 The Software Lead and Software Developers must **proactively ask the Project Manager**
 rather than make assumptions. This avoids hallucinations, miscommunication, and
-incorrect decisions.
+incorrect decisions. Junior Software Developers do NOT interact with the Project
+Manager — they report only to their delegating agent.
 
 ## Traceability System
 
@@ -52,12 +58,14 @@ Invoke a skill by saying: **"Use skill: `<skill-name>`"**
 | Skill                  | Purpose                                                    |
 |------------------------|------------------------------------------------------------|
 | `software-lead`        | Software Lead planning, delegation, and verification guide |
+| `junior-software-dev`  | Junior dev delegation protocol, task scoping, review guide |
 | `derive-requirements`  | Extract requirements from existing code and tests          |
 | `write-requirements`   | Author new requirements before code exists                 |
-| `write-tests`          | Generate Unity tests with traceability tags                |
+| `write-tests`          | Generate tests (C/Python/JS) with DI doubles and traceability tags |
 | `generate-docs`        | Produce SRS (IEEE 830), RTM with consistency validation    |
 | `generate-sdd`         | Produce SDD (IEEE 1016) from code + user rationale         |
 | `write-design`         | Propose software designs from requirements before code     |
+| `write-code`           | Implement code (C/Python/JS) from approved requirements and design |
 | `trace-check`          | Audit traceability completeness and consistency            |
 | `code-review`          | Review code against all project standards                  |
 | `write-module`         | Scaffold a new module with all conventions                 |

@@ -23,6 +23,214 @@ and lessons learned.
 
 ---
 
+## Task Decomposition and Parallelization
+
+### Decomposing Tasks
+
+Break every task into small, focused work items. Each work item should:
+- Produce a **single, well-defined deliverable** (1–3 files is ideal)
+- Be reviewable in isolation without needing the full task context
+- Have **explicit acceptance criteria** (specific, verifiable conditions)
+
+Avoid monolithic delegations. A brief that says "scaffold the entire module"
+produces too much output to review effectively. Instead, break it into:
+1. Scaffold the header file (junior)
+2. Write the source implementation (developer)
+3. Draft the requirements.json (junior formatting, developer content)
+4. Write the test file (developer)
+
+### Parallelizing Work
+
+When two or more work items have **no data or ordering dependency**, delegate
+them to separate sub-agents in parallel:
+- Writing tests for module A + writing code for module B
+- Scaffolding a header + drafting requirements
+- Scanning multiple modules for traceability tags
+- Generating Doxygen stubs across several files (multiple junior agents)
+
+**Do NOT parallelize** work items that depend on each other's output:
+- Writing code that depends on a design not yet produced
+- Writing tests before the public interface is defined
+- Adding traceability tags before requirements are finalized
+
+### Agent Tier Assignment
+
+For each work item, choose the right sub-agent tier:
+
+| Tier | When to Use | Model | Review Rigor |
+|------|-------------|-------|--------------|
+| **Software Developer** | Correctness reasoning, design judgment, architectural knowledge, domain expertise | Claude Sonnet 4.6 | Standard |
+| **Junior Software Developer** | Boilerplate, repetitive edits, drafts, search-and-summarize, scaffolding | GPT-4o | Rigorous |
+
+---
+
+## Reviewing Sub-Agent Output — Tiered Rigor
+
+You must review **all** sub-agent output before presenting to the Project Manager.
+The review rigor scales with the sub-agent tier.
+
+### Standard Review (Software Developer Output)
+
+Software Developers use a capable model and follow detailed skill instructions.
+They produce high-quality work but are not infallible.
+
+- [ ] All acceptance criteria are met
+- [ ] Project standards are followed (naming, architecture, traceability, no dynamic allocation)
+- [ ] Output is consistent with existing code and conventions
+- [ ] No obvious errors, omissions, or hallucinations
+- [ ] Traceability tags reference valid, existing requirement IDs
+- [ ] No design decisions were made without authorization
+- If deficiencies are found, delegate corrections back with specific feedback
+
+### Rigorous Review (Junior Software Developer Output)
+
+Junior Software Developers use a cost-efficient model. Their output is a
+**first draft** — useful for saving time, but expect errors. Apply every
+standard review check **plus** these additional verifications:
+
+- [ ] Naming conventions checked character-by-character (types, functions, variables, macros)
+- [ ] Every traceability tag verified against `requirements.json` (not just spot-checked)
+- [ ] Every function signature compared against the approved design or existing pattern
+- [ ] Doxygen `@param` / `@return` descriptions verified for accuracy and completeness
+- [ ] Logic reviewed line-by-line for off-by-one errors, incorrect comparisons, missed edge cases
+- [ ] No hallucinated function names, types, enum values, or requirement IDs
+- [ ] No dynamic allocation introduced
+- [ ] No architectural pattern violations (vtable/DI, module root/derivation)
+- [ ] JSON validated against the project schema
+- For small issues, fix directly rather than re-delegating
+- For systematic errors, re-delegate with specific line-level feedback
+
+---
+
+## Iterative Development: Code a Little, Test a Little
+
+This section governs **all** work that involves both writing code and writing
+tests. The Software Lead enforces this discipline on every task — new modules,
+new features, bug fixes, and refactors alike.
+
+### The Paired Parallel Model
+
+Work is organized into **developer + test pairs**. Each pair owns one or more
+independent increments and runs its internal code→test cycle autonomously.
+The Software Lead plans, assigns, and reviews on a **rolling basis** — the
+Lead does NOT mediate each individual code→test sub-cycle happening inside a pair.
+
+    Lead: Decompose work → assign independent increments to pairs
+          │
+          ├─ Pair A ─── code→test ─── code→test ──────────────────► report
+          ├─ Pair B ─── code→test ────────────────────────────────► report (early)
+          └─ Pair C ─── code→test ─── code→test ─── code→test ───► report
+          │
+          ▼  ROLLING REVIEW — review each pair as its report arrives
+          Lead ◄─ Pair B report (early)  → immediate feedback or approval
+          Lead ◄─ Pair A report          → immediate feedback or approval
+          Lead ◄─ Pair C report          → immediate feedback or approval
+          │
+          ▼  All pairs approved + full test suite green
+          Lead: Present complete work to Project Manager
+
+The key properties of this model:
+- **Pairs are autonomous.** The Lead does not mediate sub-cycles inside a pair.
+- **Review is rolling.** The Lead reviews each pair as it reports — not in a
+  batch after all pairs finish.
+- **Early finishers get immediate feedback.** A pair that finishes before
+  others receives the Lead's response right away, keeping it unblocked.
+- **The PM sees only the finished product.** No increment-by-increment approval
+  from the Project Manager — the Lead accumulates and reviews everything first.
+
+### What Is "One Increment"?
+
+An increment is the **smallest unit of working, testable behavior** that a
+pair can own end-to-end:
+
+- **One public API function** (e.g., `JunoHeapAlloc`), including its internal
+  helpers, but not unrelated functions in the same file.
+- **One requirement or a tightly coupled group of 2–3 requirements** that
+  cannot be tested independently of each other.
+- **One error path** when adding defensive behavior to an existing function.
+
+Do NOT treat an entire module or file as one increment. A vtable with six API
+functions is six increments (or fewer if functions are truly inseparable).
+
+### Decomposing Work into Pairs
+
+Before spawning any pairs:
+
+1. Read the full requirements and design for the work in scope.
+2. List every increment required to satisfy all requirements.
+3. Build a dependency graph: which increments depend on the output of another?
+4. Group independent increments — each group is a candidate for parallel assignment.
+5. Check for **file overlap** between candidate parallel pairs: pairs that would
+   edit the same file must be serialized, not parallelized.
+6. For each pair, define a brief that includes:
+   - Which increment(s) the pair owns (explicit requirement IDs and functions)
+   - Any shared interfaces the pair must treat as read-only
+   - The mandatory Pair Summary Report format (see below)
+
+**Do NOT parallelize** increments that share mutable files or have ordering
+dependencies. Parallelize only when independence is clear.
+
+### The Lead's Rolling Review Protocol
+
+The Lead reviews pairs as they report — never in a batch after all pairs finish.
+An early-finishing pair must receive feedback **immediately**.
+
+**When a pair submits its summary report:**
+1. Apply the Write Code verification checklist to the implemented functions.
+2. Apply the Write Tests verification checklist to the new tests.
+3. Run the full test suite to confirm all tests (old and new) pass:
+   ```bash
+   cd build && cmake --build . && ctest --output-on-failure
+   ```
+4. Choose one outcome:
+   - **Approved**: record the increment as closed in the running summary.
+   - **Needs Changes**: return specific, line-level feedback to the pair
+     immediately. The pair iterates and re-reports. Do NOT wait for other
+     pairs before delivering this feedback.
+
+Reviewing a finished pair's report while other pairs are still working is
+**expected and correct**. The Lead works concurrently with the pairs.
+
+### Pair Summary Report Format
+
+Each pair must return the following when their assigned work is complete:
+
+```
+## Pair Summary — <Increment Name>
+
+### Implemented
+- Function / component name(s) implemented
+- Files changed: <path> — <one-line description of change>
+- Requirement IDs addressed: REQ-XXX-NNN, ...
+
+### Tests Added
+| REQ ID | Test Function | Scenario |
+|--------|---------------|----------|
+| ...    | ...           | ...      |
+- Test run result: X passed, 0 failed, 0 skipped
+
+### Open Questions / Risks
+- Any ambiguity encountered (must be flagged — do not silently decide)
+- Any design decision made without explicit authorization (must be flagged)
+```
+
+### What Must NOT Cross Increment Boundaries
+
+- Parallel pairs must not edit the same files. Verify this before assigning.
+- Code written in increment N must not depend on logic planned for increment N+1.
+- No pair writes tests anticipating functionality not yet implemented.
+- No pair declares its work done until all internal code→test sub-cycles are green.
+
+### Final State Before PM Presentation
+
+Do not present to the Project Manager until ALL of the following are true:
+- [ ] Every pair has an approved summary report
+- [ ] The full test suite passes with zero failures
+- [ ] Every requirement in scope has at least one code tag and one test tag
+- [ ] No open questions from any pair's report remain unresolved
+
+---
+
 ## Code Review
 
 ### Code Review — Software Lead Role
@@ -306,6 +514,72 @@ and lessons learned.
 
 ---
 
+## Write Code
+
+### Write Code — Software Lead Role
+
+> **This skill is governed by the "Code a Little, Test a Little" paired
+> parallel model. Each increment is assigned to a developer + test pair.
+> The Lead reviews pair reports on a rolling basis. The Project Manager
+> sees only the final, fully-reviewed result.**
+
+1. Confirm that both of the following artifacts exist and are approved before
+   forming any pairs:
+   - Requirements file describing every "shall" statement the implementation must satisfy
+   - Approved design document with interfaces, data structures, algorithms, and
+     dependency relationships
+   If either is missing, redirect to the `write-requirements` or `write-design`
+   skill first.
+2. Identify the target language and project-specific coding standards that apply.
+   - For **LibJuno C** work, include paths to `ai/memory/coding-standards.md`,
+     `ai/memory/architecture.md`, `ai/memory/constraints.md`, and
+     `ai/memory/traceability.md` in every pair's brief.
+   - For **other languages**, include any style guides, framework conventions,
+     or banned APIs.
+3. Decompose the work into increments and form pairs (see Iterative Development
+   → Decomposing Work into Pairs). Resolve all ambiguities with the Project
+   Manager before pairs begin — do NOT let pairs guess.
+4. Delegate each increment to a **developer + test pair** with a brief that includes:
+   - Module / component name, target language, and exact increment scope
+     (requirement ID(s) and function(s) to address — not the full module)
+   - Paths to the requirements file and design document
+   - Project-specific coding standards and constraints
+   - Dependency interfaces to reference (treat as read-only)
+   - Acceptance criteria for this increment
+   - Instruction to follow the internal code→test cycle and return a
+     Pair Summary Report when done
+5. As pair reports arrive, apply the rolling review protocol
+   (see Iterative Development → The Lead's Rolling Review Protocol).
+   Give immediate feedback — approved or specific corrections — for each report.
+   Do NOT wait for all pairs to finish before reviewing any one of them.
+6. After all pairs are approved and the full test suite is green, compile a
+   complete summary across all increments.
+7. **Present the full summary to the Project Manager for approval.**
+
+### Write Code — Software Lead Verification
+
+Apply this checklist to each pair's report during rolling review:
+
+1. Verify the requirement(s) scoped to this increment are addressed by the
+   implemented function(s), with correct traceability tags where the project
+   uses them.
+2. Verify the implementation uses dependency injection — no hard-coded calls to
+   concrete dependencies inside the module under review.
+3. Verify the public interface is minimal and implementation details are hidden.
+4. Verify language-specific standards are followed:
+   - **C (LibJuno)**: naming conventions, vtable wiring, `Verify` guard, no
+     dynamic allocation, no global mutable state, Doxygen on public API
+   - **Python**: PEP 8, constructor injection, abstract base classes / protocols
+     as dependency types, no module-level global state
+   - **JavaScript/TypeScript**: project ESM/CJS conventions, constructor or
+     factory injection, interface/type boundaries over concrete classes
+5. Verify the build configuration includes new file(s) (first increment only).
+6. Verify the pair's reported test run result shows zero failures before approving.
+7. Do NOT present any individual increment to the Project Manager — accumulate
+   all approved increments and present the complete work at the end.
+
+---
+
 ## Write Module
 
 ### Write Module — Software Lead Role
@@ -347,28 +621,43 @@ and lessons learned.
 
 ### Write Tests — Software Lead Role
 
-1. Read the module's `requirements.json` to identify requirements and their
-   verification methods.
-2. Read the module's public API header to understand the interface.
-3. Read the module's source to understand implementation details and error paths.
-4. Read any existing test file for the module to understand:
-   - Test double patterns (custom vtables, injectable failure flags)
-   - Fixture setup (`setUp`/`tearDown` functions)
-   - Assertion patterns used
-5. Identify **gaps**: requirements with `verification_method: "Test"` that lack
-   `@{"verify": ...}` tags in the test file.
-6. Plan test cases:
-   - Happy path for each API function
-   - Error paths (NULL inputs, full capacity, invalid types, etc.)
-   - Boundary conditions
-   - Injected failure scenarios (via vtable test doubles)
-7. **Present the test plan to the Project Manager for review** before writing code.
+> **In the paired parallel model, the test agent works directly with the
+> code developer inside the pair — not through the Lead. The Lead reviews
+> test output as part of each pair's summary report during rolling review.**
+
+1. When forming pairs (see Iterative Development → Decomposing Work into Pairs),
+   include test coverage expectations in every pair's brief:
+   - The test framework to use (Unity for LibJuno C, pytest for Python,
+     Jest/Vitest for TypeScript)
+   - The requirement IDs the pair must cover with tests
+   - The traceability tag format (`// @{"verify": ["REQ-ID"]}`)
+   - Expected test scenarios: happy path, error paths, boundary conditions,
+     DI-injected failure paths
+2. The test agent within the pair coordinates directly with the code developer.
+   The Lead does not mediate individual code→test sub-cycles.
+3. During rolling review, evaluate the test portion of each pair's report:
+   - Are all requirement IDs in scope covered by at least one test?
+   - Are test doubles injected through the production DI boundary?
+   - Is the reported test run result clean (zero failures, zero skips)?
+   - Run the full suite to verify the number independently:
+     ```bash
+     cd build && cmake --build . && ctest --output-on-failure
+     ```
+4. If the test portion has defects, return the report to the **pair** (not
+   just the test agent) with specific feedback. The pair fixes and re-reports.
+   Deliver this feedback immediately — do not wait for other pairs.
 
 ### Write Tests — Software Lead Verification
 
-1. Verify every test function has a valid `@{"verify": ...}` tag.
-2. Verify all referenced REQ IDs exist in `requirements.json`.
-3. Verify test doubles follow the project's vtable injection pattern.
-4. Verify Hungarian notation and naming conventions are followed.
-5. Verify the test compiles (check includes, types, function signatures).
-6. **Present final output to Project Manager for approval.**
+Apply this checklist to the test portion of each pair's summary report:
+
+1. Verify every requirement in the increment's scope has at least one test
+   function with a valid traceability tag where the project uses them.
+2. Verify all referenced requirement IDs exist in the requirements file.
+3. Verify test doubles are injected through the production DI boundary — no
+   patching of module internals or linker-level mocking.
+4. Verify naming and style conventions match the target language and project.
+5. Verify no dynamic allocation in C tests; no global mutable state in any test.
+6. Verify the pair's reported test run result shows zero failures before approving.
+7. After all pairs are approved, run the full suite one final time to confirm
+   no cross-pair regressions before presenting to the Project Manager.
