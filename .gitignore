@@ -58,3 +58,4 @@ venv/
 .venv/
 .clangd
 .local
+.DS_Store
