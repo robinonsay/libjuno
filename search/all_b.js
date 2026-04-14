@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['h_0',['h',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md85',1,'engine_app.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md90',1,'engine_cmd_msg.h']]],
-  ['handler_1',['handler',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md80',1,'Failure Handler'],['../main_8c.html#autotoc_md112',1,'Failure Handler']]],
+  ['h_0',['h',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md86',1,'engine_app.h'],['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md91',1,'engine_cmd_msg.h']]],
+  ['handler_1',['handler',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md81',1,'Failure Handler'],['../main_8c.html#autotoc_md113',1,'Failure Handler']]],
   ['handling_2',['handling',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md19',1,'Error Handling'],['../group__juno__status.html',1,'Status and error handling'],['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md34',1,'Status and Error Handling']]],
   ['hash_3',['Hash',['../structJUNO__MAP__HASHABLE__POINTER__API__TAG.html#aded0c2fc42482d65809db1a9af6a4f76',1,'JUNO_MAP_HASHABLE_POINTER_API_TAG']]],
   ['hash_20utilities_4',['Hash Utilities',['../group__juno__hash.html',1,'']]],

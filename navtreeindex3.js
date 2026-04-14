@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"namespacejuno_1_1buff.html#a410515aa1cabe6498ee225555585bfc4":[13,0,0,0,6],
 "namespacejuno_1_1buff.html#a41121c4c2d402b6ef2db350fa82a1140":[13,0,0,0,3],
 "namespacejuno_1_1buff.html#a598c7e35e02eabe3976c4df73f4ae0ce":[13,0,0,0,4],
 "namespacejuno_1_1buff.html#a5cedf76e7225856b37bb0c63a80fda0f":[13,0,0,0,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "structJUNO__VEC4__I32__CART__TAG.html#aa478cc6a24146ec4694d04d21ae91209":[14,0,62,2],
 "structJUNO__VEC4__I32__CART__TAG.html#aad795674125085bcd85f071c2dd3bb97":[14,0,62,1],
 "structJUNO__VEC4__I32__CART__TAG.html#ae16c81623fa17b6e07922b30aac6371e":[14,0,62,3],
-"structJUNO__VEC4__I32__SPH__TAG.html":[14,0,63],
-"structJUNO__VEC4__I32__SPH__TAG.html#a31d5a55f83306a85810c4f9e655493f9":[14,0,63,2]
+"structJUNO__VEC4__I32__SPH__TAG.html":[14,0,63]
 };

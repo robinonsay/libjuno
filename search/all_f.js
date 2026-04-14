@@ -11,7 +11,7 @@ var searchData=
   ['log_5fapi_2eh_8',['log_api.h',['../log__api_8h.html',1,'']]],
   ['logdebug_9',['logdebug',['../main_8c.html#ae3acb5446cc3d129a21c2d00863399cc',1,'LogDebug():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#aeb29dca837a71395af86864e6a7f9ed5',1,'JUNO_LOG_API_TAG::LogDebug']]],
   ['logerror_10',['logerror',['../main_8c.html#a4c5799027873b5e412bbc794bd2cad2a',1,'LogError():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#aba52d1328f47ffc5b921a43b4bbe2802',1,'JUNO_LOG_API_TAG::LogError']]],
-  ['logging_11',['logging',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md77',1,'Logging'],['../main_8c.html#autotoc_md109',1,'Logging']]],
+  ['logging_11',['logging',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md78',1,'Logging'],['../main_8c.html#autotoc_md110',1,'Logging']]],
   ['logging_20api_12',['Logging API',['../group__juno__log.html',1,'']]],
   ['loginfo_13',['loginfo',['../main_8c.html#afdf60c17632e976e381e981f5c019c01',1,'LogInfo():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#aefd3b900918e78f012a8637e9533a3df',1,'JUNO_LOG_API_TAG::LogInfo']]],
   ['logwarning_14',['logwarning',['../main_8c.html#a1952bfaed98132c9bbf0e27e30cd4fb3',1,'LogWarning():&#160;main.c'],['../structJUNO__LOG__API__TAG.html#abdac8927055d98dfd7be63c2b7a9c647',1,'JUNO_LOG_API_TAG::LogWarning']]]

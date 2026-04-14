@@ -9,7 +9,7 @@ var searchData=
   ['userdataremoveat_6',['UserDataRemoveAt',['../minimal__queue__example_8c.html#a1e5154cfe9e302ca8dfbc532a63d8dc5',1,'minimal_queue_example.c']]],
   ['userdatareset_7',['userdatareset',['../minimal__queue__example_8c.html#a766830013c0cd15b8082a61db7a61ca5',1,'UserDataReset(JUNO_POINTER_T tPointer):&#160;minimal_queue_example.c'],['../minimal__memory__example_8c.html#a766830013c0cd15b8082a61db7a61ca5',1,'UserDataReset(JUNO_POINTER_T tPointer):&#160;minimal_memory_example.c']]],
   ['userdatasetat_8',['UserDataSetAt',['../minimal__queue__example_8c.html#a8618bc57d5978fda7770664afaeec561',1,'minimal_queue_example.c']]],
-  ['using_20examples_20as_20templates_9',['Using Examples as Templates',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html#autotoc_md133',1,'']]],
+  ['using_20examples_20as_20templates_9',['Using Examples as Templates',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html#autotoc_md134',1,'']]],
   ['using_20libjuno_10',['Using LibJuno',['../index.html#autotoc_md47',1,'']]],
   ['using_20the_20module_20system_11',['Example: Using the Module System',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2README.html#autotoc_md29',1,'']]],
   ['utilities_12',['utilities',['../group__juno__crc.html',1,'CRC utilities'],['../group__juno__hash.html',1,'Hash Utilities']]]
