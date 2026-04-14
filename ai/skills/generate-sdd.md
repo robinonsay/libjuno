@@ -3,7 +3,7 @@
 ## Purpose
 
 Generate a Software Design Document (SDD) following IEEE 1016 structure,
-derived from the source code with design rationale provided by the Program (user).
+derived from the source code with design rationale provided by the Project manager (user).
 
 ## When to Use
 
@@ -18,31 +18,11 @@ derived from the source code with design rationale provided by the Program (user
 
 ## Instructions
 
-### Coach Role
+> **Software Lead**: See `ai/skills/software-lead.md` → Generate SDD for planning and verification steps.
 
-1. Read the codebase to extract design information:
-   - Module headers: type definitions, vtable layouts, API contracts
-   - Source files: algorithm implementations, static vtable wiring
-   - Module relationships: which modules depend on which
-   - `requirements.json` files: to cross-reference design ↔ requirements
-2. Identify design elements per module:
-   - Purpose and responsibility
-   - Data structures (struct layouts with member descriptions)
-   - Interface contracts (function signatures, preconditions, postconditions)
-   - Vtable layout and polymorphic dispatch pattern
-   - Memory ownership model
-   - Error handling behavior
-3. Identify **missing design rationale** — the "why" behind design decisions.
-4. **Ask the Program for design rationale**, ONE topic at a time:
-   - Why was this data structure chosen?
-   - Why this initialization pattern?
-   - Why these specific dependencies?
-   - What trade-offs were considered?
-5. Draft the SDD outline and present to the Program.
+### Software Developer Role
 
-### Player Role
-
-6. After Program approval, generate the SDD following IEEE 1016:
+1. After Project manager approval, generate the SDD following IEEE 1016:
 
    **Section 1: Introduction**
    - Purpose, scope, definitions, references
@@ -58,7 +38,7 @@ derived from the source code with design rationale provided by the Program (user
    - 3.N.3: Interface design (API functions, vtable layout)
    - 3.N.4: Algorithm descriptions
    - 3.N.5: Error handling
-   - 3.N.6: Design rationale (from Program)
+   - 3.N.6: Design rationale (from Project manager)
    - 3.N.7: Requirements traceability (cross-reference to REQ IDs)
 
    **Section 4: Data Design**
@@ -70,23 +50,13 @@ derived from the source code with design rationale provided by the Program (user
    - Vtable dispatch pattern
    - Trait system (JUNO_TRAIT_ROOT)
 
-7. Generate AsciiDoc source.
-8. Invoke `asciidoctor` / `asciidoctor-pdf` for HTML/PDF.
-9. Submit to Coach for review.
-
-### Coach Verification
-
-10. Verify IEEE 1016 section structure is followed.
-11. Verify all modules are covered.
-12. Verify design descriptions are accurate to the code.
-13. Verify design rationale is present (from Program, not fabricated).
-14. Verify requirement cross-references are valid.
-15. Verify HTML and PDF render correctly.
-16. **Present final output to Program for approval.**
+2. Generate AsciiDoc source.
+3. Invoke `asciidoctor` / `asciidoctor-pdf` for HTML/PDF.
+4. Submit to Software Lead for review.
 
 ## Constraints
 
-- Design rationale MUST come from the Program — never fabricate it.
+- Design rationale MUST come from the Project manager — never fabricate it.
 - All design descriptions must be derived from actual code, not assumed.
 - IEEE 1016 section structure must be followed.
 - Cross-references to requirement IDs must be valid.

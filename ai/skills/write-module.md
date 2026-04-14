@@ -20,30 +20,11 @@ vtable pattern, Doxygen documentation, and traceability annotations.
 
 ## Instructions
 
-### Coach Role
+> **Software Lead**: See `ai/skills/software-lead.md` → Write Module for planning and verification steps.
 
-1. Read existing modules in the same subsystem to understand patterns:
-   - Header structure and Doxygen group organization
-   - Init function signature pattern
-   - Vtable (API struct) layout
-   - Source file structure
-   - Test file structure
-2. Read `ai/memory/architecture.md` for the module system pattern.
-3. Ask the Program (ONE question at a time):
-   - What operations should this module support?
-   - What data does it manage?
-   - What are the injected dependencies?
-   - What error conditions should be handled?
-   - What is the design rationale?
-4. Draft a module plan:
-   - Type definitions (root, derivation, API, result/option types)
-   - Public API functions
-   - Initial requirements
-5. **Present the plan to the Program for review.**
+### Software Developer Role
 
-### Player Role
-
-6. After Program approval, generate files:
+1. After Project manager approval, generate files:
 
    **`include/juno/<subsystem>/<module>_api.h`**:
    - MIT License header
@@ -65,7 +46,7 @@ vtable pattern, Doxygen documentation, and traceability annotations.
 
    **`requirements/<module>/requirements.json`**:
    - Following the JSON schema from `ai/memory/traceability.md`
-   - Rationale from Program
+   - Rationale from Project manager
 
    **`tests/test_<module>.c`**:
    - MIT License header
@@ -76,26 +57,14 @@ vtable pattern, Doxygen documentation, and traceability annotations.
    - Section banner comments
    - `main()` with `RUN_TEST` calls
 
-7. Submit all files to Coach for review.
-
-### Coach Verification
-
-8. Verify header follows the module root / derivation / vtable pattern.
-9. Verify source wires vtable correctly and calls Verify at entry.
-10. Verify all naming conventions (Hungarian notation, PascalCase, etc.).
-11. Verify Doxygen is complete on all public elements.
-12. Verify requirements.json is valid against schema.
-13. Verify test doubles use vtable injection.
-14. Verify all traceability tags are present and valid.
-15. Verify no dynamic allocation.
-16. **Present final output to Program for approval.**
+2. Submit all files to Software Lead for review.
 
 ## Constraints
 
 - All files must follow conventions in `ai/memory/coding-standards.md`.
 - Module must use the vtable/DI pattern from `ai/memory/architecture.md`.
 - No dynamic allocation — ever.
-- Rationale in requirements must come from the Program.
+- Rationale in requirements must come from the Project manager.
 - Test doubles must use vtable injection, not linker mocking.
 - The module should be added to the CMake build (update `src/` source list
   if not using `aux_source_directory`).

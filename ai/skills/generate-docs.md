@@ -20,49 +20,28 @@ consistency and produce AsciiDoc, HTML, and PDF outputs.
 
 ## Instructions
 
-### Coach Role
+> **Software Lead**: See `ai/skills/software-lead.md` → Generate Docs for planning and verification steps.
 
-1. Verify the Python tool `scripts/generate_docs.py` exists and is functional.
-   If not, guide the Player to create it (see Tool Specification below).
-2. Verify all modules have `requirements.json` files.
-3. Run a traceability consistency check FIRST:
-   - Every requirement has at least one `@{"req": ...}` code annotation
-   - Every requirement with `verification_method: "Test"` has `@{"verify": ...}` tags
-   - No orphaned tags referencing nonexistent requirements
-   - All `uses`/`implements` links resolve
-4. **Report any consistency warnings to the Program** before generating documents.
-5. Ask the Program if they want to resolve gaps before generating, or proceed
-   with warnings included in the output.
+### Software Developer Role
 
-### Player Role
-
-6. Run the document generation tool.
-7. For **SRS** (IEEE 830 structure):
+1. Run the document generation tool.
+2. For **SRS** (IEEE 830 structure):
    - Section 1: Introduction (purpose, scope, definitions)
    - Section 2: Overall Description (product perspective, constraints, assumptions)
    - Section 3: Specific Requirements (organized by module)
    - Each requirement includes: ID, title, description, rationale, verification method
    - Traceability links shown inline
-8. For **SDD** (IEEE 1016 structure):
+3. For **SDD** (IEEE 1016 structure):
    - System architecture overview (module dependency relationships)
    - Per-module design: purpose, data structures, API, vtable layout
    - Interface descriptions (public API contracts)
    - Data structure descriptions (struct layouts, memory ownership)
-   - Design rationale sections (content from Program — ask if missing)
-9. For **RTM**:
+   - Design rationale sections (content from Project manager — ask if missing)
+4. For **RTM**:
    - Single matrix: Requirement → Code Location → Test Location → Verification Method → Status
    - Coverage summary (percentage of requirements with code + test traces)
    - Gap report (requirements missing traces)
-10. Submit generated documents to Coach for review.
-
-### Coach Verification
-
-11. Verify SRS follows IEEE 830 section structure.
-12. Verify SDD follows IEEE 1016 section structure.
-13. Verify RTM matrix is complete and consistent.
-14. Verify HTML and PDF render correctly.
-15. **Ask the Program for any missing design rationale** needed for the SDD.
-16. **Present final output to Program for approval.**
+5. Submit generated documents to Software Lead for review.
 
 ## Tool Specification (`scripts/generate_docs.py`)
 
@@ -98,7 +77,7 @@ The Python tool must:
 
 ## Constraints
 
-- SDD design rationale MUST come from the Program — never fabricate it.
+- SDD design rationale MUST come from the Project manager — never fabricate it.
 - IEEE 830 and IEEE 1016 section structures must be followed.
 - Consistency validation must run before document generation.
 - Default AsciiDoc theme (no custom styling required).

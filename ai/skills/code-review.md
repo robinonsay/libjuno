@@ -19,74 +19,21 @@ safety violations, and traceability gaps.
 
 ## Instructions
 
-### Coach Role
+> **Software Lead**: See `ai/skills/software-lead.md` → Code Review for planning and verification steps.
 
-1. Define the review checklist based on project standards:
+### Software Developer Role
 
-   **Memory Safety**
-   - [ ] No `malloc`, `calloc`, `realloc`, `free`
-   - [ ] No heap-allocated memory
-   - [ ] All memory is caller-owned and injected
-   - [ ] Pointer validity checked before use
-
-   **Language & Portability**
-   - [ ] C11 compliant, freestanding-compatible
-   - [ ] No platform-specific headers in library code
-   - [ ] Compiles with `-Wall -Wextra -Werror -pedantic`
-
-   **Naming Conventions**
-   - [ ] Types: `SCREAMING_SNAKE_CASE_T`
-   - [ ] Functions: `PascalCase` with module prefix
-   - [ ] Variables: Hungarian notation (`tStatus`, `ptRoot`, `zSize`, etc.)
-   - [ ] Macros: `SCREAMING_SNAKE_CASE` with `JUNO_` prefix
-   - [ ] Private members: leading underscore
-
-   **Architecture**
-   - [ ] Module root / derivation / vtable pattern followed
-   - [ ] Dependencies injected via init function
-   - [ ] Verify function validates all preconditions
-   - [ ] No global mutable state
-
-   **Error Handling**
-   - [ ] Returns `JUNO_STATUS_T` or `JUNO_MODULE_RESULT`
-   - [ ] Uses `JUNO_ASSERT_*` macros for error propagation
-   - [ ] No silent error swallowing
-   - [ ] Failure handler is diagnostic-only
-
-   **Documentation**
-   - [ ] Doxygen comments on all public API elements
-   - [ ] `@file`, `@brief`, `@param`, `@return` present
-   - [ ] MIT License header at top of file
-
-   **Traceability**
-   - [ ] `@{"req": [...]}` tags on implementing functions
-   - [ ] `@{"verify": [...]}` tags on test functions
-   - [ ] Referenced REQ IDs exist in `requirements.json`
-   - [ ] New code has corresponding requirements
-
-2. Direct the Player to perform the review.
-
-### Player Role
-
-3. Read the files under review.
-4. Apply each checklist item, noting violations with:
+1. Read the files under review.
+2. Apply each checklist item, noting violations with:
    - File path and line number
    - Violated rule
    - Severity: **Error** (must fix), **Warning** (should fix), **Info** (suggestion)
    - Suggested fix
-5. Submit findings to Coach.
-
-### Coach Verification
-
-6. Review findings for accuracy and completeness.
-7. Remove false positives.
-8. Prioritize by severity.
-9. **Present review to the Program with clear, actionable items.**
-10. Ask the Program if they want any items auto-fixed.
+3. Submit findings to Software Lead.
 
 ## Constraints
 
-- Do not auto-fix without Program approval.
+- Do not auto-fix without Project manager approval.
 - Reference specific rules from `ai/memory/coding-standards.md` and
   `ai/memory/constraints.md` when citing violations.
 - Be precise about line numbers and specific code.

@@ -29,7 +29,7 @@ and zero-allocation constraints.
 
 ## System Overview
 
-Two cooperating agents orchestrated by the Coach:
+Two cooperating agents orchestrated by the Software Lead:
 
 ### 1. Evaluator Agent (Systems Engineer)
 
@@ -57,21 +57,7 @@ Continues until **convergence criteria** are met or max iterations reached.
 
 ## Instructions
 
-### Coach Role
-
-1. Read the relevant memory files:
-   - `ai/memory/architecture.md` — module system, vtable DI, initialization
-   - `ai/memory/coding-standards.md` — naming, documentation standards
-   - `ai/memory/constraints.md` — hard technical constraints
-   - `ai/memory/traceability.md` — requirements schema, annotation format
-2. Read the current documentation under evaluation.
-3. Read the source code, headers, and requirements for in-scope modules.
-4. **Ask the Program** for any missing context before starting the loop:
-   - Are there known documentation gaps to prioritize?
-   - Are there pending architectural changes?
-   - Any design rationale not yet captured?
-5. Orchestrate the Evaluator → Implementation loop (see Loop Process below).
-6. After convergence or max iterations, **present final results to the Program**.
+> **Software Lead**: See `ai/skills/software-lead.md` → Improve Docs for planning and verification steps.
 
 ---
 
@@ -235,7 +221,7 @@ Ensure:
 |----|--------|-------|
 | DOC-001 | Complete | ... |
 | DOC-002 | Complete | ... |
-| DOC-003 | Deferred | Requires Program input on design rationale |
+| DOC-003 | Deferred | Requires Project manager input on design rationale |
 
 ## 3. Files Modified
 - `docs/sdd/sdd.adoc` — updated §2 architecture overview
@@ -295,19 +281,19 @@ Each iteration produces a summary:
 ### Implementation Rules
 - Do NOT reinterpret intent — follow `DOC-###` actions exactly
 - Do NOT skip items unless impossible (document as deviation)
-- Do NOT introduce new design decisions without Program approval
-- Do NOT fabricate design rationale — ask the Program
+- Do NOT introduce new design decisions without Project manager approval
+- Do NOT fabricate design rationale — ask the Project manager
 - Ensure output is ready for re-evaluation
 - All documentation edits must preserve existing traceability tags
 - Diagrams must use Mermaid or PlantUML syntax compatible with AsciiDoc
 
 ### General Rules
-- Design rationale MUST come from the Program — never fabricate it
+- Design rationale MUST come from the Project manager — never fabricate it
 - If the Evaluator identifies a code–documentation mismatch, the **code is
   authoritative** (Agile: code is the single source of truth)
-- Maximum 5 iterations by default (ask Program to continue if needed)
+- Maximum 5 iterations by default (ask Project manager to continue if needed)
 - Each iteration must show measurable progress (delta > 0) or request
-  Program input to unblock
+  Project manager input to unblock
 
 ---
 
@@ -333,5 +319,5 @@ Each iteration produces a summary:
 **Iteration 3**
 - Score: **46/50** (Δ +9) ✅
 - All categories ≥ 4, no high-priority actions
-- **Converged — present to Program for approval**
+- **Converged — present to Project manager for approval**
 ````

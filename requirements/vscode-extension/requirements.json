@@ -1,0 +1,247 @@
+{
+  "module": "VSCODE",
+  "requirements": [
+    {
+      "id": "REQ-VSCODE-001",
+      "title": "VSCode Extension",
+      "description": "The LibJuno VSCode extension shall be a VSCode extension that assists developers in navigating LibJuno-based projects.",
+      "rationale": "VSCode is one of the most widely adopted development environments, making it the highest-impact platform for LibJuno developer tooling.",
+      "verification_method": "Demonstration",
+      "uses": [],
+      "implements": [
+        "REQ-VSCODE-002",
+        "REQ-VSCODE-003",
+        "REQ-VSCODE-004",
+        "REQ-VSCODE-016",
+        "REQ-VSCODE-017"
+      ]
+    },
+    {
+      "id": "REQ-VSCODE-002",
+      "title": "Vtable-Aware Go to Definition",
+      "description": "The extension shall provide Go to Definition navigation that resolves vtable-dispatched API function calls to their concrete implementation functions.",
+      "rationale": "Users have requested the ability to navigate directly from vtable-dispatched API calls to their concrete implementations.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-001"
+      ],
+      "implements": [
+        "REQ-VSCODE-005",
+        "REQ-VSCODE-006",
+        "REQ-VSCODE-007"
+      ]
+    },
+    {
+      "id": "REQ-VSCODE-003",
+      "title": "LibJuno API Pattern Recognition",
+      "description": "The extension shall recognize the LibJuno vtable API pattern (function pointer fields accessed via API struct pointers).",
+      "rationale": "LibJuno's vtable-based dependency injection pattern introduces a level of indirection that standard IDE tooling cannot resolve, making it difficult for developers to trace API calls to their concrete implementations.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-001"
+      ],
+      "implements": [
+        "REQ-VSCODE-008",
+        "REQ-VSCODE-009",
+        "REQ-VSCODE-010",
+        "REQ-VSCODE-011",
+        "REQ-VSCODE-012",
+        "REQ-VSCODE-014",
+        "REQ-VSCODE-015"
+      ]
+    },
+    {
+      "id": "REQ-VSCODE-004",
+      "title": "Graceful Error on Missing Implementation",
+      "description": "The extension shall report an error to the user when no concrete implementation can be found for a vtable API function call.",
+      "rationale": "A concrete implementation may not be resolvable in all cases, such as when the vtable assignment has not yet been written. The extension must handle this gracefully to avoid confusing or misleading the developer.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-001"
+      ],
+      "implements": [
+        "REQ-VSCODE-013"
+      ]
+    },
+    {
+      "id": "REQ-VSCODE-005",
+      "title": "Single Implementation Navigation",
+      "description": "When exactly one concrete implementation is found for a vtable API function call, the extension shall navigate directly to that implementation.",
+      "rationale": "When there is a single unambiguous implementation, direct navigation minimizes friction and matches the behavior developers expect from Go to Definition.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-006",
+      "title": "Multiple Implementation Selection",
+      "description": "When multiple concrete implementations are found for a vtable API function call, the extension shall present a selection list to the user.",
+      "rationale": "Multiple implementations may exist across a workspace. Presenting a selection list allows the developer to choose the correct target without the extension making an incorrect assumption.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-007",
+      "title": "Native Go to Definition Integration",
+      "description": "The extension shall integrate with VSCode's built-in Go to Definition system.",
+      "rationale": "Integrating with the native Go to Definition system (Ctrl+Click, F12) provides a familiar, zero-learning-curve experience for developers.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-008",
+      "title": "Module Root API Discovery",
+      "description": "The extension shall parse JUNO_MODULE_ROOT macro usage to identify the API struct type associated with a module root.",
+      "rationale": "JUNO_MODULE_ROOT is the canonical macro that associates a module root struct with its API type. Using it as the source of truth ensures the extension is consistent with the module system and does not rely on naming conventions that may vary.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-009",
+      "title": "Module Derivation Chain Resolution",
+      "description": "The extension shall parse JUNO_MODULE_DERIVE macro usage to resolve the derivation hierarchy and determine the applicable API type for derived modules.",
+      "rationale": "Derived modules inherit their root's API type through JUNO_MODULE_DERIVE. The extension must walk this chain to correctly associate a derived type with its API, since most user code operates on derived types rather than roots.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-010",
+      "title": "Designated Initializer Recognition",
+      "description": "The extension shall recognize vtable function assignments using C designated initializer syntax.",
+      "rationale": "Designated initializers are the most common and recommended syntax for populating vtable structs in LibJuno projects.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-011",
+      "title": "Direct Assignment Recognition",
+      "description": "The extension shall recognize vtable function assignments using direct assignment syntax.",
+      "rationale": "Some developers or legacy code may assign vtable fields individually after declaration. The extension should support this pattern to avoid false negatives.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-012",
+      "title": "Positional Initializer Recognition",
+      "description": "The extension shall recognize vtable function assignments using non-designated positional initializer syntax.",
+      "rationale": "Positional initialization without field designators is valid C and may be used in some codebases. Supporting it ensures the extension works regardless of initialization style.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-013",
+      "title": "Informative Non-Intrusive Error",
+      "description": "The extension shall present resolution errors in a manner that is informative but non-intrusive to the user's workflow.",
+      "rationale": "Resolution failures are expected during normal development. Intrusive error dialogs would disrupt the developer's workflow and train them to ignore extension feedback.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-014",
+      "title": "Trait Root API Discovery",
+      "description": "The extension shall parse JUNO_TRAIT_ROOT macro usage to identify the API struct type associated with a trait root.",
+      "rationale": "JUNO_TRAIT_ROOT is the canonical macro that associates a trait root struct with its API type. Using it as the source of truth ensures the extension is consistent with the trait system and does not rely on naming conventions that may vary.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-015",
+      "title": "Trait Derivation Chain Resolution",
+      "description": "The extension shall parse JUNO_TRAIT_DERIVE macro usage to resolve the derivation hierarchy and determine the applicable API type for derived traits.",
+      "rationale": "Derived traits inherit their root's API type through JUNO_TRAIT_DERIVE. The extension must walk this chain to correctly associate a derived type with its API, since most user code operates on derived types rather than roots.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-016",
+      "title": "Failure Handler Navigation",
+      "description": "The extension shall provide Go to Definition navigation that resolves failure handler function pointers to their concrete implementation functions.",
+      "rationale": "Failure handlers are injected via dependency injection in the same manner as vtable API functions. Developers need to trace failure handler assignments to understand diagnostic and error-handling behavior in their system.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-017",
+      "title": "AI Agent Accessibility",
+      "description": "The extension shall be accessible by various AI agent platforms.",
+      "rationale": "AI agents are increasingly used alongside human developers for code navigation, analysis, and generation tasks. The extension must be accessible to both human and AI developers to maximize its utility and ensure that AI-assisted workflows benefit from the same vtable resolution capabilities as manual workflows.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-001"
+      ],
+      "implements": [
+        "REQ-VSCODE-018",
+        "REQ-VSCODE-019",
+        "REQ-VSCODE-020"
+      ]
+    },
+    {
+      "id": "REQ-VSCODE-018",
+      "title": "AI Vtable Resolution Access",
+      "description": "The extension shall expose vtable API function resolution capabilities to AI developer tools.",
+      "rationale": "AI developer tools need to resolve vtable-dispatched API calls to concrete implementations in order to understand and reason about LibJuno codebases effectively.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-017"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-019",
+      "title": "AI Failure Handler Resolution Access",
+      "description": "The extension shall expose failure handler function resolution capabilities to AI developer tools.",
+      "rationale": "AI developer tools need to trace failure handler assignments to understand error-handling behavior when analyzing or generating LibJuno code.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-017"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-020",
+      "title": "Platform-Agnostic AI Interface",
+      "description": "The extension shall expose its capabilities to AI developer tools through a mechanism that is not specific to any single AI agent platform.",
+      "rationale": "The AI tooling ecosystem is diverse and evolving. A platform-agnostic interface ensures the extension remains useful regardless of which AI tools a developer chooses to use.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-VSCODE-017"
+      ],
+      "implements": []
+    }
+  ]
+}

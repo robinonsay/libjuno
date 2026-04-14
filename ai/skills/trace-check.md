@@ -19,30 +19,16 @@ untraced requirements, orphaned tags, missing annotations, and broken
 
 ## Instructions
 
-### Coach Role
+> **Software Lead**: See `ai/skills/software-lead.md` → Trace Check for planning and verification steps.
 
-1. Define the audit checklist:
-   - [ ] Every requirement in `requirements.json` has at least one `@{"req": ...}` in source
-   - [ ] Every requirement with `verification_method: "Test"` has `@{"verify": ...}` in tests
-   - [ ] Every requirement has at least one `@{"design": ...}` in SDD
-   - [ ] No `@{"req": ...}` tags reference nonexistent requirement IDs
-   - [ ] No `@{"verify": ...}` tags reference nonexistent requirement IDs
-   - [ ] No `@{"design": ...}` tags reference nonexistent requirement IDs
-   - [ ] All `uses` links resolve to valid requirement IDs
-   - [ ] All `implements` links resolve to valid requirement IDs
-   - [ ] No circular `uses`/`implements` dependencies
-   - [ ] Requirement IDs follow `REQ-<MODULE>-<NNN>` pattern
-   - [ ] No duplicate requirement IDs across modules
-2. Direct the Player to execute the audit.
+### Software Developer Role
 
-### Player Role
-
-3. Scan all `requirements/<module>/requirements.json` files.
-4. Scan all source files (`src/`, `include/`) for `@{"req": [...]}` annotations.
-5. Scan build system files (`CMakeLists.txt`, `cmake/`) for `@{"req": [...]}` annotations.
-6. Scan all test files (`tests/`) for `@{"verify": [...]}` annotations.
-7. Scan all design files (`docs/sdd/`) for `@{"design": [...]}` annotations.
-8. Cross-reference and produce:
+1. Scan all `requirements/<module>/requirements.json` files.
+2. Scan all source files (`src/`, `include/`) for `@{"req": [...]}` annotations.
+3. Scan build system files (`CMakeLists.txt`, `cmake/`) for `@{"req": [...]}` annotations.
+4. Scan all test files (`tests/`) for `@{"verify": [...]}` annotations.
+5. Scan all design files (`docs/sdd/`) for `@{"design": [...]}` annotations.
+6. Cross-reference and produce:
    - **Untraced requirements**: REQ IDs with no code annotation
    - **Undesigned requirements**: REQ IDs with no design annotation
    - **Untested requirements**: REQ IDs (with verification_method=Test) with no test annotation
@@ -51,16 +37,7 @@ untraced requirements, orphaned tags, missing annotations, and broken
    - **Orphaned design tags**: `@{"design": ...}` referencing nonexistent REQ IDs
    - **Broken links**: `uses`/`implements` pointing to nonexistent IDs
    - **Coverage statistics**: % traced, % designed, % tested
-9. Submit report to Coach.
-
-### Coach Verification
-
-10. Review the report for accuracy.
-11. Prioritize gaps by severity:
-   - **Error**: orphaned tags, broken links, duplicate IDs
-   - **Warning**: untraced requirements, undesigned requirements, untested requirements
-   - **Info**: coverage statistics
-12. **Present the report to the Program with recommended actions.**
+7. Submit report to Software Lead.
 
 ## Lessons Learned
 
