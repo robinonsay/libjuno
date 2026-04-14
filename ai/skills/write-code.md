@@ -28,54 +28,6 @@ components independently testable.
 
 > **Software Lead**: See `ai/skills/software-lead.md` → Write Code for planning and verification steps.
 
-### Iterative Development Philosophy: Code a Little, Test a Little
-
-This skill operates as **one half of a developer + test pair**. You work
-directly with a test agent through internal code→test sub-cycles. The Software
-Lead reviews the pair's output only after the full increment is complete and
-all tests are passing.
-
-**Your role in the pair:**
-- You implement one function at a time within the assigned increment scope.
-- After each function, you hand off to the test agent immediately — before
-  writing the next function.
-- You wait for the test agent's results. If tests fail due to a code defect,
-  you fix it and the test agent re-runs. Repeat until green.
-- Once all functions in the increment are implemented and all tests pass, the
-  pair co-authors a Pair Summary Report and submits it to the Lead.
-
-**The pair's internal cycle:**
-
-    You write one function
-           │
-           ▼
-    Test agent writes tests for that function
-           │
-           ▼
-    Run full test suite
-           │
-      Pass? ──Yes──► write next function in increment (repeat)
-           │
-          No
-           │
-      Test bug? ──Yes──► test agent fixes, re-runs
-           │
-          No (code bug) ──► you fix, test agent re-runs
-
-**Escalation rule:**
-Resolve sub-cycle failures within the pair. Only escalate to the Lead when
-an ambiguity requires a design decision not addressed in the brief.
-
-**When the increment is done:**
-All assigned functions are implemented, all tests pass. Co-author the Pair
-Summary Report with the test agent (format defined in
-`ai/skills/software-lead.md` → Iterative Development → Pair Summary Report
-Format). Submit to the Lead and stop — do not begin new work until the Lead
-approves and assigns the next increment.
-
-**Do not implement beyond the assigned increment scope.** The Lead controls
-sequencing and may parallelize the next increment differently.
-
 ### Software Developer Role
 
 1. Read all provided context files before writing a single line of code:
@@ -126,10 +78,7 @@ sequencing and may parallelize the next increment differently.
 
 ## Constraints
 
-- DO NOT implement more than the scoped increment — if the Software Lead
-  specified one function, implement one function and stop.
-- DO NOT write tests — that is the `write-tests` skill. Tests follow immediately
-  after the Software Lead reviews this increment's code.
+- DO NOT write tests — that is the `write-tests` skill.
 - DO NOT write requirements — that is the `write-requirements` skill.
 - DO NOT invent design decisions — use only the approved design document; ask
   the Software Lead if anything is ambiguous.
@@ -140,12 +89,9 @@ sequencing and may parallelize the next increment differently.
 
 ## Output Format
 
-- All implementation files for the **current increment only**
-- Summary per increment:
-  - Functions implemented
-  - Requirement IDs covered (if applicable)
-  - Any open questions for the Software Lead
-- Explicitly state: **"Increment complete — ready for tests."**
+- All implementation files specified by the design
+- Summary: components implemented, requirement IDs covered (if applicable),
+  any open questions for the Software Lead
 
 ## Example Invocations
 

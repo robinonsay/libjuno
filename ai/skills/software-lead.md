@@ -110,16 +110,26 @@ new features, bug fixes, and refactors alike.
 
 ### The Paired Parallel Model
 
-Work is organized into **developer + test pairs**. Each pair owns one or more
-independent increments and runs its internal code→test cycle autonomously.
-The Software Lead plans, assigns, and reviews on a **rolling basis** — the
-Lead does NOT mediate each individual code→test sub-cycle happening inside a pair.
+Work is organized into **`paired-developer` + `paired-tester` pairs**. Each
+pair owns one or more independent increments and runs its internal code→test
+cycle autonomously. The Software Lead plans, assigns, and reviews on a
+**rolling basis** — the Lead does NOT mediate each individual code→test
+sub-cycle happening inside a pair.
+
+- **`paired-developer`**: code agent for the paired model; implements one
+  function at a time and hands off to the paired tester after each.
+- **`paired-tester`**: test agent for the paired model; writes tests
+  immediately after each function, runs the full suite, and cycles with the
+  developer until the sub-cycle is green.
+
+When a task does not use the paired parallel model and code or tests need to
+be written in isolation, use `write-code` and `write-tests` instead.
 
     Lead: Decompose work → assign independent increments to pairs
           │
-          ├─ Pair A ─── code→test ─── code→test ──────────────────► report
-          ├─ Pair B ─── code→test ────────────────────────────────► report (early)
-          └─ Pair C ─── code→test ─── code→test ─── code→test ───► report
+          ├─ Pair A (paired-developer + paired-tester) ─ code⇒test ─ code⇒test ─► report
+          ├─ Pair B (paired-developer + paired-tester) ─ code⇒test ──────────► report (early)
+          └─ Pair C (paired-developer + paired-tester) ─ code⇒test ─ code⇒test ─ code⇒test ─► report
           │
           ▼  ROLLING REVIEW — review each pair as its report arrives
           Lead ◄─ Pair B report (early)  → immediate feedback or approval
@@ -165,6 +175,8 @@ Before spawning any pairs:
 6. For each pair, define a brief that includes:
    - Which increment(s) the pair owns (explicit requirement IDs and functions)
    - Any shared interfaces the pair must treat as read-only
+   - Instruction to use the `paired-developer` skill for the code agent and
+     the `paired-tester` skill for the test agent
    - The mandatory Pair Summary Report format (see below)
 
 **Do NOT parallelize** increments that share mutable files or have ordering
@@ -519,9 +531,11 @@ Do not present to the Project Manager until ALL of the following are true:
 ### Write Code — Software Lead Role
 
 > **This skill is governed by the "Code a Little, Test a Little" paired
-> parallel model. Each increment is assigned to a developer + test pair.
-> The Lead reviews pair reports on a rolling basis. The Project Manager
-> sees only the final, fully-reviewed result.**
+> parallel model. Each increment is assigned to a `paired-developer` +
+> `paired-tester` pair. The Lead reviews pair reports on a rolling basis.
+> The Project Manager sees only the final, fully-reviewed result.
+> Use `write-code` alone only when writing code in isolation without a
+> paired tester.**
 
 1. Confirm that both of the following artifacts exist and are approved before
    forming any pairs:
@@ -539,7 +553,8 @@ Do not present to the Project Manager until ALL of the following are true:
 3. Decompose the work into increments and form pairs (see Iterative Development
    → Decomposing Work into Pairs). Resolve all ambiguities with the Project
    Manager before pairs begin — do NOT let pairs guess.
-4. Delegate each increment to a **developer + test pair** with a brief that includes:
+4. Delegate each increment to a **`paired-developer` + `paired-tester` pair**
+   with a brief that includes:
    - Module / component name, target language, and exact increment scope
      (requirement ID(s) and function(s) to address — not the full module)
    - Paths to the requirements file and design document
@@ -621,9 +636,11 @@ Apply this checklist to each pair's report during rolling review:
 
 ### Write Tests — Software Lead Role
 
-> **In the paired parallel model, the test agent works directly with the
-> code developer inside the pair — not through the Lead. The Lead reviews
-> test output as part of each pair's summary report during rolling review.**
+> **In the paired parallel model, the `paired-tester` agent works directly
+> with the `paired-developer` inside the pair — not through the Lead. The
+> Lead reviews test output as part of each pair's summary report during
+> rolling review. Use `write-tests` alone only when writing tests in
+> isolation (coverage gaps, untested requirements) without an active pair.**
 
 1. When forming pairs (see Iterative Development → Decomposing Work into Pairs),
    include test coverage expectations in every pair's brief:
@@ -643,9 +660,10 @@ Apply this checklist to each pair's report during rolling review:
      ```bash
      cd build && cmake --build . && ctest --output-on-failure
      ```
-4. If the test portion has defects, return the report to the **pair** (not
-   just the test agent) with specific feedback. The pair fixes and re-reports.
-   Deliver this feedback immediately — do not wait for other pairs.
+4. If the test portion has defects, return the report to the **pair**
+   (`paired-developer` + `paired-tester`) with specific feedback. The pair
+   fixes and re-reports. Deliver this feedback immediately — do not wait
+   for other pairs.
 
 ### Write Tests — Software Lead Verification
 

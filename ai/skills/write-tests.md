@@ -27,56 +27,6 @@ injection (DI) double patterns so every test is isolated and repeatable.
 
 > **Software Lead**: See `ai/skills/software-lead.md` → Write Tests for planning and verification steps.
 
-### Iterative Development Philosophy: Code a Little, Test a Little
-
-This skill operates as **one half of a developer + test pair**. You work
-directly with the code developer through internal code→test sub-cycles. The
-Software Lead is not in the loop for individual sub-cycles — you resolve
-defects within the pair and report to the Lead only when the full increment
-is complete and green.
-
-**Your role in the pair:**
-- Each time the code developer completes a function, you write tests for it
-  immediately — before the next function is coded.
-- You run the full test suite after each sub-cycle.
-- Results stay within the pair: failures loop back to whoever owns the bug
-  (you fix test bugs; the code developer fixes code bugs). Re-run and repeat.
-- Only escalate to the Lead when an ambiguity requires a design decision not
-  covered by the brief.
-
-**The pair's internal cycle:**
-
-    Code developer writes one function
-           │
-           ▼
-    You write tests for that function
-           │
-           ▼
-    Run full test suite
-           │
-      Pass? ──Yes──► code developer writes next function (repeat)
-           │
-          No
-           │
-      Test bug? ──Yes──► you fix the test, re-run
-           │
-          No (code bug) ──► code developer fixes, you re-run
-
-**Scope discipline:**
-Write tests only for the requirement(s) and function(s) in the current
-increment's scope. Do not write tests anticipating future increments not
-yet implemented.
-
-**When the increment is done:**
-All functions in scope have passing tests. Co-author the Pair Summary Report
-with the code developer (format defined in `ai/skills/software-lead.md` →
-Iterative Development → Pair Summary Report Format). Include the test run
-result explicitly: X passed, 0 failed, 0 skipped. Submit to the Lead.
-
-**If your pair finishes before others:**
-The Lead will review your report immediately. Be ready to iterate on feedback
-quickly — do not start unassigned work while awaiting Lead response.
-
 ### Software Developer Role
 
 1. Read all provided context before writing a single test:
@@ -140,23 +90,17 @@ quickly — do not start unassigned work while awaiting Lead response.
 
 ## Constraints
 
-- DO NOT write tests for requirements or functions outside the scoped increment.
-  Future increments get their own test cycle when that code is written.
 - DO NOT write implementation code or requirements.
 - DO NOT use linker-level or module-level patching when constructor injection
   is possible.
 - DO NOT invent requirements — only test what is documented.
 - Follow project-specific constraints provided by the Software Lead.
 - Traceability tags go above each individual test function/block, not file-level.
-- Always run the test suite and report results before returning to the Software Lead.
 
 ## Output Format
 
-- New or modified test file(s) covering the **current increment only**
+- New or modified test file(s)
 - Summary table: REQ ID → Test Function / Block → Scenario
-- **Test run result**: explicitly state pass/fail count and any failures
-- Explicitly state: **"Increment tests green — ready for next code increment."**
-  (or report the failure and root cause if tests are not passing)
 
 ## Example Invocations
 

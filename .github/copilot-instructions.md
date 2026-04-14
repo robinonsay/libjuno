@@ -65,11 +65,16 @@ Invoke a skill by saying: **"Use skill: `<skill-name>`"**
 | `generate-docs`        | Produce SRS (IEEE 830), RTM with consistency validation    |
 | `generate-sdd`         | Produce SDD (IEEE 1016) from code + user rationale         |
 | `write-design`         | Propose software designs from requirements before code     |
-| `write-code`           | Implement code (C/Python/JS) from approved requirements and design |
+| `write-code`           | Implement code (C/Python/JS) standalone from approved requirements and design |
 | `trace-check`          | Audit traceability completeness and consistency            |
 | `code-review`          | Review code against all project standards                  |
 | `write-module`         | Scaffold a new module with all conventions                 |
 | `improve-docs`         | Closed-loop iterative evaluation & improvement of docs     |
+| `paired-developer`     | Code agent for paired parallel model — implement one function at a time, cycle with paired-tester |
+| `paired-tester`        | Test agent for paired parallel model — test each function immediately, cycle with paired-developer |
+| `paired-requirements`  | Requirements authoring agent for paired parallel model — draft one cluster at a time, cycle with systems-engineer |
+| `paired-design`        | Design authoring agent for paired parallel model — draft one section at a time, cycle with systems-engineer |
+| `systems-engineer`     | Upstream reviewer for paired parallel model — reviews requirement clusters and design sections immediately, cycles with paired-requirements or paired-design |
 
 ## Memory Files
 
