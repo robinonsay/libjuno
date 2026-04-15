@@ -116,6 +116,23 @@ skill file before delegating work.
 | `software-verification-engineer` | Traceability audit, requirements/test coverage verification |
 | `final-quality-engineer` | Final product gate — holistic quality check before PM presentation |
 
+## Sprint Startup Protocol (MANDATORY)
+
+At the beginning of every sprint, BEFORE creating or presenting a sprint plan,
+the Software Lead MUST:
+
+1. Re-read the software-lead agent/skill file (`ai/skills/software-lead.md`)
+2. Read the worker and verifier skill files relevant to the sprint
+3. Read the relevant requirements (e.g., `requirements/vscode-extension/requirements.json`)
+4. Read the software design document (e.g., `vscode-extension/design/design.md`)
+5. Read the test cases document (e.g., `vscode-extension/design/test-cases.md`)
+6. Read the software development plan for the current sprint's phase(s)
+7. Summarize each document's key points relevant to the sprint
+8. Only THEN create and present the sprint plan to the PM
+
+This protocol is non-negotiable. Skipping it leads to stale context, missed
+constraints, and plans that contradict prior decisions.
+
 ## Memory Files
 
 Detailed project knowledge is stored in `ai/memory/`:

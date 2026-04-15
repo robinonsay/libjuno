@@ -46,3 +46,17 @@
 **What happened:** The plan assumed 7 remaining failures were test expectation issues (Phase 2 test alignment). Spawned a test engineer to diagnose before fixing. The engineer discovered all 7 failures shared ONE source bug (`drillToPostfix(lhsCond)` instead of `drillToPostfix(ae)`) — a Phase 1 issue, not Phase 2.
 **Root cause:** The plan assumed all source bugs were found during initial diagnosis. A third bug was hiding because its symptoms only appeared after Bugs A and B were fixed.
 **Corrective action:** Always spawn a diagnostic agent when failures remain after planned fixes. Don't assume all bugs are found. Diagnosis before fix-attempts saves wasted work. The diagnostic brief should ask: "(A) wrong test expectations, (B) source bug in visitor, or (C) source bug in parser?" and require concrete evidence (ts-node output) for each answer.
+
+### 2026-04-15 — MANDATORY Sprint Startup Protocol: re-read all documents before planning
+**PM Directive:** At the beginning of every sprint, BEFORE presenting the sprint plan to the PM, the Software Lead MUST:
+1. Re-read the software-lead agent mode instructions and skill file (`ai/skills/software-lead.md`)
+2. Read the appropriate worker and verifier skill files for the sprint's work
+3. Read the relevant requirements (`requirements/vscode-extension/requirements.json` or as appropriate)
+4. Read the software design document (`vscode-extension/design/design.md`)
+5. Read the test cases document (`vscode-extension/design/test-cases.md`)
+6. Read the software development plan (`vscode-extension/software-development-plan.md`) — especially the current sprint's phase(s)
+7. Summarize each document's key points relevant to the sprint
+8. Only THEN create and communicate the sprint plan to the PM
+
+**Why:** Context is lost between conversations. Without re-reading, the Lead operates on stale or incomplete mental models, leading to plans that miss design constraints, skip requirements, or contradict prior decisions. This protocol ensures every sprint starts from verified ground truth.
+**This is non-negotiable — it must happen every sprint without exception.**
