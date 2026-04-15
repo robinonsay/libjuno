@@ -13,7 +13,8 @@
         "REQ-VSCODE-003",
         "REQ-VSCODE-004",
         "REQ-VSCODE-016",
-        "REQ-VSCODE-017"
+        "REQ-VSCODE-017",
+        "REQ-VSCODE-021"
       ]
     },
     {
@@ -240,6 +241,17 @@
       "verification_method": "Demonstration",
       "uses": [
         "REQ-VSCODE-017"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-021",
+      "title": "C and C++ File Type Support",
+      "description": "The extension shall discover and index source files with common C and C++ file extensions, including at minimum: .c, .h, .cpp, .hpp, .hh, and .cc.",
+      "rationale": "LibJuno-based projects may contain both C and C++ source files using various common file extensions. The extension must recognize all common extensions to avoid missing vtable definitions or implementations in mixed-language projects.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-001"
       ],
       "implements": []
     }

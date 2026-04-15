@@ -1,0 +1,64 @@
+{
+  "name": "libjuno",
+  "displayName": "LibJuno",
+  "description": "Vtable-aware Go to Definition for LibJuno embedded C projects",
+  "version": "0.1.0",
+  "publisher": "libjuno",
+  "license": "MIT",
+  "categories": ["Other"],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:c",
+    "onLanguage:cpp"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "libjuno.goToImplementation",
+        "title": "LibJuno: Go to Implementation"
+      },
+      {
+        "command": "libjuno.reindexWorkspace",
+        "title": "LibJuno: Re-index Workspace"
+      }
+    ],
+    "configuration": {
+      "title": "LibJuno",
+      "properties": {
+        "libjuno.excludedDirectories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["build", "deps", ".libjuno"],
+          "description": "Directories to exclude from workspace indexing."
+        },
+        "libjuno.mcpServerPort": {
+          "type": "number",
+          "default": 6543,
+          "description": "Port for the embedded MCP server."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "chevrotain": "^11.0.3"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.0.0",
+    "typescript": "^5.3.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  },
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "package": "vsce package"
+  }
+}

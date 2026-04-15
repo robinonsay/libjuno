@@ -36,6 +36,7 @@ The extension also exposes its resolution capabilities to AI agent platforms via
 | REQ-VSCODE-018 | AI Vtable Resolution Access |
 | REQ-VSCODE-019 | AI Failure Handler Resolution Access |
 | REQ-VSCODE-020 | Platform-Agnostic AI Interface |
+| REQ-VSCODE-021 | C and C++ File Type Support |
 
 ---
 
@@ -882,7 +883,7 @@ Responsible for scanning all C and H files in the workspace, invoking the Chevro
 - On `FileSystemWatcher` events: re-index the changed file, update cache.
 - Provide the populated `NavigationIndex` to the Vtable Resolver, Failure Handler Resolver, and MCP Server.
 
-**File scan scope:** All `*.c`, `*.h`, and `*.cpp` files in the workspace, excluding `build/`, `deps/`, and `.libjuno/` directories (configurable via extension settings).
+**File scan scope:** All `*.c`, `*.h`, `*.cpp`, `*.hpp`, `*.hh`, and `*.cc` files in the workspace, excluding `build/`, `deps/`, and `.libjuno/` directories (configurable via extension settings).
 
 **Indexing algorithm:**
 
@@ -1570,7 +1571,7 @@ On load, files whose hash in `fileHashes` does not match the current on-disk has
 
 ### 9.3 File Watcher Invalidation
 
-The extension registers a `vscode.FileSystemWatcher` for `**/*.{c,h,cpp}` (excluding the excluded directories). On `onDidChange`, `onDidCreate`, and `onDidDelete` events:
+The extension registers a `vscode.FileSystemWatcher` for `**/*.{c,h,cpp,hpp,hh,cc}` (excluding the excluded directories). On `onDidChange`, `onDidCreate`, and `onDidDelete` events:
 
 - `onDidChange` or `onDidCreate`: Re-parse the file, remove the old records for that file from the index, merge in the new records, update `fileHashes[filePath]`, schedule a debounced cache write (500 ms delay to batch rapid saves).
 - `onDidDelete`: Remove all index records sourced from that file, remove `fileHashes[filePath]`, schedule debounced cache write.
@@ -1613,6 +1614,7 @@ Cache writes are debounced (500 ms) to avoid excessive disk I/O during bulk file
 | REQ-VSCODE-018 | AI Vtable Resolution Access | MCP tool `resolve_vtable_call` (Section 7.2) |
 | REQ-VSCODE-019 | AI Failure Handler Resolution Access | MCP tool `resolve_failure_handler` (Section 7.3) |
 | REQ-VSCODE-020 | Platform-Agnostic AI Interface | MCP protocol selection rationale (Section 7.1); no platform-specific AI API used |
+| REQ-VSCODE-021 | C and C++ File Type Support | File scan scope (Section 3.2); FileSystemWatcher glob (Section 9.3); configurable extension settings |
 
 ---
 
