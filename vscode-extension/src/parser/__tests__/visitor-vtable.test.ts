@@ -403,5 +403,31 @@ static const JUNO_APP_API_T tEngineAppApi = {
             expect(result.vtableAssignments[1]).toMatchObject({ field: "OnProcess", functionName: "OnProcess" });
             expect(result.vtableAssignments[2]).toMatchObject({ field: "OnExit",    functionName: "OnExit"    });
         });
+
+        // -------------------------------------------------------------------
+        // TC-P8-BND-001: single-field positional initializer produces one vtable record
+        // -------------------------------------------------------------------
+
+        it("TC-P8-BND-001: single-field positional initializer produces one vtable record", () => {
+            // Boundary case: the field-zip algorithm must correctly produce exactly one
+            // (field, functionName) pair when the API struct has only one field.
+            const src = `
+typedef struct FOO_API_TAG {
+    JUNO_STATUS_T (*DoThing)(void *pvSelf);
+} FOO_API_T;
+
+static const FOO_API_T tFooApi = {
+    FooDoThing
+};
+`;
+            const result = parseFile("/test/foo.c", src);
+
+            expect(result.vtableAssignments).toHaveLength(1);
+            expect(result.vtableAssignments[0]).toMatchObject({
+                apiType: "FOO_API_T",
+                field: "DoThing",
+                functionName: "FooDoThing",
+            });
+        });
     });
 });

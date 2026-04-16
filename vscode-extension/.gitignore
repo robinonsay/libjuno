@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+out/
+dist/
+*.vsix
+
+# TypeScript
+*.tsbuildinfo
+
+# Test & coverage
+coverage/
+.stryker-tmp/
+reports/
+
+# OS files
+.DS_Store
+Thumbs.db

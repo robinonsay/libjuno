@@ -27,16 +27,66 @@ import {
     JunoModuleArg,
     JunoFailureHandler,
     JunoFailureUserData,
-    // Keywords
+    // Keywords — previously imported
     Static,
     Const,
     Struct,
-    // Punctuators — compound
+    // Keywords — additional
+    Inline,
+    Union,
+    Enum,
+    Typedef,
+    Extern,
+    Volatile,
+    Void,
+    Char,
+    Short,
+    Int,
+    Long,
+    Float,
+    Double,
+    Signed,
+    Unsigned,
+    SizeT,
+    Bool,
+    If,
+    Else,
+    For,
+    While,
+    Do,
+    Switch,
+    Case,
+    Default,
+    Break,
+    Continue,
+    Return,
+    Goto,
+    Sizeof,
+    // Punctuators — compound (previously imported)
     ArrowOp,
     EqEq,
     LShiftAssign,
     Ellipsis,
-    // Punctuators — simple
+    // Punctuators — compound (additional)
+    PlusPlus,
+    MinusMinus,
+    PlusAssign,
+    MinusAssign,
+    StarAssign,
+    SlashAssign,
+    PercentAssign,
+    AmpAssign,
+    PipeAssign,
+    CaretAssign,
+    RShiftAssign,
+    LShift,
+    RShift,
+    LtEq,
+    GtEq,
+    BangEq,
+    AmpAmp,
+    PipePipe,
+    // Punctuators — simple (previously imported)
     LParen,
     RParen,
     LBrace,
@@ -45,6 +95,24 @@ import {
     Comma,
     Dot,
     Assign,
+    // Punctuators — simple (additional)
+    LBracket,
+    RBracket,
+    Star,
+    Amp,
+    Plus,
+    Minus,
+    Slash,
+    Percent,
+    Bang,
+    Tilde,
+    Lt,
+    Gt,
+    Colon,
+    Question,
+    Caret,
+    Pipe,
+    Hash,
     // Literals
     IntegerLiteral,
     FloatingLiteral,
@@ -457,5 +525,727 @@ describe("Full snippet tokenization", () => {
         expect(tokens[3].tokenType).toBe(Assign);
         expect(tokens[4].tokenType).toBe(Identifier);           // MyHandler
         expect(tokens[5].tokenType).toBe(Semicolon);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// 7. Keyword Token Identification — one test per keyword
+//
+// Each test feeds exactly the keyword string to the lexer and verifies:
+//   (a) exactly one token is produced (pattern match is correct)
+//   (b) the token type reference is the expected exported token
+//   (c) the token type name string is correct (kills StringLiteral mutants on name)
+//   (d) the image is exactly the keyword string (kills Regex mutants on pattern)
+// ---------------------------------------------------------------------------
+
+describe("Keyword token identification", () => {
+    test("inline → Inline", () => {
+        const tokens = tokenize("inline");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Inline);
+        expect(tokens[0].tokenType.name).toBe("Inline");
+        expect(tokens[0].image).toBe("inline");
+    });
+
+    test("union → Union", () => {
+        const tokens = tokenize("union");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Union);
+        expect(tokens[0].tokenType.name).toBe("Union");
+        expect(tokens[0].image).toBe("union");
+    });
+
+    test("enum → Enum", () => {
+        const tokens = tokenize("enum");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Enum);
+        expect(tokens[0].tokenType.name).toBe("Enum");
+        expect(tokens[0].image).toBe("enum");
+    });
+
+    test("typedef → Typedef", () => {
+        const tokens = tokenize("typedef");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Typedef);
+        expect(tokens[0].tokenType.name).toBe("Typedef");
+        expect(tokens[0].image).toBe("typedef");
+    });
+
+    test("extern → Extern", () => {
+        const tokens = tokenize("extern");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Extern);
+        expect(tokens[0].tokenType.name).toBe("Extern");
+        expect(tokens[0].image).toBe("extern");
+    });
+
+    test("volatile → Volatile", () => {
+        const tokens = tokenize("volatile");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Volatile);
+        expect(tokens[0].tokenType.name).toBe("Volatile");
+        expect(tokens[0].image).toBe("volatile");
+    });
+
+    test("void → Void", () => {
+        const tokens = tokenize("void");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Void);
+        expect(tokens[0].tokenType.name).toBe("Void");
+        expect(tokens[0].image).toBe("void");
+    });
+
+    test("char → Char", () => {
+        const tokens = tokenize("char");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Char);
+        expect(tokens[0].tokenType.name).toBe("Char");
+        expect(tokens[0].image).toBe("char");
+    });
+
+    test("short → Short", () => {
+        const tokens = tokenize("short");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Short);
+        expect(tokens[0].tokenType.name).toBe("Short");
+        expect(tokens[0].image).toBe("short");
+    });
+
+    test("int → Int", () => {
+        const tokens = tokenize("int");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Int);
+        expect(tokens[0].tokenType.name).toBe("Int");
+        expect(tokens[0].image).toBe("int");
+    });
+
+    test("long → Long", () => {
+        const tokens = tokenize("long");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Long);
+        expect(tokens[0].tokenType.name).toBe("Long");
+        expect(tokens[0].image).toBe("long");
+    });
+
+    test("float → Float", () => {
+        const tokens = tokenize("float");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Float);
+        expect(tokens[0].tokenType.name).toBe("Float");
+        expect(tokens[0].image).toBe("float");
+    });
+
+    test("double → Double", () => {
+        const tokens = tokenize("double");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Double);
+        expect(tokens[0].tokenType.name).toBe("Double");
+        expect(tokens[0].image).toBe("double");
+    });
+
+    test("signed → Signed", () => {
+        const tokens = tokenize("signed");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Signed);
+        expect(tokens[0].tokenType.name).toBe("Signed");
+        expect(tokens[0].image).toBe("signed");
+    });
+
+    test("unsigned → Unsigned", () => {
+        const tokens = tokenize("unsigned");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Unsigned);
+        expect(tokens[0].tokenType.name).toBe("Unsigned");
+        expect(tokens[0].image).toBe("unsigned");
+    });
+
+    test("size_t → SizeT", () => {
+        const tokens = tokenize("size_t");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(SizeT);
+        expect(tokens[0].tokenType.name).toBe("SizeT");
+        expect(tokens[0].image).toBe("size_t");
+    });
+
+    test("_Bool → Bool", () => {
+        const tokens = tokenize("_Bool");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Bool);
+        expect(tokens[0].tokenType.name).toBe("Bool");
+        expect(tokens[0].image).toBe("_Bool");
+    });
+
+    test("if → If", () => {
+        const tokens = tokenize("if");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(If);
+        expect(tokens[0].tokenType.name).toBe("If");
+        expect(tokens[0].image).toBe("if");
+    });
+
+    test("else → Else", () => {
+        const tokens = tokenize("else");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Else);
+        expect(tokens[0].tokenType.name).toBe("Else");
+        expect(tokens[0].image).toBe("else");
+    });
+
+    test("for → For", () => {
+        const tokens = tokenize("for");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(For);
+        expect(tokens[0].tokenType.name).toBe("For");
+        expect(tokens[0].image).toBe("for");
+    });
+
+    test("while → While", () => {
+        const tokens = tokenize("while");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(While);
+        expect(tokens[0].tokenType.name).toBe("While");
+        expect(tokens[0].image).toBe("while");
+    });
+
+    test("do → Do", () => {
+        const tokens = tokenize("do");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Do);
+        expect(tokens[0].tokenType.name).toBe("Do");
+        expect(tokens[0].image).toBe("do");
+    });
+
+    test("switch → Switch", () => {
+        const tokens = tokenize("switch");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Switch);
+        expect(tokens[0].tokenType.name).toBe("Switch");
+        expect(tokens[0].image).toBe("switch");
+    });
+
+    test("case → Case", () => {
+        const tokens = tokenize("case");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Case);
+        expect(tokens[0].tokenType.name).toBe("Case");
+        expect(tokens[0].image).toBe("case");
+    });
+
+    test("default → Default", () => {
+        const tokens = tokenize("default");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Default);
+        expect(tokens[0].tokenType.name).toBe("Default");
+        expect(tokens[0].image).toBe("default");
+    });
+
+    test("break → Break", () => {
+        const tokens = tokenize("break");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Break);
+        expect(tokens[0].tokenType.name).toBe("Break");
+        expect(tokens[0].image).toBe("break");
+    });
+
+    test("continue → Continue", () => {
+        const tokens = tokenize("continue");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Continue);
+        expect(tokens[0].tokenType.name).toBe("Continue");
+        expect(tokens[0].image).toBe("continue");
+    });
+
+    test("return → Return", () => {
+        const tokens = tokenize("return");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Return);
+        expect(tokens[0].tokenType.name).toBe("Return");
+        expect(tokens[0].image).toBe("return");
+    });
+
+    test("goto → Goto", () => {
+        const tokens = tokenize("goto");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Goto);
+        expect(tokens[0].tokenType.name).toBe("Goto");
+        expect(tokens[0].image).toBe("goto");
+    });
+
+    test("sizeof → Sizeof", () => {
+        const tokens = tokenize("sizeof");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Sizeof);
+        expect(tokens[0].tokenType.name).toBe("Sizeof");
+        expect(tokens[0].image).toBe("sizeof");
+    });
+
+    // Also verify the three keywords tested in section 2 assert name and image too
+    test("static → Static (name and image verified)", () => {
+        const tokens = tokenize("static");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Static);
+        expect(tokens[0].tokenType.name).toBe("Static");
+        expect(tokens[0].image).toBe("static");
+    });
+
+    test("const → Const (name and image verified)", () => {
+        const tokens = tokenize("const");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Const);
+        expect(tokens[0].tokenType.name).toBe("Const");
+        expect(tokens[0].image).toBe("const");
+    });
+
+    test("struct → Struct (name and image verified)", () => {
+        const tokens = tokenize("struct");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Struct);
+        expect(tokens[0].tokenType.name).toBe("Struct");
+        expect(tokens[0].image).toBe("struct");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// 8. Keyword longer_alt — identifiers that start with a keyword are NOT split
+// ---------------------------------------------------------------------------
+
+describe("Keyword longer_alt — identifiers containing keywords are not split", () => {
+    test("inlined is Identifier (not Inline + d)", () => {
+        const tokens = tokenize("inlined");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("inlined");
+    });
+
+    test("unions is Identifier (not Union + s)", () => {
+        const tokens = tokenize("unions");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("unions");
+    });
+
+    test("enumValue is Identifier (not Enum + Value)", () => {
+        const tokens = tokenize("enumValue");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("enumValue");
+    });
+
+    test("voidPtr is Identifier (not Void + Ptr)", () => {
+        const tokens = tokenize("voidPtr");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("voidPtr");
+    });
+
+    test("returned is Identifier (not Return + ed)", () => {
+        const tokens = tokenize("returned");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("returned");
+    });
+
+    test("sizeof_x is Identifier (not Sizeof + _x)", () => {
+        const tokens = tokenize("sizeof_x");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("sizeof_x");
+    });
+
+    test("integer is Identifier (not Int + eger)", () => {
+        const tokens = tokenize("integer");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("integer");
+    });
+
+    test("charter is Identifier (not Char + ter)", () => {
+        const tokens = tokenize("charter");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Identifier);
+        expect(tokens[0].image).toBe("charter");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// 9. Compound operator token identification
+//
+// Each test verifies a compound operator that has no standalone test yet.
+// Asserts: length 1, correct tokenType reference, correct name, correct image.
+// ---------------------------------------------------------------------------
+
+describe("Compound operator token identification", () => {
+    test("++ → PlusPlus", () => {
+        const tokens = tokenize("++");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(PlusPlus);
+        expect(tokens[0].tokenType.name).toBe("PlusPlus");
+        expect(tokens[0].image).toBe("++");
+    });
+
+    test("-- → MinusMinus", () => {
+        const tokens = tokenize("--");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(MinusMinus);
+        expect(tokens[0].tokenType.name).toBe("MinusMinus");
+        expect(tokens[0].image).toBe("--");
+    });
+
+    test("+= → PlusAssign", () => {
+        const tokens = tokenize("+=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(PlusAssign);
+        expect(tokens[0].tokenType.name).toBe("PlusAssign");
+        expect(tokens[0].image).toBe("+=");
+    });
+
+    test("-= → MinusAssign", () => {
+        const tokens = tokenize("-=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(MinusAssign);
+        expect(tokens[0].tokenType.name).toBe("MinusAssign");
+        expect(tokens[0].image).toBe("-=");
+    });
+
+    test("*= → StarAssign", () => {
+        const tokens = tokenize("*=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(StarAssign);
+        expect(tokens[0].tokenType.name).toBe("StarAssign");
+        expect(tokens[0].image).toBe("*=");
+    });
+
+    test("/= → SlashAssign", () => {
+        const tokens = tokenize("/=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(SlashAssign);
+        expect(tokens[0].tokenType.name).toBe("SlashAssign");
+        expect(tokens[0].image).toBe("/=");
+    });
+
+    test("%= → PercentAssign", () => {
+        const tokens = tokenize("%=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(PercentAssign);
+        expect(tokens[0].tokenType.name).toBe("PercentAssign");
+        expect(tokens[0].image).toBe("%=");
+    });
+
+    test("&= → AmpAssign", () => {
+        const tokens = tokenize("&=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(AmpAssign);
+        expect(tokens[0].tokenType.name).toBe("AmpAssign");
+        expect(tokens[0].image).toBe("&=");
+    });
+
+    test("|= → PipeAssign", () => {
+        const tokens = tokenize("|=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(PipeAssign);
+        expect(tokens[0].tokenType.name).toBe("PipeAssign");
+        expect(tokens[0].image).toBe("|=");
+    });
+
+    test("^= → CaretAssign", () => {
+        const tokens = tokenize("^=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(CaretAssign);
+        expect(tokens[0].tokenType.name).toBe("CaretAssign");
+        expect(tokens[0].image).toBe("^=");
+    });
+
+    test(">>= → RShiftAssign", () => {
+        const tokens = tokenize(">>=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(RShiftAssign);
+        expect(tokens[0].tokenType.name).toBe("RShiftAssign");
+        expect(tokens[0].image).toBe(">>=");
+    });
+
+    test("<< → LShift", () => {
+        const tokens = tokenize("<<");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(LShift);
+        expect(tokens[0].tokenType.name).toBe("LShift");
+        expect(tokens[0].image).toBe("<<");
+    });
+
+    test(">> → RShift", () => {
+        const tokens = tokenize(">>");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(RShift);
+        expect(tokens[0].tokenType.name).toBe("RShift");
+        expect(tokens[0].image).toBe(">>");
+    });
+
+    test("<= → LtEq", () => {
+        const tokens = tokenize("<=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(LtEq);
+        expect(tokens[0].tokenType.name).toBe("LtEq");
+        expect(tokens[0].image).toBe("<=");
+    });
+
+    test(">= → GtEq", () => {
+        const tokens = tokenize(">=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(GtEq);
+        expect(tokens[0].tokenType.name).toBe("GtEq");
+        expect(tokens[0].image).toBe(">=");
+    });
+
+    test("!= → BangEq", () => {
+        const tokens = tokenize("!=");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(BangEq);
+        expect(tokens[0].tokenType.name).toBe("BangEq");
+        expect(tokens[0].image).toBe("!=");
+    });
+
+    test("&& → AmpAmp", () => {
+        const tokens = tokenize("&&");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(AmpAmp);
+        expect(tokens[0].tokenType.name).toBe("AmpAmp");
+        expect(tokens[0].image).toBe("&&");
+    });
+
+    test("|| → PipePipe", () => {
+        const tokens = tokenize("||");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(PipePipe);
+        expect(tokens[0].tokenType.name).toBe("PipePipe");
+        expect(tokens[0].image).toBe("||");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// 10. Simple punctuator token identification
+//
+// Each test feeds a single punctuator character and asserts the exact token.
+// ---------------------------------------------------------------------------
+
+describe("Simple punctuator token identification", () => {
+    test("[ → LBracket", () => {
+        const tokens = tokenize("[");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(LBracket);
+        expect(tokens[0].tokenType.name).toBe("LBracket");
+        expect(tokens[0].image).toBe("[");
+    });
+
+    test("] → RBracket", () => {
+        const tokens = tokenize("]");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(RBracket);
+        expect(tokens[0].tokenType.name).toBe("RBracket");
+        expect(tokens[0].image).toBe("]");
+    });
+
+    test("* → Star", () => {
+        const tokens = tokenize("*");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Star);
+        expect(tokens[0].tokenType.name).toBe("Star");
+        expect(tokens[0].image).toBe("*");
+    });
+
+    test("& → Amp", () => {
+        const tokens = tokenize("&");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Amp);
+        expect(tokens[0].tokenType.name).toBe("Amp");
+        expect(tokens[0].image).toBe("&");
+    });
+
+    test("+ → Plus", () => {
+        const tokens = tokenize("+");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Plus);
+        expect(tokens[0].tokenType.name).toBe("Plus");
+        expect(tokens[0].image).toBe("+");
+    });
+
+    test("- → Minus", () => {
+        const tokens = tokenize("-");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Minus);
+        expect(tokens[0].tokenType.name).toBe("Minus");
+        expect(tokens[0].image).toBe("-");
+    });
+
+    test("/ → Slash", () => {
+        const tokens = tokenize("/");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Slash);
+        expect(tokens[0].tokenType.name).toBe("Slash");
+        expect(tokens[0].image).toBe("/");
+    });
+
+    test("% → Percent", () => {
+        const tokens = tokenize("%");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Percent);
+        expect(tokens[0].tokenType.name).toBe("Percent");
+        expect(tokens[0].image).toBe("%");
+    });
+
+    test("! → Bang", () => {
+        const tokens = tokenize("!");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Bang);
+        expect(tokens[0].tokenType.name).toBe("Bang");
+        expect(tokens[0].image).toBe("!");
+    });
+
+    test("~ → Tilde", () => {
+        const tokens = tokenize("~");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Tilde);
+        expect(tokens[0].tokenType.name).toBe("Tilde");
+        expect(tokens[0].image).toBe("~");
+    });
+
+    test("< → Lt", () => {
+        const tokens = tokenize("<");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Lt);
+        expect(tokens[0].tokenType.name).toBe("Lt");
+        expect(tokens[0].image).toBe("<");
+    });
+
+    test("> → Gt", () => {
+        const tokens = tokenize(">");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Gt);
+        expect(tokens[0].tokenType.name).toBe("Gt");
+        expect(tokens[0].image).toBe(">");
+    });
+
+    test(": → Colon", () => {
+        const tokens = tokenize(":");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Colon);
+        expect(tokens[0].tokenType.name).toBe("Colon");
+        expect(tokens[0].image).toBe(":");
+    });
+
+    test("? → Question", () => {
+        const tokens = tokenize("?");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Question);
+        expect(tokens[0].tokenType.name).toBe("Question");
+        expect(tokens[0].image).toBe("?");
+    });
+
+    test("^ → Caret", () => {
+        const tokens = tokenize("^");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Caret);
+        expect(tokens[0].tokenType.name).toBe("Caret");
+        expect(tokens[0].image).toBe("^");
+    });
+
+    test("| → Pipe", () => {
+        const tokens = tokenize("|");
+        expect(tokens).toHaveLength(1);
+        expect(tokens[0].tokenType).toBe(Pipe);
+        expect(tokens[0].tokenType.name).toBe("Pipe");
+        expect(tokens[0].image).toBe("|");
+    });
+
+    test("# → Hash (bare, not a full directive)", () => {
+        // A bare # that is not at start-of-line (mid-expression) should be Hash, not HashDirective
+        const result = CLexer.tokenize("a #");
+        const tokens = result.tokens;
+        expect(tokens[1].tokenType).toBe(Hash);
+        expect(tokens[1].tokenType.name).toBe("Hash");
+        expect(tokens[1].image).toBe("#");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// 11. HashDirective conditional-logic boundary cases
+//
+// The HashDirective custom match function uses:
+//   if (startOffset !== 0 && text[startOffset - 1] !== "\n") { return null; }
+//   const match = _hashDirectiveRe.exec(text.slice(startOffset));
+//   if (!match || match.index !== 0) { return null; }
+//
+// These tests probe the boundary conditions to kill ConditionalExpression,
+// BlockStatement, EqualityOperator, ArithmeticOperator, and StringLiteral
+// mutants on this function.
+// ---------------------------------------------------------------------------
+
+describe("HashDirective conditional logic boundary cases", () => {
+    test("directive at startOffset 0 is recognized as HashDirective", () => {
+        // startOffset === 0 → condition (startOffset !== 0 && ...) is false → proceed
+        const result = CLexer.tokenize("#define FOO 1");
+        expect(result.errors).toHaveLength(0);
+        expect(result.tokens).toHaveLength(1);
+        expect(result.tokens[0].tokenType).toBe(HashDirective);
+        expect(result.tokens[0].image).toBe("#define FOO 1");
+    });
+
+    test("directive on second line (prev char is newline) is recognized as HashDirective", () => {
+        // startOffset > 0, text[startOffset - 1] === '\n' → second condition is false → proceed
+        const result = CLexer.tokenize("a\n#define X 1");
+        expect(result.errors).toHaveLength(0);
+        const types = result.tokens.map((t) => t.tokenType);
+        expect(types[0]).toBe(Identifier);           // 'a'
+        expect(types[1]).toBe(HashDirective);         // '#define X 1'
+        expect(result.tokens[1].image).toBe("#define X 1");
+    });
+
+    test("hash mid-line (prev char is not newline) produces bare Hash, not HashDirective", () => {
+        // startOffset > 0, text[startOffset - 1] === ' ' (not '\n') → return null from guard
+        // Remaining '#define ...' becomes Hash + Identifier + ...
+        const result = CLexer.tokenize("x #define Y 2");
+        expect(result.errors).toHaveLength(0);
+        const types = result.tokens.map((t) => t.tokenType);
+        expect(types[0]).toBe(Identifier);   // 'x'
+        expect(types[1]).toBe(Hash);          // '#' — NOT HashDirective
+    });
+
+    test("directive preceded immediately by non-newline produces Hash, not HashDirective", () => {
+        // No space between 'a' and '#' — prev char is 'a', not '\n'
+        const result = CLexer.tokenize("a#ifndef GUARD");
+        expect(result.errors).toHaveLength(0);
+        const types = result.tokens.map((t) => t.tokenType);
+        expect(types[0]).toBe(Identifier);  // 'a'
+        expect(types[1]).toBe(Hash);         // '#' bare
+    });
+
+    test("HashDirective recognizes #ifndef", () => {
+        const result = CLexer.tokenize("#ifndef GUARD_H");
+        expect(result.errors).toHaveLength(0);
+        expect(result.tokens).toHaveLength(1);
+        expect(result.tokens[0].tokenType).toBe(HashDirective);
+        expect(result.tokens[0].image).toContain("#ifndef");
+    });
+
+    test("HashDirective recognizes #endif", () => {
+        const result = CLexer.tokenize("#endif");
+        expect(result.errors).toHaveLength(0);
+        expect(result.tokens).toHaveLength(1);
+        expect(result.tokens[0].tokenType).toBe(HashDirective);
+        expect(result.tokens[0].image).toBe("#endif");
+    });
+
+    test("HashDirective recognizes #pragma once", () => {
+        const result = CLexer.tokenize("#pragma once");
+        expect(result.errors).toHaveLength(0);
+        expect(result.tokens).toHaveLength(1);
+        expect(result.tokens[0].tokenType).toBe(HashDirective);
+        expect(result.tokens[0].image).toContain("#pragma");
+    });
+
+    test("HashDirective recognizes #undef", () => {
+        const result = CLexer.tokenize("#undef MY_MACRO");
+        expect(result.errors).toHaveLength(0);
+        expect(result.tokens).toHaveLength(1);
+        expect(result.tokens[0].tokenType).toBe(HashDirective);
+        expect(result.tokens[0].image).toContain("#undef");
     });
 });
