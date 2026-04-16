@@ -4,6 +4,8 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/libjuno,type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/libjuno",
   "customizations": {
     "vscode": {
       "extensions": [
