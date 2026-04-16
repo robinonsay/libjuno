@@ -51,8 +51,7 @@
     }
   },
   "dependencies": {
-    "chevrotain": "^11.0.3",
-    "rx": "^4.1.0"
+    "chevrotain": "^12.0.0"
   },
   "devDependencies": {
     "@stryker-mutator/core": "^9.6.1",

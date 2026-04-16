@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
-ARG NODE_MAJOR=20
+ARG NODE_MAJOR=22
 
 # Install C/C++ toolchain, CMake, Python, Doxygen, and utilities
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
