@@ -18,6 +18,6 @@
     "break": 75
   },
   "timeoutMS": 60000,
-  "concurrency": 2,
+  "concurrency": 8,
   "ignoreStatic": true
 }
