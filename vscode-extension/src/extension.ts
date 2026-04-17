@@ -160,13 +160,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     // 10. Start embedded MCP server (Section 7)
     if (mcpServerPort > 0) {
         mcpServer = new McpServer(vtableResolver, failureHandlerResolver, indexer.index);
-        try {
-            mcpServer.start(mcpServerPort);
-            writeMcpDiscoveryFile(workspaceRoot, mcpServerPort);
-            console.log(`[LibJuno] MCP server started on port ${mcpServerPort}`);
-        } catch (err) {
+        mcpServer.start(mcpServerPort).then((actualPort) => {
+            writeMcpDiscoveryFile(workspaceRoot, actualPort);
+            console.log(`[LibJuno] MCP server started on port ${actualPort}`);
+        }).catch((err) => {
             console.log('[LibJuno] MCP server failed to start:', err);
-        }
+        });
     }
 }
 

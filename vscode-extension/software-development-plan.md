@@ -3,7 +3,7 @@
 **Document Version:** 3.0  
 **Date:** 2025-07-22  
 **Project:** LibJuno VSCode Extension — Vtable Go-to-Definition, Failure Handler Navigation, MCP Server  
-**Status:** Phases 1–3, 5–9 complete, Phase 4 removed, Phases 10–16 pending
+**Status:** Phases 1–3, 5–13 complete, Phase 4 removed, Phases 14–16 pending
 
 ---
 
@@ -93,7 +93,7 @@ All 15 source files compile cleanly. No known compilation errors.
 | `mcp/mcpServer.ts` | 174 | Not tested | HTTP MCP server with 3 endpoints; `start()` returns void — see M3 prerequisite in Phase 13 |
 | `extension.ts` | 208 | Not tested | Activation, wiring, commands, FileSystemWatcher |
 
-**Known source change required before Phase 13 (MCP tests):** `McpServer.start()` currently returns `void` and does not expose the bound port. Tests that use port 0 (OS-assigned) cannot retrieve the actual port. Before writing TC-MCP-\* tests, either (a) change `start()` to return `Promise<number>` (the bound port), or (b) add a `getPort()` accessor method. This is listed as WI-13.0 in Phase 13.
+**M3 Source change completed (Sprint 10):** `McpServer.start()` now returns `Promise<number>` (the bound port). WI-13.0 is complete.
 
 ### 2.2 Test Status
 
@@ -112,7 +112,9 @@ All 15 source files compile cleanly. No known compilation errors.
 | `indexer/__tests__/navigationIndex.test.ts` | 7 | All passing (TC-IDX-001–005, NEG-001, BND-001) — Sprint 3 |
 | `src/__tests__/integration.test.ts` | 6 | All passing (TC-INT-001–006) — Sprint 6 |
 | `cache/__tests__/cacheManager.test.ts` | 7 | All passing (TC-CACHE-001, 002, 006, 009, 010, NEG-001, BND-001) — Sprint 7 |
-| **Total** | **409** | **All passing** |
+| `indexer/__tests__/workspaceIndexer.test.ts` | 17 | All passing (TC-WI-001–009, TC-CACHE-003–005, TC-FILE-001, NEG-001, BND-001) — Sprints 8–9 |
+| `mcp/__tests__/mcpServer.test.ts` | 14 | All passing (TC-MCP-002–007, 009–016) — Sprint 10 |
+| **Total** | **440** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -141,7 +143,7 @@ Phase  9 ─── Visitor → Index → Resolver Integration [COMPLETE]        
 Phase 10 ─── CacheManager                           [COMPLETE]                Sprint 7  ✅
 Phase 11 ─── WorkspaceIndexer Core                  [PENDING]                 Sprint 9
 Phase 12 ─── File Discovery & Deferred Resolution   [PENDING]                 Sprint 9
-Phase 13 ─── MCP Server                             [PENDING]                 Sprint 10
+Phase 13 ─── MCP Server                             [COMPLETE]                Sprint 10 ✅
 Phase 14 ─── VSCode Mocks & Definition Provider     [PENDING]                 Sprint 11
 Phase 15 ─── Error UX, QuickPick & StatusBar        [PENDING]                 Sprint 12
 Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]                 Sprint 13
@@ -165,7 +167,7 @@ Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]             
 | 10 | CacheManager | CacheManager | 7 ✅ | TC-CACHE-001–010 |
 | 11 | WorkspaceIndexer Core | WorkspaceIndexer | 9 | TC-WI-001–006 |
 | 12 | File Discovery & Deferred Resolution | WorkspaceIndexer (file scan, deferred positional, multi-module FH) | 9 | TC-FILE-001, TC-WI-007–008 |
-| 13 | MCP Server | McpServer | 10 | TC-MCP-001–014 |
+| 13 | MCP Server | McpServer | 10 ✅ | TC-MCP-002–007, 009–016 |
 | 14 | VSCode Mocks & Definition Provider | JunoDefinitionProvider, vscode mock | 11 | TC-VSC-001–008 |
 | 15 | Error UX, QuickPick & StatusBar | StatusBarHelper, QuickPickHelper | 12 | TC-ERR-001–006, TC-QP-001–005 |
 | 16 | End-to-End Smoke & Final Quality | Full stack | 13 | Smoke tests |

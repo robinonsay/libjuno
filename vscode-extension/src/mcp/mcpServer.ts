@@ -1,5 +1,6 @@
 // @{"req": ["REQ-VSCODE-017", "REQ-VSCODE-018", "REQ-VSCODE-019", "REQ-VSCODE-020"]}
 import * as http from 'http';
+import { AddressInfo } from 'net';
 import { VtableResolver } from '../resolver/vtableResolver';
 import { FailureHandlerResolver } from '../resolver/failureHandlerResolver';
 import { NavigationIndex } from '../parser/types';
@@ -20,18 +21,28 @@ export class McpServer {
         private readonly index: NavigationIndex
     ) {}
 
-    /** Starts the HTTP server on the given port, bound to 127.0.0.1. */
-    start(port: number): void {
-        this.server = http.createServer((req, res) => {
-            this.handleRequest(req, res).catch(err => {
-                console.log('[LibJuno] McpServer unhandled error:', err);
-                if (!res.headersSent) {
-                    sendJson(res, 500, { error: 'Internal server error' });
-                }
+    /**
+     * Starts the HTTP server on the given port, bound to 127.0.0.1.
+     * @param port - Port to listen on. Pass 0 to let the OS assign a free port.
+     * @returns Promise that resolves with the actual bound port number.
+     */
+    start(port: number): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this.server = http.createServer((req, res) => {
+                this.handleRequest(req, res).catch(err => {
+                    console.log('[LibJuno] McpServer unhandled error:', err);
+                    if (!res.headersSent) {
+                        sendJson(res, 500, { error: 'Internal server error' });
+                    }
+                });
             });
-        });
 
-        this.server.listen(port, '127.0.0.1');
+            this.server.on('error', reject);
+            this.server.on('listening', () => {
+                resolve((this.server!.address() as AddressInfo).port);
+            });
+            this.server.listen(port, '127.0.0.1');
+        });
     }
 
     /** Stops the HTTP server. */
