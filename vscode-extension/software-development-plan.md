@@ -3,7 +3,7 @@
 **Document Version:** 3.0  
 **Date:** 2025-07-22  
 **Project:** LibJuno VSCode Extension — Vtable Go-to-Definition, Failure Handler Navigation, MCP Server  
-**Status:** Phases 1–3 and 5 complete, Phase 4 removed, Phases 6–16 pending
+**Status:** Phases 1–3, 5–8 complete, Phase 4 removed, Phases 9–16 pending
 
 ---
 
@@ -83,9 +83,9 @@ All 15 source files compile cleanly. No known compilation errors.
 | `parser/types.ts` | 413 | N/A | Type definitions only |
 | `indexer/navigationIndex.ts` | 101 | Tested | createEmptyIndex, clearIndex, removeFileRecords — 7 tests (Sprint 3) |
 | `indexer/workspaceIndexer.ts` | 399 | Not tested | Full/incremental indexing, file scanning, cache coordination |
-| `resolver/vtableResolver.ts` | 244 | Partially tested | 6 tests (TC-RES-001, TC-RES-006); chain-walk resolution with 3 regex strategies (`macroRe`, `arrayRe`, `generalRe`) + field-name fallback |
-| `resolver/failureHandlerResolver.ts` | 162 | Not tested | Failure handler resolution with assignment + type-walk |
-| `resolver/resolverUtils.ts` | 109 | Not tested | findEnclosingFunction, lookupVariableType, walkToRootType, parseIntermediates |
+| `resolver/vtableResolver.ts` | 244 | Tested | 18 tests passing (TC-RES-001–011, NEG-001) — Sprint 4; chain-walk resolution with 3 regex strategies (`macroRe`, `arrayRe`, `generalRe`) + field-name fallback |
+| `resolver/failureHandlerResolver.ts` | 162 | Tested | 13 tests passing (TC-FH-001–004, 005a/b, 006, 007, NEG-001–003, BND-001) — Sprint 5 |
+| `resolver/resolverUtils.ts` | 109 | Tested | 11 tests passing (TC-UTIL-001–006, NEG-001–002, BND-001, PRI-001) — Sprint 4 |
 | `cache/cacheManager.ts` | 250 | Not tested | loadCache, saveCache, indexToCache, cacheToIndex |
 | `providers/junoDefinitionProvider.ts` | 90 | Not tested | VSCode DefinitionProvider bridge |
 | `providers/quickPickHelper.ts` | 34 | Not tested | QuickPick UI display |
@@ -105,10 +105,12 @@ All 15 source files compile cleanly. No known compilation errors.
 | `parser/__tests__/visitor-vtable.test.ts` | 5 | All passing (includes TC-P6-001, TC-P6-002) |
 | `parser/__tests__/visitor-functions.test.ts` | 12 | All passing (TC-P11 function defs, TC-P10 failure handlers) |
 | `parser/__tests__/visitor-localtypeinfo.test.ts` | 8 | All passing (TC-LTI-001–005, NEG-001, NEG-002, BND-001) — Sprint 3 |
-| `resolver/__tests__/vtableResolver.test.ts` | 6 | All passing (TC-RES-001a/b, TC-RES-006a–d) |
+| `resolver/__tests__/resolverUtils.test.ts` | 11 | All passing (TC-UTIL-001–006, NEG-001–002, BND-001, PRI-001) — Sprint 4 |
+| `resolver/__tests__/vtableResolver.test.ts` | 18 | All passing (TC-RES-001a/b, TC-RES-002–005, TC-RES-006a–d, TC-RES-007–011, TC-RES-NEG-001) — Sprint 4 |
+| `resolver/__tests__/failureHandlerResolver.test.ts` | 13 | All passing (TC-FH-001–004, 005a/b, 006, 007, NEG-001–003, BND-001) — Sprint 5 |
 | `indexer/__tests__/fileExtensions.test.ts` | 85 | All passing |
 | `indexer/__tests__/navigationIndex.test.ts` | 7 | All passing (TC-IDX-001–005, NEG-001, BND-001) — Sprint 3 |
-| **Total** | **360** | **All passing** |
+| **Total** | **396** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -130,9 +132,9 @@ Phase  2 ─── Visitor: Vtable Init Patterns          [COMPLETE]            
 Phase  3 ─── Visitor: Local Type Info Extraction    [COMPLETE]                Sprint 3  ✅
 Phase  4 ─── Visitor: Call Sites & Completeness     [REMOVED — PM Decision]
 Phase  5 ─── Navigation Index CRUD                  [COMPLETE]                Sprint 3  ✅
-Phase  6 ─── Resolver Utilities                     [PENDING]                 Sprint 4
-Phase  7 ─── VtableResolver                         [PENDING]                 Sprint 5
-Phase  8 ─── FailureHandlerResolver                 [PENDING]                 Sprint 6
+Phase  6 ─── Resolver Utilities                     [COMPLETE]                Sprint 4  ✅
+Phase  7 ─── VtableResolver                         [COMPLETE]                Sprint 4  ✅
+Phase  8 ─── FailureHandlerResolver                 [COMPLETE]                Sprint 5  ✅
 Phase  9 ─── Visitor → Index → Resolver Integration [PENDING]                 Sprint 7
 Phase 10 ─── CacheManager                           [PENDING]                 Sprint 8
 Phase 11 ─── WorkspaceIndexer Core                  [PENDING]                 Sprint 9
@@ -154,9 +156,9 @@ Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]             
 | 3 | Visitor: Local Type Info | Visitor (localVariables, functionParameters) | 3 ✅ | TC-LTI-001–005 |
 | 4 | Visitor: Call Sites & Completeness | REMOVED — PM Decision | — | — |
 | 5 | Navigation Index CRUD | NavigationIndex | 3 ✅ | TC-IDX-001–005 |
-| 6 | Resolver Utilities | resolverUtils | 4 | TC-UTIL-001–006 |
-| 7 | VtableResolver | VtableResolver | 5 | TC-RES-001–011 |
-| 8 | FailureHandlerResolver | FailureHandlerResolver | 6 | TC-FH-001–006 |
+| 6 | Resolver Utilities | resolverUtils | 4 ✅ | TC-UTIL-001–006 |
+| 7 | VtableResolver | VtableResolver | 4 ✅ | TC-RES-001–011 |
+| 8 | FailureHandlerResolver | FailureHandlerResolver | 5 ✅ | TC-FH-001–006 |
 | 9 | Visitor → Index → Resolver Integration | Full data pipeline (no stubs) | 7 | TC-INT-001–003 |
 | 10 | CacheManager | CacheManager | 8 | TC-CACHE-001–010 |
 | 11 | WorkspaceIndexer Core | WorkspaceIndexer | 9 | TC-WI-001–006 |
@@ -500,10 +502,10 @@ After TC-FH-001: confirm which NavigationIndex structure `FailureHandlerResolver
 
 #### 8.5 Acceptance Criteria
 
-- [ ] TC-FH-001 through TC-FH-006 (including TC-FH-005a and TC-FH-005b) implemented and passing
-- [ ] Column 0 cursor behavior on LHS documented in test comments and lessons-learned
-- [ ] Fallthrough behavior documented in test comments (TC-FH-006)
-- [ ] No regressions in Phases 1–7
+- [x] TC-FH-001 through TC-FH-006 (including TC-FH-005a and TC-FH-005b) implemented and passing
+- [x] Column 0 cursor behavior on LHS documented in test comments and lessons-learned
+- [x] Fallthrough behavior documented in test comments (TC-FH-006)
+- [x] No regressions in Phases 1–7
 
 #### 8.6 Risk Register
 
@@ -511,6 +513,16 @@ After TC-FH-001: confirm which NavigationIndex structure `FailureHandlerResolver
 |------|-----------|--------|------------|
 | Column guard absent causes false positives for users | Medium | Low | TC-FH-005a documents current behavior; escalate to PM if guard is needed |
 | Fallthrough silently swallows real indexing errors | Low | Medium | TC-FH-006 verifies expected fallthrough output is non-empty for known root types |
+
+#### 8.7 Outcomes (Sprint 5)
+
+- 13 tests in `failureHandlerResolver.test.ts`, all passing
+- All test cases from SDP §8.1 (TC-FH-001 through TC-FH-006, TC-FH-NEG-001) implemented
+- Additional coverage tests added per verifier feedback: TC-FH-007 (PRIMARY_VAR_RE branch), TC-FH-NEG-002 (Step 0 early exit), TC-FH-NEG-003 (typeInfo undefined), TC-FH-BND-001 (multi-hop derivation chain in Step 2)
+- Column guard behavior documented: no column guard exists — any cursor on a handler line triggers resolution (TC-FH-005a/b)
+- Fallthrough behavior documented: assignment regex match with unindexed RHS → returns all handlers for root type (TC-FH-006)
+- Comment false positive documented: presence regex matches inside comments, but both resolution steps fail gracefully (TC-FH-NEG-001)
+- No source bugs found — all code paths behave as expected
 
 ---
 
