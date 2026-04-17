@@ -3,7 +3,7 @@
 **Document Version:** 3.0  
 **Date:** 2025-07-22  
 **Project:** LibJuno VSCode Extension — Vtable Go-to-Definition, Failure Handler Navigation, MCP Server  
-**Status:** Phases 1–3, 5–13 complete, Phase 4 removed, Phases 14–16 pending
+**Status:** Phases 1–3, 5–14 complete, Phase 4 removed, Phases 15–16 pending
 
 ---
 
@@ -87,11 +87,11 @@ All 15 source files compile cleanly. No known compilation errors.
 | `resolver/failureHandlerResolver.ts` | 162 | Tested | 13 tests passing (TC-FH-001–004, 005a/b, 006, 007, NEG-001–003, BND-001) — Sprint 5 |
 | `resolver/resolverUtils.ts` | 109 | Tested | 11 tests passing (TC-UTIL-001–006, NEG-001–002, BND-001, PRI-001) — Sprint 4 |
 | `cache/cacheManager.ts` | 250 | Tested | 7 tests; 1 source bug fixed (null guards in cacheToIndex) — Sprint 7 |
-| `providers/junoDefinitionProvider.ts` | 90 | Not tested | VSCode DefinitionProvider bridge |
+| `providers/junoDefinitionProvider.ts` | 90 | Tested | 10 tests passing (TC-VSC-001–008, NEG-001, BND-001) — Sprint 11 |
 | `providers/quickPickHelper.ts` | 34 | Not tested | QuickPick UI display |
 | `providers/statusBarHelper.ts` | 54 | Not tested | Status bar messages |
-| `mcp/mcpServer.ts` | 174 | Not tested | HTTP MCP server with 3 endpoints; `start()` returns void — see M3 prerequisite in Phase 13 |
-| `extension.ts` | 208 | Not tested | Activation, wiring, commands, FileSystemWatcher |
+| `mcp/mcpServer.ts` | 174 | Tested | 14 tests passing (TC-MCP-002–007, 009–016) — Sprint 10; `start()` returns `Promise<number>` |
+| `extension.ts` | 208 | Tested | Activation tested via mock — Sprint 11 |
 
 **M3 Source change completed (Sprint 10):** `McpServer.start()` now returns `Promise<number>` (the bound port). WI-13.0 is complete.
 
@@ -114,7 +114,8 @@ All 15 source files compile cleanly. No known compilation errors.
 | `cache/__tests__/cacheManager.test.ts` | 7 | All passing (TC-CACHE-001, 002, 006, 009, 010, NEG-001, BND-001) — Sprint 7 |
 | `indexer/__tests__/workspaceIndexer.test.ts` | 17 | All passing (TC-WI-001–009, TC-CACHE-003–005, TC-FILE-001, NEG-001, BND-001) — Sprints 8–9 |
 | `mcp/__tests__/mcpServer.test.ts` | 14 | All passing (TC-MCP-002–007, 009–016) — Sprint 10 |
-| **Total** | **440** | **All passing** |
+| `providers/__tests__/junoDefinitionProvider.test.ts` | 10 | All passing (TC-VSC-001–008, NEG-001, BND-001) — Sprint 11 |
+| **Total** | **450** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -144,7 +145,7 @@ Phase 10 ─── CacheManager                           [COMPLETE]            
 Phase 11 ─── WorkspaceIndexer Core                  [PENDING]                 Sprint 9
 Phase 12 ─── File Discovery & Deferred Resolution   [PENDING]                 Sprint 9
 Phase 13 ─── MCP Server                             [COMPLETE]                Sprint 10 ✅
-Phase 14 ─── VSCode Mocks & Definition Provider     [PENDING]                 Sprint 11
+Phase 14 ─── VSCode Mocks & Definition Provider     [COMPLETE]                Sprint 11 ✅
 Phase 15 ─── Error UX, QuickPick & StatusBar        [PENDING]                 Sprint 12
 Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]                 Sprint 13
 ```
@@ -168,7 +169,7 @@ Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]             
 | 11 | WorkspaceIndexer Core | WorkspaceIndexer | 9 | TC-WI-001–006 |
 | 12 | File Discovery & Deferred Resolution | WorkspaceIndexer (file scan, deferred positional, multi-module FH) | 9 | TC-FILE-001, TC-WI-007–008 |
 | 13 | MCP Server | McpServer | 10 ✅ | TC-MCP-002–007, 009–016 |
-| 14 | VSCode Mocks & Definition Provider | JunoDefinitionProvider, vscode mock | 11 | TC-VSC-001–008 |
+| 14 | VSCode Mocks & Definition Provider | JunoDefinitionProvider, vscode mock | 11 ✅ | TC-VSC-001–008, NEG-001, BND-001 |
 | 15 | Error UX, QuickPick & StatusBar | StatusBarHelper, QuickPickHelper | 12 | TC-ERR-001–006, TC-QP-001–005 |
 | 16 | End-to-End Smoke & Final Quality | Full stack | 13 | Smoke tests |
 
@@ -843,11 +844,11 @@ After WI-14.0 and TC-VSC-001: confirm `activate()` runs without throwing. Iterat
 
 #### 14.5 Acceptance Criteria
 
-- [ ] `__mocks__/vscode.ts` implemented and loadable by Jest
-- [ ] TC-VSC-001 through TC-VSC-008 implemented and passing
-- [ ] TC-VSC-NEG-001, TC-VSC-BND-001 implemented and passing (negative/boundary — v2.1 Amendment C1)
-- [ ] Provider string-coupling test passing (TC-VSC-008)
-- [ ] No regressions in Phases 1–13
+- [x] `__mocks__/vscode.ts` implemented and loadable by Jest
+- [x] TC-VSC-001 through TC-VSC-008 implemented and passing
+- [x] TC-VSC-NEG-001, TC-VSC-BND-001 implemented and passing (negative/boundary — v2.1 Amendment C1)
+- [x] Provider string-coupling test passing (TC-VSC-008)
+- [x] No regressions in Phases 1–13
 
 #### 14.6 Risk Register
 
@@ -855,6 +856,14 @@ After WI-14.0 and TC-VSC-001: confirm `activate()` runs without throwing. Iterat
 |------|-----------|--------|------------|
 | Mock misses a VSCode API used by `activate()` | High | High | Iterate on mock until TC-VSC-001 passes |
 | Resolver injection point not accessible for test spying | Medium | Medium | May require refactoring provider constructor for DI |
+
+#### 14.7 Outcomes (Sprint 11)
+
+- 10 tests in `junoDefinitionProvider.test.ts`, all passing
+- `__mocks__/vscode.ts` mock covers all 17 VSCode API surfaces used by the extension
+- `McpServer` mocked via `jest.mock()` to prevent port binding during activation tests
+- No source bugs found — JunoDefinitionProvider, extension.ts, and all providers behave as designed
+- Resolver DI confirmed accessible — `JunoDefinitionProvider` constructor accepts resolvers directly; `jest.spyOn` on resolve methods works cleanly
 
 ---
 

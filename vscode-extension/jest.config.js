@@ -9,6 +9,7 @@ module.exports = {
   // the custom transformer below can convert it to CJS without having to
   // resolve @chevrotain/* sub-packages that Jest cannot handle in CJS mode.
   moduleNameMapper: {
+    '^vscode$': '<rootDir>/src/__mocks__/vscode.ts',
     '^chevrotain$': '<rootDir>/node_modules/chevrotain/lib/chevrotain.mjs',
   },
   // Do not ignore the chevrotain package — let the custom transformer handle it.
