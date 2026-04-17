@@ -238,6 +238,7 @@ class CSTWalker {
             vtableAssignments: [],
             failureHandlerAssigns: [],
             apiCallSites: [],
+            pendingPositionalVtables: [],
             localTypeInfo: {
                 localVariables: new Map<string, Map<string, TypeInfo>>(),
                 functionParameters: new Map<string, TypeInfo[]>(),
@@ -626,7 +627,24 @@ class CSTWalker {
         // Look up the field order from already-parsed API struct definitions
         const apiRec = this.result.apiStructDefinitions.find((r) => r.apiType === apiType);
         if (!apiRec) {
-            // Can't resolve positional — defer (indexer handles cross-file case)
+            // Can't resolve positional — defer for cross-file resolution by the indexer
+            const names: string[] = [];
+            const lines: number[] = [];
+            for (const init of initializers) {
+                const fnName = this.extractInitializerIdent(init);
+                if (fnName) {
+                    names.push(fnName);
+                    lines.push(init.location?.startLine ?? 0);
+                }
+            }
+            if (names.length > 0) {
+                this.result.pendingPositionalVtables.push({
+                    apiType,
+                    initializers: names,
+                    file: this.filePath,
+                    lines,
+                });
+            }
             return;
         }
         const fields = apiRec.fields;

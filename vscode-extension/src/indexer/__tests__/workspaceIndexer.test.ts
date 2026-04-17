@@ -20,7 +20,10 @@
  * TC-CACHE-005  loadFromCache() retains stale entries for deleted file — M4 (REQ-VSCODE-001)
  * TC-FILE-001   fullIndex() discovers all 6 C/C++ file extensions (REQ-VSCODE-021)
  * TC-WI-007     Positional vtable initializer resolved, same-file (REQ-VSCODE-012)
+ * TC-WI-007b    Cross-file positional vtable resolution (REQ-VSCODE-012)
  * TC-WI-008     Failure handler root-type resolution via localTypeInfo (REQ-VSCODE-016)
+ * TC-WI-008b    Multi-module FH disambiguation in same file (REQ-VSCODE-016)
+ * TC-WI-009     Hash consistency for BOM files (REQ-VSCODE-001)
  */
 
 import * as fs from 'fs';
@@ -626,21 +629,9 @@ describe('WorkspaceIndexer — core behaviour', () => {
         // =====================================================================
         // TC-WI-007: Positional initializer resolved when API struct is in same file
         //
-        // NOTE on cross-file deferred mechanism:
-        //   The DeferredPositional interface and resolveDeferred() exist in
-        //   workspaceIndexer.ts to support cross-file positional resolution, BUT
-        //   the producer side is not yet implemented: when the visitor's
-        //   extractPositionalVtable() cannot find the API struct in the current
-        //   file it silently returns without pushing any DeferredPositional entry.
-        //   As a result, cross-file positional initializers are dropped (no vtable
-        //   assignments emitted). This test verifies the same-file path which IS
-        //   fully implemented.
-        //
-        //   Additionally, resolveDeferred() has a consumer-side defect: its
-        //   duplicate-check compares e.line against the assignment line (d.lines[i]),
-        //   but loc.line stores the definition line (from resolveDefinitionLine()).
-        //   When the producer bug is fixed, the mismatched comparison will cause
-        //   duplicate ConcreteLocation entries on repeated calls.
+        // This test verifies the same-file positional resolution path.
+        // Cross-file positional resolution (Bug 1) and resolveDeferred()
+        // duplicate-check (Bug 3) were fixed in Sprint 9 — see TC-WI-007b.
         // =====================================================================
 
         // @{"verify": ["REQ-VSCODE-012"]}
@@ -697,13 +688,8 @@ describe('WorkspaceIndexer — core behaviour', () => {
         // =====================================================================
         // TC-WI-008: Failure handler root-type resolution via localTypeInfo
         //
-        // NOTE on multi-module limitation:
-        //   resolveFailureHandlerRootType() walks ALL localTypeInfo.functionParameters
-        //   in the file and returns the FIRST matching known root type it finds.
-        //   When two modules share the same file, both failure handlers are attributed
-        //   to whichever root type appears first in the Map iteration order. This is
-        //   a known single-file disambiguation bug. This test verifies the working
-        //   (single-module) case where there is no ambiguity.
+        // This test verifies the single-module case (no ambiguity).
+        // Multi-module disambiguation (Bug 2) was fixed in Sprint 9 — see TC-WI-008b.
         // =====================================================================
 
         // @{"verify": ["REQ-VSCODE-016"]}
@@ -752,6 +738,189 @@ describe('WorkspaceIndexer — core behaviour', () => {
             expect(handlers![0].file).toContain('wi008.c');
         });
 
+        // =====================================================================
+        // TC-WI-007b: Cross-file positional vtable initializer resolution
+        //   API struct in crosspos.h; positional init in crosspos.c.
+        //   Verifies Bug 1 fix (deferred positional producer) and
+        //   Bug 3 fix (resolveDeferred() duplicate-check uses loc.line).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-012"]}
+        it('TC-WI-007b: fullIndex() resolves cross-file positional vtable initializer via deferred mechanism', async () => {
+            const dir = path.join(fileDir, 'tc-wi-007b');
+            fs.mkdirSync(dir);
+
+            // Header: API struct definition only (no function implementations)
+            const header = [
+                'typedef struct XPOS_API_TAG XPOS_API_T;',
+                'typedef struct XPOS_ROOT_TAG XPOS_ROOT_T;',
+                '',
+                'struct XPOS_ROOT_TAG JUNO_MODULE_ROOT(XPOS_API_T, );',
+                '',
+                'struct XPOS_API_TAG',
+                '{',
+                '    void (*Alpha)(XPOS_ROOT_T *ptSelf);',
+                '    void (*Beta)(XPOS_ROOT_T *ptSelf);',
+                '};',
+                '',
+            ].join('\n');
+
+            // Source: function implementations + positional initializer (API struct NOT here)
+            const source = [
+                'static void AlphaImpl(XPOS_ROOT_T *ptSelf) { (void)ptSelf; }',
+                'static void BetaImpl(XPOS_ROOT_T *ptSelf) { (void)ptSelf; }',
+                '',
+                'static const XPOS_API_T tXposApi = { AlphaImpl, BetaImpl };',
+                '',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(dir, 'crosspos.h'), header);
+            fs.writeFileSync(path.join(dir, 'crosspos.c'), source);
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // apiStructFields must have the field order from the header
+            const fields = indexer.index.apiStructFields.get('XPOS_API_T');
+            expect(fields).toBeDefined();
+            expect(fields).toEqual(['Alpha', 'Beta']);
+
+            // vtableAssignments must resolve the cross-file positional initializer
+            const fieldMap = indexer.index.vtableAssignments.get('XPOS_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const alphaLocs = fieldMap!.get('Alpha');
+            expect(alphaLocs).toBeDefined();
+            expect(alphaLocs!.length).toBe(1); // exactly 1 — no duplicates (Bug 3 fix)
+            expect(alphaLocs![0].functionName).toBe('AlphaImpl');
+
+            const betaLocs = fieldMap!.get('Beta');
+            expect(betaLocs).toBeDefined();
+            expect(betaLocs!.length).toBe(1); // exactly 1 — no duplicates (Bug 3 fix)
+            expect(betaLocs![0].functionName).toBe('BetaImpl');
+        });
+
+        // =====================================================================
+        // TC-WI-008b: Multi-module FH disambiguation in same file
+        //   Two modules (MM_A, MM_B) defined in one file, each with its own
+        //   Init function and FH assignment.
+        //   Verifies Bug 2 fix (scoped containingFn search in
+        //   resolveFailureHandlerRootType()).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-016"]}
+        it('TC-WI-008b: resolveFailureHandlerRootType() assigns each FH to its own root type when two modules share a file', async () => {
+            const dir = path.join(fileDir, 'tc-wi-008b');
+            fs.mkdirSync(dir);
+
+            // Two modules in one file — each has its own Init function and FH assignment
+            const src = [
+                'typedef struct MM_A_API_TAG MM_A_API_T;',
+                'typedef struct MM_A_ROOT_TAG MM_A_ROOT_T;',
+                'typedef struct MM_B_API_TAG MM_B_API_T;',
+                'typedef struct MM_B_ROOT_TAG MM_B_ROOT_T;',
+                '',
+                'struct MM_A_ROOT_TAG JUNO_MODULE_ROOT(MM_A_API_T, );',
+                'struct MM_B_ROOT_TAG JUNO_MODULE_ROOT(MM_B_API_T, );',
+                '',
+                'struct MM_A_API_TAG { void (*WorkA)(MM_A_ROOT_T *ptSelf); };',
+                'struct MM_B_API_TAG { void (*WorkB)(MM_B_ROOT_T *ptSelf); };',
+                '',
+                'static void FH_A(void) {}',
+                'static void FH_B(void) {}',
+                '',
+                'void InitModuleA(MM_A_ROOT_T *ptSelf)',
+                '{',
+                '    ptSelf->_pfcnFailureHandler = FH_A;',
+                '}',
+                '',
+                'void InitModuleB(MM_B_ROOT_T *ptSelf)',
+                '{',
+                '    ptSelf->_pfcnFailureHandler = FH_B;',
+                '}',
+                '',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(dir, 'multimod.c'), src);
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // Both module roots must be present
+            expect(indexer.index.moduleRoots.get('MM_A_ROOT_T')).toBe('MM_A_API_T');
+            expect(indexer.index.moduleRoots.get('MM_B_ROOT_T')).toBe('MM_B_API_T');
+
+            // MM_A_ROOT_T must only have FH_A
+            const handlersA = indexer.index.failureHandlerAssignments.get('MM_A_ROOT_T');
+            expect(handlersA).toBeDefined();
+            expect(handlersA!.some((h) => h.functionName === 'FH_A')).toBe(true);
+            expect(handlersA!.some((h) => h.functionName === 'FH_B')).toBe(false);
+
+            // MM_B_ROOT_T must only have FH_B
+            const handlersB = indexer.index.failureHandlerAssignments.get('MM_B_ROOT_T');
+            expect(handlersB).toBeDefined();
+            expect(handlersB!.some((h) => h.functionName === 'FH_B')).toBe(true);
+            expect(handlersB!.some((h) => h.functionName === 'FH_A')).toBe(false);
+        });
+
     }); // end 'File Discovery and Cross-File Resolution'
+
+    // =========================================================================
+    // Hash Consistency (WI-9.1)
+    // =========================================================================
+
+    describe('Hash Consistency', () => {
+
+        let hashDir: string;
+
+        beforeAll(() => {
+            hashDir = fs.mkdtempSync(path.join(os.tmpdir(), 'libjuno-hash-'));
+        });
+
+        afterAll(() => {
+            fs.rmSync(hashDir, { recursive: true, force: true });
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        // =====================================================================
+        // TC-WI-009: Hash consistency between hashText and hashFile for BOM files
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-001"]}
+        it('TC-WI-009: loadFromCache() does not re-parse a BOM-prefixed file whose content is unchanged', async () => {
+            const dir = path.join(hashDir, 'tc-wi-009');
+            fs.mkdirSync(dir);
+
+            // Write a C file with a UTF-8 BOM prefix (\xEF\xBB\xBF)
+            const bomPrefix = Buffer.from([0xEF, 0xBB, 0xBF]);
+            const cContent = Buffer.from('void BomFunction(void) {}\n', 'utf8');
+            const bomFile = path.join(dir, 'bomfile.c');
+            fs.writeFileSync(bomFile, Buffer.concat([bomPrefix, cContent]));
+
+            // Populate cache via fullIndex()
+            const indexer1 = new WorkspaceIndexer(dir, []);
+            await indexer1.fullIndex();
+
+            // Create a fresh indexer — same directory, same file unchanged
+            const indexer2 = new WorkspaceIndexer(dir, []);
+            const spy = jest.spyOn(visitorModule, 'parseFileWithDefs');
+
+            const loaded = await indexer2.loadFromCache();
+
+            // Cache must be found
+            expect(loaded).toBe(true);
+
+            // hashFile() and hashText() both use utf8 read + utf8 update, so hashes
+            // must match — the BOM file must NOT be treated as stale → 0 re-parses
+            expect(spy).not.toHaveBeenCalled();
+
+            // The BOM file's function must still be in the index (loaded from cache)
+            expect(indexer2.index.functionDefinitions.has('BomFunction')).toBe(true);
+        });
+
+    }); // end 'Hash Consistency'
 
 });

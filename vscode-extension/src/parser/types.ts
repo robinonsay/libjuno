@@ -38,6 +38,8 @@ export interface ParsedFile {
   failureHandlerAssigns: FailureHandlerRecord[];
   /** All API call sites found in the file. */
   apiCallSites: ApiCallSiteRecord[];
+  /** Positional vtable initializers that could not be resolved at parse time (API struct in different file). */
+  pendingPositionalVtables: PendingPositionalVtable[];
   /** Local variable and parameter type information for all functions in the file. */
   localTypeInfo: LocalTypeInfo;
 }
@@ -148,6 +150,22 @@ export interface FailureHandlerRecord {
   file: string;
   /** 1-based line number of this assignment. */
   line: number;
+}
+
+/**
+ * A positional vtable initializer that could not be resolved at parse time
+ * because the API struct definition was not in the same file.
+ * Deferred for cross-file resolution during full workspace indexing.
+ */
+export interface PendingPositionalVtable {
+  /** The API struct type name (e.g. "MY_API_T"). */
+  apiType: string;
+  /** Function names in positional order. */
+  initializers: string[];
+  /** Absolute path of the file that contains this initializer. */
+  file: string;
+  /** 1-based line numbers corresponding to each initializer. */
+  lines: number[];
 }
 
 /**

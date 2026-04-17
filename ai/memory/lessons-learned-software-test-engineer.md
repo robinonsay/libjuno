@@ -48,3 +48,10 @@
 ### 2026-04-17 — resolveFailureHandlerRootType() has multi-module disambiguation bug
 - When two module roots are in the same file, both failure handlers are attributed to the FIRST root type found in localTypeInfo.functionParameters iteration order.
 - Test the single-module (unambiguous) case only; document multi-module limitation in test comment.
+
+### 2026-04-17 — Sprint 9 source bug fixes verified
+- Bug 1 (cross-file positional producer): visitor.ts extractPositionalVtable() now pushes PendingPositionalVtable entries; mergeInto() passes them to deferred[]; resolveDeferred() resolves after all files indexed.
+- Bug 2 (multi-module FH disambiguation): resolveFailureHandlerRootType() scopes search to the containing function via findContainingFunction().
+- Bug 3 (resolveDeferred duplicate check): compare e.line === loc.line (definition line), not assignment line.
+- Bug 4 (hashFile consistency): reads as "utf8" string + update(content, "utf8") — matches hashText() exactly.
+- When testing BOM file hash consistency: write file using Buffer.concat([BomPrefix, content]) then verify loadFromCache() skips re-parse (spy call count 0).

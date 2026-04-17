@@ -9,6 +9,7 @@ import {
     FunctionDefinitionRecord,
     LocalTypeInfo,
     FailureHandlerRecord,
+    PendingPositionalVtable,
 } from "../parser/types";
 import { parseFileWithDefs } from "../parser/visitor";
 import { createEmptyIndex, removeFileRecords } from "./navigationIndex";
@@ -221,7 +222,7 @@ export class WorkspaceIndexer {
 
         // failureHandlerAssignments: append (with rootType resolution)
         for (const r of parsed.failureHandlerAssigns) {
-            const resolvedRootType = this.resolveFailureHandlerRootType(r, parsed);
+            const resolvedRootType = this.resolveFailureHandlerRootType(r, parsed, functionDefs);
             if (!resolvedRootType) { continue; }
             const loc: ConcreteLocation = {
                 functionName: r.functionName,
@@ -247,6 +248,18 @@ export class WorkspaceIndexer {
 
         // localTypeInfo: keyed by file — set (one entry per file)
         idx.localTypeInfo.set(parsed.filePath, parsed.localTypeInfo);
+
+        // pendingPositionalVtables: convert to DeferredPositional and append
+        if (deferred) {
+            for (const pp of parsed.pendingPositionalVtables) {
+                deferred.push({
+                    apiType: pp.apiType,
+                    initializers: pp.initializers,
+                    filePath: pp.file,
+                    lines: pp.lines,
+                });
+            }
+        }
     }
 
     /**
@@ -271,27 +284,78 @@ export class WorkspaceIndexer {
     /**
      * Resolves the rootType for a FailureHandlerRecord using LocalTypeInfo
      * from the parsed file. Returns empty string if it cannot be resolved.
+     *
+     * @param r - The failure handler record to resolve.
+     * @param parsed - The parsed file containing local type info.
+     * @param functionDefs - Function definitions from the same parse pass, used
+     *   to scope the search to the function containing the assignment.
      */
-    private resolveFailureHandlerRootType(r: FailureHandlerRecord, parsed: ParsedFile): string {
+    private resolveFailureHandlerRootType(
+        r: FailureHandlerRecord,
+        parsed: ParsedFile,
+        functionDefs: FunctionDefinitionRecord[]
+    ): string {
         if (r.rootType) { return r.rootType; }
-        // Walk all function parameters and local vars looking for a type that
-        // is a known module root type (ends in _ROOT_T or _T that matches moduleRoots/traitRoots).
-        // The failure handler record doesn't carry the variable name, so we use
-        // context heuristics: look for the first module root type found in any
-        // local var or parameter of any function in the file.
+
         const lti: LocalTypeInfo = parsed.localTypeInfo;
         const knownRoots = new Set([...this.index.moduleRoots.keys(), ...this.index.traitRoots.keys()]);
-        for (const varMap of lti.localVariables.values()) {
-            for (const ti of varMap.values()) {
-                if (knownRoots.has(ti.typeName)) { return ti.typeName; }
+
+        // Find the function that contains this FH assignment (largest def.line <= r.line, same file)
+        const containingFn = this.findContainingFunction(r.line, r.file, functionDefs);
+
+        if (containingFn) {
+            // Scoped search: only check the containing function's parameters and locals
+            const params = lti.functionParameters.get(containingFn);
+            if (params) {
+                for (const ti of params) {
+                    if (knownRoots.has(ti.typeName)) { return ti.typeName; }
+                }
             }
-        }
-        for (const params of lti.functionParameters.values()) {
-            for (const ti of params) {
-                if (knownRoots.has(ti.typeName)) { return ti.typeName; }
+            const vars = lti.localVariables.get(containingFn);
+            if (vars) {
+                for (const ti of vars.values()) {
+                    if (knownRoots.has(ti.typeName)) { return ti.typeName; }
+                }
+            }
+        } else {
+            // Fallback: search all (original behavior for safety)
+            for (const [, params] of lti.functionParameters) {
+                for (const ti of params) {
+                    if (knownRoots.has(ti.typeName)) { return ti.typeName; }
+                }
+            }
+            for (const [, varMap] of lti.localVariables) {
+                for (const ti of varMap.values()) {
+                    if (knownRoots.has(ti.typeName)) { return ti.typeName; }
+                }
             }
         }
         return "";
+    }
+
+    /**
+     * Finds the function whose definition line is closest to (but not after)
+     * the given line in the same file.
+     *
+     * @param line - The line number to search around.
+     * @param file - The file path to match.
+     * @param functionDefs - The list of function definitions to search.
+     * @returns The function name of the containing function, or undefined.
+     */
+    private findContainingFunction(
+        line: number,
+        file: string,
+        functionDefs: FunctionDefinitionRecord[]
+    ): string | undefined {
+        let best: FunctionDefinitionRecord | undefined;
+        for (const def of functionDefs) {
+            if (def.file === file && def.line <= line) {
+                if (!best || def.line > best.line) {
+                    best = def;
+                }
+            }
+        }
+        return best?.functionName;
     }
 
     /**
@@ -320,8 +384,8 @@ export class WorkspaceIndexer {
                     line: this.resolveDefinitionLine(fnName, d.filePath, []),
                 };
                 const existing = fieldMap.get(fields[i]) ?? [];
-                // Avoid duplicates
-                if (!existing.some((e) => e.functionName === fnName && e.file === d.filePath && e.line === line)) {
+                // Avoid duplicates — compare against loc.line (definition line), not d.lines[i] (assignment line)
+                if (!existing.some((e) => e.functionName === fnName && e.file === d.filePath && e.line === loc.line)) {
                     existing.push(loc);
                 }
                 fieldMap.set(fields[i], existing);
@@ -361,12 +425,13 @@ export class WorkspaceIndexer {
 
     /**
      * Computes the SHA-256 hex digest of a file's contents.
+     * Reads as UTF-8 string to match hashText() behavior (consistent BOM handling).
      * Returns empty string on read error.
      */
     private hashFile(filePath: string): string {
         try {
-            const content = fs.readFileSync(filePath);
-            return crypto.createHash("sha256").update(content).digest("hex");
+            const content = fs.readFileSync(filePath, "utf8");
+            return crypto.createHash("sha256").update(content, "utf8").digest("hex");
         } catch {
             return "";
         }
