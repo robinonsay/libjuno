@@ -1338,3 +1338,222 @@ static const JUNO_APP_API_T tAppApi = {
         expect(apiTypes.filter((t) => t === "JUNO_APP_API_T")).toHaveLength(2);
     });
 });
+
+// ===========================================================================
+// Group N1 — macroBodyTokens depth tracking (kills parser.ts L375-395)
+//
+// Targets:
+//   L375 StringLiteral + BlockStatement — rule name "" / rule body {}
+//   L378 GATE mutants — BooleanLiteral, ConditionalExpression (x2), LogicalOperator
+//   L379 BlockStatement — DEF body {}
+//   L380/L381 — depth++ NoCov: ConditionalExpression=false, UpdateOperator depth--
+//   L382/L383 — depth-- NoCov: ConditionalExpression=false, UpdateOperator depth++
+//   L390 StringLiteral — cstPostTerminal key "" instead of tok.tokenType.name
+// ===========================================================================
+
+describe("macroBodyTokens depth tracking", () => {
+
+    it("GRAM-300: simple macro body — plain member, no nested parens", () => {
+        // Kills L375 BlockStatement (rule body {}) and L379 BlockStatement (DEF body {}).
+        // macroBodyTokens must consume "int x ;" leaving the outer RParen for
+        // junoModuleRootMacro; wrong GATE or empty DEF causes the parent parse to
+        // fail, losing both moduleRoots and the sentinel vtableAssignment.
+        const src =
+            `struct FOO_ROOT_TAG JUNO_MODULE_ROOT(FOO_API_T, int x;);\n` +
+            SENTINEL_VTABLE;
+        const result = parseFile("/test/gram300.c", src);
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].apiType).toBe("FOO_API_T");
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+    });
+
+    it("GRAM-301: macro body with one level of nested parens — function pointer member", () => {
+        // Kills L378 GATE mutants and L380/L381 NoCov depth tracking mutants.
+        // `(*pfcnCallback)` contains a nested paren pair at depth 1.  The inner
+        // RParen must NOT stop the MANY loop; only the outer macro RParen at
+        // depth 0 should.  Wrong depth tracking causes macroBodyTokens to stop
+        // early or consume the outer RParen, breaking the rest of the parse.
+        const src =
+            `struct FOO_ROOT_TAG JUNO_MODULE_ROOT(FOO_API_T, void (*pfcnCallback)(int););\n` +
+            SENTINEL_VTABLE;
+        const result = parseFile("/test/gram301.c", src);
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].apiType).toBe("FOO_API_T");
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+    });
+
+    it("GRAM-302: macro body with two levels of nested parens — deeply nested function pointer", () => {
+        // Kills L382/L383 NoCov depth tracking mutants.
+        // `(*pfcn)(int (*)(char))` has two nested paren layers; the innermost
+        // `(char)` produces depth 2.  The loop must track both increments and
+        // decrements exactly so that only the outermost macro RParen stops it.
+        const src =
+            `struct FOO_ROOT_TAG JUNO_MODULE_ROOT(FOO_API_T, void (*pfcn)(int (*)(char)););\n` +
+            SENTINEL_VTABLE;
+        const result = parseFile("/test/gram302.c", src);
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].apiType).toBe("FOO_API_T");
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+    });
+
+    it("GRAM-303: macro body with JUNO_MODULE_EMPTY — empty body token, GATE stops at outer RParen", () => {
+        // Verifies the GATE stop condition at depth 0 + RParen when only a
+        // single non-paren token appears in the body before the closing RParen.
+        const src =
+            `struct FOO_ROOT_TAG JUNO_MODULE_ROOT(FOO_API_T, JUNO_MODULE_EMPTY);\n` +
+            SENTINEL_VTABLE;
+        const result = parseFile("/test/gram303.c", src);
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].apiType).toBe("FOO_API_T");
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+    });
+
+    it("GRAM-304: multiple function pointer members — depth resets between each member", () => {
+        // Extends GRAM-301 with two nested-paren pairs.  Depth must return to 0
+        // after each `)(param)` suffix so the loop continues for the second
+        // member and still stops at the final outer RParen rather than inside it.
+        const src =
+            `struct FOO_ROOT_TAG JUNO_MODULE_ROOT(FOO_API_T, void (*pfcnA)(int); void (*pfcnB)(char););\n` +
+            SENTINEL_VTABLE;
+        const result = parseFile("/test/gram304.c", src);
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].apiType).toBe("FOO_API_T");
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+    });
+
+    it("GRAM-305: macro body with API_T pointer member — apiMemberRegistry populated correctly", () => {
+        // Kills L375 StringLiteral (rule name "") — child(m.children,
+        // "macroBodyTokens") returns undefined, walkMacroBodyForApiMembers
+        // short-circuits, and the registry stays empty.
+        // Kills L390 StringLiteral (cstPostTerminal key "") — tokens stored
+        // under the wrong key so the visitor cannot locate them by type name.
+        const src = `struct FOO_ROOT_TAG JUNO_MODULE_ROOT(FOO_API_T, BAR_API_T *ptBar;);`;
+        const { parsed, apiMemberRegistry } = parseFileWithDefs("/test/gram305.h", src);
+        expect(parsed.moduleRoots).toHaveLength(1);
+        expect(parsed.moduleRoots[0].apiType).toBe("FOO_API_T");
+        expect(apiMemberRegistry.has("ptBar")).toBe(true);
+        expect(apiMemberRegistry.get("ptBar")).toBe("BAR_API_T");
+    });
+});
+
+// ===========================================================================
+// Group 31 — declarationSpecifiers GATE logic (lines 85-107 of parser.ts)
+// Kills the following surviving mutants:
+//   L87 ConditionalExpression  (!tokenMatcher(la1,Identifier) → false)
+//   L87 BlockStatement         (non-Identifier if-block body → {})
+//   L90 ConditionalExpression  (entire return expr → true or → false)
+//   L90 LogicalOperator        (||  →  &&  in the specifier chain)
+//   L107 ConditionalExpression (LParen&&Star clause → false)
+// ===========================================================================
+
+describe("declarationSpecifiers GATE", () => {
+
+    // -----------------------------------------------------------------------
+    // Kills L87 ConditionalExpression and L87 BlockStatement:
+    // When la1=non-Identifier and la2=non-Identifier keyword (e.g. la1=const,
+    // la2=int), the patched GATE would NOT enter the non-Identifier specifier
+    // list and would instead execute the Identifier-branch la2 check, which
+    // returns false (int is not Identifier/Star/Const/Volatile/LParen+Star).
+    // The MANY loop stops early. Chevrotain inserts a synthetic semicolon after
+    // the first specifier, so the function definition is parsed as a separate
+    // top-level construct without the 'static' keyword, yielding isStatic=false.
+    // -----------------------------------------------------------------------
+
+    it("GRAM-310: static const int function — GATE non-Identifier branch consumes const and int (la2 is non-Identifier keyword)", () => {
+        // la1=const (non-Id), la2=int (non-Id keyword, NOT Identifier/Star/Const/Volatile)
+        // Correct: non-Identifier branch recognises Const → consumed. Int → consumed.
+        // Mutant L87 CE→false / BlockStatement→{}: la2 check fires, la2=int not Identifier
+        //   → GATE returns false → const not consumed → static separated → isStatic=false.
+        const { functionDefs } = parseFileWithDefs("/test/gram310.c", "static const int Compute(void) { return 42; }");
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("Compute");
+        expect(functionDefs[0].isStatic).toBe(true);
+    });
+
+    it("GRAM-311: static unsigned int function — GATE non-Identifier branch consumes unsigned then int (la2 is non-Identifier keyword)", () => {
+        // la1=unsigned (non-Id), la2=int (non-Id keyword) — same mechanism as GRAM-310.
+        // Both L87 mutants cause unsigned to be skipped → static separated → isStatic=false.
+        const { functionDefs } = parseFileWithDefs("/test/gram311.c", "static unsigned int GetCount(void) { return 0; }");
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("GetCount");
+        expect(functionDefs[0].isStatic).toBe(true);
+    });
+
+    it("GRAM-312: typedef struct FOO_TAG FOO_T — Struct token recognised in GATE non-Identifier specifier list", () => {
+        // After typedef (first specifier), GATE fires with la1=struct (Struct token).
+        // Exercises the Struct branch (L96) in the non-Identifier OR chain.
+        // A parse failure here would corrupt the token stream and prevent the
+        // sentinel vtable assignment from being extracted.
+        const src = `typedef struct FOO_TAG FOO_T;\n` + SENTINEL_VTABLE;
+        const result = parseFile("/test/gram312.c", src);
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+        expect(result.vtableAssignments[0].field).toBe(SENTINEL_FIELD);
+    });
+
+    it("GRAM-313: volatile unsigned long — GATE recognises Volatile, Unsigned, Long in the non-Identifier specifier list", () => {
+        // Exercises three consecutive non-Identifier specifiers.
+        // Validates that the OR-chain at L90-L96 fires correctly for each one.
+        // If any branch were replaced with false (L90 CE mutants), the relevant
+        // specifier would fail to be consumed, producing a parse error that
+        // could discard the sentinel vtable.
+        const src = `volatile unsigned long g_ulTimeout;\n` + SENTINEL_VTABLE;
+        const result = parseFile("/test/gram313.c", src);
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+        expect(result.vtableAssignments[0].field).toBe(SENTINEL_FIELD);
+    });
+
+    it("GRAM-314: JUNO_STATUS_T FuncName(void) — GATE Identifier+Identifier la2 branch allows typedef-name type specifier", () => {
+        // la1=JUNO_STATUS_T (Identifier), la2=FuncName (Identifier).
+        // The Identifier branch (bypasses non-Identifier list) hits tokenMatcher(la2,Identifier)=true.
+        // Correct: JUNO_STATUS_T consumed as typeSpecifier, FuncName is the declarator.
+        // Exercises the la2=Identifier sub-branch of the GATE (lines 103+).
+        const { functionDefs } = parseFileWithDefs("/test/gram314.c", "JUNO_STATUS_T FuncName(void) { return 0; }");
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("FuncName");
+    });
+
+    it("GRAM-315: JUNO_STATUS_T *g_pStatus — GATE Identifier+Star la2 branch allows typedef-name before pointer declarator", () => {
+        // la1=JUNO_STATUS_T (Identifier), la2=* (Star).
+        // The Identifier branch hits tokenMatcher(la2,Star)=true → JUNO_STATUS_T consumed.
+        // Separates the typedef-name type from the pointer declarator correctly.
+        const src = `JUNO_STATUS_T *g_pStatus;\n` + SENTINEL_VTABLE;
+        const result = parseFile("/test/gram315.c", src);
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+        expect(result.vtableAssignments[0].field).toBe(SENTINEL_FIELD);
+    });
+
+    it("GRAM-316: void (*g_pfcnCallback)(int) — GATE non-Identifier branch correctly rejects LParen after type specifiers", () => {
+        // After void is consumed, GATE fires with la1=( (LParen, non-Identifier).
+        // The non-Identifier specifier list does NOT include LParen, so GATE returns
+        // false → MANY stops → (*g_pfcnCallback)(int) is the declarator. Correct.
+        // Exercises: the non-Identifier branch returns false for tokens not in the
+        // list (L87 Block→{} mutant would return undefined/falsy for any non-Id,
+        // so this path is the same — both produce false, no distinction here).
+        const src = `void (*g_pfcnCallback)(int x);\n` + SENTINEL_VTABLE;
+        const result = parseFile("/test/gram316.c", src);
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+        expect(result.vtableAssignments[0].field).toBe(SENTINEL_FIELD);
+    });
+
+    it("GRAM-317: typedef JUNO_STATUS_T (*CALLBACK_T)(int) — GATE Identifier+LParen+Star la2 branch at L107 allows typedef-name before function-pointer declarator", () => {
+        // la1=JUNO_STATUS_T (Identifier), la2=( (LParen), LA(3)=* (Star).
+        // L107: (tokenMatcher(la2,LParen) && tokenMatcher(LA(3),Star)) = true.
+        // JUNO_STATUS_T consumed as typeSpecifier; (*CALLBACK_T)(int) is the declarator.
+        // L107 CE→false mutant: LParen+Star → false → JUNO_STATUS_T NOT consumed as type
+        //   → typedef fails early → (*CALLBACK_T)(int); parse error → may corrupt stream.
+        const src = `typedef JUNO_STATUS_T (*CALLBACK_T)(int x);\n` + SENTINEL_VTABLE;
+        const result = parseFile("/test/gram317.c", src);
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+        expect(result.vtableAssignments[0].field).toBe(SENTINEL_FIELD);
+    });
+});

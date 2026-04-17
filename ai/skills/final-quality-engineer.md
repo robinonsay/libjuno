@@ -37,7 +37,7 @@ Verify every work item's acceptance criteria are met by cross-referencing delive
 
 Run the build and verify it completes cleanly under strict compiler settings.
 
-1. Execute: `cd build && cmake --build . 2>&1`
+1. Execute: `cd /workspaces/libjuno && cd build && cmake --build . 2>&1` (working directory: `/workspaces/libjuno`)
 2. Check the output for:
    - **Errors**: Any compilation error → REJECTED.
    - **Warnings**: Any warning (under `-Werror` these become errors) → REJECTED.
@@ -55,12 +55,22 @@ Run the build and verify it completes cleanly under strict compiler settings.
 
 Run the full test suite and verify zero failures.
 
-1. Execute: `cd build && ctest --output-on-failure`
+1. Execute: `cd /workspaces/libjuno && cd build && ctest --output-on-failure` (working directory: `/workspaces/libjuno`)
 2. Parse the output:
    - Record total tests, passed, failed, skipped.
    - For any failure, capture the test name and failure output.
 3. If any test fails → REJECTED. Include the failing test name and output.
 4. If no tests were modified or added, still run the full suite to check for regressions.
+
+### VSCode Extension Test Verification (if applicable)
+
+Run the VSCode extension test suite if extension code was modified.
+
+1. Execute: `cd /workspaces/libjuno/vscode-extension && npm test` (working directory: `/workspaces/libjuno/vscode-extension`)
+2. Parse the output:
+   - Record total tests, passed, failed.
+   - For any failure, capture the test name and failure output.
+3. If any test fails → REJECTED. Include the failing test name and output.
 
 **Common regression patterns to watch for:**
 - A new type or struct change broke an existing test's assumptions about struct layout.
@@ -69,7 +79,14 @@ Run the full test suite and verify zero failures.
 - Buffer size constants changed, causing existing boundary tests to fail.
 - Init function parameter changes broke existing test setup code.
 
-### Traceability Verification (if applicable)
+### Traceability Verification (MANDATORY)
+
+**Step 0 — Run automated traceability verification tool:**
+1. Execute: `cd /workspaces/libjuno && python3 scripts/verify_traceability.py` (working directory: `/workspaces/libjuno`)
+2. If exit code is 1 (FAIL) → the overall verdict is REJECTED. Include all ERROR lines in the findings.
+3. If exit code is 0 (PASS) → proceed to manual spot-checks below.
+4. The tool checks: tag coverage, orphaned references, link integrity, schema validity.
+5. NOTE: The tool does NOT assess test behavioral quality — the final QE must verify that tagged tests actually exercise requirement behavior, not just return-status checks.
 
 Spot-check that traceability annotations are present and correct.
 
@@ -111,7 +128,7 @@ Verify that produced documentation matches the actual code.
 
 ## Verdict Criteria
 
-- **APPROVED**: ALL checks pass. Zero blocking issues of any kind. Every acceptance criterion is MET. Build is clean. Tests pass. No regressions. No cross-item conflicts.
+- **APPROVED**: ALL checks pass. Zero blocking issues of any kind. Every acceptance criterion is MET. Build is clean. Tests pass. No regressions. No cross-item conflicts. `scripts/verify_traceability.py` exits with code 0.
 - **REJECTED**: ANY check fails. Every blocking issue must be listed individually with:
   - File and line number (where applicable)
   - Severity (BLOCKING)

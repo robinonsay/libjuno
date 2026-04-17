@@ -44,3 +44,8 @@ this.MANY({
     DEF: () => { this.OR([...]); },
 });
 ```
+
+### 2026-04-17 — Always use absolute directory paths when running commands
+**What happened:** Agents ran build/test commands from the wrong working directory, causing failures.
+**Root cause:** Commands used relative paths (`cd build`) without ensuring the current directory was correct.
+**Corrective action:** Read `ai/memory/directory-map.md` before running any terminal command. Always use absolute `cd` paths: `cd /workspaces/libjuno && cd build && cmake --build .` for C code, `cd /workspaces/libjuno/vscode-extension && npm test` for the extension.

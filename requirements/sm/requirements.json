@@ -16,7 +16,11 @@
         "REQ-SYS-009",
         "REQ-SYS-010"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SM-004",
+        "REQ-SM-006",
+        "REQ-SM-007"
+      ]
     },
     {
       "id": "REQ-SM-002",
@@ -28,7 +32,10 @@
         "REQ-SYS-006",
         "REQ-MODULE-003"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SM-003",
+        "REQ-SM-005"
+      ]
     },
     {
       "id": "REQ-SM-003",
@@ -86,7 +93,9 @@
       "uses": [
         "REQ-SM-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SM-008"
+      ]
     },
     {
       "id": "REQ-SM-008",

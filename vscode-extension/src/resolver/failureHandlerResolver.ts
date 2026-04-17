@@ -1,3 +1,4 @@
+// @{"req": ["REQ-VSCODE-016"]}
 /**
  * @file failureHandlerResolver.ts
  *

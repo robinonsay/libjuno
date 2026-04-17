@@ -18,7 +18,13 @@
         "REQ-SYS-010",
         "REQ-ARRAY-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-QUEUE-002",
+        "REQ-QUEUE-003",
+        "REQ-QUEUE-005",
+        "REQ-QUEUE-007",
+        "REQ-SB-004"
+      ]
     },
     {
       "id": "REQ-QUEUE-002",
@@ -44,7 +50,9 @@
       "uses": [
         "REQ-QUEUE-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-QUEUE-004"
+      ]
     },
     {
       "id": "REQ-QUEUE-004",
@@ -66,7 +74,9 @@
       "uses": [
         "REQ-QUEUE-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-QUEUE-006"
+      ]
     },
     {
       "id": "REQ-QUEUE-006",
@@ -88,7 +98,9 @@
       "uses": [
         "REQ-QUEUE-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-QUEUE-008"
+      ]
     },
     {
       "id": "REQ-QUEUE-008",

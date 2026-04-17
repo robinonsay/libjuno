@@ -114,6 +114,25 @@ silent failure or undefined behavior.
 
 ---
 
+### Test Quality Gate (when reviewing test code)
+
+When the Senior Software Engineer reviews test code, apply these additional checks:
+
+1. **Run the traceability tool**: `python3 scripts/verify_traceability.py --module MODULE_NAME`
+   - Tool must exit with code 0. If it exits 1 → NEEDS CHANGES.
+
+2. **Verify tagged tests actually test the requirement**: For each `// @{"verify": ["REQ-..."]}` tag:
+   - Read the test body
+   - Confirm the test exercises the specific behavior described in the requirement
+   - A test that only asserts `JUNO_STATUS_SUCCESS` without checking outputs or state is DEFECTIVE (Error severity)
+   - A test that would pass if the function under test were replaced with a no-op stub is DEFECTIVE (Error severity)
+
+3. **Cross-check requirement verification_method**: If a requirement has `verification_method: "Test"`, there MUST be at least one test tagged with `@verify` for that requirement.
+
+The `scripts/verify_traceability.py` tool only checks that tags exist and point to valid IDs. The Senior Software Engineer must verify that the tests behind those tags are behaviorally correct.
+
+---
+
 ## Verdict Criteria
 
 ### APPROVED — All of the following:
@@ -123,6 +142,7 @@ silent failure or undefined behavior.
 - Algorithm is correct for all valid inputs and documented edge cases
 - Error handling is complete — no silent failures
 - No security vulnerabilities
+- When test code is in scope, `scripts/verify_traceability.py` must exit with code 0
 
 ### NEEDS CHANGES — Any of the following:
 

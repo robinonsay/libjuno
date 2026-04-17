@@ -1,3 +1,4 @@
+// @{"req": ["REQ-VSCODE-003", "REQ-VSCODE-010", "REQ-VSCODE-011", "REQ-VSCODE-012"]}
 import { CstParser, tokenMatcher } from "chevrotain";
 import {
     allTokens,
@@ -382,7 +383,13 @@ export class CParser extends CstParser {
                 } else if (tokenMatcher(this.LA(1), RParen)) {
                     depth--;
                 }
+                const tok = this.LA(1);
                 (this as any).consumeToken();
+                // Record the consumed token in the CST so visitors can access it.
+                // Guard against Chevrotain's grammar recording phase where CST_STACK is empty.
+                if (!(this as any).RECORDING_PHASE) {
+                    (this as any).cstPostTerminal(tok.tokenType.name, tok);
+                }
             },
         });
     });

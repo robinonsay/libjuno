@@ -144,6 +144,7 @@ Detailed project knowledge is stored in `ai/memory/`:
 | `architecture.md`     | Module system, vtable DI, initialization pattern|
 | `constraints.md`      | Hard technical and traceability constraints      |
 | `traceability.md`     | Requirements JSON schema, annotation format     |
+| `directory-map.md`    | Working directory reference for all commands    |
 
 ### Lessons Learned Files
 

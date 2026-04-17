@@ -159,6 +159,28 @@ to pass rather than to verify correct behavior.
 
 Flag each finding by test function name and line number. Apply severity as listed above.
 
+### Automated Traceability Tool (MANDATORY)
+
+Before performing manual cross-referencing, run the automated traceability verification tool:
+
+```
+python3 scripts/verify_traceability.py
+```
+
+Or for a specific module:
+
+```
+python3 scripts/verify_traceability.py --module MODULE_NAME
+```
+
+1. The tool exits with code 0 (PASS) or 1 (FAIL). A FAIL result means ERRORs exist — the verifier MUST include all ERROR items from the tool output in the verification report.
+
+2. The tool checks: missing test coverage tags, orphaned tags, broken uses/implements links, bidirectional link inconsistencies, and schema validation of requirements.json files.
+
+3. The tool output does NOT replace manual verification. After running the tool, the verifier must still perform the manual checks (especially test behavioral quality assessment, which the tool cannot do).
+
+4. **Verdict impact**: If the tool exits with code 1, the verifier's verdict MUST be NEEDS CHANGES, regardless of manual findings.
+
 ## Severity Classification
 
 | Severity | Meaning | Trigger |
@@ -169,7 +191,7 @@ Flag each finding by test function name and line number. Apply severity as liste
 
 ## Verdict Criteria
 
-- **APPROVED**: Zero ERRORs. Warnings are acceptable if the Software Lead's acceptance criteria do not require their resolution.
+- **APPROVED**: Zero ERRORs AND the `scripts/verify_traceability.py` tool exits with code 0 (no ERRORs). Warnings are acceptable if the Software Lead's acceptance criteria do not require their resolution.
 - **NEEDS CHANGES**: Any ERROR is present. The report must list every ERROR with its file location, requirement ID, and specific issue so the responsible worker can fix it.
 
 ## Output Format

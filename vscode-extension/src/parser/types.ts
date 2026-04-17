@@ -1,3 +1,4 @@
+// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003"]}
 /**
  * @file types.ts
  *

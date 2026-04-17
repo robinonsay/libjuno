@@ -138,6 +138,7 @@ function tokenize(text: string) {
 // 1. LibJuno Macro Token Recognition
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003", "REQ-VSCODE-008", "REQ-VSCODE-009", "REQ-VSCODE-014", "REQ-VSCODE-015"]}
 describe("LibJuno macro token recognition", () => {
     const cases: [string, string, object][] = [
         ["JUNO_MODULE_ROOT", "JUNO_MODULE_ROOT(A, B)", JunoModuleRoot],
@@ -194,6 +195,7 @@ describe("LibJuno macro token recognition", () => {
 // 2. Token Priority / Ordering
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Token priority and ordering", () => {
     test("JUNO_MODULE_ROOT wins over Identifier for the exact string", () => {
         const tokens = tokenize("JUNO_MODULE_ROOT");
@@ -272,6 +274,7 @@ describe("Token priority and ordering", () => {
 // 3. Compound Operator Priority
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Compound operator priority", () => {
     test("-> is tokenized as ArrowOp, not Minus + Gt", () => {
         const tokens = tokenize("->");
@@ -318,6 +321,7 @@ describe("Compound operator priority", () => {
 // 4. Literals
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Literal token recognition", () => {
     test("decimal integer literal 42", () => {
         const tokens = tokenize("42");
@@ -386,6 +390,7 @@ describe("Literal token recognition", () => {
 // 5. Whitespace and Comment Skipping
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Whitespace and comment skipping", () => {
     test("whitespace between tokens is not in the token stream", () => {
         const tokens = tokenize("a   b");
@@ -434,6 +439,7 @@ describe("Whitespace and comment skipping", () => {
 // 6. Full Snippet Tokenization
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003", "REQ-VSCODE-008", "REQ-VSCODE-009"]}
 describe("Full snippet tokenization", () => {
     test("LibJuno struct definition with JUNO_MODULE_ROOT macro", () => {
         const text =
@@ -538,6 +544,7 @@ describe("Full snippet tokenization", () => {
 //   (d) the image is exactly the keyword string (kills Regex mutants on pattern)
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Keyword token identification", () => {
     test("inline → Inline", () => {
         const tokens = tokenize("inline");
@@ -809,6 +816,7 @@ describe("Keyword token identification", () => {
 // 8. Keyword longer_alt — identifiers that start with a keyword are NOT split
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Keyword longer_alt — identifiers containing keywords are not split", () => {
     test("inlined is Identifier (not Inline + d)", () => {
         const tokens = tokenize("inlined");
@@ -874,6 +882,7 @@ describe("Keyword longer_alt — identifiers containing keywords are not split",
 // Asserts: length 1, correct tokenType reference, correct name, correct image.
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Compound operator token identification", () => {
     test("++ → PlusPlus", () => {
         const tokens = tokenize("++");
@@ -1026,6 +1035,7 @@ describe("Compound operator token identification", () => {
 // Each test feeds a single punctuator character and asserts the exact token.
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Simple punctuator token identification", () => {
     test("[ → LBracket", () => {
         const tokens = tokenize("[");
@@ -1178,6 +1188,7 @@ describe("Simple punctuator token identification", () => {
 // mutants on this function.
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("HashDirective conditional logic boundary cases", () => {
     test("directive at startOffset 0 is recognized as HashDirective", () => {
         // startOffset === 0 → condition (startOffset !== 0 && ...) is false → proceed

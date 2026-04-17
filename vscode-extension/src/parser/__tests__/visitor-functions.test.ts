@@ -25,6 +25,7 @@ import { parseFile, parseFileWithDefs } from "../visitor";
 // Section 10: Function Definition Extraction (TC-P10-001 through TC-P10-005)
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-003"]}
 describe("Function Definition Extraction (Section 10)", () => {
 
     // -----------------------------------------------------------------------
@@ -165,6 +166,7 @@ describe("Function Definition Extraction (Section 10)", () => {
 // Section 11: Failure Handler Assignment Extraction (TC-P11-001 through TC-P11-007)
 // ---------------------------------------------------------------------------
 
+// @{"verify": ["REQ-VSCODE-016"]}
 describe("Failure Handler Assignment Extraction (Section 11)", () => {
 
     // -----------------------------------------------------------------------

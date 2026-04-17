@@ -210,3 +210,21 @@ Return to the Software Lead:
 2. **Summary** — what was done, key implementation decisions within the brief's scope
 3. **Acceptance criteria check** — status of each criterion (met / not met / partially met)
 4. **Open questions / ambiguities** — anything unclear that was worked around or needs clarification
+
+## Build and Test Commands
+
+**CRITICAL: Always `cd` to the correct absolute directory before running commands.**
+
+### LibJuno C — Build and Test
+
+```bash
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && cd build && cmake --build . && ctest --output-on-failure
+```
+
+### VSCode Extension — Compile and Test
+
+```bash
+# Working directory: /workspaces/libjuno/vscode-extension
+cd /workspaces/libjuno/vscode-extension && npm run compile && npm test
+```

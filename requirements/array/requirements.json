@@ -15,7 +15,15 @@
         "REQ-SYS-007",
         "REQ-SYS-009"
       ],
-      "implements": []
+      "implements": [
+        "REQ-ARRAY-002",
+        "REQ-ARRAY-003",
+        "REQ-ARRAY-004",
+        "REQ-HEAP-001",
+        "REQ-MAP-001",
+        "REQ-QUEUE-001",
+        "REQ-STACK-001"
+      ]
     },
     {
       "id": "REQ-ARRAY-002",

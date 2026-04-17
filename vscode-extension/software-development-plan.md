@@ -939,7 +939,7 @@ After TC-ERR-001: confirm auto-clear timer is observable via `jest.useFakeTimers
 | WI-16.3 | — | Cache smoke: save cache → clear index → load cache → verify restored | Medium |
 | WI-16.4 | — | Jest coverage gate: `jest --coverage` meets ≥90% line coverage and ≥85% branch coverage on all production source files | Medium |
 | WI-16.5 | — | TypeScript strict mode: `tsc --noEmit` exits clean | Low |
-| WI-16.6 | — | Mutation testing gate: `npx stryker run` meets ≥75% mutation score across all production source files with tests | Medium |
+| WI-16.6 | — | Requirements-traceability coverage gate: verify 100% of requirements in `requirements.json` have at least one linked test case (`// @{"verify": [...]}` tag), and every test file has valid traceability tags linking back to requirement IDs. Generate a traceability matrix report. | Medium |
 | WI-16.7 | — | Final quality engineer review: documentation up to date, lessons-learned complete | Low |
 
 > **Scope change (v2.1 — Amendment B3):** E2E smoke expanded from 1 real file to 3 real LibJuno files covering the three main code patterns: vtable init, failure handler assignment, and header-only. This ensures the parser handles production code diversity, not just synthetic test patterns.
@@ -948,7 +948,7 @@ After TC-ERR-001: confirm auto-clear timer is observable via `jest.useFakeTimers
 
 #### 16.2 Test Approach
 
-WI-16.2a/b/c each use a real LibJuno source file from the repository. WI-16.2a selects a file with vtable init patterns (e.g., `src/juno_time.c`), WI-16.2b selects a file with failure handler assignments, and WI-16.2c selects a header-only file. Each follows the full path: `parseFileWithDefs()` → index → resolve (or verify graceful `found: false`) → verify `ConcreteLocation`. WI-16.3 calls `saveCache()` on a populated index, `clearIndex()`, then `loadCache()`, verifying the restored index matches. WI-16.6 runs Stryker mutation testing across all production source files that have corresponding tests and verifies ≥75% mutation score.
+WI-16.2a/b/c each use a real LibJuno source file from the repository. WI-16.2a selects a file with vtable init patterns (e.g., `src/juno_time.c`), WI-16.2b selects a file with failure handler assignments, and WI-16.2c selects a header-only file. Each follows the full path: `parseFileWithDefs()` → index → resolve (or verify graceful `found: false`) → verify `ConcreteLocation`. WI-16.3 calls `saveCache()` on a populated index, `clearIndex()`, then `loadCache()`, verifying the restored index matches. WI-16.6 performs requirements-traceability coverage analysis: enumerates all requirements from `requirements.json`, verifies each has at least one test case with a valid `// @{"verify": [...]}` tag, checks that all test `verify` tags reference valid requirement IDs, and generates a traceability matrix report.
 
 #### 16.3 Debug Budget
 
@@ -961,7 +961,7 @@ WI-16.2a/b/c each use a real LibJuno source file from the repository. WI-16.2a s
 - [ ] Cache roundtrip smoke passes
 - [ ] Jest line coverage ≥90% on production source files
 - [ ] Jest branch coverage ≥85% on production source files
-- [ ] Mutation score ≥75% across all production source files with tests (v2.1 Amendment A3)
+- [ ] Requirements-traceability coverage: 100% of requirements have at least one linked test case (v2.1 Amendment A3-revised)
 - [ ] `tsc --noEmit` exits clean
 - [ ] All documentation (design.md, test-cases.md, this plan) up to date
 - [ ] All 21 requirements have at least one test case
@@ -973,7 +973,7 @@ WI-16.2a/b/c each use a real LibJuno source file from the repository. WI-16.2a s
 |------|-----------|--------|------------|
 | Real LibJuno C file exposes grammar bug | Medium | High | Select file types already exercised in Phases 1–4; 3 files increase detection probability |
 | Coverage below 90% line / 85% branch threshold | Medium | Medium | Per-sprint coverage checkpoints (starting Sprint 2) flag modules early; add targeted tests |
-| Mutation score below 75% on any tested module | Medium | High | Per-sprint mutation gate catches weak tests early; fix before final sprint |
+| Requirements-traceability gap (requirement with no linked test) | Medium | High | Per-sprint traceability audit catches gaps early; fix before final sprint |
 | `tsc --noEmit` fails on source changes from earlier phases | Low | Medium | Run `tsc --noEmit` after each phase's source fixes |
 
 ---
@@ -1020,7 +1020,7 @@ A sprint is complete when:
 2. All tests pass (including all prior sprints' tests)
 3. Any source bugs discovered are fixed, verified, and documented
 4. ESLint/TSLint clean (when configured)
-5. **Mutation testing HARD gate (v2.1 Amendment A3):** Starting Sprint 2, Stryker mutation score ≥75% on all production source files that have tests written during or before the current sprint. Sprint CANNOT exit until this passes. This ensures test validity — tests that pass but fail to detect mutations are insufficient. Applies retroactively to already-tested files (e.g., parser/lexer.ts, parser/parser.ts, parser/visitor.ts from Sprint 1).
+5. **Requirements-traceability HARD gate (v2.1 Amendment A3-revised):** Starting Sprint 2, every requirement in `requirements.json` that has test cases written during or before the current sprint must have at least one test with a valid `// @{"verify": ["REQ-..."]}'` tag. Every `verify` tag in test files must reference a valid requirement ID. Sprint CANNOT exit until this passes. This ensures test adequacy — tests that pass but don't trace to requirements provide no verifiable coverage.
 6. **Coverage checkpoint (v2.1 Amendment A2):** Starting Sprint 2, no production source module with tests below 85% line coverage. Flagged modules must be addressed or have a documented remediation plan.
 7. Final quality engineer has approved the sprint output
 8. PM has approved the sprint deliverables
@@ -1187,7 +1187,7 @@ The key discipline is: **never batch test-writing without intermediate verificat
 - [ ] Full test suite green (0 failures)
 - [ ] Any source bugs documented in `ai/memory/lessons-learned-software-developer.md`
 - [ ] ESLint/TSLint clean (when configured)
-- [ ] **Mutation testing gate (HARD — v2.1 Amendment A3):** Run Stryker (or equivalent) on all production source files that have tests. Mutation score must be ≥75% per module. Sprint cannot exit until this gate passes. Applies to every sprint starting Sprint 2 — including retroactive validation of Sprint 1 files (lexer.ts, parser.ts, visitor.ts).
+- [ ] **Requirements-traceability gate (HARD — v2.1 Amendment A3-revised):** Audit all test files for valid `// @{"verify": [...]}` tags. Every requirement with tests written must have at least one linked test case. Every `verify` tag must reference a valid requirement ID in `requirements.json`. Sprint cannot exit until this passes. Applies to every sprint starting Sprint 2 — including retroactive validation of Sprint 1 test files.
 - [ ] **Coverage checkpoint (v2.1 Amendment A2):** Starting Sprint 2, run `jest --coverage`. Flag any production source module below 85% line coverage. Flagged modules must be addressed in the current sprint or have a documented plan for the next sprint.
 - [ ] **Double test suite run (v2.1 Amendment D2):** If the sprint modifies any production source code, the full test suite must be run TWICE: (1) immediately after the source change but before writing new tests, and (2) after all new tests are written. Both run counts and results must be recorded in the sprint exit report.
 - [ ] Sprint deliverables reviewed by final quality engineer
@@ -1205,7 +1205,7 @@ The key discipline is: **never batch test-writing without intermediate verificat
 - [ ] Full test suite passes (280+ tests)
 - [ ] Jest line coverage ≥90% across production source files (v2.1 Amendment A1)
 - [ ] Jest branch coverage ≥85% across production source files (v2.1 Amendment A1)
-- [ ] Mutation score ≥75% on all production source files with tests (v2.1 Amendment A3)
+- [ ] Requirements-traceability coverage: 100% of requirements have at least one linked test case; all `verify` tags reference valid requirement IDs (v2.1 Amendment A3-revised)
 - [ ] `tsc --noEmit` exits clean (TypeScript strict mode)
 - [ ] Extension loads and resolves a real vtable call in VSCode
 - [ ] Documentation (design.md, test-cases.md, this plan) are up to date

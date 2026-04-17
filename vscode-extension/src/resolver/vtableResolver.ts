@@ -1,3 +1,4 @@
+// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-005", "REQ-VSCODE-006"]}
 /**
  * @file vtableResolver.ts
  *

@@ -210,22 +210,49 @@ Append to the appropriate `ai/memory/lessons-learned-<agent-type>.md`:
 
 ## Build and Test Commands
 
+**CRITICAL: Always `cd` to the correct absolute directory before running commands.**
+**Read `ai/memory/directory-map.md` for the full directory reference.**
+
 ### LibJuno C — Build and Test
 
 ```bash
-cd build && cmake --build . && ctest --output-on-failure
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && cd build && cmake --build . && ctest --output-on-failure
 ```
 
 ### Verify Compilation (Check Only)
 
 ```bash
-cd build && cmake --build . 2>&1 | head -50
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && cd build && cmake --build . 2>&1 | head -50
 ```
 
 ### Run Specific Test
 
 ```bash
-cd build && ctest -R <test_name> --output-on-failure
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && cd build && ctest -R <test_name> --output-on-failure
+```
+
+### VSCode Extension — Run Tests
+
+```bash
+# Working directory: /workspaces/libjuno/vscode-extension
+cd /workspaces/libjuno/vscode-extension && npm test
+```
+
+### VSCode Extension — Run Tests (Verbose)
+
+```bash
+# Working directory: /workspaces/libjuno/vscode-extension
+cd /workspaces/libjuno/vscode-extension && npx jest --verbose
+```
+
+### Traceability Verification
+
+```bash
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && python3 scripts/verify_traceability.py
 ```
 
 ---

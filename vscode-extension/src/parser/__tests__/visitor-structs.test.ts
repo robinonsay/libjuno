@@ -18,6 +18,7 @@ import { parseFile } from "../visitor";
 // ---------------------------------------------------------------------------
 
 describe("visitStructDefinition", () => {
+    // @{"verify": ["REQ-VSCODE-008"]}
     describe("JUNO_MODULE_ROOT", () => {
         it("TC-P1-001: extracts rootType and apiType from minimal JUNO_MODULE_ROOT with JUNO_MODULE_EMPTY", () => {
             const src = `struct JUNO_LOG_ROOT_TAG JUNO_MODULE_ROOT(JUNO_LOG_API_T, JUNO_MODULE_EMPTY);`;
@@ -68,6 +69,7 @@ describe("visitStructDefinition", () => {
     // Section 2: JUNO_MODULE_DERIVE
     // -----------------------------------------------------------------------
 
+    // @{"verify": ["REQ-VSCODE-009"]}
     describe("JUNO_MODULE_DERIVE", () => {
         it("TC-P2-001: extracts derivedType and rootType from application derivation", () => {
             const src = `struct ENGINE_APP_TAG JUNO_MODULE_DERIVE(JUNO_APP_ROOT_T,
@@ -104,6 +106,7 @@ describe("visitStructDefinition", () => {
     // Section 3: JUNO_TRAIT_ROOT
     // -----------------------------------------------------------------------
 
+    // @{"verify": ["REQ-VSCODE-014"]}
     describe("JUNO_TRAIT_ROOT", () => {
         it("TC-P3-001: extracts rootType and apiType from JUNO_TRAIT_ROOT", () => {
             const src = `struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
@@ -137,6 +140,7 @@ describe("visitStructDefinition", () => {
     // Section 4: JUNO_TRAIT_DERIVE
     // -----------------------------------------------------------------------
 
+    // @{"verify": ["REQ-VSCODE-015"]}
     describe("JUNO_TRAIT_DERIVE", () => {
         it("TC-P4-001: extracts derivedType and rootType from synthetic JUNO_TRAIT_DERIVE", () => {
             const src = `struct MY_POINTER_IMPL_TAG JUNO_TRAIT_DERIVE(JUNO_POINTER_T,
@@ -164,6 +168,7 @@ describe("visitStructDefinition", () => {
     // Section 5: API Struct Field Extraction
     // -----------------------------------------------------------------------
 
+    // @{"verify": ["REQ-VSCODE-003"]}
     describe("API struct field extraction", () => {
         it("TC-P5-001: extracts three fields in order from JUNO_DS_HEAP_API_TAG", () => {
             const src = `struct JUNO_DS_HEAP_API_TAG

@@ -194,6 +194,21 @@ Place `// @{"verify": ["REQ-MODULE-NNN"]}` on the line immediately above the tes
 static void test_module_init_sets_defaults(void)
 ```
 
+### Traceability Verification (MANDATORY)
+
+After writing or modifying tests, the test engineer MUST run:
+```
+python3 scripts/verify_traceability.py --module MODULE_NAME
+```
+
+**Before declaring tests complete, verify:**
+1. The tool exits with code 0 (no ERRORs)
+2. Every requirement with `verification_method: "Test"` in scope has at least one `@verify` tag in a test file
+3. No orphaned `@verify` tags reference non-existent requirement IDs
+4. Each tagged test function ACTUALLY verifies the requirement's behavior — not just status codes. The tool checks tag presence; the engineer must ensure test quality.
+
+**A test is NOT complete until the traceability tool passes.**
+
 #### Test Doubles via Vtable Injection
 
 1. Define a `TEST_<DEP>_DOUBLE_T` struct with:
@@ -350,24 +365,30 @@ These principles apply to **all languages**:
 
 ### Running Tests
 
+**CRITICAL: Always `cd` to the correct absolute directory before running commands.**
+
 **LibJuno C (full suite):**
 ```bash
-cd build && cmake --build . && ctest --output-on-failure
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && cd build && cmake --build . && ctest --output-on-failure
 ```
 
 **LibJuno C (specific test):**
 ```bash
-cd build && cmake --build . && ctest -R <test_name> --output-on-failure
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && cd build && cmake --build . && ctest -R <test_name> --output-on-failure
 ```
 
 **Python:**
 ```bash
-pytest tests/ -v
+# Working directory: /workspaces/libjuno
+cd /workspaces/libjuno && pytest tests/ -v
 ```
 
-**JavaScript/TypeScript:**
+**JavaScript/TypeScript (VSCode Extension):**
 ```bash
-npx jest --verbose
+# Working directory: /workspaces/libjuno/vscode-extension
+cd /workspaces/libjuno/vscode-extension && npx jest --verbose
 ```
 
 ## Constraints

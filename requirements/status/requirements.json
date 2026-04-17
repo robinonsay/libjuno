@@ -35,7 +35,10 @@
       "uses": [
         "REQ-SYS-004"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MODULE-002",
+        "REQ-STATUS-004"
+      ]
     },
     {
       "id": "REQ-STATUS-004",

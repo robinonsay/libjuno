@@ -1,3 +1,4 @@
+// @{"req": ["REQ-VSCODE-003", "REQ-VSCODE-008", "REQ-VSCODE-009", "REQ-VSCODE-014", "REQ-VSCODE-015"]}
 /**
  * @file lexer.ts
  *

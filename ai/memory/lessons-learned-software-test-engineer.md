@@ -36,7 +36,20 @@ must do and prove it does it."
 2. If the source code returns unexpected results, report this to the Software Lead as a source bug — do NOT write tests that will fail due to known source bugs.
 3. When the brief says "write tests for X," first confirm X works by running it. If it doesn't, stop and report back.
 
+### 2026-04-17 — Jest test files require `/// <reference types="jest" />` directive
+
+**What went wrong:** A new test file in `src/resolver/__tests__/` failed to compile with TS2593 ("Cannot find name 'describe'") even though `@types/jest` is installed.
+
+**Root cause:** `tsconfig.json` has `"types": ["node"]` which excludes jest globals from the default type resolution. Existing tests work because they include `/// <reference types="jest" />` at the top of the file.
+
+**Corrective action:** Always add `/// <reference types="jest" />` as the first line of every new TypeScript test file in this project.
+
 ### 2026-04-14 — Chevrotain CST property names differ from what design docs suggest
 **What happened:** Test expectations used property names like `variableName`, `variableType` from approximate descriptions, but the actual TypeScript interfaces use `apiType`, `field`, `functionName`, etc.
 **Root cause:** Tests were written from design-doc descriptions rather than reading the actual `types.ts` interface definitions.
 **Corrective action:** Always read the actual TypeScript interface definitions in `types.ts` before writing test expectations. Use `toMatchObject()` with the exact property names from the interface, not approximations from design docs.
+
+### 2026-04-17 — Always use absolute directory paths when running test commands
+**What happened:** Agents ran `npm test` or `npx jest` from the project root instead of `vscode-extension/`, or ran `ctest` from `vscode-extension/` instead of the project root.
+**Root cause:** Commands used relative paths without verifying the current working directory.
+**Corrective action:** Read `ai/memory/directory-map.md` before running any test command. Use absolute paths: `cd /workspaces/libjuno/vscode-extension && npm test` for extension tests, `cd /workspaces/libjuno && cd build && ctest --output-on-failure` for C tests.

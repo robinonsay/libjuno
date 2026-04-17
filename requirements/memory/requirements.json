@@ -16,7 +16,12 @@
         "REQ-SYS-009",
         "REQ-SYS-010"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MEMORY-003",
+        "REQ-MEMORY-004",
+        "REQ-MEMORY-006",
+        "REQ-MEMORY-009"
+      ]
     },
     {
       "id": "REQ-MEMORY-002",
@@ -54,7 +59,9 @@
       "uses": [
         "REQ-MEMORY-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MEMORY-005"
+      ]
     },
     {
       "id": "REQ-MEMORY-005",
@@ -76,7 +83,10 @@
       "uses": [
         "REQ-MEMORY-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MEMORY-007",
+        "REQ-MEMORY-008"
+      ]
     },
     {
       "id": "REQ-MEMORY-007",
@@ -109,7 +119,9 @@
       "uses": [
         "REQ-MEMORY-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MEMORY-010"
+      ]
     },
     {
       "id": "REQ-MEMORY-010",

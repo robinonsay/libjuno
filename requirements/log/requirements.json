@@ -14,7 +14,14 @@
         "REQ-SYS-009",
         "REQ-SYS-010"
       ],
-      "implements": []
+      "implements": [
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-LOG-004",
+        "REQ-LOG-005",
+        "REQ-LOG-006",
+        "REQ-LOG-007"
+      ]
     },
     {
       "id": "REQ-LOG-002",

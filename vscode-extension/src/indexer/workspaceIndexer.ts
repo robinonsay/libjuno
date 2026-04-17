@@ -15,7 +15,7 @@ import { createEmptyIndex, removeFileRecords } from "./navigationIndex";
 import { loadCache, saveCache, indexToCache, cacheToIndex } from "../cache/cacheManager";
 
 /** C and C++ source file extensions to scan (REQ-VSCODE-021). */
-const C_FILE_EXTENSIONS = new Set([".c", ".h", ".cpp", ".hpp", ".hh", ".cc"]);
+export const C_FILE_EXTENSIONS = new Set([".c", ".h", ".cpp", ".hpp", ".hh", ".cc"]);
 
 /** Positional vtable initializer deferred for cross-file resolution. */
 interface DeferredPositional {

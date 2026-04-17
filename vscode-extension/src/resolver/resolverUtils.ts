@@ -1,3 +1,4 @@
+// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-009", "REQ-VSCODE-015", "REQ-VSCODE-016"]}
 /**
  * @file resolverUtils.ts
  *

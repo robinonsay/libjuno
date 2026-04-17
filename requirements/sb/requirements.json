@@ -15,7 +15,10 @@
         "REQ-SYS-006",
         "REQ-SYS-009"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SB-002",
+        "REQ-SB-003"
+      ]
     },
     {
       "id": "REQ-SB-002",
@@ -26,7 +29,10 @@
       "uses": [
         "REQ-SB-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SB-006",
+        "REQ-SB-008"
+      ]
     },
     {
       "id": "REQ-SB-003",
@@ -52,7 +58,9 @@
         "REQ-MODULE-003",
         "REQ-QUEUE-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SB-005"
+      ]
     },
     {
       "id": "REQ-SB-005",
@@ -75,7 +83,10 @@
       "uses": [
         "REQ-SB-002"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SB-007",
+        "REQ-SB-012"
+      ]
     },
     {
       "id": "REQ-SB-007",
@@ -97,7 +108,9 @@
       "uses": [
         "REQ-SB-002"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SB-009"
+      ]
     },
     {
       "id": "REQ-SB-009",

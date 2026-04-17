@@ -20,6 +20,7 @@ import { parseFile } from "../visitor";
 // ---------------------------------------------------------------------------
 
 describe("visitVtableDeclaration", () => {
+    // @{"verify": ["REQ-VSCODE-010"]}
     describe("Designated Initializer (Section 6)", () => {
 
         // -------------------------------------------------------------------
@@ -141,6 +142,7 @@ static const JUNO_DS_HEAP_ROOT_T tHeap = { 0 };
     // Section 7: visitVtableDeclaration — Direct Assignment (REQ-VSCODE-011)
     // ---------------------------------------------------------------------------
 
+    // @{"verify": ["REQ-VSCODE-011"]}
     describe("Direct Assignment (Section 7)", () => {
 
         // -------------------------------------------------------------------
@@ -234,6 +236,7 @@ static void Setup(JUNO_DS_HEAP_ROOT_T *tRoot) {
     // Section 8: visitVtableDeclaration — Positional Initializer (REQ-VSCODE-012)
     // ---------------------------------------------------------------------------
 
+    // @{"verify": ["REQ-VSCODE-012"]}
     describe("Positional Initializer (Section 8)", () => {
 
         // -------------------------------------------------------------------

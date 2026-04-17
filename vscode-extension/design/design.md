@@ -6,6 +6,7 @@
 
 ---
 
+// @{"design": ["REQ-VSCODE-001"]}
 ## 1. Overview
 
 The LibJuno VSCode Extension assists developers navigating LibJuno-based embedded C projects. LibJuno uses vtable-based dependency injection (DI) — function calls dispatched through `ptApi->Foo(...)` — that standard IDE tooling cannot resolve to their concrete implementations. This extension bridges that gap by building a workspace-wide navigation index and wiring it into VSCode's native Go to Definition system.
@@ -40,6 +41,7 @@ The extension also exposes its resolution capabilities to AI agent platforms via
 
 ---
 
+// @{"design": ["REQ-VSCODE-001"]}
 ## 2. Design Approach
 
 ### 2.1 Technology Stack
@@ -62,6 +64,7 @@ The extension also exposes its resolution capabilities to AI agent platforms via
 
 ---
 
+// @{"design": ["REQ-VSCODE-001", "REQ-VSCODE-002", "REQ-VSCODE-003", "REQ-VSCODE-004", "REQ-VSCODE-016", "REQ-VSCODE-017"]}
 ## 3. Architecture and Component Design
 
 The extension is composed of seven components. Each component has a single responsibility and communicates with adjacent components through defined interfaces.
@@ -974,6 +977,7 @@ Handles reading and writing `.libjuno/navigation-cache.json`. Detects staleness 
 
 ---
 
+// @{"design": ["REQ-VSCODE-003", "REQ-VSCODE-008", "REQ-VSCODE-009", "REQ-VSCODE-010", "REQ-VSCODE-011", "REQ-VSCODE-012", "REQ-VSCODE-014", "REQ-VSCODE-015"]}
 ## 4. Data Model
 
 ### 4.1 In-Memory Navigation Index
@@ -1113,6 +1117,7 @@ File: `.libjuno/navigation-cache.json`
 
 ---
 
+// @{"design": ["REQ-VSCODE-003"]}
 ## 4.3 Per-File Type Information
 
 ```typescript
@@ -1136,6 +1141,7 @@ interface TypeInfo {
 
 ---
 
+// @{"design": ["REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-009", "REQ-VSCODE-015", "REQ-VSCODE-016"]}
 ## 5. Resolution Algorithms
 
 ### 5.1 Vtable Call Resolution
@@ -1364,6 +1370,7 @@ STEP 6 — Dispatch (same single/multiple logic as Section 5.2)
 
 ---
 
+// @{"design": ["REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-013"]}
 ## 6. VSCode Integration Details
 
 ### 6.1 DefinitionProvider Registration
@@ -1417,6 +1424,7 @@ Selecting an item opens the file at the specified line.
 
 ---
 
+// @{"design": ["REQ-VSCODE-017", "REQ-VSCODE-018", "REQ-VSCODE-019", "REQ-VSCODE-020"]}
 ## 7. MCP Server Design
 
 ### 7.1 Overview
@@ -1527,6 +1535,7 @@ This is the format recognized by Claude Desktop and similar platforms. For platf
 
 ---
 
+// @{"design": ["REQ-VSCODE-004", "REQ-VSCODE-013"]}
 ## 8. Error Handling Design
 
 ### 8.1 Resolution Failure (REQ-VSCODE-004, REQ-VSCODE-013)
@@ -1555,6 +1564,7 @@ MCP tool errors are returned as standard MCP error responses (HTTP 200 with `isE
 
 ---
 
+// @{"design": ["REQ-VSCODE-001"]}
 ## 9. Cache Design
 
 ### 9.1 Cache File Location
@@ -1618,6 +1628,7 @@ Cache writes are debounced (500 ms) to avoid excessive disk I/O during bulk file
 
 ---
 
+// @{"design": ["REQ-VSCODE-001", "REQ-VSCODE-021"]}
 ## Appendix A: Extension File Structure
 
 ```

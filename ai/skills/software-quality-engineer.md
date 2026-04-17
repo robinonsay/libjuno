@@ -106,6 +106,8 @@ alongside this file for the full verification protocol.
 
 ### Test Behavioral Quality (Severity: Error)
 
+**CRITICAL**: The presence of a `// @{"verify": ["REQ-..."]}` tag on a test function does NOT mean the requirement is verified. The verifier MUST read the test body and confirm that the test exercises the behavior described in the requirement. A tagged test that only asserts `JUNO_STATUS_SUCCESS` without verifying outputs, state changes, or side-effects is a DEFECTIVE test and must be flagged as Error severity — regardless of the tag's presence. The `scripts/verify_traceability.py` tool only checks that tags exist; it is the verifier's job to check that tagged tests actually verify the requirement.**
+
 Tests must verify actual behavior — not just that a function returns SUCCESS.
 A test that passes even when the implementation is a no-op stub is defective.
 
@@ -163,6 +165,20 @@ A test that passes even when the implementation is a no-op stub is defective.
 
 ---
 
+## Traceability Tool Verification (MANDATORY)
+
+When verifying any work that includes code or tests, run:
+```
+python3 scripts/verify_traceability.py
+```
+
+- If the tool exits with code 1 (FAIL), include all ERROR lines in your findings as Error-severity items
+- The tool checks tag validity, orphaned references, and coverage gaps
+- The tool does NOT check test behavioral quality — that remains a manual check (see Test Code Checklist)
+- If verifying a single module, use `--module MODULE_NAME` to scope the report
+
+---
+
 ## Verdict Criteria
 
 ### APPROVED — All of the following:
@@ -170,6 +186,7 @@ A test that passes even when the implementation is a no-op stub is defective.
 - Zero **Error** severity findings
 - Zero **Warning** severity findings (or only pre-existing warnings outside scope of review)
 - All checklist items for the work product type pass
+- `scripts/verify_traceability.py` exits with code 0
 
 ### NEEDS CHANGES — Any of the following:
 
