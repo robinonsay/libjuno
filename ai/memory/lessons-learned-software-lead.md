@@ -58,3 +58,9 @@ This is non-negotiable every sprint without exception.
 - Read `ai/memory/directory-map.md` before any terminal command.
 - Two roots: `/workspaces/libjuno` (C/Python), `/workspaces/libjuno/vscode-extension` (TS).
 - Always prefix: `cd /workspaces/libjuno/vscode-extension && npm test`.
+
+### 2026-04-17 — Integration tests: "test like you fly" pipeline reference
+- Full pipeline: temp .c files on disk → WorkspaceIndexer.reindexFile() → Chevrotain parse → mergeInto → NavigationIndex → VtableResolver/FailureHandlerResolver.resolve().
+- No format mismatches found between visitor output and resolver input (Sprint 6, Phase 9).
+- Indexing order matters: JUNO_MODULE_ROOT file must be indexed before files with vtable assignments or failure handler assignments.
+- For FailureHandlerResolver, assignment form (ASSIGNMENT_RE) resolves via functionDefinitions directly; Step 2 (failureHandlerAssignments) requires rootType resolution during mergeInto.

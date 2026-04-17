@@ -3,7 +3,7 @@
 **Document Version:** 3.0  
 **Date:** 2025-07-22  
 **Project:** LibJuno VSCode Extension — Vtable Go-to-Definition, Failure Handler Navigation, MCP Server  
-**Status:** Phases 1–3, 5–8 complete, Phase 4 removed, Phases 9–16 pending
+**Status:** Phases 1–3, 5–9 complete, Phase 4 removed, Phases 10–16 pending
 
 ---
 
@@ -110,7 +110,8 @@ All 15 source files compile cleanly. No known compilation errors.
 | `resolver/__tests__/failureHandlerResolver.test.ts` | 13 | All passing (TC-FH-001–004, 005a/b, 006, 007, NEG-001–003, BND-001) — Sprint 5 |
 | `indexer/__tests__/fileExtensions.test.ts` | 85 | All passing |
 | `indexer/__tests__/navigationIndex.test.ts` | 7 | All passing (TC-IDX-001–005, NEG-001, BND-001) — Sprint 3 |
-| **Total** | **396** | **All passing** |
+| `src/__tests__/integration.test.ts` | 6 | All passing (TC-INT-001–006) — Sprint 6 |
+| **Total** | **402** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -135,7 +136,7 @@ Phase  5 ─── Navigation Index CRUD                  [COMPLETE]            
 Phase  6 ─── Resolver Utilities                     [COMPLETE]                Sprint 4  ✅
 Phase  7 ─── VtableResolver                         [COMPLETE]                Sprint 4  ✅
 Phase  8 ─── FailureHandlerResolver                 [COMPLETE]                Sprint 5  ✅
-Phase  9 ─── Visitor → Index → Resolver Integration [PENDING]                 Sprint 7
+Phase  9 ─── Visitor → Index → Resolver Integration [COMPLETE]                Sprint 6  ✅
 Phase 10 ─── CacheManager                           [PENDING]                 Sprint 8
 Phase 11 ─── WorkspaceIndexer Core                  [PENDING]                 Sprint 9
 Phase 12 ─── File Discovery & Deferred Resolution   [PENDING]                 Sprint 9
@@ -159,7 +160,7 @@ Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]             
 | 6 | Resolver Utilities | resolverUtils | 4 ✅ | TC-UTIL-001–006 |
 | 7 | VtableResolver | VtableResolver | 4 ✅ | TC-RES-001–011 |
 | 8 | FailureHandlerResolver | FailureHandlerResolver | 5 ✅ | TC-FH-001–006 |
-| 9 | Visitor → Index → Resolver Integration | Full data pipeline (no stubs) | 7 | TC-INT-001–003 |
+| 9 | Visitor → Index → Resolver Integration | Full data pipeline (no stubs) | 6 ✅ | TC-INT-001–006 |
 | 10 | CacheManager | CacheManager | 8 | TC-CACHE-001–010 |
 | 11 | WorkspaceIndexer Core | WorkspaceIndexer | 9 | TC-WI-001–006 |
 | 12 | File Discovery & Deferred Resolution | WorkspaceIndexer (file scan, deferred positional, multi-module FH) | 9 | TC-FILE-001, TC-WI-007–008 |
@@ -526,9 +527,9 @@ After TC-FH-001: confirm which NavigationIndex structure `FailureHandlerResolver
 
 ---
 
-### Phase 9: Visitor → Index → Resolver Integration
+### Phase 9: Visitor → Index → Resolver Integration ✅ COMPLETE
 
-**Sprint:** 7  
+**Sprint:** 6 (complete)  
 **Goal:** Prove the full data pipeline from real visitor output → WorkspaceIndexer mergeInto → NavigationIndex → VtableResolver end-to-end — no stubs.  
 **Prerequisites:** Phases 5, 6, 7, and 8 complete; `localTypeInfo` format confirmed in Phase 3.
 
@@ -547,7 +548,7 @@ After TC-FH-001: confirm which NavigationIndex structure `FailureHandlerResolver
 
 #### 9.2 Test Approach
 
-Tests in `integration.test.ts` (at `src/__tests__/`) use `parseFileWithDefs()` on synthetic C source strings — no real file system. The returned `ParsedFile` is passed to a real `WorkspaceIndexer.mergeInto()` call. After merging, a real `VtableResolver` instance is created with the populated index and `resolve()` is called with a synthetic cursor.
+Tests in `integration.test.ts` (at `src/__tests__/`) follow the "test like you fly" principle (PM decision, Sprint 6): synthetic C source files are written to a temporary directory on disk, indexed through the real `WorkspaceIndexer.reindexFile()` public API (disk I/O → Chevrotain parse → mergeInto), and resolved through real `VtableResolver` / `FailureHandlerResolver` instances. No mocks, no manual index population. See Sprint_6.md section 6 for design rationale.
 
 This phase bridges the Phase 2–3 contract gap: if `localTypeInfo` Map key format doesn't match what the resolver expects, it surfaces here before the higher-level phases.
 
@@ -561,15 +562,15 @@ After TC-INT-001: log the full `NavigationIndex` state after mergeInto. Confirm 
 
 #### 9.5 Acceptance Criteria
 
-- [ ] TC-INT-001 implemented and passing (end-to-end single-file VtableResolver resolution)
-- [ ] TC-INT-002 implemented and passing (end-to-end two-source chain resolution)
-- [ ] TC-INT-003 implemented and passing (end-to-end FailureHandlerResolver pipeline)
-- [ ] TC-INT-004 implemented and passing (multi-hop derivation chain resolution)
-- [ ] TC-INT-005 implemented and passing (two modules in same file, no cross-contamination)
-- [ ] TC-INT-006 implemented and passing (no vtable patterns → `found: false`)
-- [ ] Any format mismatches between Phase 3 visitor output and Phase 7/8 resolver input found and fixed
-- [ ] Navigation pipeline data path documented in lessons-learned as a reference
-- [ ] No regressions in Phases 1–8
+- [x] TC-INT-001 implemented and passing (end-to-end single-file VtableResolver resolution)
+- [x] TC-INT-002 implemented and passing (end-to-end two-source chain resolution)
+- [x] TC-INT-003 implemented and passing (end-to-end FailureHandlerResolver pipeline)
+- [x] TC-INT-004 implemented and passing (multi-hop derivation chain resolution)
+- [x] TC-INT-005 implemented and passing (two modules in same file, no cross-contamination)
+- [x] TC-INT-006 implemented and passing (no vtable patterns → `found: false`)
+- [x] Any format mismatches between Phase 3 visitor output and Phase 7/8 resolver input found and fixed
+- [x] Navigation pipeline data path documented in lessons-learned as a reference
+- [x] No regressions in Phases 1–8
 
 #### 9.6 Risk Register
 
