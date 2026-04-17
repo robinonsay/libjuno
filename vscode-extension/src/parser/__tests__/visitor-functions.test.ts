@@ -4,8 +4,8 @@
  * Jest tests for the CST visitor's function definition extraction and failure
  * handler assignment extraction in the LibJuno VSCode extension.
  *
- * Test cases: TC-P10-001 through TC-P10-005 (function definitions)
- *             TC-P11-001 through TC-P11-007 (failure handler assignments)
+ * Test cases: TC-P11-001 through TC-P11-005 (function definitions)
+ *             TC-P10-001 through TC-P10-007 (failure handler assignments)
  *
  * FunctionDefinitionRecord shape (from types.ts):
  *   { functionName, file, line, isStatic }
@@ -22,17 +22,17 @@
 import { parseFile, parseFileWithDefs } from "../visitor";
 
 // ---------------------------------------------------------------------------
-// Section 10: Function Definition Extraction (TC-P10-001 through TC-P10-005)
+// Section 11: Function Definition Extraction (TC-P11-001 through TC-P11-005)
 // ---------------------------------------------------------------------------
 
 // @{"verify": ["REQ-VSCODE-003"]}
-describe("Function Definition Extraction (Section 10)", () => {
+describe("Function Definition Extraction (Section 11)", () => {
 
     // -----------------------------------------------------------------------
-    // TC-P10-001: Simple function — no parameters (void param → empty list)
+    // TC-P11-001: Simple function — no parameters (void param → empty list)
     // -----------------------------------------------------------------------
 
-    it("TC-P10-001: extracts simple no-param function definition", () => {
+    it("TC-P11-001: extracts simple no-param function definition", () => {
         const src =
             "static void MyInit(void)\n" +
             "{\n" +
@@ -55,10 +55,10 @@ describe("Function Definition Extraction (Section 10)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P10-002: Function with one typed pointer parameter
+    // TC-P11-002: Function with one typed pointer parameter
     // -----------------------------------------------------------------------
 
-    it("TC-P10-002: extracts function definition with one parameter", () => {
+    it("TC-P11-002: extracts function definition with one parameter", () => {
         const src =
             "static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +
@@ -80,10 +80,10 @@ describe("Function Definition Extraction (Section 10)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P10-003: Function with multiple parameters — 3 params extracted
+    // TC-P11-003: Function with multiple parameters — 3 params extracted
     // -----------------------------------------------------------------------
 
-    it("TC-P10-003: extracts function definition with multiple parameters", () => {
+    it("TC-P11-003: extracts function definition with multiple parameters", () => {
         const src =
             "static JUNO_STATUS_T HeapCompare(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tParent, JUNO_POINTER_T tChild)\n" +
             "{\n" +
@@ -111,10 +111,10 @@ describe("Function Definition Extraction (Section 10)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P10-004: Multiple functions in one file — all 3 definitions captured
+    // TC-P11-004: Multiple functions in one file — all 3 definitions captured
     // -----------------------------------------------------------------------
 
-    it("TC-P10-004: extracts all function definitions from a multi-function file", () => {
+    it("TC-P11-004: extracts all function definitions from a multi-function file", () => {
         const src =
             "static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +
@@ -148,10 +148,10 @@ describe("Function Definition Extraction (Section 10)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P10-005: Negative — forward declaration must NOT produce a functionDef
+    // TC-P11-005: Negative — forward declaration must NOT produce a functionDef
     // -----------------------------------------------------------------------
 
-    it("TC-P10-005: forward declaration with semicolon produces no function definition", () => {
+    it("TC-P11-005: forward declaration with semicolon produces no function definition", () => {
         // A declaration ending with ';' is parsed as 'declaration', not
         // 'functionDefinition', so _functionDefs must remain empty.
         const src = "static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp);";
@@ -163,17 +163,17 @@ describe("Function Definition Extraction (Section 10)", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Section 11: Failure Handler Assignment Extraction (TC-P11-001 through TC-P11-007)
+// Section 10: Failure Handler Assignment Extraction (TC-P10-001 through TC-P10-007)
 // ---------------------------------------------------------------------------
 
 // @{"verify": ["REQ-VSCODE-016"]}
-describe("Failure Handler Assignment Extraction (Section 11)", () => {
+describe("Failure Handler Assignment Extraction (Section 10)", () => {
 
     // -----------------------------------------------------------------------
-    // TC-P11-001: JUNO_FAILURE_HANDLER member assignment (macro token form)
+    // TC-P10-001: JUNO_FAILURE_HANDLER member assignment (macro token form)
     // -----------------------------------------------------------------------
 
-    it("TC-P11-001: extracts JUNO_FAILURE_HANDLER assignment record", () => {
+    it("TC-P10-001: extracts JUNO_FAILURE_HANDLER assignment record", () => {
         const src =
             "static JUNO_STATUS_T SomeInit(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +
@@ -190,10 +190,10 @@ describe("Failure Handler Assignment Extraction (Section 11)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P11-002: _pfcnFailureHandler member name (expanded form)
+    // TC-P10-002: _pfcnFailureHandler member name (expanded form)
     // -----------------------------------------------------------------------
 
-    it("TC-P11-002: extracts _pfcnFailureHandler assignment record", () => {
+    it("TC-P10-002: extracts _pfcnFailureHandler assignment record", () => {
         const src =
             "static JUNO_STATUS_T SomeInit(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +
@@ -209,10 +209,10 @@ describe("Failure Handler Assignment Extraction (Section 11)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P11-003: Pointer chain assignment — deep member access
+    // TC-P10-003: Pointer chain assignment — deep member access
     // -----------------------------------------------------------------------
 
-    it("TC-P11-003: extracts failure handler from deep pointer chain", () => {
+    it("TC-P10-003: extracts failure handler from deep pointer chain", () => {
         const src =
             "static JUNO_STATUS_T HeapInit(JUNO_DS_HEAP_ROOT_T *ptHeap)\n" +
             "{\n" +
@@ -228,10 +228,10 @@ describe("Failure Handler Assignment Extraction (Section 11)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P11-004: Multiple failure handlers in same function — 2 records
+    // TC-P10-004: Multiple failure handlers in same function — 2 records
     // -----------------------------------------------------------------------
 
-    it("TC-P11-004: extracts two failure handler assignments from the same function", () => {
+    it("TC-P10-004: extracts two failure handler assignments from the same function", () => {
         const src =
             "static JUNO_STATUS_T InitAll(JUNO_APP_ROOT_T *ptApp, JUNO_DS_HEAP_ROOT_T *ptHeap)\n" +
             "{\n" +
@@ -256,10 +256,10 @@ describe("Failure Handler Assignment Extraction (Section 11)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P11-005: Negative — function with no failure handler assignment
+    // TC-P10-005: Negative — function with no failure handler assignment
     // -----------------------------------------------------------------------
 
-    it("TC-P11-005: produces no failure handler record when none is assigned", () => {
+    it("TC-P10-005: produces no failure handler record when none is assigned", () => {
         const src =
             "static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +
@@ -272,10 +272,10 @@ describe("Failure Handler Assignment Extraction (Section 11)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P11-006: Negative — regular vtable member assignment is not a failure handler
+    // TC-P10-006: Negative — regular vtable member assignment is not a failure handler
     // -----------------------------------------------------------------------
 
-    it("TC-P11-006: regular member assignment does not produce a failure handler record", () => {
+    it("TC-P10-006: regular member assignment does not produce a failure handler record", () => {
         const src =
             "static JUNO_STATUS_T SomeInit(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +
@@ -290,11 +290,11 @@ describe("Failure Handler Assignment Extraction (Section 11)", () => {
     });
 
     // -----------------------------------------------------------------------
-    // TC-P11-007: Failure handler assignment is not mistakenly captured as a
+    // TC-P10-007: Failure handler assignment is not mistakenly captured as a
     //             call site — apiCallSites must not include the FH assignment
     // -----------------------------------------------------------------------
 
-    it("TC-P11-007: JUNO_FAILURE_HANDLER assignment produces a failureHandlerAssign record and no apiCallSite", () => {
+    it("TC-P10-007: JUNO_FAILURE_HANDLER assignment produces a failureHandlerAssign record and no apiCallSite", () => {
         const src =
             "static JUNO_STATUS_T SomeInit(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +

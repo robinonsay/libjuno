@@ -1,9 +1,9 @@
 # Software Development Plan — LibJuno VSCode Extension
 
-**Document Version:** 2.1  
-**Date:** 2026-04-15  
+**Document Version:** 3.0  
+**Date:** 2025-07-22  
 **Project:** LibJuno VSCode Extension — Vtable Go-to-Definition, Failure Handler Navigation, MCP Server  
-**Status:** Phase 1 complete, Phases 2–16 pending
+**Status:** Phases 1–3 and 5 complete, Phase 4 removed, Phases 6–16 pending
 
 ---
 
@@ -59,19 +59,13 @@ Seven components, bottom-up dependency order:
 
 ### 1.3 Known Design Questions
 
-**`apiCallSites` — potentially dead-code data path (pending PM decision)**
+**`apiCallSites` — REMOVED (PM Decision, Sprint 3)**
 
-The `IndexBuildingVisitor` populates `ParsedFile.apiCallSites` during CST traversal. However:
-- `WorkspaceIndexer.mergeInto()` does **not** read or store `apiCallSites` — confirmed by source inspection.
-- Neither `VtableResolver` nor `FailureHandlerResolver` reads `apiCallSites` from `NavigationIndex` — the resolver hot path goes through `localTypeInfo` (specifically `lookupVariableType` in `resolverUtils.ts` uses `localTypeInfo.localVariables` and `localTypeInfo.functionParameters`).
-- Consequence: the visitor correctly extracts call-site records at the CST level, but the downstream value of this data is currently zero.
-
-**Plan impact:**
-1. TC-P9 visitor-level tests (Phase 4) are reduced to a representative sample (5–8 tests) that validate correct CST traversal — the visitor logic is correct, and these tests prove it.
-2. A new **Phase 3** is dedicated to `localTypeInfo` extraction — the data the resolvers *actually* consume and the highest-probability bug source.
-3. A new **Phase 9** provides an integration seam test bridging visitor output → WorkspaceIndexer → NavigationIndex → resolver.
-
-**PM decision required:** Should `WorkspaceIndexer.mergeInto()` be extended to ingest `apiCallSites` for future use, or should the visitor's call-site extraction be removed to reduce complexity? This plan defers the decision but keeps the visitor-level tests to preserve optionality.
+The `IndexBuildingVisitor` populates `ParsedFile.apiCallSites` during CST traversal. However,
+`WorkspaceIndexer.mergeInto()` does not read or store `apiCallSites`, and neither resolver
+consumes it. **Per PM decision (Sprint 3), this dead-code data path is accepted as-is.**
+Phase 4 (Visitor: Call Sites & Completeness) has been removed from the development plan.
+The visitor logic remains in place but is not tested or maintained.
 
 ---
 
@@ -79,17 +73,17 @@ The `IndexBuildingVisitor` populates `ParsedFile.apiCallSites` during CST traver
 
 ### 2.1 Source Code Status
 
-All 12 source files compile cleanly. No known compilation errors.
+All 15 source files compile cleanly. No known compilation errors.
 
 | File | Lines | Status | Notes |
 |------|-------|--------|-------|
 | `parser/lexer.ts` | 401 | Tested | 72 lexer tests passing |
 | `parser/parser.ts` | ~1050 | Tested | 2 bugs fixed (Sprint 1) |
-| `parser/visitor.ts` | ~1076 | Partially tested | 1 bug fixed (Sprint 1); struct/vtable init patterns (TC-P6-001, TC-P6-002 done), functions, failure handler extraction tested |
+| `parser/visitor.ts` | ~1076 | Partially tested | 1 bug fixed (Sprint 1); struct/vtable init, functions, failure handlers, local type info tested |
 | `parser/types.ts` | 413 | N/A | Type definitions only |
-| `indexer/navigationIndex.ts` | 101 | Not tested | createEmptyIndex, clearIndex, removeFileRecords |
+| `indexer/navigationIndex.ts` | 101 | Tested | createEmptyIndex, clearIndex, removeFileRecords — 7 tests (Sprint 3) |
 | `indexer/workspaceIndexer.ts` | 399 | Not tested | Full/incremental indexing, file scanning, cache coordination |
-| `resolver/vtableResolver.ts` | 244 | Not tested | Chain-walk resolution with 3 regex strategies (`macroRe`, `arrayRe`, `generalRe`) + field-name fallback |
+| `resolver/vtableResolver.ts` | 244 | Partially tested | 6 tests (TC-RES-001, TC-RES-006); chain-walk resolution with 3 regex strategies (`macroRe`, `arrayRe`, `generalRe`) + field-name fallback |
 | `resolver/failureHandlerResolver.ts` | 162 | Not tested | Failure handler resolution with assignment + type-walk |
 | `resolver/resolverUtils.ts` | 109 | Not tested | findEnclosingFunction, lookupVariableType, walkToRootType, parseIntermediates |
 | `cache/cacheManager.ts` | 250 | Not tested | loadCache, saveCache, indexToCache, cacheToIndex |
@@ -106,10 +100,15 @@ All 12 source files compile cleanly. No known compilation errors.
 | Test File | Tests | Status |
 |-----------|-------|--------|
 | `parser/__tests__/lexer.test.ts` | 72 | All passing |
+| `parser/__tests__/parser-grammar.test.ts` | 148 | All passing |
 | `parser/__tests__/visitor-structs.test.ts` | 17 | All passing |
 | `parser/__tests__/visitor-vtable.test.ts` | 5 | All passing (includes TC-P6-001, TC-P6-002) |
-| `parser/__tests__/visitor-functions.test.ts` | 4 | All passing |
-| **Total** | **98** | **All passing** |
+| `parser/__tests__/visitor-functions.test.ts` | 12 | All passing (TC-P11 function defs, TC-P10 failure handlers) |
+| `parser/__tests__/visitor-localtypeinfo.test.ts` | 8 | All passing (TC-LTI-001–005, NEG-001, NEG-002, BND-001) — Sprint 3 |
+| `resolver/__tests__/vtableResolver.test.ts` | 6 | All passing (TC-RES-001a/b, TC-RES-006a–d) |
+| `indexer/__tests__/fileExtensions.test.ts` | 85 | All passing |
+| `indexer/__tests__/navigationIndex.test.ts` | 7 | All passing (TC-IDX-001–005, NEG-001, BND-001) — Sprint 3 |
+| **Total** | **360** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -126,46 +125,46 @@ All 12 source files compile cleanly. No known compilation errors.
 The project is organized into **16 small, focused phases**. Each phase targets one well-defined architectural layer or concern, is scoped to at most one sprint, and has explicit acceptance criteria before moving to the next phase.
 
 ```
-Phase  1 ─── Parser Foundation                     [COMPLETE]      Sprint 1
-Phase  2 ─── Visitor: Vtable Init Patterns          [NEXT]          Sprint 2
-Phase  3 ─── Visitor: Local Type Info Extraction    [PENDING]       Sprint 3
-Phase  4 ─── Visitor: Call Sites & Completeness     [PENDING]       Sprint 4
-Phase  5 ─── Navigation Index CRUD                  [PENDING]       Sprint 5
-Phase  6 ─── Resolver Utilities                     [PENDING]       Sprint 5
-Phase  7 ─── VtableResolver                         [PENDING]       Sprint 6
-Phase  8 ─── FailureHandlerResolver                 [PENDING]       Sprint 7
-Phase  9 ─── Visitor → Index → Resolver Integration [PENDING]       Sprint 8
-Phase 10 ─── CacheManager                           [PENDING]       Sprint 9
-Phase 11 ─── WorkspaceIndexer Core                  [PENDING]       Sprint 10
-Phase 12 ─── File Discovery & Deferred Resolution   [PENDING]       Sprint 10
-Phase 13 ─── MCP Server                             [PENDING]       Sprint 11
-Phase 14 ─── VSCode Mocks & Definition Provider     [PENDING]       Sprint 12
-Phase 15 ─── Error UX, QuickPick & StatusBar        [PENDING]       Sprint 13
-Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]       Sprint 14
+Phase  1 ─── Parser Foundation                     [COMPLETE]                Sprint 1  ✅
+Phase  2 ─── Visitor: Vtable Init Patterns          [COMPLETE]                Sprint 2  ✅
+Phase  3 ─── Visitor: Local Type Info Extraction    [COMPLETE]                Sprint 3  ✅
+Phase  4 ─── Visitor: Call Sites & Completeness     [REMOVED — PM Decision]
+Phase  5 ─── Navigation Index CRUD                  [COMPLETE]                Sprint 3  ✅
+Phase  6 ─── Resolver Utilities                     [PENDING]                 Sprint 4
+Phase  7 ─── VtableResolver                         [PENDING]                 Sprint 5
+Phase  8 ─── FailureHandlerResolver                 [PENDING]                 Sprint 6
+Phase  9 ─── Visitor → Index → Resolver Integration [PENDING]                 Sprint 7
+Phase 10 ─── CacheManager                           [PENDING]                 Sprint 8
+Phase 11 ─── WorkspaceIndexer Core                  [PENDING]                 Sprint 9
+Phase 12 ─── File Discovery & Deferred Resolution   [PENDING]                 Sprint 9
+Phase 13 ─── MCP Server                             [PENDING]                 Sprint 10
+Phase 14 ─── VSCode Mocks & Definition Provider     [PENDING]                 Sprint 11
+Phase 15 ─── Error UX, QuickPick & StatusBar        [PENDING]                 Sprint 12
+Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]                 Sprint 13
 ```
 
-> **Note:** Phases 5+6 share Sprint 5, and Phases 11+12 share Sprint 10. These pairs are small enough to combine in execution but remain separate phases for tracking and traceability purposes.
+> **Note:** Phases 11+12 share Sprint 9. These are small enough to combine in execution but remain separate phases for tracking and traceability purposes.
 
 ### Phase Overview
 
 | Phase | Focus | Components Under Test | Sprint | Test Sections |
 |-------|-------|----------------------|--------|---------------|
 | 1 | Parser Foundation | Lexer, Parser, Visitor (structs, vtable patterns P6, functions, failure handlers) | 1 ✅ | TC-P1–P5, TC-P6-001/002, TC-P10–P11 (partial) |
-| 2 | Visitor: Vtable Init Patterns | Visitor (designated init, direct assign, positional init) | 2 | TC-P6-003, TC-P7, TC-P8 |
-| 3 | Visitor: Local Type Info | Visitor (localVariables, functionParameters) | 3 | TC-LTI-001–005 |
-| 4 | Visitor: Call Sites & Completeness | Visitor (call site identification, function defs gap, failure handler gap) | 4 | TC-P9 (sample), TC-P10/P11 (gap) |
-| 5 | Navigation Index CRUD | NavigationIndex | 5 | TC-IDX-001–005 |
-| 6 | Resolver Utilities | resolverUtils | 5 | TC-UTIL-001–006 |
-| 7 | VtableResolver | VtableResolver | 6 | TC-RES-001–011 |
-| 8 | FailureHandlerResolver | FailureHandlerResolver | 7 | TC-FH-001–006 |
-| 9 | Visitor → Index → Resolver Integration | Full data pipeline (no stubs) | 8 | TC-INT-001–003 |
-| 10 | CacheManager | CacheManager | 9 | TC-CACHE-001–010 |
-| 11 | WorkspaceIndexer Core | WorkspaceIndexer | 10 | TC-WI-001–006 |
-| 12 | File Discovery & Deferred Resolution | WorkspaceIndexer (file scan, deferred positional, multi-module FH) | 10 | TC-FILE-001, TC-WI-007–008 |
-| 13 | MCP Server | McpServer | 11 | TC-MCP-001–014 |
-| 14 | VSCode Mocks & Definition Provider | JunoDefinitionProvider, vscode mock | 12 | TC-VSC-001–008 |
-| 15 | Error UX, QuickPick & StatusBar | StatusBarHelper, QuickPickHelper | 13 | TC-ERR-001–006, TC-QP-001–005 |
-| 16 | End-to-End Smoke & Final Quality | Full stack | 14 | Smoke tests |
+| 2 | Visitor: Vtable Init Patterns | Visitor (designated init, direct assign, positional init) | 2 ✅ | TC-P6-003, TC-P7, TC-P8 |
+| 3 | Visitor: Local Type Info | Visitor (localVariables, functionParameters) | 3 ✅ | TC-LTI-001–005 |
+| 4 | Visitor: Call Sites & Completeness | REMOVED — PM Decision | — | — |
+| 5 | Navigation Index CRUD | NavigationIndex | 3 ✅ | TC-IDX-001–005 |
+| 6 | Resolver Utilities | resolverUtils | 4 | TC-UTIL-001–006 |
+| 7 | VtableResolver | VtableResolver | 5 | TC-RES-001–011 |
+| 8 | FailureHandlerResolver | FailureHandlerResolver | 6 | TC-FH-001–006 |
+| 9 | Visitor → Index → Resolver Integration | Full data pipeline (no stubs) | 7 | TC-INT-001–003 |
+| 10 | CacheManager | CacheManager | 8 | TC-CACHE-001–010 |
+| 11 | WorkspaceIndexer Core | WorkspaceIndexer | 9 | TC-WI-001–006 |
+| 12 | File Discovery & Deferred Resolution | WorkspaceIndexer (file scan, deferred positional, multi-module FH) | 9 | TC-FILE-001, TC-WI-007–008 |
+| 13 | MCP Server | McpServer | 10 | TC-MCP-001–014 |
+| 14 | VSCode Mocks & Definition Provider | JunoDefinitionProvider, vscode mock | 11 | TC-VSC-001–008 |
+| 15 | Error UX, QuickPick & StatusBar | StatusBarHelper, QuickPickHelper | 12 | TC-ERR-001–006, TC-QP-001–005 |
+| 16 | End-to-End Smoke & Final Quality | Full stack | 13 | Smoke tests |
 
 ---
 
@@ -186,9 +185,9 @@ Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]       Sprint
 
 ---
 
-### Phase 2: Visitor — Vtable Init Patterns
+### Phase 2: Visitor — Vtable Init Patterns ✅ COMPLETE
 
-**Sprint:** 2  
+**Sprint:** 2 (complete)  
 **Goal:** Achieve full test coverage for all vtable initialization patterns (designated, direct, positional) excluding call sites and local type info.  
 **Prerequisites:** Phase 1 complete.
 
@@ -237,9 +236,9 @@ After writing TC-P8-001 (first positional init test): dump `vtableAssignments` a
 
 ---
 
-### Phase 3: Visitor — Local Type Info Extraction
+### Phase 3: Visitor — Local Type Info Extraction ✅ COMPLETE
 
-**Sprint:** 3  
+**Sprint:** 3 (complete)  
 **Goal:** Verify that `visitLocalDeclaration` and `visitFunctionParameters` emit correct variable and parameter type records into `localTypeInfo` — the data that `resolverUtils.lookupVariableType()` actually consumes.  
 **Prerequisites:** Phase 2 complete.
 
@@ -285,62 +284,26 @@ After TC-LTI-001: dump the full `localTypeInfo` structure to understand the exac
 | Multi-function scoping causes variable collision | Medium | Medium | TC-LTI-005 specifically targets this; checkpoint output before writing |
 | Visitor doesn't populate `localTypeInfo` at all | Medium | High | Run diagnostic first: inspect raw visitor output on a simple C file |
 
----
+#### 3.7 Outcomes (Sprint 3)
 
-### Phase 4: Visitor — Call Sites & Completeness
-
-**Sprint:** 4  
-**Goal:** Validate the visitor's call-site extraction logic with a representative sample of TC-P9 tests, confirm `apiCallSites` records are structurally correct at the visitor level, and complete any final gaps in Phase 1–2 visitor coverage.  
-**Prerequisites:** Phase 3 complete.
-
-#### 4.1 Scope
-
-| Work Item | TC IDs | Description | Complexity |
-|-----------|--------|-------------|------------|
-| WI-4.1 | TC-P9-001 to TC-P9-003 | Call site identification — positive cases (simple patterns) | Medium |
-| WI-4.2 | TC-P9-004, TC-P9-005 | Call site identification — negative cases (non-call-site patterns) | Low |
-| WI-4.3 | TC-P9-101 to TC-P9-103 | Chain-walk category 1 — full coverage (indirect API pointer) | Medium |
-| WI-4.4 | TC-P9-201 to TC-P9-203 | Chain-walk category 2 — full coverage (dot-accessed API) | Medium |
-| WI-4.5 | TC-P9-301 to TC-P9-303 | Chain-walk category 3 — full coverage (direct API pointer) | Medium |
-| WI-4.6 | TC-P9-401 to TC-P9-403 | Chain-walk category 4 — full coverage (named API member) | Low–Medium |
-| WI-4.7 | TC-P9-501 to TC-P9-503 | Chain-walk category 5 — full coverage (macro-based) | Medium |
-| WI-4.8 | TC-P9-601 to TC-P9-603 | Chain-walk category 6 — full coverage (nested/complex) | Medium |
-| WI-4.9 | — | Final gap check across all TC-P\* series; add any missing coverage | Low |
-
-> **Scope change (v2.1 — Amendment B1):** TC-P9 is expanded from a representative sample (5–8 tests) back to full coverage (~20–25 tests). Although `apiCallSites` is not currently consumed by the downstream indexer or resolver (see Section 1.3), testing rigor requirements demand full validation of visitor logic to ensure optionality and catch regressions. Each chain-walk category now receives 3 tests (positive, boundary, edge case) instead of 1 representative test.
-
-#### 4.2 Test Approach
-
-Create `visitor-callsites.test.ts` (new file). Tests parse synthetic C at the expression-statement level and verify `apiCallSites` records contain the expected chain pattern tokens. Each chain-walk category receives three tests: a positive case, a boundary case, and an edge case.
-
-#### 4.3 Discovery Checkpoint
-
-After TC-P9-001 and TC-P9-002: inspect the raw `apiCallSites` output structure — confirm field names, nesting, and token content. If the structure differs from test expectations, update expectation format before writing remaining category tests.
-
-#### 4.4 Debug Budget
-
-**25%** — Rationale: expanded from 20% due to full coverage (v2.1 Amendment B1). More tests surface more potential issues; the visitor traversal paths are mechanically similar to vtable init but full coverage increases the chance of hitting grammar edge cases.
-
-#### 4.5 Acceptance Criteria
-
-- [ ] TC-P9-001 through TC-P9-005 implemented and passing (identification)
-- [ ] TC-P9-101 through TC-P9-603 implemented and passing — 3 tests per chain-walk category, 6 categories (18 tests)
-- [ ] Final TC-P\* gap check complete — all visitor test series have at least one test per case
-- [ ] `apiCallSites` structure documented in lessons-learned for future reference
-- [ ] No regressions in Phases 1–3
-
-#### 4.6 Risk Register
-
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| `apiCallSites` not populated by visitor at all | Medium | Low | Only affects visitor validation; resolvers unaffected; document and inform PM |
-| Chain-walk category 5 (macro-based) requires grammar extension | Low | Medium | Run grammar diagnostic first on macro pattern |
+- 8 tests in `visitor-localtypeinfo.test.ts`, all passing
+- `localTypeInfo` format confirmed: `localVariables: Map<funcName, Map<varName, TypeInfo>>`, `functionParameters: Map<funcName, TypeInfo[]>`
+- Format matches `resolverUtils.lookupVariableType()` expectations — no mismatch
+- Behavioral notes: visitor omits localVariables entry for functions with no locals; void-param functions get empty functionParameters array; double-pointer extracts base typename
 
 ---
 
-### Phase 5: Navigation Index CRUD
+### Phase 4: Visitor — Call Sites & Completeness — REMOVED
 
-**Sprint:** 5  
+**Status:** Removed per PM decision (Sprint 3).  
+**Rationale:** `apiCallSites` is a dead-code data path — populated by the visitor but not consumed by any downstream component. Removing this phase reduces complexity and prioritizes the working product.  
+**Impact:** None — no tests, no source code changes. The visitor continues to populate `apiCallSites` but it is not tested or maintained.
+
+---
+
+### Phase 5: Navigation Index CRUD ✅ COMPLETE
+
+**Sprint:** 3 (complete)  
 **Goal:** Verify all NavigationIndex CRUD operations — creation, population, retrieval, and removal by file — across all 9 Map types.  
 **Prerequisites:** Phase 4 complete.
 
@@ -386,11 +349,18 @@ After TC-IDX-002: confirm the exact Map-key format used by `mergeInto()` for eac
 | `mergeInto()` format has undocumented nested Map nesting | Medium | Medium | Discovery checkpoint after TC-IDX-002; document format |
 | `removeFileRecords` partially prunes some flat maps (contradicting M4) | Low | Low | TC-IDX-005 verifies current behavior; document any discrepancy |
 
+#### 5.7 Outcomes (Sprint 3)
+
+- 7 tests in `navigationIndex.test.ts`, all passing
+- All 9 Map types covered: moduleRoots, traitRoots, derivationChain, apiStructFields, vtableAssignments, failureHandlerAssignments, apiMemberRegistry, functionDefinitions, localTypeInfo
+- `removeFileRecords()` confirmed to filter file-bearing Maps and leave flat Maps untouched (M4 stale behavior)
+- Unknown file path is a no-op (TC-IDX-NEG-001)
+
 ---
 
 ### Phase 6: Resolver Utilities
 
-**Sprint:** 5  
+**Sprint:** 4  
 **Goal:** Verify all four `resolverUtils` functions at unit level against synthetic NavigationIndex state.  
 **Prerequisites:** Phase 5 complete (NavigationIndex Map key formats confirmed).
 
@@ -440,7 +410,7 @@ After TC-UTIL-003: confirm `lookupVariableType()` searches `localVariables` firs
 
 ### Phase 7: VtableResolver
 
-**Sprint:** 6  
+**Sprint:** 5  
 **Goal:** Verify that `VtableResolver` correctly resolves all 6 chain-walk patterns to concrete function locations using injected NavigationIndex stubs, including all 3 regex strategy boundary conditions.  
 **Prerequisites:** Phases 5 and 6 complete (index format and resolver utilities verified).
 
@@ -495,7 +465,7 @@ After TC-RES-001: log `macroRe.exec(lineText)` output in the test. Confirm match
 
 ### Phase 8: FailureHandlerResolver
 
-**Sprint:** 7  
+**Sprint:** 6  
 **Goal:** Verify that `FailureHandlerResolver` correctly resolves failure handler assignments, handles the macro form, returns multi-match lists, and properly handles edge cases including column guards and fallthrough behavior.  
 **Prerequisites:** Phase 7 complete.
 
@@ -546,7 +516,7 @@ After TC-FH-001: confirm which NavigationIndex structure `FailureHandlerResolver
 
 ### Phase 9: Visitor → Index → Resolver Integration
 
-**Sprint:** 8  
+**Sprint:** 7  
 **Goal:** Prove the full data pipeline from real visitor output → WorkspaceIndexer mergeInto → NavigationIndex → VtableResolver end-to-end — no stubs.  
 **Prerequisites:** Phases 5, 6, 7, and 8 complete; `localTypeInfo` format confirmed in Phase 3.
 
@@ -601,7 +571,7 @@ After TC-INT-001: log the full `NavigationIndex` state after mergeInto. Confirm 
 
 ### Phase 10: CacheManager
 
-**Sprint:** 9  
+**Sprint:** 8  
 **Goal:** Verify that the CacheManager correctly serializes and deserializes the NavigationIndex to/from JSON, handles all failure modes gracefully, and writes atomically.  
 **Prerequisites:** Phase 9 complete (NavigationIndex format confirmed end-to-end).
 
@@ -660,7 +630,7 @@ After TC-CACHE-001: confirm all 9 Map types survive the roundtrip. Nested Maps (
 
 ### Phase 11: WorkspaceIndexer Core
 
-**Sprint:** 10  
+**Sprint:** 9  
 **Goal:** Verify that `WorkspaceIndexer` correctly performs full indexing, incremental re-indexing, cache loading, and file removal against synthetic file system content.  
 **Prerequisites:** Phase 10 complete (CacheManager verified).
 
@@ -708,7 +678,7 @@ After TC-WI-001: inspect the NavigationIndex state after indexing 2 files. Compa
 
 ### Phase 12: File Discovery & Deferred Resolution
 
-**Sprint:** 10  
+**Sprint:** 9  
 **Goal:** Verify that the workspace file scanner discovers all required file extensions, and that the deferred positional vtable initializer cross-file resolution works correctly (including the multi-module failure handler heuristic).  
 **Prerequisites:** Phase 11 complete.
 
@@ -755,7 +725,7 @@ After TC-WI-007's first assertion (after file A indexed): dump the deferred queu
 
 ### Phase 13: MCP Server
 
-**Sprint:** 11  
+**Sprint:** 10  
 **Goal:** Verify the embedded HTTP MCP server: start/stop lifecycle, all 3 endpoints, error handling, security (127.0.0.1-only binding), and port cleanup.  
 **Prerequisites:** Phase 12 complete; **WI-13.0 source change required** before any tests can be written.
 
@@ -819,7 +789,7 @@ After TC-MCP-001 and TC-MCP-007: confirm server binds to `127.0.0.1` and port is
 
 ### Phase 14: VSCode Mocks & Definition Provider
 
-**Sprint:** 12  
+**Sprint:** 11  
 **Goal:** Build the shared VSCode API mock and verify the `JunoDefinitionProvider` bridge, including fall-through logic and string-coupling behavior.  
 **Prerequisites:** Phases 7 and 8 complete (resolvers verified). Phase 14 can proceed in parallel with Phase 13 — they are architecturally independent (`JunoDefinitionProvider` does not call any MCP API; `McpServer` does not call any VSCode API).
 
@@ -874,7 +844,7 @@ After WI-14.0 and TC-VSC-001: confirm `activate()` runs without throwing. Iterat
 
 ### Phase 15: Error UX, QuickPick & StatusBar
 
-**Sprint:** 13  
+**Sprint:** 12  
 **Goal:** Verify the user-facing error UX (status bar messages, auto-clear), QuickPick presentation, and status bar helper behavior.  
 **Prerequisites:** Phase 14 complete (VSCode mock established).
 
@@ -924,7 +894,7 @@ After TC-ERR-001: confirm auto-clear timer is observable via `jest.useFakeTimers
 
 ### Phase 16: End-to-End Smoke & Final Quality
 
-**Sprint:** 14  
+**Sprint:** 13  
 **Goal:** Run capstone smoke tests exercising the full extension stack with a real LibJuno C file and close all quality gates.  
 **Prerequisites:** All Phases 1–15 complete.
 
@@ -989,21 +959,20 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | Sprint | Phase(s) | Focus | Key Deliverables | Debug Budget |
 |--------|---------|-------|-----------------|-------------|
 | 1 | Phase 1 ✅ | Parser Foundation | 4 test files, 98 tests, 3 bug fixes | 40% (actual) |
-| 2 | Phase 2 | Visitor: Vtable Init Patterns | TC-P6/P7/P8 tests; TC-P10/P11 gap fill | 30% |
-| 3 | Phase 3 | Visitor: Local Type Info | TC-LTI-001–005; `localTypeInfo` format confirmed | 35% |
-| 4 | Phase 4 | Visitor: Call Sites & Completeness | TC-P9 representative sample (5–8 tests); final visitor gap check | 20% |
-| 5 | Phases 5+6 | Navigation Index CRUD + Resolver Utilities | TC-IDX-001–005; TC-UTIL-001–005 | 15–20% |
-| 6 | Phase 7 | VtableResolver | TC-RES-001–011; regex boundary tests | 25% |
-| 7 | Phase 8 | FailureHandlerResolver | TC-FH-001–006 including column guard and fallthrough edge cases | 20% |
-| 8 | Phase 9 | Integration Seam | TC-INT-001–002; full pipeline smoke (no stubs) | 40% |
-| 9 | Phase 10 | CacheManager | TC-CACHE-001–010 | 25% |
-| 10 | Phases 11+12 | WorkspaceIndexer Core + File Discovery | TC-WI-001–008; TC-FILE-001 | 25–35% |
-| 11 | Phase 13 | MCP Server | TC-MCP-001–014; WI-13.0 source change | 20% |
-| 12 | Phase 14 | VSCode Mocks & Definition Provider | TC-VSC-001–008; `__mocks__/vscode.ts` | 35% |
-| 13 | Phase 15 | Error UX, QuickPick & StatusBar | TC-ERR-001–006; TC-QP-001–005 | 20% |
-| 14 | Phase 16 | End-to-End Smoke & Final Quality | Full suite; coverage gate; `tsc --noEmit`; real C file smoke | 20% |
+| 2 | Phase 2 ✅ | Visitor: Vtable Init Patterns | TC-P6/P7/P8 tests; TC-P10/P11 gap fill | 30% |
+| 3 | Phases 3+5 ✅ | Visitor: Local Type Info + Navigation Index CRUD | TC-LTI-001–005; TC-IDX-001–005 | 35% |
+| 4 | Phase 6 | Resolver Utilities | TC-UTIL-001–006 | 20% |
+| 5 | Phase 7 | VtableResolver | TC-RES-001–011; regex boundary tests | 25% |
+| 6 | Phase 8 | FailureHandlerResolver | TC-FH-001–006 including column guard and fallthrough edge cases | 20% |
+| 7 | Phase 9 | Integration Seam | TC-INT-001–006; full pipeline smoke (no stubs) | 40% |
+| 8 | Phase 10 | CacheManager | TC-CACHE-001–010 | 25% |
+| 9 | Phases 11+12 | WorkspaceIndexer Core + File Discovery | TC-WI-001–008; TC-FILE-001 | 25–35% |
+| 10 | Phase 13 | MCP Server | TC-MCP-001–014; WI-13.0 source change | 20% |
+| 11 | Phase 14 | VSCode Mocks & Definition Provider | TC-VSC-001–008; `__mocks__/vscode.ts` | 35% |
+| 12 | Phase 15 | Error UX, QuickPick & StatusBar | TC-ERR-001–006; TC-QP-001–005 | 20% |
+| 13 | Phase 16 | End-to-End Smoke & Final Quality | Full suite; coverage gate; `tsc --noEmit`; real C file smoke | 20% |
 
-**Total: 14 sprints, 16 phases**
+**Total: 13 sprints, 15 active phases (16 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

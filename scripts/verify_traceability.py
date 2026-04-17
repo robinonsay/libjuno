@@ -579,12 +579,14 @@ def main():
     errors.extend(src_errors)
 
     # Also scan all CMakeLists.txt files in the project for @req tags
+    cmake_errors = []
     for cmake_file in sorted(root.rglob("CMakeLists.txt")):
-        _scan_file(cmake_file, root, "req", req_tags, src_errors)
+        _scan_file(cmake_file, root, "req", req_tags, cmake_errors)
+    errors.extend(cmake_errors)
 
     # Step 3: Scan test files for @verify tags
     verify_tags, test_errors = scan_annotations(
-        root, ["tests", "vscode-extension/src"], {".c", ".cpp", ".ts"}, "verify"
+        root, ["tests", "src", "vscode-extension/src"], {".c", ".cpp", ".ts"}, "verify"
     )
     errors.extend(test_errors)
 

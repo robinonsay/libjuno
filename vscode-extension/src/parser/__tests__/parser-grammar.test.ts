@@ -31,6 +31,8 @@ static const JUNO_APP_API_T tSentinelApi = {
 const SENTINEL_FN = `JUNO_APP_API_T`;
 const SENTINEL_FIELD = `OnStart`;
 
+// @{"verify": ["REQ-VSCODE-003"]}
+
 // ===========================================================================
 // Group 1 — Storage Class Specifiers (kills ArrowFunction and LogicalOperator
 // mutants in storageClassSpecifier and declarationSpecifiers GATE)
