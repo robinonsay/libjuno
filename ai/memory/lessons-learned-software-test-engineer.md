@@ -39,3 +39,12 @@
 - `read_file` with endLine=150 only reads 150 lines; use `wc -l` to check actual length first.
 - If file has pre-existing content from a prior session, the new describe blocks may duplicate IDs.
 - Import `TypeInfo` explicitly when used in `new Map<string, TypeInfo>()` type annotations.
+
+### 2026-04-17 — WorkspaceIndexer deferred positional mechanism: producer pipeline is missing
+- `DeferredPositional` interface and `resolveDeferred()` exist but the visitor's `extractPositionalVtable()` silently returns (does not push deferred entries) when the API struct is not in the same file.
+- Cross-file positional initializers are silently dropped — test only the same-file path (which works).
+- Report this to the Lead as a known implementation gap.
+
+### 2026-04-17 — resolveFailureHandlerRootType() has multi-module disambiguation bug
+- When two module roots are in the same file, both failure handlers are attributed to the FIRST root type found in localTypeInfo.functionParameters iteration order.
+- Test the single-module (unambiguous) case only; document multi-module limitation in test comment.

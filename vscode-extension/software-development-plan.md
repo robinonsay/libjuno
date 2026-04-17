@@ -86,7 +86,7 @@ All 15 source files compile cleanly. No known compilation errors.
 | `resolver/vtableResolver.ts` | 244 | Tested | 18 tests passing (TC-RES-001–011, NEG-001) — Sprint 4; chain-walk resolution with 3 regex strategies (`macroRe`, `arrayRe`, `generalRe`) + field-name fallback |
 | `resolver/failureHandlerResolver.ts` | 162 | Tested | 13 tests passing (TC-FH-001–004, 005a/b, 006, 007, NEG-001–003, BND-001) — Sprint 5 |
 | `resolver/resolverUtils.ts` | 109 | Tested | 11 tests passing (TC-UTIL-001–006, NEG-001–002, BND-001, PRI-001) — Sprint 4 |
-| `cache/cacheManager.ts` | 250 | Not tested | loadCache, saveCache, indexToCache, cacheToIndex |
+| `cache/cacheManager.ts` | 250 | Tested | 7 tests; 1 source bug fixed (null guards in cacheToIndex) — Sprint 7 |
 | `providers/junoDefinitionProvider.ts` | 90 | Not tested | VSCode DefinitionProvider bridge |
 | `providers/quickPickHelper.ts` | 34 | Not tested | QuickPick UI display |
 | `providers/statusBarHelper.ts` | 54 | Not tested | Status bar messages |
@@ -111,7 +111,8 @@ All 15 source files compile cleanly. No known compilation errors.
 | `indexer/__tests__/fileExtensions.test.ts` | 85 | All passing |
 | `indexer/__tests__/navigationIndex.test.ts` | 7 | All passing (TC-IDX-001–005, NEG-001, BND-001) — Sprint 3 |
 | `src/__tests__/integration.test.ts` | 6 | All passing (TC-INT-001–006) — Sprint 6 |
-| **Total** | **402** | **All passing** |
+| `cache/__tests__/cacheManager.test.ts` | 7 | All passing (TC-CACHE-001, 002, 006, 009, 010, NEG-001, BND-001) — Sprint 7 |
+| **Total** | **409** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -137,7 +138,7 @@ Phase  6 ─── Resolver Utilities                     [COMPLETE]            
 Phase  7 ─── VtableResolver                         [COMPLETE]                Sprint 4  ✅
 Phase  8 ─── FailureHandlerResolver                 [COMPLETE]                Sprint 5  ✅
 Phase  9 ─── Visitor → Index → Resolver Integration [COMPLETE]                Sprint 6  ✅
-Phase 10 ─── CacheManager                           [PENDING]                 Sprint 8
+Phase 10 ─── CacheManager                           [COMPLETE]                Sprint 7  ✅
 Phase 11 ─── WorkspaceIndexer Core                  [PENDING]                 Sprint 9
 Phase 12 ─── File Discovery & Deferred Resolution   [PENDING]                 Sprint 9
 Phase 13 ─── MCP Server                             [PENDING]                 Sprint 10
@@ -161,7 +162,7 @@ Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]             
 | 7 | VtableResolver | VtableResolver | 4 ✅ | TC-RES-001–011 |
 | 8 | FailureHandlerResolver | FailureHandlerResolver | 5 ✅ | TC-FH-001–006 |
 | 9 | Visitor → Index → Resolver Integration | Full data pipeline (no stubs) | 6 ✅ | TC-INT-001–006 |
-| 10 | CacheManager | CacheManager | 8 | TC-CACHE-001–010 |
+| 10 | CacheManager | CacheManager | 7 ✅ | TC-CACHE-001–010 |
 | 11 | WorkspaceIndexer Core | WorkspaceIndexer | 9 | TC-WI-001–006 |
 | 12 | File Discovery & Deferred Resolution | WorkspaceIndexer (file scan, deferred positional, multi-module FH) | 9 | TC-FILE-001, TC-WI-007–008 |
 | 13 | MCP Server | McpServer | 10 | TC-MCP-001–014 |
@@ -978,7 +979,7 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 5 | Phase 7 | VtableResolver | TC-RES-001–011; regex boundary tests | 25% |
 | 6 | Phase 8 | FailureHandlerResolver | TC-FH-001–006 including column guard and fallthrough edge cases | 20% |
 | 7 | Phase 9 | Integration Seam | TC-INT-001–006; full pipeline smoke (no stubs) | 40% |
-| 8 | Phase 10 | CacheManager | TC-CACHE-001–010 | 25% |
+| 7 | Phase 10 ✅ | CacheManager | TC-CACHE-001, 002, 006, 009, 010, NEG-001, BND-001; 1 source fix | 25% |
 | 9 | Phases 11+12 | WorkspaceIndexer Core + File Discovery | TC-WI-001–008; TC-FILE-001 | 25–35% |
 | 10 | Phase 13 | MCP Server | TC-MCP-001–014; WI-13.0 source change | 20% |
 | 11 | Phase 14 | VSCode Mocks & Definition Provider | TC-VSC-001–008; `__mocks__/vscode.ts` | 35% |

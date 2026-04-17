@@ -1,6 +1,15 @@
 # Lessons Learned — Software Lead
 *Read before every task. Append new entries concisely.*
 
+### 2026-04-17 — Always verify `loadCache` happy path, not just failure modes
+- If all active tests only check null/error returns from `loadCache`, a regression to `return null` would pass.
+- The senior-software-engineer verifier caught this: TC-CACHE-006 needed `loadCache` success assertions.
+
+### 2026-04-17 — Source bugs found during test writing are valid sprint deliverables
+- TC-CACHE-010 revealed that `cacheToIndex` lacked null guards on all 9 `Object.entries()` calls.
+- Skipping the test AND fixing the source in the same sprint is the correct workflow.
+- Report the bug scope accurately (all 9 fields, not just the one that triggered it).
+
 ### 2026-04-14 — Never do hands-on work; delegate everything
 - Lead must NEVER write code, run diagnostic commands, or perform technical analysis.
 - All hands-on work (incl. bug diagnosis) goes to worker/verifier agents.

@@ -179,27 +179,27 @@ export function cacheToIndex(cache: CacheFile): NavigationIndex {
     const index = createEmptyIndex();
 
     // moduleRoots
-    for (const [k, v] of Object.entries(cache.moduleRoots)) {
+    for (const [k, v] of Object.entries(cache.moduleRoots ?? {})) {
         index.moduleRoots.set(k, v);
     }
 
     // traitRoots
-    for (const [k, v] of Object.entries(cache.traitRoots)) {
+    for (const [k, v] of Object.entries(cache.traitRoots ?? {})) {
         index.traitRoots.set(k, v);
     }
 
     // derivationChain
-    for (const [k, v] of Object.entries(cache.derivationChain)) {
+    for (const [k, v] of Object.entries(cache.derivationChain ?? {})) {
         index.derivationChain.set(k, v);
     }
 
     // apiStructFields
-    for (const [k, v] of Object.entries(cache.apiStructFields)) {
+    for (const [k, v] of Object.entries(cache.apiStructFields ?? {})) {
         index.apiStructFields.set(k, v);
     }
 
     // vtableAssignments
-    for (const [apiType, fieldObj] of Object.entries(cache.vtableAssignments)) {
+    for (const [apiType, fieldObj] of Object.entries(cache.vtableAssignments ?? {})) {
         const fieldMap = new Map<string, ConcreteLocation[]>();
         for (const [field, locs] of Object.entries(fieldObj)) {
             fieldMap.set(field, locs);
@@ -208,17 +208,17 @@ export function cacheToIndex(cache: CacheFile): NavigationIndex {
     }
 
     // failureHandlerAssignments
-    for (const [k, v] of Object.entries(cache.failureHandlerAssignments)) {
+    for (const [k, v] of Object.entries(cache.failureHandlerAssignments ?? {})) {
         index.failureHandlerAssignments.set(k, v);
     }
 
     // apiMemberRegistry
-    for (const [k, v] of Object.entries(cache.apiMemberRegistry)) {
+    for (const [k, v] of Object.entries(cache.apiMemberRegistry ?? {})) {
         index.apiMemberRegistry.set(k, v);
     }
 
     // functionDefinitions
-    for (const [fnName, defs] of Object.entries(cache.functionDefinitions)) {
+    for (const [fnName, defs] of Object.entries(cache.functionDefinitions ?? {})) {
         const records: FunctionDefinitionRecord[] = defs.map((d) => ({
             functionName: fnName,
             file: d.file,
@@ -229,7 +229,7 @@ export function cacheToIndex(cache: CacheFile): NavigationIndex {
     }
 
     // localTypeInfo
-    for (const [filePath, clti] of Object.entries(cache.localTypeInfo)) {
+    for (const [filePath, clti] of Object.entries(cache.localTypeInfo ?? {})) {
         const localVariables = new Map<string, Map<string, TypeInfo>>();
         for (const [fn, varObj] of Object.entries(clti.localVariables)) {
             const varMap = new Map<string, TypeInfo>();
