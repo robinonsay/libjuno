@@ -2,7 +2,7 @@
   "name": "libjuno",
   "displayName": "LibJuno",
   "description": "Vtable-aware Go to Definition for LibJuno embedded C projects",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "libjuno",
   "license": "MIT",
   "repository": {

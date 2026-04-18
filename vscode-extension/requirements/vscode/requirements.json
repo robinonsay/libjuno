@@ -97,7 +97,10 @@
       "uses": [
         "REQ-VSCODE-002"
       ],
-      "implements": []
+      "implements": [
+        "REQ-VSCODE-034",
+        "REQ-VSCODE-035"
+      ]
     },
     {
       "id": "REQ-VSCODE-008",
@@ -399,6 +402,28 @@
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-034",
+      "title": "Ctrl-Hover Preview for Resolvable Symbols",
+      "description": "The extension's definition provider shall return at least one resolved target location for every recognized vtable API or failure-handler call site so that VSCode's native Ctrl-hover underline decoration and built-in Go to Definition behavior are available for all resolvable symbols.",
+      "rationale": "Users expect Ctrl-hover to visually indicate navigability for every resolvable symbol. Returning at least one resolved location enables the editor's Ctrl-hover underline decoration regardless of how many concrete implementations exist.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-035",
+      "title": "Ctrl-Hover Underline for Recognized Call Sites",
+      "description": "The extension's definition provider shall return exactly one resolved location for call sites with multiple concrete implementations, preventing the native VSCode multi-definition peek widget from appearing when Ctrl is held before the user clicks. The libjuno.goToImplementation command shall remain available for full implementation selection.",
+      "rationale": "Returning all resolved locations for a multi-implementation call site triggers VSCode's native multi-definition peek widget immediately when Ctrl is held, before the user clicks, which creates inconsistent UX compared to single-implementation call sites where only an underline appears. Returning only the primary location suppresses the premature peek while preserving the Ctrl-hover underline decoration already provided by REQ-VSCODE-034.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-007"
       ],
       "implements": []
     }
