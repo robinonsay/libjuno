@@ -1,5 +1,5 @@
 /// <reference types="jest" />
-// @{"verify": ["REQ-VSCODE-017", "REQ-VSCODE-018", "REQ-VSCODE-019", "REQ-VSCODE-020"]}
+// @{"verify": ["REQ-VSCODE-004", "REQ-VSCODE-017", "REQ-VSCODE-018", "REQ-VSCODE-019", "REQ-VSCODE-020"]}
 import * as http from 'http';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -269,5 +269,27 @@ describe('McpServer', () => {
         // Re-start on a new port so afterEach's server.stop() is safe (no double-stop).
         server = new McpServer(mockVtableResolver, mockFhResolver, mockIndex);
         port = await server.start(0);
+    });
+
+    // === TC-ERR-006 ===
+    // @{"verify": ["REQ-VSCODE-004"]}
+    test('TC-ERR-006: resolve_vtable_call error object includes API type and field name — HTTP 200 (not 4xx/5xx)', async () => {
+        (mockVtableResolver.resolve as jest.Mock).mockReturnValue({
+            found: false,
+            locations: [],
+            error: "No implementation found for 'JUNO_DS_HEAP_API_T::Insert'.",
+        });
+
+        const result = await httpRequest(port, 'POST', '/resolve_vtable_call', VALID_BODY);
+
+        // Application-level resolution failure must return HTTP 200, not an HTTP error code.
+        expect(result.status).toBe(200);
+        const body = result.body as { found: boolean; locations: unknown[]; error: string };
+        expect(body.found).toBe(false);
+        expect(body.locations).toEqual([]);
+        expect(body.error).toBe("No implementation found for 'JUNO_DS_HEAP_API_T::Insert'.");
+        // Error message must identify the API type and specific field.
+        expect(body.error).toContain('JUNO_DS_HEAP_API_T');
+        expect(body.error).toContain('Insert');
     });
 });

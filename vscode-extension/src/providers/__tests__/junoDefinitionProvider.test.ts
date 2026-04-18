@@ -1,5 +1,5 @@
 /// <reference types="jest" />
-// @{"verify": ["REQ-VSCODE-001", "REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-007", "REQ-VSCODE-013", "REQ-VSCODE-016"]}
+// @{"verify": ["REQ-VSCODE-001", "REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-013", "REQ-VSCODE-016"]}
 
 import * as vscode from 'vscode';
 import { createMockExtensionContext, resetMocks, cancellationToken } from '../../__mocks__/vscode';
@@ -247,5 +247,100 @@ describe('JunoDefinitionProvider', () => {
 
         const result = await provider.provideDefinition(doc, pos, cancellationToken);
         expect(result).toBeUndefined();
+    });
+
+    // @{"verify": ["REQ-VSCODE-013"]}
+    it('TC-ERR-004: showErrorMessage is never called for any resolution failure — even after 3 invocations', async () => {
+        (fhResolver.resolve as jest.Mock).mockReturnValue({
+            found: false,
+            locations: [],
+            errorMsg: NO_HANDLER_PATTERN_MSG,
+        });
+        (vtableResolver.resolve as jest.Mock).mockReturnValue({
+            found: false,
+            locations: [],
+            errorMsg: "No implementation found for 'JUNO_APP_API_T::Launch'.",
+        });
+
+        const doc = createMockDocument("ptApp->ptApi->Launch(ptApp);");
+        const pos = createMockPosition(0, 5);
+
+        await provider.provideDefinition(doc, pos, cancellationToken);
+        await provider.provideDefinition(doc, pos, cancellationToken);
+        await provider.provideDefinition(doc, pos, cancellationToken);
+
+        // Resolution failures must never surface a modal dialog — status bar only.
+        expect(vscode.window.showErrorMessage).not.toHaveBeenCalled();
+    });
+
+    // @{"verify": ["REQ-VSCODE-004", "REQ-VSCODE-013"]}
+    it('TC-ERR-005: setStatusBarMessage includes API type and field name in error text', async () => {
+        (fhResolver.resolve as jest.Mock).mockReturnValue({
+            found: false,
+            locations: [],
+            errorMsg: NO_HANDLER_PATTERN_MSG,
+        });
+        (vtableResolver.resolve as jest.Mock).mockReturnValue({
+            found: false,
+            locations: [],
+            errorMsg: "No implementation found for 'JUNO_DS_HEAP_API_T::Insert'.",
+        });
+
+        const doc = createMockDocument("ptDs->ptApi->Insert(ptDs);");
+        const pos = createMockPosition(0, 5);
+
+        await provider.provideDefinition(doc, pos, cancellationToken);
+
+        expect(vscode.window.setStatusBarMessage).toHaveBeenCalledTimes(1);
+        const statusMsg =
+            (vscode.window.setStatusBarMessage as jest.Mock).mock.calls[0][0] as string;
+        expect(statusMsg).toContain('LibJuno');
+        expect(statusMsg).toContain('JUNO_DS_HEAP_API_T');
+        expect(statusMsg).toContain('Insert');
+    });
+
+    // @{"verify": ["REQ-VSCODE-006"]}
+    it('TC-QP-004: Selecting a QuickPick item navigates to the correct file and line', async () => {
+        const loc1 = { functionName: 'OnStart', file: '/workspace/engine/src/engine_app.c', line: 128 };
+        const loc2 = { functionName: 'OnStart', file: '/workspace/sys_manager/src/sys_manager_app.c', line: 77 };
+
+        (fhResolver.resolve as jest.Mock).mockReturnValue({
+            found: false,
+            locations: [],
+            errorMsg: NO_HANDLER_PATTERN_MSG,
+        });
+        (vtableResolver.resolve as jest.Mock).mockReturnValue({
+            found: true,
+            locations: [loc1, loc2],
+        });
+
+        // Return the first QuickPick item (which carries the location property set by showImplementationQuickPick)
+        (vscode.window.showQuickPick as jest.Mock).mockImplementation(async (items: any[]) => {
+            return items[0];
+        });
+
+        const doc = createMockDocument('ptSelf->ptApi->OnStart(ptSelf);');
+        const pos = createMockPosition(0, 5);
+
+        const result = await provider.provideDefinition(doc, pos, cancellationToken);
+
+        // Provider must have shown the QuickPick
+        expect(vscode.window.showQuickPick).toHaveBeenCalled();
+
+        // Provider must have navigated imperatively — returns undefined
+        expect(result).toBeUndefined();
+
+        // showTextDocument must have been called (navigation happened)
+        expect(vscode.window.showTextDocument).toHaveBeenCalled();
+
+        // First argument: URI built from loc1.file
+        const uriArg = (vscode.window.showTextDocument as jest.Mock).mock.calls[0][0];
+        expect(uriArg.fsPath).toBe('/workspace/engine/src/engine_app.c');
+
+        // Second argument: selection range with start at 0-based line 127 (loc1.line - 1)
+        const optionsArg = (vscode.window.showTextDocument as jest.Mock).mock.calls[0][1];
+        expect(optionsArg).toBeDefined();
+        expect(optionsArg.selection).toBeDefined();
+        expect(optionsArg.selection.start.line).toBe(127);
     });
 });

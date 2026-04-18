@@ -8,6 +8,8 @@ import * as vscode from 'vscode';
 export class StatusBarHelper implements vscode.Disposable {
     private readonly item: vscode.StatusBarItem;
     private clearTimer: ReturnType<typeof setTimeout> | undefined;
+    /** Timestamp (ms) of the most recent {@link showError} call; `undefined` if none or reset. */
+    private lastErrorTime: number | undefined;
 
     constructor() {
         this.item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
@@ -20,6 +22,7 @@ export class StatusBarHelper implements vscode.Disposable {
      */
     showIndexed(fileCount: number): void {
         this.cancelClear();
+        this.lastErrorTime = undefined;
         this.item.text = `$(check) LibJuno: Indexed ${fileCount} files`;
         this.item.tooltip = 'LibJuno workspace index is ready';
         this.item.show();
@@ -32,6 +35,10 @@ export class StatusBarHelper implements vscode.Disposable {
      */
     showError(message: string): void {
         this.cancelClear();
+        if (this.lastErrorTime !== undefined && Date.now() - this.lastErrorTime < 10_000) {
+            vscode.window.showInformationMessage(message, 'Show Details');
+        }
+        this.lastErrorTime = Date.now();
         const previous = this.item.text;
         this.item.text = `$(warning) LibJuno: ${message}`;
         this.item.show();
