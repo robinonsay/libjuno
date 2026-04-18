@@ -24,6 +24,7 @@ interface DeferredPositional {
     initializers: string[]; // function names in positional order
     filePath: string;
     lines: number[];
+    varName?: string;
 }
 
 /**
@@ -305,6 +306,7 @@ export class WorkspaceIndexer {
                     initializers: pp.initializers,
                     filePath: pp.file,
                     lines: pp.lines,
+                    varName: pp.varName,
                 });
             }
         }
@@ -506,6 +508,7 @@ export class WorkspaceIndexer {
                     line: defLoc.line !== 0 ? defLoc.line : (d.lines[i] ?? 0),
                     assignmentFile: d.filePath,
                     assignmentLine: d.lines[i] ?? 0,
+                    apiVarName: d.varName,
                 };
                 const existing = fieldMap.get(fields[i]) ?? [];
                 // Avoid duplicates — compare against loc.file and loc.line (definition location)

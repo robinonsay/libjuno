@@ -562,3 +562,17 @@ provider does not attempt to render an empty trace. It also documents known beha
 **Expected:** `compositionRoot.file === assignmentFile`; `compositionRoot.line === assignmentLine`.
 
 ---
+
+### TC-TRACE-023 — Positional Vtable Composition Root Resolved via varName Threading
+**Requirement:** REQ-VSCODE-036
+**File:** `src/indexer/__tests__/workspaceIndexer.test.ts`
+**Scenario:** A positional vtable initializer (e.g., `static const MY_API_T gtMyApi = { FuncA };`) has its `varName` threaded through `PendingPositionalVtable → DeferredPositional → ConcreteLocation.apiVarName`. After `fullIndex()`, `resolveCompositionRoots()` scans for `&gtMyApi` in source files and stamps `initCallFile`/`initCallLine` on the matching `ConcreteLocation`.
+**Expected:** `ConcreteLocation.initCallFile` is set to the file containing the `&gtMyApi` call site.
+
+### TC-TRACE-024 — varName Populated for Positional Vtable Initializer
+**Requirement:** REQ-VSCODE-036
+**File:** `src/parser/__tests__/visitor-vtable.test.ts`
+**Scenario:** A file contains an explicit-tag struct definition and a matching positional vtable initializer assigned to a named variable. The visitor resolves positional vtable in-file and emits `VtableAssignmentRecord` entries.
+**Expected:** Each emitted `VtableAssignmentRecord` has `varName` equal to the variable name of the vtable struct (e.g., `"gtMyLogApi"`).
+
+---

@@ -470,5 +470,43 @@ static const FOO_API_T tFooApi = {
                 functionName: "FooDoThing",
             });
         });
+
+        // -------------------------------------------------------------------
+        // TC-TRACE-024: varName threaded through positional vtable initializer
+        //   (REQ-VSCODE-036)
+        //
+        //   Sprint 25 fixed the gap where varName was never threaded through
+        //   PendingPositionalVtable → DeferredPositional → ConcreteLocation.apiVarName
+        //   for same-file positional initializers (which resolve immediately).
+        //   This test confirms that VtableAssignmentRecord.varName is set to
+        //   "gtMyLogApi" for each positionally-resolved field.
+        // -------------------------------------------------------------------
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it("TC-TRACE-024: walkVtableDeclaration stamps varName on VtableAssignmentRecords for a same-file positional initializer", () => {
+            // Uses explicit struct tag syntax so the parser resolves the positional
+            // initializer immediately (same-file path) rather than deferring it.
+            // The inline typedef style (typedef struct { } MY_LOG_API_T) is not
+            // recognized as an apiStructDefinition by the visitor, causing deferral.
+            const src = `
+struct MY_LOG_API_TAG {
+    void (*LogInfo)(void);
+    void (*LogError)(void);
+};
+static const MY_LOG_API_T gtMyLogApi = { LogInfo, LogError };
+`;
+            const { parsed } = parseFileWithDefs('test.c', src);
+
+            // Both positionally-resolved fields must have varName populated.
+            // Verifies that extractPositionalVtable() threads varName through to the
+            // VtableAssignmentRecord (the Sprint 25 varName threading fix).
+            const logInfoEntries = parsed.vtableAssignments.filter(r => r.functionName === 'LogInfo');
+            expect(logInfoEntries).toHaveLength(1);
+            expect(logInfoEntries[0].varName).toBe('gtMyLogApi');
+
+            const logErrorEntries = parsed.vtableAssignments.filter(r => r.functionName === 'LogError');
+            expect(logErrorEntries).toHaveLength(1);
+            expect(logErrorEntries[0].varName).toBe('gtMyLogApi');
+        });
     });
 });

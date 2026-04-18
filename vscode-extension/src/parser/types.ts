@@ -170,6 +170,7 @@ export interface PendingPositionalVtable {
   file: string;
   /** 1-based line numbers corresponding to each initializer. */
   lines: number[];
+  varName?: string;
 }
 
 /**

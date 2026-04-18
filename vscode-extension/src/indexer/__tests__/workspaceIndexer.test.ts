@@ -1806,6 +1806,50 @@ describe('WorkspaceIndexer — core behaviour', () => {
             expect(idx.initCallIndex.size).toBe(0);
         });
 
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-023: resolveCompositionRoots stamps initCallFile on ConcreteLocation for a positional vtable initializer', async () => {
+            // File 1: API struct definition (explicit struct tag syntax so the parser
+            // can resolve the positional initializer immediately in the same file),
+            // function implementations, and the positional vtable initializer.
+            const apiImplPath = path.join(crDir, 'pos023_api.c');
+            fs.writeFileSync(apiImplPath, [
+                'struct MY_API_TAG { void (*FuncA)(void); void (*FuncB)(void); };',
+                'static void FuncA(void) {}',
+                'static void FuncB(void) {}',
+                'static const MY_API_T gtMyApi = { FuncA, FuncB };',
+            ].join('\n'));
+
+            // File 2: call site that passes &gtMyApi as an argument
+            const callSitePath = path.join(crDir, 'pos023_app.c');
+            fs.writeFileSync(callSitePath, [
+                'static void someInit(void *m, const void *api, void *h) { (void)m; (void)api; (void)h; }',
+                'static void run(void) { void *myModule = 0; someInit(&myModule, &gtMyApi, 0); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            // fullIndex() processes both files and then calls resolveDeferred() +
+            // resolveCompositionRoots(). Using fullIndex() ensures cross-file
+            // resolution completes before we inspect the index.
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_API_T with FuncA
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const funcALocs = fieldMap!.get('FuncA');
+            expect(funcALocs).toBeDefined();
+            expect(funcALocs!.length).toBeGreaterThan(0);
+
+            // At least one ConcreteLocation must have initCallFile pointing to the call-site file.
+            // This verifies that varName was threaded through the positional vtable pipeline
+            // (PendingPositionalVtable.varName → VtableAssignmentRecord.varName →
+            //  ConcreteLocation.apiVarName) so that resolveCompositionRoots() could
+            // match &gtMyApi in the call site.
+            const stampedLoc = funcALocs!.find(loc => loc.initCallFile !== undefined);
+            expect(stampedLoc).toBeDefined();
+            expect(stampedLoc!.initCallFile!.endsWith('pos023_app.c')).toBe(true);
+        });
+
     }); // end 'Composition root resolution'
 
 });

@@ -670,6 +670,7 @@ class CSTWalker {
                     initializers: names,
                     file: this.filePath,
                     lines,
+                    varName,
                 });
             }
             return;
