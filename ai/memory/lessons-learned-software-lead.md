@@ -92,3 +92,13 @@ This is non-negotiable every sprint without exception.
 ### 2026-04-18 — Worker agents may leave temp diagnostic files; always clean up
 - A worker left `count-errors-temp.test.ts` in the test directory, inflating test counts.
 - Always scan for unexpected test files after worker execution and remove temp artifacts before final gate.
+
+### 2026-04-18 — When SDP header/phase tables are already updated, verify before re-editing
+- The SDP was already partially updated by a prior sprint. The junior-software-developer correctly detected this and reported "no changes needed."
+- Always read the file first to check current state before spawning editors.
+- Sprint Schedule table and phase section headers can drift independently — verifier caught Sprint 13→14 mismatch.
+
+### 2026-04-18 — Agent failures happen; retry with a different agent or smaller scope
+- software-developer agent returned no response on a large SDP edit brief.
+- Re-spawned as junior-software-developer with a focused brief — succeeded.
+- For large mechanical edits, prefer junior-software-developer with exact string specifications.
