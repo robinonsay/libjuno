@@ -80,7 +80,7 @@ export class McpServer {
                 parsed.column,
                 parsed.lineText
             );
-            sendJson(res, 200, result);
+            sendJson(res, 200, result.found ? result : { ...result, isError: true });
             return;
         }
 
@@ -101,7 +101,7 @@ export class McpServer {
                 parsed.column,
                 parsed.lineText
             );
-            sendJson(res, 200, result);
+            sendJson(res, 200, result.found ? result : { ...result, isError: true });
             return;
         }
 

@@ -4,6 +4,7 @@ import { VtableResolver } from '../resolver/vtableResolver';
 import { FailureHandlerResolver } from '../resolver/failureHandlerResolver';
 import { NavigationIndex, ConcreteLocation } from '../parser/types';
 import { showImplementationQuickPick } from './quickPickHelper';
+import { StatusBarHelper } from './statusBarHelper';
 
 /** Error message returned by VtableResolver when the line has no LibJuno pattern. */
 const NO_PATTERN_MSG = 'No LibJuno API call pattern found at cursor position.';
@@ -20,7 +21,8 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
     constructor(
         private readonly vtableResolver: VtableResolver,
         private readonly failureHandlerResolver: FailureHandlerResolver,
-        private readonly index: NavigationIndex
+        private readonly index: NavigationIndex,
+        private readonly statusBar: StatusBarHelper
     ) {}
 
     async provideDefinition(
@@ -45,10 +47,7 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
             // Only surface an error when a recognizable pattern existed but resolution failed
             const msg = result.errorMsg ?? '';
             if (msg && msg !== NO_PATTERN_MSG && msg !== NO_HANDLER_PATTERN_MSG) {
-                vscode.window.setStatusBarMessage(
-                    `$(warning) LibJuno: Could not resolve implementation — ${msg}`,
-                    5000
-                );
+                this.statusBar.showError(`Could not resolve implementation — ${msg}`);
             }
             return undefined;
         }

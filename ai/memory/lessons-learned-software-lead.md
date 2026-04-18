@@ -73,3 +73,13 @@ This is non-negotiable every sprint without exception.
 - No format mismatches found between visitor output and resolver input (Sprint 6, Phase 9).
 - Indexing order matters: JUNO_MODULE_ROOT file must be indexed before files with vtable assignments or failure handler assignments.
 - For FailureHandlerResolver, assignment form (ASSIGNMENT_RE) resolves via functionDefinitions directly; Step 2 (failureHandlerAssignments) requires rootType resolution during mergeInto.
+
+### 2026-04-18 — StatusBarHelper timer leak requires afterEach dispose
+- When tests create `new StatusBarHelper()` in `beforeEach`, `showError()` schedules a real `setTimeout(5s)`.
+- If no `afterEach(() => statusBar.dispose())` is added, Jest warns about leaked timers and force-exits workers.
+- Always pair StatusBarHelper creation with disposal in test teardown.
+
+### 2026-04-18 — Parallel WI execution works well for independent source+test splits
+- WI-13.4 (JDP tests) and WI-13.5 (MCP tests) ran in parallel successfully — no shared files.
+- WI-13.1+WI-13.2 (source changes) must complete before WI-13.4 (test changes) — sequential dependency.
+- Audit/report work items (WI-13.6) can always run in parallel with test updates.

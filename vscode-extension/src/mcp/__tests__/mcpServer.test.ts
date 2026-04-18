@@ -106,6 +106,7 @@ describe('McpServer', () => {
         expect(body.found).toBe(true);
         expect(body.locations).toHaveLength(1);
         expect(body.locations[0]).toEqual({ functionName: 'Foo', file: 'a.c', line: 10 });
+        expect((result.body as any).isError).toBeUndefined();
     });
 
     // === TC-MCP-005 ===
@@ -120,9 +121,10 @@ describe('McpServer', () => {
         const result = await httpRequest(port, 'POST', '/resolve_vtable_call', VALID_BODY);
 
         expect(result.status).toBe(200);
-        const body = result.body as { found: boolean; error: string };
+        const body = result.body as { found: boolean; error: string; isError: boolean };
         expect(body.found).toBe(false);
         expect(body.error).toBe('No match');
+        expect(body.isError).toBe(true);
     });
 
     // === TC-MCP-006 ===
@@ -152,9 +154,10 @@ describe('McpServer', () => {
         const result = await httpRequest(port, 'POST', '/resolve_failure_handler', VALID_BODY);
 
         expect(result.status).toBe(200);
-        const body = result.body as { found: boolean; error: string };
+        const body = result.body as { found: boolean; error: string; isError: boolean };
         expect(body.found).toBe(false);
         expect(body.error).toBe('None');
+        expect(body.isError).toBe(true);
     });
 
     // === TC-MCP-009 ===
@@ -183,9 +186,10 @@ describe('McpServer', () => {
 
         // Resolver "not found" is a valid application result, not a server error.
         expect(result.status).toBe(200);
-        const body = result.body as { found: boolean; error: string };
+        const body = result.body as { found: boolean; error: string; isError: boolean };
         expect(body.found).toBe(false);
         expect(body.error).toBe('Not found');
+        expect(body.isError).toBe(true);
     });
 
     // === TC-MCP-011 ===
@@ -284,12 +288,13 @@ describe('McpServer', () => {
 
         // Application-level resolution failure must return HTTP 200, not an HTTP error code.
         expect(result.status).toBe(200);
-        const body = result.body as { found: boolean; locations: unknown[]; error: string };
+        const body = result.body as { found: boolean; locations: unknown[]; error: string; isError: boolean };
         expect(body.found).toBe(false);
         expect(body.locations).toEqual([]);
         expect(body.error).toBe("No implementation found for 'JUNO_DS_HEAP_API_T::Insert'.");
         // Error message must identify the API type and specific field.
         expect(body.error).toContain('JUNO_DS_HEAP_API_T');
         expect(body.error).toContain('Insert');
+        expect(body.isError).toBe(true);
     });
 });

@@ -9,6 +9,7 @@ import { VtableResolver } from '../../resolver/vtableResolver';
 import { FailureHandlerResolver } from '../../resolver/failureHandlerResolver';
 import { createEmptyIndex } from '../../indexer/navigationIndex';
 import { NavigationIndex } from '../../parser/types';
+import { StatusBarHelper } from '../statusBarHelper';
 
 // Mock McpServer to avoid binding real network ports during tests.
 jest.mock('../../mcp/mcpServer', () => ({
@@ -91,6 +92,7 @@ describe('JunoDefinitionProvider', () => {
     let index: NavigationIndex;
     let vtableResolver: VtableResolver;
     let fhResolver: FailureHandlerResolver;
+    let statusBar: StatusBarHelper;
     let provider: JunoDefinitionProvider;
 
     const NO_PATTERN_MSG = 'No LibJuno API call pattern found at cursor position.';
@@ -101,6 +103,7 @@ describe('JunoDefinitionProvider', () => {
         index = createEmptyIndex();
         vtableResolver = new VtableResolver(index);
         fhResolver = new FailureHandlerResolver(index);
+        statusBar = new StatusBarHelper();
 
         // Set up default spy behaviour — safe fallthrough defaults.
         jest.spyOn(vtableResolver, 'resolve').mockReturnValue({
@@ -114,7 +117,7 @@ describe('JunoDefinitionProvider', () => {
             errorMsg: NO_HANDLER_PATTERN_MSG,
         });
 
-        provider = new JunoDefinitionProvider(vtableResolver, fhResolver, index);
+        provider = new JunoDefinitionProvider(vtableResolver, fhResolver, index, statusBar);
     });
 
     // @{"verify": ["REQ-VSCODE-002", "REQ-VSCODE-007"]}
@@ -200,11 +203,9 @@ describe('JunoDefinitionProvider', () => {
 
         await provider.provideDefinition(doc, pos, cancellationToken);
 
-        expect(vscode.window.setStatusBarMessage).toHaveBeenCalledTimes(1);
-        const statusMsg =
-            (vscode.window.setStatusBarMessage as jest.Mock).mock.calls[0][0] as string;
-        expect(statusMsg).toContain('LibJuno');
-        expect(statusMsg).toContain("JUNO_APP_API_T::Launch");
+        const item = (vscode.window.createStatusBarItem as jest.Mock).mock.results[0].value;
+        expect(item.text).toContain('LibJuno');
+        expect(item.text).toContain("JUNO_APP_API_T::Launch");
     });
 
     // @{"verify": ["REQ-VSCODE-007"]}
@@ -225,8 +226,9 @@ describe('JunoDefinitionProvider', () => {
 
         const result = await provider.provideDefinition(doc, pos, cancellationToken);
         expect(result).toBeUndefined();
-        // No-pattern messages are silently swallowed — no status bar update expected.
-        expect(vscode.window.setStatusBarMessage).not.toHaveBeenCalled();
+        // StatusBarHelper.showError() must NOT have been called for no-pattern messages.
+        const item = (vscode.window.createStatusBarItem as jest.Mock).mock.results[0].value;
+        expect(item.text).toBe('');
     });
 
     // @{"verify": ["REQ-VSCODE-002"]}
@@ -291,12 +293,10 @@ describe('JunoDefinitionProvider', () => {
 
         await provider.provideDefinition(doc, pos, cancellationToken);
 
-        expect(vscode.window.setStatusBarMessage).toHaveBeenCalledTimes(1);
-        const statusMsg =
-            (vscode.window.setStatusBarMessage as jest.Mock).mock.calls[0][0] as string;
-        expect(statusMsg).toContain('LibJuno');
-        expect(statusMsg).toContain('JUNO_DS_HEAP_API_T');
-        expect(statusMsg).toContain('Insert');
+        const item = (vscode.window.createStatusBarItem as jest.Mock).mock.results[0].value;
+        expect(item.text).toContain('LibJuno');
+        expect(item.text).toContain('JUNO_DS_HEAP_API_T');
+        expect(item.text).toContain('Insert');
     });
 
     // @{"verify": ["REQ-VSCODE-006"]}

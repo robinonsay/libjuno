@@ -65,7 +65,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     context.subscriptions.push(
         vscode.languages.registerDefinitionProvider(
             [{ language: 'c' }, { language: 'cpp' }],
-            new JunoDefinitionProvider(vtableResolver, failureHandlerResolver, indexer.index)
+            new JunoDefinitionProvider(vtableResolver, failureHandlerResolver, indexer.index, statusBar)
         )
     );
 
@@ -87,10 +87,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
 
             if (!result.found || result.locations.length === 0) {
-                vscode.window.setStatusBarMessage(
-                    `$(warning) LibJuno: ${result.errorMsg ?? 'No implementation found.'}`,
-                    5000
-                );
+                statusBar.showError(result.errorMsg ?? 'No implementation found.');
                 return;
             }
 
