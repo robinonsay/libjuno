@@ -82,7 +82,7 @@ All 15 source files compile cleanly. No known compilation errors.
 | `parser/visitor.ts` | ~1076 | Partially tested | 1 bug fixed (Sprint 1); struct/vtable init, functions, failure handlers, local type info tested |
 | `parser/types.ts` | 413 | N/A | Type definitions only |
 | `indexer/navigationIndex.ts` | 101 | Tested | createEmptyIndex, clearIndex, removeFileRecords — 7 tests (Sprint 3) |
-| `indexer/workspaceIndexer.ts` | 399 | Tested | 17 tests passing (TC-WI-001–009, TC-CACHE-003–005, TC-FILE-001, NEG-001, BND-001) — Sprints 8–9; reindexFile deferred fix (Sprint 17) |
+| `indexer/workspaceIndexer.ts` | 399 | Tested | 17 tests passing; reindexFile deferred fix (Sprint 17); resolveDefinitionLocation fix (Sprint 18) |
 | `resolver/vtableResolver.ts` | 244 | Tested | 18 tests passing (TC-RES-001–011, NEG-001) — Sprint 4; chain-walk resolution with 3 regex strategies (`macroRe`, `arrayRe`, `generalRe`) + field-name fallback |
 | `resolver/failureHandlerResolver.ts` | 162 | Tested | 13 tests passing (TC-FH-001–004, 005a/b, 006, 007, NEG-001–003, BND-001) — Sprint 5 |
 | `resolver/resolverUtils.ts` | 109 | Tested | 11 tests passing (TC-UTIL-001–006, NEG-001–002, BND-001, PRI-001) — Sprint 4 |
@@ -112,7 +112,7 @@ All 15 source files compile cleanly. No known compilation errors.
 | `indexer/__tests__/navigationIndex.test.ts` | 7 | All passing (TC-IDX-001–005, NEG-001, BND-001) — Sprint 3 |
 | `src/__tests__/integration.test.ts` | 6 | All passing (TC-INT-001–006) — Sprint 6 |
 | `cache/__tests__/cacheManager.test.ts` | 7 | All passing (TC-CACHE-001, 002, 006, 009, 010, NEG-001, BND-001) — Sprint 7 |
-| `indexer/__tests__/workspaceIndexer.test.ts` | 17 | All passing (TC-WI-001–009, TC-CACHE-003–005, TC-FILE-001, NEG-001, BND-001) — Sprints 8–9 |
+| `indexer/__tests__/workspaceIndexer.test.ts` | 30 | All passing (includes TC-WI-015–018 cross-file definition resolution regression tests — Sprint 18) |
 | `mcp/__tests__/mcpServer.test.ts` | 14 | All passing (TC-MCP-002–007, 009–016) — Sprint 10 |
 | `providers/__tests__/junoDefinitionProvider.test.ts` | 10 | All passing (TC-VSC-001–008, NEG-001, BND-001) — Sprint 11 |
 | `src/__tests__/bulk-headers.test.ts` | 4 | All passing (TC-BULK-004) — Sprint 15 |
@@ -122,7 +122,7 @@ All 15 source files compile cleanly. No known compilation errors.
 | `src/__tests__/e2e-smoke.test.ts` | 3 | All passing (TC-E2E-SMOKE-001/002/003) — Sprint 14 |
 | `src/__tests__/extension-branches.test.ts` | varies | All passing — Sprint 14 |
 | `parser/__tests__/visitor-branches.test.ts` | varies | All passing — Sprint 14 |
-| **Total** | **618** | **All passing** |
+| **Total** | **622** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -131,6 +131,12 @@ All 15 source files compile cleanly. No known compilation errors.
 | Bug A | `visitor.ts` used `"Identifier2"` key instead of `"Identifier"` in `walkStructOrUnionSpecifier` | Changed to `tok(c, "Identifier")` |
 | Bug B | `parser.ts` `declarationSpecifiers` used greedy `AT_LEAST_ONE` causing Identifier consumption | Restructured to OR + MANY with GATE on LA(2) |
 | Bug C | `visitor.ts` `walkExpressionStatement` called `drillToPostfix(lhsCond)` instead of `drillToPostfix(ae)` | Changed argument to `ae` |
+
+### 2.4 Bugs Found and Fixed (Sprint 18)
+
+| Bug | Root Cause | Fix |
+|-----|-----------|-----|
+| Bug D | `resolveDefinitionLine()` returned only a line number; when the function definition was in a different file than the vtable assignment, `ConcreteLocation.file` used the assignment file while `ConcreteLocation.line` came from the definition file — a file/line mismatch causing Go-to-Definition to navigate to the wrong location | Refactored to `resolveDefinitionLocation()` returning `{ file, line }`; updated `mergeInto()` and `resolveDeferred()` to use the resolved definition file; added same-file preference in index fallback; fallback to assignment location when definition not found |
 
 ---
 
@@ -1135,8 +1141,9 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 15 | Phase 17 ✅ | Parser: Production Header Compatibility | macroCallStatement rule, void macro arg fix, 29/29 headers clean, TC-MACRO-STMT-001–006, NEG-001, BND-001, 009, TC-MODROOT-VOID-001, TC-BULK-004 | 10% |
 | 16 | — | Traceability Audit & SDP Closure | Traceability matrix (21/21 REQs), SDP phases marked COMPLETE | 5% |
 | 17 | Phase 18 ✅ | Parser & Indexer: Production Source Compatibility | looksLikeCast, braced init, reindexFile deferred, EOF sentinel, FloatingLiteral; REG-17-001–010b | 15% |
+| 18 | — | Cross-File Definition Resolution Bug Fix | `resolveDefinitionLocation()` fix; TC-WI-015–018 regression tests | 10% |
 
-**Total: 16 sprints, 17 active phases (18 numbered; Phase 4 removed)**
+**Total: 17 sprints, 17 active phases (18 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

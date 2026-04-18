@@ -1272,6 +1272,228 @@ describe('WorkspaceIndexer — core behaviour', () => {
             }
         });
 
+        // =====================================================================
+        // TC-WI-015: Cross-file designated vtable assignment resolves
+        //   ConcreteLocation.file to the function DEFINITION file, not the
+        //   vtable assignment file.
+        //
+        //   Bug: resolveDefinitionLine() (old) returned only a line number;
+        //   ConcreteLocation.file was always r.file (assignment file).
+        //   Fix: resolveDefinitionLocation() returns {file, line}; callers use
+        //   defLoc.file when defLoc.line !== 0.
+        //
+        //   'a_def.c' sorts before 'b_vtable.c' → indexed first, so
+        //   CrossFile15_DoThing is in this.index.functionDefinitions when the
+        //   assignment file is processed (resolveDefinitionLocation step 2).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-015: fullIndex() sets ConcreteLocation.file to the function definition file for a cross-file designated vtable assignment', async () => {
+            const dir = path.join(fileDir, 'tc-wi-015');
+            fs.mkdirSync(dir);
+
+            // Definition file (indexed first): API struct + function definition
+            const fileDefPath = path.join(dir, 'a_def.c');
+            fs.writeFileSync(fileDefPath, [
+                'typedef struct CROSS15_API_TAG CROSS15_API_T;',
+                '',
+                'struct CROSS15_API_TAG',
+                '{',
+                '    void (*DoThing)(void);',
+                '};',
+                '',
+                'void CrossFile15_DoThing(void) {}',
+                '',
+            ].join('\n'));
+
+            // Assignment file (indexed second): designated vtable init only
+            const fileVtablePath = path.join(dir, 'b_vtable.c');
+            fs.writeFileSync(fileVtablePath, [
+                'static const CROSS15_API_T tApi15 = {',
+                '    .DoThing = CrossFile15_DoThing,',
+                '};',
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            const fieldMap = indexer.index.vtableAssignments.get('CROSS15_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('DoThing');
+            expect(locs).toBeDefined();
+            expect(locs!).toHaveLength(1);
+
+            // ConcreteLocation.file must be the DEFINITION file (a_def.c), not the
+            // assignment file (b_vtable.c). Before the fix, file was always r.file.
+            expect(locs![0].file).toBe(fileDefPath);
+            expect(locs![0].line).toBeGreaterThan(0);
+            expect(locs![0].functionName).toBe('CrossFile15_DoThing');
+        });
+
+        // =====================================================================
+        // TC-WI-016: Same-file designated vtable — no regression after fix
+        //   resolveDefinitionLocation() step 1 (same-file match) fires;
+        //   ConcreteLocation.file must be the single source file and
+        //   ConcreteLocation.line must be the definition line (before the vtable).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-016: fullIndex() correctly resolves ConcreteLocation.file/line for a same-file designated vtable assignment (no regression)', async () => {
+            const dir = path.join(fileDir, 'tc-wi-016');
+            fs.mkdirSync(dir);
+
+            const filePath = path.join(dir, 'samefi16.c');
+            fs.writeFileSync(filePath, [
+                'typedef struct SAME16_API_TAG SAME16_API_T;', // line 1
+                '',                                             // line 2
+                'struct SAME16_API_TAG',                       // line 3
+                '{',                                            // line 4
+                '    void (*Process)(void);',                  // line 5
+                '};',                                           // line 6
+                '',                                             // line 7
+                'void SameFile16_Process(void) {}',            // line 8 — definition
+                '',                                             // line 9
+                'static const SAME16_API_T tApi16 = {',       // line 10 — vtable
+                '    .Process = SameFile16_Process,',          // line 11
+                '};',                                           // line 12
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            const fieldMap = indexer.index.vtableAssignments.get('SAME16_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('Process');
+            expect(locs).toBeDefined();
+            expect(locs!).toHaveLength(1);
+
+            // ConcreteLocation.file must be the same source file
+            expect(locs![0].file).toBe(filePath);
+            // ConcreteLocation.line must be the function definition line (line 8),
+            // which precedes the vtable assignment (line 10) — proves definition
+            // line is used, not the vtable assignment line
+            expect(locs![0].line).toBeGreaterThan(0);
+            expect(locs![0].line).toBeLessThan(10);
+            expect(locs![0].functionName).toBe('SameFile16_Process');
+        });
+
+        // =====================================================================
+        // TC-WI-017: Cross-file positional vtable (deferred path) resolves
+        //   ConcreteLocation.file to the function definition file.
+        //   resolveDeferred() calls resolveDefinitionLocation(fnName, d.filePath, [])
+        //   with empty functionDefs → relies on this.index.functionDefinitions.
+        //   'a_defs17.c' sorts before 'b_init17.c' → struct + defs indexed first.
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-017: fullIndex() sets ConcreteLocation.file to the definition file for cross-file positional vtable (deferred resolution path)', async () => {
+            const dir = path.join(fileDir, 'tc-wi-017');
+            fs.mkdirSync(dir);
+
+            // Definition file (indexed first): API struct definition + function definitions
+            const fileDefsPath = path.join(dir, 'a_defs17.c');
+            fs.writeFileSync(fileDefsPath, [
+                'typedef struct DEFER17_API_TAG DEFER17_API_T;',
+                '',
+                'struct DEFER17_API_TAG',
+                '{',
+                '    void (*Op1)(void);',
+                '    void (*Op2)(void);',
+                '};',
+                '',
+                'void Defer17_Impl_Op1(void) {}',
+                'void Defer17_Impl_Op2(void) {}',
+                '',
+            ].join('\n'));
+
+            // Initializer file (indexed second): positional vtable only
+            const fileInitPath = path.join(dir, 'b_init17.c');
+            fs.writeFileSync(fileInitPath, [
+                'static const DEFER17_API_T tDefer17 = { Defer17_Impl_Op1, Defer17_Impl_Op2 };',
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            const fields = indexer.index.apiStructFields.get('DEFER17_API_T');
+            expect(fields).toEqual(['Op1', 'Op2']);
+
+            const fieldMap = indexer.index.vtableAssignments.get('DEFER17_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs1 = fieldMap!.get('Op1');
+            expect(locs1).toBeDefined();
+            expect(locs1!).toHaveLength(1);
+            // ConcreteLocation.file must be the DEFINITION file (a_defs17.c), not
+            // the positional initializer file (b_init17.c). resolveDeferred()
+            // uses defLoc.file when defLoc.line !== 0.
+            expect(locs1![0].file).toBe(fileDefsPath);
+            expect(locs1![0].line).toBeGreaterThan(0);
+            expect(locs1![0].functionName).toBe('Defer17_Impl_Op1');
+
+            const locs2 = fieldMap!.get('Op2');
+            expect(locs2).toBeDefined();
+            expect(locs2!).toHaveLength(1);
+            expect(locs2![0].file).toBe(fileDefsPath);
+            expect(locs2![0].functionName).toBe('Defer17_Impl_Op2');
+        });
+
+        // =====================================================================
+        // TC-WI-018: Fallback to vtable assignment location when function
+        //   definition is not found in any indexed file.
+        //   A forward declaration produces no FunctionDefinitionRecord; 
+        //   resolveDefinitionLocation() returns { file, line: 0 }.
+        //   mergeInto() must fall back to r.file / r.line (not leave line as 0).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-018: fullIndex() falls back to vtable assignment file/line when the function definition is not found in any indexed file', async () => {
+            const dir = path.join(fileDir, 'tc-wi-018');
+            fs.mkdirSync(dir);
+
+            const filePath = path.join(dir, 'fallback18.c');
+            fs.writeFileSync(filePath, [
+                'typedef struct FALLB18_API_TAG FALLB18_API_T;', // line 1
+                '',                                               // line 2
+                'struct FALLB18_API_TAG',                        // line 3
+                '{',                                              // line 4
+                '    void (*SomeField)(void);',                  // line 5
+                '};',                                             // line 6
+                '',                                               // line 7
+                '/* Forward declaration only — no function body */', // line 8
+                'void Fallback18_Func(void);',                   // line 9
+                '',                                               // line 10
+                'static const FALLB18_API_T tFallb18 = {',      // line 11
+                '    .SomeField = Fallback18_Func,',             // line 12
+                '};',                                             // line 13
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // Fallback18_Func has no body, so it must NOT be in functionDefinitions
+            expect(indexer.index.functionDefinitions.has('Fallback18_Func')).toBe(false);
+
+            const fieldMap = indexer.index.vtableAssignments.get('FALLB18_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('SomeField');
+            expect(locs).toBeDefined();
+            expect(locs!).toHaveLength(1);
+
+            // ConcreteLocation.file must be the ASSIGNMENT file (fallback path):
+            // resolveDefinitionLocation returns { file: r.file, line: 0 } →
+            // mergeInto uses r.file and r.line (not defLoc.file/line).
+            expect(locs![0].file).toBe(filePath);
+            // ConcreteLocation.line must be the non-zero assignment line (r.line),
+            // not the "not found" sentinel value of 0.
+            expect(locs![0].line).toBeGreaterThan(0);
+            expect(locs![0].functionName).toBe('Fallback18_Func');
+        });
+
     }); // end 'File Discovery and Cross-File Resolution'
 
     // =========================================================================

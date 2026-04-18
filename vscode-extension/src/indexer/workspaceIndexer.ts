@@ -207,10 +207,11 @@ export class WorkspaceIndexer {
 
         // vtableAssignments: append
         for (const r of parsed.vtableAssignments) {
+            const defLoc = this.resolveDefinitionLocation(r.functionName, r.file, functionDefs);
             const loc: ConcreteLocation = {
                 functionName: r.functionName,
-                file: r.file,
-                line: this.resolveDefinitionLine(r.functionName, r.file, functionDefs),
+                file: defLoc.line !== 0 ? defLoc.file : r.file,
+                line: defLoc.line !== 0 ? defLoc.line : r.line,
             };
             let fieldMap = idx.vtableAssignments.get(r.apiType);
             if (!fieldMap) {
@@ -226,10 +227,11 @@ export class WorkspaceIndexer {
         for (const r of parsed.failureHandlerAssigns) {
             const resolvedRootType = this.resolveFailureHandlerRootType(r, parsed, functionDefs);
             if (!resolvedRootType) { continue; }
+            const defLoc = this.resolveDefinitionLocation(r.functionName, r.file, functionDefs);
             const loc: ConcreteLocation = {
                 functionName: r.functionName,
-                file: r.file,
-                line: this.resolveDefinitionLine(r.functionName, r.file, functionDefs),
+                file: defLoc.line !== 0 ? defLoc.file : r.file,
+                line: defLoc.line !== 0 ? defLoc.line : r.line,
             };
             const existing = idx.failureHandlerAssignments.get(resolvedRootType) ?? [];
             existing.push(loc);
@@ -265,22 +267,32 @@ export class WorkspaceIndexer {
     }
 
     /**
-     * Resolves the definition line for a function name by looking it up in the
+     * Resolves the definition location for a function name by looking it up in the
      * functionDefs collected from the same parse pass.
-     * Falls back to the assignment line (0) if not found.
+     * Falls back to the assignment location if not found.
+     *
+     * @param functionName - The function name to look up.
+     * @param file - The file path of the vtable assignment (used as fallback).
+     * @param functionDefs - Function definitions from the current parse pass.
+     * @returns Object containing `file` and `line`; `line` is 0 when not found.
      */
-    private resolveDefinitionLine(
+    private resolveDefinitionLocation(
         functionName: string,
         file: string,
         functionDefs: FunctionDefinitionRecord[]
-    ): number {
-        // Prefer a same-file definition
+    ): { file: string; line: number } {
+        // 1. Same-file match in current parse pass
         const samefile = functionDefs.find((d) => d.functionName === functionName && d.file === file);
-        if (samefile) { return samefile.line; }
-        // Fall back to any file-scope definition already in the index
+        if (samefile) { return { file: samefile.file, line: samefile.line }; }
+        // 2. Index fallback — prefer same-file entry
         const indexDefs = this.index.functionDefinitions.get(functionName);
-        if (indexDefs?.length) { return indexDefs[0].line; }
-        return 0;
+        if (indexDefs?.length) {
+            const sameFileIdx = indexDefs.find((d) => d.file === file);
+            if (sameFileIdx) { return { file: sameFileIdx.file, line: sameFileIdx.line }; }
+            return { file: indexDefs[0].file, line: indexDefs[0].line };
+        }
+        // 3. Not found
+        return { file, line: 0 };
     }
 
     /**
@@ -379,15 +391,15 @@ export class WorkspaceIndexer {
             }
             for (let i = 0; i < d.initializers.length && i < fields.length; i++) {
                 const fnName = d.initializers[i];
-                const line = d.lines[i] ?? 0;
+                const defLoc = this.resolveDefinitionLocation(fnName, d.filePath, []);
                 const loc: ConcreteLocation = {
                     functionName: fnName,
-                    file: d.filePath,
-                    line: this.resolveDefinitionLine(fnName, d.filePath, []),
+                    file: defLoc.line !== 0 ? defLoc.file : d.filePath,
+                    line: defLoc.line !== 0 ? defLoc.line : (d.lines[i] ?? 0),
                 };
                 const existing = fieldMap.get(fields[i]) ?? [];
-                // Avoid duplicates — compare against loc.line (definition line), not d.lines[i] (assignment line)
-                if (!existing.some((e) => e.functionName === fnName && e.file === d.filePath && e.line === loc.line)) {
+                // Avoid duplicates — compare against loc.file and loc.line (definition location)
+                if (!existing.some((e) => e.functionName === fnName && e.file === loc.file && e.line === loc.line)) {
                     existing.push(loc);
                 }
                 fieldMap.set(fields[i], existing);

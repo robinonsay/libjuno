@@ -38,6 +38,17 @@ The extension also exposes its resolution capabilities to AI agent platforms via
 | REQ-VSCODE-019 | AI Failure Handler Resolution Access |
 | REQ-VSCODE-020 | Platform-Agnostic AI Interface |
 | REQ-VSCODE-021 | C and C++ File Type Support |
+| REQ-VSCODE-022 | FAIL Macro Failure Handler Navigation |
+| REQ-VSCODE-023 | JUNO_FAIL Direct Handler Resolution |
+| REQ-VSCODE-024 | JUNO_FAIL_MODULE Handler Resolution |
+| REQ-VSCODE-025 | JUNO_FAIL_ROOT Handler Resolution |
+| REQ-VSCODE-026 | JUNO_ASSERT_EXISTS_MODULE Handler Resolution |
+| REQ-VSCODE-027 | Vtable Resolution Trace View |
+| REQ-VSCODE-028 | Trace View Activation via Keyboard |
+| REQ-VSCODE-029 | Trace View Activation via Command Palette |
+| REQ-VSCODE-030 | Trace View Call Site Node |
+| REQ-VSCODE-031 | Trace View Composition Root Node |
+| REQ-VSCODE-032 | Trace View Implementation Node |
 
 ---
 
@@ -64,10 +75,10 @@ The extension also exposes its resolution capabilities to AI agent platforms via
 
 ---
 
-// @{"design": ["REQ-VSCODE-001", "REQ-VSCODE-002", "REQ-VSCODE-003", "REQ-VSCODE-004", "REQ-VSCODE-016", "REQ-VSCODE-017"]}
+// @{"design": ["REQ-VSCODE-001", "REQ-VSCODE-002", "REQ-VSCODE-003", "REQ-VSCODE-004", "REQ-VSCODE-016", "REQ-VSCODE-017", "REQ-VSCODE-027"]}
 ## 3. Architecture and Component Design
 
-The extension is composed of seven components. Each component has a single responsibility and communicates with adjacent components through defined interfaces.
+The extension is composed of eight components. Each component has a single responsibility and communicates with adjacent components through defined interfaces.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -94,7 +105,8 @@ The extension is composed of seven components. Each component has a single respo
 │           │                                                      │
 │  ┌────────▼──────────────────────────────────────────────────┐  │
 │  │               VSCode Integration Layer                     │  │
-│  │  (DefinitionProvider, QuickPick, Commands, StatusBar)     │  │
+│  │  (DefinitionProvider, QuickPick, Commands, StatusBar,     │  │
+│  │   VtableTraceProvider)                                     │  │
 │  └────────────────────────────────────────┬───────────────────┘  │
 │                                           │                      │
 │  ┌────────────────────────────────────────▼───────────────────┐  │
@@ -937,10 +949,12 @@ interface VtableResolutionResult {
 }
 
 interface ConcreteLocation {
-  functionName: string;
-  file:         string;
-  line:         number;  // Line of the function **definition**.
-                         // Resolved in the same parse pass as vtable assignments (see Section 3.2).
+  functionName:    string;
+  file:            string;
+  line:            number;      // Line of the function **definition**.
+                               // Resolved in the same parse pass as vtable assignments (see Section 3.2).
+  assignmentFile?: string;     // File where the vtable assignment occurs (composition root)
+  assignmentLine?: number;     // Line of the vtable assignment (composition root)
 }
 ```
 
@@ -957,15 +971,17 @@ Resolution algorithm is detailed in Section 5.3.
 
 ### 3.5 VSCode Integration Layer
 
-Provides the user-facing features: DefinitionProvider registration, QuickPick for multiple results, commands, and status bar messages.
+Provides the user-facing features: DefinitionProvider registration, QuickPick for multiple results, commands, status bar messages, and the vtable resolution trace WebviewPanel (VtableTraceProvider).
 
 **Registered providers and commands:**
 
 | Item | Type | Trigger |
 |------|------|---------|
 | `JunoDefinitionProvider` | `vscode.DefinitionProvider` | F12, Ctrl+Click on C/C++ files |
+| `VtableTraceProvider` | WebviewPanel | `libjuno.showVtableTrace` command |
 | `libjuno.goToImplementation` | Command | Command Palette |
 | `libjuno.reindexWorkspace` | Command | Command Palette |
+| `libjuno.showVtableTrace` | Command | Command Palette; Ctrl+Shift+T; Right-click context menu |
 
 ### 3.6 MCP Server
 
@@ -1024,11 +1040,20 @@ interface NavigationIndex {
   localTypeInfo: Map<string, LocalTypeInfo>;
 }
 
+interface ConcreteLocation {
+  functionName:    string;
+  file:            string;
+  line:            number;      // Line of the function definition
+  assignmentFile?: string;      // File where the vtable assignment occurs (composition root)
+  assignmentLine?: number;      // Line of the vtable assignment (composition root)
+}
+
 interface FunctionDefinitionRecord {
   functionName: string;
   file:         string;
   line:         number;
   isStatic:     boolean;  // true if the function was declared with the `static` keyword
+  signature?:   string;  // Full function signature text (return type + name + params)
 }
 ```
 
@@ -1060,9 +1085,9 @@ File: `.libjuno/navigation-cache.json`
   },
   "vtableAssignments": {
     "JUNO_DS_HEAP_API_T": {
-      "Insert":  [{ "functionName": "JunoDs_Heap_Insert",  "file": "src/juno_heap.c", "line": 259 }],
-      "Heapify": [{ "functionName": "JunoDs_Heap_Heapify", "file": "src/juno_heap.c", "line": 270 }],
-      "Pop":     [{ "functionName": "JunoDs_Heap_Pop",     "file": "src/juno_heap.c", "line": 285 }]
+      "Insert":  [{ "functionName": "JunoDs_Heap_Insert",  "file": "src/juno_heap.c", "line": 259, "assignmentFile": "src/juno_heap.c", "assignmentLine": 18 }],
+      "Heapify": [{ "functionName": "JunoDs_Heap_Heapify", "file": "src/juno_heap.c", "line": 270, "assignmentFile": "src/juno_heap.c", "assignmentLine": 19 }],
+      "Pop":     [{ "functionName": "JunoDs_Heap_Pop",     "file": "src/juno_heap.c", "line": 285, "assignmentFile": "src/juno_heap.c", "assignmentLine": 20 }]
     }
   },
   "failureHandlerAssignments": {
@@ -1075,10 +1100,10 @@ File: `.libjuno/navigation-cache.json`
   },
   "functionDefinitions": {
     "Publish": [
-      { "file": "src/juno_broker.c", "line": 51, "isStatic": true }
+      { "file": "src/juno_broker.c", "line": 51, "isStatic": true, "signature": "static JUNO_STATUS_T Publish(JUNO_BROKER_ROOT_T *ptBroker, JUNO_BROKER_TOPIC_T tTopic, JUNO_POINTER_T tData)" }
     ],
     "JunoDs_Heap_Insert": [
-      { "file": "src/juno_heap.c", "line": 259, "isStatic": false }
+      { "file": "src/juno_heap.c", "line": 259, "isStatic": false, "signature": "JUNO_STATUS_T JunoDs_Heap_Insert(JUNO_DS_HEAP_ROOT_T *ptHeap, JUNO_POINTER_T tValue)" }
     ]
   },
   "localTypeInfo": {
@@ -1109,10 +1134,10 @@ File: `.libjuno/navigation-cache.json`
 | `traitRoots` | `object` | traitRootType → apiType (from `JUNO_TRAIT_ROOT`). |
 | `derivationChain` | `object` | derivedType → immediate rootType. Chain is walked at resolution time. |
 | `apiStructFields` | `object` | apiType → ordered field names (from struct definition). |
-| `vtableAssignments` | `object` | apiType → fieldName → array of `ConcreteLocation`. Each `line` is the function **definition** line. |
+| `vtableAssignments` | `object` | apiType → fieldName → array of `ConcreteLocation`. Each `line` is the function **definition** line; `assignmentFile`/`assignmentLine` record the vtable assignment site (composition root). |
 | `failureHandlerAssignments` | `object` | rootType → array of `ConcreteLocation`. |
 | `apiMemberRegistry` | `object` | struct member name → API pointer type (`_API_T`). Built during indexing from all struct definitions. Used by the chain-walk fallback to resolve non-`ptApi` API member names. |
-| `functionDefinitions` | `object` | functionName → array of `FunctionDefinitionRecord` (`file`, `line`, `isStatic`). Multiple entries arise when identically named `static` functions exist in different files. |
+| `functionDefinitions` | `object` | functionName → array of `FunctionDefinitionRecord` (`file`, `line`, `isStatic`, `signature?`). Multiple entries arise when identically named `static` functions exist in different files. |
 | `localTypeInfo` | `object` | filePath → `LocalTypeInfo` (local variable and parameter type maps, keyed per function). Used at query time for the chain-walk type resolver. |
 
 ---
@@ -1141,7 +1166,7 @@ interface TypeInfo {
 
 ---
 
-// @{"design": ["REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-009", "REQ-VSCODE-015", "REQ-VSCODE-016"]}
+// @{"design": ["REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-009", "REQ-VSCODE-015", "REQ-VSCODE-016", "REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026"]}
 ## 5. Resolution Algorithms
 
 ### 5.1 Vtable Call Resolution
@@ -1368,6 +1393,85 @@ STEP 5 — Look up concrete handler(s)
 STEP 6 — Dispatch (same single/multiple logic as Section 5.2)
 ```
 
+// @{"design": ["REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026"]}
+### 5.3.1 FAIL Macro Call Site Resolution
+
+This subsection extends the `FailureHandlerResolver` to handle the four FAIL/ASSERT macro call sites. Recognition and resolution happen **at query time** inside the resolver — no new lexer tokens or index record types are required, because these macros parse as ordinary `Identifier '(' argumentExpressionList ')'` expressions whose arguments are already present as tokens in the line text.
+
+```
+STEP 0 — Check for FAIL macro call site
+  Inspect the line text at the cursor position for one of the following patterns:
+    /\bJUNO_FAIL\s*\(/
+    /\bJUNO_FAIL_MODULE\s*\(/
+    /\bJUNO_FAIL_ROOT\s*\(/
+    /\bJUNO_ASSERT_EXISTS_MODULE\s*\(/
+  IF a pattern matches:
+    Record the macro name and proceed with FAIL macro resolution (Steps 1–2 below).
+  ELSE:
+    Fall through to the existing §5.3 algorithm (cursor on _pfcnFailureHandler member).
+
+STEP 1 — Extract macro arguments from line text
+  Scan the line text starting from the opening '(' of the macro call.
+  Use balanced-parenthesis tracking to handle nested expressions within arguments:
+    depth = 0
+    FOR each character from the opening '(':
+      IF '(': depth++
+      IF ')': depth--; IF depth == 0: end of argument list
+      IF ',' AND depth == 1: argument boundary
+  Collect each argument as a trimmed substring.
+
+  Extract the 2nd argument (index 1, 0-indexed) for all four macro forms:
+    JUNO_FAIL(tStatus, pfcnHandler, pvUserData, msg)         → arg[1] = pfcnHandler
+    JUNO_FAIL_MODULE(tStatus, ptMod, msg)                   → arg[1] = ptMod
+    JUNO_FAIL_ROOT(tStatus, ptRootMod, msg)                 → arg[1] = ptRootMod
+    JUNO_ASSERT_EXISTS_MODULE(ptr, ptMod, str)              → arg[1] = ptMod
+
+  Strip surrounding whitespace and cast expressions (e.g. '(TYPE *)ptr' → 'ptr').
+  extractedArg = the bare identifier name.
+
+STEP 2 — Resolve based on macro type
+
+  IF macro is JUNO_FAIL:
+    handlerName = extractedArg  // a function pointer variable or function name
+    locations = index.functionDefinitions.get(handlerName)
+    IF locations is defined and non-empty:
+      RETURN { found: true, locations: locations.map(fd => ({
+        functionName: fd.functionName, file: fd.file, line: fd.line
+      }))}
+    ELSE:
+      RETURN { found: false, errorMsg: "No definition found for failure handler '${handlerName}'." }
+
+  IF macro is JUNO_FAIL_MODULE or JUNO_ASSERT_EXISTS_MODULE:
+    // The second argument is a pointer to a derived or root module struct.
+    modulePtrName = extractedArg
+    Resolve modulePtrName's declared type using localTypeInfo
+    (local variables first, then function parameters — same lookup as §5.3 Step 4).
+    Walk the derivation chain to the root type
+    (same WHILE loop as §5.1 Step 5):
+      current = resolvedType
+      WHILE index.derivationChain.has(current):
+        current = index.derivationChain.get(current)
+      rootType = current
+    locations = index.failureHandlerAssignments.get(rootType)
+    IF empty:
+      RETURN { found: false, errorMsg: "No failure handler registered for '${rootType}'." }
+    ELSE:
+      RETURN { found: true, locations: locations }
+
+  IF macro is JUNO_FAIL_ROOT:
+    // The second argument is already a root (not derived) module pointer.
+    rootPtrName = extractedArg
+    Resolve rootPtrName's declared type using localTypeInfo (no derivation chain walk).
+    rootType = resolvedType
+    locations = index.failureHandlerAssignments.get(rootType)
+    IF empty:
+      RETURN { found: false, errorMsg: "No failure handler registered for '${rootType}'." }
+    ELSE:
+      RETURN { found: true, locations: locations }
+```
+
+**Design rationale:** Handling FAIL macro recognition at query time (in the resolver) rather than at parse/index time (in the CST visitor) avoids adding new record types and index structures. The macro arguments are available directly in the line text; the type information needed for module pointer resolution is already populated in `localTypeInfo` by `visitLocalDeclaration` and `visitFunctionParameters`. This approach keeps the indexer and data model unchanged.
+
 ---
 
 // @{"design": ["REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-013"]}
@@ -1393,9 +1497,13 @@ class JunoDefinitionProvider implements vscode.DefinitionProvider {
     position: vscode.Position,
     token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
-    // 1. Check if line matches a LibJuno call site pattern
-    // 2. If vtable call: invoke VtableResolver
-    // 3. If failure handler line: invoke FailureHandlerResolver
+    // 1. Check if line matches a FAIL macro call site pattern (§5.3.1 Step 0):
+    //      /\bJUNO_FAIL\s*\(/, /\bJUNO_FAIL_MODULE\s*\(/, etc.
+    //    If yes: invoke FailureHandlerResolver in FAIL macro mode → goto 4.
+    // 2. Check if line matches a LibJuno vtable call site pattern (ptApi->Field)
+    //    If vtable call: invoke VtableResolver → goto 4.
+    // 3. Check if line matches a failure handler assignment (JUNO_FAILURE_HANDLER / _pfcnFailureHandler)
+    //    If yes: invoke FailureHandlerResolver in standard §5.3 mode → goto 4.
     // 4. If result.found and single: return LocationLink[]
     // 5. If result.found and multiple: show QuickPick, return undefined
     //    (QuickPick handles navigation imperatively)
@@ -1625,6 +1733,188 @@ Cache writes are debounced (500 ms) to avoid excessive disk I/O during bulk file
 | REQ-VSCODE-019 | AI Failure Handler Resolution Access | MCP tool `resolve_failure_handler` (Section 7.3) |
 | REQ-VSCODE-020 | Platform-Agnostic AI Interface | MCP protocol selection rationale (Section 7.1); no platform-specific AI API used |
 | REQ-VSCODE-021 | C and C++ File Type Support | File scan scope (Section 3.2); FileSystemWatcher glob (Section 9.3); configurable extension settings |
+| REQ-VSCODE-022 | FAIL Macro Failure Handler Navigation | `FailureHandlerResolver` §5.3.1; `JunoDefinitionProvider` §6.2 |
+| REQ-VSCODE-023 | JUNO_FAIL Direct Handler Resolution | §5.3.1 Step 2 — JUNO_FAIL branch; `functionDefinitions` index lookup |
+| REQ-VSCODE-024 | JUNO_FAIL_MODULE Handler Resolution | §5.3.1 Step 2 — JUNO_FAIL_MODULE branch; derivation chain walk + `failureHandlerAssignments` lookup |
+| REQ-VSCODE-025 | JUNO_FAIL_ROOT Handler Resolution | §5.3.1 Step 2 — JUNO_FAIL_ROOT branch; `failureHandlerAssignments` direct lookup (no derivation chain walk) |
+| REQ-VSCODE-026 | JUNO_ASSERT_EXISTS_MODULE Handler Resolution | §5.3.1 Step 2 — same as JUNO_FAIL_MODULE branch; derivation chain walk + `failureHandlerAssignments` lookup |
+| REQ-VSCODE-027 | Vtable Resolution Trace View | VtableTraceProvider (§11); WebviewPanel (§11.3); TraceNode/VtableTrace interfaces (§11.2) |
+| REQ-VSCODE-028 | Trace View Activation via Keyboard | Keybinding: Ctrl+Shift+T (§11.5); `when` clause guard for C/C++ files |
+| REQ-VSCODE-029 | Trace View Activation via Command Palette | Command: `libjuno.showVtableTrace` (§11.5) |
+| REQ-VSCODE-030 | Trace View Call Site Node | TraceNode type='call-site' (§11.2 Step 2); WebviewPanel call-site div (§11.3) |
+| REQ-VSCODE-031 | Trace View Composition Root Node | ConcreteLocation.assignmentFile/.assignmentLine (§4.1); TraceNode type='composition-root' (§11.2 Step 3) |
+| REQ-VSCODE-032 | Trace View Implementation Node | FunctionDefinitionRecord.signature (§4.1); TraceNode type='implementation' (§11.2 Step 4) |
+
+---
+
+// @{"design": ["REQ-VSCODE-027", "REQ-VSCODE-028", "REQ-VSCODE-029", "REQ-VSCODE-030", "REQ-VSCODE-031", "REQ-VSCODE-032"]}
+## 11. Vtable Resolution Trace View Design
+
+### 11.1 Overview
+
+The vtable resolution trace view provides a visual tree showing the full resolution chain from an API call site, through the composition root where the vtable was initialized, to the concrete implementation function. This satisfies REQ-VSCODE-027.
+
+The trace view complements the existing Go to Definition feature (§5.1): Go to Definition navigates directly to the implementation, while the trace view surfaces the intermediate wiring step — the composition root vtable assignment — making the full dependency injection chain visible. This is especially useful for debugging DI configuration issues and understanding the wiring of large LibJuno-based systems.
+
+### 11.2 Component: VtableTraceProvider
+
+A new component added to the VSCode Integration Layer (§3.5). Responsibility: collect the full 3-node resolution trace and render it in a `vscode.WebviewPanel`.
+
+**TypeScript interfaces:**
+
+```typescript
+interface TraceNode {
+  type:   'call-site' | 'composition-root' | 'implementation';
+  label:  string;   // e.g., "ptCmdPipeApi->Dequeue(...)"
+  file:   string;   // workspace-relative path
+  line:   number;
+  detail: string;   // additional context line
+}
+
+interface VtableTrace {
+  callSite:        TraceNode;
+  compositionRoot: TraceNode;
+  implementation:  TraceNode;
+}
+```
+
+**Data Collection Algorithm:**
+
+```
+STEP 1 — Resolve the vtable call using VtableResolver
+  result = vtableResolver.resolve(file, line, column)
+  IF result.found == false:
+    Show error via StatusBarHelper (same as §8.1)
+    RETURN
+
+STEP 2 — Build the call site node (REQ-VSCODE-030)
+  callSite = {
+    type:   'call-site',
+    label:  extractCallExpression(lineText),
+    file:   currentFile,
+    line:   cursorLine,
+    detail: lineText.trim()
+  }
+
+STEP 3 — Build the composition root node (REQ-VSCODE-031)
+  // Use the extended ConcreteLocation (with assignmentFile/assignmentLine from §4.1)
+  location = result.locations[selectedIndex or 0]
+  compositionRoot = {
+    type:   'composition-root',
+    label:  `.${fieldName} = ${location.functionName}`,
+    file:   location.assignmentFile,
+    line:   location.assignmentLine,
+    detail: // read line from assignment file at assignmentLine
+  }
+
+STEP 4 — Build the implementation node (REQ-VSCODE-032)
+  // Use FunctionDefinitionRecord.signature (from §4.1) if available
+  implementation = {
+    type:   'implementation',
+    label:  location.functionName,
+    file:   location.file,
+    line:   location.line,
+    detail: location.signature ?? location.functionName
+  }
+
+STEP 5 — Display the WebviewPanel
+  Show a WebviewPanel with HTML rendering of the 3 nodes in tree layout (see §11.3)
+```
+
+### 11.3 WebviewPanel Layout
+
+The panel is opened via `vscode.window.createWebviewPanel` with `enableScripts: true`. It uses a self-contained HTML template with inline CSS and a nonce-based inline script — no external resources.
+
+The tree layout uses CSS border and padding to create a visual connection between nodes:
+
+```html
+<div class="trace-tree">
+  <div class="trace-node call-site">
+    <span class="node-icon">📍</span>
+    <span class="node-label">Call Site</span>
+    <div class="node-detail">
+      <a href="#" data-file="..." data-line="...">engine_app.c:223</a>
+      <code>ptCmdPipeApi-&gt;Dequeue(...)</code>
+    </div>
+  </div>
+  <div class="trace-connector">│</div>
+  <div class="trace-node composition-root">
+    <span class="node-icon">🔗</span>
+    <span class="node-label">Composition Root</span>
+    <div class="node-detail">
+      <a href="#" data-file="..." data-line="...">engine_app.c:45</a>
+      <code>.Dequeue = JunoDs_BuffQueue_Dequeue</code>
+    </div>
+  </div>
+  <div class="trace-connector">│</div>
+  <div class="trace-node implementation">
+    <span class="node-icon">⚡</span>
+    <span class="node-label">Implementation</span>
+    <div class="node-detail">
+      <a href="#" data-file="..." data-line="...">juno_buff_queue.c:112</a>
+      <code>JUNO_STATUS_T JunoDs_BuffQueue_Dequeue(...)</code>
+    </div>
+  </div>
+</div>
+```
+
+File link clicks are communicated back to the extension host via `postMessage`. The extension host handles each click by calling `vscode.window.showTextDocument` to navigate to the referenced file and line.
+
+### 11.4 Multiple Results Handling
+
+When `result.locations.length > 1`, the WebviewPanel shows all results. Each location becomes a collapsible section with its own composition root → implementation subtree. The call site node is shared at the top.
+
+### 11.5 Command Registration (REQ-VSCODE-028, REQ-VSCODE-029)
+
+The following entries are added to `package.json` under `contributes`:
+
+```json
+{
+  "commands": [
+    {
+      "command": "libjuno.showVtableTrace",
+      "title": "LibJuno: Show Vtable Resolution Trace"
+    }
+  ],
+  "keybindings": [
+    {
+      "command": "libjuno.showVtableTrace",
+      "key": "ctrl+shift+t",
+      "when": "editorTextFocus && resourceLangId =~ /^c/"
+    }
+  ],
+  "menus": {
+    "editor/context": [
+      {
+        "command": "libjuno.showVtableTrace",
+        "when": "resourceLangId =~ /^c/",
+        "group": "navigation"
+      }
+    ]
+  }
+}
+```
+
+**Activation gesture summary:**
+
+| Gesture | Details |
+|---------|---------|
+| Command Palette | `libjuno.showVtableTrace` — "LibJuno: Show Vtable Resolution Trace" |
+| Keyboard shortcut | `Ctrl+Shift+T` with `when: editorTextFocus && resourceLangId =~ /^c/` |
+| Right-click context menu | "LibJuno: Show Vtable Resolution Trace" — group: navigation |
+
+> **Note:** `Ctrl+Shift+Click` is a built-in VSCode gesture (multi-cursor) and is NOT used for trace view activation.
+
+### 11.6 Security
+
+The WebviewPanel uses `enableScripts: true` to handle file link clicks via `postMessage`. Security measures:
+
+- All file paths and code text are **HTML-escaped** before insertion into the panel HTML to prevent XSS.
+- The Content Security Policy restricts script sources to `nonce`-based inline scripts only:
+  ```
+  Content-Security-Policy: default-src 'none'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline';
+  ```
+- No external resources (fonts, images, CDN scripts) are loaded.
 
 ---
 
@@ -1652,6 +1942,8 @@ vscode-extension/
       junoDefinitionProvider.ts
       quickPickHelper.ts    — multiple result QuickPick
       statusBarHelper.ts    — non-intrusive error display
+    providers/
+      vtableTraceProvider.ts   — WebviewPanel trace view
     mcp/
       mcpServer.ts          — HTTP MCP server, tool registration
     cache/
@@ -1668,8 +1960,10 @@ vscode-extension/
 | `ParsedFile` | Output of the Chevrotain parser + visitor for one file |
 | `NavigationIndex` | In-memory index (Maps) populated by the CST visitor |
 | `VtableResolutionResult` | Output of VtableResolver and FailureHandlerResolver |
-| `ConcreteLocation` | `{ functionName, file, line }` — `line` is the function definition line |
-| `FunctionDefinitionRecord` | `{ functionName, file, line, isStatic }` — one entry per definition site |
+| `ConcreteLocation` | `{ functionName, file, line, assignmentFile?, assignmentLine? }` — `line` is the function definition line; `assignmentFile`/`assignmentLine` are the composition root vtable assignment site |
+| `FunctionDefinitionRecord` | `{ functionName, file, line, isStatic, signature? }` — one entry per definition site |
 | `LocalTypeInfo` | Per-file local variable and parameter type maps, keyed per function |
 | `TypeInfo` | `{ name, typeName, isPointer, isConst, isArray }` — one entry per variable/parameter |
 | `CacheFile` | Serialized JSON cache schema (matches Section 4.2) |
+| `TraceNode` | One node in the resolution trace: call site, composition root, or implementation |
+| `VtableTrace` | The complete 3-node resolution trace (callSite, compositionRoot, implementation) |
