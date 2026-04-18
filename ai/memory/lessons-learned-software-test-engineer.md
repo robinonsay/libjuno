@@ -61,3 +61,14 @@
 - Bug 3 (resolveDeferred duplicate check): compare e.line === loc.line (definition line), not assignment line.
 - Bug 4 (hashFile consistency): reads as "utf8" string + update(content, "utf8") — matches hashText() exactly.
 - When testing BOM file hash consistency: write file using Buffer.concat([BomPrefix, content]) then verify loadFromCache() skips re-parse (spy call count 0).
+
+### 2026-04-18 — Cannot jest.spyOn() non-configurable Node.js built-in properties (e.g., fs.mkdirSync)
+- `jest.spyOn(fs, 'mkdirSync')` throws `TypeError: Cannot redefine property: mkdirSync` because the built-in `fs` module exports non-configurable properties.
+- CORRECT approach: mock the entire `fs` module at module level using `jest.mock('fs', () => ({ ...jest.requireActual('fs'), mkdirSync: jest.fn(), writeFileSync: jest.fn() }))`.
+- Then in individual tests, use `(fs.mkdirSync as jest.Mock).mockImplementationOnce(() => { throw new Error(...); })` to inject failures.
+- This also prevents tests from accidentally writing real files to disk.
+
+### 2026-04-18 — Async .catch() callback bodies need an extra await Promise.resolve() to flush
+- When a watcher callback calls `indexer.reindexFile().catch(err => {...})` and `reindexFile()` rejects, the catch callback runs as a microtask AFTER the synchronous callback returns.
+- To assert on side effects inside the catch body, add `await Promise.resolve()` after triggering the callback.
+- The same applies to fire-and-forget `.then().catch()` chains in activate() (e.g., McpServer.start()).
