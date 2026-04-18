@@ -14,10 +14,14 @@ let mcpServer: McpServer | undefined;
 
 // @{"req": ["REQ-VSCODE-001"]}
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    const outputChannel = vscode.window.createOutputChannel('LibJuno');
+    context.subscriptions.push(outputChannel);
+    const log = (msg: string) => outputChannel.appendLine(msg);
+
     // 1. Get workspace root
     const folders = vscode.workspace.workspaceFolders;
     if (!folders || folders.length === 0) {
-        console.log('[LibJuno] No workspace folders found; extension inactive.');
+        log('[LibJuno] No workspace folders found; extension inactive.');
         return;
     }
     const workspaceRoot = folders[0].uri.fsPath;
@@ -48,8 +52,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     await indexer.fullIndex();
                 }
             } catch (err) {
-                console.log('[LibJuno] Indexing error:', err);
-                vscode.window.showErrorMessage(`LibJuno: Indexing failed — ${String(err)}`);
+                log('[LibJuno] Indexing error: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
+                vscode.window.showErrorMessage(`LibJuno: Indexing failed — ${err instanceof Error ? (err.stack ?? String(err)) : String(err)}`);
             }
         }
     );
@@ -65,7 +69,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     context.subscriptions.push(
         vscode.languages.registerDefinitionProvider(
             [{ language: 'c' }, { language: 'cpp' }],
-            new JunoDefinitionProvider(vtableResolver, failureHandlerResolver, indexer.index, statusBar)
+            new JunoDefinitionProvider(vtableResolver, failureHandlerResolver, indexer.index, statusBar, log)
         )
     );
 
@@ -125,8 +129,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                         const count = indexer.index.localTypeInfo.size;
                         statusBar.showIndexed(count);
                     } catch (err) {
-                        console.log('[LibJuno] Re-index error:', err);
-                        vscode.window.showErrorMessage(`LibJuno: Re-indexing failed — ${String(err)}`);
+                        log('[LibJuno] Re-index error: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
+                        vscode.window.showErrorMessage(`LibJuno: Re-indexing failed — ${err instanceof Error ? (err.stack ?? String(err)) : String(err)}`);
                     }
                 }
             );
@@ -138,13 +142,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     watcher.onDidCreate((uri: vscode.Uri) => {
         indexer.reindexFile(uri.fsPath).catch(err => {
-            console.log('[LibJuno] watcher onDidCreate error:', err);
+            log('[LibJuno] watcher onDidCreate error: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
         });
     });
 
     watcher.onDidChange((uri: vscode.Uri) => {
         indexer.reindexFile(uri.fsPath).catch(err => {
-            console.log('[LibJuno] watcher onDidChange error:', err);
+            log('[LibJuno] watcher onDidChange error: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
         });
     });
 
@@ -156,12 +160,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     // 10. Start embedded MCP server (Section 7)
     if (mcpServerPort > 0) {
-        mcpServer = new McpServer(vtableResolver, failureHandlerResolver, indexer.index);
+        mcpServer = new McpServer(vtableResolver, failureHandlerResolver, indexer.index, log);
         mcpServer.start(mcpServerPort).then((actualPort) => {
-            writeMcpDiscoveryFile(workspaceRoot, actualPort);
-            console.log(`[LibJuno] MCP server started on port ${actualPort}`);
+            writeMcpDiscoveryFile(workspaceRoot, actualPort, log);
+            log(`[LibJuno] MCP server started on port ${actualPort}`);
         }).catch((err) => {
-            console.log('[LibJuno] MCP server failed to start:', err);
+            log('[LibJuno] MCP server failed to start: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
         });
     }
 }
@@ -181,7 +185,7 @@ export function deactivate(): void {
  * Writes the MCP discovery file to `.libjuno/mcp.json` so that AI agent
  * platforms can discover the embedded server (Section 7.4).
  */
-function writeMcpDiscoveryFile(workspaceRoot: string, port: number): void {
+function writeMcpDiscoveryFile(workspaceRoot: string, port: number, log: (msg: string) => void): void {
     const libJunoDir = path.join(workspaceRoot, '.libjuno');
     const mcpFile = path.join(libJunoDir, 'mcp.json');
     const content = JSON.stringify(
@@ -199,6 +203,6 @@ function writeMcpDiscoveryFile(workspaceRoot: string, port: number): void {
         fs.mkdirSync(libJunoDir, { recursive: true });
         fs.writeFileSync(mcpFile, content, 'utf8');
     } catch (err) {
-        console.log('[LibJuno] Failed to write .libjuno/mcp.json:', err);
+        log('[LibJuno] Failed to write .libjuno/mcp.json: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
     }
 }

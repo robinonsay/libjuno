@@ -155,8 +155,13 @@ describe('Extension Activation — edge cases', () => {
 
         await activate(context);
 
-        // No subscriptions pushed because activate returned early (Branch 0 arm 0)
-        expect(context.subscriptions.length).toBe(0);
+        // OutputChannel is pushed before the early return, so subscriptions.length === 1
+        expect(context.subscriptions.length).toBe(1);
+        // The early-return log message must be written to the OutputChannel
+        const outputChannel = (vscode.window.createOutputChannel as jest.Mock).mock.results[0].value;
+        expect(outputChannel.appendLine).toHaveBeenCalledWith(
+            expect.stringContaining('No workspace folders found')
+        );
     });
 
     // @{"verify": ["REQ-VSCODE-001"]}
@@ -413,15 +418,8 @@ describe('libjuno.reindexWorkspace — command branches', () => {
 
 describe('FileSystemWatcher callbacks', () => {
 
-    let consoleLogSpy: jest.SpyInstance;
-
     beforeEach(() => {
         resetMocks();
-        consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    });
-
-    afterEach(() => {
-        consoleLogSpy.mockRestore();
     });
 
     async function activateAndGetWatcher(): Promise<any> {
@@ -468,9 +466,9 @@ describe('FileSystemWatcher callbacks', () => {
         watcher._onDidCreateCallback({ fsPath: '/workspace/new.c' });
         await Promise.resolve(); // flush .catch() microtask
 
-        expect(consoleLogSpy).toHaveBeenCalledWith(
-            '[LibJuno] watcher onDidCreate error:',
-            expect.any(Error)
+        const outputChannel = (vscode.window.createOutputChannel as jest.Mock).mock.results[0].value;
+        expect(outputChannel.appendLine).toHaveBeenCalledWith(
+            expect.stringContaining('[LibJuno] watcher onDidCreate error:')
         );
     });
 
@@ -482,9 +480,9 @@ describe('FileSystemWatcher callbacks', () => {
         watcher._onDidChangeCallback({ fsPath: '/workspace/changed.c' });
         await Promise.resolve(); // flush .catch() microtask
 
-        expect(consoleLogSpy).toHaveBeenCalledWith(
-            '[LibJuno] watcher onDidChange error:',
-            expect.any(Error)
+        const outputChannel = (vscode.window.createOutputChannel as jest.Mock).mock.results[0].value;
+        expect(outputChannel.appendLine).toHaveBeenCalledWith(
+            expect.stringContaining('[LibJuno] watcher onDidChange error:')
         );
     });
 
@@ -496,8 +494,6 @@ describe('FileSystemWatcher callbacks', () => {
 
 describe('MCP server start and writeMcpDiscoveryFile', () => {
 
-    let consoleLogSpy: jest.SpyInstance;
-
     beforeEach(() => {
         resetMocks();
         // Explicitly configure mcpServerPort > 0 so the MCP branch always runs
@@ -507,11 +503,6 @@ describe('MCP server start and writeMcpDiscoveryFile', () => {
                 return defaultVal;
             }),
         }));
-        consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    });
-
-    afterEach(() => {
-        consoleLogSpy.mockRestore();
     });
 
     // @{"verify": ["REQ-VSCODE-001"]}
@@ -535,9 +526,9 @@ describe('MCP server start and writeMcpDiscoveryFile', () => {
         await activate(context);
         await Promise.resolve(); // drain .then() microtask if not yet flushed
 
-        expect(consoleLogSpy).toHaveBeenCalledWith(
-            '[LibJuno] Failed to write .libjuno/mcp.json:',
-            expect.any(Error)
+        const outputChannel = (vscode.window.createOutputChannel as jest.Mock).mock.results[0].value;
+        expect(outputChannel.appendLine).toHaveBeenCalledWith(
+            expect.stringContaining('[LibJuno] Failed to write .libjuno/mcp.json:')
         );
     });
 
@@ -557,9 +548,9 @@ describe('MCP server start and writeMcpDiscoveryFile', () => {
         await activate(context);
         await Promise.resolve(); // drain .catch() microtask
 
-        expect(consoleLogSpy).toHaveBeenCalledWith(
-            '[LibJuno] MCP server failed to start:',
-            expect.any(Error)
+        const outputChannel = (vscode.window.createOutputChannel as jest.Mock).mock.results[0].value;
+        expect(outputChannel.appendLine).toHaveBeenCalledWith(
+            expect.stringContaining('[LibJuno] MCP server failed to start:')
         );
     });
 

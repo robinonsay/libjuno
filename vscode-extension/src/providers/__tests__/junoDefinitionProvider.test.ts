@@ -117,7 +117,7 @@ describe('JunoDefinitionProvider', () => {
             errorMsg: NO_HANDLER_PATTERN_MSG,
         });
 
-        provider = new JunoDefinitionProvider(vtableResolver, fhResolver, index, statusBar);
+        provider = new JunoDefinitionProvider(vtableResolver, fhResolver, index, statusBar, jest.fn());
     });
 
     afterEach(() => {

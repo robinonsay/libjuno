@@ -22,7 +22,8 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
         private readonly vtableResolver: VtableResolver,
         private readonly failureHandlerResolver: FailureHandlerResolver,
         private readonly index: NavigationIndex,
-        private readonly statusBar: StatusBarHelper
+        private readonly statusBar: StatusBarHelper,
+        private readonly log: (msg: string) => void = console.log
     ) {}
 
     async provideDefinition(
@@ -61,7 +62,7 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
         token.onCancellationRequested(() => { /* QuickPick auto-dismisses on cancellation */ });
         const selected = await showImplementationQuickPick(result.locations);
         if (selected) {
-            await navigateTo(selected);
+            await navigateTo(selected, this.log);
         }
         return undefined;
     }
@@ -76,7 +77,7 @@ function toVscodeLocations(locations: ConcreteLocation[]): vscode.Location[] {
     );
 }
 
-async function navigateTo(loc: ConcreteLocation): Promise<void> {
+async function navigateTo(loc: ConcreteLocation, log: (msg: string) => void): Promise<void> {
     try {
         const uri = vscode.Uri.file(loc.file);
         const pos = new vscode.Position(Math.max(0, loc.line - 1), 0);
@@ -84,6 +85,6 @@ async function navigateTo(loc: ConcreteLocation): Promise<void> {
             selection: new vscode.Range(pos, pos),
         });
     } catch (err) {
-        console.log('[LibJuno] Failed to navigate to definition:', err);
+        log('[LibJuno] Failed to navigate to definition: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
     }
 }

@@ -18,7 +18,8 @@ export class McpServer {
     constructor(
         private readonly vtableResolver: VtableResolver,
         private readonly failureHandlerResolver: FailureHandlerResolver,
-        private readonly index: NavigationIndex
+        private readonly index: NavigationIndex,
+        private readonly log: (msg: string) => void = console.log
     ) {}
 
     /**
@@ -30,7 +31,7 @@ export class McpServer {
         return new Promise((resolve, reject) => {
             this.server = http.createServer((req, res) => {
                 this.handleRequest(req, res).catch(err => {
-                    console.log('[LibJuno] McpServer unhandled error:', err);
+                    this.log('[LibJuno] McpServer unhandled error: ' + String(err));
                     if (!res.headersSent) {
                         sendJson(res, 500, { error: 'Internal server error' });
                     }

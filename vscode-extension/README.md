@@ -1,4 +1,4 @@
-# LibJuno VSCode Extension — Developer Guide
+# LibJuno VSCode Extension
 
 Vtable-aware Go to Definition for LibJuno embedded C projects.
 
@@ -6,17 +6,30 @@ Vtable-aware Go to Definition for LibJuno embedded C projects.
 
 ## Table of Contents
 
+### User Guide
+
 1. [Overview](#overview)
-2. [Prerequisites](#prerequisites)
-3. [Getting Started](#getting-started)
-4. [Project Structure](#project-structure)
-5. [Building](#building)
-6. [Running and Debugging](#running-and-debugging)
-7. [Testing](#testing)
-8. [Mutation Testing](#mutation-testing)
-9. [Packaging](#packaging)
-10. [Extension Configuration](#extension-configuration)
-11. [Architecture Overview](#architecture-overview)
+2. [Installation](#installation)
+3. [How It Works](#how-it-works)
+4. [Supported Patterns](#supported-patterns)
+5. [Using Go to Definition](#using-go-to-definition)
+6. [Re-indexing](#re-indexing)
+7. [MCP Server for AI Agents](#mcp-server-for-ai-agents)
+8. [Configuration](#configuration)
+9. [Troubleshooting](#troubleshooting)
+
+### Developer Guide
+
+10. [Prerequisites](#prerequisites)
+11. [Getting Started](#getting-started)
+12. [Project Structure](#project-structure)
+13. [Building](#building)
+14. [Running and Debugging](#running-and-debugging)
+15. [Testing](#testing)
+16. [Mutation Testing](#mutation-testing)
+17. [Packaging](#packaging)
+18. [Extension Configuration](#extension-configuration)
+19. [Architecture Overview](#architecture-overview)
 
 ---
 
@@ -43,6 +56,185 @@ implementations. This extension bridges that gap by:
 | Version | 0.1.0 |
 | VSCode engine | ^1.85.0 |
 | Activation | `onLanguage:c`, `onLanguage:cpp` |
+
+---
+
+## Installation
+
+Install the packaged `.vsix` file from the command line:
+
+```bash
+code --install-extension libjuno-<version>.vsix
+```
+
+Or via the Extensions panel: open **Extensions** (`Ctrl+Shift+X`), click the
+`···` overflow menu, select **Install from VSIX…**, and choose the `.vsix` file.
+
+The extension activates automatically the first time any C or C++ file is opened
+in the workspace. No restart is required.
+
+---
+
+## How It Works
+
+LibJuno uses vtable-based dependency injection. Function calls look like:
+
+```c
+ptModule->ptApi->Method(ptModule, arg);
+```
+
+Standard IDE "Go to Definition" (F12) cannot resolve these because the function
+pointer is assigned at runtime through a vtable struct — the IDE sees only a
+pointer dereference, not a concrete symbol.
+
+This extension solves that by:
+
+1. Parsing every C/C++ file in the workspace with a Chevrotain-based C parser.
+2. Building an in-memory index of vtable struct assignments and function
+   definitions.
+3. At navigation time, tracing the vtable assignment chain from the call site to
+   the concrete function implementation and returning the source location to
+   VSCode.
+
+On first activation the extension indexes all `.c`, `.h`, `.cpp`, `.hpp`, `.hh`,
+and `.cc` files in the workspace. A persistent cache written to
+`.libjuno/navigation-cache.json` in the workspace root speeds up subsequent
+activations so that only changed files need to be re-parsed.
+
+---
+
+## Supported Patterns
+
+The extension resolves the following call patterns when F12 / Ctrl+Click is used.
+Place the cursor on the **function name** (the word after the last `->`) and
+then invoke Go to Definition.
+
+```c
+// 1. Indirect API pointer — place cursor on "RegisterSubscriber"
+ptEngineApp->ptBroker->ptApi->RegisterSubscriber(ptBroker, &pipe);
+
+// 2. Direct API pointer — place cursor on "LogInfo"
+const JUNO_LOG_API_T *ptLoggerApi = ptLogger->ptApi;
+ptLoggerApi->LogInfo(ptLogger, "message");
+
+// 3. Dot-accessed API — place cursor on "Copy"
+tResult.ptApi->Copy(ptSrc, ptDst);
+
+// 4. Named API member — place cursor on "Compare"
+ptHeap->ptHeapPointerApi->Compare(ptA, ptB);
+
+// 5. Failure handler — place cursor on the handler function name
+ptModule->tRoot._pfcnFailureHandler = MyFailureHandler;
+ptModule->tRoot.JUNO_FAILURE_HANDLER = MyFailureHandler;
+```
+
+The extension does **not** resolve:
+
+- **Direct function calls** such as `EngineApp_Init(...)` — VSCode's built-in
+  C/C++ tooling (e.g., the C/C++ extension or clangd) already handles these.
+- **Macro calls** such as `JUNO_ASSERT_SUCCESS(...)` — macro expansion is out of
+  scope.
+- Functions defined outside the workspace.
+
+---
+
+## Using Go to Definition
+
+1. Open any C/C++ file in a LibJuno project.
+2. Place the cursor on a vtable-dispatched function name (e.g., `LogInfo` in
+   `ptLoggerApi->LogInfo(...)`).
+3. Press **F12** or **Ctrl+Click** (**Cmd+Click** on macOS).
+4. If one implementation is found, VSCode navigates directly to it.
+5. If multiple implementations exist, a picker appears — select the desired one.
+
+Alternatively, use the Command Palette:
+
+```
+Ctrl+Shift+P → LibJuno: Go to Implementation
+```
+
+---
+
+## Re-indexing
+
+The extension watches for file changes and re-indexes modified files automatically.
+After bulk operations (renaming directories, adding many new source files) a
+manual re-index may be needed:
+
+```
+Ctrl+Shift+P → LibJuno: Re-index Workspace
+```
+
+The status bar shows **LibJuno: Indexed X files** once the index is current. If
+the count looks wrong, run a manual re-index.
+
+---
+
+## MCP Server for AI Agents
+
+The extension runs an embedded MCP (Model Context Protocol) HTTP server, which
+allows AI agents (GitHub Copilot, Claude, etc.) to query vtable and failure
+handler resolution programmatically.
+
+| Item | Detail |
+|---|---|
+| Default port | `6543` |
+| Discovery file | `.libjuno/mcp.json` in the workspace root |
+| Disable | Set `libjuno.mcpServerPort` to `0` |
+
+Configure the port in VS Code settings:
+
+```json
+"libjuno.mcpServerPort": 6543
+```
+
+---
+
+## Configuration
+
+| Setting | Default | Description |
+|---|---|---|
+| `libjuno.excludedDirectories` | `["build", "deps", ".libjuno"]` | Directories skipped during indexing. Add `vendor`, `third_party`, or similar as needed. |
+| `libjuno.mcpServerPort` | `6543` | Port for the embedded MCP server. Set to `0` to disable. |
+
+---
+
+## Troubleshooting
+
+### F12 / Ctrl+Click doesn't navigate to the implementation
+
+**1. Is the cursor on a vtable-dispatched call?**
+The extension only resolves calls through vtable function pointers such as
+`ptApi->Method(...)`. Direct function calls like `EngineApp_Init(...)` are
+handled by VSCode's built-in C/C++ tooling, not this extension. See
+[Supported Patterns](#supported-patterns) for the full list of resolvable forms.
+
+**2. Is the workspace indexed?**
+Check the status bar — it should show **LibJuno: Indexed X files**. If it is
+missing or shows 0, run **LibJuno: Re-index Workspace** from the Command Palette.
+
+**3. Is the implementation file in the workspace?**
+The extension can only resolve to functions defined in files within the workspace
+root. Functions in external libraries or outside the workspace root will not be
+found.
+
+**4. Is the vtable assignment visible?**
+The extension needs to find where the vtable struct is populated — for example:
+
+```c
+static const JUNO_APP_API_T tApi = { .OnStart = OnStart, .OnStop = OnStop };
+```
+
+If this assignment is in a file that has not been indexed (e.g., it was added
+after the last indexing run), resolution will fail. Run a manual re-index.
+
+**5. Check the Output panel.**
+Open the Output panel (`Ctrl+Shift+U`), select **LibJuno** from the channel
+dropdown, and look for error messages or indexing diagnostics.
+
+**6. Is the file type supported?**
+The extension indexes `.c`, `.h`, `.cpp`, `.hpp`, `.hh`, and `.cc` files. Other
+file types are ignored.
 
 ---
 

@@ -1,7 +1,7 @@
 .vscode/**
 src/**
 out/**/*.map
-node_modules/**
+out/__mocks__/**
 .gitignore
 tsconfig.json
 jest.config.js
@@ -13,3 +13,6 @@ design/**
 requirements/**
 **/*.test.ts
 **/*.test.js
+stryker.config.json
+traceability-matrix.md
+ai/**

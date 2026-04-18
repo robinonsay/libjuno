@@ -102,3 +102,26 @@ This is non-negotiable every sprint without exception.
 - software-developer agent returned no response on a large SDP edit brief.
 - Re-spawned as junior-software-developer with a focused brief — succeeded.
 - For large mechanical edits, prefer junior-software-developer with exact string specifications.
+
+### 2026-04-18 — VSIX packaging: always verify runtime deps are bundled
+- `.vscodeignore` with `node_modules/**` strips ALL dependencies from the VSIX, including production deps like `chevrotain`.
+- Extension installs fine but silently crashes on activation when `require('chevrotain')` fails.
+- Fix: Remove blanket `node_modules/**` from `.vscodeignore`; `vsce package` automatically excludes devDependencies.
+- Always verify: `ls <installed-extension-path>/node_modules/<runtime-dep>/` after packaging.
+- Symptom: "command not found" in Command Palette = extension never activated = check Extension Host log.
+
+### 2026-04-18 — tsconfig.json must exclude __mocks__ to prevent mock contamination in out/
+- Jest `__mocks__/` directories are test infrastructure, not production code.
+- Without `"**/__mocks__/**"` in tsconfig `exclude`, mocks compile to `out/__mocks__/` and ship in the VSIX.
+- Add `"**/__mocks__/**"` to tsconfig `exclude` alongside `"**/*.test.ts"`.
+
+### 2026-04-18 — After any source change, recompile AND repackage AND reinstall before user testing
+- Compiled `out/` can be stale if a worker modifies `.ts` but doesn't run `npm run compile`.
+- The VSIX can be stale if `out/` was rebuilt but `vsce package` wasn't re-run.
+- The installed extension can be stale if the VSIX was rebuilt but not reinstalled.
+- Full chain: `npm run compile` → `vsce package` → `code --install-extension` → Reload Window.
+
+### 2026-04-18 — Worker agents may not update tests for DI constructor changes
+- WI-18.1 (source changes adding `log` param) completed but didn't update mock or tests.
+- WI-18.2 (test updates) was planned as sequential but the first worker should have been briefed to at minimum check if tests still pass.
+- Always include "run npm test and fix any failures" in worker briefs, even for source-only work items.

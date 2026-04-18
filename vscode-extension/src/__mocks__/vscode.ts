@@ -134,12 +134,25 @@ export const commands = {
 // Namespace: vscode.window
 // ---------------------------------------------------------------------------
 
+function _createOutputChannelMock(name: string): any {
+    return {
+        appendLine: jest.fn(),
+        append: jest.fn(),
+        clear: jest.fn(),
+        show: jest.fn(),
+        hide: jest.fn(),
+        dispose: jest.fn(),
+        name,
+    };
+}
+
 export const window = {
     showQuickPick: jest.fn().mockResolvedValue(undefined),
     showTextDocument: jest.fn().mockResolvedValue(undefined),
     showErrorMessage: jest.fn().mockResolvedValue(undefined),
     showInformationMessage: jest.fn().mockResolvedValue(undefined),
     createStatusBarItem: jest.fn(() => _createStatusBarItemMock()),
+    createOutputChannel: jest.fn((name: string) => _createOutputChannelMock(name)),
     withProgress: jest.fn((options: any, task: AnyFn) =>
         task(
             { report: jest.fn() },
@@ -217,6 +230,7 @@ export function resetMocks(): void {
     window.showErrorMessage.mockResolvedValue(undefined);
     window.showInformationMessage.mockResolvedValue(undefined);
     window.createStatusBarItem.mockImplementation(() => _createStatusBarItemMock());
+    window.createOutputChannel.mockImplementation((name: string) => _createOutputChannelMock(name));
     window.withProgress.mockImplementation((options: any, task: AnyFn) =>
         task(
             { report: jest.fn() },
