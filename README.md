@@ -17,7 +17,7 @@ LibJuno is a lightweight C11 embedded systems micro-framework designed to provid
 * **Modular**: Use the whole library or cherry-pick individual components
 * **Portable**: C11 standard with minimal platform assumptions
 
-# VSCode Extension — Navigate Dependency Injection Like Magic
+# **NEW** VSCode Extension — Navigate Dependency Injection Like Magic
 
 Ever tried pressing **F12** on a vtable call like `ptLoggerApi->LogDebug(...)` and gotten... nothing? Standard C tooling can't see through function pointers. **The LibJuno VSCode Extension changes that.**
 
