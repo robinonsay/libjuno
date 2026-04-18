@@ -265,7 +265,12 @@ export const IntegerLiteral = createToken({
 
 export const FloatingLiteral = createToken({
     name: "FloatingLiteral",
-    pattern: /[0-9]*\.[0-9]+(?:[eE][+-]?[0-9]+)?[fFlL]?|[0-9]+\.[0-9]*(?:[eE][+-]?[0-9]+)?[fFlL]?/,
+    // Three forms:
+    //  1.  .digits [ exp ] [ suffix ]  — e.g.  .5,  .5e3
+    //  2.  digits. [ digits ] [ exp ] [ suffix ]  — e.g.  1.0,  1.  1.0f
+    //  3.  digits exp [ suffix ]  — e.g.  500E3, 1e-10  (no decimal point)
+    //      (valid in C99 §6.4.4.2 because the exponent makes it a float)
+    pattern: /[0-9]*\.[0-9]+(?:[eE][+-]?[0-9]+)?[fFlL]?|[0-9]+\.[0-9]*(?:[eE][+-]?[0-9]+)?[fFlL]?|[0-9]+[eE][+-]?[0-9]+[fFlL]?/,
 });
 
 export const StringLiteral = createToken({

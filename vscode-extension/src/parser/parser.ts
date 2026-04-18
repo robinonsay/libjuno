@@ -1,5 +1,5 @@
 // @{"req": ["REQ-VSCODE-003", "REQ-VSCODE-010", "REQ-VSCODE-011", "REQ-VSCODE-012"]}
-import { CstParser, tokenMatcher } from "chevrotain";
+import { CstParser, tokenMatcher, EOF } from "chevrotain";
 import {
     allTokens,
     HashDirective,
@@ -960,9 +960,18 @@ export class CParser extends CstParser {
     });
 
     castExpression = this.RULE("castExpression", () => {
+        // Pre-capture the backtrack function BEFORE the OR call.
+        // Chevrotain's BACKTRACK() must not be invoked from inside a GATE lambda —
+        // it must be called at OR-construction time so Chevrotain's internal
+        // backtracking stack is properly set up before the GATE runs.
+        const castTypeCheck = this.BACKTRACK(this.castTypePrefix);
         this.OR([
             {
-                GATE: this.BACKTRACK(this.castTypePrefix),
+                // looksLikeCast() is a fast lookahead that rejects (identifier) as a
+                // cast when the token after the closing ')' cannot start a cast operand
+                // (e.g. ';', ',', ')'). This prevents (ptFoo) from being mistakenly
+                // parsed as a cast type instead of a parenthesised expression.
+                GATE: () => this.looksLikeCast() && castTypeCheck.call(this),
                 ALT: () => {
                     this.CONSUME(LParen);
                     this.SUBRULE(this.typeName);
@@ -1068,6 +1077,17 @@ export class CParser extends CstParser {
                 },
             },
             { ALT: () => this.SUBRULE(this.junoModuleGetApiMacro) },
+            {
+                // Braced compound literal / raw initializer list used as a macro argument
+                // (e.g. MACRO(ARG, {0})). Not standard C expression syntax, but common
+                // in LibJuno macro calls where {…} is passed as a raw token argument.
+                ALT: () => {
+                    this.CONSUME(LBrace);
+                    this.SUBRULE(this.initializerList);
+                    this.OPTION(() => this.CONSUME(Comma));
+                    this.CONSUME(RBrace);
+                },
+            },
         ]);
     });
 
@@ -1099,7 +1119,16 @@ export class CParser extends CstParser {
 
     initializer = this.RULE("initializer", () => {
         this.OR([
-            { ALT: () => this.SUBRULE(this.assignmentExpression) },
+            {
+                // Skip this alternative when the next token is '{'.
+                // A bare '{' always means a brace-initializer list (second alt),
+                // NOT a compound-literal primaryExpression — even though that is
+                // now syntactically possible via the primaryExpression rule.
+                // Keeping the brace path in the second alt preserves the CST
+                // structure that the vtable visitor relies on.
+                GATE: () => !tokenMatcher(this.LA(1), LBrace),
+                ALT: () => this.SUBRULE(this.assignmentExpression),
+            },
             {
                 ALT: () => {
                     this.CONSUME(LBrace);
@@ -1152,6 +1181,51 @@ export class CParser extends CstParser {
     });
 
     /**
+     * Fast lookahead: returns true only when the token sequence starting at LA(1)
+     * looks like a C cast expression `( type-name )`, meaning:
+     *  1. LA(1) is '('
+     *  2. The token immediately after the matching closing ')' can be the start
+     *     of a unary/primary expression (identifier, literal, '(', unary op,
+     *     sizeof, or '{' compound literal).
+     *
+     * This prevents `(identifier)` followed by ';', ',', ')', '&&', etc. from
+     * being speculatively mis-parsed as a C cast.
+     */
+    private looksLikeCast(): boolean {
+        if (!tokenMatcher(this.LA(1), LParen)) { return false; }
+        let depth = 1;
+        let i = 2;
+        while (depth > 0) {
+            const t = this.LA(i);
+            if (tokenMatcher(t, EOF)) { return false; } // EOF
+            if (tokenMatcher(t, LParen))       { depth++; }
+            else if (tokenMatcher(t, RParen))  { depth--; }
+            i++;
+        }
+        // LA(i) is the token immediately after the matching ')'
+        const after = this.LA(i);
+        if (tokenMatcher(after, EOF)) { return false; }
+        return (
+            tokenMatcher(after, LParen)          || // another cast or paren-expr
+            tokenMatcher(after, PlusPlus)        || // prefix ++
+            tokenMatcher(after, MinusMinus)      || // prefix --
+            tokenMatcher(after, Amp)             || // address-of
+            tokenMatcher(after, Star)            || // deref
+            tokenMatcher(after, Plus)            || // unary +
+            tokenMatcher(after, Minus)           || // unary -
+            tokenMatcher(after, Tilde)           || // bitwise NOT
+            tokenMatcher(after, Bang)            || // logical NOT
+            tokenMatcher(after, Sizeof)          || // sizeof
+            tokenMatcher(after, Identifier)      || // primary
+            tokenMatcher(after, IntegerLiteral)  || // primary
+            tokenMatcher(after, FloatingLiteral) || // primary
+            tokenMatcher(after, StringLiteral)   || // primary
+            tokenMatcher(after, CharLiteral)     || // primary
+            tokenMatcher(after, LBrace)             // compound literal (GCC / macro arg)
+        );
+    }
+
+    /**
      * Scan ahead to determine if the current Identifier '(' ... ')' contains a
      * C keyword that cannot appear in an expression (return, break, continue, goto).
      * This indicates a macro call, not a function call, and must be gobbled.
@@ -1165,7 +1239,7 @@ export class CParser extends CstParser {
         let i = 3;
         while (depth > 0) {
             const t = this.LA(i);
-            if (t.tokenType === undefined) break; // EOF
+            if (tokenMatcher(t, EOF)) break; // EOF
             if (tokenMatcher(t, LParen)) { depth++; }
             else if (tokenMatcher(t, RParen)) { depth--; if (depth === 0) break; }
             else if (
@@ -1196,7 +1270,7 @@ export class CParser extends CstParser {
         let depth = 0;
         while (true) {
             const tok = this.LA(1);
-            if (tok.tokenType === undefined) break; // EOF sentinel
+            if (tokenMatcher(tok, EOF)) break; // EOF sentinel
             const isLParen = tokenMatcher(tok, LParen);
             const isRParen = tokenMatcher(tok, RParen);
             const isSemi  = tokenMatcher(tok, Semicolon);

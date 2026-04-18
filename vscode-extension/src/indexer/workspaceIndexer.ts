@@ -61,7 +61,9 @@ export class WorkspaceIndexer {
         removeFileRecords(this.index, filePath);
         const relPath = path.relative(this.workspaceRoot, filePath);
         this.fileHashes.delete(relPath);
-        await this.indexFile(filePath);
+        const deferred: DeferredPositional[] = [];
+        await this.indexFile(filePath, deferred);
+        this.resolveDeferred(deferred);
     }
 
     /**
