@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /workspaces/libjuno*)",
+      "Bash(cd /workspaces/libjuno/vscode-extension*)",
+      "Bash(python3 scripts/verify_traceability.py*)",
+      "Bash(cmake*)",
+      "Bash(ctest*)",
+      "Bash(npm test*)",
+      "Bash(npm run*)",
+      "Bash(npx jest*)",
+      "Bash(ls*)",
+      "Bash(find*)",
+      "Bash(pwd)"
+    ],
+    "deny": [
+      "Bash(rm*)",
+      "Bash(git push*)"
+    ]
+  }
+}

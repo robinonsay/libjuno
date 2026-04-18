@@ -98,6 +98,11 @@ This is non-negotiable every sprint without exception.
 - Always read the file first to check current state before spawning editors.
 - Sprint Schedule table and phase section headers can drift independently — verifier caught Sprint 13→14 mismatch.
 
+### 2026-04-18 — If subagent delegation is rate-limited, switch to explicit manual fallback gates
+- When runSubagent is blocked by weekly limits, continue sprint execution manually instead of stalling.
+- Keep the orchestration structure: per-work-item change, targeted test gate, then full-suite gate.
+- Remove any temporary diagnostic files immediately so verification scope remains clean.
+
 ### 2026-04-18 — Chevrotain v12 EOF sentinel: always use `tokenMatcher(t, EOF)`
 - `t.tokenType === undefined` is WRONG. Chevrotain's `this.LA(i)` past the token vector returns either JS `undefined` (TypeError on `.tokenType`) or a sentinel token with a valid `tokenType` (infinite loop).
 - The correct check is `tokenMatcher(t, EOF)` after importing `EOF` from `"chevrotain"`.
