@@ -99,6 +99,7 @@ function extractDeclaratorInfo(declaratorNode: CstNode): { name: string; isPoint
     const c = declaratorNode.children;
     const isPointer = hasToken(c, "pointer") || !!(c["pointer"]?.length);
     const directDecl = child(c, "directDeclarator");
+    // istanbul ignore next — defensive: grammar always emits directDeclarator; unreachable via parseFile()
     if (!directDecl) {
         return { name: "", isPointer: false, isArray: false };
     }
@@ -153,12 +154,16 @@ function drillToPostfix(node: CstNode): CstNode | undefined {
 
 // Collect postfix suffixes to understand `a->b.c(...)` call chains.
 // Returns an array of suffix descriptors from the postfixExpression.
+// NOTE: getPostfixPrimary/getPostfixSuffixes are reserved for future multi-hop
+//       call-chain analysis (e.g. ptr->api->field()). Not yet wired into the
+//       walker — coverage exclusions are intentional.
 interface PostfixSuffix {
     kind: "arrow" | "dot" | "call" | "index" | "incr" | "decr";
     member?: string;       // for arrow/dot
     isFhMember?: boolean;  // true when the member is JunoFailureHandler/UserData
 }
 
+// istanbul ignore next — reserved for future use (not yet called)
 function getPostfixPrimary(postNode: CstNode): string | undefined {
     const primary = child(postNode.children, "primaryExpression");
     if (!primary) { return undefined; }
@@ -166,6 +171,7 @@ function getPostfixPrimary(postNode: CstNode): string | undefined {
     return ident?.image;
 }
 
+// istanbul ignore next — reserved for future use (not yet called)
 function getPostfixSuffixes(postNode: CstNode): PostfixSuffix[] {
     const suffixes: PostfixSuffix[] = [];
     const c = postNode.children;

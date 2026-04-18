@@ -1,6 +1,7 @@
 /// <reference types="jest" />
 // @{"verify": ["REQ-VSCODE-004", "REQ-VSCODE-017", "REQ-VSCODE-018", "REQ-VSCODE-019", "REQ-VSCODE-020"]}
 import * as http from 'http';
+import * as net from 'net';
 import * as fs from 'fs';
 import * as path from 'path';
 import { McpServer } from '../mcpServer';
@@ -273,6 +274,83 @@ describe('McpServer', () => {
         // Re-start on a new port so afterEach's server.stop() is safe (no double-stop).
         server = new McpServer(mockVtableResolver, mockFhResolver, mockIndex);
         port = await server.start(0);
+    });
+
+    // === TC-MCP-017 ===
+    // @{"verify": ["REQ-VSCODE-017"]}
+    test('TC-MCP-017: /resolve_failure_handler body too large → HTTP 400 or connection reset', async () => {
+        // Body exceeds MAX_BODY_BYTES (1,048,576). Covers lines 90-91 in handleRequest.
+        const largeBody = 'A'.repeat(1_048_577);
+
+        let gotResponse = false;
+        try {
+            const result = await httpRequest(port, 'POST', '/resolve_failure_handler', largeBody);
+            gotResponse = true;
+            expect(result.status).toBe(400);
+            expect((result.body as { error: string }).error).toMatch(/too large/i);
+        } catch {
+            // ECONNRESET — req.destroy() closed the socket before 400 response arrived.
+            expect(gotResponse).toBe(false);
+        }
+    });
+
+    // === TC-MCP-018 ===
+    // @{"verify": ["REQ-VSCODE-017"]}
+    test('TC-MCP-018: /resolve_failure_handler missing required fields → HTTP 400', async () => {
+        // Valid JSON but without file/line/column/lineText. Covers lines 95-96.
+        const invalidBody = JSON.stringify({ foo: 'bar' });
+
+        const result = await httpRequest(port, 'POST', '/resolve_failure_handler', invalidBody);
+
+        expect(result.status).toBe(400);
+        const body = result.body as { error: string };
+        expect(body.error).toBe('Missing required fields: file, line, column, lineText.');
+    });
+
+    // === TC-MCP-019 ===
+    // @{"verify": ["REQ-VSCODE-017"]}
+    test('TC-MCP-019: handleRequest unhandled exception → HTTP 500 Internal server error', async () => {
+        // Resolver throws inside an async handleRequest. The .catch() in start() catches
+        // the rejection and sends 500 when headers are not yet sent. Covers lines 33-35.
+        (mockFhResolver.resolve as jest.Mock).mockImplementation(() => {
+            throw new Error('unexpected crash');
+        });
+
+        const result = await httpRequest(port, 'POST', '/resolve_failure_handler', VALID_BODY);
+
+        expect(result.status).toBe(500);
+        const body = result.body as { error: string };
+        expect(body.error).toBe('Internal server error');
+    });
+
+    // === TC-MCP-020 ===
+    // @{"verify": ["REQ-VSCODE-017"]}
+    test('TC-MCP-020: req error during body read → server remains functional', async () => {
+        // An abrupt TCP RST while the server awaits body data triggers req.on('error')
+        // inside readBody (line 173), resolving to null without crashing.
+        await new Promise<void>(resolve => {
+            const socket = net.createConnection({ host: '127.0.0.1', port }, () => {
+                // Send POST headers claiming 1000-byte body, then abruptly destroy.
+                socket.write(
+                    'POST /resolve_failure_handler HTTP/1.1\r\n' +
+                    'Host: 127.0.0.1\r\n' +
+                    'Content-Type: application/json\r\n' +
+                    'Content-Length: 1000\r\n' +
+                    '\r\n'
+                );
+                socket.destroy();
+                resolve();
+            });
+            socket.on('error', () => { /* suppress client-side ECONNRESET */ });
+        });
+
+        // Allow time for the server to process the abrupt closure.
+        await new Promise(r => setTimeout(r, 50));
+
+        // Server must still be functional after handling the req error.
+        const result = await httpRequest(port, 'GET', '/index_status');
+        expect(result.status).toBe(200);
+        expect((result.body as { fileCount: number; cacheValid: boolean }).fileCount).toBeGreaterThanOrEqual(0);
     });
 
     // === TC-ERR-006 ===

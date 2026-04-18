@@ -64,6 +64,7 @@ describe('E2E Smoke Tests — Real LibJuno C Files', () => {
 
     // TC-E2E-SMOKE-003 — app_api.h (header-only)
     let appApiHeaderFile: string;
+    let indexerSmoke003: WorkspaceIndexer;
     let vtResSmoke003: VtableResolver;
 
     // -----------------------------------------------------------------------
@@ -85,10 +86,10 @@ describe('E2E Smoke Tests — Real LibJuno C Files', () => {
         //   ...
         //   ptEngineApp->tRoot.ptApi = &tEngineAppApi;  // line 110
         //
-        // app_api.h defines JUNO_APP_ROOT_T via JUNO_MODULE_ROOT — but the
-        // Chevrotain parser cannot handle the #ifdef __cplusplus / JUNO_MODULE_EMPTY
-        // variant used in production headers, so moduleRoots stays empty.
-        // vtableAssignments IS populated from the .c file itself.
+        // app_api.h defines JUNO_APP_ROOT_T via JUNO_MODULE_ROOT. The parser
+        // correctly handles the JUNO_MODULE_EMPTY pattern in production headers,
+        // so moduleRoots IS populated (JUNO_APP_ROOT_T → JUNO_APP_API_T).
+        // vtableAssignments IS also populated from the .c file itself.
         // -------------------------------------------------------------------
 
         const dir001 = path.join(tempDir, 'smoke001');
@@ -139,7 +140,7 @@ describe('E2E Smoke Tests — Real LibJuno C Files', () => {
         appApiHeaderFile = path.join(dir003, 'app_api.h');
         fs.copyFileSync(APP_API_H, appApiHeaderFile);
 
-        const indexerSmoke003 = new WorkspaceIndexer(dir003, []);
+        indexerSmoke003 = new WorkspaceIndexer(dir003, []);
         await indexerSmoke003.reindexFile(appApiHeaderFile);
         vtResSmoke003 = new VtableResolver(indexerSmoke003.index);
     });
@@ -178,6 +179,11 @@ describe('E2E Smoke Tests — Real LibJuno C Files', () => {
         expect(onStartLocs).toHaveLength(1);
         expect(onStartLocs[0].functionName).toBe('OnStart');
         expect(onStartLocs[0].file).toBe(engineAppFile);
+
+        // moduleRoots is populated from app_api.h — JUNO_APP_ROOT_T is now
+        // correctly indexed by the parser (JUNO_MODULE_EMPTY pattern supported).
+        const rootEntry001 = indexerSmoke001.index.moduleRoots.get('JUNO_APP_ROOT_T');
+        expect(rootEntry001).toBe('JUNO_APP_API_T');
 
         // SECONDARY — resolver handles line 110 (the vtable assignment) without
         // throwing.  Assignment lines do not match any of the three ->field(
@@ -249,6 +255,11 @@ describe('E2E Smoke Tests — Real LibJuno C Files', () => {
 
     // @{"verify": ["REQ-VSCODE-001", "REQ-VSCODE-002"]}
     it('TC-E2E-SMOKE-003: VtableResolver returns found:false for header-only file with no vtable call sites', () => {
+        // The header defines JUNO_APP_ROOT_T, which is now correctly indexed
+        // by the parser (JUNO_MODULE_EMPTY pattern in production headers supported).
+        const rootEntry003 = indexerSmoke003.index.moduleRoots.get('JUNO_APP_ROOT_T');
+        expect(rootEntry003).toBe('JUNO_APP_API_T');
+
         // Line 47 of app_api.h: `typedef struct JUNO_APP_API_TAG JUNO_APP_API_T;`
         // No strategy matches a typedef statement (no `->field(` pattern).
         const result = vtResSmoke003.resolve(

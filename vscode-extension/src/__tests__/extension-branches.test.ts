@@ -29,6 +29,7 @@
  */
 
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import { createMockExtensionContext, resetMocks } from '../__mocks__/vscode';
 import { activate, deactivate } from '../extension';
 
@@ -103,6 +104,14 @@ jest.mock('../resolver/failureHandlerResolver', () => ({
         };
         return _capturedFhInstance;
     }),
+}));
+
+// Mock fs so writeMcpDiscoveryFile doesn't touch the real filesystem.
+// mkdirSync and writeFileSync are jest.fn()s; tests can make mkdirSync throw.
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    mkdirSync: jest.fn(),
+    writeFileSync: jest.fn(),
 }));
 
 // ---------------------------------------------------------------------------
@@ -355,6 +364,203 @@ describe('deactivate()', () => {
         deactivate();
 
         expect(instance.stop).toHaveBeenCalledTimes(1);
+    });
+
+});
+
+// ---------------------------------------------------------------------------
+// Tests: libjuno.reindexWorkspace command branches (lines 116-129)
+// ---------------------------------------------------------------------------
+
+describe('libjuno.reindexWorkspace — command branches', () => {
+
+    beforeEach(() => {
+        resetMocks();
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-030: reindexWorkspace happy path -> fullIndex called, statusBar reflects indexed count', async () => {
+        const cmd = await activateAndGetCommand('libjuno.reindexWorkspace');
+        _capturedIndexerInstance!.fullIndex.mockClear(); // clear activation-time invocation
+        _capturedIndexerInstance!.index.localTypeInfo.set('TYPE_A_T', {} as any);
+
+        await cmd();
+
+        expect(_capturedIndexerInstance!.fullIndex).toHaveBeenCalledTimes(1);
+        const item = (vscode.window.createStatusBarItem as jest.Mock).mock.results[0].value;
+        expect(item.text).toContain('Indexed 1 files');
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-031: reindexWorkspace error path -> showErrorMessage called with thrown error text', async () => {
+        const cmd = await activateAndGetCommand('libjuno.reindexWorkspace');
+        const injectedErr = new Error('disk full');
+        _capturedIndexerInstance!.fullIndex.mockRejectedValueOnce(injectedErr);
+        (vscode.window.showErrorMessage as jest.Mock).mockClear();
+
+        await cmd();
+
+        expect(vscode.window.showErrorMessage).toHaveBeenCalledTimes(1);
+        const msg = (vscode.window.showErrorMessage as jest.Mock).mock.calls[0][0] as string;
+        expect(msg).toContain('disk full');
+    });
+
+});
+
+// ---------------------------------------------------------------------------
+// Tests: FileSystemWatcher callbacks (lines 140-141, 146-147, 152)
+// ---------------------------------------------------------------------------
+
+describe('FileSystemWatcher callbacks', () => {
+
+    let consoleLogSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+        resetMocks();
+        consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+    });
+
+    async function activateAndGetWatcher(): Promise<any> {
+        const context = createMockExtensionContext();
+        await activate(context);
+        return (vscode.workspace.createFileSystemWatcher as jest.Mock).mock.results[0].value;
+    }
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-032: watcher onDidCreate fires -> reindexFile called with uri fsPath', async () => {
+        const watcher = await activateAndGetWatcher();
+
+        watcher._onDidCreateCallback({ fsPath: '/workspace/new.c' });
+
+        expect(_capturedIndexerInstance!.reindexFile).toHaveBeenCalledWith('/workspace/new.c');
+        expect(_capturedIndexerInstance!.reindexFile).toHaveBeenCalledTimes(1);
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-033: watcher onDidChange fires -> reindexFile called with uri fsPath', async () => {
+        const watcher = await activateAndGetWatcher();
+
+        watcher._onDidChangeCallback({ fsPath: '/workspace/changed.c' });
+
+        expect(_capturedIndexerInstance!.reindexFile).toHaveBeenCalledWith('/workspace/changed.c');
+        expect(_capturedIndexerInstance!.reindexFile).toHaveBeenCalledTimes(1);
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-034: watcher onDidDelete fires -> removeFile called with uri fsPath', async () => {
+        const watcher = await activateAndGetWatcher();
+
+        watcher._onDidDeleteCallback({ fsPath: '/workspace/deleted.c' });
+
+        expect(_capturedIndexerInstance!.removeFile).toHaveBeenCalledWith('/workspace/deleted.c');
+        expect(_capturedIndexerInstance!.removeFile).toHaveBeenCalledTimes(1);
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-037: watcher onDidCreate reindexFile rejects -> catch logs error (line 141)', async () => {
+        const watcher = await activateAndGetWatcher();
+        _capturedIndexerInstance!.reindexFile.mockRejectedValueOnce(new Error('read error'));
+
+        watcher._onDidCreateCallback({ fsPath: '/workspace/new.c' });
+        await Promise.resolve(); // flush .catch() microtask
+
+        expect(consoleLogSpy).toHaveBeenCalledWith(
+            '[LibJuno] watcher onDidCreate error:',
+            expect.any(Error)
+        );
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-038: watcher onDidChange reindexFile rejects -> catch logs error (line 147)', async () => {
+        const watcher = await activateAndGetWatcher();
+        _capturedIndexerInstance!.reindexFile.mockRejectedValueOnce(new Error('write error'));
+
+        watcher._onDidChangeCallback({ fsPath: '/workspace/changed.c' });
+        await Promise.resolve(); // flush .catch() microtask
+
+        expect(consoleLogSpy).toHaveBeenCalledWith(
+            '[LibJuno] watcher onDidChange error:',
+            expect.any(Error)
+        );
+    });
+
+});
+
+// ---------------------------------------------------------------------------
+// Tests: MCP server start and writeMcpDiscoveryFile (lines 164, 200)
+// ---------------------------------------------------------------------------
+
+describe('MCP server start and writeMcpDiscoveryFile', () => {
+
+    let consoleLogSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+        resetMocks();
+        // Explicitly configure mcpServerPort > 0 so the MCP branch always runs
+        (vscode.workspace.getConfiguration as jest.Mock).mockImplementation((_section?: string) => ({
+            get: jest.fn((key: string, defaultVal?: any) => {
+                if (key === 'mcpServerPort') { return 6543; }
+                return defaultVal;
+            }),
+        }));
+        consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-035: mcpServerPort > 0 -> McpServer instantiated and start() called with port', async () => {
+        const context = createMockExtensionContext();
+        await activate(context);
+        await Promise.resolve(); // drain any remaining microtasks
+
+        expect(_capturedMcpInstance).toBeDefined();
+        expect(_capturedMcpInstance!.start).toHaveBeenCalledWith(6543);
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-036: writeMcpDiscoveryFile mkdirSync throws -> catch block logs error (line 200)', async () => {
+        // Make mkdirSync throw BEFORE activate() so the spy is active when the .then() microtask fires
+        (fs.mkdirSync as jest.Mock).mockImplementationOnce(() => {
+            throw new Error('EACCES: permission denied');
+        });
+
+        const context = createMockExtensionContext();
+        await activate(context);
+        await Promise.resolve(); // drain .then() microtask if not yet flushed
+
+        expect(consoleLogSpy).toHaveBeenCalledWith(
+            '[LibJuno] Failed to write .libjuno/mcp.json:',
+            expect.any(Error)
+        );
+    });
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-EXT-039: start() rejects -> .catch() callback logs MCP error (line 164)', async () => {
+        // Override McpServer mock so that start() rejects for this test's instantiation
+        const McpServerMock = jest.requireMock('../mcp/mcpServer').McpServer as jest.Mock;
+        McpServerMock.mockImplementationOnce(() => {
+            _capturedMcpInstance = {
+                start: jest.fn().mockRejectedValueOnce(new Error('port in use')),
+                stop: jest.fn(),
+            };
+            return _capturedMcpInstance;
+        });
+
+        const context = createMockExtensionContext();
+        await activate(context);
+        await Promise.resolve(); // drain .catch() microtask
+
+        expect(consoleLogSpy).toHaveBeenCalledWith(
+            '[LibJuno] MCP server failed to start:',
+            expect.any(Error)
+        );
     });
 
 });

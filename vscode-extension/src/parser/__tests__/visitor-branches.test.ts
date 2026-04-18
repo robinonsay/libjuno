@@ -892,3 +892,779 @@ static JUNO_STATUS_T Foo(MY_ROOT_T *ptRoot)
         expect(result.localTypeInfo.functionParameters.get("Foo")).toBeDefined();
     });
 });
+
+// ===========================================================================
+// VB-100+: Additional branch coverage tests (WI-14.R1)
+// Target: raise visitor.ts branch coverage from 61.7% to ≥85%
+// ===========================================================================
+
+// ---------------------------------------------------------------------------
+// A. extern "C" blocks — walkExternCBlock branches
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-003"]}
+describe("walkExternCBlock — extern C block processing", () => {
+    it("VB-100: extern C block with function definition extracts call sites and function defs", () => {
+        // Covers the externCBlock loop in walkTranslationUnit and
+        // walkExternCBlock → walkExternalDeclaration → walkFunctionDefinition.
+        const src = `
+extern "C" {
+static void Foo(MY_API_T *ptApi)
+{
+    ptApi->Initialize(ptApi);
+}
+}
+`;
+        const result = parseFile("/test/header.h", src);
+        const { parsed, functionDefs } = parseFileWithDefs("/test/header.h", src);
+
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("Foo");
+
+        expect(result.apiCallSites).toHaveLength(1);
+        expect(result.apiCallSites[0].variableName).toBe("ptApi");
+        expect(result.apiCallSites[0].fieldName).toBe("Initialize");
+    });
+
+    it("VB-101: extern C block with preprocessor directive inside does not crash", () => {
+        // Covers the preprocessorDirective loop inside walkExternCBlock.
+        const src = `
+extern "C" {
+#include "my_header.h"
+}
+`;
+        const result = parseFile("/test/header.h", src);
+
+        // No crash and no spurious records
+        expect(result.moduleRoots).toHaveLength(0);
+        expect(result.apiCallSites).toHaveLength(0);
+    });
+
+    it("VB-102: extern C block with struct macro definition extracts moduleRoots", () => {
+        // Covers extern C block containing a struct declaration with JUNO_MODULE_ROOT.
+        const src = `
+extern "C" {
+struct MY_EXT_ROOT_TAG JUNO_MODULE_ROOT(MY_EXT_API_T,
+    int iState;
+);
+}
+`;
+        const result = parseFile("/test/header.h", src);
+
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].rootType).toBe("MY_EXT_ROOT_T");
+        expect(result.moduleRoots[0].apiType).toBe("MY_EXT_API_T");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// B. JUNO_TRAIT_ROOT macro — dispatchMacro junoTraitRootMacro branch
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-016"]}
+describe("JUNO_TRAIT_ROOT macro — traitRoots extraction", () => {
+    it("VB-103: JUNO_TRAIT_ROOT creates a TraitRootRecord with correct rootType and apiType", () => {
+        // Covers the junoTraitRootMacro branch of dispatchMacro.
+        const src = `
+struct MY_TRAIT_TAG JUNO_TRAIT_ROOT(MY_TRAIT_API_T,
+    int iField;
+);
+`;
+        const result = parseFile("/test/file.h", src);
+
+        expect(result.traitRoots).toHaveLength(1);
+        expect(result.traitRoots[0]).toMatchObject({
+            rootType: "MY_TRAIT_T",
+            apiType: "MY_TRAIT_API_T",
+        });
+        // JUNO_TRAIT_ROOT does not create derivations
+        expect(result.derivations).toHaveLength(0);
+    });
+
+    it("VB-104: JUNO_TRAIT_ROOT with embedded API_T member registers apiMemberRegistry", () => {
+        // Covers junoTraitRootMacro branch + walkMacroBodyForApiMembers with API_T member.
+        const src = `
+struct MY_SENSOR_TAG JUNO_TRAIT_ROOT(MY_SENSOR_API_T,
+    MY_DRIVER_API_T *ptDriver;
+);
+`;
+        const { parsed, apiMemberRegistry } = parseFileWithDefs("/test/file.h", src);
+
+        expect(parsed.traitRoots).toHaveLength(1);
+        expect(parsed.traitRoots[0].rootType).toBe("MY_SENSOR_T");
+        expect(parsed.traitRoots[0].apiType).toBe("MY_SENSOR_API_T");
+
+        expect(apiMemberRegistry.has("ptDriver")).toBe(true);
+        expect(apiMemberRegistry.get("ptDriver")).toBe("MY_DRIVER_API_T");
+    });
+
+    it("VB-105: JUNO_TRAIT_ROOT with JUNO_MODULE_EMPTY body creates traitRoots entry", () => {
+        // Covers the junoTraitRootMacro branch when the body is empty (no tokens).
+        const src = `struct MY_EMPTY_TRAIT_TAG JUNO_TRAIT_ROOT(MY_EMPTY_TRAIT_API_T, JUNO_MODULE_EMPTY);`;
+        const result = parseFile("/test/file.h", src);
+
+        expect(result.traitRoots).toHaveLength(1);
+        expect(result.traitRoots[0].rootType).toBe("MY_EMPTY_TRAIT_T");
+        expect(result.traitRoots[0].apiType).toBe("MY_EMPTY_TRAIT_API_T");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// C. Failure handler assignments — tryExtractFailureHandler true path
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-015"]}
+describe("tryExtractFailureHandler — JunoFailureHandler and JunoFailureUserData members", () => {
+    it("VB-106: JUNO_FAILURE_HANDLER assignment is recorded as a failureHandlerAssign", () => {
+        // Covers the JunoFailureHandler branch in tryExtractFailureHandler (push path).
+        const src = `
+static void Init(MY_ROOT_T *ptSelf)
+{
+    ptSelf->JUNO_FAILURE_HANDLER = MyErrorHandler;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.failureHandlerAssigns).toHaveLength(1);
+        expect(result.failureHandlerAssigns[0].functionName).toBe("MyErrorHandler");
+        expect(result.failureHandlerAssigns[0].rootType).toBe(""); // resolved later by indexer
+        expect(result.failureHandlerAssigns[0].file).toBe("/test/file.c");
+
+        // Not mistakenly also added to vtable assignments
+        expect(result.vtableAssignments).toHaveLength(0);
+    });
+
+    it("VB-107: JUNO_FAILURE_USER_DATA assignment is recorded as a failureHandlerAssign", () => {
+        // Covers the JunoFailureUserData branch in tryExtractFailureHandler (push path).
+        const src = `
+static void Setup(MY_ROOT_T *ptSelf)
+{
+    ptSelf->JUNO_FAILURE_USER_DATA = pvUserContext;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.failureHandlerAssigns).toHaveLength(1);
+        expect(result.failureHandlerAssigns[0].functionName).toBe("pvUserContext");
+        expect(result.vtableAssignments).toHaveLength(0);
+    });
+
+    it("VB-108: _pfcnFailureHandler (member-name form) is recorded as a failureHandlerAssign", () => {
+        // Covers the JunoFailureHandler token from the _pfcnFailureHandler member form.
+        const src = `
+static void Register(MY_ROOT_T *ptSelf)
+{
+    ptSelf->_pfcnFailureHandler = OnModuleError;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.failureHandlerAssigns).toHaveLength(1);
+        expect(result.failureHandlerAssigns[0].functionName).toBe("OnModuleError");
+    });
+
+    it("VB-109: _pvFailureUserData (member-name form) is recorded as a failureHandlerAssign", () => {
+        // Covers the JunoFailureUserData token from the _pvFailureUserData member form.
+        const src = `
+static void Register(MY_ROOT_T *ptSelf)
+{
+    ptSelf->_pvFailureUserData = pvAppContext;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.failureHandlerAssigns).toHaveLength(1);
+        expect(result.failureHandlerAssigns[0].functionName).toBe("pvAppContext");
+    });
+
+    it("VB-110: both JUNO_FAILURE_HANDLER and JUNO_FAILURE_USER_DATA in same function produce two assigns", () => {
+        const src = `
+static void Configure(MY_ROOT_T *ptSelf)
+{
+    ptSelf->JUNO_FAILURE_HANDLER = HandleError;
+    ptSelf->JUNO_FAILURE_USER_DATA = pvCtx;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.failureHandlerAssigns).toHaveLength(2);
+        expect(result.failureHandlerAssigns[0].functionName).toBe("HandleError");
+        expect(result.failureHandlerAssigns[1].functionName).toBe("pvCtx");
+        expect(result.vtableAssignments).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// D. extractPositionalVtable — defer path (unknown API_T type in same file)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-010"]}
+describe("extractPositionalVtable — defer path for cross-file API structs", () => {
+    it("VB-111: positional vtable with API type not defined in same file goes to pendingPositionalVtables", () => {
+        // Covers the `if (!apiRec)` defer path in extractPositionalVtable.
+        // MY_CUSTOM_API_T is not defined in this file so apiRec is null.
+        const src = `
+static const MY_CUSTOM_API_T tImpl = {
+    MyCreate,
+    MyDestroy,
+    MyReset
+};
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.pendingPositionalVtables).toHaveLength(1);
+        expect(result.pendingPositionalVtables[0].apiType).toBe("MY_CUSTOM_API_T");
+        expect(result.pendingPositionalVtables[0].initializers).toEqual(["MyCreate", "MyDestroy", "MyReset"]);
+        expect(result.pendingPositionalVtables[0].file).toBe("/test/file.c");
+
+        // No resolved vtable assignments since the struct definition is cross-file
+        expect(result.vtableAssignments).toHaveLength(0);
+    });
+
+    it("VB-112: positional vtable with single entry for unknown API defers correctly", () => {
+        // Covers the single-entry defer path.
+        const src = `static const UNKNOWN_API_T tSingleImpl = { MyOnlyFunc };`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.pendingPositionalVtables).toHaveLength(1);
+        expect(result.pendingPositionalVtables[0].initializers).toEqual(["MyOnlyFunc"]);
+        expect(result.pendingPositionalVtables[0].lines).toHaveLength(1);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// E. Designated vtable — extractInitializerIdent !ae branch (nested brace)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-010"]}
+describe("extractDesignatedVtable — nested brace initializer skipped", () => {
+    it("VB-113: designated field with nested brace initializer produces no vtable assignment for that field", () => {
+        // .Field = { 0 } — the initializer child is a brace-list, not an assignmentExpression.
+        // Covers the `if (!ae) { return undefined; }` branch in extractInitializerIdent.
+        const src = `
+static const MY_API_T tApi = {
+    .Insert = MyInsert,
+    .Options = { 0 }
+};
+`;
+        const result = parseFile("/test/file.c", src);
+
+        // .Insert = MyInsert → valid vtable assignment
+        // .Options = { 0 } → extractInitializerIdent returns undefined → skipped
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].field).toBe("Insert");
+        expect(result.vtableAssignments[0].functionName).toBe("MyInsert");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// F. walkDeclaration — non-API_T and struct body top-level declarations
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-003"]}
+describe("walkDeclaration — top-level non-API_T and struct-body declarations", () => {
+    it("VB-114: global variable with non-API_T type produces no vtable declarations or struct records", () => {
+        // Covers the `if (typeName.endsWith('_API_T'))` false branch for a top-level
+        // non-API_T declaration (e.g., MY_ROOT_T *pGlobal).
+        const src = `MY_ROOT_T *pGlobalRoot;`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.vtableAssignments).toHaveLength(0);
+        expect(result.apiStructDefinitions).toHaveLength(0);
+        expect(result.moduleRoots).toHaveLength(0);
+    });
+
+    it("VB-115: top-level struct declaration with body (non-TAG, non-macro) is traversed without crash", () => {
+        // A plain struct definition at top level with a struct body.
+        // Covers the walkStructOrUnionSpecifier path for a struct with a body but no macro.
+        const src = `
+struct PLAIN_DATA_TAG {
+    int iX;
+    int iY;
+};
+`;
+        const result = parseFile("/test/file.h", src);
+
+        // No records since this isn't an API_TAG struct and has no macro
+        expect(result.apiStructDefinitions).toHaveLength(0);
+        expect(result.moduleRoots).toHaveLength(0);
+    });
+
+    it("VB-116: top-level struct with embedded _API_T member registers apiMemberRegistry via struct body walk", () => {
+        // Covers walkStructOrUnionSpecifier → walkApiStructBody path for a struct body
+        // that contains an _API_T typed member (non-fnptr else branch).
+        const src = `
+struct MY_COMPOSITE_TAG {
+    MY_HELPER_API_T tHelper;
+    int iField;
+};
+`;
+        const { apiMemberRegistry } = parseFileWithDefs("/test/file.h", src);
+
+        // MY_HELPER_API_T regular member check in walkApiStructBody (non-fnptr else branch)
+        expect(apiMemberRegistry.has("tHelper")).toBe(true);
+        expect(apiMemberRegistry.get("tHelper")).toBe("MY_HELPER_API_T");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// G. walkExpressionStatement — RHS is not a function identifier
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-011"]}
+describe("walkExpressionStatement — non-identifier RHS in assignment", () => {
+    it("VB-117: assignment where RHS is an integer literal produces no vtable assignment", () => {
+        // tApi.Insert = 42; — RHS drills to postfix but getPostfixPrimary returns undefined
+        // (IntegerLiteral primary has no Identifier token).
+        // Covers `if (!functionName) { return; }` in walkExpressionStatement.
+        const src = `
+static void Update(MY_API_T tApi)
+{
+    tApi.Insert = 42;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        // Integer literal is not a valid function identifier → no vtable assignment
+        expect(result.vtableAssignments).toHaveLength(0);
+    });
+
+    it("VB-118: assignment where RHS is a string literal produces no vtable assignment", () => {
+        const src = `
+static void Update(MY_API_T tApi)
+{
+    tApi.Insert = "hello";
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.vtableAssignments).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// H. API struct body — additional function pointer field paths
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-009"]}
+describe("walkApiStructBody — API_TAG with multiple function pointer fields", () => {
+    it("VB-119: API_TAG struct with three function pointer fields extracts all field names", () => {
+        // Covers the function pointer (innerDecl present) path in walkApiStructBody for
+        // an API_TAG struct with multiple fields.
+        const src = `
+struct TRIPLE_API_TAG {
+    JUNO_STATUS_T (*Create)(TRIPLE_API_T *p);
+    JUNO_STATUS_T (*Read)(TRIPLE_API_T *p);
+    JUNO_STATUS_T (*Destroy)(TRIPLE_API_T *p);
+};
+`;
+        const result = parseFile("/test/file.h", src);
+
+        expect(result.apiStructDefinitions).toHaveLength(1);
+        expect(result.apiStructDefinitions[0].apiType).toBe("TRIPLE_API_T");
+        expect(result.apiStructDefinitions[0].fields).toEqual(["Create", "Read", "Destroy"]);
+    });
+
+    it("VB-120: API_TAG struct with function pointer AND embedded API_T member extracts both", () => {
+        // Covers: (1) the innerDecl true branch for the fnptr field,
+        //         (2) the else branch for the regular API_T member,
+        //         (3) the specifierQualifierList check for both.
+        const src = `
+struct MIXED_API_TAG {
+    JUNO_STATUS_T (*Execute)(MIXED_API_T *p);
+    HELPER_API_T tHelper;
+};
+`;
+        const { parsed, apiMemberRegistry } = parseFileWithDefs("/test/file.h", src);
+
+        // The function pointer field is added to apiStructDefinitions
+        expect(parsed.apiStructDefinitions).toHaveLength(1);
+        expect(parsed.apiStructDefinitions[0].fields).toContain("Execute");
+
+        // The embedded API_T member is registered in apiMemberRegistry
+        expect(apiMemberRegistry.has("tHelper")).toBe(true);
+        expect(apiMemberRegistry.get("tHelper")).toBe("HELPER_API_T");
+    });
+
+    it("VB-121: regular TAG struct (not _API_TAG) with function pointer has no apiStructDefinition", () => {
+        // isApiTag = false → the function pointer is NOT added to fields[] → no apiStructDef.
+        // Covers the `if (isApiTag) { fields.push(fieldName); }` false branch.
+        const src = `
+struct REGULAR_TAG {
+    JUNO_STATUS_T (*DoWork)(void);
+};
+`;
+        const result = parseFile("/test/file.h", src);
+
+        expect(result.apiStructDefinitions).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// I. JUNO_MODULE macro — junoModuleMacro fall-through produces no records
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-008"]}
+describe("JUNO_MODULE macro — produces no root/derive records", () => {
+    it("VB-122: JUNO_MODULE macro (plain JUNO_MODULE, not ROOT/DERIVE) produces no moduleRoots", () => {
+        // Covers the 'fall-through' case in dispatchMacro where none of the
+        // if-branches match for junoModuleMacro (JUNO_MODULE itself).
+        const src = `struct MY_MODULE_TAG JUNO_MODULE(MY_API_T, int iState;);`;
+        const result = parseFile("/test/file.h", src);
+
+        // JUNO_MODULE has no specific extraction branch → no records
+        expect(result.moduleRoots).toHaveLength(0);
+        expect(result.derivations).toHaveLength(0);
+        expect(result.traitRoots).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// J. walkLocalDeclaration — struct body inside function (no initDeclarator)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-015"]}
+describe("walkLocalDeclaration — local struct body inside function body", () => {
+    it("VB-123: local struct declaration with body inside function is skipped (no initDeclaratorList)", () => {
+        // A struct body declaration inside a function has no initDeclaratorList.
+        // The guard `if (!idl) { return; }` fires → no crash.
+        const src = `
+static void Foo(MY_ROOT_T *ptRoot)
+{
+    struct inner { int x; };
+    MY_TYPE_T *ptUsed;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        // Only ptUsed should be in local variables (struct inner has no declarator list)
+        const fnMap = result.localTypeInfo.localVariables.get("Foo");
+        expect(fnMap).toBeDefined();
+        expect(fnMap!.has("ptUsed")).toBe(true);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// K. walkStructOrUnionSpecifier — multiple macros in one file
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-008", "REQ-VSCODE-014", "REQ-VSCODE-016"]}
+describe("walkDeclaration — multiple macro types exercise all dispatchMacro branches", () => {
+    it("VB-124: all four macro types in one file exercise the full dispatchMacro if-else chain", () => {
+        // Covers all four non-trivial branches of dispatchMacro:
+        // junoModuleRootMacro, junoModuleDeriveMacro, junoTraitRootMacro, junoTraitDeriveMacro.
+        const src = `
+struct MY_ROOT_TAG JUNO_MODULE_ROOT(MY_ROOT_API_T, JUNO_MODULE_EMPTY);
+struct MY_CHILD_TAG JUNO_MODULE_DERIVE(MY_ROOT_T, JUNO_MODULE_EMPTY);
+struct MY_TRAIT_TAG JUNO_TRAIT_ROOT(MY_TRAIT_API_T, JUNO_MODULE_EMPTY);
+struct MY_IMPL_TAG JUNO_TRAIT_DERIVE(JUNO_POINTER_T, JUNO_MODULE_EMPTY);
+`;
+        const result = parseFile("/test/file.h", src);
+
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].rootType).toBe("MY_ROOT_T");
+
+        expect(result.derivations).toHaveLength(2);
+        const derivedTypes = result.derivations.map((d) => d.derivedType);
+        expect(derivedTypes).toContain("MY_CHILD_T");
+        expect(derivedTypes).toContain("MY_IMPL_T");
+
+        expect(result.traitRoots).toHaveLength(1);
+        expect(result.traitRoots[0].rootType).toBe("MY_TRAIT_T");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// L. walkFunctionDefinition — edge case paths
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-003"]}
+describe("walkFunctionDefinition — edge cases", () => {
+    it("VB-125: function with empty body does not crash and is recorded", () => {
+        // Empty function body — walkCompoundStatement gets empty children.
+        const src = `
+static void Empty(void)
+{
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/file.c", src);
+
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("Empty");
+        expect(functionDefs[0].isStatic).toBe(true);
+    });
+
+    it("VB-126: non-static function with multiple typed parameters records all parameters", () => {
+        // Covers extractParameters with multiple typed parameters in a non-static function.
+        const src = `
+JUNO_STATUS_T ApiInit(MY_API_T *ptApi, MY_ROOT_T *ptRoot)
+{
+    return 0;
+}
+`;
+        const { parsed, functionDefs } = parseFileWithDefs("/test/file.c", src);
+
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].isStatic).toBe(false);
+
+        const params = parsed.localTypeInfo.functionParameters.get("ApiInit");
+        expect(params).toBeDefined();
+        expect(params!).toHaveLength(2);
+        expect(params![0].typeName).toBe("MY_API_T");
+        expect(params![0].name).toBe("ptApi");
+        expect(params![1].typeName).toBe("MY_ROOT_T");
+        expect(params![1].name).toBe("ptRoot");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// M. walkVtableDeclaration — scalar (non-brace) initializer guard
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-010"]}
+describe("walkVtableDeclaration — scalar initializer skips vtable extraction", () => {
+    it("VB-127: API_T variable initialized with a scalar expression produces no vtable or pending entry", () => {
+        // When the initializer is not a brace-list (e.g., = GetApi()),
+        // `if (!ilitNode) { continue; }` guard fires.
+        const src = `static MY_API_T tApi = GetApi();`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.vtableAssignments).toHaveLength(0);
+        expect(result.pendingPositionalVtables).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// N. tryExtractDirectVtableAssign — arrow-operator form for pointer param
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-011"]}
+describe("tryExtractDirectVtableAssign — arrow-operator on pointer parameter", () => {
+    it("VB-128: vtable field assigned via arrow on a pointer parameter is recorded", () => {
+        // ptApi->Insert = MyInsert; where ptApi is MY_API_T* parameter.
+        // Covers the fnParams lookup path for a pointer param (not just value param).
+        const src = `
+static void Bind(MY_API_T *ptApi)
+{
+    ptApi->Insert = MyInsert;
+    ptApi->Delete = MyDelete;
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        expect(result.vtableAssignments).toHaveLength(2);
+        expect(result.vtableAssignments[0]).toMatchObject({
+            apiType: "MY_API_T",
+            field: "Insert",
+            functionName: "MyInsert",
+        });
+        expect(result.vtableAssignments[1]).toMatchObject({
+            apiType: "MY_API_T",
+            field: "Delete",
+            functionName: "MyDelete",
+        });
+    });
+});
+
+// ---------------------------------------------------------------------------
+// O. walkApiStructBody — API_TAG struct with empty body (no fields)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-009"]}
+describe("walkApiStructBody — API_TAG struct with empty body produces no apiStructDefinition", () => {
+    it("VB-129: API_TAG struct with empty body produces no apiStructDefinition", () => {
+        // isApiTag = true but fields.length = 0 → push skipped.
+        // Covers `if (isApiTag && fields.length > 0)` false branch.
+        const src = `
+struct MY_EMPTY_API_TAG {
+};
+`;
+        const result = parseFile("/test/file.h", src);
+
+        expect(result.apiStructDefinitions).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// P. walkApiStructBody — fnptr specifierQualifierList returns API_T type
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-009"]}
+describe("walkApiStructBody — function pointer with API_T return type registers apiMemberRegistry", () => {
+    it("VB-130: API_TAG struct function pointers are in apiStructDefinitions; specList check uses outer directDecl", () => {
+        // Covers the 'Also check specifierQualifierList' section in walkApiStructBody.
+        // For function-pointer fields, the Identifier in directDecl.children is
+        // in the inner declarator (not the outer), so tok(directDecl.children, "Identifier")
+        // returns undefined → apiMemberRegistry entry is NOT created for fnptr fields.
+        const src = `
+struct MY_API_TAG {
+    JUNO_STATUS_T (*Execute)(MY_API_T *p);
+    SUB_API_T (*GetSub)(void);
+};
+`;
+        const { parsed, apiMemberRegistry } = parseFileWithDefs("/test/file.h", src);
+
+        // Both function pointers are in apiStructDefinitions.fields
+        expect(parsed.apiStructDefinitions).toHaveLength(1);
+        expect(parsed.apiStructDefinitions[0].fields).toContain("Execute");
+        expect(parsed.apiStructDefinitions[0].fields).toContain("GetSub");
+
+        // The outer directDecl for a fnptr has no Identifier (it's in the inner decl),
+        // so the specList check finds name="" and does NOT add to apiMemberRegistry.
+        expect(apiMemberRegistry.has("GetSub")).toBe(false);
+        expect(apiMemberRegistry.has("Execute")).toBe(false);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Q. JUNO_MODULE_DERIVE — dispatchMacro derivation path cross-check
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-009"]}
+describe("JUNO_MODULE_DERIVE — dispatchMacro junoModuleDeriveMacro branch", () => {
+    it("VB-131: JUNO_MODULE_DERIVE with API_T member registers apiMemberRegistry entry", () => {
+        // Covers junoModuleDeriveMacro branch + walkMacroBodyForApiMembers with API_T member.
+        const src = `
+struct MY_DERIVED_TAG JUNO_MODULE_DERIVE(MY_PARENT_T,
+    MY_CHILD_API_T *ptChildApi;
+);
+`;
+        const { parsed, apiMemberRegistry } = parseFileWithDefs("/test/file.h", src);
+
+        expect(parsed.derivations).toHaveLength(1);
+        expect(parsed.derivations[0].derivedType).toBe("MY_DERIVED_T");
+        expect(parsed.derivations[0].rootType).toBe("MY_PARENT_T");
+
+        expect(apiMemberRegistry.has("ptChildApi")).toBe(true);
+        expect(apiMemberRegistry.get("ptChildApi")).toBe("MY_CHILD_API_T");
+    });
+});
+
+// ---------------------------------------------------------------------------
+// R. tryExtractCallSite — no-call member expression (hasCall false)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-012"]}
+describe("tryExtractCallSite — member access that is a function call", () => {
+    it("VB-132: call sites in a switch statement labeled-statement bodies are NOT extracted", () => {
+        // Switch bodies contain labeled statements (case: label) which fall under
+        // the 'jumpStatement / labeledStatement: no index data' comment in walkStatement.
+        // Labeled statements are intentionally skipped — this documents the actual behavior.
+        const src = `
+static void Dispatch(MY_API_T *ptApi, int eCmd)
+{
+    switch (eCmd) {
+        case 0:
+            ptApi->Start(ptApi);
+            break;
+        case 1:
+            ptApi->Stop(ptApi);
+            break;
+        default:
+            break;
+    }
+}
+`;
+        const result = parseFile("/test/file.c", src);
+
+        // Labeled statements (case:) are not visited by walkStatement — call sites inside
+        // switch case bodies are not extracted. This is the documented limitation.
+        expect(result.apiCallSites).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// S. walkApiStructBody — function pointer without API_T in specifier (no registry entry)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-009"]}
+describe("walkApiStructBody — function pointer with non-API_T return type not in registry", () => {
+    it("VB-133: API_TAG struct function pointer with JUNO_STATUS_T return type does not add to apiMemberRegistry", () => {
+        // When the specifierQualifierList type does NOT end in _API_T (e.g., JUNO_STATUS_T),
+        // the apiMemberRegistry is NOT updated for that field.
+        // Covers the `if (memberTypeName.endsWith('_API_T'))` false branch in the specList check.
+        const src = `
+struct NORMAL_API_TAG {
+    JUNO_STATUS_T (*Run)(void);
+    JUNO_STATUS_T (*Done)(void);
+};
+`;
+        const { parsed, apiMemberRegistry } = parseFileWithDefs("/test/file.h", src);
+
+        expect(parsed.apiStructDefinitions).toHaveLength(1);
+        expect(parsed.apiStructDefinitions[0].fields).toEqual(["Run", "Done"]);
+
+        // JUNO_STATUS_T does not end in _API_T → not in registry
+        expect(apiMemberRegistry.has("Run")).toBe(false);
+        expect(apiMemberRegistry.has("Done")).toBe(false);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// T. extractDeclaratorInfo — defensive no-directDeclarator guard (line 103)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-003"]}
+describe("extractDeclaratorInfo — defensive no-directDeclarator guard", () => {
+    it("VB-134: C code with parser errors does not crash parseFile and produces empty results", () => {
+        // The guard `if (!directDecl) return { name:'', isPointer:false, isArray:false }`
+        // at line 103 is a purely defensive check. The parser grammar rule for `declarator`
+        // always creates a directDeclarator sub-node when a declarator node is produced —
+        // so this branch cannot be reached through valid (or partially-invalid) C code via
+        // parseFile(). Even error-recovery scenarios skip the declarator node entirely rather
+        // than creating one without a directDeclarator.
+        //
+        // This test documents the observed behavior: malformed C that causes parse errors
+        // (e.g. `int *;` — pointer without a name) yields an empty result without throwing.
+        const src = `int *;`;
+        // Must not throw
+        const result = parseFile("/test/file.c", src);
+
+        // No vtable assignments, no local variables, no API call sites extracted
+        expect(result.vtableAssignments).toHaveLength(0);
+        expect(result.localTypeInfo.localVariables.size).toBe(0);
+        expect(result.apiCallSites).toHaveLength(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// U. extractDesignationField — array designator [N] has no Identifier (line 627)
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-009"]}
+describe("extractDesignationField — array designator returns undefined", () => {
+    it("VB-135: array designator [N] in MY_API_T initializer is not added to vtableAssignments", () => {
+        // extractDesignationField iterates designator nodes looking for an Identifier token.
+        // An array designator `[0]` has children LBracket/constantExpression/RBracket but
+        // no Identifier → the loop falls through and returns undefined (line 627).
+        // The caller (extractDesignatedVtable) then skips the entry because `field` is undefined.
+        const src = `
+static const MY_API_T s_tApi = { [0] = MyFunc };
+`;
+        const result = parseFile("/test/file.c", src);
+
+        // Array designator produces no field name → no vtableAssignment
+        expect(result.vtableAssignments).toHaveLength(0);
+    });
+
+    it("VB-136: mixed dot and array designators — dot entry extracted, array entry skipped", () => {
+        // When an initializer has both `.field = fn` (dot designator) and `[0] = fn`
+        // (array designator), only the dot-designated entry produces a vtableAssignment.
+        // The array designator invokes extractDesignationField which returns undefined
+        // (line 627), and the entry is silently skipped.
+        const src = `
+static const MY_API_T s_tApi = { .Run = MyRun, [0] = Ignored };
+`;
+        const result = parseFile("/test/file.c", src);
+
+        // Only the dot-designator entry (.Run = MyRun) is extracted
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].field).toBe("Run");
+        expect(result.vtableAssignments[0].functionName).toBe("MyRun");
+        expect(result.vtableAssignments[0].apiType).toBe("MY_API_T");
+
+        // The [0] = Ignored entry is NOT in vtableAssignments (no Identifier in designator)
+        const ignoredEntry = result.vtableAssignments.find(a => a.functionName === "Ignored");
+        expect(ignoredEntry).toBeUndefined();
+    });
+});

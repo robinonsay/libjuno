@@ -14,6 +14,7 @@
  * TC-WI-005     removeFile() — records removed from index (REQ-VSCODE-001)
  * TC-WI-006     mergeInto() multi-file — no key collision (REQ-VSCODE-001, REQ-VSCODE-021)
  * TC-WI-NEG-001 reindexFile() on never-indexed file → no error (REQ-VSCODE-001)
+ * TC-WI-NEG-002 reindexFile() with nonexistent path → silent no-op, index unchanged (REQ-VSCODE-001)
  * TC-WI-BND-001 fullIndex() on empty workspace → empty index (REQ-VSCODE-001)
  * TC-CACHE-003  loadFromCache() re-parses only modified file on hash mismatch (REQ-VSCODE-001)
  * TC-CACHE-004  loadFromCache() parses file added after initial fullIndex() (REQ-VSCODE-001)
@@ -24,6 +25,8 @@
  * TC-WI-008     Failure handler root-type resolution via localTypeInfo (REQ-VSCODE-016)
  * TC-WI-008b    Multi-module FH disambiguation in same file (REQ-VSCODE-016)
  * TC-WI-009     Hash consistency for BOM files (REQ-VSCODE-001)
+ * TC-WI-010     mergeInto() traitRoots loop — single trait root (REQ-VSCODE-001, WI-14.C7)
+ * TC-WI-011     mergeInto() traitRoots loop — two files, two trait roots (REQ-VSCODE-001, WI-14.C7)
  */
 
 import * as fs from 'fs';
@@ -31,6 +34,7 @@ import * as path from 'path';
 import * as os from 'os';
 import { WorkspaceIndexer } from '../workspaceIndexer';
 import * as visitorModule from '../../parser/visitor';
+import { ParsedFile } from '../../parser/types';
 
 // @{"verify": ["REQ-VSCODE-001", "REQ-VSCODE-021"]}
 describe('WorkspaceIndexer — core behaviour', () => {
@@ -373,6 +377,40 @@ describe('WorkspaceIndexer — core behaviour', () => {
         expect(defs!.length).toBeGreaterThanOrEqual(1);
         expect(defs![0].functionName).toBe('FreshFunction');
         expect(defs![0].file).toBe(newFilePath);
+    });
+
+    // =========================================================================
+    // TC-WI-NEG-002: reindexFile() with nonexistent path → silent no-op
+    // =========================================================================
+
+    // @{"verify": ["REQ-VSCODE-001"]}
+    it('TC-WI-NEG-002: reindexFile() with a nonexistent file path does not throw and leaves the index unchanged', async () => {
+        const dir = path.join(tempDir, 'tcneg002');
+        fs.mkdirSync(dir);
+
+        const indexer = new WorkspaceIndexer(dir, []);
+
+        // Index a real file first so there is a baseline to compare against
+        const realFile = path.join(dir, 'real.c');
+        fs.writeFileSync(realFile, 'void RealFunction(void) {}\n');
+        await indexer.fullIndex();
+
+        const beforeFuncSize = indexer.index.functionDefinitions.size;
+        const beforeRootSize = indexer.index.moduleRoots.size;
+        const beforeVtableSize = indexer.index.vtableAssignments.size;
+
+        // Path that never existed — fs.promises.readFile throws ENOENT,
+        // exercising the catch { return; } branch in indexFile() (line 163)
+        const ghostPath = path.join(dir, 'does_not_exist.c');
+        await expect(indexer.reindexFile(ghostPath)).resolves.toBeUndefined();
+
+        // Index must be unchanged — no records added, none removed
+        expect(indexer.index.functionDefinitions.size).toBe(beforeFuncSize);
+        expect(indexer.index.moduleRoots.size).toBe(beforeRootSize);
+        expect(indexer.index.vtableAssignments.size).toBe(beforeVtableSize);
+
+        // The previously-indexed function must still be present
+        expect(indexer.index.functionDefinitions.has('RealFunction')).toBe(true);
     });
 
     // =========================================================================
@@ -863,6 +901,377 @@ describe('WorkspaceIndexer — core behaviour', () => {
             expect(handlersB!.some((h) => h.functionName === 'FH_A')).toBe(false);
         });
 
+        // =====================================================================
+        // TC-WI-014-LOC: resolveRootTypeForFH containingFn found, root type in
+        //   local variables (lines 319-322)
+        //   The containing function has void params → params array is empty →
+        //   falls through to localVariables check which finds the root type.
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-016"]}
+        it('TC-WI-014-LOC: resolveRootTypeForFH() finds root type via localVariables when containing function has no root-type parameters', async () => {
+            const dir = path.join(fileDir, 'tc-wi-014-loc');
+            fs.mkdirSync(dir);
+
+            // Single file: module root + void-param function with LOCAL variable of
+            // root type.  resolveRootTypeForFH must exercise:
+            //   line 314 – functionParameters.get("InitLocal") → []
+            //   line 315 – if (params) → true, but loop body never entered (empty)
+            //   line 319 – localVariables.get("InitLocal") → Map with tRoot
+            //   line 320 – if (vars) → true
+            //   line 322 – knownRoots.has("WI014L_ROOT_T") → return
+            const src = [
+                'typedef struct WI014L_API_TAG WI014L_API_T;',
+                'typedef struct WI014L_ROOT_TAG WI014L_ROOT_T;',
+                '',
+                'struct WI014L_ROOT_TAG JUNO_MODULE_ROOT(WI014L_API_T, );',
+                '',
+                'struct WI014L_API_TAG { void (*Work)(WI014L_ROOT_T *ptSelf); };',
+                '',
+                'static void FH_WI014L(void) {}',
+                '',
+                'void InitLocal(void) {',
+                '    WI014L_ROOT_T tRoot;',
+                '    tRoot._pfcnFailureHandler = FH_WI014L;',
+                '}',
+                '',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(dir, 'wi014l.c'), src);
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // moduleRoots must have the root type
+            expect(indexer.index.moduleRoots.get('WI014L_ROOT_T')).toBe('WI014L_API_T');
+
+            // resolveRootTypeForFH must attribute the handler to WI014L_ROOT_T via
+            // the local variable 'tRoot' of type WI014L_ROOT_T inside InitLocal()
+            const handlers = indexer.index.failureHandlerAssignments.get('WI014L_ROOT_T');
+            expect(handlers).toBeDefined();
+            expect(handlers!.length).toBeGreaterThanOrEqual(1);
+            expect(handlers!.some((h) => h.functionName === 'FH_WI014L')).toBe(true);
+        });
+
+        // =====================================================================
+        // TC-WI-014-FBP: resolveRootTypeForFH fallback path — search all
+        //   functionParameters (lines 325-327)
+        //   findContainingFunction returns undefined when functionDefs is empty,
+        //   so the fallback iterates all functionParameters entries and finds the
+        //   root type there.
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-016"]}
+        it('TC-WI-014-FBP: resolveRootTypeForFH() searches all functionParameters in fallback when no containing function is found', async () => {
+            const dir = path.join(fileDir, 'tc-wi-014-fbp');
+            fs.mkdirSync(dir);
+
+            // Index the header first to populate moduleRoots with FALLP_ROOT_T
+            const header = [
+                'typedef struct FALLP_API_TAG FALLP_API_T;',
+                'typedef struct FALLP_ROOT_TAG FALLP_ROOT_T;',
+                '',
+                'struct FALLP_ROOT_TAG JUNO_MODULE_ROOT(FALLP_API_T, );',
+                '',
+                'struct FALLP_API_TAG { void (*Work)(FALLP_ROOT_T *ptSelf); };',
+                '',
+            ].join('\n');
+
+            const implPath = path.join(dir, 'fallp_impl.c');
+            fs.writeFileSync(path.join(dir, 'fallp.h'), header);
+            // Placeholder impl file — content is replaced by the mock below
+            fs.writeFileSync(implPath, '/* placeholder */\n');
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            // Index header only to seed moduleRoots; impl file will use the mock
+            await indexer.reindexFile(path.join(dir, 'fallp.h'));
+            expect(indexer.index.moduleRoots.get('FALLP_ROOT_T')).toBe('FALLP_API_T');
+
+            // Craft a ParsedFile with a FH assignment and functionDefs=[] so that
+            // findContainingFunction(10, implPath, []) returns undefined → fallback.
+            // functionParameters has FALLP_ROOT_T → fallback finds root via params.
+            const mockParsed: ParsedFile = {
+                filePath: implPath,
+                moduleRoots: [],
+                traitRoots: [],
+                derivations: [],
+                apiStructDefinitions: [],
+                vtableAssignments: [],
+                failureHandlerAssigns: [{
+                    rootType: '',
+                    functionName: 'FH_FallParams',
+                    file: implPath,
+                    line: 10,
+                }],
+                apiCallSites: [],
+                pendingPositionalVtables: [],
+                localTypeInfo: {
+                    functionParameters: new Map([
+                        ['AnyFunc', [{
+                            name: 'ptRoot', typeName: 'FALLP_ROOT_T',
+                            isPointer: true, isConst: false, isArray: false,
+                        }]],
+                    ]),
+                    localVariables: new Map(),
+                },
+            };
+
+            jest.spyOn(visitorModule, 'parseFileWithDefs').mockReturnValueOnce({
+                parsed: mockParsed,
+                functionDefs: [],        // empty → findContainingFunction → undefined → fallback
+                apiMemberRegistry: new Map(),
+            });
+
+            await indexer.reindexFile(implPath);
+
+            // Fallback params loop (lines 325-327) found FALLP_ROOT_T
+            const handlers = indexer.index.failureHandlerAssignments.get('FALLP_ROOT_T');
+            expect(handlers).toBeDefined();
+            expect(handlers!.length).toBeGreaterThanOrEqual(1);
+            expect(handlers!.some((h) => h.functionName === 'FH_FallParams')).toBe(true);
+        });
+
+        // =====================================================================
+        // TC-WI-014-FBV: resolveRootTypeForFH fallback path — search all
+        //   localVariables (lines 329-333)
+        //   functionParameters has only a non-root type, so the fallback falls
+        //   through to the localVariables loop which finds the root type.
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-016"]}
+        it('TC-WI-014-FBV: resolveRootTypeForFH() searches all localVariables in fallback when functionParameters yields no root-type match', async () => {
+            const dir = path.join(fileDir, 'tc-wi-014-fbv');
+            fs.mkdirSync(dir);
+
+            // Index the header first to populate moduleRoots with FALLV_ROOT_T
+            const header = [
+                'typedef struct FALLV_API_TAG FALLV_API_T;',
+                'typedef struct FALLV_ROOT_TAG FALLV_ROOT_T;',
+                '',
+                'struct FALLV_ROOT_TAG JUNO_MODULE_ROOT(FALLV_API_T, );',
+                '',
+                'struct FALLV_API_TAG { void (*Work)(FALLV_ROOT_T *ptSelf); };',
+                '',
+            ].join('\n');
+
+            const implPath = path.join(dir, 'fallv_impl.c');
+            fs.writeFileSync(path.join(dir, 'fallv.h'), header);
+            fs.writeFileSync(implPath, '/* placeholder */\n');
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.reindexFile(path.join(dir, 'fallv.h'));
+            expect(indexer.index.moduleRoots.get('FALLV_ROOT_T')).toBe('FALLV_API_T');
+
+            // functionParameters has only a non-root 'int' param → fallback params
+            // loop finds no match.  localVariables has FALLV_ROOT_T → fallback vars
+            // loop (lines 329-333) finds it.
+            const mockParsed: ParsedFile = {
+                filePath: implPath,
+                moduleRoots: [],
+                traitRoots: [],
+                derivations: [],
+                apiStructDefinitions: [],
+                vtableAssignments: [],
+                failureHandlerAssigns: [{
+                    rootType: '',
+                    functionName: 'FH_FallVars',
+                    file: implPath,
+                    line: 10,
+                }],
+                apiCallSites: [],
+                pendingPositionalVtables: [],
+                localTypeInfo: {
+                    functionParameters: new Map([
+                        ['AnyFunc', [{
+                            name: 'x', typeName: 'int',
+                            isPointer: false, isConst: false, isArray: false,
+                        }]],
+                    ]),
+                    localVariables: new Map([
+                        ['AnyFunc', new Map([
+                            ['myVar', {
+                                name: 'myVar', typeName: 'FALLV_ROOT_T',
+                                isPointer: false, isConst: false, isArray: false,
+                            }],
+                        ])],
+                    ]),
+                },
+            };
+
+            jest.spyOn(visitorModule, 'parseFileWithDefs').mockReturnValueOnce({
+                parsed: mockParsed,
+                functionDefs: [],        // empty → findContainingFunction → undefined → fallback
+                apiMemberRegistry: new Map(),
+            });
+
+            await indexer.reindexFile(implPath);
+
+            // Fallback vars loop (lines 329-333) found FALLV_ROOT_T
+            const handlers = indexer.index.failureHandlerAssignments.get('FALLV_ROOT_T');
+            expect(handlers).toBeDefined();
+            expect(handlers!.length).toBeGreaterThanOrEqual(1);
+            expect(handlers!.some((h) => h.functionName === 'FH_FallVars')).toBe(true);
+        });
+
+        // =====================================================================
+        // TC-WI-C6-A: resolveDeferred() — API struct not found → warn + continue
+        //   (workspaceIndexer.ts lines 370-371)
+        //
+        //   A positional vtable initializer for a type whose struct is NEVER
+        //   defined anywhere produces a DeferredPositional entry. After all
+        //   files are indexed, resolveDeferred() cannot find the type in
+        //   apiStructFields → issues a console.warn and continues (skips).
+        //
+        //   Trigger: type name ends in _API_T (visitor line 474)
+        //            and has no struct definition in any indexed file.
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-012"]}
+        it('TC-WI-C6-A: resolveDeferred() warns and skips when API struct definition is absent from all indexed files', async () => {
+            const dir = path.join(fileDir, 'tc-wi-c6-a');
+            fs.mkdirSync(dir);
+
+            // C file: positional vtable init for UNRSLV_API_T, which has NO struct
+            // definition anywhere in the workspace.  The visitor creates a
+            // PendingPositionalVtable; resolveDeferred() cannot look it up in
+            // apiStructFields (undefined) → warn + continue (lines 369-371).
+            const src = [
+                'static void UnrslvFuncA(void) {}',
+                'static void UnrslvFuncB(void) {}',
+                '',
+                'static const UNRSLV_API_T tUnrslv = { UnrslvFuncA, UnrslvFuncB };',
+                '',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(dir, 'unrslv.c'), src);
+
+            const warnSpy = jest.spyOn(console, 'warn');
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // The warning must have been emitted with the unknown API type name
+            const warnCalls = warnSpy.mock.calls.map((args) => args.join(' '));
+            expect(warnCalls.some((msg) => msg.includes('UNRSLV_API_T'))).toBe(true);
+
+            // vtableAssignments must NOT have an entry for the unresolvable type
+            expect(indexer.index.vtableAssignments.has('UNRSLV_API_T')).toBe(false);
+
+            // apiStructFields must NOT have an entry (no struct def was ever parsed)
+            expect(indexer.index.apiStructFields.has('UNRSLV_API_T')).toBe(false);
+        });
+
+        // =====================================================================
+        // TC-WI-C6-B: scanFiles() — excluded directory is skipped (line 415)
+        //
+        //   WorkspaceIndexer constructed with excludedDirs=['build'] must not
+        //   index any file inside a directory named 'build'.  Files at the
+        //   workspace root level are still indexed normally.
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-021"]}
+        it('TC-WI-C6-B: fullIndex() does not index C files inside an excluded directory but recurses into non-excluded subdirs', async () => {
+            const dir = path.join(fileDir, 'tc-wi-c6-b');
+            const excludedSubdir = path.join(dir, 'build');
+            const includedSubdir = path.join(dir, 'src');
+            fs.mkdirSync(dir);
+            fs.mkdirSync(excludedSubdir);
+            fs.mkdirSync(includedSubdir);
+
+            // File in the excluded 'build' directory — must NOT be indexed
+            fs.writeFileSync(
+                path.join(excludedSubdir, 'excluded.c'),
+                'void ExcludedC6Func(void) {}\n',
+            );
+
+            // File inside a non-excluded subdirectory 'src/' — MUST be indexed.
+            // This triggers the recursive scanFiles() call at line 415.
+            fs.writeFileSync(
+                path.join(includedSubdir, 'subdir.c'),
+                'void SubdirC6Func(void) {}\n',
+            );
+
+            // File at the workspace root — must still be indexed
+            fs.writeFileSync(
+                path.join(dir, 'included.c'),
+                'void IncludedC6Func(void) {}\n',
+            );
+
+            // Construct with 'build' as an excluded directory
+            const indexer = new WorkspaceIndexer(dir, ['build']);
+            await indexer.fullIndex();
+
+            // Root-level file is indexed
+            expect(indexer.index.functionDefinitions.has('IncludedC6Func')).toBe(true);
+            const incDefs = indexer.index.functionDefinitions.get('IncludedC6Func')!;
+            expect(incDefs[0].functionName).toBe('IncludedC6Func');
+
+            // File inside non-excluded 'src/' is indexed (recursive scan, line 415)
+            expect(indexer.index.functionDefinitions.has('SubdirC6Func')).toBe(true);
+            const subDefs = indexer.index.functionDefinitions.get('SubdirC6Func')!;
+            expect(subDefs[0].functionName).toBe('SubdirC6Func');
+
+            // File inside 'build/' is NOT indexed (excluded dir, line 412 → continue)
+            expect(indexer.index.functionDefinitions.has('ExcludedC6Func')).toBe(false);
+        });
+
+        // =====================================================================
+        // TC-WI-C6-C: hashFile() read error → returns "" (line 436)
+        //
+        //   loadFromCache() calls hashFile() for every file found by scanFiles().
+        //   When readFileSync throws (e.g., EACCES), the catch block returns "".
+        //   The empty string does NOT match the cached (non-empty) hash, so the
+        //   file is treated as stale: removeFileRecords() runs, then indexFile()
+        //   also fails silently (readFile throws).  The net result: the file's
+        //   index entries are removed and not re-added.
+        //
+        //   Skipped when running as root (chmod has no effect under root).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-001"]}
+        it('TC-WI-C6-C: hashFile() returns "" on read error causing loadFromCache() to treat the file as stale', async () => {
+            // Skip if process is root — chmod restrictions do not apply to root
+            if (typeof process.getuid === 'function' && process.getuid() === 0) {
+                return;
+            }
+
+            const dir = path.join(fileDir, 'tc-wi-c6-c');
+            fs.mkdirSync(dir);
+
+            const filePath = path.join(dir, 'hashfail.c');
+            fs.writeFileSync(filePath, 'void HashFailFunc(void) {}\n');
+
+            // Populate cache via fullIndex()
+            const indexer1 = new WorkspaceIndexer(dir, []);
+            await indexer1.fullIndex();
+
+            // Precondition: HashFailFunc was indexed and cached
+            expect(indexer1.index.functionDefinitions.has('HashFailFunc')).toBe(true);
+
+            // Make the file unreadable — hashFile() will throw and return ""
+            fs.chmodSync(filePath, 0o000);
+
+            try {
+                const indexer2 = new WorkspaceIndexer(dir, []);
+                const spy = jest.spyOn(visitorModule, 'parseFileWithDefs');
+
+                const loaded = await indexer2.loadFromCache();
+
+                // Cache must be found
+                expect(loaded).toBe(true);
+
+                // hashFile() returned "" (read error) → hash mismatch → stale path:
+                //   removeFileRecords() removed HashFailFunc from index
+                //   indexFile() also failed to read → returned early (no re-parse)
+                expect(spy).not.toHaveBeenCalled();
+
+                // HashFailFunc must be absent: removed by removeFileRecords, not re-added
+                expect(indexer2.index.functionDefinitions.has('HashFailFunc')).toBe(false);
+            } finally {
+                // Restore permissions so afterAll cleanup can delete the directory
+                fs.chmodSync(filePath, 0o644);
+            }
+        });
+
     }); // end 'File Discovery and Cross-File Resolution'
 
     // =========================================================================
@@ -922,5 +1331,97 @@ describe('WorkspaceIndexer — core behaviour', () => {
         });
 
     }); // end 'Hash Consistency'
+
+    // =========================================================================
+    // TC-WI-010 / TC-WI-011: mergeInto() traitRoots branch (WI-14.C7)
+    // Covers workspaceIndexer.ts line 193: idx.traitRoots.set(r.rootType, r.apiType)
+    // =========================================================================
+
+    describe('mergeInto traitRoots branch', () => {
+
+        let traitDir: string;
+
+        beforeAll(() => {
+            traitDir = fs.mkdtempSync(path.join(os.tmpdir(), 'libjuno-trait-'));
+        });
+
+        afterAll(() => {
+            fs.rmSync(traitDir, { recursive: true, force: true });
+        });
+
+        // @{"verify": ["REQ-VSCODE-001"]}
+        it('TC-WI-010: fullIndex() with JUNO_TRAIT_ROOT populates traitRoots', async () => {
+            const dir = path.join(traitDir, 'tc010');
+            fs.mkdirSync(dir);
+
+            const header = [
+                'typedef struct MY_TRAIT_ROOT_TAG MY_TRAIT_ROOT_T;',
+                'typedef struct MY_TRAIT_API_TAG MY_TRAIT_API_T;',
+                '',
+                'struct MY_TRAIT_ROOT_TAG JUNO_TRAIT_ROOT(MY_TRAIT_API_T, );',
+                '',
+                'struct MY_TRAIT_API_TAG',
+                '{',
+                '    int (*DoWork)(void);',
+                '};',
+                '',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(dir, 'trait010.h'), header);
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // traitRoots must be populated — line 193 in workspaceIndexer.ts
+            expect(indexer.index.traitRoots.get('MY_TRAIT_ROOT_T')).toBe('MY_TRAIT_API_T');
+        });
+
+        // @{"verify": ["REQ-VSCODE-001"]}
+        it('TC-WI-011: fullIndex() with two JUNO_TRAIT_ROOT in separate files stores both in traitRoots', async () => {
+            const dir = path.join(traitDir, 'tc011');
+            fs.mkdirSync(dir);
+
+            const headerA = [
+                'typedef struct TRAITA_ROOT_TAG TRAITA_ROOT_T;',
+                'typedef struct TRAITA_API_TAG TRAITA_API_T;',
+                '',
+                'struct TRAITA_ROOT_TAG JUNO_TRAIT_ROOT(TRAITA_API_T, );',
+                '',
+                'struct TRAITA_API_TAG',
+                '{',
+                '    int (*DoA)(void);',
+                '};',
+                '',
+            ].join('\n');
+
+            const headerB = [
+                'typedef struct TRAITB_ROOT_TAG TRAITB_ROOT_T;',
+                'typedef struct TRAITB_API_TAG TRAITB_API_T;',
+                '',
+                'struct TRAITB_ROOT_TAG JUNO_TRAIT_ROOT(TRAITB_API_T, );',
+                '',
+                'struct TRAITB_API_TAG',
+                '{',
+                '    int (*DoB)(void);',
+                '};',
+                '',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(dir, 'traita.h'), headerA);
+            fs.writeFileSync(path.join(dir, 'traitb.h'), headerB);
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // Both trait roots must appear — line 193 executed twice across mergeInto calls
+            expect(indexer.index.traitRoots.get('TRAITA_ROOT_T')).toBe('TRAITA_API_T');
+            expect(indexer.index.traitRoots.get('TRAITB_ROOT_T')).toBe('TRAITB_API_T');
+
+            // No cross-contamination
+            expect(indexer.index.traitRoots.has('TRAITA_API_T')).toBe(false);
+            expect(indexer.index.traitRoots.has('TRAITB_API_T')).toBe(false);
+        });
+
+    }); // end 'mergeInto traitRoots branch'
 
 });
