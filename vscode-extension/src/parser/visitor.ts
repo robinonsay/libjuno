@@ -268,6 +268,19 @@ class CSTWalker {
         for (const n of (c["preprocessorDirective"] ?? []) as CstNode[]) {
             this.walkPreprocessorDirective(n);
         }
+        for (const n of (c["externCBlock"] ?? []) as CstNode[]) {
+            this.walkExternCBlock(n);
+        }
+    }
+
+    private walkExternCBlock(node: CstNode): void {
+        const c = node.children;
+        for (const n of (c["externalDeclaration"] ?? []) as CstNode[]) {
+            this.walkExternalDeclaration(n);
+        }
+        for (const n of (c["preprocessorDirective"] ?? []) as CstNode[]) {
+            this.walkPreprocessorDirective(n);
+        }
     }
 
     private walkExternalDeclaration(node: CstNode): void {

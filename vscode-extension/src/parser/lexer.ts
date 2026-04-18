@@ -93,6 +93,11 @@ export const JunoModuleResult = createToken({
     pattern: /JUNO_MODULE_RESULT\b/,
 });
 
+export const JunoModuleOption = createToken({
+    name: "JunoModuleOption",
+    pattern: /JUNO_MODULE_OPTION\b/,
+});
+
 export const JunoModuleSuper = createToken({
     name: "JunoModuleSuper",
     pattern: /JUNO_MODULE_SUPER\b/,
@@ -154,18 +159,44 @@ export const JunoFailureUserData = createToken({
 // Use a custom match function that preserves start-of-line semantics.
 // ---------------------------------------------------------------------------
 
-const _hashDirectiveRe = /[ \t]*#[ \t]*(?:define|include|ifdef|ifndef|if|elif|else|endif|pragma|undef|error|warning|line)[^\n]*/;
+const _hashDirectiveRe = /[ \t]*#[ \t]*(?:define|include|ifdef|ifndef|if|elif|else|endif|pragma|undef|error|warning|line)/;
 
 export const HashDirective = createToken({
     name: "HashDirective",
-    pattern: (text: string, startOffset: number) => {
+    pattern: (text: string, startOffset: number): RegExpExecArray | null => {
         // Only match at the very beginning of the text or just after a newline.
         if (startOffset !== 0 && text[startOffset - 1] !== "\n") { return null; }
-        const match = _hashDirectiveRe.exec(text.slice(startOffset));
+        const remaining = text.slice(startOffset);
+        const match = _hashDirectiveRe.exec(remaining);
         if (!match || match.index !== 0) { return null; }
-        return match;
+
+        // Consume the rest of the directive, including continuation lines (\ + \n).
+        let pos = match[0].length;
+        while (pos < remaining.length) {
+            const ch = remaining[pos];
+            if (ch === "\n") {
+                // Look back past any trailing whitespace (excluding \n) for a backslash.
+                let lookBack = pos - 1;
+                while (lookBack >= 0 && (remaining[lookBack] === " " || remaining[lookBack] === "\t" || remaining[lookBack] === "\r")) {
+                    lookBack--;
+                }
+                if (lookBack >= 0 && remaining[lookBack] === "\\") {
+                    // Line continuation — consume the newline and keep going.
+                    pos++;
+                    continue;
+                }
+                // No continuation — stop here (do not consume the newline).
+                break;
+            }
+            pos++;
+        }
+
+        const result = [remaining.slice(0, pos)] as unknown as RegExpExecArray;
+        result.index = 0;
+        result.input = remaining;
+        return result;
     },
-    line_breaks: false,
+    line_breaks: true,
 });
 
 // ---------------------------------------------------------------------------
@@ -297,6 +328,7 @@ export const allTokens = [
     JunoModuleDeriveDeclare,
     JunoModuleGetApi,
     JunoModuleResult,
+    JunoModuleOption,
     JunoModuleSuper,
     JunoModuleEmpty,
     JunoModuleRoot,

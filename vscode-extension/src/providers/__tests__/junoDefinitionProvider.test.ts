@@ -120,6 +120,10 @@ describe('JunoDefinitionProvider', () => {
         provider = new JunoDefinitionProvider(vtableResolver, fhResolver, index, statusBar);
     });
 
+    afterEach(() => {
+        statusBar.dispose();
+    });
+
     // @{"verify": ["REQ-VSCODE-002", "REQ-VSCODE-007"]}
     it('TC-VSC-003: vtable call → returns Location array with correct file and 0-based line', async () => {
         const doc = createMockDocument('ptSelf->ptApi->Launch(ptSelf);');
@@ -142,7 +146,7 @@ describe('JunoDefinitionProvider', () => {
         expect(result!.length).toBe(1);
         // toVscodeLocations converts 1-based line 110 → 0-based Position(109, 0)
         expect((result![0] as any).uri.fsPath).toBe('/test/impl.c');
-        expect((result![0] as any).range.line).toBe(109);
+        expect((result![0] as any).range.start.line).toBe(109);
     });
 
     // @{"verify": ["REQ-VSCODE-016"]}
@@ -162,7 +166,7 @@ describe('JunoDefinitionProvider', () => {
         expect(result!.length).toBe(1);
         expect((result![0] as any).uri.fsPath).toBe('/test/handler.c');
         // toVscodeLocations converts 1-based line 50 → 0-based Position(49, 0)
-        expect((result![0] as any).range.line).toBe(49);
+        expect((result![0] as any).range.start.line).toBe(49);
     });
 
     // @{"verify": ["REQ-VSCODE-007"]}

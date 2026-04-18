@@ -18,17 +18,32 @@ export class Position {
 }
 
 export class Range {
-    constructor(
-        public readonly start: Position,
-        public readonly end: Position
-    ) {}
+    public readonly start: Position;
+    public readonly end: Position;
+
+    constructor(startOrStartLine: Position | number, endOrStartChar: Position | number, endLine?: number, endChar?: number) {
+        if (typeof startOrStartLine === 'number') {
+            this.start = new Position(startOrStartLine, endOrStartChar as number);
+            this.end = new Position(endLine!, endChar!);
+        } else {
+            this.start = startOrStartLine;
+            this.end = endOrStartChar as Position;
+        }
+    }
 }
 
 export class Location {
-    constructor(
-        public readonly uri: Uri,
-        public readonly range: Position | Range
-    ) {}
+    public readonly uri: Uri;
+    public readonly range: Range;
+
+    constructor(uri: Uri, rangeOrPosition: Range | Position) {
+        this.uri = uri;
+        if (rangeOrPosition instanceof Position) {
+            this.range = new Range(rangeOrPosition, rangeOrPosition);
+        } else {
+            this.range = rangeOrPosition;
+        }
+    }
 }
 
 export class Uri {
@@ -124,7 +139,6 @@ export const window = {
     showTextDocument: jest.fn().mockResolvedValue(undefined),
     showErrorMessage: jest.fn().mockResolvedValue(undefined),
     showInformationMessage: jest.fn().mockResolvedValue(undefined),
-    setStatusBarMessage: jest.fn(() => ({ dispose: jest.fn() })),
     createStatusBarItem: jest.fn(() => _createStatusBarItemMock()),
     withProgress: jest.fn((options: any, task: AnyFn) =>
         task(
@@ -155,7 +169,7 @@ export const workspace = {
 
 export const cancellationToken = {
     isCancellationRequested: false,
-    onCancellationRequested: jest.fn(),
+    onCancellationRequested: jest.fn().mockReturnValue({ dispose: jest.fn() }),
 };
 
 // ---------------------------------------------------------------------------
@@ -202,7 +216,6 @@ export function resetMocks(): void {
     window.showTextDocument.mockResolvedValue(undefined);
     window.showErrorMessage.mockResolvedValue(undefined);
     window.showInformationMessage.mockResolvedValue(undefined);
-    window.setStatusBarMessage.mockReturnValue({ dispose: jest.fn() });
     window.createStatusBarItem.mockImplementation(() => _createStatusBarItemMock());
     window.withProgress.mockImplementation((options: any, task: AnyFn) =>
         task(

@@ -27,7 +27,7 @@ import {
     JunoModuleRoot, JunoModuleDerive, JunoModule,
     JunoTraitRoot, JunoTraitDerive,
     JunoModuleDeclare, JunoModuleRootDeclare, JunoModuleDeriveDeclare,
-    JunoModuleResult,
+    JunoModuleResult, JunoModuleOption,
     JunoModuleGetApi, JunoModuleSuper, JunoFailureHandler, JunoFailureUserData,
 } from "./lexer";
 
@@ -45,9 +45,23 @@ export class CParser extends CstParser {
         this.MANY(() => {
             this.OR([
                 { ALT: () => this.SUBRULE(this.preprocessorDirective) },
+                { ALT: () => this.SUBRULE(this.externCBlock) },
                 { ALT: () => this.SUBRULE(this.externalDeclaration) },
             ]);
         });
+    });
+
+    externCBlock = this.RULE("externCBlock", () => {
+        this.CONSUME(Extern);
+        this.CONSUME(StringLiteral);
+        this.CONSUME(LBrace);
+        this.MANY(() => {
+            this.OR2([
+                { ALT: () => this.SUBRULE(this.preprocessorDirective) },
+                { ALT: () => this.SUBRULE(this.externalDeclaration) },
+            ]);
+        });
+        this.CONSUME(RBrace);
     });
 
     externalDeclaration = this.RULE("externalDeclaration", () => {
@@ -411,11 +425,28 @@ export class CParser extends CstParser {
             },
             {
                 ALT: () => {
-                    this.CONSUME(JunoModuleResult);
+                    this.OR4([
+                        { ALT: () => this.CONSUME(JunoModuleResult) },
+                        { ALT: () => this.CONSUME(JunoModuleOption) },
+                    ]);
                     this.CONSUME2(LParen);
                     this.CONSUME2(Identifier);
                     this.CONSUME(Comma);
-                    this.CONSUME3(Identifier);
+                    this.OR3([
+                        { ALT: () => this.CONSUME3(Identifier) },
+                        { ALT: () => this.CONSUME(SizeT) },
+                        { ALT: () => this.CONSUME(Bool) },
+                        { ALT: () => this.CONSUME(Void) },
+                        { ALT: () => this.CONSUME(Double) },
+                        { ALT: () => this.CONSUME(Float) },
+                        { ALT: () => this.CONSUME(Int) },
+                        { ALT: () => this.CONSUME(Char) },
+                        { ALT: () => this.CONSUME(Long) },
+                        { ALT: () => this.CONSUME(Short) },
+                        { ALT: () => this.CONSUME(Unsigned) },
+                        { ALT: () => this.CONSUME(Signed) },
+                    ]);
+                    this.OPTION3(() => this.CONSUME(Star));
                     this.CONSUME2(RParen);
                     this.OPTION2(() => this.CONSUME2(Semicolon));
                 },

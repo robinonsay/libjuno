@@ -49,6 +49,12 @@
 - When two module roots are in the same file, both failure handlers are attributed to the FIRST root type found in localTypeInfo.functionParameters iteration order.
 - Test the single-module (unambiguous) case only; document multi-module limitation in test comment.
 
+### 2026-04-18 — Use module-level capture variables for jest.mock() instance tracking
+- `mockFn.mock.instances[0]` captures `this` (Jest's internal wrapper), NOT the object returned by `mockImplementation(() => plainObject)`.
+- The correct way to get the returned instance: `mockFn.mock.results[0].value`.
+- CLEANEST pattern: use module-level `let _capturedInstance` variables updated inside the `mockImplementation` factory closure. This is reliable across `clearAllMocks()` calls because each `new ClassName()` recreates the instance and updates the capture.
+- Factory closures inside `jest.mock()` capturing `let` variables are safe: the variable is in TDZ only during factory registration; by the time the inner `mockImplementation` factory is *called* (at `new ClassName()` time in a test), the `let` declaration has already executed.
+
 ### 2026-04-17 — Sprint 9 source bug fixes verified
 - Bug 1 (cross-file positional producer): visitor.ts extractPositionalVtable() now pushes PendingPositionalVtable entries; mergeInto() passes them to deferred[]; resolveDeferred() resolves after all files indexed.
 - Bug 2 (multi-module FH disambiguation): resolveFailureHandlerRootType() scopes search to the containing function via findContainingFunction().
