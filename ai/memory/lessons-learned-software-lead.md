@@ -137,7 +137,34 @@ This is non-negotiable every sprint without exception.
 - The installed extension can be stale if the VSIX was rebuilt but not reinstalled.
 - Full chain: `npm run compile` → `vsce package` → `code --install-extension` → Reload Window.
 
+### 2026-04-18 — Every plan presented to the PM must include a worker/verifier assignment table
+- For every work item, show: WI | Deliverable | Worker | Verifier(s) | Notes.
+- Applies to all phases — initial sprint plan, revised plans, and per-phase plans.
+- PM explicitly requested this after the initial sprint plan omitted assignments (2026-04-18).
+- No exceptions: even single-WI phases need the table.
+
 ### 2026-04-18 — Worker agents may not update tests for DI constructor changes
 - WI-18.1 (source changes adding `log` param) completed but didn't update mock or tests.
 - WI-18.2 (test updates) was planned as sequential but the first worker should have been briefed to at minimum check if tests still pass.
 - Always include "run npm test and fix any failures" in worker briefs, even for source-only work items.
+
+### 2026-04-18 — New REQ with `uses` needs reciprocal `implements` update in parent
+- Added REQ-VSCODE-033 with `uses: ["REQ-VSCODE-003"]` but forgot to add "REQ-VSCODE-033" to REQ-VSCODE-003's `implements` array.
+- `verify_traceability.py` flagged this as a bidirectional inconsistency warning.
+- Protocol: whenever a new REQ adds a `uses` link, also update the parent REQ's `implements` list in the same commit.
+
+### 2026-04-18 — `verify_traceability.py` needs `--root` for sub-project requirement trees
+- Running the script from `/workspaces/libjuno` looks at `/workspaces/libjuno/requirements/`, which does NOT contain VSCode extension requirements.
+- VSCode extension requirements live under `/workspaces/libjuno/vscode-extension/requirements/vscode/requirements.json`.
+- Correct invocation: `python3 scripts/verify_traceability.py --root /workspaces/libjuno/vscode-extension`.
+- Without `--root`, the script reports spurious "orphaned @verify tag" errors for every VSCode REQ ID.
+
+### 2026-04-18 — Grammar conformance tests: tag the grammar-level REQ, not just the user-visible REQ
+- The `c11-grammar-conformance.test.ts` file initially tagged only REQ-VSCODE-005 (user-visible go-to-def behavior).
+- REQ-VSCODE-033 (parser C11 conformance) is the direct verification target for these tests.
+- Correct: tag BOTH — the grammar REQ (direct) AND the user-visible REQ (indirect outcome).
+
+### 2026-04-18 — C11 §6.5.3 unary-expression recursion target matters for vtable go-to-def
+- Root cause of the go-to-def bug: `unaryExpression` recursed to `unaryExpression` for `& * + - ~ !`, violating C11 §6.5.3 which requires recursion to `cast-expression` for these six operators (only `++` and `--` recurse to `unary-expression`).
+- Symptom: any function body with `return *(T *) pv;` style expression caused parser to bail mid-body; function definition never emitted; vtable resolver fell back to assignment line.
+- Lesson: when fixing parser/grammar bugs, always cite the C11 §/production number in the fix comment so future audits have normative reference.

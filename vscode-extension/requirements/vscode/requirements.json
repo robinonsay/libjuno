@@ -49,7 +49,8 @@
         "REQ-VSCODE-011",
         "REQ-VSCODE-012",
         "REQ-VSCODE-014",
-        "REQ-VSCODE-015"
+        "REQ-VSCODE-015",
+        "REQ-VSCODE-033"
       ]
     },
     {
@@ -68,8 +69,8 @@
     {
       "id": "REQ-VSCODE-005",
       "title": "Single Implementation Navigation",
-      "description": "When exactly one concrete implementation is found for a vtable API function call, the extension shall navigate directly to that implementation.",
-      "rationale": "When there is a single unambiguous implementation, direct navigation minimizes friction and matches the behavior developers expect from Go to Definition.",
+      "description": "When exactly one concrete implementation is found for a vtable API function call, the extension shall navigate directly to the line of that function's definition, not to the vtable assignment, the vtable initializer entry, or a forward declaration of that function.",
+      "rationale": "When there is a single unambiguous implementation, direct navigation to the definition line minimizes friction and matches the behavior developers expect from Go to Definition. Navigating to the vtable initializer or a forward declaration forces the developer to perform a second navigation step, defeating the purpose of the feature.",
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-002"
@@ -387,6 +388,17 @@
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-027"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-033",
+      "title": "C11 Expression Grammar Conformance",
+      "description": "The extension's C parser shall implement the C11 §6.5 expression grammar such that each unary operator recurses to the correct operand non-terminal: the prefix increment and decrement operators shall recurse to unary-expression, and the unary operators &, *, +, -, ~, and ! shall recurse to cast-expression.",
+      "rationale": "Deviation from the C11 unary-expression production causes expressions containing unary operators followed by cast syntax (for example, a dereferenced cast through a function-pointer vtable field) to be parsed incorrectly or not at all. Correct recursion targets are required for the vtable resolver to locate function-pointer call sites reliably, which is a prerequisite for Go-to-Definition navigation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-003"
       ],
       "implements": []
     }

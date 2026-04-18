@@ -138,6 +138,31 @@ All 15 source files compile cleanly. No known compilation errors.
 |-----|-----------|-----|
 | Bug D | `resolveDefinitionLine()` returned only a line number; when the function definition was in a different file than the vtable assignment, `ConcreteLocation.file` used the assignment file while `ConcreteLocation.line` came from the definition file — a file/line mismatch causing Go-to-Definition to navigate to the wrong location | Refactored to `resolveDefinitionLocation()` returning `{ file, line }`; updated `mergeInto()` and `resolveDeferred()` to use the resolved definition file; added same-file preference in index fallback; fallback to assignment location when definition not found |
 
+### 2.5 Bugs Found and Fixed (Sprint 19 — Go-to-Definition C11 Conformance)
+
+**Bug description:** Go-to-Definition on a vtable field (e.g., the `Reset` entry in an API struct initializer such as `.Reset = EngineCmdMsg_Reset`) navigated to the vtable assignment line or a forward declaration instead of the function definition line (line 88 of `engine_cmd_msg.c` for `EngineCmdMsg_Reset`). The defect manifested across every vtable initializer whose function body contained a unary operator immediately followed by a cast expression (for example, `return *(JUNO_STATUS_T *) pvUserData;` or `ptVtable->pfcnFn = & (FN_T) { ... };`).
+
+**Root cause (three-layer analysis):**
+1. **Layer 1 — Grammar (parser.ts):** The `unaryExpression` Chevrotain rule recursed to `unaryExpression` for every unary operator, violating C11 §6.5.3. The standard requires `++` and `--` to recurse to `unary-expression`, but `& * + - ~ !` must recurse to `cast-expression`. With the wrong recursion target, any unary operator followed by a cast-expression operand caused the parser to bail out mid-body.
+2. **Layer 2 — Visitor:** Not defective; visitor would have handled the CST correctly had the parser emitted it.
+3. **Layer 3 — Indexer:** When the parser bailed, the wrapping function definition was never emitted, so `functionDefinitions` held no record and the vtable resolver fell back to the assignment location.
+
+**Three-layer fix summary:**
+
+| Bug | Root Cause | Fix |
+|-----|-----------|-----|
+| Bug E | `unaryExpression` rule recursed to `unaryExpression` for `& * + - ~ !`, diverging from C11 §6.5.3 (which requires recursion to `cast-expression` for these six operators). Any function body containing, for example, `return *(T *) pv;` caused the parser to bail mid-body, dropping the function definition record and breaking Go-to-Definition to the definition line. | Split the first alternative of `unaryExpression` in `src/parser/parser.ts` into two alternatives: `++\|--` recurses to `unaryExpression`; `& * + - ~ !` recurses to `castExpression`. Preserved `sizeof` and `postfixExpression` branches. Renumbered inner `OR` ordinals (`OR2`/`OR3`/`OR4`) to satisfy Chevrotain's self-analysis. Added C11 §6.5.3 production citation as an inline comment. |
+
+**Test coverage:**
+- `src/parser/__tests__/c11-grammar-conformance.test.ts` — 21 canonical C11 expression/statement pattern tests (TC-CONF-001–021), permanent regression guard against future grammar drift. All tagged `@{"verify": ["REQ-VSCODE-005", "REQ-VSCODE-033"]}`.
+- `src/parser/__tests__/go-to-def-bug.test.ts` — TC-WI-019: focused parser-level reproduction against the controlled fixture under `test/fixtures/go-to-def-bug/`.
+- `src/__tests__/go-to-def-bug-e2e.test.ts` — TC-WI-020a (fixture E2E through `WorkspaceIndexer`) and TC-WI-020b (real `examples/example_project/engine/src/engine_cmd_msg.c` — locks `EngineCmdMsg_Reset` resolving to line 88, not the forward-decl at 31 nor the vtable initializer entry at 53).
+- Gate C result: **645/645 green** (622 baseline + 23 new).
+
+**Requirements delta:**
+- `REQ-VSCODE-005` tightened to specify navigation to the function definition line, explicitly excluding vtable assignment, vtable initializer entry, and forward-declaration lines.
+- `REQ-VSCODE-033` added — "C11 Expression Grammar Conformance" requiring the parser to implement C11 §6.5.3 with the correct recursion targets for each unary operator.
+
 ---
 
 ## 3. High-Level Work Breakdown Structure
@@ -163,6 +188,7 @@ Phase 15 ─── Error UX, QuickPick & StatusBar        [COMPLETE]            
 Phase 16 ─── End-to-End Smoke & Final Quality       [COMPLETE]                Sprint 14 ✅
 Phase 17 ─── Parser: Production Header Compatibility [COMPLETE]               Sprint 15 ✅
 Phase 18 ─── Parser & Indexer: Production Source Compatibility [COMPLETE]     Sprint 17 ✅
+Phase 19 ─── Parser: C11 §6.5.3 Unary Expression Conformance   [COMPLETE]     Sprint 19 ✅
 ```
 
 > **Note:** Phases 11+12 share Sprint 9. These are small enough to combine in execution but remain separate phases for tracking and traceability purposes.
@@ -189,6 +215,7 @@ Phase 18 ─── Parser & Indexer: Production Source Compatibility [COMPLETE] 
 | 16 | End-to-End Smoke & Final Quality | Full stack | 14 ✅ | Smoke tests |
 | 17 | Parser: Production Header Compatibility | Parser (macroCallStatement, void macro arg) | 15 ✅ | TC-MACRO-STMT-001–006, NEG-001, BND-001, TC-MODROOT-VOID-001, TC-BULK-004 |
 | 18 | Parser & Indexer: Production Source Compatibility | Parser (looksLikeCast, braced init, EOF sentinel), WorkspaceIndexer (reindexFile deferred), Lexer (FloatingLiteral) | 17 ✅ | REG-17-001–010b |
+| 19 | Parser: C11 §6.5.3 Unary Expression Conformance | Parser (unaryExpression recursion targets) | 19 ✅ | TC-CONF-001–022, TC-WI-019, TC-WI-020a/b |
 
 ---
 
@@ -1142,8 +1169,9 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 16 | — | Traceability Audit & SDP Closure | Traceability matrix (21/21 REQs), SDP phases marked COMPLETE | 5% |
 | 17 | Phase 18 ✅ | Parser & Indexer: Production Source Compatibility | looksLikeCast, braced init, reindexFile deferred, EOF sentinel, FloatingLiteral; REG-17-001–010b | 15% |
 | 18 | — | Cross-File Definition Resolution Bug Fix | `resolveDefinitionLocation()` fix; TC-WI-015–018 regression tests | 10% |
+| 19 | Phase 19 ✅ | Go-to-Definition Bug: Parser C11 Unary Conformance | Parser `unaryExpression` fix (& \* + - ~ ! → castExpression); REQ-VSCODE-005 tightened; REQ-VSCODE-033 added; TC-CONF-001–022, TC-WI-019, TC-WI-020a/b (23 new tests); VSIX 0.1.4 | 15% |
 
-**Total: 17 sprints, 17 active phases (18 numbered; Phase 4 removed)**
+**Total: 18 sprints, 18 active phases (19 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

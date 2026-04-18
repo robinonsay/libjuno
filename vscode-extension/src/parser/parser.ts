@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-003", "REQ-VSCODE-010", "REQ-VSCODE-011", "REQ-VSCODE-012"]}
+// @{"req": ["REQ-VSCODE-003", "REQ-VSCODE-010", "REQ-VSCODE-011", "REQ-VSCODE-012", "REQ-VSCODE-033"]}
 import { CstParser, tokenMatcher, EOF } from "chevrotain";
 import {
     allTokens,
@@ -985,13 +985,30 @@ export class CParser extends CstParser {
         ]);
     });
 
+    // @{"req": ["REQ-VSCODE-033"]}
     unaryExpression = this.RULE("unaryExpression", () => {
+        // C11 §6.5.3 unary-expression:
+        //   postfix-expression
+        //   ++ unary-expression         <-- prefix ++ recurses to unary-expression
+        //   -- unary-expression         <-- prefix -- recurses to unary-expression
+        //   unary-operator cast-expression  <-- & * + - ~ ! recurse to CAST-expression
+        //   sizeof unary-expression
+        //   sizeof ( type-name )
         this.OR([
             {
+                // ++ | --  followed by unary-expression
                 ALT: () => {
                     this.OR2([
                         { ALT: () => this.CONSUME(PlusPlus) },
                         { ALT: () => this.CONSUME(MinusMinus) },
+                    ]);
+                    this.SUBRULE(this.unaryExpression);
+                },
+            },
+            {
+                // unary-operator (& * + - ~ !)  followed by cast-expression
+                ALT: () => {
+                    this.OR3([
                         { ALT: () => this.CONSUME(Amp) },
                         { ALT: () => this.CONSUME(Star) },
                         { ALT: () => this.CONSUME(Plus) },
@@ -999,13 +1016,13 @@ export class CParser extends CstParser {
                         { ALT: () => this.CONSUME(Tilde) },
                         { ALT: () => this.CONSUME(Bang) },
                     ]);
-                    this.SUBRULE(this.unaryExpression);
+                    this.SUBRULE(this.castExpression);
                 },
             },
             {
                 ALT: () => {
                     this.CONSUME(Sizeof);
-                    this.OR3([
+                    this.OR4([
                         {
                             GATE: this.BACKTRACK(this.castTypePrefix),
                             ALT: () => {
