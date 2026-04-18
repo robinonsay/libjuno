@@ -98,6 +98,17 @@ This is non-negotiable every sprint without exception.
 - Always read the file first to check current state before spawning editors.
 - Sprint Schedule table and phase section headers can drift independently — verifier caught Sprint 13→14 mismatch.
 
+### 2026-04-18 — Chevrotain v12 EOF sentinel: always use `tokenMatcher(t, EOF)`
+- `t.tokenType === undefined` is WRONG. Chevrotain's `this.LA(i)` past the token vector returns either JS `undefined` (TypeError on `.tokenType`) or a sentinel token with a valid `tokenType` (infinite loop).
+- The correct check is `tokenMatcher(t, EOF)` after importing `EOF` from `"chevrotain"`.
+- This bug was NOT caught by 623 tests because all test inputs were well-formed C. Found only via senior engineer code review.
+- Lesson: Always run verification on new parser lookahead methods that scan with `LA(i)`.
+
+### 2026-04-18 — `reindexFile()` must mirror `fullIndex()` for all deferred data paths
+- `mergeInto()` has an `if (deferred)` guard that silently drops `pendingPositionalVtables` when no array is provided.
+- `reindexFile()` (incremental, on file-save) originally didn't pass `DeferredPositional[]`, so cross-file positional vtable initializers were silently dropped.
+- Any new deferred data path added to `mergeInto()` must also be threaded through `reindexFile()`.
+
 ### 2026-04-18 — Agent failures happen; retry with a different agent or smaller scope
 - software-developer agent returned no response on a large SDP edit brief.
 - Re-spawned as junior-software-developer with a focused brief — succeeded.

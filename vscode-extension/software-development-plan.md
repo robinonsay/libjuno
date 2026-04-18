@@ -1,6 +1,6 @@
 # Software Development Plan — LibJuno VSCode Extension
 
-**Document Version:** 4.0  
+**Document Version:** 4.1  
 **Date:** 2026-04-18  
 **Project:** LibJuno VSCode Extension — Vtable Go-to-Definition, Failure Handler Navigation, MCP Server  
 **Status:** All phases complete (Phase 4 removed by PM decision)
@@ -77,12 +77,12 @@ All 15 source files compile cleanly. No known compilation errors.
 
 | File | Lines | Status | Notes |
 |------|-------|--------|-------|
-| `parser/lexer.ts` | 401 | Tested | 72 lexer tests passing |
-| `parser/parser.ts` | ~1050 | Tested | 2 bugs fixed (Sprint 1) |
+| `parser/lexer.ts` | ~408 | Tested | 72 lexer tests passing; FloatingLiteral fix (Sprint 17) |
+| `parser/parser.ts` | ~1230 | Tested | 5 fixes (Sprints 1, 15, 17) |
 | `parser/visitor.ts` | ~1076 | Partially tested | 1 bug fixed (Sprint 1); struct/vtable init, functions, failure handlers, local type info tested |
 | `parser/types.ts` | 413 | N/A | Type definitions only |
 | `indexer/navigationIndex.ts` | 101 | Tested | createEmptyIndex, clearIndex, removeFileRecords — 7 tests (Sprint 3) |
-| `indexer/workspaceIndexer.ts` | 399 | Tested | 17 tests passing (TC-WI-001–009, TC-CACHE-003–005, TC-FILE-001, NEG-001, BND-001) — Sprints 8–9 |
+| `indexer/workspaceIndexer.ts` | 399 | Tested | 17 tests passing (TC-WI-001–009, TC-CACHE-003–005, TC-FILE-001, NEG-001, BND-001) — Sprints 8–9; reindexFile deferred fix (Sprint 17) |
 | `resolver/vtableResolver.ts` | 244 | Tested | 18 tests passing (TC-RES-001–011, NEG-001) — Sprint 4; chain-walk resolution with 3 regex strategies (`macroRe`, `arrayRe`, `generalRe`) + field-name fallback |
 | `resolver/failureHandlerResolver.ts` | 162 | Tested | 13 tests passing (TC-FH-001–004, 005a/b, 006, 007, NEG-001–003, BND-001) — Sprint 5 |
 | `resolver/resolverUtils.ts` | 109 | Tested | 11 tests passing (TC-UTIL-001–006, NEG-001–002, BND-001, PRI-001) — Sprint 4 |
@@ -116,12 +116,13 @@ All 15 source files compile cleanly. No known compilation errors.
 | `mcp/__tests__/mcpServer.test.ts` | 14 | All passing (TC-MCP-002–007, 009–016) — Sprint 10 |
 | `providers/__tests__/junoDefinitionProvider.test.ts` | 10 | All passing (TC-VSC-001–008, NEG-001, BND-001) — Sprint 11 |
 | `src/__tests__/bulk-headers.test.ts` | 4 | All passing (TC-BULK-004) — Sprint 15 |
+| `src/__tests__/sprint17-regression.test.ts` | 15 | All passing (REG-17-001–010b) — Sprint 17 |
 | `providers/__tests__/statusBarHelper.test.ts` | 3 | All passing (TC-ERR-001/002/003) — Sprint 14 |
 | `providers/__tests__/quickPickHelper.test.ts` | 5 | All passing (TC-QP-001/002/003/004/005) — Sprint 14 |
 | `src/__tests__/e2e-smoke.test.ts` | 3 | All passing (TC-E2E-SMOKE-001/002/003) — Sprint 14 |
 | `src/__tests__/extension-branches.test.ts` | varies | All passing — Sprint 14 |
 | `parser/__tests__/visitor-branches.test.ts` | varies | All passing — Sprint 14 |
-| **Total** | **603** | **All passing** |
+| **Total** | **618** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -155,6 +156,7 @@ Phase 14 ─── VSCode Mocks & Definition Provider     [COMPLETE]            
 Phase 15 ─── Error UX, QuickPick & StatusBar        [COMPLETE]                Sprint 12 ✅
 Phase 16 ─── End-to-End Smoke & Final Quality       [COMPLETE]                Sprint 14 ✅
 Phase 17 ─── Parser: Production Header Compatibility [COMPLETE]               Sprint 15 ✅
+Phase 18 ─── Parser & Indexer: Production Source Compatibility [COMPLETE]     Sprint 17 ✅
 ```
 
 > **Note:** Phases 11+12 share Sprint 9. These are small enough to combine in execution but remain separate phases for tracking and traceability purposes.
@@ -180,6 +182,7 @@ Phase 17 ─── Parser: Production Header Compatibility [COMPLETE]           
 | 15 | Error UX, QuickPick & StatusBar | StatusBarHelper, QuickPickHelper | 12 ✅ | TC-ERR-001–006, TC-QP-001–005 |
 | 16 | End-to-End Smoke & Final Quality | Full stack | 14 ✅ | Smoke tests |
 | 17 | Parser: Production Header Compatibility | Parser (macroCallStatement, void macro arg) | 15 ✅ | TC-MACRO-STMT-001–006, NEG-001, BND-001, TC-MODROOT-VOID-001, TC-BULK-004 |
+| 18 | Parser & Indexer: Production Source Compatibility | Parser (looksLikeCast, braced init, EOF sentinel), WorkspaceIndexer (reindexFile deferred), Lexer (FloatingLiteral) | 17 ✅ | REG-17-001–010b |
 
 ---
 
@@ -1059,6 +1062,53 @@ Diagnostic analysis of 6 failing headers (array_api.h, queue_api.h, memory_api.h
 
 ---
 
+### Phase 18: Parser & Indexer — Production Source Compatibility ✅ COMPLETE
+
+**Sprint:** 17 (complete)
+**Goal:** Fix vtable call resolution failures on production C source files (`engine_app.c`, `juno_broker.c`, `juno_buff_queue.c`) by addressing parser gaps and WorkspaceIndexer deferred resolution.
+**Prerequisites:** Phase 17 complete (parser foundation for headers).
+
+#### 18.1 Root Cause Analysis
+
+Diagnostic analysis of 3 production source files identified 5 root causes:
+
+| Root Cause | Affected Component | Description |
+|---|---|---|
+| `{0}` compound literal in macro arg | parser.ts | Braced initializer had no path in `primaryExpression` |
+| `(identifier) &&` mis-parsed as cast | parser.ts | `castExpression` BACKTRACK succeeded for non-cast patterns |
+| `reindexFile()` drops deferred vtables | workspaceIndexer.ts | No `DeferredPositional[]` passed; `resolveDeferred()` not called |
+| EOF sentinel `tokenType === undefined` | parser.ts | Unsafe for Chevrotain v12; causes TypeError or infinite loop on malformed input |
+| FloatingLiteral missing `digits exp` | lexer.ts | `500E3` form not matched by regex |
+
+#### 18.2 Scope
+
+| Work Item | Description | Complexity |
+|---|---|---|
+| WI-17.2 | Parser: `looksLikeCast()`, braced initializer, initializer GATE, FloatingLiteral | Medium |
+| WI-17.2b | Indexer: `reindexFile()` deferred resolution | Low |
+| WI-17.2c | Parser: EOF sentinel fix (`tokenMatcher(t, EOF)`) | Low |
+| WI-17.4 | Regression tests: 15 tests (REG-17-001 through REG-17-010b) | Medium |
+
+#### 18.3 Outcomes
+
+- All 3 production source files parse with 0 Chevrotain errors
+- Vtable resolution works end-to-end: `Enqueue` → `JunoDs_QueuePush`, `Dequeue` → `JunoDs_QueuePop`
+- `reindexFile()` now resolves cross-file positional vtable initializers
+- EOF sentinel safe for malformed input (Chevrotain v12 compatible)
+- 15 new regression tests; total test count: 618 (was 603)
+- No regressions
+
+#### 18.4 Acceptance Criteria
+
+- [x] `juno_buff_queue.c`, `engine_app.c`, `juno_broker.c` parse with 0 errors
+- [x] Vtable resolution works for broker Enqueue and engine Dequeue
+- [x] No regressions in existing tests
+- [x] Regression tests cover all 5 fixes
+- [x] EOF sentinel safe for malformed input
+- [x] SDP updated
+
+---
+
 ## 5. Sprint Schedule
 
 ### Sprint Cadence
@@ -1084,8 +1134,9 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 14 | Phase 16 ✅ | End-to-End Smoke & Final Quality | Full suite; coverage gate; `tsc --noEmit`; real C file smoke; API audit | 20% |
 | 15 | Phase 17 ✅ | Parser: Production Header Compatibility | macroCallStatement rule, void macro arg fix, 29/29 headers clean, TC-MACRO-STMT-001–006, NEG-001, BND-001, 009, TC-MODROOT-VOID-001, TC-BULK-004 | 10% |
 | 16 | — | Traceability Audit & SDP Closure | Traceability matrix (21/21 REQs), SDP phases marked COMPLETE | 5% |
+| 17 | Phase 18 ✅ | Parser & Indexer: Production Source Compatibility | looksLikeCast, braced init, reindexFile deferred, EOF sentinel, FloatingLiteral; REG-17-001–010b | 15% |
 
-**Total: 15 sprints, 16 active phases (17 numbered; Phase 4 removed)**
+**Total: 16 sprints, 17 active phases (18 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 
@@ -1343,7 +1394,8 @@ vscode-extension/
 │   │   └── __tests__/
 │   │       └── mcpServer.test.ts                   (Phase 13 — NEW)
 │   ├── __tests__/
-│   │   └── integration.test.ts                     (Phase 9 — NEW)
+│   │   ├── integration.test.ts                     (Phase 9 — NEW)
+│   │   └── sprint17-regression.test.ts             (Phase 18 — NEW)
 │   ├── __mocks__/
 │   │   └── vscode.ts                               (Phase 14 — NEW)
 │   └── extension.ts
