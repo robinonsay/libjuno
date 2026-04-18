@@ -343,7 +343,10 @@ export class CParser extends CstParser {
     junoModuleRootMacro = this.RULE("junoModuleRootMacro", () => {
         this.CONSUME(JunoModuleRoot);
         this.CONSUME(LParen);
-        this.CONSUME(Identifier);
+        this.OR([
+            { ALT: () => this.CONSUME(Identifier) },
+            { ALT: () => this.CONSUME(Void) },
+        ]);
         this.CONSUME(Comma);
         this.SUBRULE(this.macroBodyTokens);
         this.CONSUME(RParen);
@@ -656,6 +659,10 @@ export class CParser extends CstParser {
                     tokenMatcher(this.LA(1), Case) ||
                     tokenMatcher(this.LA(1), Default),
                 ALT: () => this.SUBRULE(this.labeledStatement),
+            },
+            {
+                GATE: () => this.isMacroCallWithKeywordArg(),
+                ALT: () => this.gobbleMacroCallStatement(),
             },
             { ALT: () => this.SUBRULE(this.expressionStatement) },
         ]);
@@ -1143,4 +1150,61 @@ export class CParser extends CstParser {
     constantExpression = this.RULE("constantExpression", () => {
         this.SUBRULE(this.conditionalExpression);
     });
+
+    /**
+     * Scan ahead to determine if the current Identifier '(' ... ')' contains a
+     * C keyword that cannot appear in an expression (return, break, continue, goto).
+     * This indicates a macro call, not a function call, and must be gobbled.
+     */
+    private isMacroCallWithKeywordArg(): boolean {
+        // LA(1) = Identifier, LA(2) = LParen
+        if (!tokenMatcher(this.LA(1), Identifier) || !tokenMatcher(this.LA(2), LParen)) {
+            return false;
+        }
+        let depth = 1;
+        let i = 3;
+        while (depth > 0) {
+            const t = this.LA(i);
+            if (t.tokenType === undefined) break; // EOF
+            if (tokenMatcher(t, LParen)) { depth++; }
+            else if (tokenMatcher(t, RParen)) { depth--; if (depth === 0) break; }
+            else if (
+                tokenMatcher(t, Return) ||
+                tokenMatcher(t, Break) ||
+                tokenMatcher(t, Continue) ||
+                tokenMatcher(t, Goto)
+            ) {
+                return true;
+            }
+            i++;
+        }
+        return false;
+    }
+
+    /**
+     * Gobble an entire macro call statement: Identifier '(' ... ')' ';'
+     * Uses raw consumeToken() to avoid creating a grammar rule that would
+     * cause Chevrotain's path-analysis to recurse infinitely through the
+     * already-recursive statement → compoundStatement chain.
+     */
+    private gobbleMacroCallStatement(): void {
+        // During Chevrotain's recording phase the CST stack is empty;
+        // return immediately so no grammar structure is captured (the GATE
+        // provides the lookahead predicate, removing the need for FIRST-set
+        // analysis of this alternative).
+        if ((this as any).RECORDING_PHASE) return;
+        let depth = 0;
+        while (true) {
+            const tok = this.LA(1);
+            if (tok.tokenType === undefined) break; // EOF sentinel
+            const isLParen = tokenMatcher(tok, LParen);
+            const isRParen = tokenMatcher(tok, RParen);
+            const isSemi  = tokenMatcher(tok, Semicolon);
+            if (isLParen) { depth++; }
+            else if (isRParen) { depth--; }
+            (this as any).consumeToken();
+            (this as any).cstPostTerminal(tok.tokenType.name, tok);
+            if (isSemi && depth === 0) break;
+        }
+    }
 }

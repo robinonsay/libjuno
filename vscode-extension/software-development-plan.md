@@ -3,7 +3,7 @@
 **Document Version:** 3.0  
 **Date:** 2025-07-22  
 **Project:** LibJuno VSCode Extension — Vtable Go-to-Definition, Failure Handler Navigation, MCP Server  
-**Status:** Phases 1–3, 5–14 complete, Phase 4 removed, Phases 15–16 pending
+**Status:** Phases 1–3, 5–14, 17 complete, Phase 4 removed, Phases 15–16 pending
 
 ---
 
@@ -100,8 +100,8 @@ All 15 source files compile cleanly. No known compilation errors.
 | Test File | Tests | Status |
 |-----------|-------|--------|
 | `parser/__tests__/lexer.test.ts` | 72 | All passing |
-| `parser/__tests__/parser-grammar.test.ts` | 148 | All passing |
-| `parser/__tests__/visitor-structs.test.ts` | 17 | All passing |
+| `parser/__tests__/parser-grammar.test.ts` | 157 | All passing |
+| `parser/__tests__/visitor-structs.test.ts` | 18 | All passing |
 | `parser/__tests__/visitor-vtable.test.ts` | 5 | All passing (includes TC-P6-001, TC-P6-002) |
 | `parser/__tests__/visitor-functions.test.ts` | 12 | All passing (TC-P11 function defs, TC-P10 failure handlers) |
 | `parser/__tests__/visitor-localtypeinfo.test.ts` | 8 | All passing (TC-LTI-001–005, NEG-001, NEG-002, BND-001) — Sprint 3 |
@@ -115,7 +115,8 @@ All 15 source files compile cleanly. No known compilation errors.
 | `indexer/__tests__/workspaceIndexer.test.ts` | 17 | All passing (TC-WI-001–009, TC-CACHE-003–005, TC-FILE-001, NEG-001, BND-001) — Sprints 8–9 |
 | `mcp/__tests__/mcpServer.test.ts` | 14 | All passing (TC-MCP-002–007, 009–016) — Sprint 10 |
 | `providers/__tests__/junoDefinitionProvider.test.ts` | 10 | All passing (TC-VSC-001–008, NEG-001, BND-001) — Sprint 11 |
-| **Total** | **450** | **All passing** |
+| `src/__tests__/bulk-headers.test.ts` | 4 | All passing (TC-BULK-004) — Sprint 15 |
+| **Total** | **603** | **All passing** |
 
 ### 2.3 Bugs Found and Fixed (Sprint 1)
 
@@ -148,6 +149,7 @@ Phase 13 ─── MCP Server                             [COMPLETE]            
 Phase 14 ─── VSCode Mocks & Definition Provider     [COMPLETE]                Sprint 11 ✅
 Phase 15 ─── Error UX, QuickPick & StatusBar        [PENDING]                 Sprint 12
 Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]                 Sprint 13
+Phase 17 ─── Parser: Production Header Compatibility [COMPLETE]               Sprint 15 ✅
 ```
 
 > **Note:** Phases 11+12 share Sprint 9. These are small enough to combine in execution but remain separate phases for tracking and traceability purposes.
@@ -172,6 +174,7 @@ Phase 16 ─── End-to-End Smoke & Final Quality       [PENDING]             
 | 14 | VSCode Mocks & Definition Provider | JunoDefinitionProvider, vscode mock | 11 ✅ | TC-VSC-001–008, NEG-001, BND-001 |
 | 15 | Error UX, QuickPick & StatusBar | StatusBarHelper, QuickPickHelper | 12 | TC-ERR-001–006, TC-QP-001–005 |
 | 16 | End-to-End Smoke & Final Quality | Full stack | 13 | Smoke tests |
+| 17 | Parser: Production Header Compatibility | Parser (macroCallStatement, void macro arg) | 15 ✅ | TC-MACRO-STMT-001–006, NEG-001, BND-001, TC-MODROOT-VOID-001, TC-BULK-004 |
 
 ---
 
@@ -973,6 +976,52 @@ WI-16.2a/b/c each use a real LibJuno source file from the repository. WI-16.2a s
 
 ---
 
+### Phase 17: Parser — Production Header Compatibility ✅ COMPLETE
+
+**Sprint:** 15 (complete)
+**Goal:** Achieve 29/29 production header parsing with zero Chevrotain errors by fixing two grammar gaps: macro calls with keyword arguments and `void` as a macro type parameter.
+**Prerequisites:** Phase 1 complete (parser foundation).
+
+#### 17.1 Root Cause Analysis
+
+Diagnostic analysis of 6 failing headers (array_api.h, queue_api.h, memory_api.h, pointer_api.h, broker_api.h, sm_api.h) identified two root causes:
+
+| Root Cause | Occurrences | Headers Affected |
+|---|---|---|
+| `JUNO_ASSERT_SUCCESS(status, return expr)` — `return` keyword inside function-call argument list | 12 | All 6 |
+| `JUNO_MODULE_ROOT(void, ...)` — `void` keyword token where `Identifier` expected | 1 | sm_api.h |
+
+#### 17.2 Scope
+
+| Work Item | Description | Complexity |
+|---|---|---|
+| WI-15.1 | macroCallStatement: detect `Identifier(` with keyword args via lookahead, gobble via balanced-paren consumption | Medium |
+| WI-15.2 | junoModuleRootMacro: accept `Void` token as first argument; visitor extracts `apiType: "void"` | Low |
+| WI-15.3 | Verification gate: 29/29 headers parse with 0 errors | Low |
+| WI-15.4 | Grammar tests: TC-MACRO-STMT-001–006, NEG-001, BND-001 (8 tests) | Low |
+| WI-15.5 | Visitor test: TC-MODROOT-VOID-001 (1 test) | Low |
+| WI-15.6 | Bulk-headers test: TC-BULK-004 (explicit 0-error assertion per header) | Low |
+| WI-15.7 | SDP update | Low |
+
+#### 17.3 Outcomes
+
+- 29/29 production headers parse with 0 Chevrotain errors (was 23/29)
+- 11 new tests added: 9 grammar tests + 1 visitor test + 1 bulk-headers assertion
+- Total test count: 603 (was 592 before sprint)
+- No regressions
+- `macroCallStatement` uses plain-method token gobbling (not a Chevrotain RULE) to avoid `performSelfAnalysis` stack overflow with recursive statement chains
+
+#### 17.4 Acceptance Criteria
+
+- [x] All 29 production headers parse with 0 Chevrotain errors
+- [x] All existing tests pass (no regressions)
+- [x] TC-MACRO-STMT-001–006, NEG-001, BND-001 implemented and passing
+- [x] TC-MODROOT-VOID-001 implemented and passing
+- [x] TC-BULK-004 implemented and passing
+- [x] SDP updated
+
+---
+
 ## 5. Sprint Schedule
 
 ### Sprint Cadence
@@ -996,8 +1045,9 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 11 | Phase 14 | VSCode Mocks & Definition Provider | TC-VSC-001–008; `__mocks__/vscode.ts` | 35% |
 | 12 | Phase 15 | Error UX, QuickPick & StatusBar | TC-ERR-001–006; TC-QP-001–005 | 20% |
 | 13 | Phase 16 | End-to-End Smoke & Final Quality | Full suite; coverage gate; `tsc --noEmit`; real C file smoke | 20% |
+| 15 | Phase 17 ✅ | Parser: Production Header Compatibility | macroCallStatement rule, void macro arg fix, 29/29 headers clean, TC-MACRO-STMT-001–006, NEG-001, BND-001, 009, TC-MODROOT-VOID-001, TC-BULK-004 | 10% |
 
-**Total: 13 sprints, 15 active phases (16 numbered; Phase 4 removed)**
+**Total: 14 sprints, 16 active phases (17 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

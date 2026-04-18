@@ -63,6 +63,19 @@ describe("visitStructDefinition", () => {
             const result = parseFile("/test/file.h", src);
             expect(result.moduleRoots).toHaveLength(0);
         });
+
+        // @{"verify": ["REQ-VSCODE-008"]}
+        it("TC-MODROOT-VOID-001: extracts rootType and apiType 'void' when JUNO_MODULE_ROOT uses void as first argument", () => {
+            const src = `struct JUNO_SM_ROOT_TAG JUNO_MODULE_ROOT(void,
+    JUNO_SM_STATE_ROOT_T *ptCurrentState;
+);`;
+            const result = parseFile("/test/file.h", src);
+            expect(result.moduleRoots).toHaveLength(1);
+            expect(result.moduleRoots[0]).toMatchObject({
+                rootType: "JUNO_SM_ROOT_T",
+                apiType: "void",
+            });
+        });
     });
 
     // -----------------------------------------------------------------------

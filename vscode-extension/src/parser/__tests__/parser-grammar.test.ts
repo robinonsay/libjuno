@@ -17,6 +17,8 @@
 /// <reference types="jest" />
 
 import { parseFile, parseFileWithDefs } from "../visitor";
+import { CLexer } from '../lexer';
+import { CParser } from '../parser';
 
 // ---------------------------------------------------------------------------
 // Helper: a trivial vtable assignment appended after the construct under test.
@@ -1557,5 +1559,175 @@ describe("declarationSpecifiers GATE", () => {
         expect(result.vtableAssignments).toHaveLength(1);
         expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
         expect(result.vtableAssignments[0].field).toBe(SENTINEL_FIELD);
+    });
+});
+
+// ===========================================================================
+// Group 18 — macroCallStatement (kills GATE predicate and gobble-loop mutants)
+//
+// The macroCallStatement alternative fires when isMacroCallWithKeywordArg()
+// detects an Identifier '(' ... keyword ... ')' ahead. gobbleMacroCallStatement()
+// then consumes the entire balanced-paren token run as raw tokens so that
+// keyword tokens (return, break, continue, goto) inside macro args never
+// reach a grammar rule that disallows them.
+// ===========================================================================
+
+// @{"verify": ["REQ-VSCODE-003"]}
+
+describe("macroCallStatement — keyword arguments in macro calls", () => {
+
+    it("TC-MACRO-STMT-001: JUNO_ASSERT_SUCCESS(tStatus, return tStatus) — return as macro arg parses without errors", () => {
+        // isMacroCallWithKeywordArg(): la1=JUNO_ASSERT_SUCCESS (Id), la2=( (LParen),
+        // scan finds Return token → gate=true → gobbleMacroCallStatement() consumes the
+        // entire statement so the Return keyword never hits jumpStatement validation.
+        const src = `
+JUNO_STATUS_T TestFunc(void)
+{
+    JUNO_STATUS_T tStatus;
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    return tStatus;
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/macro001.c", src);
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("TestFunc");
+    });
+
+    it("TC-MACRO-STMT-002: JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult) — dot-accessed first arg with return keyword", () => {
+        // The dot-access 'tResult.tStatus' produces an additional Dot+Identifier token
+        // pair before the comma; the keyword scan must continue past them to find Return.
+        // Note: JUNO_MODULE_RESULT is a dedicated lexer token (not Identifier) so it
+        // cannot be used as a local variable type; use a plain typedef-style name instead.
+        const src = `
+JUNO_STATUS_T TestFunc(void)
+{
+    MY_RESULT_T tResult;
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    return tResult.tStatus;
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/macro002.c", src);
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("TestFunc");
+    });
+
+    it("TC-MACRO-STMT-003: MY_MACRO(x, return func(a, b)) — nested parens inside macro args parse correctly", () => {
+        // The nested '(' increments depth inside isMacroCallWithKeywordArg() scan;
+        // the enclosed Return is still found. gobbleMacroCallStatement() tracks depth
+        // correctly so the outer ')' terminates at depth=0 and ';' ends the statement.
+        const src = `
+int TestFunc(void)
+{
+    int x;
+    MY_MACRO(x, return func(a, b));
+    return 0;
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/macro003.c", src);
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("TestFunc");
+    });
+
+    it("TC-MACRO-STMT-004: MY_MACRO(x, break) — break keyword in macro args gobbled correctly", () => {
+        // tokenMatcher(t, Break) branch in isMacroCallWithKeywordArg() fires; gate=true.
+        // gobbleMacroCallStatement() consumes all tokens so Break never reaches the
+        // iterationStatement or selectionStatement rule where it would be illegal.
+        const src = `
+void TestFunc(void)
+{
+    int x;
+    MY_MACRO(x, break);
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/macro004.c", src);
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("TestFunc");
+    });
+
+    it("TC-MACRO-STMT-005: MY_MACRO(x, continue) — continue keyword in macro args gobbled correctly", () => {
+        // tokenMatcher(t, Continue) branch in isMacroCallWithKeywordArg() fires.
+        // Mirrors TC-MACRO-STMT-004 but exercises the Continue token matcher branch.
+        const src = `
+void TestFunc(void)
+{
+    int x;
+    MY_MACRO(x, continue);
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/macro005.c", src);
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("TestFunc");
+    });
+
+    it("TC-MACRO-STMT-006: MY_MACRO(x, goto label) — goto keyword in macro args gobbled correctly", () => {
+        // tokenMatcher(t, Goto) branch in isMacroCallWithKeywordArg() fires.
+        // 'label' is an additional Identifier token after Goto; gobbler consumes both.
+        const src = `
+void TestFunc(void)
+{
+    int x;
+    MY_MACRO(x, goto label);
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/macro006.c", src);
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("TestFunc");
+    });
+
+    it("TC-MACRO-STMT-NEG-001: foo(a, b) — regular function call with no keyword args is NOT gobbled as macro", () => {
+        // isMacroCallWithKeywordArg() scans the arg list and finds no Return/Break/
+        // Continue/Goto → gate=false → falls through to expressionStatement rule.
+        // The sentinel vtable after the function proves the parse stream is intact.
+        const src = `
+void TestFunc(void)
+{
+    int a;
+    int b;
+    foo(a, b);
+}
+` + SENTINEL_VTABLE;
+        const result = parseFile("/test/macro-neg001.c", src);
+        expect(result.vtableAssignments).toHaveLength(1);
+        expect(result.vtableAssignments[0].apiType).toBe(SENTINEL_FN);
+        expect(result.vtableAssignments[0].field).toBe(SENTINEL_FIELD);
+    });
+
+    it('TC-MACRO-STMT-009: zero Chevrotain parse errors for keyword-arg macro (mutation guard)', () => {
+        // Uses CLexer + CParser directly (same pattern as TC-BULK-004) to assert
+        // parser.errors.length === 0. parseFileWithDefs() does not expose parser.errors,
+        // so error-recovery could silently hide parse failures in TC-MACRO-STMT-001..006.
+        const input = `
+            void TestFunc(void) {
+                JUNO_STATUS_T tStatus = Verify(ptMod);
+                JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+            }
+        `;
+        const parser = new CParser();
+        const lexResult = CLexer.tokenize(input);
+        parser.input = lexResult.tokens;
+        parser.translationUnit();
+        expect(parser.errors).toHaveLength(0);
+    });
+
+    it("TC-MACRO-STMT-BND-001: multiple macro call statements in the same function body all parse cleanly", () => {
+        // Exercises the statement-level OR loop firing gobbleMacroCallStatement()
+        // multiple times within a single compoundStatement. Each invocation must
+        // consume exactly up to the matching ';' so the next statement is parsed fresh.
+        // Uses MY_RESULT_T instead of JUNO_MODULE_RESULT (a dedicated lexer token, not
+        // an Identifier, so invalid as a local variable type specifier).
+        const src = `
+JUNO_STATUS_T TestFunc(void)
+{
+    JUNO_STATUS_T tStatus;
+    MY_RESULT_T tResult;
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    JUNO_ASSERT_SUCCESS(tResult.tStatus, return tResult);
+    MY_MACRO(tStatus, break);
+    return tStatus;
+}
+`;
+        const { functionDefs } = parseFileWithDefs("/test/macro-bnd001.c", src);
+        expect(functionDefs).toHaveLength(1);
+        expect(functionDefs[0].functionName).toBe("TestFunc");
     });
 });

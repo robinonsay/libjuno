@@ -4,6 +4,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { parseFile } from '../parser/visitor';
+import { CLexer } from '../parser/lexer';
+import { CParser } from '../parser/parser';
 import { WorkspaceIndexer } from '../indexer/workspaceIndexer';
 
 const INCLUDE_DIR = '/workspaces/libjuno/include/juno';
@@ -64,4 +66,23 @@ describe('Bulk Real-World Header Indexing', () => {
         await expect(indexer.fullIndex()).resolves.not.toThrow();
         expect(indexer.index.moduleRoots.size).toBeGreaterThanOrEqual(15);
     }, 30000);
+
+    it('TC-BULK-004: all production headers parse with zero Chevrotain errors', () => {
+        expect(headers.length).toBeGreaterThanOrEqual(29);
+        const parser = new CParser();
+        const failures: string[] = [];
+
+        for (const h of headers) {
+            const text = fs.readFileSync(h, 'utf8');
+            const lexResult = CLexer.tokenize(text);
+            parser.input = lexResult.tokens;
+            parser.translationUnit();
+
+            if (parser.errors.length > 0) {
+                failures.push(`${path.basename(h)}: ${parser.errors.length} errors`);
+            }
+        }
+
+        expect(failures).toEqual([]);
+    });
 });

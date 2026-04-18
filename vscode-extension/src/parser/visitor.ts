@@ -718,7 +718,7 @@ class CSTWalker {
 
         if (mc["junoModuleRootMacro"]?.length) {
             const m = mc["junoModuleRootMacro"][0] as CstNode;
-            const apiType = tok(m.children, "Identifier")?.image ?? "";
+            const apiType = (tok(m.children, "Identifier") ?? tok(m.children, "Void"))?.image ?? "";
             if (!apiType) { return; }
             const rec: ModuleRootRecord = {
                 rootType: tagToType(tag),

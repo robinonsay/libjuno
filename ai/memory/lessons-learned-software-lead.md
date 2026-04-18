@@ -83,3 +83,12 @@ This is non-negotiable every sprint without exception.
 - WI-13.4 (JDP tests) and WI-13.5 (MCP tests) ran in parallel successfully — no shared files.
 - WI-13.1+WI-13.2 (source changes) must complete before WI-13.4 (test changes) — sequential dependency.
 - Audit/report work items (WI-13.6) can always run in parallel with test updates.
+
+### 2026-04-18 — Chevrotain RULE vs plain method for token gobbling
+- Creating a new `RULE("macroCallStatement")` that calls `SUBRULE(macroBodyTokens)` caused `RangeError: Maximum call stack size exceeded` in `performSelfAnalysis()`.
+- Root cause: `macroBodyTokens` MANY loop accepts any token, creating infinite path expansion when reachable from `statement → compoundStatement → statement`.
+- Fix: Use a plain private method with `RECORDING_PHASE` guard instead of a Chevrotain RULE. The GATE provides the lookahead predicate.
+
+### 2026-04-18 — Worker agents may leave temp diagnostic files; always clean up
+- A worker left `count-errors-temp.test.ts` in the test directory, inflating test counts.
+- Always scan for unexpected test files after worker execution and remove temp artifacts before final gate.
