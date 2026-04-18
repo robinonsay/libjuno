@@ -1005,6 +1005,7 @@ describe('WorkspaceIndexer — core behaviour', () => {
                 }],
                 apiCallSites: [],
                 pendingPositionalVtables: [],
+                initCallSites: [],
                 localTypeInfo: {
                     functionParameters: new Map([
                         ['AnyFunc', [{
@@ -1080,6 +1081,7 @@ describe('WorkspaceIndexer — core behaviour', () => {
                 }],
                 apiCallSites: [],
                 pendingPositionalVtables: [],
+                initCallSites: [],
                 localTypeInfo: {
                     functionParameters: new Map([
                         ['AnyFunc', [{
@@ -1703,5 +1705,107 @@ describe('WorkspaceIndexer — core behaviour', () => {
         });
 
     }); // end 'Debounced cache write'
+
+    // =========================================================================
+    // TC-TRACE-018 through TC-TRACE-020: Composition Root Resolution (REQ-VSCODE-036)
+    // =========================================================================
+
+    describe('Composition root resolution (REQ-VSCODE-036)', () => {
+
+        let crDir: string;
+        let crIndexer: WorkspaceIndexer | undefined;
+
+        beforeEach(() => {
+            crDir = path.join(os.tmpdir(), 'libjuno-test-cr-' + Date.now());
+            fs.mkdirSync(crDir, { recursive: true });
+            crIndexer = undefined;
+        });
+
+        afterEach(() => {
+            if (crIndexer) { crIndexer.dispose(); }
+            fs.rmSync(crDir, { recursive: true, force: true });
+            jest.restoreAllMocks();
+        });
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-018: resolveCompositionRoots stamps initCallFile/initCallLine on ConcreteLocation', async () => {
+            // File 1: vtable struct definition
+            const apiImplSrc = [
+                'typedef struct { int (*DoWork)(void); } MY_API_T;',
+                'static int MyImpl_DoWork(void) { return 0; }',
+                'static const MY_API_T gtMyApi = { .DoWork = MyImpl_DoWork };',
+            ].join('\n');
+
+            // File 2: composition root — passes &gtMyApi as an argument
+            const appSrc = [
+                'static int SomeModule_Init(void *m, const void *api, void *h, void *u) { return 0; }',
+                'static int run(void) { void *m = 0; return SomeModule_Init(&m, &gtMyApi, 0, 0); }',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(crDir, 'api_impl.c'), apiImplSrc);
+            fs.writeFileSync(path.join(crDir, 'app.c'), appSrc);
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            await crIndexer.fullIndex();
+
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('DoWork');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            const loc = locs![0];
+            expect(loc.apiVarName).toBe('gtMyApi');
+            expect(loc.initCallFile).toBeDefined();
+            expect(loc.initCallFile!.endsWith('app.c')).toBe(true);
+            expect(loc.initCallLine).toBe(2);
+        });
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-019: address-of a non-API variable does not appear in initCallIndex for that variable', async () => {
+            const src = [
+                'typedef struct { int (*Foo)(void); } MY_API_T;',
+                'static int MyFoo(void) { return 0; }',
+                'static const MY_API_T gApi = { .Foo = MyFoo };',
+                'static void bar(MY_API_T *p) { (void)p; }',
+                'static void run(void) { MY_API_T local; local.Foo = MyFoo; bar(&local); }',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(crDir, 'single.c'), src);
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            await crIndexer.fullIndex();
+
+            // 'local' is not a known API variable name — must not appear in initCallIndex
+            expect(crIndexer.index.initCallIndex.has('local')).toBe(false);
+
+            // The ConcreteLocation for Foo should NOT have initCallLine from 'local'
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_API_T');
+            if (fieldMap) {
+                const locs = fieldMap.get('Foo');
+                if (locs && locs.length > 0) {
+                    // If initCallLine is set it must come from gApi, not local
+                    if (locs[0].initCallLine !== undefined) {
+                        expect(locs[0].apiVarName).toBe('gApi');
+                    }
+                }
+            }
+        });
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-020: clearIndex() empties initCallIndex', () => {
+            const { createEmptyIndex, clearIndex } = require('../navigationIndex');
+            const idx = createEmptyIndex();
+
+            // Manually populate initCallIndex
+            idx.initCallIndex.set('gtSomeApi', [{ file: '/some/file.c', line: 10 }]);
+            expect(idx.initCallIndex.size).toBe(1);
+
+            // Clear the index
+            clearIndex(idx);
+            expect(idx.initCallIndex.size).toBe(0);
+        });
+
+    }); // end 'Composition root resolution'
 
 });

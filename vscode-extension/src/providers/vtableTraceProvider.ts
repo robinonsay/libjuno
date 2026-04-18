@@ -191,12 +191,14 @@ export class VtableTraceProvider {
 
         // Steps 3–4 — Build one VtableTrace per resolved location.
         const traces: VtableTrace[] = result.locations.map(location => {
-            // Step 3 — Composition root node (REQ-VSCODE-031).
+            // Step 3 — Composition root node (REQ-VSCODE-031, REQ-VSCODE-036).
+            // Prefer the init call site (where &apiVar is passed to a function) over the
+            // vtable struct definition site, as the call site is the true runtime wiring point.
             const compositionRoot: TraceNode = {
                 type:   'composition-root',
                 label:  location.functionName,
-                file:   location.assignmentFile ?? 'unknown',
-                line:   location.assignmentLine ?? 0,
+                file:   location.initCallFile ?? location.assignmentFile ?? 'unknown',
+                line:   location.initCallLine ?? location.assignmentLine ?? 0,
                 detail: location.functionName,
             };
 

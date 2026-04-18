@@ -490,3 +490,75 @@ provider does not attempt to render an empty trace. It also documents known beha
 `JUNO_MODULE_SUPER` pattern.
 
 ---
+
+### TC-TRACE-016: walkVtableDeclaration stamps varName on each VtableAssignmentRecord
+
+**Requirement:** REQ-VSCODE-036
+
+**Scenario:** For a top-level designated vtable struct declaration, `parseFileWithDefs` sets `varName` on every emitted `VtableAssignmentRecord` to the variable name of the API struct.
+
+**Setup:** Source containing `static const JUNO_LOG_API_T gtMyLoggerApi = { .LogInfo = JunoLog_DebugLogger_LogInfo, .LogError = JunoLog_DebugLogger_LogError };`
+
+**Expected:** `parsed.vtableAssignments[0].varName === 'gtMyLoggerApi'` and `parsed.vtableAssignments[1].varName === 'gtMyLoggerApi'`.
+
+---
+
+### TC-TRACE-017: Direct assignment inside function body does not populate varName
+
+**Requirement:** REQ-VSCODE-036
+
+**Scenario:** A direct vtable assignment inside a function body does not set `varName` (varName is only for top-level struct declarations).
+
+**Expected:** `parsed.vtableAssignments[0].varName === undefined`.
+
+---
+
+### TC-TRACE-018: resolveCompositionRoots stamps initCallFile/Line on ConcreteLocation
+
+**Requirement:** REQ-VSCODE-036
+
+**Scenario:** After `fullIndex()`, a `ConcreteLocation` whose API variable is passed by address in a call site has `initCallFile` and `initCallLine` pointing to that call site.
+
+**Expected:** `loc.initCallFile` ends with the source file containing the call; `loc.initCallLine` equals the call site line.
+
+---
+
+### TC-TRACE-019: No false positive for non-API variable address
+
+**Requirement:** REQ-VSCODE-036
+
+**Scenario:** Taking the address of a local variable that is NOT a known vtable API variable does not pollute `initCallIndex` for that local name.
+
+**Expected:** `index.initCallIndex.has('local') === false`.
+
+---
+
+### TC-TRACE-020: clearIndex empties initCallIndex
+
+**Requirement:** REQ-VSCODE-036
+
+**Scenario:** After `clearIndex()`, `initCallIndex` is empty.
+
+**Expected:** `index.initCallIndex.size === 0`.
+
+---
+
+### TC-TRACE-021: Composition root node uses initCallFile/initCallLine when present
+
+**Requirement:** REQ-VSCODE-036
+
+**Scenario:** When `ConcreteLocation` has both `initCallFile`/`initCallLine` and `assignmentFile`/`assignmentLine`, the composition-root node in the Vtable Trace View uses the init call values.
+
+**Expected:** HTML contains the init call file link and line; the `assignmentLine` value is not used.
+
+---
+
+### TC-TRACE-022: Composition root falls back to assignmentFile/assignmentLine when initCallFile absent
+
+**Requirement:** REQ-VSCODE-036
+
+**Scenario:** When `ConcreteLocation` has no `initCallFile`/`initCallLine`, the composition root falls back to `assignmentFile`/`assignmentLine`.
+
+**Expected:** `compositionRoot.file === assignmentFile`; `compositionRoot.line === assignmentLine`.
+
+---

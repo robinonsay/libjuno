@@ -65,6 +65,7 @@ export class WorkspaceIndexer {
         const deferred: DeferredPositional[] = [];
         await this.indexFile(filePath, deferred);
         this.resolveDeferred(deferred);
+        this.resolveCompositionRoots();
         this.scheduleSave();
     }
 
@@ -94,6 +95,9 @@ export class WorkspaceIndexer {
 
         // Cross-file deferred positional initializer resolution
         this.resolveDeferred(deferred);
+
+        // Locate composition-root call sites for all known API struct variables.
+        this.resolveCompositionRoots();
 
         await this.saveToCache();
     }
@@ -241,6 +245,7 @@ export class WorkspaceIndexer {
                 line: defLoc.line !== 0 ? defLoc.line : r.line,
                 assignmentFile: r.file,
                 assignmentLine: r.line,
+                apiVarName: r.varName,
             };
             let fieldMap = idx.vtableAssignments.get(r.apiType);
             if (!fieldMap) {
@@ -250,6 +255,16 @@ export class WorkspaceIndexer {
             const existing = fieldMap.get(r.field) ?? [];
             existing.push(loc);
             fieldMap.set(r.field, existing);
+        }
+
+        // initCallIndex: append from parsed initCallSites
+        for (const ic of parsed.initCallSites) {
+            let sites = idx.initCallIndex.get(ic.apiVarName);
+            if (!sites) {
+                sites = [];
+                idx.initCallIndex.set(ic.apiVarName, sites);
+            }
+            sites.push({ file: ic.file, line: ic.line });
         }
 
         // failureHandlerAssignments: append (with rootType resolution)
@@ -399,6 +414,70 @@ export class WorkspaceIndexer {
             }
         }
         return best?.functionName;
+    }
+
+    // @{"req": ["REQ-VSCODE-036"]}
+    /**
+     * Scans all indexed source files for call sites where a known API struct
+     * variable's address is passed as an argument (e.g. `&gtMyLoggerApi`).
+     * Populates initCallIndex, then stamps initCallFile/initCallLine on
+     * matching ConcreteLocation objects (REQ-VSCODE-036).
+     */
+    private resolveCompositionRoots(): void {
+        // Collect all known API variable names from vtableAssignments.
+        const apiVarNames = new Set<string>();
+        for (const fieldMap of this.index.vtableAssignments.values()) {
+            for (const locs of fieldMap.values()) {
+                for (const loc of locs) {
+                    if (loc.apiVarName) { apiVarNames.add(loc.apiVarName); }
+                }
+            }
+        }
+        if (apiVarNames.size === 0) { return; }
+
+        // Build a regex matching &apiVarName at argument position.
+        const escaped = [...apiVarNames].map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const pattern = new RegExp(`&(${escaped.join('|')})\\b`, 'g');
+
+        // Scan every indexed file for matches.
+        this.index.initCallIndex.clear();
+        for (const relPath of this.fileHashes.keys()) {
+            const absPath = path.join(this.workspaceRoot, relPath);
+            let text: string;
+            try {
+                text = fs.readFileSync(absPath, 'utf8');
+            } catch {
+                continue;
+            }
+            const lines = text.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                pattern.lastIndex = 0;
+                let m: RegExpExecArray | null;
+                while ((m = pattern.exec(lines[i])) !== null) {
+                    const varName = m[1];
+                    let sites = this.index.initCallIndex.get(varName);
+                    if (!sites) {
+                        sites = [];
+                        this.index.initCallIndex.set(varName, sites);
+                    }
+                    sites.push({ file: absPath, line: i + 1 });
+                }
+            }
+        }
+
+        // Stamp initCallFile/initCallLine on matching ConcreteLocations.
+        for (const fieldMap of this.index.vtableAssignments.values()) {
+            for (const locs of fieldMap.values()) {
+                for (const loc of locs) {
+                    if (!loc.apiVarName) { continue; }
+                    const sites = this.index.initCallIndex.get(loc.apiVarName);
+                    if (sites && sites.length > 0) {
+                        loc.initCallFile = sites[0].file;
+                        loc.initCallLine = sites[0].line;
+                    }
+                }
+            }
+        }
     }
 
     /**

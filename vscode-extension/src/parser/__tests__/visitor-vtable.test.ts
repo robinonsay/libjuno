@@ -13,7 +13,7 @@
 
 /// <reference types="jest" />
 
-import { parseFile } from "../visitor";
+import { parseFile, parseFileWithDefs } from "../visitor";
 
 // ---------------------------------------------------------------------------
 // Section 6: visitVtableDeclaration — Designated Initializer (REQ-VSCODE-010)
@@ -375,6 +375,44 @@ static const JUNO_APP_API_T tAppApi = { };
 `;
             const result = parseFile("/test/empty.c", src);
             expect(result.vtableAssignments).toHaveLength(0);
+        });
+
+        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------
+        // TC-TRACE-016: varName captured in designated initializer (REQ-VSCODE-036)
+        // -------------------------------------------------------------------
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it("TC-TRACE-016: walkVtableDeclaration stamps varName on every VtableAssignmentRecord for a top-level struct", () => {
+            const src = `
+static const JUNO_LOG_API_T gtMyLoggerApi = {
+    .LogInfo = JunoLog_DebugLogger_LogInfo,
+    .LogError = JunoLog_DebugLogger_LogError
+};`;
+            const { parsed } = parseFileWithDefs('test.c', src);
+
+            expect(parsed.vtableAssignments).toHaveLength(2);
+            expect(parsed.vtableAssignments[0].varName).toBe('gtMyLoggerApi');
+            expect(parsed.vtableAssignments[1].varName).toBe('gtMyLoggerApi');
+        });
+
+        // -------------------------------------------------------------------
+        // TC-TRACE-017: varName is undefined for direct assignment inside function body
+        // -------------------------------------------------------------------
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it("TC-TRACE-017: direct vtable assignment inside function body does NOT populate varName", () => {
+            // tryExtractDirectVtableAssign handles this path — varName is only set
+            // by walkVtableDeclaration for top-level struct declarations.
+            const src = `
+void Setup(void) {
+    JUNO_DS_HEAP_API_T tApi;
+    tApi.Insert = JunoDs_Heap_Insert;
+}`;
+            const { parsed } = parseFileWithDefs('test.c', src);
+
+            expect(parsed.vtableAssignments).toHaveLength(1);
+            expect(parsed.vtableAssignments[0].varName).toBeUndefined();
         });
 
         // -------------------------------------------------------------------

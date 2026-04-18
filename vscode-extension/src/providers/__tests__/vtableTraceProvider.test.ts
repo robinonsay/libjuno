@@ -26,6 +26,7 @@ function createMinimalIndex(
         apiMemberRegistry: new Map(),
         functionDefinitions: functionDefinitions ?? new Map(),
         localTypeInfo: new Map(),
+        initCallIndex: new Map(),
     };
 }
 
@@ -637,5 +638,97 @@ describe('VtableTraceProvider', () => {
             expect.stringContaining('No LibJuno API call pattern found')
         );
         expect(mockCreateWebviewPanel).not.toHaveBeenCalled();
+    });
+
+    // -------------------------------------------------------------------------
+    // TC-TRACE-021: Composition root prefers initCallFile/initCallLine over assignmentFile/Line
+    // -------------------------------------------------------------------------
+
+    // @{"verify": ["REQ-VSCODE-036"]}
+    it('TC-TRACE-021: composition-root node uses initCallFile/initCallLine when present', () => {
+        mockResolver.resolve.mockReturnValue({
+            found: true,
+            locations: [{
+                functionName: 'JunoLog_DebugLogger_LogInfo',
+                file: 'src/juno_log.c',
+                line: 55,
+                assignmentFile: 'src/log_api.c',
+                assignmentLine: 10,
+                initCallFile: 'examples/app/main.c',
+                initCallLine: 42,
+            }],
+        });
+
+        const provider = new VtableTraceProvider(
+            mockResolver as unknown as VtableResolver,
+            createMinimalIndex(),
+            mockStatusBar as unknown as StatusBarHelper,
+            mockCreateWebviewPanel,
+            mockShowTextDocument
+        );
+
+        provider.showTrace(
+            'examples/app/main.c',
+            60,
+            10,
+            '    ptLogger->ptApi->LogInfo(ptLogger, "hello");'
+        );
+
+        expect(mockCreateWebviewPanel).toHaveBeenCalledTimes(1);
+        const html: string = fakePanel.webview.html;
+
+        // The composition-root link must use initCallFile/initCallLine: main.c:42
+        expect(html).toContain('examples/app/main.c:42');
+        // The composition-root link must NOT use assignmentLine 10 as the display line for main.c
+        expect(html).not.toContain('examples/app/main.c:10');
+    });
+
+    // -------------------------------------------------------------------------
+    // TC-TRACE-022: Composition root falls back to assignmentFile/Line when initCallFile absent
+    // -------------------------------------------------------------------------
+
+    // @{"verify": ["REQ-VSCODE-036"]}
+    it('TC-TRACE-022: composition-root node falls back to assignmentFile/assignmentLine when initCallFile absent', () => {
+        mockResolver.resolve.mockReturnValue({
+            found: true,
+            locations: [{
+                functionName: 'JunoDs_Heap_Insert',
+                file: 'src/juno_heap.c',
+                line: 259,
+                assignmentFile: 'src/juno_heap.c',
+                assignmentLine: 18,
+                // no initCallFile or initCallLine
+            }],
+        });
+
+        const provider = new VtableTraceProvider(
+            mockResolver as unknown as VtableResolver,
+            createMinimalIndex(),
+            mockStatusBar as unknown as StatusBarHelper,
+            mockCreateWebviewPanel,
+            mockShowTextDocument
+        );
+
+        provider.showTrace(
+            'src/juno_heap.c',
+            300,
+            20,
+            '    ptHeap->ptApi->Insert(ptHeap, tVal);'
+        );
+
+        expect(mockCreateWebviewPanel).toHaveBeenCalledTimes(1);
+        const html: string = fakePanel.webview.html;
+
+        // The composition-root link must reference assignmentFile 'src/juno_heap.c' at line 18
+        const compositionRootLinkRe = /data-file="([^"]+)"\s+data-line="(\d+)"/g;
+        const links: Array<{ file: string; line: string }> = [];
+        let m: RegExpExecArray | null;
+        while ((m = compositionRootLinkRe.exec(html)) !== null) {
+            links.push({ file: m[1], line: m[2] });
+        }
+
+        // At least one link must point to assignmentFile:assignmentLine
+        const rootLink = links.find(l => l.file === 'src/juno_heap.c' && l.line === '18');
+        expect(rootLink).toBeDefined();
     });
 });

@@ -381,7 +381,9 @@
       "uses": [
         "REQ-VSCODE-027"
       ],
-      "implements": []
+      "implements": [
+        "REQ-VSCODE-036"
+      ]
     },
     {
       "id": "REQ-VSCODE-032",
@@ -424,6 +426,17 @@
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-036",
+      "title": "Structural Composition Root Detection via API Pointer Call Site",
+      "description": "The extension shall identify the composition root of a vtable resolution as the call site where the address of the concrete API struct variable is passed as a function argument (e.g., &gtMyLoggerApi in SomeModule_Init(&tModule, &gtMyLoggerApi, ...)), rather than the vtable struct definition site. This detection shall be structural — based on which variables hold API struct values — and shall not rely on any naming convention of the callee function.",
+      "rationale": "LibJuno modules are wired to their concrete vtable implementations via Init functions (e.g., JunoLog_LogInit). The actual runtime composition root is the call site of these functions, not the static definition of the vtable struct. Showing the call site helps developers navigate directly to where the DI wiring occurs.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-031"
       ],
       "implements": []
     }

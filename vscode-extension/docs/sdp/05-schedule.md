@@ -33,8 +33,9 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 22 | Phases 22+23 ✅ | FAIL Macro Navigation + Vtable Trace View | `FailureHandlerResolver` §5.3.1 (4 FAIL macros, 12 tests); `VtableTraceProvider` (CSP WebviewPanel, 15 tests); `Ctrl+Shift+T` command; REQ-022–032 traced; VSIX 0.1.7 | 15% |
 | 23 | Phase 24 ✅ | Test Case Completeness & README Update | TC-PP-001–004, TC-DECL-005, TC-CACHE-008 (6 new tests); `WorkspaceIndexer.scheduleSave()` debounce; README user guide updated through Sprint 22; 679 tests passing | 5% |
 | 24 | Phase 25 ✅ | MCP JSON-RPC 2.0 Protocol Implementation | `/mcp` endpoint: `initialize`, `tools/list`, `tools/call`, notification handling, `-32602` validation; TC-MCP-021–025 (5 new tests); README "Connecting AI Agents" section; 684 tests passing | 10% |
+| 25 | Phase 26 ✅ | Structural Composition Root Detection | `resolveCompositionRoots()` structural `&apiVar` scan; `initCallFile`/`initCallLine` on ConcreteLocation; TC-TRACE-016–022 (7 new tests); REQ-VSCODE-036; 691 tests passing | 5% |
 
-**Total: 24 sprints, 24 active phases (25 numbered; Phase 4 removed)**
+**Total: 25 sprints, 25 active phases (26 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

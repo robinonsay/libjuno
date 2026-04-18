@@ -245,6 +245,7 @@ class CSTWalker {
             failureHandlerAssigns: [],
             apiCallSites: [],
             pendingPositionalVtables: [],
+            initCallSites: [],
             localTypeInfo: {
                 localVariables: new Map<string, Map<string, TypeInfo>>(),
                 functionParameters: new Map<string, TypeInfo[]>(),
@@ -546,6 +547,10 @@ class CSTWalker {
             const ilitNode = child(initNode.children, "initializerList");
             if (!ilitNode) { continue; }
 
+            // Extract the variable name for this declarator (e.g. "gtMyLoggerApi").
+            const declarator = child(entry.children, "declarator");
+            const varName = declarator ? extractDeclaratorInfo(declarator).name : undefined;
+
             // Collect all designation+initializer pairs
             const ilic = ilitNode.children;
             const designations = (ilic["designation"] ?? []) as CstNode[];
@@ -553,10 +558,10 @@ class CSTWalker {
 
             if (designations.length > 0) {
                 // Designated initializer
-                this.extractDesignatedVtable(apiType, designations, initializers, ilitNode);
+                this.extractDesignatedVtable(apiType, designations, initializers, ilitNode, varName);
             } else {
                 // Positional initializer
-                this.extractPositionalVtable(apiType, initializers, ilitNode);
+                this.extractPositionalVtable(apiType, initializers, ilitNode, varName);
             }
         }
     }
@@ -565,7 +570,8 @@ class CSTWalker {
         apiType: string,
         designations: CstNode[],
         initializers: CstNode[],
-        ilitNode: CstNode
+        ilitNode: CstNode,
+        varName?: string
     ): void {
         // Interleave designations with their initializers by source order.
         // initializerList: (designation? initializer)* so they are co-indexed.
@@ -619,6 +625,7 @@ class CSTWalker {
                     functionName: fnName,
                     file: this.filePath,
                     line,
+                    varName,
                 });
             }
         }
@@ -643,7 +650,7 @@ class CSTWalker {
         return getPostfixPrimary(pf);
     }
 
-    private extractPositionalVtable(apiType: string, initializers: CstNode[], _ilitNode: CstNode): void {
+    private extractPositionalVtable(apiType: string, initializers: CstNode[], _ilitNode: CstNode, varName?: string): void {
         // Look up the field order from already-parsed API struct definitions
         const apiRec = this.result.apiStructDefinitions.find((r) => r.apiType === apiType);
         if (!apiRec) {
@@ -678,6 +685,7 @@ class CSTWalker {
                 functionName: fnName,
                 file: this.filePath,
                 line,
+                varName,
             });
         }
     }
