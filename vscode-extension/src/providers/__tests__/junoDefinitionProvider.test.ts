@@ -71,7 +71,8 @@ describe('Extension Activation', () => {
         );
         expect(registeredCommands).toContain('libjuno.goToImplementation');
         expect(registeredCommands).toContain('libjuno.reindexWorkspace');
-        expect(vscode.commands.registerCommand).toHaveBeenCalledTimes(2);
+        expect(registeredCommands).toContain('libjuno.showVtableTrace');
+        expect(vscode.commands.registerCommand).toHaveBeenCalledTimes(3);
     });
 
     // @{"verify": ["REQ-VSCODE-001"]}

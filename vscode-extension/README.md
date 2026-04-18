@@ -14,9 +14,10 @@ Vtable-aware Go to Definition for LibJuno embedded C projects.
 4. [Supported Patterns](#supported-patterns)
 5. [Using Go to Definition](#using-go-to-definition)
 6. [Re-indexing](#re-indexing)
-7. [MCP Server for AI Agents](#mcp-server-for-ai-agents)
-8. [Configuration](#configuration)
-9. [Troubleshooting](#troubleshooting)
+7. [Vtable Resolution Trace View](#vtable-resolution-trace-view)
+8. [MCP Server for AI Agents](#mcp-server-for-ai-agents)
+9. [Configuration](#configuration)
+10. [Troubleshooting](#troubleshooting)
 
 ### Developer Guide
 
@@ -53,7 +54,7 @@ implementations. This extension bridges that gap by:
 |---|---|
 | Name | `libjuno` |
 | Display name | LibJuno |
-| Version | 0.1.0 |
+| Version | 0.1.7 |
 | VSCode engine | ^1.85.0 |
 | Activation | `onLanguage:c`, `onLanguage:cpp` |
 
@@ -128,6 +129,17 @@ ptModule->tRoot._pfcnFailureHandler = MyFailureHandler;
 ptModule->tRoot.JUNO_FAILURE_HANDLER = MyFailureHandler;
 ```
 
+```c
+// 6. FAIL macro call sites — place cursor on the handler variable name
+//    (the second argument)
+JUNO_FAIL(tStatus, ptModule->tRoot._pfcnFailureHandler, NULL, "msg");
+JUNO_FAIL_MODULE(tStatus, ptMod, NULL, "msg");
+JUNO_FAIL_ROOT(tStatus, ptRoot, NULL, "msg");
+JUNO_ASSERT_EXISTS_MODULE(ptMod, NULL, "msg");
+```
+
+FAIL macro call sites (`JUNO_FAIL`, `JUNO_FAIL_MODULE`, `JUNO_FAIL_ROOT`, `JUNO_ASSERT_EXISTS_MODULE`) — place the cursor anywhere on the macro call line and press F12 to navigate to the registered failure handler.
+
 The extension does **not** resolve:
 
 - **Direct function calls** such as `EngineApp_Init(...)` — VSCode's built-in
@@ -170,6 +182,39 @@ the count looks wrong, run a manual re-index.
 
 ---
 
+## Vtable Resolution Trace View
+
+The Trace View shows the full resolution chain for a vtable call: the call site
+node, the composition root (where the vtable was assigned), and the concrete
+implementation. Each node is clickable — selecting it navigates the editor to
+that source location.
+
+### Opening the Trace View
+
+| Method | Action |
+|---|---|
+| Keyboard | Press **Ctrl+Shift+T** while the cursor is in a C or C++ source file |
+| Command Palette | `Ctrl+Shift+P` → **LibJuno: Show Vtable Resolution Trace** |
+| Context Menu | Right-click in a C/C++ editor → **LibJuno: Show Vtable Resolution Trace** |
+
+The trace view opens in a panel beside the editor. If no vtable call is found at
+the cursor location, a brief error message appears in the status bar.
+
+### Trace Node Structure
+
+Each resolved call displays three nodes:
+
+| Node | Label | Navigates to |
+|---|---|---|
+| Call Site | The expression at the cursor | The line where F12 was pressed |
+| Composition Root | The file and line where the vtable was assigned | The vtable assignment statement |
+| Implementation | The concrete function name and signature | The function definition |
+
+For calls with multiple implementations (e.g. an array of modules all sharing the
+same vtable slot), the trace panel shows one subtree per implementation.
+
+---
+
 ## MCP Server for AI Agents
 
 The extension runs an embedded MCP (Model Context Protocol) HTTP server, which
@@ -187,6 +232,52 @@ Configure the port in VS Code settings:
 ```json
 "libjuno.mcpServerPort": 6543
 ```
+
+### Connecting AI Agents
+
+After the extension activates, a discovery file is written to `.libjuno/mcp.json` in the workspace root. The file contains the server URL that MCP-compatible agents need:
+
+```json
+{
+  "mcpServers": {
+    "libjuno": {
+      "url": "http://127.0.0.1:6543/mcp"
+    }
+  }
+}
+```
+
+#### Claude Code (project-level)
+
+Add the server to `.claude/settings.json` in your workspace root:
+
+```json
+{
+  "mcpServers": {
+    "libjuno": {
+      "type": "http",
+      "url": "http://127.0.0.1:6543/mcp"
+    }
+  }
+}
+```
+
+Reload the Claude Code session. The `resolve_vtable_call` and `resolve_failure_handler` tools will appear in Claude's tool list.
+
+#### Claude Desktop
+
+Merge the contents of `.libjuno/mcp.json` into your Claude Desktop configuration file (`claude_desktop_config.json`), then restart Claude Desktop.
+
+#### GitHub Copilot / other MCP clients
+
+Point your MCP client at `http://127.0.0.1:6543/mcp`. The server implements the MCP Streamable HTTP transport (JSON-RPC 2.0) — standard `initialize`, `tools/list`, and `tools/call` methods are supported.
+
+### Available MCP Tools
+
+| Tool | Description |
+|---|---|
+| `resolve_vtable_call` | Given a file path, line, column, and line text, resolves a vtable API call to its concrete implementation function(s) |
+| `resolve_failure_handler` | Given a file path, line, column, and line text, resolves a failure handler assignment or FAIL macro call to the registered handler function |
 
 ---
 
@@ -295,6 +386,7 @@ vscode-extension/
 │   ├── providers/
 │   │   ├── junoDefinitionProvider.ts — VSCode DefinitionProvider integration
 │   │   ├── quickPickHelper.ts        — Multi-implementation picker UI
+│   │   ├── vtableTraceProvider.ts        — Vtable resolution trace view (WebviewPanel)
 │   │   └── statusBarHelper.ts        — Status bar indexing progress
 │   └── resolver/
 │       ├── vtableResolver.ts         — Vtable call → concrete impl resolution
@@ -502,7 +594,7 @@ The `.vscodeignore` file excludes the following from the `.vsix`:
 ### Install locally
 
 ```bash
-code --install-extension libjuno-0.1.0.vsix
+code --install-extension libjuno-0.1.7.vsix
 ```
 
 ---
@@ -523,6 +615,7 @@ namespace:
 |---|---|---|
 | `libjuno.goToImplementation` | LibJuno: Go to Implementation | Command Palette or keybinding |
 | `libjuno.reindexWorkspace` | LibJuno: Re-index Workspace | Command Palette after adding new source files |
+| `libjuno.showVtableTrace` | LibJuno: Show Vtable Resolution Trace | Ctrl+Shift+T or Command Palette |
 
 ### Cache location
 
@@ -534,7 +627,7 @@ default so that the cache file itself is not re-indexed.
 
 ## Architecture Overview
 
-The extension has seven components arranged in a bottom-up dependency stack:
+The extension has eight components arranged in a bottom-up dependency stack:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -549,6 +642,7 @@ The extension has seven components arranged in a bottom-up dependency stack:
 │  ├── JunoDefinitionProvider ◄── Resolvers                │
 │  │      ├── StatusBarHelper                              │
 │  │      └── QuickPickHelper                              │
+│  ├── VtableTraceProvider ◄── VtableResolver              │
 │  └── McpServer ◄── Resolvers                             │
 └──────────────────────────────────────────────────────────┘
 ```
@@ -564,6 +658,7 @@ The extension has seven components arranged in a bottom-up dependency stack:
 | 5 | **Resolvers** | `resolver/vtableResolver.ts`, `resolver/failureHandlerResolver.ts`, `resolver/resolverUtils.ts` | Traverse the vtable assignment chain from a call site to locate the concrete function implementation. Shared utilities live in `resolverUtils.ts`. |
 | 6 | **VSCode Integration** | `providers/junoDefinitionProvider.ts`, `providers/quickPickHelper.ts`, `providers/statusBarHelper.ts` | Implements `vscode.DefinitionProvider`, presents a QuickPick when multiple implementations exist, and shows indexing progress in the status bar. |
 | 7 | **MCP Server** | `mcp/mcpServer.ts` | Runs a vanilla Node.js HTTP server on `libjuno.mcpServerPort` (default 6543). Exposes vtable and failure-handler resolution as JSON-RPC-style MCP tools consumable by GitHub Copilot, Claude, and other MCP-compatible AI agents. |
+| 8 | **VtableTraceProvider** | `providers/vtableTraceProvider.ts` | Presents a WebviewPanel showing the call-site → composition-root → implementation resolution chain. Invoked via `Ctrl+Shift+T` or the Command Palette. |
 
 ### Data flow: Go to Definition (F12)
 

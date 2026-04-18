@@ -179,8 +179,39 @@ This is non-negotiable every sprint without exception.
 - Systems engineer flagged: REQ-VSCODE-005 is a sibling, not a parent — REQ-VSCODE-007 (Native Go to Definition Integration) is the correct parent for provider-mechanism requirements.
 - Rule: when choosing the `uses` parent, match the semantic scope. Provider mechanism reqs (how the extension integrates with VSCode) trace to REQ-VSCODE-007; user-visible navigation reqs trace to REQ-VSCODE-005/006.
 
+### 2026-04-18 — Ambiguous PM UX feedback: describe-behavior ≠ remove-behavior
+- Sprint 20 PM said "the window appears before I click" — interpreted as "remove the peek widget."
+- Correct interpretation: PM was describing what they observed; the peek widget WAS their desired UX.
+- Rule: when PM describes a UX behavior as a symptom, clarify design intent before removing the feature. Ask: "Do you want the peek window at all, or just want it triggered differently?"
+- Lesson: description of behavior ≠ request to remove behavior.
+
 ### 2026-04-18 — VSCode multi-definition peek: return ALL locations; peek widget IS the desired UX
 - Returning `Location[]` with 2+ entries from `provideDefinition` triggers VSCode's native multi-definition peek widget on Ctrl-hold — this is correct, intentional UX.
 - Single-impl: return all 1 location → VSCode navigates directly. Multi-impl: return all N locations → VSCode shows native peek widget for selection.
 - **NEVER truncate to slice(0,1)** — doing so suppresses the peek and breaks multi-implementation navigation (Sprint 20 regression, fixed in Sprint 21).
 - Do NOT use `QuickPick` in the provider — VSCode's native peek is the selection mechanism.
+
+### 2026-04-18 — TC-ID string presence ≠ test coverage; audit must check behaviors
+- A gap audit that checks for literal TC-ID strings in test files massively overcounts missing tests.
+- Many test files use internal naming (TC-LTI, TC-WI, GRAM-*, TC-RES-BRANCH) that covers the documented TC-LOCAL, TC-P9, TC-SYS, TC-DECL-001–004 behaviors exactly.
+- Correct audit: for each documented TC-ID, check whether the described BEHAVIOR is tested — not whether the string appears.
+- Practical shortcut: read the test file's header comment and `describe` blocks; they usually state which spec sections they cover.
+
+### 2026-04-18 — Documented behavior with no source implementation cannot be tested green
+- TC-CACHE-008 (debounced cache write) was documented for sprints but `reindexFile()` never called `saveToCache()` at all.
+- Writing the test alone would always fail (0 calls, not 1). Source change was required first.
+- Protocol: when a documented TC describes behavior not found in the source, implement the behavior AND the test in the same work item. Do not attempt to write the test first.
+
+### 2026-04-18 — README stale version strings require a full-file scan, not just the header
+- The Overview table was correctly updated to 0.1.7, but the "Install locally" example still had `libjuno-0.1.0.vsix`.
+- Quality engineer caught it. Rule: after any version bump, search the entire README for the old version string (`grep "0\.1\.0"`) before closing the work item.
+
+### 2026-04-18 — Discovery file URL ≠ endpoint implementation; both must be in sync
+- The MCP discovery file correctly advertised `/mcp` but the server only handled `/resolve_vtable_call` and `/resolve_failure_handler` — the `/mcp` path returned 404.
+- Agents got 404 and showed zero tools. Root cause was invisible in unit tests because the tests only hit the REST endpoints directly, never simulating what an MCP client actually sends.
+- Rule: whenever a component writes a URL that external clients will call (discovery files, config files, documentation), verify that URL is actually handled by the server with the right protocol.
+
+### 2026-04-18 — Two JSON-RPC edge cases senior SE will always flag: notifications and missing params
+- Notifications (no `id` field) must return HTTP 202 with no body — NOT a MethodNotFound error. A specific check for one notification name is insufficient; the guard must cover ALL methods with no `id`.
+- `tools/call` must validate `arguments` fields before passing to the handler, returning `-32602 InvalidParams` on missing/wrong-typed fields. Silently casting `undefined` as `string` is a latent crash.
+- Both issues are caught by code review, not unit tests (unit tests typically supply well-formed inputs). Always ask: "what happens if `id` is absent?" and "what happens if required `arguments` fields are missing?" when implementing any JSON-RPC handler.

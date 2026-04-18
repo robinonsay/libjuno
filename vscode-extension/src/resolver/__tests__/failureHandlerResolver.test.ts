@@ -19,7 +19,7 @@ import { FailureHandlerResolver } from '../../resolver/failureHandlerResolver';
 import { createEmptyIndex } from '../../indexer/navigationIndex';
 import { LocalTypeInfo, TypeInfo, FunctionDefinitionRecord, NavigationIndex } from '../../parser/types';
 
-// @{"verify": ["REQ-VSCODE-016"]}
+// @{"verify": ["REQ-VSCODE-016", "REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026"]}
 describe('FailureHandlerResolver', () => {
 
     // =========================================================================
@@ -489,5 +489,396 @@ describe('FailureHandlerResolver', () => {
         expect(result.locations).toHaveLength(0);
         expect(result.errorMsg).toBe('Could not resolve failure handler: enclosing function or variable type unknown.');
     });
+
+    // =========================================================================
+    // FAIL Macro Call Site Resolution (§5.3.1) — TC-FAIL-001 through TC-FAIL-012
+    // =========================================================================
+
+    describe('FAIL macro call site resolution (§5.3.1)', () => {
+
+        // =====================================================================
+        // TC-FAIL-001: JUNO_FAIL — handler name found in functionDefinitions
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-023"]}
+        it('TC-FAIL-001: JUNO_FAIL with known handler resolves directly to functionDefinitions entry', () => {
+            const index = createEmptyIndex();
+
+            index.functionDefinitions.set('MyFailureHandler', [
+                { functionName: 'MyFailureHandler', file: 'src/module.c', line: 55, isStatic: false },
+            ]);
+            // failureHandlerAssignments empty — not consulted for JUNO_FAIL
+            // derivationChain empty — not consulted for JUNO_FAIL
+            // localTypeInfo empty — not consulted for JUNO_FAIL
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL(eStatus, MyFailureHandler, NULL, "operation failed");';
+
+            const result = resolver.resolve('src/caller.c', 87, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('MyFailureHandler');
+            expect(result.locations[0].file).toBe('src/module.c');
+            expect(result.locations[0].line).toBe(55);
+        });
+
+        // =====================================================================
+        // TC-FAIL-002: JUNO_FAIL — unknown handler not in functionDefinitions
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-023"]}
+        it('TC-FAIL-002: JUNO_FAIL with unknown handler returns found=false with identifier in errorMsg', () => {
+            const index = createEmptyIndex();
+            // functionDefinitions empty — no entry for UnknownHandler
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL(eStatus, UnknownHandler, pvUserData, "msg");';
+
+            const result = resolver.resolve('src/caller.c', 102, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(false);
+            expect(result.locations).toHaveLength(0);
+            expect(result.errorMsg).toContain('UnknownHandler');
+        });
+
+        // =====================================================================
+        // TC-FAIL-003: JUNO_FAIL_MODULE — derived type walks chain to handler
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-024"]}
+        it('TC-FAIL-003: JUNO_FAIL_MODULE walks derivation chain ENGINE_APP_T → JUNO_APP_ROOT_T and finds handler', () => {
+            const index = createEmptyIndex();
+
+            index.derivationChain.set('ENGINE_APP_T', 'JUNO_APP_ROOT_T');
+            index.failureHandlerAssignments.set('JUNO_APP_ROOT_T', [
+                { functionName: 'EngineFailureHandler', file: 'engine/src/engine_app.c', line: 111 },
+            ]);
+            // functionDefinitions non-empty — verify resolver does NOT use it for JUNO_FAIL_MODULE
+            index.functionDefinitions.set('OtherFunc', [
+                { functionName: 'OtherFunc', file: 'other.c', line: 5, isStatic: false },
+            ]);
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptEngineApp', { name: 'ptEngineApp', typeName: 'ENGINE_APP_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('engine/src/engine_app.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL_MODULE(eStatus, ptEngineApp, "init failed");';
+
+            const result = resolver.resolve('engine/src/engine_app.c', 210, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('EngineFailureHandler');
+            expect(result.locations[0].file).toBe('engine/src/engine_app.c');
+            expect(result.locations[0].line).toBe(111);
+        });
+
+        // =====================================================================
+        // TC-FAIL-004: JUNO_FAIL_MODULE — no handler for resolved root type
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-024"]}
+        it('TC-FAIL-004: JUNO_FAIL_MODULE with no handler for root type returns found=false naming root type', () => {
+            const index = createEmptyIndex();
+
+            index.derivationChain.set('MY_SENSOR_T', 'JUNO_APP_ROOT_T');
+            // failureHandlerAssignments empty — no entry for JUNO_APP_ROOT_T
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptSensor', { name: 'ptSensor', typeName: 'MY_SENSOR_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('sensors/src/sensor.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL_MODULE(eStatus, ptSensor, "sensor error");';
+
+            const result = resolver.resolve('sensors/src/sensor.c', 78, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(false);
+            expect(result.locations).toHaveLength(0);
+            expect(result.errorMsg).toContain('JUNO_APP_ROOT_T');
+        });
+
+        // =====================================================================
+        // TC-FAIL-005: JUNO_FAIL_ROOT — root type pointer, handler found
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-025"]}
+        it('TC-FAIL-005: JUNO_FAIL_ROOT with root type pointer resolves directly via failureHandlerAssignments', () => {
+            const index = createEmptyIndex();
+
+            // derivationChain empty — not consulted for JUNO_FAIL_ROOT
+            index.failureHandlerAssignments.set('JUNO_LOG_ROOT_T', [
+                { functionName: 'LogFailureHandler', file: 'src/logger.c', line: 33 },
+            ]);
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptLogRoot', { name: 'ptLogRoot', typeName: 'JUNO_LOG_ROOT_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('src/logger.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL_ROOT(eStatus, ptLogRoot, "logger failure");';
+
+            const result = resolver.resolve('src/logger.c', 120, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('LogFailureHandler');
+            expect(result.locations[0].file).toBe('src/logger.c');
+            expect(result.locations[0].line).toBe(33);
+        });
+
+        // =====================================================================
+        // TC-FAIL-006: JUNO_FAIL_ROOT — no handler registered for root type
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-025"]}
+        it('TC-FAIL-006: JUNO_FAIL_ROOT with no handler registered returns found=false naming root type', () => {
+            const index = createEmptyIndex();
+
+            // derivationChain empty, failureHandlerAssignments empty
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptHeapRoot', { name: 'ptHeapRoot', typeName: 'JUNO_DS_HEAP_ROOT_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('src/heap_usage.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL_ROOT(eStatus, ptHeapRoot, "heap overflow");';
+
+            const result = resolver.resolve('src/heap_usage.c', 45, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(false);
+            expect(result.locations).toHaveLength(0);
+            expect(result.errorMsg).toContain('JUNO_DS_HEAP_ROOT_T');
+        });
+
+        // =====================================================================
+        // TC-FAIL-007: JUNO_ASSERT_EXISTS_MODULE — derived type, handler found
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-026"]}
+        it('TC-FAIL-007: JUNO_ASSERT_EXISTS_MODULE walks derivation chain JUNO_SB_PIPE_T → JUNO_DS_QUEUE_ROOT_T and finds handler', () => {
+            const index = createEmptyIndex();
+
+            index.derivationChain.set('JUNO_SB_PIPE_T', 'JUNO_DS_QUEUE_ROOT_T');
+            index.failureHandlerAssignments.set('JUNO_DS_QUEUE_ROOT_T', [
+                { functionName: 'QueueFailureHandler', file: 'src/juno_queue.c', line: 28 },
+            ]);
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptPipe', { name: 'ptPipe', typeName: 'JUNO_SB_PIPE_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('src/broker.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            // arg[0] = "ptPipe != NULL", arg[1] = "ptPipe", arg[2] = "\"pipe must exist\""
+            const lineText = '    JUNO_ASSERT_EXISTS_MODULE(ptPipe != NULL, ptPipe, "pipe must exist");';
+
+            const result = resolver.resolve('src/broker.c', 66, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('QueueFailureHandler');
+            expect(result.locations[0].file).toBe('src/juno_queue.c');
+            expect(result.locations[0].line).toBe(28);
+        });
+
+        // =====================================================================
+        // TC-FAIL-008: JUNO_ASSERT_EXISTS_MODULE — no handler registered
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-026"]}
+        it('TC-FAIL-008: JUNO_ASSERT_EXISTS_MODULE with no handler registered returns found=false naming root type', () => {
+            const index = createEmptyIndex();
+
+            index.derivationChain.set('MY_IMPL_T', 'JUNO_POINTER_ROOT_T');
+            // failureHandlerAssignments empty — no entry for JUNO_POINTER_ROOT_T
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptImpl', { name: 'ptImpl', typeName: 'MY_IMPL_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('src/init.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_ASSERT_EXISTS_MODULE(ptImpl != NULL, ptImpl, "impl required");';
+
+            const result = resolver.resolve('src/init.c', 91, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(false);
+            expect(result.locations).toHaveLength(0);
+            expect(result.errorMsg).toContain('JUNO_POINTER_ROOT_T');
+        });
+
+        // =====================================================================
+        // TC-FAIL-009: Non-macro line — falls through to §5.3 algorithm
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-022"]}
+        it('TC-FAIL-009: non-macro _pfcnFailureHandler assignment line falls through to §5.3 and resolves via failureHandlerAssignments', () => {
+            // Line contains _pfcnFailureHandler but NOT a JUNO_FAIL* macro —
+            // FAIL_MACRO_RE finds no match, so §5.3.1 Step 0 does not fire.
+            // The §5.3 algorithm takes over: ASSIGNMENT_RE fires (RHS not in
+            // functionDefinitions), falls through to Step 2 type-walk.
+            const index = createEmptyIndex();
+
+            index.failureHandlerAssignments.set('JUNO_DS_HEAP_ROOT_T', [
+                { functionName: 'HeapFailureHandler', file: 'src/heap.c', line: 77 },
+            ]);
+            // functionDefinitions empty — §5.3 Step 1 falls through to Step 2
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptHeap', { name: 'ptHeap', typeName: 'JUNO_DS_HEAP_ROOT_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('src/init.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    ptHeap->_pfcnFailureHandler = HeapFailureHandler;';
+
+            const result = resolver.resolve('src/init.c', 40, 12, lineText, 'testFn');
+
+            // Verify §5.3 result: found via failureHandlerAssignments type-walk
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('HeapFailureHandler');
+            expect(result.locations[0].file).toBe('src/heap.c');
+            expect(result.locations[0].line).toBe(77);
+        });
+
+        // =====================================================================
+        // TC-FAIL-010: JUNO_FAIL — compound expression in arg[1] not a bare identifier
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-023"]}
+        it('TC-FAIL-010: JUNO_FAIL with compound arg[1] (nested call) returns found=false with expression in errorMsg', () => {
+            const index = createEmptyIndex();
+
+            // functionDefinitions has entries but none matching the compound expression
+            index.functionDefinitions.set('someOtherFunc', [
+                { functionName: 'someOtherFunc', file: 'other.c', line: 10, isStatic: false },
+            ]);
+            // failureHandlerAssignments, derivationChain, localTypeInfo all empty
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL(eStatus, getHandler(ptMod), NULL, "msg");';
+
+            const result = resolver.resolve('src/caller.c', 130, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(false);
+            expect(result.locations).toHaveLength(0);
+            expect(result.errorMsg).toContain('getHandler');
+        });
+
+        // =====================================================================
+        // TC-FAIL-011: JUNO_FAIL_MODULE — cast expression in arg[1] stripped
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-024"]}
+        it('TC-FAIL-011: JUNO_FAIL_MODULE strips cast (MY_MOD_T *)ptMod to bare identifier and resolves via type chain', () => {
+            const index = createEmptyIndex();
+
+            index.derivationChain.set('MY_MOD_T', 'JUNO_APP_ROOT_T');
+            index.failureHandlerAssignments.set('JUNO_APP_ROOT_T', [
+                { functionName: 'AppFailureHandler', file: 'src/app.c', line: 19 },
+            ]);
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptMod', { name: 'ptMod', typeName: 'MY_MOD_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('src/app.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL_MODULE(eStatus, (MY_MOD_T *)ptMod, "cast call");';
+
+            const result = resolver.resolve('src/app.c', 155, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('AppFailureHandler');
+            expect(result.locations[0].file).toBe('src/app.c');
+            expect(result.locations[0].line).toBe(19);
+        });
+
+        // =====================================================================
+        // TC-FAIL-012: JUNO_FAIL_MODULE — two-level derivation chain
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-024"]}
+        it('TC-FAIL-012: JUNO_FAIL_MODULE walks two-hop chain TYPE_A_T → TYPE_B_T → ROOT_T and finds handler', () => {
+            const index = createEmptyIndex();
+
+            index.derivationChain.set('TYPE_A_T', 'TYPE_B_T');
+            index.derivationChain.set('TYPE_B_T', 'ROOT_T');
+            index.failureHandlerAssignments.set('ROOT_T', [
+                { functionName: 'RootFailureHandler', file: 'src/root_module.c', line: 9 },
+            ]);
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['testFn', new Map<string, TypeInfo>([
+                        ['ptTypeA', { name: 'ptTypeA', typeName: 'TYPE_A_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('src/deep_caller.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = '    JUNO_FAIL_MODULE(eStatus, ptTypeA, "deep error");';
+
+            const result = resolver.resolve('src/deep_caller.c', 200, 4, lineText, 'testFn');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('RootFailureHandler');
+            expect(result.locations[0].file).toBe('src/root_module.c');
+            expect(result.locations[0].line).toBe(9);
+        });
+
+    }); // end describe('FAIL macro call site resolution (§5.3.1)')
 
 });

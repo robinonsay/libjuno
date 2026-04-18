@@ -342,8 +342,8 @@
     {
       "id": "REQ-VSCODE-028",
       "title": "Trace View Activation via Keyboard",
-      "description": "The extension shall activate the vtable resolution trace view when the user performs a Ctrl+Shift+Click on a vtable API call site in a C or C++ source file.",
-      "rationale": "Ctrl+Shift+Click is a natural extension of the existing Ctrl+Click (Go to Definition) gesture. Adding Shift signals \"show me more detail\" — a convention familiar to VSCode users.",
+      "description": "The extension shall activate the vtable resolution trace view when the user presses Ctrl+Shift+T while the cursor is in a C or C++ source file.",
+      "rationale": "Ctrl+Shift+T is the dedicated keyboard shortcut for the trace view. Ctrl+Shift+Click cannot be used as it is a built-in VSCode multi-cursor gesture that cannot be overridden.",
       "verification_method": "Demonstration",
       "uses": [
         "REQ-VSCODE-027"

@@ -33,7 +33,7 @@ Section 3.
 | [01-visitor-struct.md](01-visitor-struct.md) | Sections 1-4: visitStructDefinition (MODULE_ROOT, DERIVE, TRAIT_ROOT, TRAIT_DERIVE) |
 | [02-visitor-api-vtable.md](02-visitor-api-vtable.md) | Sections 5-8: API Struct Field Extraction, Vtable Declaration variants |
 | [03-chain-walk.md](03-chain-walk.md) | Section 9: Chain-Walk Call Site Resolution |
-| [04-failure-handler.md](04-failure-handler.md) | Section 10: visitFailureHandlerAssignment |
+| [04-failure-handler.md](04-failure-handler.md) | Section 10: visitFailureHandlerAssignment; Section 10b: FAIL Macro Failure Handler Navigation |
 | [05-function-definition.md](05-function-definition.md) | Section 11: visitFunctionDefinition |
 | [06-e2e-resolution.md](06-e2e-resolution.md) | Section 12: End-to-End Resolution Tests |
 | [07-vscode-integration.md](07-vscode-integration.md) | Sections 13-14: VSCode Integration and Error UX Tests |
@@ -42,6 +42,7 @@ Section 3.
 | [10-lexer-parser.md](10-lexer-parser.md) | Sections 20-21: Lexer Token Boundary and Parser Error Recovery Tests |
 | [11-local-preprocessor-macro.md](11-local-preprocessor-macro.md) | Sections 22-24: LocalTypeInfo, Preprocessor Directive, Standalone Macro Tests |
 | [12-system-e2e.md](12-system-e2e.md) | Section 19: System-Level End-to-End Tests |
+| [13-vtable-trace-view.md](13-vtable-trace-view.md) | Section 25: Vtable Resolution Trace View |
 
 ---
 
@@ -186,6 +187,18 @@ Section 3.
 | TC-FH-002 | Failure Handler | JUNO_FAILURE_HANDLER macro form resolves (gap fix) | REQ-VSCODE-016 |
 | TC-FH-003 | Failure Handler | Multiple assignments → QuickPick shown | REQ-VSCODE-016 |
 | TC-FH-004 | Failure Handler | No assignment → error shown | REQ-VSCODE-016 |
+| TC-FAIL-001 | FAIL Macro Nav | JUNO_FAIL: bare handler name found in functionDefinitions | REQ-VSCODE-023 |
+| TC-FAIL-002 | FAIL Macro Nav | JUNO_FAIL: unknown handler name not in functionDefinitions | REQ-VSCODE-023 |
+| TC-FAIL-003 | FAIL Macro Nav | JUNO_FAIL_MODULE: derived type walks chain → handler found | REQ-VSCODE-024 |
+| TC-FAIL-004 | FAIL Macro Nav | JUNO_FAIL_MODULE: no handler registered for resolved root type | REQ-VSCODE-024 |
+| TC-FAIL-005 | FAIL Macro Nav | JUNO_FAIL_ROOT: root pointer directly → no chain walk → found | REQ-VSCODE-025 |
+| TC-FAIL-006 | FAIL Macro Nav | JUNO_FAIL_ROOT: no handler registered for root type | REQ-VSCODE-025 |
+| TC-FAIL-007 | FAIL Macro Nav | JUNO_ASSERT_EXISTS_MODULE: derived → walks chain → found | REQ-VSCODE-026 |
+| TC-FAIL-008 | FAIL Macro Nav | JUNO_ASSERT_EXISTS_MODULE: no handler registered | REQ-VSCODE-026 |
+| TC-FAIL-009 | FAIL Macro Nav | Non-macro line falls through to §5.3 algorithm | REQ-VSCODE-022 |
+| TC-FAIL-010 | FAIL Macro Nav | JUNO_FAIL: nested parentheses in arg[1] — gracefully unresolvable | REQ-VSCODE-023 |
+| TC-FAIL-011 | FAIL Macro Nav | JUNO_FAIL_MODULE: cast expression in arg[1] stripped to bare identifier | REQ-VSCODE-024 |
+| TC-FAIL-012 | FAIL Macro Nav | JUNO_FAIL_MODULE: two-level derivation chain walks to root type | REQ-VSCODE-024 |
 | TC-QP-001 | QuickPick | Items show function name as label | REQ-VSCODE-006 |
 | TC-QP-002 | QuickPick | Items show file:line as description | REQ-VSCODE-006 |
 | TC-QP-003 | QuickPick | Items show workspace-relative path as detail | REQ-VSCODE-006 |
@@ -205,6 +218,28 @@ Section 3.
 | TC-SYS-012 | System E2E | Non-vtable call passes through to default C language provider | REQ-VSCODE-007 |
 | TC-SYS-013 | System E2E | Designated initializer indexing — engine_app.c vtable, all 3 fields via MCP | REQ-VSCODE-010 |
 | TC-SYS-014 | System E2E | Positional initializer indexing — main.c log API, all 4 fields via MCP | REQ-VSCODE-012 |
+
+---
+
+## Summary Table (Section 25)
+
+| Test Case ID | Section | Scenario | Requirement(s) |
+|-------------|---------|----------|----------------|
+| TC-TRACE-001 | Vtable Trace View | Single impl: 3-node trace (call-site, composition-root, implementation) | REQ-VSCODE-030, REQ-VSCODE-031, REQ-VSCODE-032 |
+| TC-TRACE-002 | Vtable Trace View | Multi-impl: 2 subtrees with shared call-site node | REQ-VSCODE-027 |
+| TC-TRACE-003 | Vtable Trace View | Resolver found:false → StatusBarHelper.showError(); no WebviewPanel | REQ-VSCODE-027 |
+| TC-TRACE-004 | Vtable Trace View | Call-site node: label from lineText; file = currentFile; line = cursorLine | REQ-VSCODE-030 |
+| TC-TRACE-005 | Vtable Trace View | Composition-root node: file = assignmentFile; line = assignmentLine | REQ-VSCODE-031 |
+| TC-TRACE-006 | Vtable Trace View | Implementation node: label = functionName; detail = FunctionDefinitionRecord.signature | REQ-VSCODE-032 |
+| TC-TRACE-007 | Vtable Trace View | HTML escaping: file path with `<script>` tag → HTML-escaped in panel (XSS prevention) | REQ-VSCODE-027 |
+| TC-TRACE-008 | Vtable Trace View | CSP nonce: same nonce in Content-Security-Policy meta tag and script tag | REQ-VSCODE-027 |
+| TC-TRACE-009 | Vtable Trace View | File link click: postMessage {type:'navigate', file, line} → showTextDocument | REQ-VSCODE-027 |
+| TC-TRACE-010 | Vtable Trace View | Command `libjuno.showVtableTrace` registered during activation | REQ-VSCODE-028, REQ-VSCODE-029 |
+| TC-TRACE-011 | Vtable Trace View | Keybinding: package.json has Ctrl+Shift+T → libjuno.showVtableTrace with when clause | REQ-VSCODE-028 |
+| TC-TRACE-012 | Vtable Trace View | Context menu: package.json has editor/context entry for libjuno.showVtableTrace | REQ-VSCODE-029 |
+| TC-TRACE-013 | Vtable Trace View | WebviewPanel options: enableScripts:true and retainContextWhenHidden:true | REQ-VSCODE-027 |
+| TC-TRACE-014 | Vtable Trace View | No external resources: HTML contains no http:// or https:// URLs | REQ-VSCODE-027 |
+| TC-TRACE-015 | Vtable Trace View | Empty locations (found:false) → error shown, no panel; JUNO_MODULE_SUPER edge case | REQ-VSCODE-027 |
 
 ---
 
@@ -232,5 +267,16 @@ Section 3.
 | REQ-VSCODE-018 | AI Vtable Resolution Access | TC-MCP-002, TC-MCP-004, TC-MCP-005 |
 | REQ-VSCODE-019 | AI Failure Handler Resolution Access | TC-MCP-003, TC-MCP-006, TC-MCP-007 |
 | REQ-VSCODE-020 | Platform-Agnostic AI Interface | TC-MCP-009, TC-MCP-011, TC-MCP-012 |
+| REQ-VSCODE-022 | FAIL Macro Failure Handler Navigation | TC-FAIL-001 through TC-FAIL-012 |
+| REQ-VSCODE-023 | JUNO_FAIL Direct Handler Resolution | TC-FAIL-001, TC-FAIL-002, TC-FAIL-010 |
+| REQ-VSCODE-024 | JUNO_FAIL_MODULE Handler Resolution | TC-FAIL-003, TC-FAIL-004, TC-FAIL-011, TC-FAIL-012 |
+| REQ-VSCODE-025 | JUNO_FAIL_ROOT Handler Resolution | TC-FAIL-005, TC-FAIL-006 |
+| REQ-VSCODE-026 | JUNO_ASSERT_EXISTS_MODULE Handler Resolution | TC-FAIL-007, TC-FAIL-008 |
+| REQ-VSCODE-027 | Vtable Resolution Trace View | TC-TRACE-002, TC-TRACE-003, TC-TRACE-007, TC-TRACE-008, TC-TRACE-009, TC-TRACE-013, TC-TRACE-014, TC-TRACE-015 |
+| REQ-VSCODE-028 | Trace View Activation via Keyboard | TC-TRACE-010, TC-TRACE-011 |
+| REQ-VSCODE-029 | Trace View Activation via Command Palette | TC-TRACE-010, TC-TRACE-012 |
+| REQ-VSCODE-030 | Trace View Call Site Node | TC-TRACE-001, TC-TRACE-004 |
+| REQ-VSCODE-031 | Trace View Composition Root Node | TC-TRACE-001, TC-TRACE-005 |
+| REQ-VSCODE-032 | Trace View Implementation Node | TC-TRACE-001, TC-TRACE-006 |
 
 ---

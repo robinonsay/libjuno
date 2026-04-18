@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003"]}
+// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003", "REQ-VSCODE-031"]}
 /**
  * @file types.ts
  *
@@ -315,6 +315,8 @@ export interface FunctionDefinitionRecord {
   line: number;
   /** true if the function was declared with the `static` storage-class keyword. */
   isStatic: boolean;
+  /** Full function signature text (return type + name + params), e.g. "JunoDs_Heap_Insert(...)". */
+  signature?: string;
 }
 
 /**
@@ -331,6 +333,10 @@ export interface ConcreteLocation {
   file: string;
   /** 1-based line number of the function definition. */
   line: number;
+  /** File where the vtable assignment occurs (composition root). REQ-VSCODE-031. */
+  assignmentFile?: string;
+  /** 1-based line of the vtable assignment (composition root). REQ-VSCODE-031. */
+  assignmentLine?: number;
 }
 
 // ---------------------------------------------------------------------------

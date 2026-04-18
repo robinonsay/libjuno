@@ -1646,4 +1646,62 @@ describe('WorkspaceIndexer — core behaviour', () => {
 
     }); // end 'mergeInto traitRoots branch'
 
+    // =========================================================================
+    // TC-CACHE-008: Debounced write — rapid saves produce one cache write
+    // =========================================================================
+
+    describe('Debounced cache write', () => {
+
+        let debounceDir: string;
+
+        beforeAll(() => {
+            debounceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'libjuno-debounce-'));
+        });
+
+        afterAll(() => {
+            fs.rmSync(debounceDir, { recursive: true, force: true });
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.useRealTimers();
+        });
+
+        // @{"verify": ["REQ-VSCODE-001"]}
+        it('TC-CACHE-008: rapid reindexFile calls produce exactly one saveToCache via 500 ms debounce', async () => {
+            jest.useFakeTimers();
+
+            const dir = path.join(debounceDir, 'tc-cache-008');
+            fs.mkdirSync(dir);
+
+            const filePath = path.join(dir, 'debounce008.c');
+            fs.writeFileSync(filePath, 'void Debounce008Func(void) {}\n');
+
+            const indexer = new WorkspaceIndexer(dir, []);
+
+            const saveSpy = jest.spyOn(indexer as unknown as { saveToCache: () => Promise<void> }, 'saveToCache')
+                .mockResolvedValue(undefined);
+
+            // Call reindexFile 5 times in rapid succession
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+
+            // saveToCache must NOT have been called yet — timer is still pending
+            expect(saveSpy).not.toHaveBeenCalled();
+
+            // Advance fake timers past the 500 ms debounce window
+            jest.advanceTimersByTime(600);
+
+            // Exactly one debounced write must have fired
+            expect(saveSpy).toHaveBeenCalledTimes(1);
+
+            // Clean up the pending timer
+            indexer.dispose();
+        });
+
+    }); // end 'Debounced cache write'
+
 });

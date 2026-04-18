@@ -64,6 +64,11 @@ export class McpServer {
     ): Promise<void> {
         const { method, url } = req;
 
+        if (url === '/mcp' && method === 'POST') {
+            await this.handleMcp(req, res);
+            return;
+        }
+
         if (url === '/resolve_vtable_call' && method === 'POST') {
             const body = await readBody(req);
             if (body === null) {
@@ -116,6 +121,154 @@ export class McpServer {
         }
 
         sendJson(res, 404, { error: `Unknown endpoint: ${url}` });
+    }
+
+    // -----------------------------------------------------------------------
+    // Private: JSON-RPC 2.0 MCP endpoint
+    // -----------------------------------------------------------------------
+
+    private async handleMcp(
+        req: http.IncomingMessage,
+        res: http.ServerResponse
+    ): Promise<void> {
+        const rawBody = await readBody(req);
+        if (rawBody === null) {
+            sendJson(res, 400, { error: 'Request body too large.' });
+            return;
+        }
+
+        let rpc: unknown;
+        try {
+            rpc = JSON.parse(rawBody);
+        } catch {
+            sendJson(res, 200, { jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } });
+            return;
+        }
+
+        const r = rpc as Record<string, unknown>;
+        const id: unknown = Object.prototype.hasOwnProperty.call(r, 'id') ? r['id'] : null;
+        const mcpMethod = typeof r['method'] === 'string' ? r['method'] : '';
+
+        // Notifications have no `id` — respond with HTTP 202 and no body per spec.
+        const isNotification = !Object.prototype.hasOwnProperty.call(r, 'id');
+        if (isNotification) {
+            res.writeHead(202);
+            res.end();
+            return;
+        }
+
+        if (mcpMethod === 'initialize') {
+            sendJson(res, 200, {
+                jsonrpc: '2.0',
+                id,
+                result: {
+                    protocolVersion: '2024-11-05',
+                    capabilities: { tools: {} },
+                    serverInfo: { name: 'libjuno', version: '0.1.7' },
+                },
+            });
+            return;
+        }
+
+        if (mcpMethod === 'tools/list') {
+            sendJson(res, 200, {
+                jsonrpc: '2.0',
+                id,
+                result: {
+                    tools: [
+                        {
+                            name: 'resolve_vtable_call',
+                            description:
+                                'Resolves a LibJuno vtable API call site to its concrete implementation function(s). Given a C source file path and cursor position (1-based line and column), returns the function name(s) and source location(s) of the implementation.',
+                            inputSchema: {
+                                type: 'object',
+                                required: ['file', 'line', 'column', 'lineText'],
+                                properties: {
+                                    file:     { type: 'string',  description: 'Absolute path to the C source file.' },
+                                    line:     { type: 'integer', description: '1-based line number of the call site.' },
+                                    column:   { type: 'integer', description: '1-based column number of the cursor.' },
+                                    lineText: { type: 'string',  description: 'Full text of the source line at the call site.' },
+                                },
+                            },
+                        },
+                        {
+                            name: 'resolve_failure_handler',
+                            description:
+                                'Resolves a LibJuno failure handler assignment or FAIL macro call site to the registered handler function. Given a C source file path and cursor position, returns the handler function name and source location.',
+                            inputSchema: {
+                                type: 'object',
+                                required: ['file', 'line', 'column', 'lineText'],
+                                properties: {
+                                    file:     { type: 'string',  description: 'Absolute path to the C source file.' },
+                                    line:     { type: 'integer', description: '1-based line number.' },
+                                    column:   { type: 'integer', description: '1-based column number of the cursor.' },
+                                    lineText: { type: 'string',  description: 'Full text of the source line.' },
+                                },
+                            },
+                        },
+                    ],
+                },
+            });
+            return;
+        }
+
+        if (mcpMethod === 'tools/call') {
+            const params = (r['params'] ?? {}) as Record<string, unknown>;
+            const toolName = typeof params['name'] === 'string' ? params['name'] : '';
+            const args = params['arguments'] ?? {};
+
+            if (!isResolveParams(args)) {
+                sendJson(res, 200, {
+                    jsonrpc: '2.0',
+                    id,
+                    error: { code: -32602, message: 'Invalid params: required fields file (string), line (number), column (number), lineText (string).' },
+                });
+                return;
+            }
+
+            if (toolName === 'resolve_vtable_call') {
+                const result = this.vtableResolver.resolve(
+                    args.file,
+                    args.line,
+                    args.column,
+                    args.lineText
+                );
+                sendJson(res, 200, {
+                    jsonrpc: '2.0',
+                    id,
+                    result: { content: [{ type: 'text', text: JSON.stringify(result) }] },
+                });
+                return;
+            }
+
+            if (toolName === 'resolve_failure_handler') {
+                const result = this.failureHandlerResolver.resolve(
+                    args.file,
+                    args.line,
+                    args.column,
+                    args.lineText
+                );
+                sendJson(res, 200, {
+                    jsonrpc: '2.0',
+                    id,
+                    result: { content: [{ type: 'text', text: JSON.stringify(result) }] },
+                });
+                return;
+            }
+
+            sendJson(res, 200, {
+                jsonrpc: '2.0',
+                id,
+                error: { code: -32601, message: `Unknown tool: ${toolName}` },
+            });
+            return;
+        }
+
+        sendJson(res, 200, {
+            jsonrpc: '2.0',
+            id,
+            error: { code: -32601, message: `Method not found: ${mcpMethod}` },
+        });
     }
 }
 

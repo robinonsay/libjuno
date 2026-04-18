@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "libjuno": {
+      "type": "sse",
+      "url": "http://localhost:6543/sse"
+    }
+  }
+}

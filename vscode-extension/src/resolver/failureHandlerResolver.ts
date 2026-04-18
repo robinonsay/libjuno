@@ -1,8 +1,9 @@
-// @{"req": ["REQ-VSCODE-016"]}
+// @{"req": ["REQ-VSCODE-016", "REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026"]}
 /**
  * @file failureHandlerResolver.ts
  *
- * Implements the Failure Handler Resolution algorithm (design §5.3).
+ * Implements the Failure Handler Resolution algorithm (design §5.3) and the
+ * FAIL Macro Call Site Resolution extension (design §5.3.1).
  *
  * Given a cursor position on a line containing `_pfcnFailureHandler` or
  * `JUNO_FAILURE_HANDLER`, FailureHandlerResolver resolves the concrete
@@ -10,6 +11,9 @@
  * member being accessed.
  *
  * Resolution steps:
+ *   0. (§5.3.1) Check if the line matches a FAIL macro call site pattern. If
+ *      matched, extract the 2nd argument and resolve the handler or module
+ *      pointer using the appropriate lookup strategy for the macro type.
  *   1. Confirm the line contains a failure handler reference; return early if
  *      not, so callers can safely invoke this resolver on any cursor position.
  *   2. If the line is a handler assignment (`= funcName`), navigate directly
@@ -29,6 +33,13 @@ import {
 
 /** Matches either macro name or underlying member name. */
 const FAILURE_HANDLER_PRESENCE_RE = /_pfcnFailureHandler|JUNO_FAILURE_HANDLER/;
+
+/**
+ * Matches one of the four FAIL/ASSERT macro call sites. Capture group 1 is
+ * the macro name.
+ */
+const FAIL_MACRO_RE =
+    /\b(JUNO_FAIL|JUNO_FAIL_MODULE|JUNO_FAIL_ROOT|JUNO_ASSERT_EXISTS_MODULE)\s*\(/;
 
 /**
  * Captures the LHS expression (group 1) and the RHS function name (group 2)
@@ -76,6 +87,16 @@ export class FailureHandlerResolver {
         lineText: string,
         functionName?: string
     ): VtableResolutionResult {
+        // Step 0 (§5.3.1): Check for FAIL macro call site. If matched, resolve
+        // using the FAIL macro algorithm and return — do not fall through to §5.3.
+        const failMacroMatch = FAIL_MACRO_RE.exec(lineText);
+        if (failMacroMatch) {
+            const macroName = failMacroMatch[1];
+            const enclosingFuncForMacro =
+                functionName ?? findEnclosingFunction(this.index, file, line);
+            return this.resolveFailMacro(macroName, lineText, file, enclosingFuncForMacro);
+        }
+
         if (!FAILURE_HANDLER_PRESENCE_RE.test(lineText)) {
             return {
                 found: false,
@@ -159,5 +180,179 @@ export class FailureHandlerResolver {
             }
         }
         return PRIMARY_VAR_RE.exec(lineText)?.[1];
+    }
+
+    // -----------------------------------------------------------------------
+    // §5.3.1 — FAIL macro resolution helpers
+    // -----------------------------------------------------------------------
+
+    /**
+     * Resolves a FAIL/ASSERT macro call site to its concrete handler or module
+     * handler location(s).
+     *
+     * Implements design §5.3.1 Steps 1–2.
+     *
+     * @param macroName     One of the four recognised macro names.
+     * @param lineText      Full text of the source line.
+     * @param file          Absolute path of the C source file.
+     * @param enclosingFunc Name of the enclosing function (may be undefined).
+     * @returns VtableResolutionResult.
+     */
+    // @{"req": ["REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026"]}
+    private resolveFailMacro(
+        macroName: string,
+        lineText: string,
+        file: string,
+        enclosingFunc: string | undefined
+    ): VtableResolutionResult {
+        const extractedArg = this.extractMacroArg(lineText, 1);
+        if (extractedArg === undefined) {
+            return {
+                found: false,
+                locations: [],
+                errorMsg: `Could not extract 2nd argument from ${macroName} call.`,
+            };
+        }
+
+        if (macroName === 'JUNO_FAIL') {
+            // arg[1] is a function pointer variable or function name — look up directly.
+            const defs = this.index.functionDefinitions.get(extractedArg);
+            if (defs && defs.length > 0) {
+                return {
+                    found: true,
+                    locations: defs.map(d => ({
+                        functionName: extractedArg,
+                        file: d.file,
+                        line: d.line,
+                    })),
+                };
+            }
+            return {
+                found: false,
+                locations: [],
+                errorMsg: `No definition found for failure handler '${extractedArg}'.`,
+            };
+        }
+
+        if (macroName === 'JUNO_FAIL_MODULE' || macroName === 'JUNO_ASSERT_EXISTS_MODULE') {
+            // arg[1] is a pointer to a derived or root module struct — walk derivation chain.
+            if (!enclosingFunc) {
+                return {
+                    found: false,
+                    locations: [],
+                    errorMsg: `Could not resolve enclosing function for ${macroName} call.`,
+                };
+            }
+            const typeInfo = lookupVariableType(this.index, file, enclosingFunc, extractedArg);
+            if (!typeInfo) {
+                return {
+                    found: false,
+                    locations: [],
+                    errorMsg: `Could not resolve type of '${extractedArg}' in ${macroName} call.`,
+                };
+            }
+            const rootType = walkToRootType(this.index, typeInfo.typeName);
+            const locations = this.index.failureHandlerAssignments.get(rootType);
+            if (locations && locations.length > 0) {
+                return { found: true, locations };
+            }
+            return {
+                found: false,
+                locations: [],
+                errorMsg: `No failure handler registered for '${rootType}'.`,
+            };
+        }
+
+        if (macroName === 'JUNO_FAIL_ROOT') {
+            // arg[1] is already a root module pointer — no derivation chain walk.
+            if (!enclosingFunc) {
+                return {
+                    found: false,
+                    locations: [],
+                    errorMsg: `Could not resolve enclosing function for ${macroName} call.`,
+                };
+            }
+            const typeInfo = lookupVariableType(this.index, file, enclosingFunc, extractedArg);
+            if (!typeInfo) {
+                return {
+                    found: false,
+                    locations: [],
+                    errorMsg: `Could not resolve type of '${extractedArg}' in ${macroName} call.`,
+                };
+            }
+            const rootType = typeInfo.typeName;
+            const locations = this.index.failureHandlerAssignments.get(rootType);
+            if (locations && locations.length > 0) {
+                return { found: true, locations };
+            }
+            return {
+                found: false,
+                locations: [],
+                errorMsg: `No failure handler registered for '${rootType}'.`,
+            };
+        }
+
+        return {
+            found: false,
+            locations: [],
+            errorMsg: `Unrecognised FAIL macro: '${macroName}'.`,
+        };
+    }
+
+    /**
+     * Extracts the argument at the given 0-based index from a macro call on
+     * the line. Uses balanced-parenthesis tracking so nested calls like
+     * `JUNO_FAIL(status, getHandler(ptMod), data, "msg")` are handled
+     * correctly. Cast expressions such as `(TYPE *)ptr` are stripped from the
+     * extracted argument before returning.
+     *
+     * Used by §5.3.1 to extract the second argument from a FAIL macro call.
+     *
+     * @param lineText  Full text of the source line.
+     * @param argIndex  0-based index of the argument to extract.
+     * @returns The bare identifier string, or undefined if not found.
+     */
+    private extractMacroArg(lineText: string, argIndex: number): string | undefined {
+        // Locate the opening parenthesis of the macro call matched by FAIL_MACRO_RE.
+        const macroMatch = FAIL_MACRO_RE.exec(lineText);
+        if (!macroMatch) {
+            return undefined;
+        }
+
+        // Start scanning from the character after the '(' that ends the regex match.
+        // macroMatch.index + macroMatch[0].length positions us just after '('.
+        const startPos = macroMatch.index + macroMatch[0].length;
+
+        let depth = 1;
+        let argStart = startPos;
+        const args: string[] = [];
+
+        for (let i = startPos; i < lineText.length; i++) {
+            const ch = lineText[i];
+            if (ch === '(') {
+                depth++;
+            } else if (ch === ')') {
+                depth--;
+                if (depth === 0) {
+                    // End of argument list — collect the final argument.
+                    args.push(lineText.slice(argStart, i));
+                    break;
+                }
+            } else if (ch === ',' && depth === 1) {
+                args.push(lineText.slice(argStart, i));
+                argStart = i + 1;
+            }
+        }
+
+        if (argIndex >= args.length) {
+            return undefined;
+        }
+
+        // Strip surrounding whitespace then cast expressions like `(TYPE *)ptr`.
+        let arg = args[argIndex].trim();
+        arg = arg.replace(/^\(\s*[\w\s*]+\)\s*/, '');
+        arg = arg.trim();
+
+        return arg.length > 0 ? arg : undefined;
     }
 }

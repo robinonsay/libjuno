@@ -30,8 +30,11 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 19 | Phase 19 ✅ | Go-to-Definition Bug: Parser C11 Unary Conformance | Parser `unaryExpression` fix (& \* + - ~ ! → castExpression); REQ-VSCODE-005 tightened; REQ-VSCODE-033 added; TC-CONF-001–022, TC-WI-019, TC-WI-020a/b (23 new tests); VSIX 0.1.4 | 15% |
 | 20 | Phase 20 ✅ | Ctrl-Hover Underline & Multi-Impl UX Fix | REQ-VSCODE-034 revised; REQ-VSCODE-035 added; `provideDefinition` returns first Location for multi-impl (no premature peek); TC-QP-004 updated; TC-VSC-009 added; VSIX 0.1.5 | 10% |
 | 21 | Phase 21 ✅ | Peek Widget Regression Fix | `provideDefinition` reverted to return all locations; REQ-VSCODE-035 revised (multi-impl peek); TC-QP-004 + TC-VSC-009 updated; VSIX 0.1.6 | 5% |
+| 22 | Phases 22+23 ✅ | FAIL Macro Navigation + Vtable Trace View | `FailureHandlerResolver` §5.3.1 (4 FAIL macros, 12 tests); `VtableTraceProvider` (CSP WebviewPanel, 15 tests); `Ctrl+Shift+T` command; REQ-022–032 traced; VSIX 0.1.7 | 15% |
+| 23 | Phase 24 ✅ | Test Case Completeness & README Update | TC-PP-001–004, TC-DECL-005, TC-CACHE-008 (6 new tests); `WorkspaceIndexer.scheduleSave()` debounce; README user guide updated through Sprint 22; 679 tests passing | 5% |
+| 24 | Phase 25 ✅ | MCP JSON-RPC 2.0 Protocol Implementation | `/mcp` endpoint: `initialize`, `tools/list`, `tools/call`, notification handling, `-32602` validation; TC-MCP-021–025 (5 new tests); README "Connecting AI Agents" section; 684 tests passing | 10% |
 
-**Total: 21 sprints, 20 active phases (21 numbered; Phase 4 removed)**
+**Total: 24 sprints, 24 active phases (25 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

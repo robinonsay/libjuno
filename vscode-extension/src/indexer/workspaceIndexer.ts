@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-021", "REQ-VSCODE-001"]}
+// @{"req": ["REQ-VSCODE-021", "REQ-VSCODE-001", "REQ-VSCODE-031"]}
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
@@ -38,6 +38,7 @@ export class WorkspaceIndexer {
     private readonly excludedDirs: Set<string>;
     private readonly cachePath: string;
     private readonly fileHashes: Map<string, string>;
+    private _saveTimer: ReturnType<typeof setTimeout> | undefined;
 
     constructor(workspaceRoot: string, excludedDirs: string[]) {
         this.workspaceRoot = workspaceRoot;
@@ -64,6 +65,7 @@ export class WorkspaceIndexer {
         const deferred: DeferredPositional[] = [];
         await this.indexFile(filePath, deferred);
         this.resolveDeferred(deferred);
+        this.scheduleSave();
     }
 
     /**
@@ -149,9 +151,34 @@ export class WorkspaceIndexer {
         await saveCache(this.cachePath, cache);
     }
 
+    /**
+     * Cancels any pending debounced save timer. Call this to clean up the
+     * indexer when it is no longer needed (e.g., in tests or on deactivation).
+     */
+    public dispose(): void {
+        if (this._saveTimer !== undefined) {
+            clearTimeout(this._saveTimer);
+            this._saveTimer = undefined;
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Private helpers
     // -----------------------------------------------------------------------
+
+    /**
+     * Schedules a debounced cache write 500 ms after the last call.
+     * Rapid successive calls reset the timer, producing exactly one write.
+     */
+    private scheduleSave(): void {
+        if (this._saveTimer !== undefined) {
+            clearTimeout(this._saveTimer);
+        }
+        this._saveTimer = setTimeout(() => {
+            this._saveTimer = undefined;
+            this.saveToCache().catch(() => { /* silent */ });
+        }, 500);
+    }
 
     /**
      * Parses one file and merges its results into the index.
@@ -212,6 +239,8 @@ export class WorkspaceIndexer {
                 functionName: r.functionName,
                 file: defLoc.line !== 0 ? defLoc.file : r.file,
                 line: defLoc.line !== 0 ? defLoc.line : r.line,
+                assignmentFile: r.file,
+                assignmentLine: r.line,
             };
             let fieldMap = idx.vtableAssignments.get(r.apiType);
             if (!fieldMap) {
@@ -396,6 +425,8 @@ export class WorkspaceIndexer {
                     functionName: fnName,
                     file: defLoc.line !== 0 ? defLoc.file : d.filePath,
                     line: defLoc.line !== 0 ? defLoc.line : (d.lines[i] ?? 0),
+                    assignmentFile: d.filePath,
+                    assignmentLine: d.lines[i] ?? 0,
                 };
                 const existing = fieldMap.get(fields[i]) ?? [];
                 // Avoid duplicates — compare against loc.file and loc.line (definition location)

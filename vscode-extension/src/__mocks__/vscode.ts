@@ -77,6 +77,14 @@ export const ProgressLocation = {
     Notification: 15 as const,
 };
 
+export const ViewColumn = {
+    Active: -1 as const,
+    Beside: -2 as const,
+    One: 1 as const,
+    Two: 2 as const,
+    Three: 3 as const,
+};
+
 // ---------------------------------------------------------------------------
 // Internal helpers — re-created on resetMocks()
 // ---------------------------------------------------------------------------

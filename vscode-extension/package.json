@@ -2,7 +2,7 @@
   "name": "libjuno",
   "displayName": "LibJuno",
   "description": "Vtable-aware Go to Definition for LibJuno embedded C projects",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "publisher": "libjuno",
   "license": "MIT",
   "repository": {
@@ -29,8 +29,28 @@
       {
         "command": "libjuno.reindexWorkspace",
         "title": "LibJuno: Re-index Workspace"
+      },
+      {
+        "command": "libjuno.showVtableTrace",
+        "title": "LibJuno: Show Vtable Resolution Trace"
       }
     ],
+    "keybindings": [
+      {
+        "command": "libjuno.showVtableTrace",
+        "key": "ctrl+shift+t",
+        "when": "editorTextFocus && resourceLangId =~ /^c/"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "libjuno.showVtableTrace",
+          "when": "resourceLangId =~ /^c/",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
       "title": "LibJuno",
       "properties": {
