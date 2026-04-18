@@ -28,8 +28,10 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 17 | Phase 18 ✅ | Parser & Indexer: Production Source Compatibility | looksLikeCast, braced init, reindexFile deferred, EOF sentinel, FloatingLiteral; REG-17-001–010b | 15% |
 | 18 | — | Cross-File Definition Resolution Bug Fix | `resolveDefinitionLocation()` fix; TC-WI-015–018 regression tests | 10% |
 | 19 | Phase 19 ✅ | Go-to-Definition Bug: Parser C11 Unary Conformance | Parser `unaryExpression` fix (& \* + - ~ ! → castExpression); REQ-VSCODE-005 tightened; REQ-VSCODE-033 added; TC-CONF-001–022, TC-WI-019, TC-WI-020a/b (23 new tests); VSIX 0.1.4 | 15% |
+| 20 | Phase 20 ✅ | Ctrl-Hover Underline & Multi-Impl UX Fix | REQ-VSCODE-034 revised; REQ-VSCODE-035 added; `provideDefinition` returns first Location for multi-impl (no premature peek); TC-QP-004 updated; TC-VSC-009 added; VSIX 0.1.5 | 10% |
+| 21 | Phase 21 ✅ | Peek Widget Regression Fix | `provideDefinition` reverted to return all locations; REQ-VSCODE-035 revised (multi-impl peek); TC-QP-004 + TC-VSC-009 updated; VSIX 0.1.6 | 5% |
 
-**Total: 18 sprints, 18 active phases (19 numbered; Phase 4 removed)**
+**Total: 21 sprints, 20 active phases (21 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

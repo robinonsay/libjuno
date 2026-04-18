@@ -41,8 +41,8 @@
 Before presenting any sprint plan, Lead MUST:
 1. Re-read `ai/skills/software-lead.md` and relevant worker/verifier skill files.
 2. Read `requirements/vscode-extension/requirements.json` (or applicable requirements).
-3. Read `vscode-extension/design/design.md` and `vscode-extension/design/test-cases.md`.
-4. Read `vscode-extension/software-development-plan.md` (current sprint phases).
+3. Read `vscode-extension/docs/design/index.md` (then relevant section file), and `vscode-extension/docs/test-cases/index.md` (then relevant section file).
+4. Read `vscode-extension/docs/sdp/index.md` (then the relevant phase file for the current sprint).
 5. Summarize each document's key points. THEN create and present the sprint plan.
 This is non-negotiable every sprint without exception.
 
@@ -168,3 +168,19 @@ This is non-negotiable every sprint without exception.
 - Root cause of the go-to-def bug: `unaryExpression` recursed to `unaryExpression` for `& * + - ~ !`, violating C11 §6.5.3 which requires recursion to `cast-expression` for these six operators (only `++` and `--` recurse to `unary-expression`).
 - Symptom: any function body with `return *(T *) pv;` style expression caused parser to bail mid-body; function definition never emitted; vtable resolver fell back to assignment line.
 - Lesson: when fixing parser/grammar bugs, always cite the C11 §/production number in the fix comment so future audits have normative reference.
+
+### 2026-04-18 — Requirements atomicity: UX behavior and implementation mechanism need separate requirements
+- Sprint 20: REQ-VSCODE-035 initially bundled "editor shall display underline" (UX behavior) with "provider shall return exactly one location" (implementation mechanism).
+- Systems engineer correctly flagged non-atomicity — two independently testable behaviors cannot share one requirement.
+- Fix: REQ-VSCODE-034 owns the "underline for all call sites" observable behavior; REQ-VSCODE-035 owns the "return exactly one location for multi-impl" implementation constraint.
+
+### 2026-04-18 — REQ hierarchy: new child requirement's `uses` parent must match semantic level
+- Sprint 20: REQ-VSCODE-035 was initially given `uses: ["REQ-VSCODE-005"]` (single-impl navigation) even though it primarily governs multi-impl behavior.
+- Systems engineer flagged: REQ-VSCODE-005 is a sibling, not a parent — REQ-VSCODE-007 (Native Go to Definition Integration) is the correct parent for provider-mechanism requirements.
+- Rule: when choosing the `uses` parent, match the semantic scope. Provider mechanism reqs (how the extension integrates with VSCode) trace to REQ-VSCODE-007; user-visible navigation reqs trace to REQ-VSCODE-005/006.
+
+### 2026-04-18 — VSCode multi-definition peek: return ALL locations; peek widget IS the desired UX
+- Returning `Location[]` with 2+ entries from `provideDefinition` triggers VSCode's native multi-definition peek widget on Ctrl-hold — this is correct, intentional UX.
+- Single-impl: return all 1 location → VSCode navigates directly. Multi-impl: return all N locations → VSCode shows native peek widget for selection.
+- **NEVER truncate to slice(0,1)** — doing so suppresses the peek and breaks multi-implementation navigation (Sprint 20 regression, fixed in Sprint 21).
+- Do NOT use `QuickPick` in the provider — VSCode's native peek is the selection mechanism.

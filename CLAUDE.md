@@ -94,12 +94,12 @@ No sub-agent may spawn other sub-agents.
 At the beginning of every sprint, BEFORE creating or presenting a sprint plan,
 the Software Lead MUST:
 
-1. Re-read the software-lead agent file: `.claude/agents/software-lead.md`
+1. Re-read the software-lead skill file: `ai/skills/software-lead.md`
 2. Read the worker and verifier skill files relevant to the sprint (`ai/skills/`)
 3. Read the relevant requirements (e.g., `requirements/vscode-extension/requirements.json`)
-4. Read the software design document (e.g., `vscode-extension/design/design.md`)
-5. Read the test cases document (e.g., `vscode-extension/design/test-cases.md`)
-6. Read the software development plan for the current sprint's phase(s)
+4. Read the design doc index: `vscode-extension/docs/design/index.md`, then read only the relevant section file(s) from `vscode-extension/docs/design/`
+5. Read the test cases index: `vscode-extension/docs/test-cases/index.md`, then read only the relevant section file(s) from `vscode-extension/docs/test-cases/`
+6. Read the SDP index: `vscode-extension/docs/sdp/index.md`, then read the relevant phase file(s) for the current sprint
 7. Summarize each document's key points relevant to the sprint
 8. Only THEN create and present the sprint plan to the PM
 
@@ -111,31 +111,36 @@ constraints, and plans that contradict prior decisions.
 After every conversation compaction (context window reset), the **Software Lead**
 must re-read the following files before resuming work:
 
-1. **Agent file**: `.claude/agents/software-lead.md`
+1. **Skill file**: `ai/skills/software-lead.md`
 2. **Lessons learned**: `ai/memory/lessons-learned-software-lead.md`
 3. **Project memory**: `ai/memory/project-overview.md`, `ai/memory/architecture.md`,
    `ai/memory/coding-standards.md`, `ai/memory/constraints.md`, `ai/memory/traceability.md`
 4. **Current project requirements & design**: For the VSCode extension:
    - `requirements/vscode-extension/requirements.json`
-   - `vscode-extension/design/design.md`
-   - `vscode-extension/design/test-cases.md`
+   - `vscode-extension/docs/design/index.md` (then relevant section files)
+   - `vscode-extension/docs/test-cases/index.md` (then relevant section files)
+   - `vscode-extension/docs/sdp/index.md` (then relevant phase files)
 5. **Reiterate plans**: Present both the high-level plan (all sprints) and the
    tactical plan (current sprint work breakdown) to the PM before resuming work.
 
 ## Available Agents
 
+The **Software Lead** runs as a **primary agent skill** via `/software-lead` — it is NOT
+a spawnable sub-agent. Only the primary agent can use the `Agent` tool to orchestrate
+workers and verifiers.
+
 | Agent | Role Type | Model | Agent File |
 |-------|-----------|-------|-----------|
-| `software-lead` | Orchestrator | claude-opus-4-7 | `.claude/agents/software-lead.md` |
-| `software-developer` | Worker | claude-sonnet-4-6 | `.claude/agents/software-developer.md` |
-| `software-test-engineer` | Worker | claude-sonnet-4-6 | `.claude/agents/software-test-engineer.md` |
-| `software-requirements-engineer` | Worker | claude-sonnet-4-6 | `.claude/agents/software-requirements-engineer.md` |
-| `junior-software-developer` | Worker | claude-haiku-4-5-20251001 | `.claude/agents/junior-software-developer.md` |
-| `software-quality-engineer` | Verifier | claude-sonnet-4-6 | `.claude/agents/software-quality-engineer.md` |
-| `software-systems-engineer` | Verifier | claude-sonnet-4-6 | `.claude/agents/software-systems-engineer.md` |
-| `senior-software-engineer` | Verifier | claude-sonnet-4-6 | `.claude/agents/senior-software-engineer.md` |
-| `software-verification-engineer` | Verifier | claude-sonnet-4-6 | `.claude/agents/software-verification-engineer.md` |
-| `final-quality-engineer` | Final Gate | claude-sonnet-4-6 | `.claude/agents/final-quality-engineer.md` |
+| `software-lead` | Primary Agent Skill | claude-opus-4-7 | `ai/skills/software-lead.md` |
+| `software-developer` | Worker (sub-agent) | claude-sonnet-4-6 | `.claude/agents/software-developer.md` |
+| `software-test-engineer` | Worker (sub-agent) | claude-sonnet-4-6 | `.claude/agents/software-test-engineer.md` |
+| `software-requirements-engineer` | Worker (sub-agent) | claude-sonnet-4-6 | `.claude/agents/software-requirements-engineer.md` |
+| `junior-software-developer` | Worker (sub-agent) | claude-haiku-4-5-20251001 | `.claude/agents/junior-software-developer.md` |
+| `software-quality-engineer` | Verifier (sub-agent) | claude-sonnet-4-6 | `.claude/agents/software-quality-engineer.md` |
+| `software-systems-engineer` | Verifier (sub-agent) | claude-sonnet-4-6 | `.claude/agents/software-systems-engineer.md` |
+| `senior-software-engineer` | Verifier (sub-agent) | claude-sonnet-4-6 | `.claude/agents/senior-software-engineer.md` |
+| `software-verification-engineer` | Verifier (sub-agent) | claude-sonnet-4-6 | `.claude/agents/software-verification-engineer.md` |
+| `final-quality-engineer` | Final Gate (sub-agent) | claude-sonnet-4-6 | `.claude/agents/final-quality-engineer.md` |
 
 ## Memory Files
 

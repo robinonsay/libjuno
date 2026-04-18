@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-016", "REQ-VSCODE-034"]}
+// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-016", "REQ-VSCODE-034", "REQ-VSCODE-035"]}
 import * as vscode from 'vscode';
 import { VtableResolver } from '../resolver/vtableResolver';
 import { FailureHandlerResolver } from '../resolver/failureHandlerResolver';
@@ -16,12 +16,10 @@ const NO_HANDLER_PATTERN_MSG = 'Line does not contain a failure handler referenc
  * failure handler references to their concrete implementation locations.
  * Registered for C and C++ documents (REQ-VSCODE-007).
  *
- * Contract (REQ-VSCODE-034/REQ-VSCODE-035): provideDefinition returns exactly
- * one Location for every resolved call site — the primary (first) implementation.
- * This ensures the Ctrl-hover underline decoration appears for all recognized
- * symbols regardless of implementation count, without triggering VSCode's
- * native multi-definition peek widget prematurely. Full implementation selection
- * for multi-impl call sites is available via libjuno.goToImplementation (REQ-VSCODE-006).
+ * Contract (REQ-VSCODE-034/REQ-VSCODE-035): provideDefinition returns all resolved
+ * locations for any recognized call site. Single-implementation call sites navigate
+ * directly; multi-implementation call sites surface VSCode's native peek widget so
+ * the user can select the desired implementation.
  */
 export class JunoDefinitionProvider implements vscode.DefinitionProvider {
     constructor(
@@ -32,7 +30,7 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
         private readonly log: (msg: string) => void = console.log
     ) {}
 
-    // @{"req": ["REQ-VSCODE-005", "REQ-VSCODE-007", "REQ-VSCODE-034"]}
+    // @{"req": ["REQ-VSCODE-005", "REQ-VSCODE-007", "REQ-VSCODE-034", "REQ-VSCODE-035"]}
     async provideDefinition(
         document: vscode.TextDocument,
         position: vscode.Position,
@@ -60,11 +58,10 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
             return undefined;
         }
 
-        // 3. Return first location only — Ctrl-hover underline for all recognized
-        //    call sites (REQ-VSCODE-034/035). Returning a single Location suppresses
-        //    VSCode's multi-definition peek for multi-impl call sites; full selection
-        //    is available via libjuno.goToImplementation (REQ-VSCODE-006).
-        return toVscodeLocations(result.locations.slice(0, 1));
+        // 3. Return all resolved locations (REQ-VSCODE-034/035).
+        //    Single impl: VSCode navigates directly. Multi-impl: VSCode shows the
+        //    native multi-definition peek widget for implementation selection.
+        return toVscodeLocations(result.locations);
     }
 }
 

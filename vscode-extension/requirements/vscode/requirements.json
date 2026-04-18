@@ -418,9 +418,9 @@
     },
     {
       "id": "REQ-VSCODE-035",
-      "title": "Ctrl-Hover Underline for Recognized Call Sites",
-      "description": "The extension's definition provider shall return exactly one resolved location for call sites with multiple concrete implementations, preventing the native VSCode multi-definition peek widget from appearing when Ctrl is held before the user clicks. The libjuno.goToImplementation command shall remain available for full implementation selection.",
-      "rationale": "Returning all resolved locations for a multi-implementation call site triggers VSCode's native multi-definition peek widget immediately when Ctrl is held, before the user clicks, which creates inconsistent UX compared to single-implementation call sites where only an underline appears. Returning only the primary location suppresses the premature peek while preserving the Ctrl-hover underline decoration already provided by REQ-VSCODE-034.",
+      "title": "Native Peek Window for Multi-Implementation Call Sites",
+      "description": "The extension's definition provider shall return all resolved locations for call sites with multiple concrete implementations so that VSCode's native multi-definition peek widget is shown, allowing the user to select the desired implementation before navigating.",
+      "rationale": "When a vtable API call site has multiple concrete implementations, the user needs a way to choose the correct target. Returning all resolved locations enables VSCode's built-in multi-definition peek widget, which presents the available implementations for selection in a familiar, zero-learning-curve UI.",
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-007"

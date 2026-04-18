@@ -14,8 +14,8 @@ type of work the team performs.
 - When verifying agent output
 - When deciding how to decompose work
 
-**Always read the corresponding agent file** (`.github/agents/software-lead.agent.md`)
-alongside this file for the full orchestration protocol.
+This file contains the full orchestration protocol. The Software Lead runs as a
+primary agent skill (via `/software-lead`), not as a spawnable sub-agent.
 
 ---
 
