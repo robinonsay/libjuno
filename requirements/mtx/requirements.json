@@ -1,0 +1,69 @@
+{
+  "module": "MTX",
+  "requirements": [
+    {
+      "id": "REQ-MTX-001",
+      "title": "Mutex Root Structure",
+      "description": "The mutex root shall embed a module root with an API vtable pointer.",
+      "rationale": "An abstract mutex interface decouples synchronization logic from platform-specific locking primitives (RTOS mutexes, spinlocks, etc.), enabling portability and testability.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009"
+      ],
+      "implements": [
+        "REQ-MTX-002",
+        "REQ-MTX-003",
+        "REQ-MTX-004"
+      ]
+    },
+    {
+      "id": "REQ-MTX-002",
+      "title": "TryLock Operation",
+      "description": "The mutex API vtable shall define a TryLock operation that attempts to acquire the lock and returns immediately with a boolean result.",
+      "rationale": "TryLock enables non-blocking lock acquisition, which is essential for real-time tasks that cannot afford to block indefinitely on a contended resource.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MTX-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MTX-003",
+      "title": "Lock Operation",
+      "description": "The mutex API vtable shall define a Lock operation that blocks until the lock is acquired.",
+      "rationale": "Blocking Lock provides the standard synchronization primitive for tasks that can afford to wait, complementing the non-blocking TryLock.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MTX-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MTX-004",
+      "title": "Free Operation",
+      "description": "The mutex API vtable shall define a Free operation that releases the lock.",
+      "rationale": "Free releases the lock, enabling other tasks to acquire it; without Free the mutex would be permanently held.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MTX-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MTX-005",
+      "title": "Mutex Vtable Validation",
+      "description": "The mutex module shall verify that its API vtable and all function pointers within it are non-NULL.",
+      "rationale": "Validates the vtable at runtime to ensure memory safety before dispatching any mutex operation through function pointers.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010"
+      ],
+      "implements": []
+    }
+  ]
+}

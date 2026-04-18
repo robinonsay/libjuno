@@ -113,6 +113,7 @@ static inline JUNO_STATUS_T JunoDs_QueueApiVerify(const JUNO_DS_QUEUE_API_T *ptQ
 }
 
 /// @brief Verify a queue instance and its API table.
+// @{"req": ["REQ-QUEUE-001"]}
 static inline JUNO_STATUS_T JunoDs_QueueVerify(const JUNO_DS_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_ASSERT_EXISTS(ptQueue);

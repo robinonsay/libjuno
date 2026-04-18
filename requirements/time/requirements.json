@@ -1,0 +1,245 @@
+{
+  "module": "TIME",
+  "requirements": [
+    {
+      "id": "REQ-TIME-001",
+      "title": "Timestamp Representation",
+      "description": "The time module shall represent time as a struct with integer seconds and fixed-point fractional subseconds fields.",
+      "rationale": "Integer seconds with fixed-point subseconds provides deterministic, lossless time representation without floating-point rounding, which is essential for real-time scheduling and time-triggered architectures.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SYS-009",
+        "REQ-SYS-010",
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-002",
+      "title": "Time API Interface",
+      "description": "The time module shall define a vtable-based API with Now, AddTime, SubtractTime, SleepTo, Sleep, and conversion operations.",
+      "rationale": "A vtable-based time API decouples the scheduler and application logic from platform-specific clock hardware, enabling both real hardware clocks and deterministic test clocks.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": [
+        "REQ-SCH-007",
+        "REQ-TIME-003",
+        "REQ-TIME-005",
+        "REQ-TIME-009",
+        "REQ-TIME-010",
+        "REQ-TIME-011",
+        "REQ-TIME-012",
+        "REQ-TIME-013",
+        "REQ-TIME-014",
+        "REQ-TIME-015",
+        "REQ-TIME-016"
+      ]
+    },
+    {
+      "id": "REQ-TIME-003",
+      "title": "AddTime Operation",
+      "description": "The time module shall add a duration to a timestamp in-place.",
+      "rationale": "In-place addition avoids allocating a new timestamp, and is the fundamental operation for computing deadlines and advancing time.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": [
+        "REQ-TIME-004"
+      ]
+    },
+    {
+      "id": "REQ-TIME-004",
+      "title": "AddTime Subsecond Carry-Over",
+      "description": "The time module shall carry over subseconds to seconds when subsecond addition overflows.",
+      "rationale": "Correct carry-over from subseconds to seconds is essential for accurate time arithmetic; without it, subsecond accumulation would overflow and produce incorrect timestamps.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-005",
+      "title": "SubtractTime Operation",
+      "description": "The time module shall subtract a duration from a timestamp in-place.",
+      "rationale": "In-place subtraction is the fundamental operation for computing elapsed time and remaining durations.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": [
+        "REQ-TIME-006",
+        "REQ-TIME-007"
+      ]
+    },
+    {
+      "id": "REQ-TIME-006",
+      "title": "SubtractTime Subsecond Borrow",
+      "description": "The time module shall borrow from seconds when subsecond subtraction underflows.",
+      "rationale": "Correct borrow from seconds to subseconds is essential for accurate time subtraction; without it, subsecond underflow would produce incorrect timestamps.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-005"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-007",
+      "title": "SubtractTime Negative Saturation",
+      "description": "The time module shall saturate the result to zero seconds and zero subseconds when subtraction would produce negative time.",
+      "rationale": "Saturating to zero prevents negative time values, which have no physical meaning in the library's time model and would cause undefined behavior in unsigned arithmetic.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-005"
+      ],
+      "implements": [
+        "REQ-TIME-008"
+      ]
+    },
+    {
+      "id": "REQ-TIME-008",
+      "title": "SubtractTime Negative Error",
+      "description": "The time module shall return JUNO_STATUS_INVALID_DATA_ERROR when subtraction would produce negative time.",
+      "rationale": "Returning an error status when saturation occurs allows callers to detect and handle the underflow condition rather than silently receiving a clamped result.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-009",
+      "title": "Timestamp to Nanoseconds Conversion",
+      "description": "The time module shall convert a timestamp to nanoseconds using half-up rounding.",
+      "rationale": "Nanosecond conversion enables interfacing with platform APIs and POSIX timespec structures that use nanosecond resolution.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-010",
+      "title": "Timestamp to Microseconds Conversion",
+      "description": "The time module shall convert a timestamp to microseconds using half-up rounding.",
+      "rationale": "Microsecond conversion enables interfacing with platform timers and IO timeout APIs that use microsecond resolution.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-011",
+      "title": "Timestamp to Milliseconds Conversion",
+      "description": "The time module shall convert a timestamp to milliseconds using half-up rounding.",
+      "rationale": "Millisecond conversion enables interfacing with RTOS tick-based APIs and human-readable timing displays.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-012",
+      "title": "Nanoseconds to Timestamp Conversion",
+      "description": "The time module shall convert nanoseconds to a timestamp with integer seconds and fractional subseconds.",
+      "rationale": "Conversion from nanoseconds enables constructing timestamps from platform clock reads and POSIX timespec values.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-013",
+      "title": "Microseconds to Timestamp Conversion",
+      "description": "The time module shall convert microseconds to a timestamp with integer seconds and fractional subseconds.",
+      "rationale": "Conversion from microseconds enables constructing timestamps from timer registers and IO timeout values.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-014",
+      "title": "Milliseconds to Timestamp Conversion",
+      "description": "The time module shall convert milliseconds to a timestamp with integer seconds and fractional subseconds.",
+      "rationale": "Conversion from milliseconds enables constructing timestamps from RTOS tick counts and human-specified delays.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-015",
+      "title": "Timestamp to Double Conversion",
+      "description": "The time module shall convert a timestamp to a double-precision floating-point seconds value.",
+      "rationale": "Double-precision conversion provides a convenient floating-point representation for algorithms that require fractional seconds, such as control loops and telemetry formatting.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-016",
+      "title": "Double to Timestamp Conversion",
+      "description": "The time module shall convert a non-negative double-precision seconds value to a timestamp.",
+      "rationale": "Conversion from double enables constructing timestamps from floating-point time sources and configuration values.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-002"
+      ],
+      "implements": [
+        "REQ-TIME-017"
+      ]
+    },
+    {
+      "id": "REQ-TIME-017",
+      "title": "Double to Timestamp Range Rejection",
+      "description": "The time module shall return JUNO_STATUS_INVALID_DATA_ERROR for negative or out-of-range double inputs.",
+      "rationale": "Rejecting negative and out-of-range double inputs prevents construction of timestamps with undefined or physically meaningless values.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-TIME-016"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-018",
+      "title": "Conversion Overflow Detection",
+      "description": "The time module shall return JUNO_STATUS_INVALID_DATA_ERROR when a timestamp-to-integer conversion would overflow.",
+      "rationale": "Detecting overflow before it occurs prevents silent truncation or wraparound, which would produce incorrect timing values in downstream consumers.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-005"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-TIME-019",
+      "title": "Null Pointer Rejection",
+      "description": "The time module shall return JUNO_STATUS_NULLPTR_ERROR when the time root pointer is NULL.",
+      "rationale": "Rejecting a NULL time root pointer prevents null dereference, ensuring runtime memory safety at the module entry point.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    }
+  ]
+}

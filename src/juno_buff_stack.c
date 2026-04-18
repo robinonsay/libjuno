@@ -24,6 +24,7 @@
 
 /// Enqueue an item into the buffer
 /// @returns The index to place the enqueued item
+// @{"req": ["REQ-STACK-003", "REQ-STACK-004"]}
 JUNO_STATUS_T JunoDs_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tItem)
 {
     JUNO_STATUS_T tStatus = JunoDs_StackVerify(ptStack);
@@ -48,6 +49,7 @@ JUNO_STATUS_T JunoDs_StackPush(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tIt
 
 /// Dequeue an item from the buffer
 /// @returns The index to dequeue the item from
+// @{"req": ["REQ-STACK-005", "REQ-STACK-006"]}
 JUNO_STATUS_T JunoDs_StackPop(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tReturn)
 {
     JUNO_STATUS_T tStatus = JunoDs_StackVerify(ptStack);
@@ -72,6 +74,7 @@ JUNO_STATUS_T JunoDs_StackPop(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_POINTER_T tRet
 
 /// Peek at the next item in the queue
 /// @returns the index of the next item in the queue
+// @{"req": ["REQ-STACK-007", "REQ-STACK-008"]}
 JUNO_RESULT_POINTER_T JunoDs_StackPeek(JUNO_DS_STACK_ROOT_T *ptStack)
 {
     JUNO_RESULT_POINTER_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR, {0});
@@ -95,6 +98,7 @@ static const JUNO_DS_STACK_API_T gtStackApi =
 };
 
 /// Initialize a buffer queue with a capacity
+// @{"req": ["REQ-STACK-001", "REQ-STACK-002"]}
 JUNO_STATUS_T JunoDs_StackInit(JUNO_DS_STACK_ROOT_T *ptStack, JUNO_DS_ARRAY_ROOT_T *ptStackArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptStack);

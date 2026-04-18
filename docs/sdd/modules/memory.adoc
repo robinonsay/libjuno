@@ -1,0 +1,172 @@
+// @{"design": ["REQ-MEMORY-001", "REQ-MEMORY-002", "REQ-MEMORY-003", "REQ-MEMORY-004", "REQ-MEMORY-005", "REQ-MEMORY-006", "REQ-MEMORY-007", "REQ-MEMORY-008", "REQ-MEMORY-009", "REQ-MEMORY-010"]}
+= Memory Module
+
+== Purpose
+
+The Memory module (`memory_api.h`, `memory_block.h`) provides the abstract memory allocation interface and its fixed-size block allocator implementation.
+It enables deterministic, bounded-capacity memory management on caller-supplied backing buffers without dynamic allocation.
+
+== Data Structures
+
+=== Abstract Allocator Root (`JUNO_MEMORY_ALLOC_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_MEMORY_ALLOC_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MEMORY_ALLOC_API_T,
+    const JUNO_POINTER_API_T *ptPointerApi;  // Dependent pointer operations
+);
+----
+
+Follows the module root pattern with an additional dependency on the pointer API.
+
+=== Allocator API (`JUNO_MEMORY_ALLOC_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Get(ptMem, zSize)` | Allocate a region of at least `zSize` bytes. Returns `JUNO_RESULT_POINTER_T`.
+| `Update(ptMem, ptMemory, zNewSize)` | Adjust an existing allocation's descriptor in-place.
+| `Put(ptMem, pvAddr)` | Free a previously allocated region. Clears descriptor on success.
+|===
+
+=== Block Allocator Derivation (`JUNO_MEMORY_ALLOC_BLOCK_T`)
+
+[source,c]
+----
+struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MODULE_DERIVE(JUNO_MEMORY_ALLOC_ROOT_T,
+    uint8_t *pvMemory;                        // Backing memory region
+    JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata; // Per-block free-list metadata
+    size_t zTypeSize;                         // Element size per block
+    size_t zAlignment;                        // Alignment per block
+    size_t zLength;                           // Total blocks in pool
+    size_t zUsed;                             // Blocks currently allocated
+    size_t zFreed;                            // Entries on free stack
+);
+----
+
+=== Block Metadata (`JUNO_MEMORY_BLOCK_METADATA_T`)
+
+Each entry stores the address of a freed block; the free list is a stack in `ptMetadata[0..zFreed)`.
+
+== Interface Design
+
+`JunoMemory_BlockInit(...)`::
+Initializes a block allocator over caller-supplied backing memory and metadata arrays.
+Validates all parameters (nulls, overflow of `zTypeSize * zLength`, base alignment).
+Wires the vtable into the root. Counters `zUsed` and `zFreed` start at 0.
+
+`JunoMemory_BlockGetT(ptBlkRoot, type)`::
+Convenience macro that calls `Get` with `sizeof(type)`.
+
+`JunoMemory_BlockPutT(ptBlkRoot, pPtr)`::
+Convenience macro that calls `Put` on a pointer descriptor.
+
+`JunoMemory_AllocApiVerify(ptAllocApi)`::
+Inline verification that all three API functions (Get, Put, Update) are non-NULL.
+
+`JunoMemory_AllocVerify(ptAlloc)`::
+Inline verification of the allocator root, its API, and its dependent pointer API.
+
+=== Storage Declaration Macros
+
+`JUNO_MEMORY_BLOCK(name, type, length)`::
+Declares a static backing array of `type[length]`.
+
+`JUNO_MEMORY_BLOCK_METADATA(name, length)`::
+Declares a static metadata array of `JUNO_MEMORY_BLOCK_METADATA_T[length]`.
+
+== Algorithm Descriptions
+
+The following diagram illustrates the block allocator's memory layout and internal structure:
+
+.Block Allocator Memory Layout
+[mermaid]
+....
+flowchart TD
+    subgraph BLOCK_ALLOC["JUNO_MEMORY_ALLOC_BLOCK_T"]
+        ROOT["JUNO_MEMORY_ALLOC_ROOT_T\n(ptApi, ptPointerApi)"]
+        PVMEM["pvMemory: uint8_t*\n(Backing Buffer)"]
+        PTMETA["ptMetadata: METADATA_T*\n(Free Stack)"]
+        FIELDS["zTypeSize, zAlignment\nzLength, zUsed, zFreed"]
+    end
+
+    subgraph BACKING["Caller-Owned Backing Buffer"]
+        BLK0["Block 0\n(zTypeSize bytes)"]
+        BLK1["Block 1\n(zTypeSize bytes)"]
+        BLK2["Block 2\n(zTypeSize bytes)"]
+        BLKN["...\nBlock N-1"]
+    end
+
+    subgraph FREESTACK["Free Stack (Metadata Array)"]
+        FS0["[0]: addr of freed block"]
+        FS1["[1]: addr of freed block"]
+        FSE["... (zFreed entries)"]
+    end
+
+    PVMEM --> BACKING
+    PTMETA --> FREESTACK
+
+    style BLK0 fill:#90EE90
+    style BLK1 fill:#FFB6C1
+    style BLK2 fill:#90EE90
+    style BLKN fill:#D3D3D3
+....
+
+Green blocks are allocated; red blocks have been freed and are on the free stack; gray blocks are unallocated.
+
+=== Block Get (Allocation)
+
+. If a freed block exists (`zFreed > 0`): pop from free stack (LIFO), decrement `zFreed`.
+. Otherwise: carve a new block from offset `zUsed * zTypeSize` if `zUsed < zLength`; increment `zUsed`.
+. Reset the block via the pointer API before returning.
+. On Reset failure, roll back and report the error.
+
+*Complexity*: O(1).
+
+=== Block Put (Deallocation)
+
+. Verify the address belongs to the pool and is properly aligned.
+. Reject double-frees.
+. If the block is the most recently allocated (last in sequence): decrement `zUsed` directly.
+. Otherwise: push the address onto the free stack; increment `zFreed`.
+. Clear the caller's descriptor (`pvAddr = NULL`, sizes zeroed).
+
+*Complexity*: O(1).
+
+=== Block Update
+
+. Adjust the descriptor's `zSize` in-place, up to `zTypeSize`.
+. Reject requests exceeding `zTypeSize`. Memory is never moved.
+
+*Complexity*: O(1).
+
+== Error Handling
+
+* `Get`: returns `JUNO_STATUS_MEMALLOC_ERROR` when the pool is full or size exceeds element size. Returns `JUNO_STATUS_INVALID_SIZE_ERROR` for zero-size requests.
+* `Put`: returns `JUNO_STATUS_MEMFREE_ERROR` for unaligned, out-of-range, or double-freed addresses. Restores the descriptor on failure.
+* `Update`: returns `JUNO_STATUS_MEMALLOC_ERROR` if the new size exceeds element capacity.
+* All operations call `Verify` at entry.
+
+== Design Rationale
+
+The abstract `JUNO_MEMORY_ALLOC_API_T` separates the allocation interface from the block allocator implementation, allowing future allocator strategies (slab, buddy) to be injected through the same root type.
+The block allocator provides O(1) deterministic operations suitable for hard real-time systems with fixed-capacity pools.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-MEMORY-001 | `JUNO_MEMORY_ALLOC_API_T` — Get/Put/Update vtable
+| REQ-MEMORY-002 | `JUNO_MEMORY_ALLOC_ROOT_T` — root with pointer API dependency
+| REQ-MEMORY-003 | `JunoMemory_BlockInit` — block allocator initialization
+| REQ-MEMORY-004 | Block Get — O(1) allocation from pool
+| REQ-MEMORY-005 | Block Get — freed block reuse via LIFO free list
+| REQ-MEMORY-006 | Block Put — O(1) deallocation
+| REQ-MEMORY-007 | Block Put — double-free rejection
+| REQ-MEMORY-008 | Block Put — invalid/misaligned address rejection
+| REQ-MEMORY-009 | Block allocator Update operation
+| REQ-MEMORY-010 | Block allocator no memory move guarantee
+|===

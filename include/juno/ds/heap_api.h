@@ -224,6 +224,7 @@ JUNO_STATUS_T JunoDs_Heap_SiftDown(JUNO_DS_HEAP_ROOT_T *ptHeap, size_t iStart);
  * @return JUNO_STATUS_SUCCESS on valid configuration; an error (e.g., NULLPTR,
  *         INVALID_TYPE) otherwise.
  */
+// @{"req": ["REQ-HEAP-007", "REQ-HEAP-008"]}
 static inline JUNO_STATUS_T JunoDs_Heap_Verify(JUNO_DS_HEAP_ROOT_T *ptHeap)
 {
     JUNO_ASSERT_EXISTS(

@@ -30,6 +30,7 @@
 extern "C" {
 #endif
 
+// @{"req": ["REQ-MATH-001"]}
 /**
  * @def JUNO_PI
  * @ingroup juno_math

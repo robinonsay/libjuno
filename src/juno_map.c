@@ -31,6 +31,7 @@ static const JUNO_MAP_API_T gtMapApi =
     JunoDs_MapRemove,
 };
 
+// @{"req": ["REQ-MAP-001", "REQ-MAP-002", "REQ-MAP-003"]}
 JUNO_STATUS_T JunoDs_MapInit(JUNO_MAP_ROOT_T *ptMapRoot, const JUNO_MAP_HASHABLE_POINTER_API_T *ptHashablePointerApi, const JUNO_VALUE_POINTER_API_T *ptValuePointerApi, JUNO_DS_ARRAY_ROOT_T *ptArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvUserData)
 {
     JUNO_ASSERT_EXISTS(ptMapRoot);
@@ -105,6 +106,7 @@ static JUNO_RESULT_POINTER_T JunoDs_MapGetWithKey(JUNO_MAP_ROOT_T *ptJunoMap, JU
     return tResult;
 }
 
+// @{"req": ["REQ-MAP-006", "REQ-MAP-007"]}
 JUNO_RESULT_POINTER_T JunoDs_MapGet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem)
 {
     JUNO_RESULT_POINTER_T tResult = {0};
@@ -130,6 +132,7 @@ JUNO_RESULT_POINTER_T JunoDs_MapGet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T t
     return tResult;
 }
 
+// @{"req": ["REQ-MAP-004", "REQ-MAP-005"]}
 JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem)
 {
     JUNO_STATUS_T tStatus = JunoDs_MapVerify(ptJunoMap);
@@ -150,6 +153,7 @@ JUNO_STATUS_T JunoDs_MapSet(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem)
     return tStatus;
 }
 
+// @{"req": ["REQ-MAP-008"]}
 JUNO_STATUS_T JunoDs_MapRemove(JUNO_MAP_ROOT_T *ptJunoMap, JUNO_POINTER_T tItem)
 {
     JUNO_RESULT_POINTER_T tResult = {0};

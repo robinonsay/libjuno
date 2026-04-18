@@ -1,0 +1,70 @@
+// @{"design": ["REQ-APP-001", "REQ-APP-002", "REQ-APP-003", "REQ-APP-004"]}
+= Application Module
+
+== Purpose
+
+The Application module (`app_api.h`) defines a minimal application lifecycle interface: `OnStart`, `OnProcess`, and `OnExit`.
+It provides the unit of schedulable work for the Scheduler and a common interface for application composition.
+
+== Data Structures
+
+=== Application Root (`JUNO_APP_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_APP_ROOT_TAG JUNO_MODULE_ROOT(JUNO_APP_API_T, JUNO_MODULE_EMPTY);
+----
+
+The application root carries only the standard module fields (ptApi, failure handler, user data).
+Application-specific state is added via derivation.
+
+=== Application API (`JUNO_APP_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `OnStart(ptJunoApp)` | Called once to initialize resources before processing.
+| `OnProcess(ptJunoApp)` | Main processing routine; may be invoked repeatedly by a scheduler.
+| `OnExit(ptJunoApp)` | Called once prior to shutdown to release resources.
+|===
+
+== Interface Design
+
+No `Init` function is defined at the interface level.
+Applications are initialized by:
+
+. Allocating an `JUNO_APP_ROOT_T` (or derivation).
+. Setting `ptApi` to a `static const JUNO_APP_API_T` vtable.
+. Setting failure handler fields as needed.
+
+The Scheduler calls `OnProcess` on each app in each minor frame.
+`OnStart` and `OnExit` are called once at system startup and shutdown respectively.
+
+== Algorithm Descriptions
+
+No algorithms — the Application module defines a lifecycle contract only.
+
+== Error Handling
+
+* All lifecycle functions return `JUNO_STATUS_T` for status propagation.
+* The module root carries a failure handler for diagnostic reporting.
+* The Scheduler propagates errors returned by `OnProcess`.
+
+== Design Rationale
+
+The Application module is the thinnest possible lifecycle abstraction — three hooks covering the universal start/run/stop pattern.
+It does not prescribe initialization strategy, thread ownership, or resource management — these are implementation concerns handled by derivations.
+The module root pattern enables the Scheduler to call `OnProcess` through a uniform `JUNO_APP_ROOT_T *` without knowing the concrete application type.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-APP-001 | `JUNO_APP_ROOT_T` — application root definition
+| REQ-APP-002 | `OnStart` — initialization lifecycle hook
+| REQ-APP-003 | `OnProcess` — main processing lifecycle hook
+| REQ-APP-004 | `OnExit` — shutdown lifecycle hook
+|===

@@ -1,0 +1,825 @@
+= LibJuno Software Design Document
+Robin A. Onsay
+:revnumber: 1.0.1
+:revdate: 2026-04-10
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: rouge
+
+== Introduction
+
+=== Purpose
+
+This Software Design Document (SDD) describes the internal design of LibJuno version 1.0.1, a freestanding C11 embedded systems micro-framework.
+It follows the IEEE 1016 standard structure and is intended for developers, integrators, reviewers, and certification auditors who need to understand the design decisions, data structures, interfaces, and algorithms within the library.
+
+=== Scope
+
+This SDD covers all modules of LibJuno:
+
+* Core infrastructure: Status, Module System, Macros, Common Types
+* Memory subsystem: Pointer, Memory Allocator, Block Allocator
+* Data structures: Array, Heap, Queue, Stack, Map
+* Algorithms: CRC, Hash, Math (vectors, quaternions)
+* System services: Time, IO (Async, I2C, SPI), Log, Mutex
+* Frameworks: State Machine, Software Bus Broker, Application, Scheduler
+
+NOTE: LibJuno also provides C++11 template wrappers for the Queue and Stack data structures (`buff_api.hpp`, `juno_buff.hpp`).
+These wrappers are thin convenience layers over the C API and are not covered in this SDD.
+Refer to the Doxygen API reference for their interface documentation.
+
+=== Definitions, Acronyms, and Abbreviations
+
+[cols="1,3"]
+|===
+| Term | Definition
+
+| DI | Dependency Injection — a design pattern where dependencies are provided to a module rather than created internally.
+| Vtable | Virtual function table — a struct of function pointers providing polymorphic dispatch.
+| Root | The common base struct of a module, containing the API pointer and failure handler fields.
+| Derivation | A concrete implementation struct that embeds the root as its first member.
+| Union | A C union of root and all derivations, sized for the largest variant.
+| Trait | A lightweight interface (via `JUNO_TRAIT_ROOT`) carrying only an API pointer, without failure handler fields.
+| Fat pointer | `JUNO_POINTER_T` — a descriptor carrying address, size, alignment, and an operations API.
+| Result type | A struct combining a `JUNO_STATUS_T` status code with a typed success payload.
+| Option type | A struct combining a boolean presence flag with a typed payload.
+| WCET | Worst-Case Execution Time.
+| MID | Message ID — a topic identifier used by the Software Bus broker.
+| Pipe | A queue-based subscriber channel in the Software Bus, carrying messages for a specific MID.
+| Major Frame | One complete cycle of all minor frames in the Scheduler; the total scheduling period.
+| Minor Frame | A fixed-duration time slot within the Scheduler's major frame during which a set of applications are executed sequentially.
+| Cyclic Executive | A deterministic scheduling strategy where execution order is defined by a static table of application references.
+|===
+
+=== References
+
+[bibliography]
+* [[[IEEE1016]]] IEEE Std 1016-2009, _IEEE Standard for Information Technology — Systems Design — Software Design Descriptions_.
+* [[[IEEE830]]] IEEE Std 830-1998, _IEEE Recommended Practice for Software Requirements Specifications_.
+* [[[SRS]]] LibJuno Software Requirements Specification (generated from `requirements/` directory).
+* [[[RTM]]] LibJuno Requirements Traceability Matrix (generated from code/test annotations).
+* [[[DOXYGEN]]] LibJuno API Reference Documentation (generated via Doxygen).
+
+=== Document Conventions
+
+This document uses the following conventions:
+
+* **Section structure**: Each module's detailed design follows a consistent template: Purpose, Data Structures, Interface Design, Algorithm Descriptions, Error Handling, Design Rationale, Usage Example (where applicable), and Requirements Traceability.
+* **Code listings**: Inline code and types are rendered in monospace. C source excerpts are syntax-highlighted.
+* **Diagrams**: All diagrams use Mermaid syntax. Class diagrams show struct layouts and relationships. Sequence diagrams show runtime interactions. Flowcharts show data flow and control flow.
+* **Traceability tags**: Each module section begins with a comment `// @{"design": ["REQ-...", ...]}` linking the design description to the requirements it addresses.
+* **Naming conventions**: Types use `SCREAMING_SNAKE_CASE_T`; functions use `PascalCase` with module prefix; variables use Hungarian notation (see Coding Standards).
+* **Complexity notation**: Algorithm complexity is stated using big-O notation. All data structure operations document worst-case and average-case where they differ.
+
+=== Revision History
+
+[cols="1,1,2,2"]
+|===
+| Version | Date | Author | Description
+
+| 1.0.1 | 2026-04-10 | Robin A. Onsay | Initial SDD release covering all LibJuno 1.0.1 modules
+|===
+
+// @{"design": ["REQ-SYS-001", "REQ-SYS-002", "REQ-SYS-003", "REQ-SYS-004", "REQ-SYS-005", "REQ-SYS-006", "REQ-SYS-009"]}
+== System Architecture
+
+=== Architectural Overview
+
+LibJuno is a dependency-injection-oriented C11 micro-framework for embedded systems.
+Its architecture is built on four foundational principles:
+
+. **Zero dynamic allocation** — all memory is caller-owned and injected.
+. **Freestanding compatibility** — the library compiles with `-nostdlib -ffreestanding`.
+. **Vtable-based dependency injection** — every module uses function-pointer tables for polymorphic dispatch.
+. **Explicit error propagation** — all fallible functions return status codes; no exceptions, no `errno`, no `longjmp`.
+
+The library provides reusable building blocks (data structures, memory management, CRC, math, time, IO abstractions) and a lightweight application framework (app lifecycle, state machine, software bus, scheduler) that integrators compose into their system.
+
+=== Design Rationale: Why Vtable-Based DI
+
+LibJuno chose vtable-based dependency injection over alternative C polymorphism approaches (switch-based dispatch, `_Generic`, per-instance function pointers) for the following reasons:
+
+**Architectural decoupling.** A root object carrying a `const API_T *ptApi` pointer supports passing modules behind a stable root type.
+Dependencies can be injected explicitly, and concrete implementations can be swapped without central registries or framework-owned dispatch code.
+
+**Why not switch-based dispatch.** A switch-based approach centralizes polymorphism around a type tag, coupling the common interface layer to every concrete implementation.
+Each new backend requires editing the switch logic and shared dispatch functions — the opposite of LibJuno's goal of making components easy to adapt, share, and compose.
+With the vtable pattern, a new implementation defines a new derived type plus a new static API table, without requiring edits to a central dispatcher.
+
+**Vtable indirection vs. switch dispatch.** A vtable call adds one pointer dereference and typically prevents cross-interface inlining.
+A switch-based dispatcher can sometimes be inlined more aggressively.
+LibJuno favors architectural decoupling, substitutability, and test injection over dispatch micro-optimization — consistent with its emphasis on portability, explicit interfaces, and reusable building blocks.
+
+**Shared vtable per type vs. per-instance function pointers.** LibJuno stores `const API_T *ptApi` in the root — one pointer per instance, with the function table shared by all instances of the same implementation.
+This is smaller and more consistent than per-instance function pointers, especially for embedded targets with many instances sharing the same behavior.
+
+**`const` vtable and ROM placement.** The module macros define the root field as `const API_T *ptApi`, and implementations provide `static const` API tables.
+This supports placing vtables in read-only storage/flash on embedded systems, reducing RAM pressure and preventing accidental mutation.
+
+**Why not `_Generic` or macro-driven generics.** `_Generic` is selected at compile time from the static type at the call site; it does not provide runtime substitution through a common root pointer.
+LibJuno's module system is explicitly built around runtime polymorphism and injected dependencies, so `_Generic` would supplement type ergonomics, not replace the architecture.
+
+=== Module System Pattern: Root / Derivation / Union
+
+Every LibJuno module follows a three-part structural pattern:
+
+[source,c]
+----
+// 1. Root — common interface fields
+struct MY_ROOT_TAG JUNO_MODULE_ROOT(MY_API_T,
+    // additional root-level state
+);
+
+// 2. Derivation — embeds root as first member
+struct MY_IMPL_TAG JUNO_MODULE_DERIVE(MY_ROOT_T,
+    // implementation-specific state
+);
+
+// 3. Union — sized for the largest variant
+union MY_MODULE_T JUNO_MODULE(MY_API_T, MY_ROOT_T,
+    MY_IMPL_T tImpl;
+);
+----
+
+The following diagram illustrates the structural relationship between these three parts:
+
+[mermaid]
+....
+classDiagram
+    class ROOT_T {
+        +const API_T *ptApi
+        +JUNO_FAILURE_HANDLER_T _pfcnFailureHandler
+        +JUNO_USER_DATA_T *_pvFailureUserData
+        +... additional root state
+    }
+
+    class DERIVATION_T {
+        +ROOT_T tRoot
+        +... implementation-specific state
+    }
+
+    class MODULE_UNION_T {
+        «union»
+        +ROOT_T tRoot
+        +DERIVATION_A_T tImplA
+        +DERIVATION_B_T tImplB
+    }
+
+    class API_T {
+        «vtable / const»
+        +DoSomething(ROOT_T *ptRoot, ...) JUNO_STATUS_T
+        +GetValue(ROOT_T *ptRoot, ...) RESULT_T
+    }
+
+    class TRAIT_ROOT_T {
+        +const TRAIT_API_T *ptApi
+        +... trait-specific members
+    }
+
+    ROOT_T --> API_T : ptApi points to
+    DERIVATION_T --|> ROOT_T : embeds as first member
+    MODULE_UNION_T o-- ROOT_T : common view
+    MODULE_UNION_T o-- DERIVATION_T : sized for largest
+    TRAIT_ROOT_T --> API_T : ptApi points to
+....
+
+=== Design Rationale: Root/Derivation/Union Layering
+
+**Why the root/derivation split.** API functions accept `ROOT_T *` — the common base type.
+A flat struct per implementation would require every call site to know the concrete type (breaking abstraction) or use `void *` casts (breaking type safety).
+Because `JUNO_MODULE_SUPER` is always the first member, a `DERIVATION_T *` can be safely cast to `ROOT_T *` by the C standard (§6.7.2.1¶15).
+
+**Why the union.** The union serves stack allocation sizing with type erasure.
+LibJuno requires zero dynamic allocation, so the caller must allocate the module instance — but may not know which derivation will be initialized at runtime.
+The union is sized to the largest derivation.
+It also provides C-standard type-punning safety (§6.5.2.3): accessing the root member is always valid because the root is a common initial sequence shared by all members.
+
+**Why first-member embedding over `container_of`.** Three reasons:
+
+. **No `offsetof` dependency** — the cast is `(ROOT_T *)ptDerived`, zero arithmetic, zero macros.
+. **No ownership inversion** — root and derivation are physically contiguous in a single allocation.
+. **Determinism and locality** — same cache line, no pointer indirection.
+
+=== Subsystem Decomposition
+
+LibJuno is organized into the following subsystems:
+
+[cols="1,2,3"]
+|===
+| Subsystem | Directory | Modules
+
+| Core | `include/juno/` | Status, Module, Macros, Types
+| Memory | `include/juno/memory/` | Pointer, Memory Allocator, Block Allocator
+| Data Structures | `include/juno/ds/` | Array, Heap, Queue, Stack, Map
+| Algorithms | `include/juno/crc/`, `hash/`, `math/` | CRC (ARC, BinHex, CCITT, CCITT32, Kermit, ZIP), Hash (DJB2), Math (vectors, quaternions)
+| Time | `include/juno/time/` | Time module
+| IO | `include/juno/io/` | Async IO, I2C IO, SPI IO
+| Logging | `include/juno/log/` | Log module
+| Concurrency | `include/juno/mp/` | Mutex
+| State Machine | `include/juno/sm/` | State Machine
+| Software Bus | `include/juno/sb/` | Broker
+| Application | `include/juno/app/` | Application lifecycle
+| Scheduler | `include/juno/sch/` | Cyclic executive scheduler
+|===
+
+=== Module Dependency Overview
+
+The dependency graph flows from high-level frameworks down to core primitives:
+
+[mermaid]
+....
+flowchart TD
+    subgraph Frameworks
+        SCH[Scheduler]
+        APP[Application]
+        SM[State Machine]
+        SB[Software Bus / Broker]
+    end
+
+    subgraph Data Structures
+        HEAP[Heap]
+        QUEUE[Queue]
+        STACK[Stack]
+        MAP[Map]
+        ARRAY[Array]
+    end
+
+    subgraph Memory
+        PTR[Pointer / Fat Pointer]
+        BLKALLOC[Block Allocator]
+        MEMAPI[Memory Allocator API]
+    end
+
+    subgraph Core
+        MOD[Module System]
+        STATUS[Status]
+        MACROS[Macros]
+        TYPES[Common Types]
+    end
+
+    subgraph Algorithms
+        CRC[CRC]
+        HASH[Hash / DJB2]
+        MATH[Math / Vectors / Quaternions]
+    end
+
+    subgraph System Services
+        TIME[Time]
+        IO[IO / Async / I2C / SPI]
+        LOG[Log]
+        MTX[Mutex]
+    end
+
+    SCH --> APP
+    SCH --> TIME
+    APP --> MOD
+
+    SB --> QUEUE
+
+    SM --> MOD
+
+    HEAP --> ARRAY
+    QUEUE --> ARRAY
+    STACK --> ARRAY
+    MAP --> ARRAY
+    MAP --> HASH
+    MAP -.-> PTR
+
+    ARRAY --> PTR
+
+    BLKALLOC --> MEMAPI
+    MEMAPI --> PTR
+
+    PTR --> STATUS
+
+    MOD --> STATUS
+    MOD --> MACROS
+
+    IO --> MOD
+    LOG --> MOD
+    MTX --> MOD
+
+    TYPES --> MOD
+....
+
+Arrows indicate "depends on" relationships.
+Dashed arrows indicate optional or trait-level dependencies.
+Algorithm modules (CRC, Math, Hash) are freestanding with no module dependencies.
+
+=== Data Structure Composition Chain
+
+The data structure subsystem is layered: higher-level containers compose lower-level ones, with the Pointer trait providing type-safe element operations at every layer.
+
+[mermaid]
+....
+flowchart TD
+    subgraph ElementAccess["Element Layer"]
+        PTR_API["JUNO_POINTER_API_T\n(Copy / Reset)"]
+        VAL_API["JUNO_VALUE_POINTER_API_T\n(Equals)"]
+        HEAP_PTR["JUNO_DS_HEAP_POINTER_API_T\n(Compare / Swap)"]
+    end
+
+    subgraph Storage["Storage Layer"]
+        ARRAY["Array\n(SetAt / GetAt / RemoveAt)\nFixed-capacity contiguous storage"]
+    end
+
+    subgraph Containers["Container Layer"]
+        HEAP["Heap\n(Insert / Pop / Heapify)\nBinary heap with O(log n) ops"]
+        QUEUE["Queue\n(Enqueue / Dequeue / Peek)\nCircular buffer FIFO"]
+        STACK["Stack\n(Push / Pop / Peek)\nLIFO with index counter"]
+        MAP["Map\n(Set / Get / Remove)\nOpen-addressed linear probing"]
+    end
+
+    subgraph Frameworks["Framework Layer"]
+        PIPE["SB Pipe\n(Queue derivation + MID)"]
+        BROKER["SB Broker\n(Publish / RegisterSubscriber)\nFan-out to matching pipes"]
+    end
+
+    HEAP --> ARRAY
+    QUEUE --> ARRAY
+    STACK --> ARRAY
+    MAP --> ARRAY
+
+    HEAP --> HEAP_PTR
+    MAP --> VAL_API
+
+    ARRAY --> PTR_API
+
+    PIPE --> QUEUE
+    BROKER --> PIPE
+....
+
+Each container delegates element storage to the Array.
+The Array delegates element copying and resetting to the Pointer API.
+The Broker's pipes are queue derivations, inheriting all queue operations and adding topic-based routing.
+This layering means adding a new container type requires only composing the Array — no storage logic duplication.
+
+== Detailed Design
+
+Each subsection below describes one module's detailed design.
+Subsections are maintained as separate AsciiDoc files for modularity.
+
+include::modules/status.adoc[leveloffset=+1]
+
+include::modules/module_system.adoc[leveloffset=+1]
+
+include::modules/macros.adoc[leveloffset=+1]
+
+include::modules/types.adoc[leveloffset=+1]
+
+include::modules/pointer.adoc[leveloffset=+1]
+
+include::modules/memory.adoc[leveloffset=+1]
+
+include::modules/array.adoc[leveloffset=+1]
+
+include::modules/heap.adoc[leveloffset=+1]
+
+include::modules/queue.adoc[leveloffset=+1]
+
+include::modules/stack.adoc[leveloffset=+1]
+
+include::modules/map.adoc[leveloffset=+1]
+
+include::modules/crc.adoc[leveloffset=+1]
+
+include::modules/hash.adoc[leveloffset=+1]
+
+include::modules/math.adoc[leveloffset=+1]
+
+include::modules/time.adoc[leveloffset=+1]
+
+include::modules/io.adoc[leveloffset=+1]
+
+include::modules/log.adoc[leveloffset=+1]
+
+include::modules/mutex.adoc[leveloffset=+1]
+
+include::modules/state_machine.adoc[leveloffset=+1]
+
+include::modules/software_bus.adoc[leveloffset=+1]
+
+include::modules/application.adoc[leveloffset=+1]
+
+include::modules/scheduler.adoc[leveloffset=+1]
+
+== Data Design
+
+=== Common Types
+
+LibJuno defines a small set of common value types used across all modules:
+
+**`JUNO_STATUS_T`** (`int32_t`) — the unified error code type.
+Zero indicates success; non-zero values indicate specific failure conditions.
+
+**Result types** (`JUNO_MODULE_RESULT(NAME_T, OK_T)`) — structs combining `{JUNO_STATUS_T tStatus; OK_T tOk;}`.
+Pre-defined specializations: `JUNO_RESULT_BOOL_T`, `JUNO_RESULT_UINT32_T`, `JUNO_RESULT_F64_T`, `JUNO_RESULT_SIZE_T`, `JUNO_RESULT_VOID_PTR_T`.
+
+**Option types** (`JUNO_MODULE_OPTION(NAME_T, SOME_T)`) — structs combining `{bool bIsSome; SOME_T tSome;}`.
+Used for operations where absence is a legitimate state (peek on empty collection, optional next-state in SM).
+
+**`JUNO_POINTER_T`** — the fat pointer descriptor `{ptApi, pvAddr, zSize, zAlignment}`.
+Carries self-describing type information and operations for type-safe memory access.
+
+=== Memory Ownership Model
+
+All memory in LibJuno is **caller-owned and injected**:
+
+. The caller allocates storage (stack, static, or platform-specific memory pool).
+. The caller passes storage to an `Init` function along with all dependencies.
+. The module operates exclusively on the injected storage.
+. The caller is responsible for the lifetime of all injected memory.
+
+No module in LibJuno calls `malloc`, `calloc`, `realloc`, or `free`.
+Memory pools (block allocator) operate on caller-provided backing buffers.
+
+.Memory Ownership Flow
+[mermaid]
+....
+flowchart LR
+    subgraph Caller["Caller / Integrator"]
+        ALLOC["Allocate Storage\n(stack, static, or pool)"]
+        DEPS["Allocate Dependencies\n(arrays, APIs, etc.)"]
+    end
+
+    subgraph Init["Module_Init()"]
+        WIRE["Wire vtable pointer"]
+        STORE["Store dependency pointers"]
+        VERIFY["Verify configuration"]
+    end
+
+    subgraph Runtime["Module Operations"]
+        OP["Read/write only\ninjected storage"]
+    end
+
+    subgraph CallerEnd["Caller Responsibility"]
+        LIFETIME["Manage lifetime\nof all storage"]
+    end
+
+    ALLOC --> Init
+    DEPS --> Init
+    WIRE --> STORE --> VERIFY
+    Init --> Runtime
+    Runtime --> CallerEnd
+....
+
+=== Design Rationale: Result/Option Types and Error Handling
+
+**Why Rust-style Result/Option in C11.** `errno` is a hosted-only thread-local global unavailable in freestanding builds and violates the "no global mutable state" constraint.
+Out-parameters separate the value from its validity — nothing prevents ignoring the status and using a garbage out-parameter.
+Result structs bind the value and status in a single aggregate with `JUNO_ASSERT_OK` enforcing check-before-use.
+
+**Why failure handlers are diagnostic-only.** Three reasons:
+
+. **Predictable WCET** — if handlers could `longjmp` or abort, the control flow of every library function becomes unanalyzable.
+. **No stack unwinding** — `longjmp`/`setjmp` is hosted-only; exceptions require RTTI. The only portable freestanding flow control is "check status, return status."
+. **Separation of policy from mechanism** — the library decides what constitutes an error; the application decides what to do about it (log, blink LED, set fault flag).
+
+**Why the ASSERT macro family.** Each macro maps to a specific domain of validation:
+
+* `JUNO_ASSERT_EXISTS(ptr)` → always returns `JUNO_STATUS_NULLPTR_ERROR` — correct specific status.
+* `JUNO_ASSERT_SUCCESS(s, ...)` → variadic action statements for ergonomic propagation.
+* `JUNO_ASSERT_OK(result, ...)` → unwraps Result types.
+* `JUNO_ASSERT_SOME(opt, ...)` → unwraps Option types.
+
+Each macro name is self-documenting: it reads as a named proof obligation.
+
+== Interface Design
+
+=== Module Initialization Contracts
+
+Every module follows the same initialization pattern:
+
+. Caller allocates all storage.
+. Caller calls `Module_Init(...)` passing the instance, all dependencies, and an optional failure handler.
+. `Init` wires the vtable, stores dependencies, and calls `Verify`.
+. `Verify` validates all pointers and dependencies are non-NULL.
+. All subsequent public functions call `Verify` at entry.
+
+[source,c]
+----
+JUNO_STATUS_T JunoDs_Heap_Init(
+    JUNO_DS_HEAP_ROOT_T *ptHeap,
+    const JUNO_DS_HEAP_POINTER_API_T *ptHeapPointerApi,
+    JUNO_DS_ARRAY_ROOT_T *ptHeapArray,
+    JUNO_FAILURE_HANDLER_T pfcnFailureHdlr,
+    JUNO_USER_DATA_T *pvUserData
+);
+----
+
+=== Vtable Dispatch Pattern
+
+API dispatch follows this pattern:
+
+[source,c]
+----
+// Caller invokes via vtable:
+ptModule->ptApi->DoSomething(&ptModule->tRoot, args...);
+
+// Or through the root directly:
+JUNO_MODULE_GET_API(ptModule, ROOT_T)->DoSomething((ROOT_T *)ptModule, args...);
+----
+
+The vtable is `const` and typically `static` — enabling ROM placement.
+Dispatch requires one pointer dereference through `ptApi`, then a function pointer call.
+
+.Vtable Dispatch Sequence
+[mermaid]
+....
+sequenceDiagram
+    participant Caller
+    participant Module as Module Instance (Union/Root)
+    participant Vtable as const API_T (Vtable)
+    participant Impl as Implementation Function
+
+    Caller->>Module: Access ptApi field
+    Module->>Vtable: Dereference ptApi pointer
+    Caller->>Vtable: Select function pointer (e.g., DoSomething)
+    Vtable->>Impl: Call via function pointer, passing ROOT_T*
+    Impl->>Impl: Cast ROOT_T* to DERIVATION_T* (first-member guarantee)
+    Impl->>Impl: Execute implementation logic
+    Impl-->>Caller: Return JUNO_STATUS_T
+....
+
+.Module Initialization Sequence
+[mermaid]
+....
+sequenceDiagram
+    participant Caller
+    participant Init as Module_Init()
+    participant Verify as Module_Verify()
+    participant DepVerify as Dependency Verify
+
+    Caller->>Caller: Allocate storage (stack/static)
+    Caller->>Caller: Allocate dependencies (arrays, APIs, etc.)
+    Caller->>Init: Pass instance + all dependencies + failure handler
+    Init->>Init: Wire ptApi to static const vtable
+    Init->>Init: Store dependency pointers in root/derivation
+    Init->>Verify: Validate configuration
+    Verify->>Verify: Check ptApi non-NULL
+    Verify->>Verify: Check all dependency pointers non-NULL
+    Verify->>DepVerify: Validate each injected dependency
+    DepVerify-->>Verify: JUNO_STATUS_T
+    Verify-->>Init: JUNO_STATUS_T
+    Init-->>Caller: JUNO_STATUS_T
+....
+
+=== Trait System (JUNO_TRAIT_ROOT)
+
+Traits are lightweight interfaces without failure handler fields:
+
+[source,c]
+----
+struct JUNO_POINTER_TAG JUNO_TRAIT_ROOT(JUNO_POINTER_API_T,
+    void *pvAddr;
+    size_t zSize;
+    size_t zAlignment;
+);
+----
+
+.Fat Pointer Trait Structure
+[mermaid]
+....
+classDiagram
+    class JUNO_POINTER_T {
+        «trait root»
+        +const JUNO_POINTER_API_T *ptApi
+        +void *pvAddr
+        +size_t zSize
+        +size_t zAlignment
+    }
+
+    class JUNO_POINTER_API_T {
+        «vtable / const»
+        +Copy(tDest, tSrc) JUNO_STATUS_T
+        +Reset(tPointer) JUNO_STATUS_T
+    }
+
+    class JUNO_VALUE_POINTER_API_T {
+        «vtable / const»
+        +Equals(tLeft, tRight) JUNO_RESULT_BOOL_T
+    }
+
+    class DataStructure {
+        «Heap / Queue / Stack / Map»
+        Operates on JUNO_POINTER_T
+        without knowing element type
+    }
+
+    JUNO_POINTER_T --> JUNO_POINTER_API_T : ptApi
+    DataStructure ..> JUNO_POINTER_T : receives elements as
+    DataStructure ..> JUNO_POINTER_API_T : delegates Copy/Reset to
+....
+
+=== Design Rationale: Pointer Trait System
+
+**Why a fat pointer with a vtable.** `JUNO_POINTER_T` binds `{pvAddr, zSize, zAlignment, ptApi}` into a self-describing, self-validating value type.
+In freestanding environments, `memcpy` is not guaranteed to exist; by putting `Copy` behind a vtable in the pointer, the element knows how to copy itself — data structures never need `memcpy`.
+
+**Why Copy/Reset on the pointer, not per-data-structure.** One Copy/Reset implementation per element type, reused by every data structure (heap, queue, stack, map).
+Data structures remain type-agnostic; adding a new element type requires only a new `JUNO_POINTER_API_T` implementation.
+
+**Why `JUNO_TRAIT_ROOT` (no failure handler).** The pointer is a pass-by-value ephemeral descriptor, not a stateful module instance.
+Adding failure handler fields (+16 bytes on 64-bit) would bloat every data structure call's stack frame.
+Failure reporting belongs to the owning module.
+
+=== Software Bus Integration Pattern
+
+The broker provides single-threaded publish/subscribe message fan-out:
+
+[source,c]
+----
+// Publisher:
+ptBrokerApi->Publish(ptBroker, ENGINE_CMD_MID, tMsgPointer);
+
+// Subscriber (in its own OnProcess):
+ptQueueApi->Dequeue(&ptCmdPipe->tRoot, tReturnPointer);
+----
+
+=== Design Rationale: Single-Threaded Broker
+
+**Why single-threaded scope.** IPC mechanisms are platform-specific and non-abstractable without losing the properties that make them useful (blocking semantics, copy vs. zero-copy, priority inheritance, WCET guarantees).
+The broker solves intra-thread fan-out portably; inter-thread transport belongs to the integrator.
+
+**Why pipes (queues) over callbacks.** Three reasons:
+
+. **Temporal decoupling** — Publish does O(1) enqueue; subscriber processes on its own schedule.
+. **Bounded backpressure** — each pipe has fixed capacity; overflow returns an error status.
+. **Subscriber control** — subscribers inspect, batch, and prioritize message consumption.
+
+**Multi-threaded integration pattern.** One broker per thread, bridged by a user-written bridge app that forwards messages between brokers via platform IPC.
+
+=== Scheduler Integration Pattern
+
+The scheduler is a table-driven cyclic executive:
+
+[source,c]
+----
+JUNO_SCH_TABLE_NEW(ptTable, 2, 3,
+    &tAppA.tRoot, &tAppB.tRoot,   // Minor frame 0
+    &tAppA.tRoot, NULL,            // Minor frame 1
+    &tAppC.tRoot, &tAppB.tRoot,   // Minor frame 2
+);
+----
+
+=== Design Rationale: Cyclic Executive
+
+**Why static cyclic executive.** Deterministic timing by construction — execution order and boundaries are fixed at compile time.
+No OS dependency (works on bare metal with a single timer).
+Certifiable by inspection (DO-178C, MISRA, IEC 61508).
+Complements RTOS preemption rather than replacing it.
+
+**Why flattened 2D array.** Zero allocation (single caller-owned buffer), cache-friendly sequential access, O(1) index arithmetic, NULL slots for variable-length frames.
+
+**Why injected Time module.** Clock hardware (`Now`) and blocking primitives (`Sleep`, `SleepTo`) are platform-specific.
+Time math (add, subtract, conversions) is universal and provided by LibJuno.
+The split follows DI: inject what varies, provide what's universal.
+
+== Requirements Allocation and Provenance
+
+=== Requirements Allocation Strategy
+
+LibJuno allocates requirements across design artifacts using the following rule:
+
+* System-level requirements (`REQ-SYS-*`) are allocated to `docs/sdd/sdd.adoc`.
+* Module-level requirements (`REQ-<MODULE>-*`) are allocated to `docs/sdd/modules/*.adoc`.
+* Generated SRS and RTM artifacts are derived from `requirements/*/requirements.json` and traceability annotations in code, tests, and design files.
+
+This allocation model preserves deterministic traceability from requirement IDs to design sections and avoids duplicate ownership of requirement statements.
+
+=== Documentation Generation Provenance
+
+The SRS and RTM are generated artifacts located under `docs/generated/`.
+For release-quality outputs, regenerate documentation from current source annotations and requirements before publication.
+
+[source,bash]
+----
+python3 scripts/generate_docs.py
+----
+
+Generated artifacts are treated as build outputs; the design source of record remains `docs/sdd/` and the requirement source of record remains `requirements/*/requirements.json`.
+
+== Audit Snapshot: Source, Tests, and Examples
+
+=== Audit Scope and Method
+
+This snapshot audits design accuracy against the current repository state by cross-checking:
+
+* Source implementation files under `src/` and `include/juno/`
+* Requirement-verification tests under `tests/`
+* Learning and integration examples under `examples/`
+
+Audit date: `2026-04-10`.
+
+=== Source ↔ Design Consistency Checks
+
+[cols="1,2,2"]
+|===
+| Area | Evidence Checked | Result
+
+| Memory error semantics
+| `src/juno_memory_block.c` (`Juno_MemoryBlkGet`) vs `docs/sdd/modules/memory.adoc`
+| Corrected: zero-size allocation status is `JUNO_STATUS_INVALID_SIZE_ERROR`.
+
+| Scheduler behavioral model
+| `docs/sdd/modules/scheduler.adoc` algorithm/sequence and `tests/test_sch.c` execution expectations
+| Consistent: major-frame execution and period queries align with test double behavior.
+
+| State machine transition model
+| `docs/sdd/modules/state_machine.adoc` transition/step flow and `tests/test_sm.c`
+| Consistent: explicit transition via option semantics (`SOME/NONE`) matches verification tags.
+
+| Queue operational behavior
+| `docs/sdd/modules/queue.adoc` and `tests/test_queue.c`
+| Consistent: FIFO operations, empty/full behaviors, and verify-path assertions are covered by tests.
+|===
+
+=== Example ↔ Module Coverage
+
+[cols="1,2,2"]
+|===
+| Example Artifact | Primary APIs Exercised | Covered Design Modules
+
+| `examples/minimal_memory_example.c`
+| `JunoMemory_BlockInit`, allocator `Get`/`Put`, pointer verification path
+| `memory.adoc`, `pointer.adoc`
+
+| `examples/minimal_queue_example.c`
+| `JunoDs_ArrayInit`, `JunoDs_QueueInit`, queue `Enqueue`/`Dequeue`
+| `array.adoc`, `queue.adoc`, `pointer.adoc`
+
+| `examples/example_state_machine.c`
+| `JunoSm_Init`, `JunoSm_StateInit`, `JunoSm_GetCurrentState`, `JunoSm_TransitionState`
+| `state_machine.adoc`, `module_system.adoc`
+|===
+
+=== Test Traceability Spot Check
+
+The following tagged tests were explicitly reviewed in this audit pass:
+
+* `tests/test_memory.c` — verifies `REQ-MEMORY-*`
+* `tests/test_queue.c` — verifies `REQ-QUEUE-*`
+* `tests/test_sm.c` — verifies `REQ-SM-*`
+* `tests/test_sch.c` — verifies `REQ-SCH-004..006`
+
+This spot check confirms that requirement-linked verification artifacts exist and align with the behavioral descriptions in the SDD module sections.
+
+=== Full Module Status-Code Audit (Iteration 3)
+
+A full pass was performed across `docs/sdd/modules/*.adoc` comparing documented status-code behavior to implementation evidence in:
+
+* `src/*.c` runtime modules (array-dependent containers, memory, broker, time, crc/hash)
+* Inline/`static` API logic in public headers under `include/juno/`
+* Requirement-tagged unit tests in `tests/*.c`
+
+Result summary:
+
+* Confirmed and corrected mismatch: `docs/sdd/modules/software_bus.adoc` previously documented broker registry-full as `JUNO_STATUS_TABLE_FULL_ERROR`; implementation in `src/juno_broker.c` returns `JUNO_STATUS_ERR`.
+* Previously corrected mismatch retained: `docs/sdd/modules/memory.adoc` zero-size `Get` uses `JUNO_STATUS_INVALID_SIZE_ERROR` per `src/juno_memory_block.c`.
+* Remaining status-code wording reviewed in this pass was consistent with available source/test evidence.
+
+[appendix]
+== Public Header Reference
+
+The following table lists all public C headers shipped with LibJuno and their purpose.
+C++11 wrapper headers (`.hpp`) are included for completeness but are not covered in the detailed design sections of this SDD.
+
+[cols="2,1,3"]
+|===
+| Header | Subsystem | Description
+
+| `juno/status.h` | Core | Status codes, failure handler type, `JUNO_FAIL*` macros
+| `juno/module.h` | Core | Module root/derivation/union macros, Result/Option types
+| `juno/macros.h` | Core | `JUNO_ASSERT_EXISTS`, `JUNO_ASSERT_SUCCESS` assertion macros
+| `juno/types.h` | Core | Pre-defined Result specializations (`JUNO_RESULT_BOOL_T`, etc.)
+| `juno/memory/pointer_api.h` | Memory | Fat pointer trait, `JUNO_POINTER_T`, Copy/Reset API
+| `juno/memory/memory_api.h` | Memory | Abstract allocator interface (`Get`/`Put`/`Update`)
+| `juno/memory/memory_block.h` | Memory | Block allocator derivation with fixed-size pools
+| `juno/ds/array_api.h` | Data Structures | Fixed-capacity array (`SetAt`/`GetAt`/`RemoveAt`)
+| `juno/ds/heap_api.h` | Data Structures | Binary heap with injected Compare/Swap
+| `juno/ds/queue_api.h` | Data Structures | Circular-buffer FIFO queue
+| `juno/ds/stack_api.h` | Data Structures | LIFO stack
+| `juno/ds/map_api.h` | Data Structures | Open-addressed hash map with linear probing
+| `juno/crc/crc.h` | Algorithms | CRC-16/32 streaming update functions (ARC, BinHex, CCITT, CCITT32, Kermit, ZIP)
+| `juno/hash/hash_djb2.h` | Algorithms | djb2 hash function
+| `juno/math/juno_math.h` | Algorithms | Generic math macros (Abs, Max, Min, Clamp)
+| `juno/math/juno_vec.h` | Algorithms | Vector operations (Add, Sub, Scale, Dot, Cross, Norm, Normalize)
+| `juno/math/juno_vec_types.h` | Algorithms | Vector and quaternion type definitions
+| `juno/math/juno_math_types.h` | Algorithms | Scalar type aliases (F32, F64)
+| `juno/time/time_api.h` | System Services | Time interface, timestamp type, math and conversion functions
+| `juno/io/async_io_api.h` | System Services | Asynchronous byte-stream IO interface
+| `juno/io/i2c_io_api.h` | System Services | I2C bus transfer interface
+| `juno/io/spi_io_api.h` | System Services | SPI transaction interface
+| `juno/log/log_api.h` | System Services | Logging facade (Debug/Info/Warning/Error)
+| `juno/mp/mtx_api.h` | System Services | Mutex interface (TryLock/Lock/Free)
+| `juno/sm/sm_api.h` | Frameworks | State machine with explicit state transitions
+| `juno/sb/broker_api.h` | Frameworks | Software Bus broker (Publish/RegisterSubscriber)
+| `juno/app/app_api.h` | Frameworks | Application lifecycle (OnStart/OnProcess/OnExit)
+| `juno/sch/juno_sch_api.h` | Frameworks | Cyclic executive scheduler
+| `juno/module.hpp` | C++ Wrappers | C++11 module system helpers
+| `juno/types.hpp` | C++ Wrappers | C++11 type wrappers
+| `juno/ds/buff_api.hpp` | C++ Wrappers | C++11 queue buffer template
+| `juno/ds/juno_buff.hpp` | C++ Wrappers | C++11 buffer implementation
+|===

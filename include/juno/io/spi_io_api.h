@@ -43,6 +43,7 @@ extern "C"
 typedef struct JUNO_SPI_IO_API_TAG JUNO_SPI_IO_API_T;
 typedef struct JUNO_SPI_IO_ROOT_TAG JUNO_SPI_IO_ROOT_T;
 
+// @{"req": ["REQ-IO-013"]}
 struct JUNO_SPI_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_SPI_IO_API_T, JUNO_MODULE_EMPTY);
 
 
@@ -54,6 +55,7 @@ struct JUNO_SPI_IO_API_TAG
     /// @param zReadBuffSize Number of bytes to read.
     /// @param pvWriteBuff Source buffer to transmit (optional if zWriteBuffSize==0).
     /// @param zWriteBuffSize Number of bytes to write.
+    // @{"req": ["REQ-IO-014"]}
     JUNO_STATUS_T (*Transaction)(JUNO_SPI_IO_ROOT_T *ptIo, char *pcReadBuff, size_t zReadBuffSize, const void *pvWriteBuff, size_t zWriteBuffSize);
 };
 

@@ -206,6 +206,7 @@ static TEST_QUEUE_DATA_T CreateTestData(uint32_t iValue, bool bFlag, uint8_t iCo
  * Test Cases: Initialization
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-001", "REQ-QUEUE-002"]}
 static void test_queue_init_nominal(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -216,6 +217,7 @@ static void test_queue_init_nominal(void)
     TEST_ASSERT_NOT_NULL(gtTestQueue.ptApi);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_init_null_queue(void)
 {
     gtTestQueueArray.ptBuffer = gtTestQueueBuffer;
@@ -225,12 +227,14 @@ static void test_queue_init_null_queue(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_init_null_array(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_QueueInit(&gtTestQueue, NULL, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_init_zero_capacity(void)
 {
     gtTestQueueArray.ptBuffer = gtTestQueueBuffer;
@@ -242,6 +246,7 @@ static void test_queue_init_zero_capacity(void)
  * Test Cases: Enqueue (Push) Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-003"]}
 static void test_queue_push_single_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -258,6 +263,7 @@ static void test_queue_push_single_item(void)
     TEST_ASSERT_EQUAL(1, gtTestQueueBuffer[0].iCounter);
 }
 
+// @{"verify": ["REQ-QUEUE-003"]}
 static void test_queue_push_multiple_items(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -281,6 +287,7 @@ static void test_queue_push_multiple_items(void)
     }
 }
 
+// @{"verify": ["REQ-QUEUE-003"]}
 static void test_queue_push_to_full_capacity(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -298,6 +305,7 @@ static void test_queue_push_to_full_capacity(void)
     TEST_ASSERT_EQUAL(TEST_QUEUE_CAPACITY, gtTestQueue.zLength);
 }
 
+// @{"verify": ["REQ-QUEUE-004"]}
 static void test_queue_push_overflow(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -320,6 +328,7 @@ static void test_queue_push_overflow(void)
     TEST_ASSERT_EQUAL(TEST_QUEUE_CAPACITY, gtTestQueue.zLength);
 }
 
+// @{"verify": ["REQ-QUEUE-003"]}
 static void test_queue_push_null_queue(void)
 {
     TEST_QUEUE_DATA_T tData = CreateTestData(42, true, 1);
@@ -329,6 +338,7 @@ static void test_queue_push_null_queue(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-003"]}
 static void test_queue_push_invalid_pointer(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -343,6 +353,7 @@ static void test_queue_push_invalid_pointer(void)
  * Test Cases: Dequeue (Pop) Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-005"]}
 static void test_queue_pop_single_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -365,6 +376,7 @@ static void test_queue_pop_single_item(void)
     TEST_ASSERT_EQUAL(5, tPopData.iCounter);
 }
 
+// @{"verify": ["REQ-QUEUE-005"]}
 static void test_queue_pop_multiple_items_fifo_order(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -394,6 +406,7 @@ static void test_queue_pop_multiple_items_fifo_order(void)
     TEST_ASSERT_EQUAL(0, gtTestQueue.zLength);
 }
 
+// @{"verify": ["REQ-QUEUE-006"]}
 static void test_queue_pop_empty_queue(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -405,6 +418,7 @@ static void test_queue_pop_empty_queue(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-005"]}
 static void test_queue_pop_null_queue(void)
 {
     TEST_QUEUE_DATA_T tPopData = {0};
@@ -413,6 +427,7 @@ static void test_queue_pop_null_queue(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-005"]}
 static void test_queue_pop_invalid_pointer(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -434,6 +449,7 @@ static void test_queue_pop_invalid_pointer(void)
  * Test Cases: Peek Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-007"]}
 static void test_queue_peek_single_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -459,6 +475,7 @@ static void test_queue_peek_single_item(void)
     TEST_ASSERT_EQUAL(1, gtTestQueue.zLength);
 }
 
+// @{"verify": ["REQ-QUEUE-007"]}
 static void test_queue_peek_multiple_times(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -485,6 +502,7 @@ static void test_queue_peek_multiple_times(void)
     TEST_ASSERT_EQUAL(3, gtTestQueue.zLength);
 }
 
+// @{"verify": ["REQ-QUEUE-008"]}
 static void test_queue_peek_empty_queue(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -494,12 +512,14 @@ static void test_queue_peek_empty_queue(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-007"]}
 static void test_queue_peek_null_queue(void)
 {
     JUNO_RESULT_POINTER_T tResult = JunoDs_QueuePeek(NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-007"]}
 static void test_queue_peek_after_pop(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -531,6 +551,7 @@ static void test_queue_peek_after_pop(void)
  * Test Cases: Circular Buffer Wraparound
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-003", "REQ-QUEUE-005"]}
 static void test_queue_circular_wraparound(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, 5);
@@ -581,6 +602,7 @@ static void test_queue_circular_wraparound(void)
     }
 }
 
+// @{"verify": ["REQ-QUEUE-003", "REQ-QUEUE-005"]}
 static void test_queue_wraparound_at_boundary(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, 4);
@@ -617,6 +639,7 @@ static void test_queue_wraparound_at_boundary(void)
  * Test Cases: Stress Testing
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-003", "REQ-QUEUE-005"]}
 static void test_queue_stress_push_pop_cycles(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -647,6 +670,7 @@ static void test_queue_stress_push_pop_cycles(void)
     }
 }
 
+// @{"verify": ["REQ-QUEUE-003", "REQ-QUEUE-005"]}
 static void test_queue_interleaved_operations(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, 5);
@@ -702,6 +726,7 @@ static void test_queue_interleaved_operations(void)
  * Test Cases: API Verification
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_verify_valid_queue(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -711,12 +736,14 @@ static void test_queue_verify_valid_queue(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_verify_null_queue(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_QueueVerify(NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_verify_invalid_api(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -729,6 +756,7 @@ static void test_queue_verify_invalid_api(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_api_verify_valid(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -738,12 +766,14 @@ static void test_queue_api_verify_valid(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_api_verify_null(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_QueueApiVerify(NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-001"]}
 static void test_queue_api_verify_missing_functions(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -770,6 +800,7 @@ static void test_queue_api_verify_missing_functions(void)
  * Test Cases: Edge Cases
  * ============================================================================ */
 
+// @{"verify": ["REQ-QUEUE-003", "REQ-QUEUE-005"]}
 static void test_queue_single_element_capacity(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, 1);
@@ -797,6 +828,7 @@ static void test_queue_single_element_capacity(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
+// @{"verify": ["REQ-QUEUE-003"]}
 static void test_queue_boundary_index_calculation(void)
 {
     /* Test with capacity that will test modulo arithmetic */
@@ -825,6 +857,7 @@ static void test_queue_boundary_index_calculation(void)
     }
 }
 
+// @{"verify": ["REQ-QUEUE-003", "REQ-QUEUE-005"]}
 static void test_queue_data_integrity_after_operations(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -856,6 +889,7 @@ static void test_queue_data_integrity_after_operations(void)
  * Test Cases: Array API Error Paths
  * ============================================================================ */
 
+// @{"verify": ["REQ-ARRAY-006"]}
 static void test_queue_array_api_set_at_invalid_api(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, TEST_QUEUE_CAPACITY);
@@ -876,6 +910,7 @@ static void test_queue_array_api_set_at_invalid_api(void)
     gtTestQueue.ptQueueArray->ptApi = ptOriginalApi;
 }
 
+// @{"verify": ["REQ-ARRAY-005"]}
 static void test_queue_array_api_get_at_out_of_bounds(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, 5);
@@ -885,6 +920,7 @@ static void test_queue_array_api_get_at_out_of_bounds(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-ARRAY-005"]}
 static void test_queue_array_api_remove_at_out_of_bounds(void)
 {
     JUNO_STATUS_T tStatus = InitTestQueue(&gtTestQueue, 5);

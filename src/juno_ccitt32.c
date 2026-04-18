@@ -17,6 +17,7 @@
 #include "juno/crc/crc.h"
 #include "crc/ccitt32.h"
 
+// @{"req": ["REQ-CRC-001", "REQ-CRC-002", "REQ-CRC-003", "REQ-CRC-008"]}
 uint32_t Juno_CrcCcitt32Update(uint32_t iCrc, const void *pcData, size_t zDataSize)
 {
     if(!(pcData && zDataSize))

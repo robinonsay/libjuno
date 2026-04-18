@@ -208,6 +208,7 @@ static TEST_STACK_DATA_T CreateTestData(uint32_t iValue, bool bFlag, uint8_t iCo
  * Test Cases: Initialization
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-001", "REQ-STACK-002"]}
 static void test_stack_init_nominal(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -217,12 +218,14 @@ static void test_stack_init_nominal(void)
     TEST_ASSERT_NOT_NULL(gtTestStack.tRoot.ptApi);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_init_null_stack(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_StackInit(NULL, &gtTestStack.tArray.tRoot, NULL, NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_init_null_api(void)
 {
     gtTestStack.tArray.ptBuffer = gtTestStackBuffer;
@@ -230,6 +233,7 @@ static void test_stack_init_null_api(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_init_zero_capacity(void)
 {
     gtTestStack.tArray.ptBuffer = gtTestStackBuffer;
@@ -241,6 +245,7 @@ static void test_stack_init_zero_capacity(void)
  * Test Cases: Push Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-003"]}
 static void test_stack_push_single_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -257,6 +262,7 @@ static void test_stack_push_single_item(void)
     TEST_ASSERT_EQUAL(1, gtTestStackBuffer[0].iCounter);
 }
 
+// @{"verify": ["REQ-STACK-003"]}
 static void test_stack_push_multiple_items(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -280,6 +286,7 @@ static void test_stack_push_multiple_items(void)
     }
 }
 
+// @{"verify": ["REQ-STACK-003"]}
 static void test_stack_push_to_full_capacity(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -297,6 +304,7 @@ static void test_stack_push_to_full_capacity(void)
     TEST_ASSERT_EQUAL(TEST_STACK_CAPACITY, gtTestStack.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-STACK-004"]}
 static void test_stack_push_overflow(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -319,6 +327,7 @@ static void test_stack_push_overflow(void)
     TEST_ASSERT_EQUAL(TEST_STACK_CAPACITY, gtTestStack.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-STACK-003"]}
 static void test_stack_push_null_stack(void)
 {
     TEST_STACK_DATA_T tData = CreateTestData(42, true, 1);
@@ -328,6 +337,7 @@ static void test_stack_push_null_stack(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-003"]}
 static void test_stack_push_invalid_pointer(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -342,6 +352,7 @@ static void test_stack_push_invalid_pointer(void)
  * Test Cases: Pop Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-005"]}
 static void test_stack_pop_single_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -364,6 +375,7 @@ static void test_stack_pop_single_item(void)
     TEST_ASSERT_EQUAL(5, tPopData.iCounter);
 }
 
+// @{"verify": ["REQ-STACK-005"]}
 static void test_stack_pop_multiple_items_lifo_order(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -393,6 +405,7 @@ static void test_stack_pop_multiple_items_lifo_order(void)
     TEST_ASSERT_EQUAL(0, gtTestStack.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-STACK-006"]}
 static void test_stack_pop_empty_stack(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -404,6 +417,7 @@ static void test_stack_pop_empty_stack(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-005"]}
 static void test_stack_pop_null_stack(void)
 {
     TEST_STACK_DATA_T tPopData = {0};
@@ -412,6 +426,7 @@ static void test_stack_pop_null_stack(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-005"]}
 static void test_stack_pop_invalid_pointer(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -433,6 +448,7 @@ static void test_stack_pop_invalid_pointer(void)
  * Test Cases: Peek Operations
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-007"]}
 static void test_stack_peek_single_item(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -458,6 +474,7 @@ static void test_stack_peek_single_item(void)
     TEST_ASSERT_EQUAL(1, gtTestStack.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-STACK-007"]}
 static void test_stack_peek_top_element(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -481,6 +498,7 @@ static void test_stack_peek_top_element(void)
     TEST_ASSERT_EQUAL(3, gtTestStack.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-STACK-007"]}
 static void test_stack_peek_multiple_times(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -507,6 +525,7 @@ static void test_stack_peek_multiple_times(void)
     TEST_ASSERT_EQUAL(3, gtTestStack.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-STACK-008"]}
 static void test_stack_peek_empty_stack(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -516,12 +535,14 @@ static void test_stack_peek_empty_stack(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-STACK-007"]}
 static void test_stack_peek_null_stack(void)
 {
     JUNO_RESULT_POINTER_T tResult = JunoDs_StackPeek(NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-STACK-007"]}
 static void test_stack_peek_after_pop(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -554,6 +575,7 @@ static void test_stack_peek_after_pop(void)
  * Test Cases: Stress Testing
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-003", "REQ-STACK-005"]}
 static void test_stack_stress_push_pop_cycles(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -584,6 +606,7 @@ static void test_stack_stress_push_pop_cycles(void)
     }
 }
 
+// @{"verify": ["REQ-STACK-003", "REQ-STACK-005"]}
 static void test_stack_interleaved_operations(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 5);
@@ -641,6 +664,7 @@ static void test_stack_interleaved_operations(void)
     TEST_ASSERT_EQUAL(0, gtTestStack.tRoot.zLength);
 }
 
+// @{"verify": ["REQ-STACK-003", "REQ-STACK-005"]}
 static void test_stack_fill_empty_cycles(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -678,6 +702,7 @@ static void test_stack_fill_empty_cycles(void)
  * Test Cases: API Verification
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_verify_valid_stack(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -687,12 +712,14 @@ static void test_stack_verify_valid_stack(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_verify_null_stack(void)
 {
     JUNO_STATUS_T tStatus = JunoDs_StackVerify(NULL);
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_verify_invalid_api(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -705,6 +732,7 @@ static void test_stack_verify_invalid_api(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_verify_missing_push_function(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -720,6 +748,7 @@ static void test_stack_verify_missing_push_function(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_verify_missing_pop_function(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -735,6 +764,7 @@ static void test_stack_verify_missing_pop_function(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_verify_missing_peek_function(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -754,6 +784,7 @@ static void test_stack_verify_missing_peek_function(void)
  * Test Cases: Edge Cases
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-003", "REQ-STACK-005"]}
 static void test_stack_single_element_capacity(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 1);
@@ -786,6 +817,7 @@ static void test_stack_single_element_capacity(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-003", "REQ-STACK-005"]}
 static void test_stack_data_integrity_after_operations(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -813,6 +845,7 @@ static void test_stack_data_integrity_after_operations(void)
     }
 }
 
+// @{"verify": ["REQ-STACK-003", "REQ-STACK-005"]}
 static void test_stack_alternating_push_pop(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -844,6 +877,7 @@ static void test_stack_alternating_push_pop(void)
     }
 }
 
+// @{"verify": ["REQ-STACK-007"]}
 static void test_stack_peek_consistency_during_operations(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -868,6 +902,7 @@ static void test_stack_peek_consistency_during_operations(void)
  * Test Cases: Array API Error Paths
  * ============================================================================ */
 
+// @{"verify": ["REQ-ARRAY-006"]}
 static void test_stack_array_api_set_at_invalid_api(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -888,6 +923,7 @@ static void test_stack_array_api_set_at_invalid_api(void)
     gtTestStack.tArray.tRoot.ptApi = ptOriginalApi;
 }
 
+// @{"verify": ["REQ-ARRAY-005"]}
 static void test_stack_array_api_get_at_out_of_bounds(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 5);
@@ -897,6 +933,7 @@ static void test_stack_array_api_get_at_out_of_bounds(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-ARRAY-005"]}
 static void test_stack_array_api_remove_at_out_of_bounds(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 5);
@@ -906,6 +943,7 @@ static void test_stack_array_api_remove_at_out_of_bounds(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
+// @{"verify": ["REQ-ARRAY-006"]}
 static void test_stack_array_api_null_array(void)
 {
     TEST_STACK_DATA_T tData = CreateTestData(1, true, 1);
@@ -925,6 +963,7 @@ static void test_stack_array_api_null_array(void)
  * Test Cases: Boundary Conditions
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-003", "REQ-STACK-004"]}
 static void test_stack_push_at_exact_capacity(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 3);
@@ -950,6 +989,7 @@ static void test_stack_push_at_exact_capacity(void)
     TEST_ASSERT_EQUAL(JUNO_STATUS_OOB_ERROR, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-005", "REQ-STACK-006"]}
 static void test_stack_pop_until_empty(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, 3);
@@ -989,6 +1029,7 @@ static void test_stack_pop_until_empty(void)
  * Test Cases: Pointer API Coverage
  * ============================================================================ */
 
+// @{"verify": ["REQ-POINTER-002"]}
 static void test_stack_pointer_copy_invalid_dest(void)
 {
     TEST_STACK_DATA_T tSrcData = CreateTestData(42, true, 1);
@@ -999,6 +1040,7 @@ static void test_stack_pointer_copy_invalid_dest(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-POINTER-002"]}
 static void test_stack_pointer_copy_invalid_src(void)
 {
     TEST_STACK_DATA_T tDestData = {0};
@@ -1009,6 +1051,7 @@ static void test_stack_pointer_copy_invalid_src(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-POINTER-003"]}
 static void test_stack_pointer_reset_invalid(void)
 {
     JUNO_POINTER_T tInvalidPointer = {0};
@@ -1016,6 +1059,7 @@ static void test_stack_pointer_reset_invalid(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-POINTER-003"]}
 static void test_stack_pointer_reset_valid(void)
 {
     TEST_STACK_DATA_T tData = CreateTestData(42, true, 5);
@@ -1032,6 +1076,7 @@ static void test_stack_pointer_reset_valid(void)
  * Additional Edge Case Tests for Maximum Coverage
  * ============================================================================ */
 
+// @{"verify": ["REQ-STACK-003"]}
 static void test_stack_push_with_setAt_failure(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -1051,6 +1096,7 @@ static void test_stack_push_with_setAt_failure(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-005"]}
 static void test_stack_pop_with_getAt_failure(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -1076,6 +1122,7 @@ static void test_stack_pop_with_getAt_failure(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-007"]}
 static void test_stack_peek_with_getAt_failure(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -1098,6 +1145,7 @@ static void test_stack_peek_with_getAt_failure(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tResult.tStatus);
 }
 
+// @{"verify": ["REQ-STACK-005"]}
 static void test_stack_pop_copy_failure(void)
 {
     JUNO_STATUS_T tStatus = InitTestStack(&gtTestStack, TEST_STACK_CAPACITY);
@@ -1119,6 +1167,7 @@ static void test_stack_pop_copy_failure(void)
     TEST_ASSERT_NOT_EQUAL(JUNO_STATUS_SUCCESS, tStatus);
 }
 
+// @{"verify": ["REQ-STACK-001"]}
 static void test_stack_init_with_array_verify_failure(void)
 {
     gtTestStack.tArray.ptBuffer = gtTestStackBuffer;

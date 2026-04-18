@@ -61,6 +61,7 @@ extern "C" {
  *
  * Contains radial distance and angle in radians.
  */
+// @{"req": ["REQ-MATH-002", "REQ-MATH-003"]}
 typedef struct JUNO_VEC2_F64_SPH_TAG
 {
     double r;   /**< Radial distance from the origin. */ 
@@ -670,6 +671,7 @@ JUNO_MODULE_RESULT(JUNO_M4X4_I32_RESULT_T, JUNO_M4X4_I32_T);
  *
  * Can be accessed as individual components or raw array.
  */
+// @{"req": ["REQ-MATH-004"]}
 typedef union JUNO_RQUAT_F64_TAG
 {
     struct {

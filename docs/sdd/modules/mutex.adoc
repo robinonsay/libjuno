@@ -1,0 +1,65 @@
+// @{"design": ["REQ-MTX-001", "REQ-MTX-002", "REQ-MTX-003", "REQ-MTX-004", "REQ-MTX-005"]}
+= Mutex Module
+
+== Purpose
+
+The Mutex module (`mtx_api.h`) provides a minimal mutual exclusion interface for cooperative concurrency.
+It defines TryLock, Lock, and Free operations as vtable functions.
+Implementations provide platform-specific locking semantics.
+
+== Data Structures
+
+=== Mutex Root (`JUNO_MP_MTX_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_MP_MTX_ROOT_TAG JUNO_MODULE_ROOT(JUNO_MP_MTX_API_T, JUNO_MODULE_EMPTY);
+----
+
+=== Mutex API (`JUNO_MP_MTX_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `TryLock(ptMtx)` | Non-blocking lock attempt. Returns `JUNO_RESULT_BOOL_T` (true if acquired).
+| `Lock(ptMtx)` | Blocking lock (may busy-wait). Returns `JUNO_STATUS_T`.
+| `Free(ptMtx)` | Release the lock. Returns `JUNO_STATUS_T`.
+|===
+
+== Interface Design
+
+`JunoMp_MtxVerify(ptMtx)`::
+Inline verification that the mutex root, API pointer, and all three function pointers (TryLock, Lock, Free) are non-NULL.
+
+No `Init` function is defined at the interface level — initialization is implementation-specific (e.g., platform mutex creation).
+
+== Algorithm Descriptions
+
+No algorithms — the Mutex module defines the interface only.
+Lock/unlock semantics depend on the platform (spin lock, OS mutex, test-and-set).
+
+== Error Handling
+
+* `JunoMp_MtxVerify` returns `JUNO_STATUS_NULLPTR_ERROR` if any required pointer is NULL.
+* `TryLock` returns a Result type with boolean success indicator.
+* `Lock` and `Free` return status codes.
+
+== Design Rationale
+
+The mutex interface is deliberately minimal — three operations covering the essential lock lifecycle.
+No priority inheritance, recursive locking, or timeout parameters are specified at the interface level because these semantics vary fundamentally between platforms.
+The vtable pattern allows injecting platform mutexes (FreeRTOS, Zephyr, POSIX, bare-metal spin locks) or test doubles.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-MTX-001 | `JUNO_MP_MTX_ROOT_T` — mutex root definition
+| REQ-MTX-002 | `TryLock` — non-blocking lock attempt
+| REQ-MTX-003 | `Lock` — blocking lock acquisition
+| REQ-MTX-004 | `Free` — lock release
+| REQ-MTX-005 | `JunoMp_MtxVerify` — mutex verification
+|===

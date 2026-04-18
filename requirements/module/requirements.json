@@ -1,0 +1,77 @@
+{
+  "module": "MODULE",
+  "requirements": [
+    {
+      "id": "REQ-MODULE-001",
+      "title": "Module Root Structure",
+      "description": "The module system shall define a module root struct containing an API vtable pointer.",
+      "rationale": "The module root struct is the foundation of the vtable-based dependency injection system, enabling polymorphic dispatch across all LibJuno modules.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-002",
+      "title": "Module Root Failure Handler",
+      "description": "The module root shall contain a failure handler pointer and user data pointer.",
+      "rationale": "Provides a diagnostic callback mechanism so integrators can observe failures without altering control flow, which is essential for debugging on targets with limited instrumentation.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-STATUS-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-003",
+      "title": "Module Derivation",
+      "description": "Derived module structs shall embed the root as their first member, enabling safe upcasting to the root type.",
+      "rationale": "Struct embedding with the root as the first member enables safe upcasting in C, providing polymorphism without dynamic allocation or language extensions.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": [
+        "REQ-SB-004",
+        "REQ-SM-002"
+      ]
+    },
+    {
+      "id": "REQ-MODULE-004",
+      "title": "Module Union",
+      "description": "A module union shall contain the root and all derivation types for polymorphic storage.",
+      "rationale": "The union enables caller-allocated polymorphic storage that is correctly sized for any derivation, without requiring the caller to know which concrete type will be used at compile time.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-005",
+      "title": "Result Type",
+      "description": "The module system shall define a result type combining a status code with a typed success payload.",
+      "rationale": "Combines a status code with a typed payload in a single return value, enabling functions to communicate both success data and error conditions without out-parameters or global state.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MODULE-006",
+      "title": "Option Type",
+      "description": "The module system shall define an option type combining a presence flag with a typed payload.",
+      "rationale": "Provides explicit representation of optional values, eliminating sentinel-value conventions and making the presence or absence of a value type-safe and self-documenting.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-004"
+      ],
+      "implements": []
+    }
+  ]
+}

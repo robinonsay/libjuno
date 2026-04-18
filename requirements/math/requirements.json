@@ -1,0 +1,226 @@
+{
+  "module": "MATH",
+  "requirements": [
+    {
+      "id": "REQ-MATH-001",
+      "title": "Math Constants",
+      "description": "The math module shall define double-precision constants for \u03c0, \u03c0/2, \u03c0/4, and e.",
+      "rationale": "Pre-defined constants avoid repeated magic numbers and ensure consistent precision across all math operations in the library.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-009"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-002",
+      "title": "Vector Types",
+      "description": "The math module shall define 2D and 3D vector types in double, float, and int32 precisions.",
+      "rationale": "Multiple precision variants allow embedded applications to choose the appropriate trade-off between precision and memory/computation cost for their target platform.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-003"
+      ],
+      "implements": [
+        "REQ-MATH-003",
+        "REQ-MATH-005",
+        "REQ-MATH-006",
+        "REQ-MATH-007",
+        "REQ-MATH-008",
+        "REQ-MATH-009",
+        "REQ-MATH-010",
+        "REQ-MATH-011"
+      ]
+    },
+    {
+      "id": "REQ-MATH-003",
+      "title": "Vector Coordinate Access",
+      "description": "Each vector type shall support both named Cartesian field access and raw array indexing.",
+      "rationale": "Dual access via named fields (x, y, z) and raw array indexing enables both readable application code and loop-based generic algorithms over vector components.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-004",
+      "title": "Quaternion Type",
+      "description": "The math module shall define a real quaternion type with [s, i, j, k] component order in double precision.",
+      "rationale": "Quaternions provide singularity-free rotation representation, which is critical for attitude determination and control in embedded navigation and robotics applications.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-003"
+      ],
+      "implements": [
+        "REQ-MATH-012",
+        "REQ-MATH-013",
+        "REQ-MATH-014",
+        "REQ-MATH-015",
+        "REQ-MATH-016",
+        "REQ-MATH-018"
+      ]
+    },
+    {
+      "id": "REQ-MATH-005",
+      "title": "Vector Addition",
+      "description": "The math module shall compute component-wise vector addition for each vector type.",
+      "rationale": "Vector addition is a fundamental linear algebra operation used in position accumulation, force summation, and signal combination.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-006",
+      "title": "Vector Subtraction",
+      "description": "The math module shall compute component-wise vector subtraction for each vector type.",
+      "rationale": "Vector subtraction is used for computing displacements, error vectors, and relative quantities between two points or measurements.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-007",
+      "title": "Vector Scalar Multiplication",
+      "description": "The math module shall compute component-wise scalar multiplication for each vector type.",
+      "rationale": "Scalar multiplication is used for scaling vectors by gain factors, time steps, or unit conversions.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-008",
+      "title": "Vector Dot Product",
+      "description": "The math module shall compute the dot product for each vector type.",
+      "rationale": "The dot product computes projection and angle-related quantities, which are fundamental to geometry, physics, and signal processing.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-009",
+      "title": "2D Cross Product",
+      "description": "The math module shall compute the pseudoscalar z-component of the 2D cross product.",
+      "rationale": "The 2D cross product (pseudoscalar z-component) determines signed area and winding direction, which is useful for 2D geometry and path planning.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-010",
+      "title": "3D Cross Product",
+      "description": "The math module shall compute the 3D cross product returning an orthogonal vector.",
+      "rationale": "The 3D cross product computes torque, angular momentum, and surface normals, which are fundamental to 3D kinematics and dynamics.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-011",
+      "title": "Squared L2 Norm",
+      "description": "The math module shall compute the squared L2 norm for each vector type.",
+      "rationale": "The squared norm avoids a square-root computation, providing an efficient magnitude comparison and normalization building block for resource-constrained targets.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-012",
+      "title": "Quaternion Addition",
+      "description": "The math module shall compute component-wise quaternion addition.",
+      "rationale": "Quaternion addition is used in interpolation schemes (e.g., SLERP numerator) and filter state updates.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-013",
+      "title": "Quaternion Subtraction",
+      "description": "The math module shall compute component-wise quaternion subtraction.",
+      "rationale": "Quaternion subtraction is used for computing rotation error and difference quaternions in attitude estimation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-014",
+      "title": "Quaternion Scalar Multiplication",
+      "description": "The math module shall compute component-wise quaternion scalar multiplication.",
+      "rationale": "Scalar multiplication is used for scaling quaternion corrections and blending interpolation weights.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-015",
+      "title": "Hamilton Product",
+      "description": "The math module shall compute the right-handed Hamilton product of two quaternions.",
+      "rationale": "The Hamilton product composes rotations, which is the core operation for attitude propagation and frame transformation in navigation systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-016",
+      "title": "Quaternion Conjugate",
+      "description": "The math module shall compute the conjugate of a quaternion by negating the vector part.",
+      "rationale": "The conjugate of a unit quaternion is its inverse rotation, providing an efficient way to compute reverse transformations without division.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": [
+        "REQ-MATH-017"
+      ]
+    },
+    {
+      "id": "REQ-MATH-017",
+      "title": "Quaternion Reciprocal",
+      "description": "The math module shall compute the multiplicative inverse of a quaternion as conj(q) divided by the squared norm.",
+      "rationale": "The reciprocal generalizes the inverse to non-unit quaternions, which is needed for quaternion division and certain filter update equations.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-016",
+        "REQ-MATH-018"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MATH-018",
+      "title": "Quaternion Squared Norm",
+      "description": "The math module shall compute the squared L2 norm of a quaternion.",
+      "rationale": "The squared norm is the denominator in the reciprocal computation and provides an efficient normalization check without requiring a square root.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MATH-004"
+      ],
+      "implements": [
+        "REQ-MATH-017"
+      ]
+    }
+  ]
+}

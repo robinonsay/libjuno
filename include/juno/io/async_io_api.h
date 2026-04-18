@@ -44,23 +44,31 @@ typedef struct JUNO_ASYNC_IO_API_TAG JUNO_ASYNC_IO_API_T;
 
 typedef struct JUNO_ASYNC_IO_ROOT_TAG JUNO_ASYNC_IO_ROOT_T;
 
+// @{"req": ["REQ-IO-001"]}
 struct JUNO_ASYNC_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ASYNC_IO_API_T, JUNO_MODULE_EMPTY);
 
 struct JUNO_ASYNC_IO_API_TAG
 {
     /// @brief Read up to *pzBuffSize bytes; updates size with bytes read.
+    // @{"req": ["REQ-IO-002"]}
     JUNO_STATUS_T (*Read)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize);
     /// @brief Try to read with timeout; returns when data available or timeout.
+    // @{"req": ["REQ-IO-003"]}
     JUNO_STATUS_T (*TryRead)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
     /// @brief Read until any stop character is received (size updated).
+    // @{"req": ["REQ-IO-004"]}
     JUNO_STATUS_T (*ReadUntil)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars);
     /// @brief Try to read until stop character or timeout.
+    // @{"req": ["REQ-IO-005"]}
     JUNO_STATUS_T (*TryReadUntil)(JUNO_ASYNC_IO_ROOT_T *ptIo, char *pcBuff, size_t *pzBuffSize, const char *pcStopChars, size_t zSizeStopChars, JUNO_TIME_MICROS_T iTimeoutUs);
     /// @brief Write up to *pzBuffSize bytes; updates size with bytes written.
+    // @{"req": ["REQ-IO-006"]}
     JUNO_STATUS_T (*Write)(JUNO_ASYNC_IO_ROOT_T *ptIo, const void *pvBuff, size_t *pzBuffSize);
     /// @brief Try to write with timeout; updates size with bytes written.
+    // @{"req": ["REQ-IO-007"]}
     JUNO_STATUS_T (*TryWrite)(JUNO_ASYNC_IO_ROOT_T *ptIo, const void *pvBuff, size_t *pzBuffSize, JUNO_TIME_MICROS_T iTimeoutUs);
     /// @brief Poll for input readiness within timeout; sets pbHasData.
+    // @{"req": ["REQ-IO-008"]}
     JUNO_STATUS_T (*Poll)(JUNO_ASYNC_IO_ROOT_T *ptIo, JUNO_TIME_MICROS_T iTimeoutUs, bool *pbHasData);
 };
 

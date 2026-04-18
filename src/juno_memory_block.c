@@ -62,6 +62,7 @@ static inline JUNO_STATUS_T Verify(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory)
     return JUNO_STATUS_SUCCESS;
 }
 
+// @{"req": ["REQ-MEMORY-004", "REQ-MEMORY-005"]}
 static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, size_t zSize)
 {
     JUNO_RESULT_POINTER_T tResult = {0};
@@ -135,6 +136,7 @@ static JUNO_RESULT_POINTER_T Juno_MemoryBlkGet(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoM
     return tResult;
 }
 
+// @{"req": ["REQ-MEMORY-009", "REQ-MEMORY-010"]}
 static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, JUNO_POINTER_T *ptMemory, size_t zNewSize)
 {
     // Validate the memory block structure
@@ -153,6 +155,7 @@ static JUNO_STATUS_T Juno_MemoryBlkUpdate(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory
     return tStatus;
 }
 
+// @{"req": ["REQ-MEMORY-006", "REQ-MEMORY-007", "REQ-MEMORY-008"]}
 static JUNO_STATUS_T Juno_MemoryBlkPut(JUNO_MEMORY_ALLOC_ROOT_T *ptJunoMemory, JUNO_POINTER_T *ptMemory)
 {
     // Validate the memory block structure
@@ -242,6 +245,7 @@ static const JUNO_MEMORY_ALLOC_API_T tJunoMemoryBlockApi = {
 };
 
 /* TODO: Insert initialization arguments for module members here*/
+// @{"req": ["REQ-MEMORY-003"]}
 JUNO_STATUS_T JunoMemory_BlockInit(
     JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemoryBlock,
     const JUNO_POINTER_API_T *ptPointerApi,

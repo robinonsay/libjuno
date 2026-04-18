@@ -1,0 +1,138 @@
+{
+  "module": "MEMORY",
+  "requirements": [
+    {
+      "id": "REQ-MEMORY-001",
+      "title": "Memory Allocator Interface",
+      "description": "The memory module shall define an abstract allocator API with Get, Update, and Put operations.",
+      "rationale": "An abstract allocator interface decouples data structures from a specific allocation strategy, enabling the integrator to provide pool-based, slab, or custom allocators suited to their target's memory constraints.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": [
+        "REQ-MEMORY-003",
+        "REQ-MEMORY-004",
+        "REQ-MEMORY-006",
+        "REQ-MEMORY-009"
+      ]
+    },
+    {
+      "id": "REQ-MEMORY-002",
+      "title": "Allocator Pointer API Dependency",
+      "description": "The memory allocator root shall hold an injected pointer API for internal memory operations.",
+      "rationale": "Injecting the pointer API ensures the allocator can perform type-safe copy and reset operations on allocated blocks without depending on a specific pointer implementation.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-007",
+        "REQ-POINTER-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-003",
+      "title": "Block Allocator Initialization",
+      "description": "The block allocator shall initialize from caller-provided backing memory, metadata array, type size, alignment, and length.",
+      "rationale": "Initialization from caller-provided memory ensures the block allocator operates without dynamic allocation and that all backing storage is under integrator control.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SYS-011",
+        "REQ-MEMORY-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-004",
+      "title": "Block Allocator Get",
+      "description": "The block allocator shall allocate a block of the configured element size in O(1) time.",
+      "rationale": "O(1) allocation time guarantees deterministic performance, which is essential for real-time embedded applications with strict timing budgets.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-001"
+      ],
+      "implements": [
+        "REQ-MEMORY-005"
+      ]
+    },
+    {
+      "id": "REQ-MEMORY-005",
+      "title": "Block Allocator Free Block Reuse",
+      "description": "The block allocator shall reuse freed blocks via a LIFO free list when available.",
+      "rationale": "LIFO free-list reuse maximizes block utilization without fragmentation, keeping the allocator's memory footprint bounded to the initial caller-provided pool.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-006",
+      "title": "Block Allocator Put",
+      "description": "The block allocator shall free a previously allocated block in O(1) time.",
+      "rationale": "O(1) deallocation time guarantees deterministic performance and complements the O(1) allocation guarantee.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-001"
+      ],
+      "implements": [
+        "REQ-MEMORY-007",
+        "REQ-MEMORY-008"
+      ]
+    },
+    {
+      "id": "REQ-MEMORY-007",
+      "title": "Block Allocator Double Free Rejection",
+      "description": "The block allocator shall reject double frees with an error status.",
+      "rationale": "Detecting double frees at runtime prevents free-list corruption that would otherwise cause silent data corruption or unbounded allocation behavior.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-008",
+      "title": "Block Allocator Invalid Address Rejection",
+      "description": "The block allocator shall reject frees of invalid or misaligned addresses with an error status.",
+      "rationale": "Rejecting invalid or misaligned addresses prevents corruption of the free list and ensures that only addresses within the original backing memory are returned to the pool.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-MEMORY-009",
+      "title": "Block Allocator Update",
+      "description": "The block allocator shall adjust a descriptor's size in-place up to the configured element size.",
+      "rationale": "In-place size adjustment allows a descriptor to shrink or grow within its fixed block without triggering a new allocation or data copy, which is useful for variable-length payloads within fixed-size slots.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-001"
+      ],
+      "implements": [
+        "REQ-MEMORY-010"
+      ]
+    },
+    {
+      "id": "REQ-MEMORY-010",
+      "title": "Block Allocator No Memory Move",
+      "description": "The block allocator Update shall not move memory when adjusting descriptor size.",
+      "rationale": "Guaranteeing no memory movement during Update ensures that existing pointers to the block remain valid, which is critical for data structures that hold references to allocated blocks.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-MEMORY-009"
+      ],
+      "implements": []
+    }
+  ]
+}

@@ -17,7 +17,7 @@ option(JUNO_EXAMPLES "Compile Juno Examples" OFF)
 message("Compiler: ${CMAKE_C_COMPILER}")
 message("Testing: ${JUNO_TESTS}")
 
-project(juno VERSION 1.0.1 LANGUAGES C CXX)
+project(juno VERSION 1.0.2 LANGUAGES C CXX)
 
 # Package config helpers for installing CMake package files
 include(CMakePackageConfigHelpers)
@@ -72,6 +72,7 @@ if(JUNO_COVERAGE)
 endif()
 
 
+# @{"req": ["REQ-SYS-001", "REQ-SYS-003"]}
 if(JUNO_FREESTANDING)
     list(APPEND JUNO_COMPILE_C_OPTIONS
         -nostdlib

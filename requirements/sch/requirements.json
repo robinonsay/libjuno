@@ -1,0 +1,99 @@
+{
+  "module": "SCH",
+  "requirements": [
+    {
+      "id": "REQ-SCH-001",
+      "title": "Scheduler Root Structure",
+      "description": "The scheduler root shall hold a time source pointer, a flattened schedule table, apps-per-minor-frame count, minor-frame count, and minor-frame period.",
+      "rationale": "The scheduler root holds all configuration needed to execute a time-triggered schedule: the time source for pacing, and the table layout defining which applications run in which minor frames.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-003",
+        "REQ-SYS-006",
+        "REQ-SYS-007",
+        "REQ-SYS-009",
+        "REQ-SYS-010"
+      ],
+      "implements": [
+        "REQ-SCH-002",
+        "REQ-SCH-003"
+      ]
+    },
+    {
+      "id": "REQ-SCH-002",
+      "title": "Scheduler API Interface",
+      "description": "The scheduler API vtable shall define Execute, GetMinorFramePeriod, and GetMajorFramePeriod operations.",
+      "rationale": "Execute, GetMinorFramePeriod, and GetMajorFramePeriod are the minimal API surface needed to run and query a time-triggered schedule.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SCH-001"
+      ],
+      "implements": [
+        "REQ-SCH-004",
+        "REQ-SCH-005"
+      ]
+    },
+    {
+      "id": "REQ-SCH-003",
+      "title": "Schedule Table Layout",
+      "description": "The schedule table shall be a flattened 2D array of application pointers with dimensions minor-frame count by apps-per-minor-frame.",
+      "rationale": "A flattened 2D array avoids pointer-to-pointer indirection and dynamic allocation, keeping the schedule table in a single contiguous caller-provided buffer.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SCH-001",
+        "REQ-SYS-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SCH-004",
+      "title": "Execute Major Frame",
+      "description": "The scheduler Execute operation shall invoke each application's OnProcess hook across all minor frames in one major frame.",
+      "rationale": "Executing all minor frames in sequence completes one major frame, which is the standard time-triggered scheduling pattern used in flight software and real-time control systems.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SCH-002",
+        "REQ-APP-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SCH-005",
+      "title": "Minor Frame Period Query",
+      "description": "The scheduler shall return the configured minor frame period as a timestamp.",
+      "rationale": "Exposing the minor frame period allows applications and diagnostics to query the scheduler's timing granularity without accessing internal fields.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SCH-002"
+      ],
+      "implements": [
+        "REQ-SCH-006"
+      ]
+    },
+    {
+      "id": "REQ-SCH-006",
+      "title": "Major Frame Period Computation",
+      "description": "The scheduler shall compute the major frame period as the product of the minor frame period and the minor-frame count.",
+      "rationale": "The major frame period is a derived quantity that callers need for cycle-level timing and telemetry; computing it from the minor frame period and count ensures consistency.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SCH-005"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SCH-007",
+      "title": "Time Source Dependency",
+      "description": "The scheduler shall use an injected time module for timing operations.",
+      "rationale": "Injecting the time source decouples the scheduler from any specific platform clock, enabling both real hardware timing and deterministic test clocks.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-007",
+        "REQ-TIME-002"
+      ],
+      "implements": []
+    }
+  ]
+}

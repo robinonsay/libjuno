@@ -1,0 +1,101 @@
+// @{"design": ["REQ-IO-001", "REQ-IO-002", "REQ-IO-003", "REQ-IO-004", "REQ-IO-005", "REQ-IO-006", "REQ-IO-007", "REQ-IO-008", "REQ-IO-009", "REQ-IO-010", "REQ-IO-011", "REQ-IO-012", "REQ-IO-013", "REQ-IO-014"]}
+= IO Module
+
+== Purpose
+
+The IO module (`async_io_api.h`, `i2c_io_api.h`, `spi_io_api.h`) provides abstract hardware IO interfaces for asynchronous byte-stream IO, I2C bus transfers, and SPI transactions.
+All three are pure vtable interfaces — implementations are platform-specific and injected by the integrator.
+
+== Data Structures
+
+=== Async IO Root (`JUNO_ASYNC_IO_ROOT_T`)
+
+[source,c]
+----
+struct JUNO_ASYNC_IO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_ASYNC_IO_API_T, JUNO_MODULE_EMPTY);
+----
+
+=== Async IO API (`JUNO_ASYNC_IO_API_T`)
+
+[cols="1,3"]
+|===
+| Function | Description
+
+| `Read(ptIo, pcBuff, pzBuffSize)` | Read up to `*pzBuffSize` bytes; updates size with bytes read.
+| `TryRead(ptIo, pcBuff, pzBuffSize, iTimeoutUs)` | Read with timeout.
+| `ReadUntil(ptIo, pcBuff, pzBuffSize, pcStopChars, zSizeStopChars)` | Read until stop character.
+| `TryReadUntil(...)` | Read until stop character with timeout.
+| `Write(ptIo, pvBuff, pzBuffSize)` | Write up to `*pzBuffSize` bytes; updates size with bytes written.
+| `TryWrite(ptIo, pvBuff, pzBuffSize, iTimeoutUs)` | Write with timeout.
+| `Poll(ptIo, iTimeoutUs, pbHasData)` | Poll for input readiness.
+|===
+
+Size parameters are in/out: on input they specify capacity; on return they reflect actual bytes transferred.
+
+=== I2C IO Root and Messages
+
+`JUNO_I2C_IO_ROOT_T`:: Module root for I2C.
+`JUNO_I2C_IO_MSG_T`:: Union of read/write message descriptors sharing a common header.
+`JUNO_I2C_IO_MSG_HDR_T`:: `{tType, iAddr}` — message type enum and 8-bit device address.
+`JUNO_I2C_IO_MSG_R_T`:: `{tHdr, ptReadBuff, zReadBuffSize}` — read descriptor.
+`JUNO_I2C_IO_MSG_W_T`:: `{tHdr, ptWriteBuff, zWriteBuffSize}` — write descriptor.
+
+=== I2C IO API (`JUNO_I2C_IO_API_T`)
+
+Single function: `Transfer(ptI2c, ptMsgs, zNumMsgs)` — executes an array of I2C messages.
+
+=== I2C Helper Macros
+
+`ReadMsg(iAddr, pcBuff, zBuffSize)`:: Constructs a read message literal.
+`WriteMsg(iAddr, pvBuff, zBuffSize)`:: Constructs a write message literal.
+`JUNO_I2C_IO_TRANSFER(...)`:: Wraps messages into a compound literal array.
+
+=== SPI IO Root and API
+
+`JUNO_SPI_IO_ROOT_T`:: Module root for SPI.
+`JUNO_SPI_IO_API_T`:: Single function: `Transaction(ptIo, pcReadBuff, zReadBuffSize, pvWriteBuff, zWriteBuffSize)` — full-duplex SPI transaction.
+
+== Interface Design
+
+All three IO modules are pure abstract interfaces — no LibJuno-provided implementations.
+Integrators create platform-specific derivations that implement the vtable for their hardware.
+
+== Algorithm Descriptions
+
+No algorithms — the IO modules define interfaces only.
+Implementation algorithms depend on the target platform (UART DMA, I2C peripheral registers, SPI controller).
+
+== Error Handling
+
+* All functions return `JUNO_STATUS_T` for consistent error propagation.
+* Timeout variants return `JUNO_STATUS_TIMEOUT_ERROR` when the deadline expires.
+* Read/Write failures return `JUNO_STATUS_READ_ERROR` or `JUNO_STATUS_WRITE_ERROR`.
+* The module root carries a failure handler for diagnostic reporting.
+
+== Design Rationale
+
+IO interfaces are intentionally minimal — they define the contract, not the implementation.
+Hardware IO is inherently platform-specific; the vtable pattern allows injecting UART, USB, network, or mock implementations without changing application code.
+The I2C message-array pattern (`Transfer` with an array of read/write descriptors) mirrors common I2C hardware APIs (Linux `i2c_msg`, Zephyr `i2c_msg`) and enables multi-message transactions (write-then-read) in a single call.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-IO-001 | `JUNO_ASYNC_IO_ROOT_T` — async IO root definition
+| REQ-IO-002 | `Read` — byte-stream read
+| REQ-IO-003 | `TryRead` — read with timeout
+| REQ-IO-004 | `ReadUntil` — read until stop character
+| REQ-IO-005 | `TryReadUntil` — read until stop char with timeout
+| REQ-IO-006 | `Write` — byte-stream write
+| REQ-IO-007 | `TryWrite` — write with timeout
+| REQ-IO-008 | `Poll` — input readiness polling
+| REQ-IO-009 | `JUNO_I2C_IO_ROOT_T` — I2C root definition
+| REQ-IO-010 | `Transfer` — I2C multi-message transaction
+| REQ-IO-011 | `JUNO_I2C_IO_MSG_HDR_T` — message header with type/address
+| REQ-IO-012 | `JUNO_I2C_IO_MSG_T` — read/write message union
+| REQ-IO-013 | `JUNO_SPI_IO_ROOT_T` — SPI root definition
+| REQ-IO-014 | `Transaction` — full-duplex SPI transaction
+|===

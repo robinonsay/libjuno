@@ -1,0 +1,171 @@
+{
+  "module": "SB",
+  "requirements": [
+    {
+      "id": "REQ-SB-001",
+      "title": "Broker Root Structure",
+      "description": "The broker root shall hold a pipe registry pointer, registry length, and registry capacity.",
+      "rationale": "The broker root holds the pipe registry that enables publish/subscribe message routing, providing the core data needed to fan out messages to subscribers.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SYS-001",
+        "REQ-SYS-003",
+        "REQ-SYS-004",
+        "REQ-SYS-005",
+        "REQ-SYS-006",
+        "REQ-SYS-009"
+      ],
+      "implements": [
+        "REQ-SB-002",
+        "REQ-SB-003"
+      ]
+    },
+    {
+      "id": "REQ-SB-002",
+      "title": "Broker API Interface",
+      "description": "The broker API vtable shall define Publish and RegisterSubscriber operations.",
+      "rationale": "Publish and RegisterSubscriber are the minimal operations needed for a publish/subscribe software bus: producers publish messages and consumers register pipes to receive them.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-SB-001"
+      ],
+      "implements": [
+        "REQ-SB-006",
+        "REQ-SB-008"
+      ]
+    },
+    {
+      "id": "REQ-SB-003",
+      "title": "Broker Initialization",
+      "description": "The broker shall initialize from a caller-provided pipe registry array and capacity.",
+      "rationale": "Initialization from a caller-provided registry array ensures the broker operates without dynamic allocation and that the registry capacity is under integrator control.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-002",
+        "REQ-SYS-007",
+        "REQ-SYS-008",
+        "REQ-SB-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-004",
+      "title": "Pipe Derivation",
+      "description": "A pipe shall derive from the queue module root with an additional message ID field.",
+      "rationale": "Deriving a pipe from the queue root reuses the existing FIFO implementation and adds only the message ID field needed for topic-based routing, minimizing code duplication.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-MODULE-003",
+        "REQ-QUEUE-001"
+      ],
+      "implements": [
+        "REQ-SB-005"
+      ]
+    },
+    {
+      "id": "REQ-SB-005",
+      "title": "Pipe Initialization",
+      "description": "A pipe shall initialize with a message ID and a backing queue array.",
+      "rationale": "Initializing a pipe with a message ID and backing queue establishes the subscription topic and buffer in a single step, with all memory caller-owned.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-004",
+        "REQ-SYS-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-006",
+      "title": "Publish Fan-Out",
+      "description": "The broker shall enqueue a message into every registered pipe whose message ID matches the published message ID.",
+      "rationale": "Fan-out delivery to all matching pipes is the defining behavior of a publish/subscribe bus, decoupling producers from consumers by message topic.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-002"
+      ],
+      "implements": [
+        "REQ-SB-007",
+        "REQ-SB-012"
+      ]
+    },
+    {
+      "id": "REQ-SB-007",
+      "title": "Publish Non-Matching Skip",
+      "description": "The broker shall skip pipes whose message ID does not match the published message ID.",
+      "rationale": "Skipping non-matching pipes ensures that subscribers only receive messages for their registered topic, preventing cross-contamination between message channels.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-006"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-008",
+      "title": "Register Subscriber",
+      "description": "The broker shall append a pipe pointer to the registry on registration.",
+      "rationale": "Appending a pipe to the registry is the mechanism by which consumers subscribe to the software bus, establishing the routing table for future publish operations.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-002"
+      ],
+      "implements": [
+        "REQ-SB-009"
+      ]
+    },
+    {
+      "id": "REQ-SB-009",
+      "title": "Registry Full Rejection",
+      "description": "The broker shall return an error status when registration is attempted on a full registry.",
+      "rationale": "Explicit rejection on a full registry surfaces the capacity limit to the caller rather than silently failing to register a subscriber.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-010",
+      "title": "Broker Vtable Validation",
+      "description": "The broker shall verify that its API vtable entries are non-null before each operation.",
+      "rationale": "Validates the vtable and registry dependency at runtime to ensure memory safety before dispatching any broker operation.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-010",
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-011",
+      "title": "Broker Registry Validation",
+      "description": "The broker shall verify that its pipe registry pointer and capacity are valid before each operation.",
+      "rationale": "Validates the registry pointer and capacity at runtime to catch uninitialized or misconfigured broker instances before they produce undefined behavior.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SYS-011"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-012",
+      "title": "Pipe Validation",
+      "description": "The broker shall verify each pipe via the queue verification before publishing to it.",
+      "rationale": "Verifying each pipe before publishing to it prevents the broker from enqueuing messages into uninitialized or corrupted queue instances.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-SB-006",
+        "REQ-SYS-008"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-SB-013",
+      "title": "Single Thread Scope",
+      "description": "The broker shall operate within a single thread without thread-safety mechanisms.",
+      "rationale": "Single-thread scope avoids the complexity and overhead of synchronization primitives, which aligns with the deterministic, freestanding design philosophy; thread safety can be layered externally via the mutex module if needed.",
+      "verification_method": "Inspection",
+      "uses": [],
+      "implements": []
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+// @{"design": ["REQ-STATUS-001", "REQ-STATUS-002", "REQ-STATUS-003", "REQ-STATUS-004"]}
+= Status Module
+
+== Purpose
+
+The Status module (`status.h`) defines the unified error-reporting type and failure-handling hooks used by every other module in LibJuno.
+It provides canonical status codes, the failure handler callback signature, and helper macros for invoking failure handlers without altering control flow.
+
+== Data Structures
+
+`JUNO_STATUS_T` (`int32_t`)::
+The unified status code type.
+Zero (`JUNO_STATUS_SUCCESS`) indicates success; non-zero values indicate specific error conditions.
+
+Status Code Constants::
+[cols="2,1,3"]
+|===
+| Code | Value | Meaning
+
+| `JUNO_STATUS_SUCCESS` | 0 | Operation completed successfully
+| `JUNO_STATUS_ERR` | 1 | Unspecified error
+| `JUNO_STATUS_NULLPTR_ERROR` | 2 | Required pointer was NULL
+| `JUNO_STATUS_MEMALLOC_ERROR` | 3 | Memory allocation failed
+| `JUNO_STATUS_MEMFREE_ERROR` | 4 | Memory free operation failed
+| `JUNO_STATUS_INVALID_TYPE_ERROR` | 5 | Type or trait mismatch
+| `JUNO_STATUS_INVALID_SIZE_ERROR` | 6 | Invalid size or alignment
+| `JUNO_STATUS_TABLE_FULL_ERROR` | 7 | Fixed-capacity table full
+| `JUNO_STATUS_DNE_ERROR` | 8 | Element or key does not exist
+| `JUNO_STATUS_FILE_ERROR` | 9 | Generic file IO error
+| `JUNO_STATUS_READ_ERROR` | 10 | Read operation failed
+| `JUNO_STATUS_WRITE_ERROR` | 11 | Write operation failed
+| `JUNO_STATUS_CRC_ERROR` | 12 | CRC check failed
+| `JUNO_STATUS_INVALID_REF_ERROR` | 13 | Invalid reference handle
+| `JUNO_STATUS_REF_IN_USE_ERROR` | 14 | Reference still active
+| `JUNO_STATUS_INVALID_DATA_ERROR` | 15 | Input data failed validation
+| `JUNO_STATUS_TIMEOUT_ERROR` | 16 | Operation timed out
+| `JUNO_STATUS_OOB_ERROR` | 17 | Index or pointer out of bounds
+|===
+
+`JUNO_FAILURE_HANDLER_T`::
+Callback signature: `void (*)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)`.
+Invoked for diagnostic purposes only — never alters control flow.
+
+`JUNO_USER_DATA_T`::
+Opaque `void` type for user-supplied context passed to failure handlers.
+
+`JUNO_FAIL_MESSAGE_LEN`::
+Preprocessor constant (default 256) defining the recommended maximum length for failure handler messages.
+User-overridable via `#define` before including `status.h`.
+Not enforced by the library — serves as guidance for implementations that format diagnostic strings.
+
+== Interface Design
+
+`JUNO_FAIL(tStatus, pfcnFailureHandler, pvFailureUserData, pcMessage)`::
+Macro that invokes the failure handler (if non-NULL) with the status, message, and user data.
+Does not alter control flow — callers must still return or handle the error.
+
+`JUNO_FAIL_MODULE(tStatus, ptMod, pcMessage)`::
+Macro that invokes a module instance's failure handler via `JUNO_MODULE_SUPER` fields.
+Null-safe: does nothing if `ptMod` or its handler is NULL.
+
+`JUNO_FAIL_ROOT(tStatus, ptMod, pcMessage)`::
+Macro that invokes a module root's failure handler directly.
+Null-safe: does nothing if `ptMod` or its handler is NULL.
+
+== Algorithm Descriptions
+
+No algorithms.
+All operations are macro-based conditional invocations with O(1) cost.
+
+== Error Handling
+
+The Status module itself defines the error-handling primitives used elsewhere.
+The `JUNO_FAIL*` macros guard against NULL before calling the handler, preventing null dereferences.
+The failure handler is diagnostic-only; it has no return value and does not affect the caller's control flow.
+
+== Design Rationale
+
+Status codes are `int32_t` rather than an enum to allow extensibility beyond the pre-defined set while maintaining a fixed-size ABI across compilation units.
+Failure handlers are callback-based (not `abort` or `longjmp`) to ensure deterministic control flow suitable for safety-critical embedded systems.
+
+== Requirements Traceability
+
+[cols="1,3"]
+|===
+| Requirement | Coverage
+
+| REQ-STATUS-001 | `JUNO_STATUS_T` type definition
+| REQ-STATUS-002 | Status code constants (SUCCESS through OOB_ERROR)
+| REQ-STATUS-003 | `JUNO_FAILURE_HANDLER_T` callback signature
+| REQ-STATUS-004 | `JUNO_FAIL` macro implementation
+|===

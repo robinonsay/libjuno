@@ -21,6 +21,7 @@
 #include "juno/status.h"
 
 /// Enqueue an item on the queue
+// @{"req": ["REQ-QUEUE-003", "REQ-QUEUE-004"]}
 JUNO_STATUS_T JunoDs_QueuePush(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tItem)
 {
     JUNO_ASSERT_EXISTS(ptQueue);
@@ -46,6 +47,7 @@ JUNO_STATUS_T JunoDs_QueuePush(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tIt
 }
 
 /// Dequeue an item from the queue
+// @{"req": ["REQ-QUEUE-005", "REQ-QUEUE-006"]}
 JUNO_STATUS_T JunoDs_QueuePop(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tReturn)
 {
     JUNO_STATUS_T tStatus = JunoDs_QueueVerify(ptQueue);
@@ -73,6 +75,7 @@ JUNO_STATUS_T JunoDs_QueuePop(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_POINTER_T tRet
 }
 
 /// Peek at the next item in the queue
+// @{"req": ["REQ-QUEUE-007", "REQ-QUEUE-008"]}
 JUNO_RESULT_POINTER_T JunoDs_QueuePeek(JUNO_DS_QUEUE_ROOT_T *ptQueue)
 {
     JUNO_RESULT_POINTER_T tResult = JUNO_ERR_RESULT(JUNO_STATUS_ERR, {0});
@@ -100,6 +103,7 @@ static const JUNO_DS_QUEUE_API_T gtQueueApi =
 };
 
 /// Initialize a buffer queue with a capacity
+// @{"req": ["REQ-QUEUE-001", "REQ-QUEUE-002"]}
 JUNO_STATUS_T JunoDs_QueueInit(JUNO_DS_QUEUE_ROOT_T *ptQueue, JUNO_DS_ARRAY_ROOT_T *ptQueueArray, JUNO_FAILURE_HANDLER_T pfcnFailureHdlr, JUNO_USER_DATA_T *pvFailureUserData)
 {
     JUNO_ASSERT_EXISTS(ptQueue && ptQueueArray);
