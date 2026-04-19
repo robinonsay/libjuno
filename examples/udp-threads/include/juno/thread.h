@@ -44,7 +44,6 @@
  *  static JUNO_THREAD_ROOT_T tThread;
  *
  *  // Initialize with the Linux vtable
- *  JunoThread_Init(&tThread, &g_junoThreadLinuxApi, NULL, NULL);
  *
  *  // Start the thread
  *  JunoThread_Create(&tThread, MyEntryFunction, &tThread);

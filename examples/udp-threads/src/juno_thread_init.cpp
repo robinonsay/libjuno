@@ -36,7 +36,6 @@
  *  before any vtable dispatch function (Create, Stop, Join).
  *
  * @param ptRoot               Caller-owned root storage. Must not be NULL.
- * @param ptApi                Vtable to inject (e.g., @c &g_junoThreadLinuxApi
  *                             or a test double). Must not be NULL.
  * @param pfcnFailureHandler   Optional diagnostic callback; may be NULL.
  * @param pvFailureUserData    Opaque user data passed to @p pfcnFailureHandler;
