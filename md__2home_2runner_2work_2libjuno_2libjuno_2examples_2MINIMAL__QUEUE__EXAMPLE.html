@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.3</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.4</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -124,8 +124,8 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
   <div class="headertitle"><div class="title">Minimal_queue_example Docs</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md120"></a> </p>
-<h1><a class="anchor" id="autotoc_md121"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md121"></a> </p>
+<h1><a class="anchor" id="autotoc_md122"></a>
 The Queue Example</h1>
 <p>In this example we will implement a queue. Queue's are intended to be memory safe in LibJuno so we need to implement an array for our type that tell's the queue how to get, set, and remove values. We also need to implement a pointer API for this type to tell the queue how to safely access the memory.</p>
 <p>For Context:</p><ul>
@@ -259,7 +259,7 @@ The Queue Example</h1>
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__juno__status__codes_html_gaf19acf3477a0e3a9fe75e793f482d3cd"><div class="ttname"><a href="group__juno__status__codes.html#gaf19acf3477a0e3a9fe75e793f482d3cd">JUNO_STATUS_OOB_ERROR</a></div><div class="ttdeci">#define JUNO_STATUS_OOB_ERROR</div><div class="ttdoc">Index or pointer was out of bounds.</div><div class="ttdef"><b>Definition</b> status.h:93</div></div>
-<div class="ttc" id="agroup__juno__status_html_gaf575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdoc">Opaque user data type for failure callbacks.</div><div class="ttdef"><b>Definition</b> status.h:99</div></div>
+<div class="ttc" id="agroup__juno__status_html_gaf575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdoc">Opaque user data type for failure callbacks.</div><div class="ttdef"><b>Definition</b> status.h:101</div></div>
 <div class="ttc" id="aminimal__memory__example_8c_html_ab96b39b3ef81c15a3d0152bec2f3f873"><div class="ttname"><a href="minimal__memory__example_8c.html#ab96b39b3ef81c15a3d0152bec2f3f873">ErrorHandler</a></div><div class="ttdeci">void ErrorHandler(JUNO_STATUS_T tStatus, const char *pcMsg, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdef"><b>Definition</b> minimal_memory_example.c:70</div></div>
 </div><!-- fragment --><p>Next we need to init the array and queue</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>(<span class="keywordtype">void</span>) {</div>

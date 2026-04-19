@@ -1,8 +1,12 @@
 var searchData=
 [
-  ['w_0',['w',['../structJUNO__VEC4__F64__CART__TAG.html#a8ae2587a6f9efd7dc8037f5bb2f94353',1,'JUNO_VEC4_F64_CART_TAG::w'],['../structJUNO__VEC4__F32__CART__TAG.html#a61502f88d8461ccba4facef5d53fb2f8',1,'JUNO_VEC4_F32_CART_TAG::w'],['../structJUNO__VEC4__I32__CART__TAG.html#a7d0611e6dfb823fe6b93a8e084637405',1,'JUNO_VEC4_I32_CART_TAG::w']]],
-  ['work_1',['Future work',['../md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html#autotoc_md21',1,'']]],
-  ['workflow_2',['Development and Testing Workflow',['../index.html#autotoc_md54',1,'']]],
-  ['write_3',['Write',['../structJUNO__ASYNC__IO__API__TAG.html#a978b3d9ae76477f7d0350bbce384035c',1,'JUNO_ASYNC_IO_API_TAG']]],
-  ['writemsg_4',['WriteMsg',['../i2c__io__api_8h.html#aebcbf0ee0874bc10ff8f09d80c68a3c0',1,'i2c_io_api.h']]]
+  ['questions_0',['Questions?',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html#autotoc_md140',1,'']]],
+  ['queue_20api_1',['Queue API',['../group__juno__ds__queue.html',1,'']]],
+  ['queue_20example_2',['queue example',['../minimal__queue__example_8c.html#autotoc_md120',1,'The Queue Example'],['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2MINIMAL__QUEUE__EXAMPLE.html#autotoc_md122',1,'The Queue Example']]],
+  ['queue_20example_20tt_20minimal_5fqueue_5fexample_20c_20tt_3',['2. Minimal Queue Example (&lt;tt&gt;minimal_queue_example.c&lt;/tt&gt;)',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html#autotoc_md128',1,'']]],
+  ['queue_20implementation_4',['queue implementation',['../engine__cmd__msg_8c.html#autotoc_md76',1,'Pipe Queue Implementation'],['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2example__project_2LibJuno__Tutorial.html#autotoc_md101',1,'Pipe Queue Implementation']]],
+  ['queue_5fapi_2eh_5',['queue_api.h',['../queue__api_8h.html',1,'']]],
+  ['queue_5fapi_5ft_6',['QUEUE_API_T',['../structjuno_1_1buff_1_1QUEUE__API__T.html',1,'juno::buff']]],
+  ['queuepeek_7',['QueuePeek',['../namespacejuno_1_1buff.html#ad3f08e8522eefa923a6d28f34934921f',1,'juno::buff']]],
+  ['quick_20start_8',['Quick Start',['../md__2home_2runner_2work_2libjuno_2libjuno_2examples_2README.html#autotoc_md124',1,'']]]
 ];

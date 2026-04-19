@@ -30,6 +30,8 @@ digraph "/home/runner/work/libjuno/libjuno/include/juno/time/time_api.h"
   Node9 [id="Node000009",label="/home/runner/work/libjuno\l/libjuno/include/juno/io\l/async_io_api.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$async__io__api_8h.html",tooltip="Asynchronous/non-blocking IO facade with timeouts."];
   Node1 -> Node10 [id="edge16_Node000001_Node000010",dir="back",color="steelblue1",style="solid",tooltip=" "];
   Node10 [id="Node000010",label="/home/runner/work/libjuno\l/libjuno/include/juno/sch\l/juno_sch_api.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__sch__api_8h.html",tooltip="Cyclic executive (minor/major frame) scheduler API."];
-  Node1 -> Node11 [id="edge17_Node000001_Node000011",dir="back",color="steelblue1",style="solid",tooltip=" "];
-  Node11 [id="Node000011",label="/home/runner/work/libjuno\l/libjuno/src/juno_time.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__time_8c.html",tooltip=" "];
+  Node10 -> Node11 [id="edge17_Node000010_Node000011",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node11 [id="Node000011",label="/home/runner/work/libjuno\l/libjuno/examples/udp-threads\l/src/main.cpp",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$main_8cpp.html",tooltip="Composition root for the udp-threads example."];
+  Node1 -> Node12 [id="edge18_Node000001_Node000012",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node12 [id="Node000012",label="/home/runner/work/libjuno\l/libjuno/src/juno_time.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$juno__time_8c.html",tooltip=" "];
 }

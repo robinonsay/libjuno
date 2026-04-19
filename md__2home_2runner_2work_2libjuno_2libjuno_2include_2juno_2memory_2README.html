@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.3</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.4</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -265,8 +265,8 @@ Initializing the block allocator</h1>
 <div class="line">    <a class="code hl_typedef" href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a> *pvFailureUserData</div>
 <div class="line">);</div>
 <div class="ttc" id="agroup__juno__memory__block_html_gaf5cb070171a69cefe8c86b2275e6db0b"><div class="ttname"><a href="group__juno__memory__block.html#gaf5cb070171a69cefe8c86b2275e6db0b">JunoMemory_BlockInit</a></div><div class="ttdeci">JUNO_STATUS_T JunoMemory_BlockInit(JUNO_MEMORY_ALLOC_BLOCK_T *ptJunoMemory, const JUNO_POINTER_API_T *ptPointerApi, void *pvMemory, JUNO_MEMORY_BLOCK_METADATA_T *ptMetadata, size_t zTypeSize, size_t zAlignment, size_t zLength, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, JUNO_USER_DATA_T *pvFailureUserData)</div><div class="ttdoc">Initialize a fixed-size block allocator over a caller-supplied region.</div><div class="ttdef"><b>Definition</b> juno_memory_block.c:249</div></div>
-<div class="ttc" id="agroup__juno__status_html_ga0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdoc">Failure handler callback signature.</div><div class="ttdef"><b>Definition</b> status.h:108</div></div>
-<div class="ttc" id="agroup__juno__status_html_gaf575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdoc">Opaque user data type for failure callbacks.</div><div class="ttdef"><b>Definition</b> status.h:99</div></div>
+<div class="ttc" id="agroup__juno__status_html_ga0fbff8c7db15c2f4d01e82b8a863dbbc"><div class="ttname"><a href="group__juno__status.html#ga0fbff8c7db15c2f4d01e82b8a863dbbc">JUNO_FAILURE_HANDLER_T</a></div><div class="ttdeci">void(* JUNO_FAILURE_HANDLER_T)(JUNO_STATUS_T tStatus, const char *pcCustomMessage, JUNO_USER_DATA_T *pvUserData)</div><div class="ttdoc">Failure handler callback signature.</div><div class="ttdef"><b>Definition</b> status.h:110</div></div>
+<div class="ttc" id="agroup__juno__status_html_gaf575dc984c80091757afe42a5d5c2b60"><div class="ttname"><a href="group__juno__status.html#gaf575dc984c80091757afe42a5d5c2b60">JUNO_USER_DATA_T</a></div><div class="ttdeci">void JUNO_USER_DATA_T</div><div class="ttdoc">Opaque user data type for failure callbacks.</div><div class="ttdef"><b>Definition</b> status.h:101</div></div>
 <div class="ttc" id="amemory__block_8h_html_aedb8dcf65a30cfeb601803caf159ae03"><div class="ttname"><a href="memory__block_8h.html#aedb8dcf65a30cfeb601803caf159ae03">JUNO_MEMORY_ALLOC_BLOCK_T</a></div><div class="ttdeci">struct JUNO_MEMORY_ALLOC_BLOCK_TAG JUNO_MEMORY_ALLOC_BLOCK_T</div><div class="ttdef"><b>Definition</b> memory_block.h:103</div></div>
 <div class="ttc" id="astructJUNO__MEMORY__BLOCK__METADATA__TAG_html"><div class="ttname"><a href="structJUNO__MEMORY__BLOCK__METADATA__TAG.html">JUNO_MEMORY_BLOCK_METADATA_TAG</a></div><div class="ttdoc">Metadata for a memory block entry (allocator-specific).</div><div class="ttdef"><b>Definition</b> memory_block.h:112</div></div>
 </div><!-- fragment --><p>Usage:</p>

@@ -16,9 +16,9 @@ digraph "/home/runner/work/libjuno/libjuno/examples/example_project/system_manag
   }
   }
   dir_d44c64559bbebec7f509842c48db8b23 [label="include", fillcolor="#edf0f7", color="red", style="filled", URL="dir_d44c64559bbebec7f509842c48db8b23.html",tooltip=""];
-  dir_21ffde085e80dea3afb802d67e926a06->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="6", labeldistance=1.5 headhref="dir_000010_000011.html" href="dir_000010_000011.html" color="steelblue1" fontcolor="steelblue1"];
-  dir_21ffde085e80dea3afb802d67e926a06->dir_1f5417f6f28478589e6e706f38a58164 [headlabel="1", labeldistance=1.5 headhref="dir_000010_000004.html" href="dir_000010_000004.html" color="steelblue1" fontcolor="steelblue1"];
-  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_1f5417f6f28478589e6e706f38a58164 [headlabel="2", labeldistance=1.5 headhref="dir_000022_000004.html" href="dir_000022_000004.html" color="steelblue1" fontcolor="steelblue1"];
-  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_21ffde085e80dea3afb802d67e926a06 [headlabel="1", labeldistance=1.5 headhref="dir_000022_000010.html" href="dir_000022_000010.html" color="steelblue1" fontcolor="steelblue1"];
-  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="7", labeldistance=1.5 headhref="dir_000022_000011.html" href="dir_000022_000011.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_21ffde085e80dea3afb802d67e926a06->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="6", labeldistance=1.5 headhref="dir_000012_000014.html" href="dir_000012_000014.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_21ffde085e80dea3afb802d67e926a06->dir_1f5417f6f28478589e6e706f38a58164 [headlabel="1", labeldistance=1.5 headhref="dir_000012_000006.html" href="dir_000012_000006.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_1f5417f6f28478589e6e706f38a58164 [headlabel="2", labeldistance=1.5 headhref="dir_000026_000006.html" href="dir_000026_000006.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_21ffde085e80dea3afb802d67e926a06 [headlabel="1", labeldistance=1.5 headhref="dir_000026_000012.html" href="dir_000026_000012.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_0f2a2986182c26fe6ddd066a36cc2571->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="7", labeldistance=1.5 headhref="dir_000026_000014.html" href="dir_000026_000014.html" color="steelblue1" fontcolor="steelblue1"];
 }

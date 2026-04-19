@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['now_0',['Now',['../main_8c.html#a6572883ff03955261759096ae2e010f1',1,'main.c']]]
+  ['main_0',['main',['../main_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main(void):&#160;main.c'],['../example__state__machine_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main(void):&#160;example_state_machine.c'],['../minimal__memory__example_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main(void):&#160;minimal_memory_example.c'],['../minimal__queue__example_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main(void):&#160;minimal_queue_example.c'],['../main_8cpp.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main(void):&#160;main.cpp']]],
+  ['makemsgpointer_1',['MakeMsgPointer',['../udp__thread__msg_8cpp.html#a8f7a91e065d484b714ece6157c0aea2e',1,'udp_thread_msg.cpp']]],
+  ['monitorapp_5finit_2',['monitorapp_init',['../monitor__app_8h.html#a94a49c38901e6753fabf0d6a03af2b01',1,'MonitorApp_Init(MONITOR_APP_T *ptApp, JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_DS_ARRAY_ROOT_T *ptPipeArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, void *pvFailureUserData):&#160;monitor_app.cpp'],['../monitor__app_8cpp.html#a94a49c38901e6753fabf0d6a03af2b01',1,'MonitorApp_Init(MONITOR_APP_T *ptApp, JUNO_SB_BROKER_ROOT_T *ptBroker, JUNO_DS_ARRAY_ROOT_T *ptPipeArray, JUNO_FAILURE_HANDLER_T pfcnFailureHandler, void *pvFailureUserData):&#160;monitor_app.cpp']]]
 ];

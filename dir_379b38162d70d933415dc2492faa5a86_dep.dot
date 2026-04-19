@@ -1,0 +1,25 @@
+digraph "/home/runner/work/libjuno/libjuno/examples/udp-threads"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  compound=true
+  subgraph clusterdir_d28a4824dc47e487b107a5db32ef43c4 {
+    graph [ bgcolor="#edf0f7", pencolor="grey25", label="examples", fontname=Helvetica,fontsize=10 style="filled,dashed", URL="dir_d28a4824dc47e487b107a5db32ef43c4.html",tooltip=""]
+  subgraph clusterdir_379b38162d70d933415dc2492faa5a86 {
+    graph [ bgcolor="#edf0f7", pencolor="grey25", label="", fontname=Helvetica,fontsize=10 style="filled,bold", URL="dir_379b38162d70d933415dc2492faa5a86.html",tooltip=""]
+    dir_379b38162d70d933415dc2492faa5a86 [shape=plaintext, label="udp-threads"];
+  dir_df5976f29e9777bff052b228e99cf36e [label="docs", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_df5976f29e9777bff052b228e99cf36e.html",tooltip=""];
+  dir_650a2e3dce576c6440d1d35a88490e57 [label="include", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_650a2e3dce576c6440d1d35a88490e57.html",tooltip=""];
+  dir_3a3825c667cb854d1cb9d63bfadebcd2 [label="src", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_3a3825c667cb854d1cb9d63bfadebcd2.html",tooltip=""];
+  dir_f4f10672f7fabde3dbd37f242fd8bfac [label="tests", fillcolor="#a2b4d6", color="grey25", style="filled", URL="dir_f4f10672f7fabde3dbd37f242fd8bfac.html",tooltip=""];
+  }
+  }
+  dir_d44c64559bbebec7f509842c48db8b23 [label="include", fillcolor="#edf0f7", color="red", style="filled", URL="dir_d44c64559bbebec7f509842c48db8b23.html",tooltip=""];
+  dir_650a2e3dce576c6440d1d35a88490e57->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="24", labeldistance=1.5 headhref="dir_000013_000014.html" href="dir_000013_000014.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_3a3825c667cb854d1cb9d63bfadebcd2->dir_650a2e3dce576c6440d1d35a88490e57 [headlabel="20", labeldistance=1.5 headhref="dir_000027_000013.html" href="dir_000027_000013.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_3a3825c667cb854d1cb9d63bfadebcd2->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="16", labeldistance=1.5 headhref="dir_000027_000014.html" href="dir_000027_000014.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_f4f10672f7fabde3dbd37f242fd8bfac->dir_650a2e3dce576c6440d1d35a88490e57 [headlabel="7", labeldistance=1.5 headhref="dir_000032_000013.html" href="dir_000032_000013.html" color="steelblue1" fontcolor="steelblue1"];
+  dir_f4f10672f7fabde3dbd37f242fd8bfac->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="3", labeldistance=1.5 headhref="dir_000032_000014.html" href="dir_000032_000014.html" color="steelblue1" fontcolor="steelblue1"];
+}

@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.3</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.4</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -121,6 +121,8 @@ $(document).ready(function(){initNavTree('juno__math_8h.html',''); initResizable
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">juno_math.h File Reference<div class="ingroups"><a class="el" href="group__juno__math.html">Math Core</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -129,6 +131,7 @@ $(document).ready(function(){initNavTree('juno__math_8h.html',''); initResizable
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="juno__math__types_8h_source.html">juno_math_types.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="juno__vec_8h_source.html">juno_vec.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="juno__math__constants_8h_source.html">juno/math/juno_math_constants.h</a>&quot;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for juno_math.h:</div>
@@ -137,6 +140,14 @@ Include dependency graph for juno_math.h:</div>
 </div>
 </div>
 <p><a href="juno__math_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a6f42fe4e94b9077153ff4a3d42423112" id="r_a6f42fe4e94b9077153ff4a3d42423112"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math_8h.html#a6f42fe4e94b9077153ff4a3d42423112">Juno_Deg2Rad</a>(deg)&#160;&#160;&#160;deg * <a class="el" href="group__juno__math.html#ga9ed43157bb9cdb16c2a2ddb8b27404ae">JUNO_PI</a> / 180.0</td></tr>
+<tr class="separator:a6f42fe4e94b9077153ff4a3d42423112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a546684ae729106a98034906ec70782c8" id="r_a546684ae729106a98034906ec70782c8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="juno__math_8h.html#a546684ae729106a98034906ec70782c8">Juno_Rad2Deg</a>(rad)&#160;&#160;&#160;rad * 180.0 / <a class="el" href="group__juno__math.html#ga9ed43157bb9cdb16c2a2ddb8b27404ae">JUNO_PI</a></td></tr>
+<tr class="separator:a546684ae729106a98034906ec70782c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Convenience header: math types plus inline vector/quaternion ops. </p>
 <p>Umbrella include that aggregates:</p><ul>
@@ -152,7 +163,44 @@ Include dependency graph for juno_math.h:</div>
 <div class="ttc" id="ajuno__math_8h_html"><div class="ttname"><a href="juno__math_8h.html">juno_math.h</a></div><div class="ttdoc">Convenience header: math types plus inline vector/quaternion ops.</div></div>
 <div class="ttc" id="ajuno__vec_8h_html_af6aafc0b62d83d81714f75bc0680e4ef"><div class="ttname"><a href="juno__vec_8h.html#af6aafc0b62d83d81714f75bc0680e4ef">Juno_Vec3_F64_Add</a></div><div class="ttdeci">static JUNO_VEC3_F64_T Juno_Vec3_F64_Add(JUNO_VEC3_F64_T tVec0, JUNO_VEC3_F64_T tVec1)</div><div class="ttdoc">Add two 3D vectors (double).</div><div class="ttdef"><b>Definition</b> juno_vec.h:265</div></div>
 <div class="ttc" id="aunionJUNO__VEC3__F64__TAG_html"><div class="ttname"><a href="unionJUNO__VEC3__F64__TAG.html">JUNO_VEC3_F64_TAG</a></div><div class="ttdoc">3D vector union supporting Cartesian, spherical, and array access (double precision).</div><div class="ttdef"><b>Definition</b> juno_vec_types.h:265</div></div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- fragment --> </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a6f42fe4e94b9077153ff4a3d42423112" name="a6f42fe4e94b9077153ff4a3d42423112"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f42fe4e94b9077153ff4a3d42423112">&#9670;&#160;</a></span>Juno_Deg2Rad</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define Juno_Deg2Rad</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">deg</td><td>)</td>
+          <td>&#160;&#160;&#160;deg * <a class="el" href="group__juno__math.html#ga9ed43157bb9cdb16c2a2ddb8b27404ae">JUNO_PI</a> / 180.0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a546684ae729106a98034906ec70782c8" name="a546684ae729106a98034906ec70782c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a546684ae729106a98034906ec70782c8">&#9670;&#160;</a></span>Juno_Rad2Deg</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define Juno_Rad2Deg</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">rad</td><td>)</td>
+          <td>&#160;&#160;&#160;rad * 180.0 / <a class="el" href="group__juno__math.html#ga9ed43157bb9cdb16c2a2ddb8b27404ae">JUNO_PI</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

@@ -56,7 +56,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="juno_logo_1.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.3</span>
+   <div id="projectname">LibJuno<span id="projectnumber">&#160;1.0.4</span>
    </div>
    <div id="projectbrief">LibJuno is a lightweight C11 library designed specifically for embedded systems.</div>
   </td>
@@ -124,15 +124,15 @@ $(document).ready(function(){initNavTree('md__2home_2runner_2work_2libjuno_2libj
   <div class="headertitle"><div class="title">LibJuno Examples</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md122"></a> This directory contains minimal, self-contained examples demonstrating LibJuno's core capabilities.</p>
-<h1><a class="anchor" id="autotoc_md123"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md123"></a> This directory contains minimal, self-contained examples demonstrating LibJuno's core capabilities.</p>
+<h1><a class="anchor" id="autotoc_md124"></a>
 Quick Start</h1>
 <p>Build all examples with: </p><div class="fragment"><div class="line">cmake -S .. -B ../build -DJUNO_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug</div>
 <div class="line">cmake --build ../build -j</div>
 </div><!-- fragment --><p>Executables will be in <code>../build/examples/</code>.</p>
-<h1><a class="anchor" id="autotoc_md124"></a>
+<h1><a class="anchor" id="autotoc_md125"></a>
 Available Examples</h1>
-<h2><a class="anchor" id="autotoc_md125"></a>
+<h2><a class="anchor" id="autotoc_md126"></a>
 1. Minimal Memory Example (&lt;tt&gt;minimal_memory_example.c&lt;/tt&gt;)</h2>
 <p><b>What it demonstrates</b>: Block-based memory allocator with type-safe pointer API</p>
 <p><b>Key concepts</b>:</p><ul>
@@ -145,7 +145,7 @@ Available Examples</h1>
 <p><b>Learn</b>: How LibJuno achieves memory safety without dynamic allocation</p>
 <p><b>Run</b>: </p><div class="fragment"><div class="line">../build/examples/minimal_memory_example</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md127"></a>
+<h2><a class="anchor" id="autotoc_md128"></a>
 2. Minimal Queue Example (&lt;tt&gt;minimal_queue_example.c&lt;/tt&gt;)</h2>
 <p><b>What it demonstrates</b>: Type-safe queue implementation using array and pointer APIs</p>
 <p><b>Key concepts</b>:</p><ul>
@@ -159,7 +159,7 @@ Available Examples</h1>
 <p><b>Documentation</b>: See <code><a class="el" href="MINIMAL__QUEUE__EXAMPLE_8md.html">MINIMAL_QUEUE_EXAMPLE.md</a></code> for detailed walkthrough</p>
 <p><b>Run</b>: </p><div class="fragment"><div class="line">../build/examples/minimal_queue_example</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md129"></a>
+<h2><a class="anchor" id="autotoc_md130"></a>
 3. State Machine Example (&lt;tt&gt;example_state_machine.c&lt;/tt&gt;)</h2>
 <p><b>What it demonstrates</b>: State machine implementation using LibJuno's SM API</p>
 <p><b>Key concepts</b>:</p><ul>
@@ -172,7 +172,7 @@ Available Examples</h1>
 <p><b>Use case</b>: Traffic light controller simulation</p>
 <p><b>Run</b>: </p><div class="fragment"><div class="line">../build/examples/example_state_machine</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md131"></a>
+<h2><a class="anchor" id="autotoc_md132"></a>
 4. Complete Tutorial Project (&lt;tt&gt;example_project/&lt;/tt&gt;)</h2>
 <p><b>What it demonstrates</b>: Full application using multiple LibJuno subsystems</p>
 <p><b>Key concepts</b>:</p><ul>
@@ -187,7 +187,7 @@ Available Examples</h1>
 <p><b>Build</b>: </p><div class="fragment"><div class="line">cd example_project</div>
 <div class="line"># See tutorial for build instructions</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md133"></a>
+<h1><a class="anchor" id="autotoc_md134"></a>
 Example Selection Guide</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -203,14 +203,14 @@ Example Selection Guide</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Understand DI patterns   </td><td class="markdownTableBodyNone">Tutorial + any example   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md134"></a>
+<h1><a class="anchor" id="autotoc_md135"></a>
 Using Examples as Templates</h1>
 <p>Examples are designed to be:</p><ul>
 <li><b>Copy-paste friendly</b>: Take code snippets directly into your project</li>
 <li><b>Minimal</b>: Only demonstrate the specific feature</li>
 <li><b>Self-contained</b>: No hidden dependencies or setup</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md135"></a>
+<h2><a class="anchor" id="autotoc_md136"></a>
 Code Generation Scripts</h2>
 <p>For production code, use the generators in <code>../scripts/</code>:</p><ul>
 <li><code>create_array.py</code>: Generate array and pointer API boilerplate</li>
@@ -218,7 +218,7 @@ Code Generation Scripts</h2>
 <li><code>create_app.py</code>: Generate application skeleton</li>
 <li><code>create_msg.py</code>: Generate message types</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md136"></a>
+<h1><a class="anchor" id="autotoc_md137"></a>
 Example Code Style</h1>
 <p>All examples follow these patterns:</p><ol type="1">
 <li><b>Forward declarations</b> of APIs to allow static initialization</li>
@@ -227,7 +227,7 @@ Example Code Style</h1>
 <li><b>Initialization</b> showing dependency injection</li>
 <li><b>Usage</b> demonstrating the API</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md137"></a>
+<h1><a class="anchor" id="autotoc_md138"></a>
 Notes</h1>
 <ul>
 <li>Examples may use <b>hosted features</b> (printf, etc.) for clarity</li>
@@ -235,7 +235,7 @@ Notes</h1>
 <li>For production embedded code, replace stdio/stdlib with your platform's APIs</li>
 <li>See <code>../include/juno/README.md</code> for module system architecture</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md138"></a>
+<h1><a class="anchor" id="autotoc_md139"></a>
 Additional Resources</h1>
 <ul>
 <li><a class="el" href="index.html#md__2home_2runner_2work_2libjuno_2libjuno_2README">Main README</a>: Build instructions and CMake options</li>
@@ -243,7 +243,7 @@ Additional Resources</h1>
 <li><a class="el" href="md__2home_2runner_2work_2libjuno_2libjuno_2include_2juno_2memory_2README.html">Memory Module Guide</a>: Detailed memory management</li>
 <li><a href="../docs/">API Documentation</a>: Generated Doxygen docs (build with <code>-DJUNO_DOCS=ON</code>)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md139"></a>
+<h1><a class="anchor" id="autotoc_md140"></a>
 Questions?</h1>
 <p>Check the <a href="https://github.com/robinonsay/libjuno/issues">LibJuno GitHub Issues</a> or consult inline documentation in headers. </p>
 </div></div><!-- contents -->

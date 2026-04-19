@@ -1,6 +1,7 @@
 var group__juno__status__codes =
 [
     [ "JUNO_STATUS_CRC_ERROR", "group__juno__status__codes.html#gacf882ada02e2ec41ba4f36637e428d85", null ],
+    [ "JUNO_STATUS_CUSTOM_ERROR", "group__juno__status__codes.html#gab6cba4f2684d699bc3c4e4f40cbca5fe", null ],
     [ "JUNO_STATUS_DNE_ERROR", "group__juno__status__codes.html#ga07fa62e4e2f3ce807233b7acc9d06039", null ],
     [ "JUNO_STATUS_ERR", "group__juno__status__codes.html#ga07ec979dfc10514575e99ff44bb0c074", null ],
     [ "JUNO_STATUS_FILE_ERROR", "group__juno__status__codes.html#ga4c47d741d50c36723478ae465ee56f6c", null ],
