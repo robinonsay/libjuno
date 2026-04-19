@@ -2,13 +2,14 @@
   "name": "libjuno",
   "displayName": "LibJuno",
   "description": "Vtable-aware Go to Definition for LibJuno embedded C projects",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "publisher": "libjuno",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/robinonsay/libjuno.git"
   },
+  "icon": "assets/icon.png",
   "categories": [
     "Other"
   ],
