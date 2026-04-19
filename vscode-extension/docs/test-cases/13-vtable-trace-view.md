@@ -593,4 +593,16 @@ provider does not attempt to render an empty trace. It also documents known beha
 **Scenario:** A `ConcreteLocation` with `initCallFile` set but no `compRootFile` is passed through `VtableTraceProvider.showTrace()`. The initialization implementation node must not appear.
 **Expected:** HTML does NOT contain `<div class="trace-node init-impl">`.
 
+### TC-TRACE-028 — resolveInitCallers Excludes Header File Forward Declarations
+**Requirement:** REQ-VSCODE-037
+**File:** `src/indexer/__tests__/workspaceIndexer.test.ts`
+**Scenario:** A header file contains a forward declaration of the Init function, and a `.c` file contains the real call site. After `fullIndex()`, `resolveInitCallers()` must stamp `compRootFile` to the `.c` file, not the `.h` file.
+**Expected:** `ConcreteLocation.compRootFile` ends with `trace028_main.c`; does NOT end with `trace028_decl.h`.
+
+### TC-TRACE-029 — resolveInitCallers Skips main() — No Caller Resolution
+**Requirement:** REQ-VSCODE-037
+**File:** `src/indexer/__tests__/workspaceIndexer.test.ts`
+**Scenario:** The Init function call site is inside `main()`. Since `main` has no callers in user C code, `resolveInitCallers()` must leave `compRootFile` undefined and fall back gracefully.
+**Expected:** `ConcreteLocation.compRootFile` is `undefined`; `initCallFile` ends with `trace029_main.c`.
+
 ---

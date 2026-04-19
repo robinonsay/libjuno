@@ -498,11 +498,16 @@ export class WorkspaceIndexer {
                     );
                     if (!initFnName) { continue; }
 
+                    // 'main' has no callers in C user code — skip to avoid false positives.
+                    if (initFnName === 'main') { continue; }
+
                     // Scan all indexed files for a call to that function.
                     const callPattern = new RegExp(`\\b${initFnName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\(`, 'g');
                     let found = false;
                     for (const relPath of this.fileHashes.keys()) {
                         if (found) { break; }
+                        const ext = path.extname(relPath).toLowerCase();
+                        if (ext !== '.c' && ext !== '.cpp') { continue; }
                         const absPath = path.join(this.workspaceRoot, relPath);
                         let text: string;
                         try { text = fs.readFileSync(absPath, 'utf8'); } catch { continue; }

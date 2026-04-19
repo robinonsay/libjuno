@@ -211,6 +211,16 @@ This is non-negotiable every sprint without exception.
 - Agents got 404 and showed zero tools. Root cause was invisible in unit tests because the tests only hit the REST endpoints directly, never simulating what an MCP client actually sends.
 - Rule: whenever a component writes a URL that external clients will call (discovery files, config files, documentation), verify that URL is actually handled by the server with the right protocol.
 
+### 2026-04-18 — Structural detection beats naming-convention heuristics for feature detection
+- Sprint 25: initial plan used `*Init*` function name to find composition roots — PM correctly rejected as "weak."
+- Better rule: detect the STRUCTURAL INVARIANT (API struct variable's address passed as `&varName` in any call) rather than any naming convention.
+- Lesson: when designing detection/resolution logic, ask "what structural property is always true?" not "what naming pattern is common?"
+
+### 2026-04-18 — New NavigationIndex fields require updates in 4 places: createEmptyIndex, clearIndex, removeFileRecords, and test mocks
+- Adding `initCallIndex` to NavigationIndex required edits in `navigationIndex.ts` (3 functions) AND in existing test mocks that construct `NavigationIndex` objects directly.
+- The test agent correctly found and fixed 2 pre-existing test mocks (`vtableTraceProvider.test.ts`, `workspaceIndexer.test.ts`) that failed to compile after the new field was added.
+- Rule: when adding a field to a shared interface like NavigationIndex, grep for all test files that construct the interface directly and update them in the same work item.
+
 ### 2026-04-18 — Two JSON-RPC edge cases senior SE will always flag: notifications and missing params
 - Notifications (no `id` field) must return HTTP 202 with no body — NOT a MethodNotFound error. A specific check for one notification name is insufficient; the guard must cover ALL methods with no `id`.
 - `tools/call` must validate `arguments` fields before passing to the handler, returning `-32602 InvalidParams` on missing/wrong-typed fields. Silently casting `undefined` as `string` is a latent crash.

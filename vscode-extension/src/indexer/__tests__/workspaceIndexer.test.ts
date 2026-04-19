@@ -1905,6 +1905,108 @@ describe('WorkspaceIndexer — core behaviour', () => {
             expect(loc!.compRootLine).toBe(1);
         });
 
+        // @{"verify": ["REQ-VSCODE-037"]}
+        it('TC-TRACE-028: resolveInitCallers does not use .h forward declaration as call site', async () => {
+            // File 1: trace028_impl.c — API struct (explicit tag syntax), vtable,
+            // and MyInit which contains &gtMyInitApi (becomes initCallFile).
+            // Explicit struct tag syntax is required so the parser resolves the
+            // positional vtable immediately without deferring.
+            const implPath = path.join(crDir, 'trace028_impl.c');
+            fs.writeFileSync(implPath, [
+                'struct MY_INIT_API_TAG { void (*Run)(void); }; typedef struct MY_INIT_API_TAG MY_INIT_API_T;',
+                'static void RunImpl(void) {}',
+                'static const MY_INIT_API_T gtMyInitApi = { RunImpl };',
+                'void MyInit(void *p) { p = &gtMyInitApi; }',
+            ].join('\n'));
+
+            // File 2: trace028_decl.h — forward declaration only.
+            // This line matches \bMyInit\s*\( and would be a false call site
+            // if .h files were included in the resolveInitCallers scan.
+            const declPath = path.join(crDir, 'trace028_decl.h');
+            fs.writeFileSync(declPath, 'void MyInit(void *p);\n');
+
+            // File 3: trace028_main.c — the real call site.
+            const mainPath = path.join(crDir, 'trace028_main.c');
+            fs.writeFileSync(mainPath, [
+                'void RealCaller(void) { void *myModule = 0; MyInit(&myModule); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            // fullIndex() scans all files (including the .h) into fileHashes,
+            // then calls resolveInitCallers() which must skip .h files.
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_INIT_API_T with Run field.
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_INIT_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs = fieldMap!.get('Run');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            // Find the ConcreteLocation stamped by resolveInitCallers.
+            const loc = locs!.find(l => l.compRootFile !== undefined);
+            expect(loc).toBeDefined();
+
+            // initCallFile: where &gtMyInitApi appears — inside MyInit in trace028_impl.c.
+            expect(loc!.initCallFile).toBeDefined();
+            expect(loc!.initCallFile!.endsWith('trace028_impl.c')).toBe(true);
+
+            // compRootFile: must be the .c call site, NOT the .h forward declaration.
+            expect(loc!.compRootFile!.endsWith('trace028_main.c')).toBe(true);
+            expect(loc!.compRootFile!.endsWith('trace028_decl.h')).toBe(false);
+
+            // compRootLine: line containing MyInit(&myModule) in trace028_main.c.
+            expect(loc!.compRootLine).toBe(1);
+        });
+
+        // @{"verify": ["REQ-VSCODE-037"]}
+        it('TC-TRACE-029: resolveInitCallers leaves compRootFile undefined when init call site is inside main()', async () => {
+            // File 1: trace029_api.c — API struct (explicit tag syntax), vtable,
+            // and GoImpl implementation. Explicit tag syntax ensures immediate
+            // positional vtable resolution in the same file.
+            const apiPath = path.join(crDir, 'trace029_api.c');
+            fs.writeFileSync(apiPath, [
+                'struct MY_MAIN_API_TAG { void (*Go)(void); }; typedef struct MY_MAIN_API_TAG MY_MAIN_API_T;',
+                'static void GoImpl(void) {}',
+                'static const MY_MAIN_API_T gtMainApi = { GoImpl };',
+            ].join('\n'));
+
+            // File 2: trace029_main.c — GoInit on line 1, main on line 2.
+            // &gtMainApi appears on line 2 (inside main), so resolveCompositionRoots
+            // stamps initCallFile = trace029_main.c, initCallLine = 2.
+            // findEnclosingFunction returns 'main' for line 2, so the main-guard
+            // fires and compRootFile is left undefined.
+            const mainPath = path.join(crDir, 'trace029_main.c');
+            fs.writeFileSync(mainPath, [
+                'void GoInit(void *p, void *api) { p = api; }',
+                'void main(void) { void *myModule = 0; GoInit(&myModule, &gtMainApi); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_MAIN_API_T with Go field.
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_MAIN_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs = fieldMap!.get('Go');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            // Find the ConcreteLocation that has initCallFile set.
+            // resolveCompositionRoots must have stamped it (guard for initCallFile
+            // existence is the prerequisite for resolveInitCallers to run).
+            const loc = locs!.find(l => l.initCallFile !== undefined);
+            expect(loc).toBeDefined();
+
+            // initCallFile: where &gtMainApi appears — inside main() in trace029_main.c.
+            expect(loc!.initCallFile!.endsWith('trace029_main.c')).toBe(true);
+
+            // compRootFile: must be undefined — the main-guard skipped the scan.
+            expect(loc!.compRootFile).toBeUndefined();
+        });
+
     }); // end 'Composition root resolution'
 
 });
