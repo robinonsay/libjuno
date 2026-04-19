@@ -353,6 +353,110 @@ describe('McpServer', () => {
         expect((result.body as { fileCount: number; cacheValid: boolean }).fileCount).toBeGreaterThanOrEqual(0);
     });
 
+    // === TC-MCP-021 ===
+    // @{"verify": ["REQ-VSCODE-017"]}
+    it('TC-MCP-021: /mcp initialize → HTTP 200 with protocolVersion, capabilities.tools, serverInfo.name', async () => {
+        const payload = JSON.stringify({
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'initialize',
+            params: { protocolVersion: '2024-11-05', capabilities: {}, clientInfo: { name: 'test', version: '1.0' } },
+        });
+
+        const result = await httpRequest(port, 'POST', '/mcp', payload);
+
+        expect(result.status).toBe(200);
+        const body = result.body as { jsonrpc: string; id: number; result: { protocolVersion: string; capabilities: { tools: unknown }; serverInfo: { name: string } } };
+        expect(body.jsonrpc).toBe('2.0');
+        expect(body.id).toBe(1);
+        expect(body.result.protocolVersion).toBe('2024-11-05');
+        expect(body.result.capabilities).toHaveProperty('tools');
+        expect(body.result.serverInfo.name).toBe('libjuno');
+    });
+
+    // === TC-MCP-022 ===
+    // @{"verify": ["REQ-VSCODE-017", "REQ-VSCODE-018", "REQ-VSCODE-019"]}
+    it('TC-MCP-022: /mcp tools/list → HTTP 200 with resolve_vtable_call and resolve_failure_handler tools', async () => {
+        const payload = JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list' });
+
+        const result = await httpRequest(port, 'POST', '/mcp', payload);
+
+        expect(result.status).toBe(200);
+        const body = result.body as { result: { tools: Array<{ name: string; inputSchema: { type: string; required: string[] } }> } };
+        expect(Array.isArray(body.result.tools)).toBe(true);
+        expect(body.result.tools.length).toBeGreaterThanOrEqual(2);
+        const names = body.result.tools.map(t => t.name);
+        expect(names).toContain('resolve_vtable_call');
+        expect(names).toContain('resolve_failure_handler');
+        for (const tool of body.result.tools) {
+            expect(tool.inputSchema.type).toBe('object');
+            expect(Array.isArray(tool.inputSchema.required)).toBe(true);
+            expect(tool.inputSchema.required).toContain('file');
+            expect(tool.inputSchema.required).toContain('line');
+            expect(tool.inputSchema.required).toContain('column');
+            expect(tool.inputSchema.required).toContain('lineText');
+        }
+    });
+
+    // === TC-MCP-023 ===
+    // @{"verify": ["REQ-VSCODE-018"]}
+    it('TC-MCP-023: /mcp tools/call resolve_vtable_call → HTTP 200 with content[0].text containing found property', async () => {
+        (mockVtableResolver.resolve as jest.Mock).mockReturnValue({ found: true, locations: [{ functionName: 'Insert', file: '/test/a.c', line: 42 }] });
+
+        const payload = JSON.stringify({
+            jsonrpc: '2.0',
+            id: 3,
+            method: 'tools/call',
+            params: { name: 'resolve_vtable_call', arguments: { file: '/test/a.c', line: 1, column: 5, lineText: 'ptApi->Insert(ptHeap)' } },
+        });
+
+        const result = await httpRequest(port, 'POST', '/mcp', payload);
+
+        expect(result.status).toBe(200);
+        const body = result.body as { result: { content: Array<{ type: string; text: string }> } };
+        expect(Array.isArray(body.result.content)).toBe(true);
+        expect(body.result.content.length).toBeGreaterThanOrEqual(1);
+        expect(body.result.content[0].type).toBe('text');
+        const parsed = JSON.parse(body.result.content[0].text) as { found: boolean };
+        expect(typeof parsed.found).toBe('boolean');
+        expect(parsed.found).toBe(true);
+    });
+
+    // === TC-MCP-024 ===
+    // @{"verify": ["REQ-VSCODE-019"]}
+    it('TC-MCP-024: /mcp tools/call resolve_failure_handler → HTTP 200 with content[0].text containing found property', async () => {
+        (mockFhResolver.resolve as jest.Mock).mockReturnValue({ found: true, locations: [{ functionName: 'MyHandler', file: '/test/a.c', line: 10 }] });
+
+        const payload = JSON.stringify({
+            jsonrpc: '2.0',
+            id: 4,
+            method: 'tools/call',
+            params: { name: 'resolve_failure_handler', arguments: { file: '/test/a.c', line: 1, column: 5, lineText: 'ptMod->tRoot._pfcnFailureHandler = MyHandler;' } },
+        });
+
+        const result = await httpRequest(port, 'POST', '/mcp', payload);
+
+        expect(result.status).toBe(200);
+        const body = result.body as { result: { content: Array<{ type: string; text: string }> } };
+        expect(body.result.content[0].type).toBe('text');
+        const parsed = JSON.parse(body.result.content[0].text) as { found: boolean };
+        expect(typeof parsed.found).toBe('boolean');
+        expect(parsed.found).toBe(true);
+    });
+
+    // === TC-MCP-025 ===
+    // @{"verify": ["REQ-VSCODE-017"]}
+    it('TC-MCP-025: /mcp unknown method → HTTP 200 with error.code -32601 and matching id', async () => {
+        const payload = JSON.stringify({ jsonrpc: '2.0', id: 5, method: 'nonexistent/method' });
+
+        const result = await httpRequest(port, 'POST', '/mcp', payload);
+
+        expect(result.status).toBe(200);
+        const body = result.body as { jsonrpc: string; id: number; error: { code: number; message: string } };
+        expect(body.error.code).toBe(-32601);
+        expect(body.id).toBe(5);
+    });
+
     // === TC-ERR-006 ===
     // @{"verify": ["REQ-VSCODE-004"]}
     test('TC-ERR-006: resolve_vtable_call error object includes API type and field name — HTTP 200 (not 4xx/5xx)', async () => {

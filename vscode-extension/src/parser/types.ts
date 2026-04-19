@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003"]}
+// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003", "REQ-VSCODE-031"]}
 /**
  * @file types.ts
  *
@@ -40,6 +40,8 @@ export interface ParsedFile {
   apiCallSites: ApiCallSiteRecord[];
   /** Positional vtable initializers that could not be resolved at parse time (API struct in different file). */
   pendingPositionalVtables: PendingPositionalVtable[];
+  /** Call sites where a known API struct variable's address is passed as an argument. Populated by scanInitCallSites(). */
+  initCallSites: InitCallRecord[];
   /** Local variable and parameter type information for all functions in the file. */
   localTypeInfo: LocalTypeInfo;
 }
@@ -129,6 +131,8 @@ export interface VtableAssignmentRecord {
   file: string;
   /** 1-based line number of this assignment. */
   line: number;
+  /** Variable name of the API struct containing this assignment (e.g. "gtMyLoggerApi"). Populated for top-level struct declarations. Used to locate the composition root call site. */
+  varName?: string;
 }
 
 /**
@@ -166,6 +170,21 @@ export interface PendingPositionalVtable {
   file: string;
   /** 1-based line numbers corresponding to each initializer. */
   lines: number[];
+  varName?: string;
+}
+
+/**
+ * A call site where a known API struct variable's address is passed as an argument.
+ * Used to locate the composition root — the site where a module instance is wired
+ * to its concrete vtable at runtime (REQ-VSCODE-036).
+ */
+export interface InitCallRecord {
+  /** Variable name of the API struct being passed, e.g. "gtMyLoggerApi". */
+  apiVarName: string;
+  /** Absolute path of the file containing this call site. */
+  file: string;
+  /** 1-based line number of the call site. */
+  line: number;
 }
 
 /**
@@ -299,6 +318,13 @@ export interface NavigationIndex {
    * Populated by visitLocalDeclaration and visitFunctionParameters.
    */
   localTypeInfo: Map<string, LocalTypeInfo>;
+
+  /**
+   * REQ-VSCODE-036: apiVarName → list of call sites where &apiVarName appears as a
+   * function argument. Populated by resolveCompositionRoots() after full index.
+   * Used to stamp ConcreteLocation.initCallFile / initCallLine.
+   */
+  initCallIndex: Map<string, Array<{ file: string; line: number }>>;
 }
 
 /**
@@ -315,6 +341,8 @@ export interface FunctionDefinitionRecord {
   line: number;
   /** true if the function was declared with the `static` storage-class keyword. */
   isStatic: boolean;
+  /** Full function signature text (return type + name + params), e.g. "JunoDs_Heap_Insert(...)". */
+  signature?: string;
 }
 
 /**
@@ -331,6 +359,20 @@ export interface ConcreteLocation {
   file: string;
   /** 1-based line number of the function definition. */
   line: number;
+  /** File where the vtable assignment occurs (composition root). REQ-VSCODE-031. */
+  assignmentFile?: string;
+  /** 1-based line of the vtable assignment (composition root). REQ-VSCODE-031. */
+  assignmentLine?: number;
+  /** Variable name of the API struct used in the vtable assignment. Used for cross-referencing initCallIndex. */
+  apiVarName?: string;
+  /** File where the composition-root call site occurs (preferred over assignmentFile for display). REQ-VSCODE-036. */
+  initCallFile?: string;
+  /** 1-based line of the composition-root call site. REQ-VSCODE-036. */
+  initCallLine?: number;
+  /** Caller of the Init function — the true composition root in user code (REQ-VSCODE-037). */
+  compRootFile?: string;
+  /** 1-based line of the composition root call site. */
+  compRootLine?: number;
 }
 
 // ---------------------------------------------------------------------------

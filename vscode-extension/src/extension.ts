@@ -9,6 +9,7 @@ import { JunoDefinitionProvider } from './providers/junoDefinitionProvider';
 import { StatusBarHelper } from './providers/statusBarHelper';
 import { showImplementationQuickPick } from './providers/quickPickHelper';
 import { McpServer } from './mcp/mcpServer';
+import { VtableTraceProvider } from './providers/vtableTraceProvider';
 
 let mcpServer: McpServer | undefined;
 
@@ -114,7 +115,32 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         })
     );
 
-    // 8. Command: libjuno.reindexWorkspace — full re-scan with progress
+    // 8. Command: libjuno.showVtableTrace — show resolution trace in webview
+    const traceProvider = new VtableTraceProvider(
+        vtableResolver,
+        indexer.index,
+        statusBar,
+        vscode.window.createWebviewPanel,
+        vscode.window.showTextDocument
+    );
+
+    // @{"req": ["REQ-VSCODE-028", "REQ-VSCODE-029"]}
+    context.subscriptions.push(
+        vscode.commands.registerCommand('libjuno.showVtableTrace', () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) { return; }
+            const pos = editor.selection.active;
+            const lineText = editor.document.lineAt(pos.line).text;
+            traceProvider.showTrace(
+                editor.document.uri.fsPath,
+                pos.line + 1,   // Convert 0-based to 1-based
+                pos.character,
+                lineText
+            );
+        })
+    );
+
+    // 9. Command: libjuno.reindexWorkspace — full re-scan with progress
     context.subscriptions.push(
         vscode.commands.registerCommand('libjuno.reindexWorkspace', async () => {
             await vscode.window.withProgress(
@@ -137,7 +163,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         })
     );
 
-    // 9. FileSystemWatcher for incremental updates (Section 9.3)
+    // 10. FileSystemWatcher for incremental updates (Section 9.3)
     const watcher = vscode.workspace.createFileSystemWatcher('**/*.{c,h,cpp,hpp,hh,cc}');
 
     watcher.onDidCreate((uri: vscode.Uri) => {
@@ -158,7 +184,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     context.subscriptions.push(watcher);
 
-    // 10. Start embedded MCP server (Section 7)
+    // 11. Start embedded MCP server (Section 7)
     if (mcpServerPort > 0) {
         mcpServer = new McpServer(vtableResolver, failureHandlerResolver, indexer.index, log);
         mcpServer.start(mcpServerPort).then((actualPort) => {

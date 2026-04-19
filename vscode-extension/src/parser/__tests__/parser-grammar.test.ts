@@ -1731,3 +1731,79 @@ JUNO_STATUS_T TestFunc(void)
         expect(functionDefs[0].functionName).toBe("TestFunc");
     });
 });
+
+// ===========================================================================
+// TC-PP: Preprocessor Directive Visitor-Level Tests
+// ===========================================================================
+
+describe("TC-PP: Preprocessor Directive Visitor-Level Tests", () => {
+
+    // @{"verify": ["REQ-VSCODE-003"]}
+    it("TC-PP-001: #include before JUNO_MODULE_ROOT struct — moduleRoots populated correctly", () => {
+        const src = `#include "juno/module.h"
+struct JUNO_FOO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_FOO_API_T, JUNO_MODULE_EMPTY);`;
+        const result = parseFile("/test/pp001.c", src);
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].rootType).toBe("JUNO_FOO_ROOT_T");
+        expect(result.moduleRoots[0].apiType).toBe("JUNO_FOO_API_T");
+    });
+
+    // @{"verify": ["REQ-VSCODE-003"]}
+    it("TC-PP-002: #ifdef / #endif include guards do not prevent moduleRoots indexing", () => {
+        const src = `#ifndef JUNO_FOO_API_H
+#define JUNO_FOO_API_H
+
+struct JUNO_FOO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_FOO_API_T, JUNO_MODULE_EMPTY);
+
+#endif`;
+        const result = parseFile("/test/pp002.c", src);
+        expect(result.moduleRoots).toHaveLength(1);
+        expect(result.moduleRoots[0].rootType).toBe("JUNO_FOO_ROOT_T");
+        expect(result.moduleRoots[0].apiType).toBe("JUNO_FOO_API_T");
+    });
+
+    // @{"verify": ["REQ-VSCODE-003"]}
+    it("TC-PP-003: #define of a LibJuno macro is consumed without error; adjacent struct still indexed", () => {
+        const src = `#define JUNO_MODULE_ROOT(API_T, ...) struct { int x; }
+struct JUNO_FOO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_FOO_API_T, JUNO_MODULE_EMPTY);`;
+        let result: ReturnType<typeof parseFile>;
+        expect(() => { result = parseFile("/test/pp003.c", src); }).not.toThrow();
+        expect(result!.moduleRoots).toHaveLength(1);
+        expect(result!.moduleRoots[0].rootType).toBe("JUNO_FOO_ROOT_T");
+    });
+
+    // @{"verify": ["REQ-VSCODE-003"]}
+    it("TC-PP-004: Multiple #include directives followed by JUNO_MODULE_DERIVE struct — derivations populated", () => {
+        const src = `#include <stdint.h>
+#include "juno/module.h"
+#include "juno/status.h"
+
+struct JUNO_BAR_IMPL_TAG JUNO_MODULE_DERIVE(JUNO_BAR_ROOT_T, JUNO_MODULE_EMPTY);`;
+        const result = parseFile("/test/pp004.c", src);
+        expect(result.derivations).toHaveLength(1);
+        expect(result.derivations[0].derivedType).toBe("JUNO_BAR_IMPL_T");
+        expect(result.derivations[0].rootType).toBe("JUNO_BAR_ROOT_T");
+    });
+});
+
+// ===========================================================================
+// TC-DECL: Standalone Macro Declaration Tests
+// ===========================================================================
+
+describe("TC-DECL: Standalone Macro Declaration Tests", () => {
+
+    // @{"verify": ["REQ-VSCODE-003"]}
+    it("TC-DECL-005: multiple standalone declarations interspersed with struct definition — all parsed cleanly", () => {
+        const src = `JUNO_MODULE_ROOT_DECLARE(JUNO_FOO_ROOT_T);
+JUNO_MODULE_DERIVE_DECLARE(JUNO_FOO_IMPL_T);
+
+struct JUNO_FOO_ROOT_TAG JUNO_MODULE_ROOT(JUNO_FOO_API_T, JUNO_MODULE_EMPTY);
+
+JUNO_MODULE_DECLARE(JUNO_FOO_T);`;
+        let result: ReturnType<typeof parseFile>;
+        expect(() => { result = parseFile("/test/decl005.c", src); }).not.toThrow();
+        expect(result!.moduleRoots).toHaveLength(1);
+        expect(result!.moduleRoots[0].rootType).toBe("JUNO_FOO_ROOT_T");
+        expect(result!.moduleRoots[0].apiType).toBe("JUNO_FOO_API_T");
+    });
+});

@@ -1005,6 +1005,7 @@ describe('WorkspaceIndexer — core behaviour', () => {
                 }],
                 apiCallSites: [],
                 pendingPositionalVtables: [],
+                initCallSites: [],
                 localTypeInfo: {
                     functionParameters: new Map([
                         ['AnyFunc', [{
@@ -1080,6 +1081,7 @@ describe('WorkspaceIndexer — core behaviour', () => {
                 }],
                 apiCallSites: [],
                 pendingPositionalVtables: [],
+                initCallSites: [],
                 localTypeInfo: {
                     functionParameters: new Map([
                         ['AnyFunc', [{
@@ -1272,6 +1274,228 @@ describe('WorkspaceIndexer — core behaviour', () => {
             }
         });
 
+        // =====================================================================
+        // TC-WI-015: Cross-file designated vtable assignment resolves
+        //   ConcreteLocation.file to the function DEFINITION file, not the
+        //   vtable assignment file.
+        //
+        //   Bug: resolveDefinitionLine() (old) returned only a line number;
+        //   ConcreteLocation.file was always r.file (assignment file).
+        //   Fix: resolveDefinitionLocation() returns {file, line}; callers use
+        //   defLoc.file when defLoc.line !== 0.
+        //
+        //   'a_def.c' sorts before 'b_vtable.c' → indexed first, so
+        //   CrossFile15_DoThing is in this.index.functionDefinitions when the
+        //   assignment file is processed (resolveDefinitionLocation step 2).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-015: fullIndex() sets ConcreteLocation.file to the function definition file for a cross-file designated vtable assignment', async () => {
+            const dir = path.join(fileDir, 'tc-wi-015');
+            fs.mkdirSync(dir);
+
+            // Definition file (indexed first): API struct + function definition
+            const fileDefPath = path.join(dir, 'a_def.c');
+            fs.writeFileSync(fileDefPath, [
+                'typedef struct CROSS15_API_TAG CROSS15_API_T;',
+                '',
+                'struct CROSS15_API_TAG',
+                '{',
+                '    void (*DoThing)(void);',
+                '};',
+                '',
+                'void CrossFile15_DoThing(void) {}',
+                '',
+            ].join('\n'));
+
+            // Assignment file (indexed second): designated vtable init only
+            const fileVtablePath = path.join(dir, 'b_vtable.c');
+            fs.writeFileSync(fileVtablePath, [
+                'static const CROSS15_API_T tApi15 = {',
+                '    .DoThing = CrossFile15_DoThing,',
+                '};',
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            const fieldMap = indexer.index.vtableAssignments.get('CROSS15_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('DoThing');
+            expect(locs).toBeDefined();
+            expect(locs!).toHaveLength(1);
+
+            // ConcreteLocation.file must be the DEFINITION file (a_def.c), not the
+            // assignment file (b_vtable.c). Before the fix, file was always r.file.
+            expect(locs![0].file).toBe(fileDefPath);
+            expect(locs![0].line).toBeGreaterThan(0);
+            expect(locs![0].functionName).toBe('CrossFile15_DoThing');
+        });
+
+        // =====================================================================
+        // TC-WI-016: Same-file designated vtable — no regression after fix
+        //   resolveDefinitionLocation() step 1 (same-file match) fires;
+        //   ConcreteLocation.file must be the single source file and
+        //   ConcreteLocation.line must be the definition line (before the vtable).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-016: fullIndex() correctly resolves ConcreteLocation.file/line for a same-file designated vtable assignment (no regression)', async () => {
+            const dir = path.join(fileDir, 'tc-wi-016');
+            fs.mkdirSync(dir);
+
+            const filePath = path.join(dir, 'samefi16.c');
+            fs.writeFileSync(filePath, [
+                'typedef struct SAME16_API_TAG SAME16_API_T;', // line 1
+                '',                                             // line 2
+                'struct SAME16_API_TAG',                       // line 3
+                '{',                                            // line 4
+                '    void (*Process)(void);',                  // line 5
+                '};',                                           // line 6
+                '',                                             // line 7
+                'void SameFile16_Process(void) {}',            // line 8 — definition
+                '',                                             // line 9
+                'static const SAME16_API_T tApi16 = {',       // line 10 — vtable
+                '    .Process = SameFile16_Process,',          // line 11
+                '};',                                           // line 12
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            const fieldMap = indexer.index.vtableAssignments.get('SAME16_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('Process');
+            expect(locs).toBeDefined();
+            expect(locs!).toHaveLength(1);
+
+            // ConcreteLocation.file must be the same source file
+            expect(locs![0].file).toBe(filePath);
+            // ConcreteLocation.line must be the function definition line (line 8),
+            // which precedes the vtable assignment (line 10) — proves definition
+            // line is used, not the vtable assignment line
+            expect(locs![0].line).toBeGreaterThan(0);
+            expect(locs![0].line).toBeLessThan(10);
+            expect(locs![0].functionName).toBe('SameFile16_Process');
+        });
+
+        // =====================================================================
+        // TC-WI-017: Cross-file positional vtable (deferred path) resolves
+        //   ConcreteLocation.file to the function definition file.
+        //   resolveDeferred() calls resolveDefinitionLocation(fnName, d.filePath, [])
+        //   with empty functionDefs → relies on this.index.functionDefinitions.
+        //   'a_defs17.c' sorts before 'b_init17.c' → struct + defs indexed first.
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-017: fullIndex() sets ConcreteLocation.file to the definition file for cross-file positional vtable (deferred resolution path)', async () => {
+            const dir = path.join(fileDir, 'tc-wi-017');
+            fs.mkdirSync(dir);
+
+            // Definition file (indexed first): API struct definition + function definitions
+            const fileDefsPath = path.join(dir, 'a_defs17.c');
+            fs.writeFileSync(fileDefsPath, [
+                'typedef struct DEFER17_API_TAG DEFER17_API_T;',
+                '',
+                'struct DEFER17_API_TAG',
+                '{',
+                '    void (*Op1)(void);',
+                '    void (*Op2)(void);',
+                '};',
+                '',
+                'void Defer17_Impl_Op1(void) {}',
+                'void Defer17_Impl_Op2(void) {}',
+                '',
+            ].join('\n'));
+
+            // Initializer file (indexed second): positional vtable only
+            const fileInitPath = path.join(dir, 'b_init17.c');
+            fs.writeFileSync(fileInitPath, [
+                'static const DEFER17_API_T tDefer17 = { Defer17_Impl_Op1, Defer17_Impl_Op2 };',
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            const fields = indexer.index.apiStructFields.get('DEFER17_API_T');
+            expect(fields).toEqual(['Op1', 'Op2']);
+
+            const fieldMap = indexer.index.vtableAssignments.get('DEFER17_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs1 = fieldMap!.get('Op1');
+            expect(locs1).toBeDefined();
+            expect(locs1!).toHaveLength(1);
+            // ConcreteLocation.file must be the DEFINITION file (a_defs17.c), not
+            // the positional initializer file (b_init17.c). resolveDeferred()
+            // uses defLoc.file when defLoc.line !== 0.
+            expect(locs1![0].file).toBe(fileDefsPath);
+            expect(locs1![0].line).toBeGreaterThan(0);
+            expect(locs1![0].functionName).toBe('Defer17_Impl_Op1');
+
+            const locs2 = fieldMap!.get('Op2');
+            expect(locs2).toBeDefined();
+            expect(locs2!).toHaveLength(1);
+            expect(locs2![0].file).toBe(fileDefsPath);
+            expect(locs2![0].functionName).toBe('Defer17_Impl_Op2');
+        });
+
+        // =====================================================================
+        // TC-WI-018: Fallback to vtable assignment location when function
+        //   definition is not found in any indexed file.
+        //   A forward declaration produces no FunctionDefinitionRecord; 
+        //   resolveDefinitionLocation() returns { file, line: 0 }.
+        //   mergeInto() must fall back to r.file / r.line (not leave line as 0).
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-005"]}
+        it('TC-WI-018: fullIndex() falls back to vtable assignment file/line when the function definition is not found in any indexed file', async () => {
+            const dir = path.join(fileDir, 'tc-wi-018');
+            fs.mkdirSync(dir);
+
+            const filePath = path.join(dir, 'fallback18.c');
+            fs.writeFileSync(filePath, [
+                'typedef struct FALLB18_API_TAG FALLB18_API_T;', // line 1
+                '',                                               // line 2
+                'struct FALLB18_API_TAG',                        // line 3
+                '{',                                              // line 4
+                '    void (*SomeField)(void);',                  // line 5
+                '};',                                             // line 6
+                '',                                               // line 7
+                '/* Forward declaration only — no function body */', // line 8
+                'void Fallback18_Func(void);',                   // line 9
+                '',                                               // line 10
+                'static const FALLB18_API_T tFallb18 = {',      // line 11
+                '    .SomeField = Fallback18_Func,',             // line 12
+                '};',                                             // line 13
+                '',
+            ].join('\n'));
+
+            const indexer = new WorkspaceIndexer(dir, []);
+            await indexer.fullIndex();
+
+            // Fallback18_Func has no body, so it must NOT be in functionDefinitions
+            expect(indexer.index.functionDefinitions.has('Fallback18_Func')).toBe(false);
+
+            const fieldMap = indexer.index.vtableAssignments.get('FALLB18_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('SomeField');
+            expect(locs).toBeDefined();
+            expect(locs!).toHaveLength(1);
+
+            // ConcreteLocation.file must be the ASSIGNMENT file (fallback path):
+            // resolveDefinitionLocation returns { file: r.file, line: 0 } →
+            // mergeInto uses r.file and r.line (not defLoc.file/line).
+            expect(locs![0].file).toBe(filePath);
+            // ConcreteLocation.line must be the non-zero assignment line (r.line),
+            // not the "not found" sentinel value of 0.
+            expect(locs![0].line).toBeGreaterThan(0);
+            expect(locs![0].functionName).toBe('Fallback18_Func');
+        });
+
     }); // end 'File Discovery and Cross-File Resolution'
 
     // =========================================================================
@@ -1423,5 +1647,366 @@ describe('WorkspaceIndexer — core behaviour', () => {
         });
 
     }); // end 'mergeInto traitRoots branch'
+
+    // =========================================================================
+    // TC-CACHE-008: Debounced write — rapid saves produce one cache write
+    // =========================================================================
+
+    describe('Debounced cache write', () => {
+
+        let debounceDir: string;
+
+        beforeAll(() => {
+            debounceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'libjuno-debounce-'));
+        });
+
+        afterAll(() => {
+            fs.rmSync(debounceDir, { recursive: true, force: true });
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.useRealTimers();
+        });
+
+        // @{"verify": ["REQ-VSCODE-001"]}
+        it('TC-CACHE-008: rapid reindexFile calls produce exactly one saveToCache via 500 ms debounce', async () => {
+            jest.useFakeTimers();
+
+            const dir = path.join(debounceDir, 'tc-cache-008');
+            fs.mkdirSync(dir);
+
+            const filePath = path.join(dir, 'debounce008.c');
+            fs.writeFileSync(filePath, 'void Debounce008Func(void) {}\n');
+
+            const indexer = new WorkspaceIndexer(dir, []);
+
+            const saveSpy = jest.spyOn(indexer as unknown as { saveToCache: () => Promise<void> }, 'saveToCache')
+                .mockResolvedValue(undefined);
+
+            // Call reindexFile 5 times in rapid succession
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+            await indexer.reindexFile(filePath);
+
+            // saveToCache must NOT have been called yet — timer is still pending
+            expect(saveSpy).not.toHaveBeenCalled();
+
+            // Advance fake timers past the 500 ms debounce window
+            jest.advanceTimersByTime(600);
+
+            // Exactly one debounced write must have fired
+            expect(saveSpy).toHaveBeenCalledTimes(1);
+
+            // Clean up the pending timer
+            indexer.dispose();
+        });
+
+    }); // end 'Debounced cache write'
+
+    // =========================================================================
+    // TC-TRACE-018 through TC-TRACE-020: Composition Root Resolution (REQ-VSCODE-036)
+    // =========================================================================
+
+    describe('Composition root resolution (REQ-VSCODE-036)', () => {
+
+        let crDir: string;
+        let crIndexer: WorkspaceIndexer | undefined;
+
+        beforeEach(() => {
+            crDir = path.join(os.tmpdir(), 'libjuno-test-cr-' + Date.now());
+            fs.mkdirSync(crDir, { recursive: true });
+            crIndexer = undefined;
+        });
+
+        afterEach(() => {
+            if (crIndexer) { crIndexer.dispose(); }
+            fs.rmSync(crDir, { recursive: true, force: true });
+            jest.restoreAllMocks();
+        });
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-018: resolveCompositionRoots stamps initCallFile/initCallLine on ConcreteLocation', async () => {
+            // File 1: vtable struct definition
+            const apiImplSrc = [
+                'typedef struct { int (*DoWork)(void); } MY_API_T;',
+                'static int MyImpl_DoWork(void) { return 0; }',
+                'static const MY_API_T gtMyApi = { .DoWork = MyImpl_DoWork };',
+            ].join('\n');
+
+            // File 2: composition root — passes &gtMyApi as an argument
+            const appSrc = [
+                'static int SomeModule_Init(void *m, const void *api, void *h, void *u) { return 0; }',
+                'static int run(void) { void *m = 0; return SomeModule_Init(&m, &gtMyApi, 0, 0); }',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(crDir, 'api_impl.c'), apiImplSrc);
+            fs.writeFileSync(path.join(crDir, 'app.c'), appSrc);
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            await crIndexer.fullIndex();
+
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_API_T');
+            expect(fieldMap).toBeDefined();
+            const locs = fieldMap!.get('DoWork');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            const loc = locs![0];
+            expect(loc.apiVarName).toBe('gtMyApi');
+            expect(loc.initCallFile).toBeDefined();
+            expect(loc.initCallFile!.endsWith('app.c')).toBe(true);
+            expect(loc.initCallLine).toBe(2);
+        });
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-019: address-of a non-API variable does not appear in initCallIndex for that variable', async () => {
+            const src = [
+                'typedef struct { int (*Foo)(void); } MY_API_T;',
+                'static int MyFoo(void) { return 0; }',
+                'static const MY_API_T gApi = { .Foo = MyFoo };',
+                'static void bar(MY_API_T *p) { (void)p; }',
+                'static void run(void) { MY_API_T local; local.Foo = MyFoo; bar(&local); }',
+            ].join('\n');
+
+            fs.writeFileSync(path.join(crDir, 'single.c'), src);
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            await crIndexer.fullIndex();
+
+            // 'local' is not a known API variable name — must not appear in initCallIndex
+            expect(crIndexer.index.initCallIndex.has('local')).toBe(false);
+
+            // The ConcreteLocation for Foo should NOT have initCallLine from 'local'
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_API_T');
+            if (fieldMap) {
+                const locs = fieldMap.get('Foo');
+                if (locs && locs.length > 0) {
+                    // If initCallLine is set it must come from gApi, not local
+                    if (locs[0].initCallLine !== undefined) {
+                        expect(locs[0].apiVarName).toBe('gApi');
+                    }
+                }
+            }
+        });
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-020: clearIndex() empties initCallIndex', () => {
+            const { createEmptyIndex, clearIndex } = require('../navigationIndex');
+            const idx = createEmptyIndex();
+
+            // Manually populate initCallIndex
+            idx.initCallIndex.set('gtSomeApi', [{ file: '/some/file.c', line: 10 }]);
+            expect(idx.initCallIndex.size).toBe(1);
+
+            // Clear the index
+            clearIndex(idx);
+            expect(idx.initCallIndex.size).toBe(0);
+        });
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it('TC-TRACE-023: resolveCompositionRoots stamps initCallFile on ConcreteLocation for a positional vtable initializer', async () => {
+            // File 1: API struct definition (explicit struct tag syntax so the parser
+            // can resolve the positional initializer immediately in the same file),
+            // function implementations, and the positional vtable initializer.
+            const apiImplPath = path.join(crDir, 'pos023_api.c');
+            fs.writeFileSync(apiImplPath, [
+                'struct MY_API_TAG { void (*FuncA)(void); void (*FuncB)(void); };',
+                'static void FuncA(void) {}',
+                'static void FuncB(void) {}',
+                'static const MY_API_T gtMyApi = { FuncA, FuncB };',
+            ].join('\n'));
+
+            // File 2: call site that passes &gtMyApi as an argument
+            const callSitePath = path.join(crDir, 'pos023_app.c');
+            fs.writeFileSync(callSitePath, [
+                'static void someInit(void *m, const void *api, void *h) { (void)m; (void)api; (void)h; }',
+                'static void run(void) { void *myModule = 0; someInit(&myModule, &gtMyApi, 0); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            // fullIndex() processes both files and then calls resolveDeferred() +
+            // resolveCompositionRoots(). Using fullIndex() ensures cross-file
+            // resolution completes before we inspect the index.
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_API_T with FuncA
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const funcALocs = fieldMap!.get('FuncA');
+            expect(funcALocs).toBeDefined();
+            expect(funcALocs!.length).toBeGreaterThan(0);
+
+            // At least one ConcreteLocation must have initCallFile pointing to the call-site file.
+            // This verifies that varName was threaded through the positional vtable pipeline
+            // (PendingPositionalVtable.varName → VtableAssignmentRecord.varName →
+            //  ConcreteLocation.apiVarName) so that resolveCompositionRoots() could
+            // match &gtMyApi in the call site.
+            const stampedLoc = funcALocs!.find(loc => loc.initCallFile !== undefined);
+            expect(stampedLoc).toBeDefined();
+            expect(stampedLoc!.initCallFile!.endsWith('pos023_app.c')).toBe(true);
+        });
+
+        // @{"verify": ["REQ-VSCODE-037"]}
+        it('TC-TRACE-025: resolveInitCallers stamps compRootFile/compRootLine on ConcreteLocation', async () => {
+            // File 1: broker.c — API struct (explicit tag syntax), vtable initializer,
+            // and BrokerInit which contains &gtBrokerApi (this becomes initCallFile).
+            // Explicit struct tag syntax is required so the parser can resolve the
+            // positional vtable initializer in the same file without deferring.
+            const brokerPath = path.join(crDir, 'init025_broker.c');
+            fs.writeFileSync(brokerPath, [
+                'struct MY_BROKER_API_TAG { void (*Publish)(void); };',
+                'static void BrokerPublish(void) {}',
+                'static const MY_BROKER_API_T gtBrokerApi = { BrokerPublish };',
+                'void BrokerInit(void *p) { p->ptApi = &gtBrokerApi; }',
+            ].join('\n'));
+
+            // File 2: main.c — caller of BrokerInit; this is the true composition root.
+            // resolveInitCallers finds BrokerInit as the function enclosing the
+            // &gtBrokerApi reference, then scans for its call site here.
+            const mainPath = path.join(crDir, 'init025_main.c');
+            fs.writeFileSync(mainPath, [
+                'static void main(void) { void *myBroker = 0; BrokerInit(&myBroker); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            // fullIndex() runs resolveDeferred(), resolveCompositionRoots(), and
+            // resolveInitCallers() before returning.
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_BROKER_API_T with Publish field.
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_BROKER_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs = fieldMap!.get('Publish');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            // Find the ConcreteLocation that was stamped by resolveInitCallers.
+            // initCallFile is set by resolveCompositionRoots to the file containing
+            // &gtBrokerApi (broker.c line 4). compRootFile is set by
+            // resolveInitCallers to the file containing BrokerInit(&myBroker)
+            // (main.c line 1).
+            const loc = locs!.find(l => l.compRootFile !== undefined);
+            expect(loc).toBeDefined();
+
+            // initCallFile: where &gtBrokerApi appears — inside BrokerInit in broker.c.
+            expect(loc!.initCallFile).toBeDefined();
+            expect(loc!.initCallFile!.endsWith('init025_broker.c')).toBe(true);
+
+            // compRootFile: where BrokerInit is called — main.c.
+            expect(loc!.compRootFile!.endsWith('init025_main.c')).toBe(true);
+
+            // compRootLine: must be the line containing BrokerInit(&myBroker).
+            // In init025_main.c that call appears on line 1.
+            expect(loc!.compRootLine).toBe(1);
+        });
+
+        // @{"verify": ["REQ-VSCODE-037"]}
+        it('TC-TRACE-028: resolveInitCallers does not use .h forward declaration as call site', async () => {
+            // File 1: trace028_impl.c — API struct (explicit tag syntax), vtable,
+            // and MyInit which contains &gtMyInitApi (becomes initCallFile).
+            // Explicit struct tag syntax is required so the parser resolves the
+            // positional vtable immediately without deferring.
+            const implPath = path.join(crDir, 'trace028_impl.c');
+            fs.writeFileSync(implPath, [
+                'struct MY_INIT_API_TAG { void (*Run)(void); }; typedef struct MY_INIT_API_TAG MY_INIT_API_T;',
+                'static void RunImpl(void) {}',
+                'static const MY_INIT_API_T gtMyInitApi = { RunImpl };',
+                'void MyInit(void *p) { p = &gtMyInitApi; }',
+            ].join('\n'));
+
+            // File 2: trace028_decl.h — forward declaration only.
+            // This line matches \bMyInit\s*\( and would be a false call site
+            // if .h files were included in the resolveInitCallers scan.
+            const declPath = path.join(crDir, 'trace028_decl.h');
+            fs.writeFileSync(declPath, 'void MyInit(void *p);\n');
+
+            // File 3: trace028_main.c — the real call site.
+            const mainPath = path.join(crDir, 'trace028_main.c');
+            fs.writeFileSync(mainPath, [
+                'void RealCaller(void) { void *myModule = 0; MyInit(&myModule); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            // fullIndex() scans all files (including the .h) into fileHashes,
+            // then calls resolveInitCallers() which must skip .h files.
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_INIT_API_T with Run field.
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_INIT_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs = fieldMap!.get('Run');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            // Find the ConcreteLocation stamped by resolveInitCallers.
+            const loc = locs!.find(l => l.compRootFile !== undefined);
+            expect(loc).toBeDefined();
+
+            // initCallFile: where &gtMyInitApi appears — inside MyInit in trace028_impl.c.
+            expect(loc!.initCallFile).toBeDefined();
+            expect(loc!.initCallFile!.endsWith('trace028_impl.c')).toBe(true);
+
+            // compRootFile: must be the .c call site, NOT the .h forward declaration.
+            expect(loc!.compRootFile!.endsWith('trace028_main.c')).toBe(true);
+            expect(loc!.compRootFile!.endsWith('trace028_decl.h')).toBe(false);
+
+            // compRootLine: line containing MyInit(&myModule) in trace028_main.c.
+            expect(loc!.compRootLine).toBe(1);
+        });
+
+        // @{"verify": ["REQ-VSCODE-037"]}
+        it('TC-TRACE-029: resolveInitCallers leaves compRootFile undefined when init call site is inside main()', async () => {
+            // File 1: trace029_api.c — API struct (explicit tag syntax), vtable,
+            // and GoImpl implementation. Explicit tag syntax ensures immediate
+            // positional vtable resolution in the same file.
+            const apiPath = path.join(crDir, 'trace029_api.c');
+            fs.writeFileSync(apiPath, [
+                'struct MY_MAIN_API_TAG { void (*Go)(void); }; typedef struct MY_MAIN_API_TAG MY_MAIN_API_T;',
+                'static void GoImpl(void) {}',
+                'static const MY_MAIN_API_T gtMainApi = { GoImpl };',
+            ].join('\n'));
+
+            // File 2: trace029_main.c — GoInit on line 1, main on line 2.
+            // &gtMainApi appears on line 2 (inside main), so resolveCompositionRoots
+            // stamps initCallFile = trace029_main.c, initCallLine = 2.
+            // findEnclosingFunction returns 'main' for line 2, so the main-guard
+            // fires and compRootFile is left undefined.
+            const mainPath = path.join(crDir, 'trace029_main.c');
+            fs.writeFileSync(mainPath, [
+                'void GoInit(void *p, void *api) { p = api; }',
+                'void main(void) { void *myModule = 0; GoInit(&myModule, &gtMainApi); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_MAIN_API_T with Go field.
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_MAIN_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs = fieldMap!.get('Go');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            // Find the ConcreteLocation that has initCallFile set.
+            // resolveCompositionRoots must have stamped it (guard for initCallFile
+            // existence is the prerequisite for resolveInitCallers to run).
+            const loc = locs!.find(l => l.initCallFile !== undefined);
+            expect(loc).toBeDefined();
+
+            // initCallFile: where &gtMainApi appears — inside main() in trace029_main.c.
+            expect(loc!.initCallFile!.endsWith('trace029_main.c')).toBe(true);
+
+            // compRootFile: must be undefined — the main-guard skipped the scan.
+            expect(loc!.compRootFile).toBeUndefined();
+        });
+
+    }); // end 'Composition root resolution'
 
 });

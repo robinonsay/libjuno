@@ -1,5 +1,5 @@
 /// <reference types="jest" />
-// @{"verify": ["REQ-VSCODE-001", "REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-013", "REQ-VSCODE-016"]}
+// @{"verify": ["REQ-VSCODE-001", "REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-013", "REQ-VSCODE-016", "REQ-VSCODE-034", "REQ-VSCODE-035"]}
 
 import * as vscode from 'vscode';
 import { createMockExtensionContext, resetMocks, cancellationToken } from '../../__mocks__/vscode';
@@ -71,7 +71,8 @@ describe('Extension Activation', () => {
         );
         expect(registeredCommands).toContain('libjuno.goToImplementation');
         expect(registeredCommands).toContain('libjuno.reindexWorkspace');
-        expect(vscode.commands.registerCommand).toHaveBeenCalledTimes(2);
+        expect(registeredCommands).toContain('libjuno.showVtableTrace');
+        expect(vscode.commands.registerCommand).toHaveBeenCalledTimes(3);
     });
 
     // @{"verify": ["REQ-VSCODE-001"]}
@@ -303,8 +304,8 @@ describe('JunoDefinitionProvider', () => {
         expect(item.text).toContain('Insert');
     });
 
-    // @{"verify": ["REQ-VSCODE-006"]}
-    it('TC-QP-004: Selecting a QuickPick item navigates to the correct file and line', async () => {
+    // @{"verify": ["REQ-VSCODE-006", "REQ-VSCODE-034", "REQ-VSCODE-035"]}
+    it('TC-QP-004: multi-impl vtable call → provideDefinition returns all Locations; no QuickPick shown', async () => {
         const loc1 = { functionName: 'OnStart', file: '/workspace/engine/src/engine_app.c', line: 128 };
         const loc2 = { functionName: 'OnStart', file: '/workspace/sys_manager/src/sys_manager_app.c', line: 77 };
 
@@ -318,33 +319,61 @@ describe('JunoDefinitionProvider', () => {
             locations: [loc1, loc2],
         });
 
-        // Return the first QuickPick item (which carries the location property set by showImplementationQuickPick)
-        (vscode.window.showQuickPick as jest.Mock).mockImplementation(async (items: any[]) => {
-            return items[0];
-        });
-
         const doc = createMockDocument('ptSelf->ptApi->OnStart(ptSelf);');
         const pos = createMockPosition(0, 5);
 
         const result = await provider.provideDefinition(doc, pos, cancellationToken);
 
-        // Provider must have shown the QuickPick
-        expect(vscode.window.showQuickPick).toHaveBeenCalled();
+        // Provider must NOT invoke QuickPick — that is the command's responsibility.
+        expect(vscode.window.showQuickPick).not.toHaveBeenCalled();
 
-        // Provider must have navigated imperatively — returns undefined
-        expect(result).toBeUndefined();
+        // Provider returns all Locations — VSCode shows its native peek widget for multi-impl.
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result!.length).toBe(2);
+        expect((result![0] as any).uri.fsPath).toBe('/workspace/engine/src/engine_app.c');
+        // toVscodeLocations converts 1-based line 128 → 0-based Position(127, 0)
+        expect((result![0] as any).range.start.line).toBe(127);
+        expect((result![1] as any).uri.fsPath).toBe('/workspace/sys_manager/src/sys_manager_app.c');
+        // toVscodeLocations converts 1-based line 77 → 0-based Position(76, 0)
+        expect((result![1] as any).range.start.line).toBe(76);
 
-        // showTextDocument must have been called (navigation happened)
-        expect(vscode.window.showTextDocument).toHaveBeenCalled();
+        // No imperative navigation — VSCode handles routing via the returned Location[].
+        expect(vscode.window.showTextDocument).not.toHaveBeenCalled();
+    });
 
-        // First argument: URI built from loc1.file
-        const uriArg = (vscode.window.showTextDocument as jest.Mock).mock.calls[0][0];
-        expect(uriArg.fsPath).toBe('/workspace/engine/src/engine_app.c');
+    // @{"verify": ["REQ-VSCODE-035"]}
+    it('TC-VSC-009: multi-impl (3 locations) → provideDefinition returns all 3 Locations', async () => {
+        const locations = [
+            { functionName: 'Reset', file: '/impl/a.c', line: 10 },
+            { functionName: 'Reset', file: '/impl/b.c', line: 20 },
+            { functionName: 'Reset', file: '/impl/c.c', line: 30 },
+        ];
 
-        // Second argument: selection range with start at 0-based line 127 (loc1.line - 1)
-        const optionsArg = (vscode.window.showTextDocument as jest.Mock).mock.calls[0][1];
-        expect(optionsArg).toBeDefined();
-        expect(optionsArg.selection).toBeDefined();
-        expect(optionsArg.selection.start.line).toBe(127);
+        (fhResolver.resolve as jest.Mock).mockReturnValue({
+            found: false,
+            locations: [],
+            errorMsg: NO_HANDLER_PATTERN_MSG,
+        });
+        (vtableResolver.resolve as jest.Mock).mockReturnValue({
+            found: true,
+            locations,
+        });
+
+        const doc = createMockDocument('ptSelf->ptApi->Reset(ptSelf);');
+        const pos = createMockPosition(0, 5);
+
+        const result = await provider.provideDefinition(doc, pos, cancellationToken);
+
+        // All 3 Locations returned — VSCode shows its native multi-definition peek widget.
+        expect(result).toBeDefined();
+        expect(result!.length).toBe(3);
+        expect((result![0] as any).uri.fsPath).toBe('/impl/a.c');
+        // toVscodeLocations converts 1-based line 10 → 0-based Position(9, 0)
+        expect((result![0] as any).range.start.line).toBe(9);
+        expect((result![1] as any).uri.fsPath).toBe('/impl/b.c');
+        expect((result![1] as any).range.start.line).toBe(19);
+        expect((result![2] as any).uri.fsPath).toBe('/impl/c.c');
+        expect((result![2] as any).range.start.line).toBe(29);
     });
 });

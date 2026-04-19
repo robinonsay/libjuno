@@ -13,7 +13,7 @@
 
 /// <reference types="jest" />
 
-import { parseFile } from "../visitor";
+import { parseFile, parseFileWithDefs } from "../visitor";
 
 // ---------------------------------------------------------------------------
 // Section 6: visitVtableDeclaration — Designated Initializer (REQ-VSCODE-010)
@@ -378,6 +378,44 @@ static const JUNO_APP_API_T tAppApi = { };
         });
 
         // -------------------------------------------------------------------
+        // -------------------------------------------------------------------
+        // TC-TRACE-016: varName captured in designated initializer (REQ-VSCODE-036)
+        // -------------------------------------------------------------------
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it("TC-TRACE-016: walkVtableDeclaration stamps varName on every VtableAssignmentRecord for a top-level struct", () => {
+            const src = `
+static const JUNO_LOG_API_T gtMyLoggerApi = {
+    .LogInfo = JunoLog_DebugLogger_LogInfo,
+    .LogError = JunoLog_DebugLogger_LogError
+};`;
+            const { parsed } = parseFileWithDefs('test.c', src);
+
+            expect(parsed.vtableAssignments).toHaveLength(2);
+            expect(parsed.vtableAssignments[0].varName).toBe('gtMyLoggerApi');
+            expect(parsed.vtableAssignments[1].varName).toBe('gtMyLoggerApi');
+        });
+
+        // -------------------------------------------------------------------
+        // TC-TRACE-017: varName is undefined for direct assignment inside function body
+        // -------------------------------------------------------------------
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it("TC-TRACE-017: direct vtable assignment inside function body does NOT populate varName", () => {
+            // tryExtractDirectVtableAssign handles this path — varName is only set
+            // by walkVtableDeclaration for top-level struct declarations.
+            const src = `
+void Setup(void) {
+    JUNO_DS_HEAP_API_T tApi;
+    tApi.Insert = JunoDs_Heap_Insert;
+}`;
+            const { parsed } = parseFileWithDefs('test.c', src);
+
+            expect(parsed.vtableAssignments).toHaveLength(1);
+            expect(parsed.vtableAssignments[0].varName).toBeUndefined();
+        });
+
+        // -------------------------------------------------------------------
         // TC-P8-NEG-001: designated initializer does NOT fall through to positional path
         // -------------------------------------------------------------------
 
@@ -431,6 +469,44 @@ static const FOO_API_T tFooApi = {
                 field: "DoThing",
                 functionName: "FooDoThing",
             });
+        });
+
+        // -------------------------------------------------------------------
+        // TC-TRACE-024: varName threaded through positional vtable initializer
+        //   (REQ-VSCODE-036)
+        //
+        //   Sprint 25 fixed the gap where varName was never threaded through
+        //   PendingPositionalVtable → DeferredPositional → ConcreteLocation.apiVarName
+        //   for same-file positional initializers (which resolve immediately).
+        //   This test confirms that VtableAssignmentRecord.varName is set to
+        //   "gtMyLogApi" for each positionally-resolved field.
+        // -------------------------------------------------------------------
+
+        // @{"verify": ["REQ-VSCODE-036"]}
+        it("TC-TRACE-024: walkVtableDeclaration stamps varName on VtableAssignmentRecords for a same-file positional initializer", () => {
+            // Uses explicit struct tag syntax so the parser resolves the positional
+            // initializer immediately (same-file path) rather than deferring it.
+            // The inline typedef style (typedef struct { } MY_LOG_API_T) is not
+            // recognized as an apiStructDefinition by the visitor, causing deferral.
+            const src = `
+struct MY_LOG_API_TAG {
+    void (*LogInfo)(void);
+    void (*LogError)(void);
+};
+static const MY_LOG_API_T gtMyLogApi = { LogInfo, LogError };
+`;
+            const { parsed } = parseFileWithDefs('test.c', src);
+
+            // Both positionally-resolved fields must have varName populated.
+            // Verifies that extractPositionalVtable() threads varName through to the
+            // VtableAssignmentRecord (the Sprint 25 varName threading fix).
+            const logInfoEntries = parsed.vtableAssignments.filter(r => r.functionName === 'LogInfo');
+            expect(logInfoEntries).toHaveLength(1);
+            expect(logInfoEntries[0].varName).toBe('gtMyLogApi');
+
+            const logErrorEntries = parsed.vtableAssignments.filter(r => r.functionName === 'LogError');
+            expect(logErrorEntries).toHaveLength(1);
+            expect(logErrorEntries[0].varName).toBe('gtMyLogApi');
         });
     });
 });

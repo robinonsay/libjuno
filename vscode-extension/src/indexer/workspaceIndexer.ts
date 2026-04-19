@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-021", "REQ-VSCODE-001"]}
+// @{"req": ["REQ-VSCODE-021", "REQ-VSCODE-001", "REQ-VSCODE-031"]}
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
@@ -14,6 +14,7 @@ import {
 import { parseFileWithDefs } from "../parser/visitor";
 import { createEmptyIndex, removeFileRecords } from "./navigationIndex";
 import { loadCache, saveCache, indexToCache, cacheToIndex } from "../cache/cacheManager";
+import { findEnclosingFunction } from '../resolver/resolverUtils';
 
 /** C and C++ source file extensions to scan (REQ-VSCODE-021). */
 export const C_FILE_EXTENSIONS = new Set([".c", ".h", ".cpp", ".hpp", ".hh", ".cc"]);
@@ -24,6 +25,7 @@ interface DeferredPositional {
     initializers: string[]; // function names in positional order
     filePath: string;
     lines: number[];
+    varName?: string;
 }
 
 /**
@@ -38,6 +40,7 @@ export class WorkspaceIndexer {
     private readonly excludedDirs: Set<string>;
     private readonly cachePath: string;
     private readonly fileHashes: Map<string, string>;
+    private _saveTimer: ReturnType<typeof setTimeout> | undefined;
 
     constructor(workspaceRoot: string, excludedDirs: string[]) {
         this.workspaceRoot = workspaceRoot;
@@ -64,6 +67,9 @@ export class WorkspaceIndexer {
         const deferred: DeferredPositional[] = [];
         await this.indexFile(filePath, deferred);
         this.resolveDeferred(deferred);
+        this.resolveCompositionRoots();
+        this.resolveInitCallers();
+        this.scheduleSave();
     }
 
     /**
@@ -92,6 +98,10 @@ export class WorkspaceIndexer {
 
         // Cross-file deferred positional initializer resolution
         this.resolveDeferred(deferred);
+
+        // Locate composition-root call sites for all known API struct variables.
+        this.resolveCompositionRoots();
+        this.resolveInitCallers();
 
         await this.saveToCache();
     }
@@ -149,9 +159,34 @@ export class WorkspaceIndexer {
         await saveCache(this.cachePath, cache);
     }
 
+    /**
+     * Cancels any pending debounced save timer. Call this to clean up the
+     * indexer when it is no longer needed (e.g., in tests or on deactivation).
+     */
+    public dispose(): void {
+        if (this._saveTimer !== undefined) {
+            clearTimeout(this._saveTimer);
+            this._saveTimer = undefined;
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Private helpers
     // -----------------------------------------------------------------------
+
+    /**
+     * Schedules a debounced cache write 500 ms after the last call.
+     * Rapid successive calls reset the timer, producing exactly one write.
+     */
+    private scheduleSave(): void {
+        if (this._saveTimer !== undefined) {
+            clearTimeout(this._saveTimer);
+        }
+        this._saveTimer = setTimeout(() => {
+            this._saveTimer = undefined;
+            this.saveToCache().catch(() => { /* silent */ });
+        }, 500);
+    }
 
     /**
      * Parses one file and merges its results into the index.
@@ -207,10 +242,14 @@ export class WorkspaceIndexer {
 
         // vtableAssignments: append
         for (const r of parsed.vtableAssignments) {
+            const defLoc = this.resolveDefinitionLocation(r.functionName, r.file, functionDefs);
             const loc: ConcreteLocation = {
                 functionName: r.functionName,
-                file: r.file,
-                line: this.resolveDefinitionLine(r.functionName, r.file, functionDefs),
+                file: defLoc.line !== 0 ? defLoc.file : r.file,
+                line: defLoc.line !== 0 ? defLoc.line : r.line,
+                assignmentFile: r.file,
+                assignmentLine: r.line,
+                apiVarName: r.varName,
             };
             let fieldMap = idx.vtableAssignments.get(r.apiType);
             if (!fieldMap) {
@@ -222,14 +261,25 @@ export class WorkspaceIndexer {
             fieldMap.set(r.field, existing);
         }
 
+        // initCallIndex: append from parsed initCallSites
+        for (const ic of parsed.initCallSites) {
+            let sites = idx.initCallIndex.get(ic.apiVarName);
+            if (!sites) {
+                sites = [];
+                idx.initCallIndex.set(ic.apiVarName, sites);
+            }
+            sites.push({ file: ic.file, line: ic.line });
+        }
+
         // failureHandlerAssignments: append (with rootType resolution)
         for (const r of parsed.failureHandlerAssigns) {
             const resolvedRootType = this.resolveFailureHandlerRootType(r, parsed, functionDefs);
             if (!resolvedRootType) { continue; }
+            const defLoc = this.resolveDefinitionLocation(r.functionName, r.file, functionDefs);
             const loc: ConcreteLocation = {
                 functionName: r.functionName,
-                file: r.file,
-                line: this.resolveDefinitionLine(r.functionName, r.file, functionDefs),
+                file: defLoc.line !== 0 ? defLoc.file : r.file,
+                line: defLoc.line !== 0 ? defLoc.line : r.line,
             };
             const existing = idx.failureHandlerAssignments.get(resolvedRootType) ?? [];
             existing.push(loc);
@@ -259,28 +309,39 @@ export class WorkspaceIndexer {
                     initializers: pp.initializers,
                     filePath: pp.file,
                     lines: pp.lines,
+                    varName: pp.varName,
                 });
             }
         }
     }
 
     /**
-     * Resolves the definition line for a function name by looking it up in the
+     * Resolves the definition location for a function name by looking it up in the
      * functionDefs collected from the same parse pass.
-     * Falls back to the assignment line (0) if not found.
+     * Falls back to the assignment location if not found.
+     *
+     * @param functionName - The function name to look up.
+     * @param file - The file path of the vtable assignment (used as fallback).
+     * @param functionDefs - Function definitions from the current parse pass.
+     * @returns Object containing `file` and `line`; `line` is 0 when not found.
      */
-    private resolveDefinitionLine(
+    private resolveDefinitionLocation(
         functionName: string,
         file: string,
         functionDefs: FunctionDefinitionRecord[]
-    ): number {
-        // Prefer a same-file definition
+    ): { file: string; line: number } {
+        // 1. Same-file match in current parse pass
         const samefile = functionDefs.find((d) => d.functionName === functionName && d.file === file);
-        if (samefile) { return samefile.line; }
-        // Fall back to any file-scope definition already in the index
+        if (samefile) { return { file: samefile.file, line: samefile.line }; }
+        // 2. Index fallback — prefer same-file entry
         const indexDefs = this.index.functionDefinitions.get(functionName);
-        if (indexDefs?.length) { return indexDefs[0].line; }
-        return 0;
+        if (indexDefs?.length) {
+            const sameFileIdx = indexDefs.find((d) => d.file === file);
+            if (sameFileIdx) { return { file: sameFileIdx.file, line: sameFileIdx.line }; }
+            return { file: indexDefs[0].file, line: indexDefs[0].line };
+        }
+        // 3. Not found
+        return { file, line: 0 };
     }
 
     /**
@@ -360,6 +421,116 @@ export class WorkspaceIndexer {
         return best?.functionName;
     }
 
+    // @{"req": ["REQ-VSCODE-036"]}
+    /**
+     * Scans all indexed source files for call sites where a known API struct
+     * variable's address is passed as an argument (e.g. `&gtMyLoggerApi`).
+     * Populates initCallIndex, then stamps initCallFile/initCallLine on
+     * matching ConcreteLocation objects (REQ-VSCODE-036).
+     */
+    private resolveCompositionRoots(): void {
+        // Collect all known API variable names from vtableAssignments.
+        const apiVarNames = new Set<string>();
+        for (const fieldMap of this.index.vtableAssignments.values()) {
+            for (const locs of fieldMap.values()) {
+                for (const loc of locs) {
+                    if (loc.apiVarName) { apiVarNames.add(loc.apiVarName); }
+                }
+            }
+        }
+        if (apiVarNames.size === 0) { return; }
+
+        // Build a regex matching &apiVarName at argument position.
+        const escaped = [...apiVarNames].map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const pattern = new RegExp(`&(${escaped.join('|')})\\b`, 'g');
+
+        // Scan every indexed file for matches.
+        this.index.initCallIndex.clear();
+        for (const relPath of this.fileHashes.keys()) {
+            const absPath = path.join(this.workspaceRoot, relPath);
+            let text: string;
+            try {
+                text = fs.readFileSync(absPath, 'utf8');
+            } catch {
+                continue;
+            }
+            const lines = text.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                pattern.lastIndex = 0;
+                let m: RegExpExecArray | null;
+                while ((m = pattern.exec(lines[i])) !== null) {
+                    const varName = m[1];
+                    let sites = this.index.initCallIndex.get(varName);
+                    if (!sites) {
+                        sites = [];
+                        this.index.initCallIndex.set(varName, sites);
+                    }
+                    sites.push({ file: absPath, line: i + 1 });
+                }
+            }
+        }
+
+        // Stamp initCallFile/initCallLine on matching ConcreteLocations.
+        for (const fieldMap of this.index.vtableAssignments.values()) {
+            for (const locs of fieldMap.values()) {
+                for (const loc of locs) {
+                    if (!loc.apiVarName) { continue; }
+                    const sites = this.index.initCallIndex.get(loc.apiVarName);
+                    if (sites && sites.length > 0) {
+                        loc.initCallFile = sites[0].file;
+                        loc.initCallLine = sites[0].line;
+                    }
+                }
+            }
+        }
+    }
+
+    // @{"req": ["REQ-VSCODE-037"]}
+    private resolveInitCallers(): void {
+        for (const fieldMap of this.index.vtableAssignments.values()) {
+            for (const locs of fieldMap.values()) {
+                for (const loc of locs) {
+                    if (!loc.initCallFile || !loc.initCallLine) { continue; }
+
+                    // Find which function contains the init-call line.
+                    const initFnName = findEnclosingFunction(
+                        this.index, loc.initCallFile, loc.initCallLine
+                    );
+                    if (!initFnName) { continue; }
+
+                    // 'main' has no callers in C user code — skip to avoid false positives.
+                    if (initFnName === 'main') { continue; }
+
+                    // Scan all indexed files for a call to that function.
+                    const callPattern = new RegExp(`\\b${initFnName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\(`, 'g');
+                    let found = false;
+                    for (const relPath of this.fileHashes.keys()) {
+                        if (found) { break; }
+                        const ext = path.extname(relPath).toLowerCase();
+                        if (ext !== '.c' && ext !== '.cpp') { continue; }
+                        const absPath = path.join(this.workspaceRoot, relPath);
+                        let text: string;
+                        try { text = fs.readFileSync(absPath, 'utf8'); } catch { continue; }
+                        const lines = text.split('\n');
+                        for (let i = 0; i < lines.length; i++) {
+                            callPattern.lastIndex = 0;
+                            if (callPattern.test(lines[i])) {
+                                // Skip the function definition line itself.
+                                const defs = this.index.functionDefinitions.get(initFnName);
+                                const isDef = defs?.some((d) => d.file === absPath && d.line === i + 1);
+                                if (isDef) { continue; }
+                                loc.compRootFile = absPath;
+                                loc.compRootLine = i + 1;
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Resolves deferred positional vtable initializers after all files have
      * been indexed, so cross-file API struct field orders are available.
@@ -379,15 +550,18 @@ export class WorkspaceIndexer {
             }
             for (let i = 0; i < d.initializers.length && i < fields.length; i++) {
                 const fnName = d.initializers[i];
-                const line = d.lines[i] ?? 0;
+                const defLoc = this.resolveDefinitionLocation(fnName, d.filePath, []);
                 const loc: ConcreteLocation = {
                     functionName: fnName,
-                    file: d.filePath,
-                    line: this.resolveDefinitionLine(fnName, d.filePath, []),
+                    file: defLoc.line !== 0 ? defLoc.file : d.filePath,
+                    line: defLoc.line !== 0 ? defLoc.line : (d.lines[i] ?? 0),
+                    assignmentFile: d.filePath,
+                    assignmentLine: d.lines[i] ?? 0,
+                    apiVarName: d.varName,
                 };
                 const existing = fieldMap.get(fields[i]) ?? [];
-                // Avoid duplicates — compare against loc.line (definition line), not d.lines[i] (assignment line)
-                if (!existing.some((e) => e.functionName === fnName && e.file === d.filePath && e.line === loc.line)) {
+                // Avoid duplicates — compare against loc.file and loc.line (definition location)
+                if (!existing.some((e) => e.functionName === fnName && e.file === loc.file && e.line === loc.line)) {
                     existing.push(loc);
                 }
                 fieldMap.set(fields[i], existing);

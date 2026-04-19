@@ -21,6 +21,7 @@ export function createEmptyIndex(): NavigationIndex {
         apiMemberRegistry: new Map<string, string>(),
         functionDefinitions: new Map<string, FunctionDefinitionRecord[]>(),
         localTypeInfo: new Map<string, LocalTypeInfo>(),
+        initCallIndex: new Map(),
     };
 }
 
@@ -38,6 +39,7 @@ export function clearIndex(index: NavigationIndex): void {
     index.apiMemberRegistry.clear();
     index.functionDefinitions.clear();
     index.localTypeInfo.clear();
+    index.initCallIndex.clear();
 }
 
 /**
@@ -94,6 +96,16 @@ export function removeFileRecords(index: NavigationIndex, filePath: string): voi
 
     // localTypeInfo: keyed by file path — direct removal
     index.localTypeInfo.delete(filePath);
+
+    // initCallIndex: Map<apiVarName, Array<{file, line}>>
+    for (const [varName, sites] of index.initCallIndex) {
+        const filtered = sites.filter((s) => s.file !== filePath);
+        if (filtered.length === 0) {
+            index.initCallIndex.delete(varName);
+        } else {
+            index.initCallIndex.set(varName, filtered);
+        }
+    }
 
     // The flat string→string maps (moduleRoots, traitRoots, derivationChain,
     // apiStructFields, apiMemberRegistry) do not carry a file pointer, so stale

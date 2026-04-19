@@ -2,13 +2,14 @@
   "name": "libjuno",
   "displayName": "LibJuno",
   "description": "Vtable-aware Go to Definition for LibJuno embedded C projects",
-  "version": "0.1.1",
-  "publisher": "libjuno",
+  "version": "0.1.14",
+  "publisher": "RobinOnsay",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/robinonsay/libjuno.git"
   },
+  "icon": "assets/icon.png",
   "categories": [
     "Other"
   ],
@@ -29,8 +30,28 @@
       {
         "command": "libjuno.reindexWorkspace",
         "title": "LibJuno: Re-index Workspace"
+      },
+      {
+        "command": "libjuno.showVtableTrace",
+        "title": "LibJuno: Show Vtable Resolution Trace"
       }
     ],
+    "keybindings": [
+      {
+        "command": "libjuno.showVtableTrace",
+        "key": "ctrl+shift+t",
+        "when": "editorTextFocus && resourceLangId =~ /^c/"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "libjuno.showVtableTrace",
+          "when": "resourceLangId =~ /^c/",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
       "title": "LibJuno",
       "properties": {

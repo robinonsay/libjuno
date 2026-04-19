@@ -1,9 +1,8 @@
-// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-016"]}
+// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-007", "REQ-VSCODE-016", "REQ-VSCODE-034", "REQ-VSCODE-035"]}
 import * as vscode from 'vscode';
 import { VtableResolver } from '../resolver/vtableResolver';
 import { FailureHandlerResolver } from '../resolver/failureHandlerResolver';
 import { NavigationIndex, ConcreteLocation } from '../parser/types';
-import { showImplementationQuickPick } from './quickPickHelper';
 import { StatusBarHelper } from './statusBarHelper';
 
 /** Error message returned by VtableResolver when the line has no LibJuno pattern. */
@@ -16,6 +15,11 @@ const NO_HANDLER_PATTERN_MSG = 'Line does not contain a failure handler referenc
  * VSCode DefinitionProvider that resolves LibJuno vtable call sites and
  * failure handler references to their concrete implementation locations.
  * Registered for C and C++ documents (REQ-VSCODE-007).
+ *
+ * Contract (REQ-VSCODE-034/REQ-VSCODE-035): provideDefinition returns all resolved
+ * locations for any recognized call site. Single-implementation call sites navigate
+ * directly; multi-implementation call sites surface VSCode's native peek widget so
+ * the user can select the desired implementation.
  */
 export class JunoDefinitionProvider implements vscode.DefinitionProvider {
     constructor(
@@ -26,26 +30,27 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
         private readonly log: (msg: string) => void = console.log
     ) {}
 
+    // @{"req": ["REQ-VSCODE-005", "REQ-VSCODE-007", "REQ-VSCODE-034", "REQ-VSCODE-035"]}
     async provideDefinition(
         document: vscode.TextDocument,
         position: vscode.Position,
-        token: vscode.CancellationToken
+        _token: vscode.CancellationToken
     ): Promise<vscode.Location[] | undefined> {
         const lineText = document.lineAt(position.line).text;
         const file = document.uri.fsPath;
         const line = position.line + 1; // convert to 1-based
         const column = position.character;
 
-        // 2. Try failure handler resolver first (design §6.2 priority)
+        // 1. Try failure handler resolver first (design §6.2 priority).
         let result = this.failureHandlerResolver.resolve(file, line, column, lineText);
 
-        // 3. Fall through to vtable resolver if failure handler pattern not present
+        // 2. Fall through to vtable resolver if failure handler pattern not present.
         if (!result.found && result.errorMsg === NO_HANDLER_PATTERN_MSG) {
             result = this.vtableResolver.resolve(file, line, column, lineText);
         }
 
         if (!result.found || result.locations.length === 0) {
-            // Only surface an error when a recognizable pattern existed but resolution failed
+            // Only surface an error when a recognizable pattern existed but resolution failed.
             const msg = result.errorMsg ?? '';
             if (msg && msg !== NO_PATTERN_MSG && msg !== NO_HANDLER_PATTERN_MSG) {
                 this.statusBar.showError(`Could not resolve implementation — ${msg}`);
@@ -53,18 +58,10 @@ export class JunoDefinitionProvider implements vscode.DefinitionProvider {
             return undefined;
         }
 
-        // 4a. Single location: return directly for native VSCode navigation (REQ-VSCODE-005)
-        if (result.locations.length === 1) {
-            return toVscodeLocations(result.locations);
-        }
-
-        // 4b. Multiple locations: show QuickPick and navigate imperatively (REQ-VSCODE-006)
-        token.onCancellationRequested(() => { /* QuickPick auto-dismisses on cancellation */ });
-        const selected = await showImplementationQuickPick(result.locations);
-        if (selected) {
-            await navigateTo(selected, this.log);
-        }
-        return undefined;
+        // 3. Return all resolved locations (REQ-VSCODE-034/035).
+        //    Single impl: VSCode navigates directly. Multi-impl: VSCode shows the
+        //    native multi-definition peek widget for implementation selection.
+        return toVscodeLocations(result.locations);
     }
 }
 
@@ -75,16 +72,4 @@ function toVscodeLocations(locations: ConcreteLocation[]): vscode.Location[] {
             new vscode.Position(Math.max(0, loc.line - 1), 0)
         )
     );
-}
-
-async function navigateTo(loc: ConcreteLocation, log: (msg: string) => void): Promise<void> {
-    try {
-        const uri = vscode.Uri.file(loc.file);
-        const pos = new vscode.Position(Math.max(0, loc.line - 1), 0);
-        await vscode.window.showTextDocument(uri, {
-            selection: new vscode.Range(pos, pos),
-        });
-    } catch (err) {
-        log('[LibJuno] Failed to navigate to definition: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
-    }
 }
