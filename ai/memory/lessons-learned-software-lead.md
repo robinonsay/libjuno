@@ -231,6 +231,17 @@ This is non-negotiable every sprint without exception.
 - Fix required restructuring dequeue, publish, and register-subscriber pseudocode in 04-applications.md.
 - Rule: when spawning a design worker, brief them to explicitly list ALL API calls they will use and their signatures — then spawn a senior engineer to cross-check those signatures against headers before approving.
 
+### 2026-04-19 — Script outside tsconfig rootDir requires exclude entry in root tsconfig
+- Creating a file under `scripts/` (outside `src/`) in a TypeScript project with `"rootDir": "./src"` causes TS6059 at compile time because the default `**/*` glob picks it up.
+- A separate `scripts/tsconfig.json` fixes `ts-node` runtime use but does NOT prevent the root `tsc` from picking up the file.
+- Fix: add `"scripts"` to the root `tsconfig.json` `exclude` array in the same work item that creates the script.
+- Lesson: whenever a developer creates any file outside `rootDir`, the brief must include: "also add the folder to `exclude` in the root `tsconfig.json`."
+
+### 2026-04-19 — Shared type files need @req annotation updated when new requirements add fields
+- Adding a field to `ConcreteLocation` in `types.ts` for REQ-VSCODE-041 was done correctly, but the file-level `// @{"req": [...]}` annotation was not updated to include the new REQ ID.
+- The JSDoc comment mentioning the REQ ID is NOT a machine-readable traceability tag.
+- Rule: whenever a developer adds a field targeting a new requirement to a shared type file, the brief must explicitly say "also add REQ-VSCODE-NNN to the `@{"req": [...]}` annotation at line 1 of `types.ts`."
+
 ### 2026-04-18 — Two JSON-RPC edge cases senior SE will always flag: notifications and missing params
 - Notifications (no `id` field) must return HTTP 202 with no body — NOT a MethodNotFound error. A specific check for one notification name is insufficient; the guard must cover ALL methods with no `id`.
 - `tools/call` must validate `arguments` fields before passing to the handler, returning `-32602 InvalidParams` on missing/wrong-typed fields. Silently casting `undefined` as `string` is a latent crash.

@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003", "REQ-VSCODE-031"]}
+// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003", "REQ-VSCODE-031", "REQ-VSCODE-041"]}
 /**
  * @file types.ts
  *
@@ -373,6 +373,13 @@ export interface ConcreteLocation {
   compRootFile?: string;
   /** 1-based line of the composition root call site. */
   compRootLine?: number;
+  /**
+   * Discriminates the origin of this location. REQ-VSCODE-041.
+   * - 'assignment' — location came from failureHandlerAssignments (a handler wiring site).
+   * - 'invocation' — location came from functionDefinitions reached via a JUNO_FAIL* macro
+   *   call site (the cursor is on an invocation, navigating to the handler definition).
+   */
+  kind?: 'assignment' | 'invocation';
 }
 
 // ---------------------------------------------------------------------------

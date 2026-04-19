@@ -881,4 +881,211 @@ describe('FailureHandlerResolver', () => {
 
     }); // end describe('FAIL macro call site resolution (§5.3.1)')
 
+    // =========================================================================
+    // REQ-VSCODE-038: Full derivation chain walk in lookupHandlersByType
+    // REQ-VSCODE-041: ConcreteLocation.kind discrimination
+    // =========================================================================
+
+    describe('derivation chain walk (REQ-VSCODE-038) and kind field (REQ-VSCODE-041)', () => {
+
+        // =====================================================================
+        // TC-FH-APP-001: Handler found at intermediate type in derivation chain
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-038"]}
+        it('TC-FH-APP-001: Step 2 finds handler registered at intermediate type APP_ROOT_T in ENGINE_APP_T → APP_ROOT_T → MODULE_ROOT_T chain', () => {
+            const index = createEmptyIndex();
+
+            // Two-hop chain: ENGINE_APP_T → APP_ROOT_T → MODULE_ROOT_T
+            index.derivationChain.set('ENGINE_APP_T', 'APP_ROOT_T');
+            index.derivationChain.set('APP_ROOT_T', 'MODULE_ROOT_T');
+
+            // Handler registered at the intermediate type APP_ROOT_T (not terminal root)
+            index.failureHandlerAssignments.set('APP_ROOT_T', [
+                { functionName: 'AppFailureHandler', file: '/src/engine_app.c', line: 111 },
+            ]);
+
+            // localTypeInfo: ptEngineApp → ENGINE_APP_T in EngineApp_Init
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['EngineApp_Init', new Map<string, TypeInfo>([
+                        ['ptEngineApp', { name: 'ptEngineApp', typeName: 'ENGINE_APP_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('/src/engine_app.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            // Non-assignment reference — Step 1 is skipped, Step 2 runs
+            const lineText = 'ptEngineApp->tRoot.JUNO_FAILURE_HANDLER;';
+
+            const result = resolver.resolve('/src/engine_app.c', 60, 0, lineText, 'EngineApp_Init');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('AppFailureHandler');
+        });
+
+        // =====================================================================
+        // TC-FH-APP-002: Handler NOT found when chain exhausted
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-038"]}
+        it('TC-FH-APP-002: Step 2 returns found=false with type name in errorMsg when no handler at any level of ENGINE_APP_T → APP_ROOT_T → MODULE_ROOT_T', () => {
+            const index = createEmptyIndex();
+
+            // Two-hop chain: ENGINE_APP_T → APP_ROOT_T → MODULE_ROOT_T
+            index.derivationChain.set('ENGINE_APP_T', 'APP_ROOT_T');
+            index.derivationChain.set('APP_ROOT_T', 'MODULE_ROOT_T');
+
+            // failureHandlerAssignments is empty — no handler at any level
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['EngineApp_Init', new Map<string, TypeInfo>([
+                        ['ptEngineApp', { name: 'ptEngineApp', typeName: 'ENGINE_APP_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('/src/engine_app.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = 'ptEngineApp->tRoot.JUNO_FAILURE_HANDLER;';
+
+            const result = resolver.resolve('/src/engine_app.c', 60, 0, lineText, 'EngineApp_Init');
+
+            expect(result.found).toBe(false);
+            expect(result.locations).toHaveLength(0);
+            expect(result.errorMsg).toBeDefined();
+            // errorMsg must contain some type name — the terminal root or an intermediate type
+            expect(result.errorMsg!.length).toBeGreaterThan(0);
+            expect(result.errorMsg).toMatch(/ENGINE_APP_T|APP_ROOT_T|MODULE_ROOT_T/);
+        });
+
+        // =====================================================================
+        // TC-FH-APP-003: JUNO_FAIL_MODULE resolves via intermediate type
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-038"]}
+        it('TC-FH-APP-003: JUNO_FAIL_MODULE resolves handler registered at intermediate type APP_ROOT_T via ENGINE_APP_T → APP_ROOT_T → MODULE_ROOT_T chain', () => {
+            const index = createEmptyIndex();
+
+            // Two-hop chain: ENGINE_APP_T → APP_ROOT_T → MODULE_ROOT_T
+            index.derivationChain.set('ENGINE_APP_T', 'APP_ROOT_T');
+            index.derivationChain.set('APP_ROOT_T', 'MODULE_ROOT_T');
+
+            // Handler registered at the intermediate type APP_ROOT_T
+            index.failureHandlerAssignments.set('APP_ROOT_T', [
+                { functionName: 'AppFailureHandler', file: '/src/engine_app.c', line: 111 },
+            ]);
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['EngineApp_Init', new Map<string, TypeInfo>([
+                        ['ptEngineApp', { name: 'ptEngineApp', typeName: 'ENGINE_APP_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('/src/engine_app.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = 'JUNO_FAIL_MODULE(tStatus, ptEngineApp, "error");';
+
+            const result = resolver.resolve('/src/engine_app.c', 60, 0, lineText, 'EngineApp_Init');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('AppFailureHandler');
+        });
+
+        // =====================================================================
+        // TC-FH-KIND-001: Step 2 result has kind: 'assignment'
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-041"]}
+        it('TC-FH-KIND-001: Step 2 type-walk result has kind === "assignment"', () => {
+            const index = createEmptyIndex();
+
+            // Single-hop chain: DERIVED_T → ROOT_T
+            index.derivationChain.set('DERIVED_T', 'ROOT_T');
+            index.failureHandlerAssignments.set('ROOT_T', [
+                { functionName: 'RootHandler', file: '/src/mod.c', line: 5 },
+            ]);
+
+            const localTypeInfo: LocalTypeInfo = {
+                localVariables: new Map([
+                    ['Mod_Init', new Map<string, TypeInfo>([
+                        ['ptMod', { name: 'ptMod', typeName: 'DERIVED_T', isPointer: true, isConst: false, isArray: false }],
+                    ])],
+                ]),
+                functionParameters: new Map(),
+            };
+            index.localTypeInfo.set('/src/mod.c', localTypeInfo);
+
+            const resolver = new FailureHandlerResolver(index);
+            // Non-assignment form — Step 1 is skipped, Step 2 runs
+            const lineText = 'ptMod->JUNO_FAILURE_HANDLER;';
+
+            const result = resolver.resolve('/src/mod.c', 20, 0, lineText, 'Mod_Init');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].kind).toBe('assignment');
+        });
+
+        // =====================================================================
+        // TC-FH-KIND-002: JUNO_FAIL macro result has kind: 'invocation'
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-041"]}
+        it('TC-FH-KIND-002: JUNO_FAIL macro result has kind === "invocation"', () => {
+            const index = createEmptyIndex();
+
+            index.functionDefinitions.set('MyHandler', [
+                { functionName: 'MyHandler', file: '/src/handler.c', line: 10, isStatic: false },
+            ]);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = 'JUNO_FAIL(tStatus, MyHandler, pvData, "msg");';
+
+            const result = resolver.resolve('/src/caller.c', 30, 0, lineText, 'SomeFn');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('MyHandler');
+            expect(result.locations[0].file).toBe('/src/handler.c');
+            expect(result.locations[0].line).toBe(10);
+            expect(result.locations[0].kind).toBe('invocation');
+        });
+
+        // =====================================================================
+        // TC-FH-KIND-003: Step 1 assignment form result has kind: 'assignment'
+        // =====================================================================
+
+        // @{"verify": ["REQ-VSCODE-041"]}
+        it('TC-FH-KIND-003: Step 1 assignment form result has kind === "assignment"', () => {
+            const index = createEmptyIndex();
+
+            index.functionDefinitions.set('MyHandler', [
+                { functionName: 'MyHandler', file: '/src/handler.c', line: 20, isStatic: false },
+            ]);
+
+            const resolver = new FailureHandlerResolver(index);
+            const lineText = 'ptMod->JUNO_FAILURE_HANDLER = MyHandler;';
+
+            const result = resolver.resolve('/src/mod.c', 50, 0, lineText, 'Mod_Init');
+
+            expect(result.found).toBe(true);
+            expect(result.locations).toHaveLength(1);
+            expect(result.locations[0].functionName).toBe('MyHandler');
+            expect(result.locations[0].file).toBe('/src/handler.c');
+            expect(result.locations[0].line).toBe(20);
+            expect(result.locations[0].kind).toBe('assignment');
+        });
+
+    }); // end describe('derivation chain walk and kind field')
+
 });

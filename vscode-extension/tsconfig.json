@@ -16,6 +16,7 @@
     "node_modules",
     "out",
     "**/*.test.ts",
-    "**/__mocks__/**"
+    "**/__mocks__/**",
+    "scripts"
   ]
 }
