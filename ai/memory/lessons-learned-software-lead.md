@@ -221,6 +221,16 @@ This is non-negotiable every sprint without exception.
 - The test agent correctly found and fixed 2 pre-existing test mocks (`vtableTraceProvider.test.ts`, `workspaceIndexer.test.ts`) that failed to compile after the new field was added.
 - Rule: when adding a field to a shared interface like NavigationIndex, grep for all test files that construct the interface directly and update them in the same work item.
 
+### 2026-04-19 — Always verify LibJuno API shape from actual header files before designing against it
+- Sprint 30: broker API had 4 critical mismatches (Dequeue doesn't exist on broker, RegisterSubscriber takes 2 not 3 args, Publish needs JUNO_POINTER_T not raw pointer, empty queue returns JUNO_STATUS_OOB_ERROR not JUNO_STATUS_EMPTY).
+- The senior engineer caught all four by reading `broker_api.h` and `juno_buff_queue.c` directly.
+- Rule: any time a design doc describes API calls on a LibJuno module, the senior engineer verifier MUST check the actual header file before approving. Do not trust doc or design memory alone.
+
+### 2026-04-19 — Design docs for example projects require explicit verification of API usage patterns
+- Sprint 30: worker designed application algorithms based on assumed API shape; all four Broker/Pipe API calls were wrong.
+- Fix required restructuring dequeue, publish, and register-subscriber pseudocode in 04-applications.md.
+- Rule: when spawning a design worker, brief them to explicitly list ALL API calls they will use and their signatures — then spawn a senior engineer to cross-check those signatures against headers before approving.
+
 ### 2026-04-18 — Two JSON-RPC edge cases senior SE will always flag: notifications and missing params
 - Notifications (no `id` field) must return HTTP 202 with no body — NOT a MethodNotFound error. A specific check for one notification name is insufficient; the guard must cover ALL methods with no `id`.
 - `tools/call` must validate `arguments` fields before passing to the handler, returning `-32602 InvalidParams` on missing/wrong-typed fields. Silently casting `undefined` as `string` is a latent crash.

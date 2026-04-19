@@ -1,0 +1,239 @@
+{
+  "module": "UDPAPP",
+  "requirements": [
+    {
+      "id": "REQ-UDPAPP-001",
+      "title": "Example Project Overview",
+      "description": "The example project shall demonstrate LibJuno's vtable/DI pattern using two application threads, a software bus broker per thread, a scheduler per thread, and UDP inter-thread communication.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. The composition root will utilize these modules to create 4 sample applications. 2 sample applications will sit on one thread, 2 sample applications will sit on a different thread. You will use the scheduler to schedule them, and the broker to exchange and route messages between the threads.",
+      "verification_method": "Demonstration",
+      "uses": [],
+      "implements": [
+        "REQ-UDPAPP-002",
+        "REQ-UDPAPP-008",
+        "REQ-UDPAPP-011",
+        "REQ-UDPAPP-016",
+        "REQ-UDPAPP-019",
+        "REQ-UDPAPP-020",
+        "REQ-UDPAPP-021",
+        "REQ-UDPAPP-022",
+        "REQ-UDPAPP-023"
+      ]
+    },
+    {
+      "id": "REQ-UDPAPP-002",
+      "title": "SenderApp Lifecycle Interface",
+      "description": "SenderApp shall implement the JUNO_APP_API_T interface, providing OnStart, OnProcess, and OnExit callbacks.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. The composition root will utilize these modules to create 4 sample applications.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDPAPP-001"],
+      "implements": [
+        "REQ-UDPAPP-003",
+        "REQ-UDPAPP-004",
+        "REQ-UDPAPP-005",
+        "REQ-UDPAPP-006",
+        "REQ-UDPAPP-007"
+      ]
+    },
+    {
+      "id": "REQ-UDPAPP-003",
+      "title": "SenderApp OnStart — Open UDP Sender Socket",
+      "description": "SenderApp shall open a UDP sender socket connected to the fixed loopback address and port during its OnStart callback.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. The fixed loopback address (127.0.0.1:9000) is a compile-time constant so applications know where to send without runtime configuration.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-002", "REQ-UDP-003"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-004",
+      "title": "SenderApp OnProcess — Publish to Thread 1 Broker",
+      "description": "SenderApp shall publish a UDP_THREAD_MSG_T message to Thread 1's broker under UDPTH_MSG_MID on each OnProcess cycle.",
+      "rationale": "You will use the broker to exchange and route messages between the threads. SenderApp publishes to the local broker so that co-located subscribers on Thread 1 can observe outgoing messages.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-002"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-005",
+      "title": "SenderApp OnProcess — Transmit via UDP",
+      "description": "SenderApp shall transmit the UDP_THREAD_MSG_T to Thread 2 via the UDP module on each OnProcess cycle.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. UDP is the inter-thread transport mechanism.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-002", "REQ-UDP-006"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-006",
+      "title": "SenderApp Sequence Counter",
+      "description": "SenderApp shall increment a sequence counter and populate the UDP_THREAD_MSG_T sequence number field on each OnProcess cycle.",
+      "rationale": "It should have a fixed message structure to make it easier. Apps will know the size and memory map of the structure. A monotonically increasing sequence number allows the receiver to detect dropped or out-of-order datagrams.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-002"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-007",
+      "title": "SenderApp OnExit — Close UDP Sender Socket",
+      "description": "SenderApp shall close the UDP sender socket during its OnExit callback.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. Closing the socket on exit releases the OS resource and leaves the system in a clean state after the application lifecycle ends.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-002"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-008",
+      "title": "MonitorApp Lifecycle Interface",
+      "description": "MonitorApp shall implement the JUNO_APP_API_T interface.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. The composition root will utilize these modules to create 4 sample applications.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDPAPP-001"],
+      "implements": [
+        "REQ-UDPAPP-009",
+        "REQ-UDPAPP-010"
+      ]
+    },
+    {
+      "id": "REQ-UDPAPP-009",
+      "title": "MonitorApp OnStart — Register Subscription",
+      "description": "MonitorApp shall register a subscription pipe for the UDPTH_MSG_MID topic on Thread 1's broker during its OnStart callback.",
+      "rationale": "You will use the broker to exchange and route messages between the threads. MonitorApp sits on Thread 1 alongside SenderApp and subscribes to the same MID so it can observe every outgoing message.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-008"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-010",
+      "title": "MonitorApp OnProcess — Dequeue and Log Messages",
+      "description": "MonitorApp shall dequeue and process all available messages from its subscription pipe on each OnProcess cycle.",
+      "rationale": "You will use the broker to exchange and route messages between the threads. MonitorApp provides visibility into SenderApp activity by consuming messages from the local broker on each scheduler cycle.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-008"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-011",
+      "title": "UdpBridgeApp Lifecycle Interface",
+      "description": "UdpBridgeApp shall implement the JUNO_APP_API_T interface, providing OnStart, OnProcess, and OnExit callbacks.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. The composition root will utilize these modules to create 4 sample applications.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDPAPP-001"],
+      "implements": [
+        "REQ-UDPAPP-012",
+        "REQ-UDPAPP-013",
+        "REQ-UDPAPP-014",
+        "REQ-UDPAPP-015"
+      ]
+    },
+    {
+      "id": "REQ-UDPAPP-012",
+      "title": "UdpBridgeApp OnStart — Open UDP Receiver Socket",
+      "description": "UdpBridgeApp shall open a UDP receiver socket bound to the fixed loopback port during its OnStart callback.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. The receiver must bind to the well-known port at startup so it is ready to accept datagrams from SenderApp.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-011", "REQ-UDP-004"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-013",
+      "title": "UdpBridgeApp OnProcess — Receive UDP Datagram",
+      "description": "UdpBridgeApp shall attempt to receive one UDP datagram on each OnProcess cycle, returning without error when the receive operation times out.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. A non-blocking receive with timeout keeps UdpBridgeApp responsive to its scheduler without stalling Thread 2 indefinitely.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-011", "REQ-UDP-007"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-014",
+      "title": "UdpBridgeApp OnProcess — Publish to Thread 2 Broker",
+      "description": "UdpBridgeApp shall publish each successfully received UDP_THREAD_MSG_T to Thread 2's broker under UDPTH_MSG_MID.",
+      "rationale": "You will use the broker to exchange and route messages between the threads. UdpBridgeApp bridges the UDP transport to the Thread 2 software bus so that co-located subscribers on Thread 2 can receive messages originating from Thread 1.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-011"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-015",
+      "title": "UdpBridgeApp OnExit — Close UDP Receiver Socket",
+      "description": "UdpBridgeApp shall close the UDP receiver socket during its OnExit callback.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. Closing the socket on exit releases the OS resource and leaves the system in a clean state after the application lifecycle ends.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-011"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-016",
+      "title": "ProcessorApp Lifecycle Interface",
+      "description": "ProcessorApp shall implement the JUNO_APP_API_T interface.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. The composition root will utilize these modules to create 4 sample applications.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDPAPP-001"],
+      "implements": [
+        "REQ-UDPAPP-017",
+        "REQ-UDPAPP-018"
+      ]
+    },
+    {
+      "id": "REQ-UDPAPP-017",
+      "title": "ProcessorApp OnStart — Register Subscription",
+      "description": "ProcessorApp shall register a subscription pipe for the UDPTH_MSG_MID topic on Thread 2's broker during its OnStart callback.",
+      "rationale": "You will use the broker to exchange and route messages between the threads. ProcessorApp sits on Thread 2 alongside UdpBridgeApp and subscribes to UDPTH_MSG_MID so it can process every message bridged from Thread 1.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-016"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-018",
+      "title": "ProcessorApp OnProcess — Dequeue and Process Messages",
+      "description": "ProcessorApp shall dequeue and process all available messages from its subscription pipe on each OnProcess cycle.",
+      "rationale": "You will use the broker to exchange and route messages between the threads. ProcessorApp consumes messages forwarded by UdpBridgeApp from Thread 1, completing the end-to-end inter-thread data path.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDPAPP-016"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-019",
+      "title": "Composition Root — Static Allocation",
+      "description": "The composition root shall statically allocate all module instances without dynamic memory allocation.",
+      "rationale": "Zero dynamic allocation is a hard constraint for freestanding embedded targets and is a core LibJuno architectural principle.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDPAPP-001"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-020",
+      "title": "Composition Root — Two-Thread Topology",
+      "description": "The composition root shall create two independent threads, each hosting a scheduler with two applications.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. 2 sample applications will sit on one thread, 2 sample applications will sit on a different thread.",
+      "verification_method": "Demonstration",
+      "uses": ["REQ-UDPAPP-001", "REQ-THREAD-003"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-021",
+      "title": "Composition Root — Scheduler Configuration",
+      "description": "The composition root shall configure Thread 1's scheduler with SenderApp and MonitorApp, and Thread 2's scheduler with UdpBridgeApp and ProcessorApp.",
+      "rationale": "You will use the scheduler to schedule them, and the broker to exchange and route messages between the threads. The pairing of sender with monitor on Thread 1 and bridge with processor on Thread 2 reflects the intended data flow.",
+      "verification_method": "Demonstration",
+      "uses": ["REQ-UDPAPP-001"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-022",
+      "title": "Composition Root — Broker Isolation",
+      "description": "The composition root shall provide each thread with its own software bus broker instance that does not share state with the other thread's broker.",
+      "rationale": "You will use the broker to exchange and route messages between the threads. Per-thread broker instances confine publish/subscribe routing to a single thread, enforcing the single-thread-scope contract of the software bus module and preventing cross-thread data races.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDPAPP-001"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDPAPP-023",
+      "title": "Composition Root — Graceful Shutdown",
+      "description": "The composition root shall signal both threads to stop and join both threads before the process exits.",
+      "rationale": "I want to create an example CPP LibJuno project that will use UDP to send data between two threads. Stopping and joining all threads before exit ensures resources are released cleanly and no threads are left running in an undefined state.",
+      "verification_method": "Demonstration",
+      "uses": ["REQ-UDPAPP-001", "REQ-THREAD-005", "REQ-THREAD-006"],
+      "implements": []
+    }
+  ]
+}
