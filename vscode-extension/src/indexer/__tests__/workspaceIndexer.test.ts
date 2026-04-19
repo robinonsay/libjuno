@@ -1850,6 +1850,61 @@ describe('WorkspaceIndexer — core behaviour', () => {
             expect(stampedLoc!.initCallFile!.endsWith('pos023_app.c')).toBe(true);
         });
 
+        // @{"verify": ["REQ-VSCODE-037"]}
+        it('TC-TRACE-025: resolveInitCallers stamps compRootFile/compRootLine on ConcreteLocation', async () => {
+            // File 1: broker.c — API struct (explicit tag syntax), vtable initializer,
+            // and BrokerInit which contains &gtBrokerApi (this becomes initCallFile).
+            // Explicit struct tag syntax is required so the parser can resolve the
+            // positional vtable initializer in the same file without deferring.
+            const brokerPath = path.join(crDir, 'init025_broker.c');
+            fs.writeFileSync(brokerPath, [
+                'struct MY_BROKER_API_TAG { void (*Publish)(void); };',
+                'static void BrokerPublish(void) {}',
+                'static const MY_BROKER_API_T gtBrokerApi = { BrokerPublish };',
+                'void BrokerInit(void *p) { p->ptApi = &gtBrokerApi; }',
+            ].join('\n'));
+
+            // File 2: main.c — caller of BrokerInit; this is the true composition root.
+            // resolveInitCallers finds BrokerInit as the function enclosing the
+            // &gtBrokerApi reference, then scans for its call site here.
+            const mainPath = path.join(crDir, 'init025_main.c');
+            fs.writeFileSync(mainPath, [
+                'static void main(void) { void *myBroker = 0; BrokerInit(&myBroker); }',
+            ].join('\n'));
+
+            crIndexer = new WorkspaceIndexer(crDir, []);
+            // fullIndex() runs resolveDeferred(), resolveCompositionRoots(), and
+            // resolveInitCallers() before returning.
+            await crIndexer.fullIndex();
+
+            // vtableAssignments must contain MY_BROKER_API_T with Publish field.
+            const fieldMap = crIndexer.index.vtableAssignments.get('MY_BROKER_API_T');
+            expect(fieldMap).toBeDefined();
+
+            const locs = fieldMap!.get('Publish');
+            expect(locs).toBeDefined();
+            expect(locs!.length).toBeGreaterThan(0);
+
+            // Find the ConcreteLocation that was stamped by resolveInitCallers.
+            // initCallFile is set by resolveCompositionRoots to the file containing
+            // &gtBrokerApi (broker.c line 4). compRootFile is set by
+            // resolveInitCallers to the file containing BrokerInit(&myBroker)
+            // (main.c line 1).
+            const loc = locs!.find(l => l.compRootFile !== undefined);
+            expect(loc).toBeDefined();
+
+            // initCallFile: where &gtBrokerApi appears — inside BrokerInit in broker.c.
+            expect(loc!.initCallFile).toBeDefined();
+            expect(loc!.initCallFile!.endsWith('init025_broker.c')).toBe(true);
+
+            // compRootFile: where BrokerInit is called — main.c.
+            expect(loc!.compRootFile!.endsWith('init025_main.c')).toBe(true);
+
+            // compRootLine: must be the line containing BrokerInit(&myBroker).
+            // In init025_main.c that call appears on line 1.
+            expect(loc!.compRootLine).toBe(1);
+        });
+
     }); // end 'Composition root resolution'
 
 });

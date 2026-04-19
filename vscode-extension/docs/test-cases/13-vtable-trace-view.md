@@ -575,4 +575,22 @@ provider does not attempt to render an empty trace. It also documents known beha
 **Scenario:** A file contains an explicit-tag struct definition and a matching positional vtable initializer assigned to a named variable. The visitor resolves positional vtable in-file and emits `VtableAssignmentRecord` entries.
 **Expected:** Each emitted `VtableAssignmentRecord` has `varName` equal to the variable name of the vtable struct (e.g., `"gtMyLogApi"`).
 
+### TC-TRACE-025 — resolveInitCallers Stamps compRootFile/compRootLine
+**Requirement:** REQ-VSCODE-037
+**File:** `src/indexer/__tests__/workspaceIndexer.test.ts`
+**Scenario:** After `fullIndex()`, `resolveInitCallers()` finds the caller of the Init function (the function that contains the `&apiVar` site) and stamps `compRootFile`/`compRootLine` on the matching `ConcreteLocation`. Two temp files are used: one with a positional vtable initializer and an Init-function body containing `&apiVar`, and a second with a call to that Init function.
+**Expected:** `ConcreteLocation.compRootFile` ends with the second temp file name; `compRootLine` points to the line containing the Init function call.
+
+### TC-TRACE-026 — 4-Node Chain Rendered When compRootFile and initCallFile Both Present
+**Requirement:** REQ-VSCODE-037
+**File:** `src/providers/__tests__/vtableTraceProvider.test.ts`
+**Scenario:** A `ConcreteLocation` with both `compRootFile` and `initCallFile` set is passed through `VtableTraceProvider.showTrace()`. The generated HTML must include the initialization implementation node.
+**Expected:** HTML contains `class="trace-node init-impl"`; composition root link targets `compRootFile:compRootLine`; init-impl link targets `initCallFile:initCallLine`.
+
+### TC-TRACE-027 — 3-Node Fallback When compRootFile Absent
+**Requirement:** REQ-VSCODE-037
+**File:** `src/providers/__tests__/vtableTraceProvider.test.ts`
+**Scenario:** A `ConcreteLocation` with `initCallFile` set but no `compRootFile` is passed through `VtableTraceProvider.showTrace()`. The initialization implementation node must not appear.
+**Expected:** HTML does NOT contain `<div class="trace-node init-impl">`.
+
 ---

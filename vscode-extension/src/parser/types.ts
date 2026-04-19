@@ -369,6 +369,10 @@ export interface ConcreteLocation {
   initCallFile?: string;
   /** 1-based line of the composition-root call site. REQ-VSCODE-036. */
   initCallLine?: number;
+  /** Caller of the Init function — the true composition root in user code (REQ-VSCODE-037). */
+  compRootFile?: string;
+  /** 1-based line of the composition root call site. */
+  compRootLine?: number;
 }
 
 // ---------------------------------------------------------------------------

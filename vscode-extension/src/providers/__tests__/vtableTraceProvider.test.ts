@@ -684,6 +684,105 @@ describe('VtableTraceProvider', () => {
     });
 
     // -------------------------------------------------------------------------
+    // TC-TRACE-026: 4-node chain rendered when both compRootFile and initCallFile are set
+    // -------------------------------------------------------------------------
+
+    // @{"verify": ["REQ-VSCODE-037"]}
+    it('TC-TRACE-026: HTML contains init-impl CSS class when ConcreteLocation has both compRootFile and initCallFile', () => {
+        // ConcreteLocation with all four fields populated — produces a 4-node chain:
+        // call-site → composition-root (main.c:212) → init-impl (broker.c:39) → implementation (broker.c:55).
+        mockResolver.resolve.mockReturnValue({
+            found: true,
+            locations: [{
+                functionName: 'BrokerPublish',
+                file: '/workspace/juno_broker.c',
+                line: 55,
+                assignmentFile: '/workspace/juno_broker.c',
+                assignmentLine: 10,
+                initCallFile: '/workspace/juno_broker.c',
+                initCallLine: 39,
+                compRootFile: '/workspace/main.c',
+                compRootLine: 212,
+            }],
+        });
+
+        const provider = new VtableTraceProvider(
+            mockResolver as unknown as VtableResolver,
+            createMinimalIndex(),
+            mockStatusBar as unknown as StatusBarHelper,
+            mockCreateWebviewPanel,
+            mockShowTextDocument
+        );
+
+        provider.showTrace(
+            '/workspace/main.c',
+            300,
+            10,
+            '    ptBroker->ptApi->Publish(ptBroker, tTopic);'
+        );
+
+        expect(mockCreateWebviewPanel).toHaveBeenCalledTimes(1);
+        const html: string = fakePanel.webview.html;
+
+        // The 4th node must be present — init-impl CSS class confirms it.
+        expect(html).toMatch(/class="trace-node init-impl"/);
+
+        // The init-impl link must point to initCallFile:initCallLine (broker.c:39).
+        expect(html).toContain('data-file="/workspace/juno_broker.c"');
+        expect(html).toContain('data-line="39"');
+
+        // The composition-root link must point to compRootFile:compRootLine (main.c:212).
+        expect(html).toContain('data-file="/workspace/main.c"');
+        expect(html).toContain('data-line="212"');
+    });
+
+    // -------------------------------------------------------------------------
+    // TC-TRACE-027: init-impl node absent when compRootFile is not set (3-node fallback)
+    // -------------------------------------------------------------------------
+
+    // @{"verify": ["REQ-VSCODE-037"]}
+    it('TC-TRACE-027: HTML does NOT contain init-impl when ConcreteLocation has initCallFile but no compRootFile', () => {
+        // ConcreteLocation with initCallFile set but compRootFile absent —
+        // should produce the 3-node chain only (no init-impl node).
+        mockResolver.resolve.mockReturnValue({
+            found: true,
+            locations: [{
+                functionName: 'BrokerPublish',
+                file: '/workspace/juno_broker.c',
+                line: 55,
+                assignmentFile: '/workspace/juno_broker.c',
+                assignmentLine: 10,
+                initCallFile: '/workspace/juno_broker.c',
+                initCallLine: 39,
+                // compRootFile and compRootLine intentionally absent
+            }],
+        });
+
+        const provider = new VtableTraceProvider(
+            mockResolver as unknown as VtableResolver,
+            createMinimalIndex(),
+            mockStatusBar as unknown as StatusBarHelper,
+            mockCreateWebviewPanel,
+            mockShowTextDocument
+        );
+
+        provider.showTrace(
+            '/workspace/main.c',
+            300,
+            10,
+            '    ptBroker->ptApi->Publish(ptBroker, tTopic);'
+        );
+
+        expect(mockCreateWebviewPanel).toHaveBeenCalledTimes(1);
+        const html: string = fakePanel.webview.html;
+
+        // The init-impl div element must NOT be rendered — only a 3-node chain.
+        // Note: the CSS rule ".trace-node.init-impl" is always present in the <style> block,
+        // so we assert on the absence of the actual div element, not the CSS token.
+        expect(html).not.toContain('<div class="trace-node init-impl">');
+    });
+
+    // -------------------------------------------------------------------------
     // TC-TRACE-022: Composition root falls back to assignmentFile/Line when initCallFile absent
     // -------------------------------------------------------------------------
 

@@ -46,17 +46,17 @@
 
 The vtable resolution trace view provides a visual tree showing the full resolution chain from an API call site, through the composition root where the vtable was initialized, to the concrete implementation function. This satisfies REQ-VSCODE-027.
 
-The trace view complements the existing Go to Definition feature (§5.1): Go to Definition navigates directly to the implementation, while the trace view surfaces the intermediate wiring step — the composition root vtable assignment — making the full dependency injection chain visible. This is especially useful for debugging DI configuration issues and understanding the wiring of large LibJuno-based systems.
+The trace view complements the existing Go to Definition feature (§5.1): Go to Definition navigates directly to the implementation, while the trace view surfaces the intermediate wiring steps — the composition root caller and, when available, the Init function body where the vtable pointer is wired — making the full dependency injection chain visible. This is especially useful for debugging DI configuration issues and understanding the wiring of large LibJuno-based systems.
 
 ### 11.2 Component: VtableTraceProvider
 
-A new component added to the VSCode Integration Layer (§3.5). Responsibility: collect the full 3-node resolution trace and render it in a `vscode.WebviewPanel`.
+A new component added to the VSCode Integration Layer (§3.5). Responsibility: collect the full up-to-4-node resolution trace and render it in a `vscode.WebviewPanel`.
 
 **TypeScript interfaces:**
 
 ```typescript
 interface TraceNode {
-  type:   'call-site' | 'composition-root' | 'implementation';
+  type:   'call-site' | 'composition-root' | 'init-impl' | 'implementation';
   label:  string;   // e.g., "ptCmdPipeApi->Dequeue(...)"
   file:   string;   // workspace-relative path
   line:   number;
@@ -66,6 +66,7 @@ interface TraceNode {
 interface VtableTrace {
   callSite:        TraceNode;
   compositionRoot: TraceNode;
+  initImpl?:       TraceNode;  // present when compRootFile is resolved
   implementation:  TraceNode;
 }
 ```
@@ -88,16 +89,33 @@ STEP 2 — Build the call site node (REQ-VSCODE-030)
     detail: lineText.trim()
   }
 
-STEP 3 — Build the composition root node (REQ-VSCODE-031)
-  // Use the extended ConcreteLocation (with assignmentFile/assignmentLine from §4.1)
+STEP 3 — Build the composition root node (REQ-VSCODE-031, REQ-VSCODE-036, REQ-VSCODE-037)
+  // When compRootFile is set, use it as the true composition root (caller of Init,
+  // e.g. main.c). Otherwise fall back to initCallFile ?? assignmentFile as before.
   location = result.locations[selectedIndex or 0]
+  compRootFile = location.compRootFile ?? location.initCallFile ?? location.assignmentFile ?? 'unknown'
+  compRootLine = location.compRootLine ?? location.initCallLine ?? location.assignmentLine ?? 0
   compositionRoot = {
     type:   'composition-root',
-    label:  `.${fieldName} = ${location.functionName}`,
-    file:   location.assignmentFile,
-    line:   location.assignmentLine,
-    detail: // read line from assignment file at assignmentLine
+    label:  location.functionName,
+    file:   compRootFile,
+    line:   compRootLine,
+    detail: location.functionName
   }
+
+STEP 3b — Build the initialization implementation node (REQ-VSCODE-037)
+  // Only present when compRootFile is resolved AND initCallFile is known.
+  // This node points to where the vtable pointer is wired inside the Init function body.
+  IF location.compRootFile AND location.initCallFile:
+    initImpl = {
+      type:   'init-impl',
+      label:  location.functionName,
+      file:   location.initCallFile,
+      line:   location.initCallLine ?? 0,
+      detail: location.functionName
+    }
+  ELSE:
+    initImpl = undefined
 
 STEP 4 — Build the implementation node (REQ-VSCODE-032)
   // Use FunctionDefinitionRecord.signature (from §4.1) if available
@@ -110,7 +128,7 @@ STEP 4 — Build the implementation node (REQ-VSCODE-032)
   }
 
 STEP 5 — Display the WebviewPanel
-  Show a WebviewPanel with HTML rendering of the 3 nodes in tree layout (see §11.3)
+  Show a WebviewPanel with HTML rendering of up to 4 nodes in tree layout (see §11.3)
 ```
 
 ### 11.3 WebviewPanel Layout
@@ -118,6 +136,8 @@ STEP 5 — Display the WebviewPanel
 The panel is opened via `vscode.window.createWebviewPanel` with `enableScripts: true`. It uses a self-contained HTML template with inline CSS and a nonce-based inline script — no external resources.
 
 The tree layout uses CSS border and padding to create a visual connection between nodes:
+
+The tree layout renders up to 4 nodes. The `init-impl` node is only emitted when `compRootFile` is resolved on the `ConcreteLocation`.
 
 ```html
 <div class="trace-tree">
@@ -134,8 +154,18 @@ The tree layout uses CSS border and padding to create a visual connection betwee
     <span class="node-icon">🔗</span>
     <span class="node-label">Composition Root</span>
     <div class="node-detail">
-      <a href="#" data-file="..." data-line="...">engine_app.c:45</a>
-      <code>.Dequeue = JunoDs_BuffQueue_Dequeue</code>
+      <a href="#" data-file="..." data-line="...">main.c:12</a>
+      <code>JunoSb_BrokerInit(&amp;tBroker, &amp;gtCmdPipeApi)</code>
+    </div>
+  </div>
+  <!-- Optional: only present when compRootFile is resolved -->
+  <div class="trace-connector">│</div>
+  <div class="trace-node init-impl">
+    <span class="node-icon">⚙</span>
+    <span class="node-label">Initialization Implementation</span>
+    <div class="node-detail">
+      <a href="#" data-file="..." data-line="...">juno_sb_broker.c:45</a>
+      <code>ptRoot-&gt;ptApi = ptApi</code>
     </div>
   </div>
   <div class="trace-connector">│</div>

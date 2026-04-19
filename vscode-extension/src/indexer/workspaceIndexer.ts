@@ -14,6 +14,7 @@ import {
 import { parseFileWithDefs } from "../parser/visitor";
 import { createEmptyIndex, removeFileRecords } from "./navigationIndex";
 import { loadCache, saveCache, indexToCache, cacheToIndex } from "../cache/cacheManager";
+import { findEnclosingFunction } from '../resolver/resolverUtils';
 
 /** C and C++ source file extensions to scan (REQ-VSCODE-021). */
 export const C_FILE_EXTENSIONS = new Set([".c", ".h", ".cpp", ".hpp", ".hh", ".cc"]);
@@ -67,6 +68,7 @@ export class WorkspaceIndexer {
         await this.indexFile(filePath, deferred);
         this.resolveDeferred(deferred);
         this.resolveCompositionRoots();
+        this.resolveInitCallers();
         this.scheduleSave();
     }
 
@@ -99,6 +101,7 @@ export class WorkspaceIndexer {
 
         // Locate composition-root call sites for all known API struct variables.
         this.resolveCompositionRoots();
+        this.resolveInitCallers();
 
         await this.saveToCache();
     }
@@ -476,6 +479,47 @@ export class WorkspaceIndexer {
                     if (sites && sites.length > 0) {
                         loc.initCallFile = sites[0].file;
                         loc.initCallLine = sites[0].line;
+                    }
+                }
+            }
+        }
+    }
+
+    // @{"req": ["REQ-VSCODE-037"]}
+    private resolveInitCallers(): void {
+        for (const fieldMap of this.index.vtableAssignments.values()) {
+            for (const locs of fieldMap.values()) {
+                for (const loc of locs) {
+                    if (!loc.initCallFile || !loc.initCallLine) { continue; }
+
+                    // Find which function contains the init-call line.
+                    const initFnName = findEnclosingFunction(
+                        this.index, loc.initCallFile, loc.initCallLine
+                    );
+                    if (!initFnName) { continue; }
+
+                    // Scan all indexed files for a call to that function.
+                    const callPattern = new RegExp(`\\b${initFnName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\(`, 'g');
+                    let found = false;
+                    for (const relPath of this.fileHashes.keys()) {
+                        if (found) { break; }
+                        const absPath = path.join(this.workspaceRoot, relPath);
+                        let text: string;
+                        try { text = fs.readFileSync(absPath, 'utf8'); } catch { continue; }
+                        const lines = text.split('\n');
+                        for (let i = 0; i < lines.length; i++) {
+                            callPattern.lastIndex = 0;
+                            if (callPattern.test(lines[i])) {
+                                // Skip the function definition line itself.
+                                const defs = this.index.functionDefinitions.get(initFnName);
+                                const isDef = defs?.some((d) => d.file === absPath && d.line === i + 1);
+                                if (isDef) { continue; }
+                                loc.compRootFile = absPath;
+                                loc.compRootLine = i + 1;
+                                found = true;
+                                break;
+                            }
+                        }
                     }
                 }
             }

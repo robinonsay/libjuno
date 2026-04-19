@@ -375,14 +375,15 @@
     {
       "id": "REQ-VSCODE-031",
       "title": "Trace View Composition Root Node",
-      "description": "The trace view shall display a composition root node showing the file path, line number, and the vtable assignment expression (e.g., `.FieldName = ConcreteFunction`) where the API function pointer is initialized.",
+      "description": "The extension shall display a Composition Root node in the Vtable Trace View showing the call site where the Init function is called to wire the module instance to its concrete vtable. When the caller of the Init function can be resolved, the node links to that call site. When it cannot (e.g., the Init function is called directly from the top-level composition root with no further callers), the node falls back to the initialization implementation location.",
       "rationale": "The composition root is the key piece of the dependency injection chain that connects the abstract call site to the concrete implementation. Showing this assignment helps developers understand and debug the wiring configuration.",
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-027"
       ],
       "implements": [
-        "REQ-VSCODE-036"
+        "REQ-VSCODE-036",
+        "REQ-VSCODE-037"
       ]
     },
     {
@@ -434,6 +435,17 @@
       "title": "Structural Composition Root Detection via API Pointer Call Site",
       "description": "The extension shall identify the composition root of a vtable resolution as the call site where the address of the concrete API struct variable is passed as a function argument (e.g., &gtMyLoggerApi in SomeModule_Init(&tModule, &gtMyLoggerApi, ...)), rather than the vtable struct definition site. This detection shall be structural — based on which variables hold API struct values — and shall not rely on any naming convention of the callee function.",
       "rationale": "LibJuno modules are wired to their concrete vtable implementations via Init functions (e.g., JunoLog_LogInit). The actual runtime composition root is the call site of these functions, not the static definition of the vtable struct. Showing the call site helps developers navigate directly to where the DI wiring occurs.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-031"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-037",
+      "title": "Trace View Initialization Implementation Node",
+      "description": "When the composition root caller is resolved, the extension shall display an Initialization Implementation node in the Vtable Trace View showing the location within the Init function where the module instance is wired to its concrete vtable (e.g., where ptApi = &apiVar is assigned or where &apiVar is passed as a function argument). This node appears between the Composition Root node and the Implementation node.",
+      "rationale": "In LibJuno's DI pattern, the API pointer assignment occurs inside the Init function body, not at the user-visible composition root. Surfacing this intermediate wiring step helps developers understand the full initialization chain when debugging DI configuration issues.",
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-031"
