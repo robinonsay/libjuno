@@ -18,6 +18,7 @@
 #include "processor_app.h"
 #include "udp_msg_api.h"
 #include "juno/macros.h"
+#include <stdio.h>
 
 /* --------------------------------------------------------------------------
  * Lifecycle implementations
@@ -72,9 +73,7 @@ JUNO_STATUS_T ProcessorApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
         {
             return tStatus;
         }
-        /* Message consumed. In a production app, process tMsg here.
-         * For this example we just drain the queue. */
-        (void)tMsg;
+        printf("[ProcessorApp] processed seq=%u\n", tMsg.uSeqNum);
     }
     return JUNO_STATUS_SUCCESS;
 }

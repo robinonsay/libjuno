@@ -18,6 +18,7 @@
 #include "udp_bridge_app.h"
 #include "udp_msg_api.h"
 #include "juno/macros.h"
+#include <stdio.h>
 
 /* --------------------------------------------------------------------------
  * Forward declarations of lifecycle functions (referenced by vtable below)
@@ -103,6 +104,7 @@ JUNO_STATUS_T UdpBridgeApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
     }
 
     /* Received successfully — publish to Thread 2's broker */
+    printf("[UdpBridgeApp] rx seq=%u → forwarding\n", tMsg.uSeqNum);
     JUNO_POINTER_T tPtr;
     tPtr.ptApi       = &g_udpThreadMsgPointerApi;
     tPtr.pvAddr      = &tMsg;

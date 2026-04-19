@@ -197,54 +197,6 @@ JUNO_STATUS_T JunoThread_Init(
 );
 
 /* -------------------------------------------------------------------------
- * Convenience wrappers
- * ---------------------------------------------------------------------- */
-
-/**
- * @brief Create and start the managed thread.
- *
- * @details Dispatches to @c ptRoot->ptApi->Create.
- *
- * @param ptRoot      Thread module root instance.
- * @param pfcnEntry   Thread entry function.
- * @param pvArg       Argument forwarded to @p pfcnEntry.
- * @return @c JUNO_STATUS_SUCCESS on success, or a non-zero error code.
- */
-static inline JUNO_STATUS_T JunoThread_Create(
-    JUNO_THREAD_ROOT_T *ptRoot,
-    void *(*pfcnEntry)(void *),
-    void *pvArg)
-{
-    return ptRoot->ptApi->Create(ptRoot, pfcnEntry, pvArg);
-}
-
-/**
- * @brief Signal the managed thread to stop cooperatively.
- *
- * @details Dispatches to @c ptRoot->ptApi->Stop.
- *
- * @param ptRoot Thread module root instance.
- * @return @c JUNO_STATUS_SUCCESS on success, or a non-zero error code.
- */
-static inline JUNO_STATUS_T JunoThread_Stop(JUNO_THREAD_ROOT_T *ptRoot)
-{
-    return ptRoot->ptApi->Stop(ptRoot);
-}
-
-/**
- * @brief Block until the managed thread exits.
- *
- * @details Dispatches to @c ptRoot->ptApi->Join.
- *
- * @param ptRoot Thread module root instance.
- * @return @c JUNO_STATUS_SUCCESS on success, or a non-zero error code.
- */
-static inline JUNO_STATUS_T JunoThread_Join(JUNO_THREAD_ROOT_T *ptRoot)
-{
-    return ptRoot->ptApi->Join(ptRoot);
-}
-
-/* -------------------------------------------------------------------------
  * Platform vtable declarations
  * ---------------------------------------------------------------------- */
 

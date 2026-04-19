@@ -20,6 +20,7 @@ extern "C" {
 #include "udp_msg_api.h"
 #include "juno/status.h"
 #include "juno/macros.h"
+#include <stdio.h>
 }
 #include <string.h>
 #include <stdalign.h>
@@ -68,6 +69,8 @@ JUNO_STATUS_T SenderApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
     JUNO_STATUS_T tStatus = ptSender->ptBroker->ptApi->Publish(
         ptSender->ptBroker, UDPTH_MSG_MID, tPtr);
     JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+
+    printf("[SenderApp]    tx seq=%u\n", tMsg.uSeqNum);
 
     /* Transmit via UDP (REQ-UDPAPP-005) */
     tStatus = ptSender->ptUdp->ptApi->Send(ptSender->ptUdp, &tMsg);

@@ -219,7 +219,7 @@ TEST_F(ThreadModuleTest, Create_DispatchesViaVtable_HandleSet)
     JUNO_STATUS_T eInit = JunoThread_Init(&m_tRoot, &s_tTestApi, NULL, NULL);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eInit);
 
-    JUNO_STATUS_T eStatus = JunoThread_Create(&m_tRoot, DummyEntry, &m_tRoot);
+    JUNO_STATUS_T eStatus = m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, &m_tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* vtable Create must have been called */
     EXPECT_TRUE(s_bCreateCalled);
@@ -233,7 +233,7 @@ TEST_F(ThreadModuleTest, Create_ForwardsEntryAndArg)
     JunoThread_Init(&m_tRoot, &s_tTestApi, NULL, NULL);
 
     int iDummyData = 42;
-    JunoThread_Create(&m_tRoot, DummyEntry, &iDummyData);
+    m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, &iDummyData);
 
     EXPECT_TRUE(s_bCreateCalled);
     EXPECT_EQ(reinterpret_cast<void *(*)(void *)>(DummyEntry),
@@ -250,9 +250,9 @@ TEST_F(ThreadModuleTest, Stop_DispatchesViaVtable_SetsBStopTrue)
 {
     JunoThread_Init(&m_tRoot, &s_tTestApi, NULL, NULL);
     /* Create first so handle is non-zero */
-    JunoThread_Create(&m_tRoot, DummyEntry, NULL);
+    m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, NULL);
 
-    JUNO_STATUS_T eStatus = JunoThread_Stop(&m_tRoot);
+    JUNO_STATUS_T eStatus = m_tRoot.ptApi->Stop(&m_tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* vtable Stop must have been called */
     EXPECT_TRUE(s_bStopCalled);
@@ -268,10 +268,10 @@ TEST_F(ThreadModuleTest, Stop_DispatchesViaVtable_SetsBStopTrue)
 TEST_F(ThreadModuleTest, Join_DispatchesViaVtable_ClearsHandle)
 {
     JunoThread_Init(&m_tRoot, &s_tTestApi, NULL, NULL);
-    JunoThread_Create(&m_tRoot, DummyEntry, NULL);
+    m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, NULL);
     EXPECT_NE(0u, m_tRoot._uHandle);
 
-    JUNO_STATUS_T eStatus = JunoThread_Join(&m_tRoot);
+    JUNO_STATUS_T eStatus = m_tRoot.ptApi->Join(&m_tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* vtable Join must have been called */
     EXPECT_TRUE(s_bJoinCalled);
@@ -287,12 +287,12 @@ TEST_F(ThreadModuleTest, Join_DispatchesViaVtable_ClearsHandle)
 TEST_F(ThreadModuleTest, BStop_ReadableAfterStop_TrueViaRootPointer)
 {
     JunoThread_Init(&m_tRoot, &s_tTestApi, NULL, NULL);
-    JunoThread_Create(&m_tRoot, DummyEntry, &m_tRoot);
+    m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, &m_tRoot);
 
     /* Before stop, flag must be false */
     EXPECT_FALSE(m_tRoot.bStop);
 
-    JunoThread_Stop(&m_tRoot);
+    m_tRoot.ptApi->Stop(&m_tRoot);
 
     /* After stop, a thread entry reading ptRoot->bStop must see true.
      * This is the same root pointer that would be passed as pvArg in real usage.
@@ -314,7 +314,7 @@ TEST_F(ThreadModuleTest, Create_WhenVtableReturnsError_PropagatesExactStatus)
     s_bCreateFail         = true;
     s_tCreateFailStatus   = JUNO_STATUS_INVALID_REF_ERROR;
 
-    JUNO_STATUS_T eStatus = JunoThread_Create(&m_tRoot, DummyEntry, NULL);
+    JUNO_STATUS_T eStatus = m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, NULL);
     EXPECT_EQ(JUNO_STATUS_INVALID_REF_ERROR, eStatus);
 }
 
@@ -322,12 +322,12 @@ TEST_F(ThreadModuleTest, Create_WhenVtableReturnsError_PropagatesExactStatus)
 TEST_F(ThreadModuleTest, Stop_WhenVtableReturnsError_PropagatesExactStatus)
 {
     JunoThread_Init(&m_tRoot, &s_tTestApi, NULL, NULL);
-    JunoThread_Create(&m_tRoot, DummyEntry, NULL);
+    m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, NULL);
 
     s_bStopFail       = true;
     s_tStopFailStatus = JUNO_STATUS_INVALID_REF_ERROR;
 
-    JUNO_STATUS_T eStatus = JunoThread_Stop(&m_tRoot);
+    JUNO_STATUS_T eStatus = m_tRoot.ptApi->Stop(&m_tRoot);
     EXPECT_EQ(JUNO_STATUS_INVALID_REF_ERROR, eStatus);
 }
 
@@ -335,12 +335,12 @@ TEST_F(ThreadModuleTest, Stop_WhenVtableReturnsError_PropagatesExactStatus)
 TEST_F(ThreadModuleTest, Join_WhenVtableReturnsError_PropagatesExactStatus)
 {
     JunoThread_Init(&m_tRoot, &s_tTestApi, NULL, NULL);
-    JunoThread_Create(&m_tRoot, DummyEntry, NULL);
+    m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, NULL);
 
     s_bJoinFail       = true;
     s_tJoinFailStatus = JUNO_STATUS_INVALID_REF_ERROR;
 
-    JUNO_STATUS_T eStatus = JunoThread_Join(&m_tRoot);
+    JUNO_STATUS_T eStatus = m_tRoot.ptApi->Join(&m_tRoot);
     EXPECT_EQ(JUNO_STATUS_INVALID_REF_ERROR, eStatus);
 }
 
@@ -385,12 +385,12 @@ TEST_F(ThreadModuleTest, Create_WhenAlreadyRunning_ReturnsRefInUseError)
     JunoThread_Init(&m_tRoot, &s_tGuardApi, NULL, NULL);
 
     /* First create — should succeed and set handle */
-    JUNO_STATUS_T eFirst = JunoThread_Create(&m_tRoot, DummyEntry, NULL);
+    JUNO_STATUS_T eFirst = m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, NULL);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eFirst);
     EXPECT_NE(0u, m_tRoot._uHandle);
 
     /* Second create — handle still non-zero → must return REF_IN_USE */
-    JUNO_STATUS_T eSecond = JunoThread_Create(&m_tRoot, DummyEntry, NULL);
+    JUNO_STATUS_T eSecond = m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, NULL);
     EXPECT_EQ(JUNO_STATUS_REF_IN_USE_ERROR, eSecond);
 }
 
@@ -404,20 +404,20 @@ TEST_F(ThreadModuleTest, FullLifecycle_CreateStopJoin_StateConsistent)
     JunoThread_Init(&m_tRoot, &s_tTestApi, TestFailureHandler, NULL);
 
     /* Create */
-    JUNO_STATUS_T eCreate = JunoThread_Create(&m_tRoot, DummyEntry, &m_tRoot);
+    JUNO_STATUS_T eCreate = m_tRoot.ptApi->Create(&m_tRoot, DummyEntry, &m_tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eCreate);
     EXPECT_TRUE(s_bCreateCalled);
     EXPECT_NE(0u, m_tRoot._uHandle);
     EXPECT_FALSE(m_tRoot.bStop);
 
     /* Stop */
-    JUNO_STATUS_T eStop = JunoThread_Stop(&m_tRoot);
+    JUNO_STATUS_T eStop = m_tRoot.ptApi->Stop(&m_tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStop);
     EXPECT_TRUE(s_bStopCalled);
     EXPECT_TRUE(m_tRoot.bStop);
 
     /* Join */
-    JUNO_STATUS_T eJoin = JunoThread_Join(&m_tRoot);
+    JUNO_STATUS_T eJoin = m_tRoot.ptApi->Join(&m_tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eJoin);
     EXPECT_TRUE(s_bJoinCalled);
     EXPECT_EQ(0u, m_tRoot._uHandle);

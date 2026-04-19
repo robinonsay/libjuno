@@ -18,6 +18,7 @@
 #include "monitor_app.h"
 #include "udp_msg_api.h"
 #include "juno/macros.h"
+#include <stdio.h>
 
 /* --------------------------------------------------------------------------
  * Lifecycle implementations
@@ -72,9 +73,7 @@ JUNO_STATUS_T MonitorApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
         {
             return tStatus;
         }
-        /* Message consumed. In a production app, log/print tMsg here.
-         * For this example we just drain the queue. */
-        (void)tMsg;
+        printf("[MonitorApp]   monitored seq=%u\n", tMsg.uSeqNum);
     }
     return JUNO_STATUS_SUCCESS;
 }

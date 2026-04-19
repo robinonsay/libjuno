@@ -242,28 +242,28 @@ int main(void)
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* Start Thread 1 */
-    tStatus = JunoThread_Create(&s_tThread1, Thread1Entry, &s_tThread1); /* MCP-resolved: Create in linux_thread_impl.cpp */
+    tStatus = s_tThread1.ptApi->Create(&s_tThread1, Thread1Entry, &s_tThread1);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* Start Thread 2; on failure stop and join Thread 1 before returning */
-    tStatus = JunoThread_Create(&s_tThread2, Thread2Entry, &s_tThread2); /* MCP-resolved: Create in linux_thread_impl.cpp */
+    tStatus = s_tThread2.ptApi->Create(&s_tThread2, Thread2Entry, &s_tThread2);
     if (tStatus != JUNO_STATUS_SUCCESS)
     {
-        (void)JunoThread_Stop(&s_tThread1);  /* MCP-resolved: Stop in linux_thread_impl.cpp */
-        (void)JunoThread_Join(&s_tThread1);  /* MCP-resolved: Join in linux_thread_impl.cpp */
+        tStatus = s_tThread1.ptApi->Stop(&s_tThread1);
+        tStatus = s_tThread1.ptApi->Join(&s_tThread1);
         return 1;
     }
 
     sleep(10);
 
     /* Cooperative shutdown — Stop errors are non-fatal */
-    (void)JunoThread_Stop(&s_tThread1);  /* MCP-resolved: Stop in linux_thread_impl.cpp */
-    (void)JunoThread_Stop(&s_tThread2);  /* MCP-resolved: Stop in linux_thread_impl.cpp */
+    tStatus = s_tThread1.ptApi->Stop(&s_tThread1);
+    tStatus = s_tThread2.ptApi->Stop(&s_tThread2);
 
-    tStatus = JunoThread_Join(&s_tThread1);  /* MCP-resolved: Join in linux_thread_impl.cpp */
+    tStatus = s_tThread1.ptApi->Join(&s_tThread1);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
-    tStatus = JunoThread_Join(&s_tThread2);  /* MCP-resolved: Join in linux_thread_impl.cpp */
+    tStatus = s_tThread2.ptApi->Join(&s_tThread2);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     return 0;
