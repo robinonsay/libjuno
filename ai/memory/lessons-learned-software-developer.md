@@ -19,3 +19,16 @@
 - Read `ai/memory/directory-map.md` before any terminal command.
 - C: `cd /workspaces/libjuno && cd build && cmake --build .`
 - Extension: `cd /workspaces/libjuno/vscode-extension && npm test`
+
+### 2026-04-19 — LibJuno Broker/Pipe API: correct usage patterns
+- `JUNO_SB_BROKER_API_T` has only `Publish(ptBroker, tMid, tMsg: JUNO_POINTER_T)` and `RegisterSubscriber(ptBroker, ptPipe)` — NO `Dequeue` on the broker.
+- `RegisterSubscriber` takes exactly 2 args: the broker pointer and the pipe pointer (NOT a MID; MID is set via `JunoSb_PipeInit`).
+- Dequeue must call the pipe's embedded queue directly: `tPipe.tRoot.ptApi->Dequeue(&tPipe.tRoot, tReturn)`.
+- Empty queue sentinel: `JUNO_STATUS_OOB_ERROR` (from `juno_buff_queue.c:72`) — NOT `JUNO_STATUS_EMPTY` (does not exist).
+- `Publish` requires a `JUNO_POINTER_T` fat pointer: `JUNO_POINTER_T tPtr = JunoMemory_PointerInit(ptPointerApi, TYPE, &tVar)`.
+- Pipe init sequence: `JunoSb_PipeInit(&tPipe, MID, ptArray, pfcnFailureHandler, pvUserData)` → `ptBroker->ptApi->RegisterSubscriber(ptBroker, &tPipe)`.
+
+### 2026-04-19 — LibJuno module derivation: correct struct syntax
+- `JUNO_MODULE_DERIVE` expands to a struct body. Do NOT write `struct TAG JUNO_MODULE_DERIVE(...);` as a statement.
+- Correct derivation form: `struct JUNO_UDP_LINUX_TAG { JUNO_UDP_ROOT_T tRoot; };` with explicit brace body.
+- Module union (expanded JUNO_MODULE macro form): `union TAG { ROOT_T tRoot; DERIVED_T tDerived; };`

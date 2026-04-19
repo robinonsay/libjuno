@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-005", "REQ-VSCODE-006"]}
+// @{"req": ["REQ-VSCODE-002", "REQ-VSCODE-004", "REQ-VSCODE-005", "REQ-VSCODE-006", "REQ-VSCODE-039", "REQ-VSCODE-040"]}
 /**
  * @file vtableResolver.ts
  *
@@ -21,6 +21,7 @@
  * across all apiStructFields provides the final fallback.
  */
 
+import * as path from 'path';
 import { NavigationIndex, VtableResolutionResult, ConcreteLocation } from '../parser/types';
 import {
     findEnclosingFunction,
@@ -82,6 +83,40 @@ export class VtableResolver {
             if (column >= m.index && column < m.index + m[0].length) {
                 return this.resolveChain(file, enclosingFunc, m[1], m[2], m[3]);
             }
+        }
+
+        // Scan the full line for any vtable call pattern to suggest the nearest
+        // valid column to the caller (REQ-VSCODE-039).
+        const allMatches: Array<{ col: number; fieldName: string }> = [];
+
+        const scanMacroRe =
+            /JUNO_MODULE_GET_API\s*\(\s*\w+\s*,\s*(\w+)\s*\)\s*->\s*(\w+)\s*\(/g;
+        let sm: RegExpExecArray | null;
+        while ((sm = scanMacroRe.exec(lineText)) !== null) {
+            allMatches.push({ col: sm.index, fieldName: sm[2] });
+        }
+
+        const scanArrayRe =
+            /(\w+)\s*\[.*?\]((?:\s*(?:->|\.)\s*\w+)*)\s*->\s*(\w+)\s*\(/g;
+        while ((sm = scanArrayRe.exec(lineText)) !== null) {
+            allMatches.push({ col: sm.index, fieldName: sm[3] });
+        }
+
+        const scanGeneralRe =
+            /(\w+)((?:\s*(?:->|\.)\s*\w+)*)\s*->\s*(\w+)\s*\(/g;
+        while ((sm = scanGeneralRe.exec(lineText)) !== null) {
+            allMatches.push({ col: sm.index, fieldName: sm[3] });
+        }
+
+        if (allMatches.length > 0) {
+            const nearest = allMatches.reduce((best, cur) =>
+                Math.abs(cur.col - column) < Math.abs(best.col - column) ? cur : best
+            );
+            return {
+                found: false,
+                locations: [],
+                errorMsg: `No LibJuno API call pattern found at col ${column}. Nearest vtable call: '${nearest.fieldName}' at col ${nearest.col}.`,
+            };
         }
 
         return {
@@ -158,7 +193,7 @@ export class VtableResolver {
         }
 
         // Final fallback: field-name search across all known API types.
-        const fallback = this.fieldNameFallback(fieldName);
+        const fallback = this.fieldNameFallback(file, fieldName);
         if (fallback.found) {
             return fallback;
         }
@@ -223,8 +258,12 @@ export class VtableResolver {
      * Returns all concrete implementations found across all matching API types.
      * This handles cases where the receiver type could not be resolved via
      * localTypeInfo or apiMemberRegistry.
+     *
+     * When the source file has not been indexed at all, returns an explicit
+     * "file not indexed" message (REQ-VSCODE-040) rather than the generic
+     * "no API type contains field" message.
      */
-    private fieldNameFallback(fieldName: string): VtableResolutionResult {
+    private fieldNameFallback(file: string, fieldName: string): VtableResolutionResult {
         const allLocations: ConcreteLocation[] = [];
         for (const [apiType, fields] of this.index.apiStructFields) {
             if (fields.includes(fieldName)) {
@@ -234,6 +273,13 @@ export class VtableResolver {
             }
         }
         if (allLocations.length === 0) {
+            if (!this.index.localTypeInfo.has(file)) {
+                return {
+                    found: false,
+                    locations: [],
+                    errorMsg: `File '${path.basename(file)}' has not been indexed. Ensure the file is within the workspace and LibJuno has finished indexing.`,
+                };
+            }
             return {
                 found: false,
                 locations: [],

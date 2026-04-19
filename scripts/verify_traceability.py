@@ -574,7 +574,7 @@ def main():
 
     # Step 2: Scan source files for @req tags
     req_tags, src_errors = scan_annotations(
-        root, ["src", "include", "vscode-extension/src"], {".c", ".h", ".ts"}, "req"
+        root, ["src", "include", "vscode-extension/src"], {".c", ".cpp", ".h", ".ts"}, "req"
     )
     errors.extend(src_errors)
 

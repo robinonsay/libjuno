@@ -40,6 +40,53 @@ cd /workspaces/libjuno && python3 scripts/verify_traceability.py
 
 **Common mistakes:** Running `npm test` from `/workspaces/libjuno` (wrong — must be in `vscode-extension/`). Running cmake from `vscode-extension/` (wrong — must be in project root).
 
+### Starting the MCP Server for AI Agent Use
+
+The LibJuno VSCode extension embeds an MCP HTTP server (default port 6543).
+When VSCode is not running, AI sub-agents can still access the MCP tools by
+starting the server headlessly using the standalone launcher script.
+
+**Start the server:**
+```bash
+cd /workspaces/libjuno/vscode-extension && npx ts-node --transpile-only --project scripts/tsconfig.json scripts/start-mcp-server.ts
+```
+
+**Options:**
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--port PORT` | `6543` | Port to listen on |
+| `--root ROOT` | `process.cwd()` | Workspace root directory to index |
+
+**Default root:** When run from `/workspaces/libjuno/vscode-extension`, the script
+defaults to that directory. Pass `--root /workspaces/libjuno` (or the project root
+of the workspace to be indexed) to index the correct directory:
+
+> **Warning:** Omitting `--root` causes the server to index only TypeScript source files and produce an empty index — every C vtable resolution query will return `found: false`. Always pass `--root /workspaces/libjuno` (or the path to your LibJuno workspace root).
+
+```bash
+cd /workspaces/libjuno/vscode-extension && npx ts-node --transpile-only --project scripts/tsconfig.json scripts/start-mcp-server.ts --root /workspaces/libjuno
+```
+
+**Sub-agent connection:** Sub-agents connect via the URL already registered in
+`/workspaces/libjuno/.claude/settings.json`:
+```json
+"mcpServers": {
+    "libjuno": {
+        "type": "http",
+        "url": "http://127.0.0.1:6543/mcp"
+    }
+}
+```
+
+**Changing the port:** Pass `--port PORT` to the launcher and update the `url`
+in `.claude/settings.json` to match (e.g., change `6543` to the new port value).
+
+**Keep the process running** for the duration of a dev session. Ctrl-C (SIGINT)
+or SIGTERM will shut it down cleanly.
+
+Note for worker agent briefs: if MCP tools are unavailable, proceed manually by reading the relevant header files.
+
 ## Key Technical Rules
 
 1. **No dynamic allocation** — never use `malloc`, `calloc`, `realloc`, `free`.

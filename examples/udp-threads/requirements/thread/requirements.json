@@ -1,0 +1,185 @@
+{
+  "module": "THREAD",
+  "requirements": [
+    {
+      "id": "REQ-THREAD-001",
+      "title": "Thread Module Root Structure",
+      "description": "The thread module root shall hold an API vtable pointer, an opaque thread handle stored as uintptr_t, a volatile bool stop flag, and a failure handler.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. The root struct carries the opaque handle so that the caller can own and statically allocate the storage, and the volatile stop flag so the scheduler loop running inside the thread can observe a termination signal without dynamic allocation.",
+      "verification_method": "Inspection",
+      "uses": [],
+      "implements": [
+        "REQ-THREAD-002",
+        "REQ-THREAD-007",
+        "REQ-THREAD-008",
+        "REQ-THREAD-009",
+        "REQ-THREAD-012",
+        "REQ-THREAD-013",
+        "REQ-THREAD-014"
+      ]
+    },
+    {
+      "id": "REQ-THREAD-002",
+      "title": "Thread API Vtable Interface",
+      "description": "The thread API vtable shall define Create, Join, and Stop operations as function pointers.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Expressing Create, Join, and Stop as vtable function pointers keeps the interface decoupled from any OS-specific implementation and enables the Linux pthreads implementation to be swapped for another platform implementation at initialization time.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-THREAD-001"],
+      "implements": [
+        "REQ-THREAD-003",
+        "REQ-THREAD-005",
+        "REQ-THREAD-006",
+        "REQ-THREAD-010",
+        "REQ-THREAD-011",
+        "REQ-THREAD-012",
+        "REQ-THREAD-013"
+      ]
+    },
+    {
+      "id": "REQ-THREAD-003",
+      "title": "Create Operation",
+      "description": "The thread module shall provide a Create operation that creates and starts a thread executing the caller-provided entry function with the caller-provided argument.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. The Create operation is the mechanism by which the caller launches a thread to host a scheduler and its applications.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-THREAD-002"
+      ],
+      "implements": [
+        "REQ-THREAD-004",
+        "REQ-UDPAPP-020"
+      ]
+    },
+    {
+      "id": "REQ-THREAD-004",
+      "title": "Single Thread Per Root",
+      "description": "The thread module shall manage exactly one thread per root instance.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Enforcing one thread per root prevents resource leaks from orphaned threads and makes the mapping between root instances and OS threads explicit and predictable.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-THREAD-003"
+      ],
+      "implements": [
+        "REQ-THREAD-015"
+      ]
+    },
+    {
+      "id": "REQ-THREAD-005",
+      "title": "Join Operation",
+      "description": "The thread module shall provide a Join operation that blocks the calling thread until the managed thread has exited.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Join allows the owner of the root to synchronize on thread completion, preventing use of the root after the thread has been stopped.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-THREAD-002"
+      ],
+      "implements": [
+        "REQ-UDPAPP-023"
+      ]
+    },
+    {
+      "id": "REQ-THREAD-006",
+      "title": "Stop Operation",
+      "description": "The thread module shall provide a Stop operation that sets the root's stop flag to true.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. The Stop operation provides the signaling half of the cooperative shutdown protocol; the thread entry function reads the flag from the root and exits its scheduler loop when the flag is set.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-THREAD-002"
+      ],
+      "implements": [
+        "REQ-UDPAPP-023"
+      ]
+    },
+    {
+      "id": "REQ-THREAD-007",
+      "title": "Stop Flag Readable by Thread Entry",
+      "description": "The thread module shall make the root's stop flag readable by the thread entry function via the root pointer passed as the thread argument.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. The scheduler loop running inside the thread must be able to observe the stop signal through the same root pointer it received at creation, enabling cooperative termination without global variables.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-THREAD-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-THREAD-008",
+      "title": "No Dynamic Allocation",
+      "description": "The thread module shall not use malloc, calloc, realloc, or free.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Prohibiting dynamic allocation ensures deterministic behavior and enables deployment on bare-metal and safety-critical targets that lack a heap.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-THREAD-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-THREAD-009",
+      "title": "Freestanding Interface — No Platform Headers",
+      "description": "The thread module interface header shall not include any POSIX, OS-specific, or platform-dependent headers.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. The implementation must be in CPP for Linux/Posix. Keeping the interface header free of platform headers allows it to be compiled on any freestanding target and confines OS dependencies entirely to the Linux C++ implementation translation unit.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-THREAD-001"
+      ],
+      "implements": ["REQ-THREAD-014"]
+    },
+    {
+      "id": "REQ-THREAD-010",
+      "title": "Error Status Return",
+      "description": "The thread module shall return a JUNO_STATUS_T error value from any API operation that encounters an error.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Returning JUNO_STATUS_T from every error path follows the LibJuno-wide error reporting convention and gives callers a uniform, inspectable result without requiring out-of-band error queries.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-THREAD-002"
+      ],
+      "implements": ["REQ-THREAD-013"]
+    },
+    {
+      "id": "REQ-THREAD-011",
+      "title": "Linux Pthreads Implementation",
+      "description": "The thread module shall provide a C++ implementation that satisfies the thread vtable using pthread_create and pthread_join.",
+      "rationale": "The implementation must be in CPP for Linux/Posix. A C++ translation unit allows inclusion of pthread.h and use of POSIX APIs without polluting the freestanding C interface, while satisfying the vtable contract so the rest of the system remains platform-agnostic.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-THREAD-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-THREAD-012",
+      "title": "Module Initialization",
+      "description": "The thread module shall provide an initialization function that accepts a caller-provided root struct and API vtable pointer, wires the vtable into the root, and validates all required pointers before any operation is dispatched.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. An explicit initialization function is the LibJuno-mandated mechanism for wiring the vtable and establishing the caller-owns-memory contract before any operation is dispatched.",
+      "verification_method": "Test",
+      "uses": ["REQ-THREAD-001", "REQ-THREAD-002"],
+      "implements": []
+    },
+    {
+      "id": "REQ-THREAD-013",
+      "title": "Failure Handler Invocation on Error",
+      "description": "The thread module shall invoke the root's failure handler when any API operation encounters an error.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Invoking the failure handler on error follows the LibJuno assertion and error-signaling pattern, enabling integrators to hook platform-specific fault response without modifying the module.",
+      "verification_method": "Test",
+      "uses": ["REQ-THREAD-001", "REQ-THREAD-002", "REQ-THREAD-010"],
+      "implements": []
+    },
+    {
+      "id": "REQ-THREAD-014",
+      "title": "Allowed Interface Header Dependencies",
+      "description": "The thread module interface header shall depend only on stdint.h, stddef.h, stdbool.h, juno/status.h, juno/module.h, and juno/types.h.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Enumerating the allowed dependencies makes the freestanding contract explicit and auditable, preventing accidental inclusion of hosted-environment headers.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-THREAD-001", "REQ-THREAD-009"],
+      "implements": []
+    },
+    {
+      "id": "REQ-THREAD-015",
+      "title": "Error on Double Create",
+      "description": "The thread module shall return an error status when Create is called on a root that already has a running thread.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to CPP pthreads. Returning an error on a second Create call makes the single-thread-per-root constraint enforceable at runtime and gives callers a detectable signal rather than silently leaking an orphaned thread.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-THREAD-004"
+      ],
+      "implements": []
+    }
+  ]
+}

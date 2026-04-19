@@ -15,3 +15,5 @@ foreach(file ${JUNO_EXAMPLE_SRCS})
       $<$<COMPILE_LANGUAGE:CXX>:${JUNO_COMPILE_CXX_OPTIONS}>
     )
 endforeach()
+
+add_subdirectory(udp-threads)

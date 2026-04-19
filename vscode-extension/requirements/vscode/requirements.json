@@ -63,7 +63,9 @@
         "REQ-VSCODE-001"
       ],
       "implements": [
-        "REQ-VSCODE-013"
+        "REQ-VSCODE-013",
+        "REQ-VSCODE-039",
+        "REQ-VSCODE-040"
       ]
     },
     {
@@ -275,7 +277,9 @@
         "REQ-VSCODE-023",
         "REQ-VSCODE-024",
         "REQ-VSCODE-025",
-        "REQ-VSCODE-026"
+        "REQ-VSCODE-026",
+        "REQ-VSCODE-038",
+        "REQ-VSCODE-041"
       ]
     },
     {
@@ -449,6 +453,50 @@
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-031"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-038",
+      "title": "Failure Handler Resolution for App-Layer Derived Types",
+      "description": "The extension shall resolve failure handler references for module types that derive from any intermediate base type (e.g., JUNO_APP_ROOT_T) that embeds the failure handler field, not only for types that derive directly from JUNO_MODULE_ROOT_T.",
+      "rationale": "Modules in the LibJuno app layer derive from JUNO_APP_ROOT_T rather than directly from JUNO_MODULE_ROOT_T. Without this, the entire app layer is invisible to `resolve_failure_handler`, preventing navigation from app-module FAIL macro sites.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-022"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-039",
+      "title": "Cursor Column Hint in Vtable Not-Found Errors",
+      "description": "When no vtable call pattern is found at the specified cursor column, the resolve_vtable_call tool shall scan the source line for the nearest valid vtable call expression and include the suggested column in the error message (e.g., 'No vtable call found at col 27. Nearest match: ->Now at col 62.').",
+      "rationale": "Users wasted multiple round-trips guessing the correct column when the cursor was slightly off-target. A scan-and-suggest approach eliminates trial-and-error and was explicitly requested in two separate field reports.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-040",
+      "title": "Explicit File-Not-Indexed Error Message",
+      "description": "When the queried source file has not been indexed, the resolve_vtable_call tool shall return an error message that explicitly states the file has not been indexed (e.g., 'File not indexed. Ensure the file is within the workspace and the extension has finished indexing.') rather than a generic 'No API type contains field X' message.",
+      "rationale": "Users reported that 'No API type contains field Open' implied no type globally had that field, when the actual cause was that the specific file had not been indexed. The misleading message caused confusion about whether the vtable was misnamed or the implementation was missing.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-004"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-041",
+      "title": "Kind Field in Failure Handler Resolution Results",
+      "description": "Each location entry returned by resolve_failure_handler shall include a 'kind' field with value 'assignment' (for sites where the handler is stored into a module root field) or 'invocation' (for JUNO_FAIL_* macro call sites where the handler fires).",
+      "rationale": "The current response mixes wiring sites (where the handler is stored) with invocation sites (where JUNO_FAIL_* fires it), making the output ambiguous. Two separate field reports requested this distinction.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-022"
       ],
       "implements": []
     }

@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-016", "REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026"]}
+// @{"req": ["REQ-VSCODE-016", "REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026", "REQ-VSCODE-038", "REQ-VSCODE-041"]}
 /**
  * @file failureHandlerResolver.ts
  *
@@ -24,7 +24,7 @@
  *      handlers registered to that root type.
  */
 
-import { NavigationIndex, VtableResolutionResult } from '../parser/types';
+import { ConcreteLocation, NavigationIndex, VtableResolutionResult } from '../parser/types';
 import {
     findEnclosingFunction,
     lookupVariableType,
@@ -108,6 +108,7 @@ export class FailureHandlerResolver {
         const enclosingFunc = functionName ?? findEnclosingFunction(this.index, file, line);
 
         // Step 1: Assignment form — navigate to the explicitly named RHS function.
+        // @{"req": ["REQ-VSCODE-041"]}
         const assignMatch = ASSIGNMENT_RE.exec(lineText);
         if (assignMatch) {
             const rhsFuncName = assignMatch[2];
@@ -119,13 +120,17 @@ export class FailureHandlerResolver {
                         functionName: rhsFuncName,
                         file: d.file,
                         line: d.line,
+                        kind: 'assignment' as const,
                     })),
                 };
             }
         }
 
-        // Step 2: Walk the LHS primary variable's type to the root, then look
-        // up all registered handlers for that root type.
+        // Step 2: Walk the LHS primary variable's type up the full derivation
+        // chain, checking failureHandlerAssignments at each level. This handles
+        // app-layer modules that use an intermediate root type (e.g.
+        // JUNO_APP_ROOT_T) whose handlers are keyed under that intermediate type
+        // rather than the terminal root (REQ-VSCODE-038).
         const primaryIdent = this.extractPrimaryIdent(assignMatch, lineText);
         if (primaryIdent && enclosingFunc) {
             const typeInfo = lookupVariableType(
@@ -135,11 +140,12 @@ export class FailureHandlerResolver {
                 primaryIdent
             );
             if (typeInfo) {
-                const rootType = walkToRootType(this.index, typeInfo.typeName);
-                const locations = this.index.failureHandlerAssignments.get(rootType);
+                const locations = this.lookupHandlersByType(typeInfo.typeName);
                 if (locations && locations.length > 0) {
-                    return { found: true, locations };
+                    // @{"req": ["REQ-VSCODE-041"]}
+                    return { found: true, locations: locations.map(l => ({ ...l, kind: 'assignment' as const })) };
                 }
+                const rootType = walkToRootType(this.index, typeInfo.typeName);
                 return {
                     found: false,
                     locations: [],
@@ -182,6 +188,41 @@ export class FailureHandlerResolver {
         return PRIMARY_VAR_RE.exec(lineText)?.[1];
     }
 
+    /**
+     * Walks the derivation chain from `typeName` upward and returns the first
+     * non-empty ConcreteLocation list found in `failureHandlerAssignments`.
+     *
+     * This handles modules that use an intermediate base type (e.g.
+     * `JUNO_APP_ROOT_T`) whose failure handler assignments are indexed under
+     * that intermediate type rather than the terminal root
+     * (REQ-VSCODE-038).
+     *
+     * Algorithm:
+     *   1. Check `failureHandlerAssignments.get(typeName)`. If found and
+     *      non-empty, return it immediately.
+     *   2. Look up the parent type via `derivationChain.get(typeName)`. If a
+     *      parent exists and has not been visited, repeat from step 1 with the
+     *      parent type.
+     *   3. Return `undefined` when the chain is exhausted without a match.
+     *
+     * @param typeName  The starting type name (concrete, intermediate, or root).
+     * @returns A non-empty ConcreteLocation array, or `undefined` if not found.
+     */
+    // @{"req": ["REQ-VSCODE-038"]}
+    private lookupHandlersByType(typeName: string): ConcreteLocation[] | undefined {
+        let current: string | undefined = typeName;
+        const visited = new Set<string>();
+        while (current !== undefined && !visited.has(current)) {
+            visited.add(current);
+            const locations = this.index.failureHandlerAssignments.get(current);
+            if (locations && locations.length > 0) {
+                return locations;
+            }
+            current = this.index.derivationChain.get(current);
+        }
+        return undefined;
+    }
+
     // -----------------------------------------------------------------------
     // §5.3.1 — FAIL macro resolution helpers
     // -----------------------------------------------------------------------
@@ -198,7 +239,7 @@ export class FailureHandlerResolver {
      * @param enclosingFunc Name of the enclosing function (may be undefined).
      * @returns VtableResolutionResult.
      */
-    // @{"req": ["REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026"]}
+    // @{"req": ["REQ-VSCODE-022", "REQ-VSCODE-023", "REQ-VSCODE-024", "REQ-VSCODE-025", "REQ-VSCODE-026", "REQ-VSCODE-041"]}
     private resolveFailMacro(
         macroName: string,
         lineText: string,
@@ -218,12 +259,14 @@ export class FailureHandlerResolver {
             // arg[1] is a function pointer variable or function name — look up directly.
             const defs = this.index.functionDefinitions.get(extractedArg);
             if (defs && defs.length > 0) {
+                // @{"req": ["REQ-VSCODE-041"]}
                 return {
                     found: true,
                     locations: defs.map(d => ({
                         functionName: extractedArg,
                         file: d.file,
                         line: d.line,
+                        kind: 'invocation' as const,
                     })),
                 };
             }
@@ -251,11 +294,12 @@ export class FailureHandlerResolver {
                     errorMsg: `Could not resolve type of '${extractedArg}' in ${macroName} call.`,
                 };
             }
-            const rootType = walkToRootType(this.index, typeInfo.typeName);
-            const locations = this.index.failureHandlerAssignments.get(rootType);
+            const locations = this.lookupHandlersByType(typeInfo.typeName);
             if (locations && locations.length > 0) {
-                return { found: true, locations };
+                // @{"req": ["REQ-VSCODE-041"]}
+                return { found: true, locations: locations.map(l => ({ ...l, kind: 'assignment' as const })) };
             }
+            const rootType = walkToRootType(this.index, typeInfo.typeName);
             return {
                 found: false,
                 locations: [],
@@ -280,15 +324,18 @@ export class FailureHandlerResolver {
                     errorMsg: `Could not resolve type of '${extractedArg}' in ${macroName} call.`,
                 };
             }
-            const rootType = typeInfo.typeName;
-            const locations = this.index.failureHandlerAssignments.get(rootType);
+            // JUNO_FAIL_ROOT arg is already a root-level pointer, but the
+            // handler may be keyed under an intermediate type in the chain, so
+            // use the same chain-walking lookup (REQ-VSCODE-038).
+            const locations = this.lookupHandlersByType(typeInfo.typeName);
             if (locations && locations.length > 0) {
-                return { found: true, locations };
+                // @{"req": ["REQ-VSCODE-041"]}
+                return { found: true, locations: locations.map(l => ({ ...l, kind: 'assignment' as const })) };
             }
             return {
                 found: false,
                 locations: [],
-                errorMsg: `No failure handler registered for '${rootType}'.`,
+                errorMsg: `No failure handler registered for '${typeInfo.typeName}'.`,
             };
         }
 

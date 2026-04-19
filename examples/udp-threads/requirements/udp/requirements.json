@@ -1,0 +1,230 @@
+{
+  "module": "UDP",
+  "requirements": [
+    {
+      "id": "REQ-UDP-001",
+      "title": "UDP Module Root Structure",
+      "description": "The UDP module root shall hold a pointer to the API vtable, an opaque socket descriptor, and a failure handler.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. The module root is the central state object that ties together the vtable dispatch, the platform socket handle, and the error signaling path required by LibJuno's vtable/DI pattern.",
+      "verification_method": "Inspection",
+      "uses": [],
+      "implements": [
+        "REQ-UDP-002",
+        "REQ-UDP-003",
+        "REQ-UDP-010",
+        "REQ-UDP-011",
+        "REQ-UDP-013",
+        "REQ-UDP-016"
+      ]
+    },
+    {
+      "id": "REQ-UDP-002",
+      "title": "UDP API Vtable Interface",
+      "description": "The UDP API vtable shall define Open, Send, Receive, and Close operations as function pointer entries.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. Defining these four operations in a vtable enables dependency injection of the Linux implementation and keeps the interface decoupled from any POSIX or OS-specific headers.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-UDP-001"
+      ],
+      "implements": [
+        "REQ-UDP-003",
+        "REQ-UDP-006",
+        "REQ-UDP-007",
+        "REQ-UDP-009",
+        "REQ-UDP-012",
+        "REQ-UDP-014",
+        "REQ-UDP-016",
+        "REQ-UDP-017",
+        "REQ-UDP-018"
+      ]
+    },
+    {
+      "id": "REQ-UDP-003",
+      "title": "Open Operation",
+      "description": "The UDP module shall open and configure a socket when the Open operation is called with a caller-provided configuration.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. Open is the entry point that acquires the underlying platform socket resource and applies the caller-supplied address, port, and timeout configuration before any data transfer.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-001",
+        "REQ-UDP-002"
+      ],
+      "implements": [
+        "REQ-UDP-004",
+        "REQ-UDP-005",
+        "REQ-UDPAPP-003"
+      ]
+    },
+    {
+      "id": "REQ-UDP-004",
+      "title": "Receiver Socket Bind",
+      "description": "The UDP module shall bind a receiver socket to the local port specified in the caller-provided configuration.",
+      "rationale": "The example project uses UDP to send data between two threads; the receiving end must bind to a well-known local port so the sender can address datagrams to it. It should have a fixed message structure to make it easier.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-003"
+      ],
+      "implements": [
+        "REQ-UDPAPP-012"
+      ]
+    },
+    {
+      "id": "REQ-UDP-005",
+      "title": "Sender Socket Connect",
+      "description": "The UDP module shall associate a sender socket with the remote address and port specified in the caller-provided configuration.",
+      "rationale": "The example project uses UDP to send data between two threads; the sending end must be associated with the remote address so that Send operations require no per-call addressing. It should have a fixed message structure to make it easier.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-003"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-006",
+      "title": "Send Operation",
+      "description": "The UDP module shall transmit exactly one UDP_THREAD_MSG_T struct as a single UDP datagram when the Send operation is called.",
+      "rationale": "It should have a fixed message structure to make it easier. Apps will know the size and memory map of the structure. Sending exactly one struct per call gives applications a deterministic, atomic unit of transfer.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-002"
+      ],
+      "implements": [
+        "REQ-UDP-015",
+        "REQ-UDPAPP-005"
+      ]
+    },
+    {
+      "id": "REQ-UDP-007",
+      "title": "Receive Operation Blocking",
+      "description": "The UDP module shall block the calling thread until one UDP_THREAD_MSG_T datagram is received when the Receive operation is called.",
+      "rationale": "The example project uses UDP to send data between two threads. Blocking receive allows the consumer thread to yield the CPU until data arrives, avoiding a busy-wait polling loop.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-002"
+      ],
+      "implements": [
+        "REQ-UDP-008",
+        "REQ-UDP-015",
+        "REQ-UDPAPP-013"
+      ]
+    },
+    {
+      "id": "REQ-UDP-008",
+      "title": "Receive Timeout Status",
+      "description": "The UDP module shall return a timeout status when the Receive operation completes without receiving a datagram within the configured timeout period.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. A distinct timeout status allows callers to distinguish a normal receive timeout from a hard error and react accordingly without inspecting platform-specific error codes.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-009",
+      "title": "Close Operation",
+      "description": "The UDP module shall close the socket and reset the internal socket descriptor to an invalid state when the Close operation is called.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. Resetting the descriptor to an invalid sentinel after close prevents accidental reuse of a stale file descriptor and makes double-close detectable.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-010",
+      "title": "No Dynamic Memory Allocation",
+      "description": "The UDP module shall not use malloc, calloc, realloc, or free.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. The implementation must be in CPP for Linux/POSIX. Zero dynamic allocation is a hard constraint for freestanding embedded targets and is a core LibJuno architectural principle.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-UDP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-011",
+      "title": "Freestanding Interface Header",
+      "description": "The UDP module interface header shall not include any POSIX or OS-specific headers.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. The implementation must be in CPP for Linux/POSIX. Keeping the public interface free of POSIX headers preserves portability and allows the interface to be compiled in freestanding C11 environments where system headers are unavailable.",
+      "verification_method": "Inspection",
+      "uses": [
+        "REQ-UDP-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-012",
+      "title": "API Error Status Return",
+      "description": "The UDP module shall return a JUNO_STATUS_T value from every API operation to report success or failure to the caller.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. Returning JUNO_STATUS_T from every operation follows the LibJuno-wide error reporting convention and gives callers a uniform, inspectable result without requiring out-of-band error queries.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-002"
+      ],
+      "implements": [
+        "REQ-UDP-013"
+      ]
+    },
+    {
+      "id": "REQ-UDP-013",
+      "title": "Failure Handler Invocation on Error",
+      "description": "The UDP module shall invoke the failure handler stored in the module root whenever an API operation encounters an error.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. Invoking the failure handler on error follows the LibJuno assertion and error-signaling pattern, enabling integrators to hook platform-specific fault response (e.g., logging, safe-state entry) without modifying the module.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-001",
+        "REQ-UDP-012"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-014",
+      "title": "Linux POSIX Implementation",
+      "description": "A C++ implementation shall satisfy the UDP API vtable using POSIX socket APIs including socket, bind, sendto, recvfrom, and close.",
+      "rationale": "The implementation must be in CPP for Linux/POSIX. A C++ implementation that wraps POSIX socket APIs allows the freestanding interface to run on Linux hosts and development machines without exposing POSIX types in the public header.",
+      "verification_method": "Demonstration",
+      "uses": [
+        "REQ-UDP-002"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-015",
+      "title": "Fixed Datagram Size",
+      "description": "The UDP module shall transmit and receive exactly sizeof(UDP_THREAD_MSG_T) bytes per datagram.",
+      "rationale": "It should have a fixed message structure to make it easier. Apps will know the size and memory map of the structure. A compile-time fixed datagram size eliminates framing ambiguity, ensures receiver-side buffers are always correctly sized, and simplifies both send and receive path logic.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-UDP-006",
+        "REQ-UDP-007"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-016",
+      "title": "Module Initialization",
+      "description": "The UDP module shall provide an initialization function that accepts a caller-provided root struct and API vtable pointer, wires the vtable into the root, and validates all required pointers before any operation is dispatched.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. An explicit initialization function is the LibJuno-mandated mechanism for wiring the vtable and establishing the caller-owns-memory contract before any operation is dispatched.",
+      "verification_method": "Test",
+      "uses": ["REQ-UDP-001", "REQ-UDP-002"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-017",
+      "title": "Socket Configuration Structure",
+      "description": "The UDP module shall accept a caller-provided configuration struct containing an IPv4 address string, a port number, and a receive timeout duration in milliseconds.",
+      "rationale": "I want to create a modular, layered approach where there are modules that define a freestanding C11 compatible interface to UDP sockets. A dedicated configuration struct makes the caller's intent explicit and allows all socket parameters to be injected without embedding platform-specific types in the interface.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDP-002"],
+      "implements": []
+    },
+    {
+      "id": "REQ-UDP-018",
+      "title": "Message Structure Definition",
+      "description": "The UDP module shall define a message structure UDP_THREAD_MSG_T containing a monotonically increasing sequence number (uint32_t), a timestamp in seconds (uint32_t), a timestamp in sub-seconds (uint32_t), and a fixed 64-byte payload array.",
+      "rationale": "It should have a fixed message structure to make it easier. Apps will know the size and memory map of the structure. A compile-time-fixed message layout eliminates framing ambiguity and allows all senders and receivers to share the same struct definition without runtime negotiation.",
+      "verification_method": "Inspection",
+      "uses": ["REQ-UDP-002"],
+      "implements": []
+    }
+  ]
+}

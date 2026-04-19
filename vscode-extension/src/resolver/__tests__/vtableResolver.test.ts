@@ -433,6 +433,109 @@ describe('VtableResolver — Multi-Match and Negative Cases', () => {
 });
 
 // ---------------------------------------------------------------------------
+// REQ-VSCODE-039 — Column Hint on Cursor Miss
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-039"]}
+describe('VtableResolver — Column Hint (REQ-VSCODE-039)', () => {
+
+    // @{"verify": ["REQ-VSCODE-039"]}
+    it('TC-RES-COL-001: should include nearest vtable call field name and col in errorMsg when cursor misses but a pattern exists on the line', () => {
+        // Index with MY_API_T having 'Run'; file IS indexed so fieldNameFallback
+        // does not return the "not indexed" message. The cursor is placed one
+        // column past the end of the generalRe match to guarantee no strategy
+        // matches — triggering the "Nearest vtable call" hint path.
+        const index = createEmptyIndex();
+        index.apiStructFields.set('MY_API_T', ['Run']);
+        const fieldMap = new Map([
+            ['Run', [{ functionName: 'App_Run', file: '/impl/app.c', line: 10 }]],
+        ]);
+        index.vtableAssignments.set('MY_API_T', fieldMap);
+        // Mark file as indexed so fieldNameFallback takes the "No API type" branch,
+        // not the "not indexed" branch.
+        index.localTypeInfo.set('/src/test_file.c', {
+            localVariables: new Map(),
+            functionParameters: new Map(),
+        });
+
+        const resolver = new VtableResolver(index);
+        // generalRe matches 'ptApp->ptApi->Run(' at [0, 18); col 18 is one past end.
+        const lineText = 'ptApp->ptApi->Run(ptApp);';
+        const result = resolver.resolve('/src/test_file.c', 10, 18, lineText);
+
+        expect(result.found).toBe(false);
+        expect(result.locations).toHaveLength(0);
+        expect(result.errorMsg).toContain('Nearest vtable call');
+        expect(result.errorMsg).toContain('Run');
+        expect(result.errorMsg).toContain('col');
+    });
+
+    // @{"verify": ["REQ-VSCODE-039"]}
+    it('TC-RES-COL-002: should return the original generic message when no vtable pattern exists anywhere on the line', () => {
+        const resolver = new VtableResolver(createEmptyIndex());
+
+        const result = resolver.resolve('/src/test_file.c', 10, 5, 'int x = 5;');
+
+        expect(result.found).toBe(false);
+        expect(result.locations).toHaveLength(0);
+        expect(result.errorMsg).toBe('No LibJuno API call pattern found at cursor position.');
+        expect(result.errorMsg).not.toContain('Nearest');
+    });
+});
+
+// ---------------------------------------------------------------------------
+// REQ-VSCODE-040 — File Not Indexed Error Message
+// ---------------------------------------------------------------------------
+
+// @{"verify": ["REQ-VSCODE-040"]}
+describe('VtableResolver — File Not Indexed (REQ-VSCODE-040)', () => {
+
+    // @{"verify": ["REQ-VSCODE-040"]}
+    it('TC-RES-IDX-001: should return "has not been indexed" message when field is in apiStructFields but file is absent from localTypeInfo', () => {
+        // apiStructFields declares 'Open' for 'MY_API_T' but vtableAssignments
+        // has no entry for MY_API_T, so allLocations remains empty inside
+        // fieldNameFallback. Because the file is NOT in localTypeInfo, the
+        // resolver returns the explicit "not indexed" message.
+        const index = createEmptyIndex();
+        index.apiStructFields.set('MY_API_T', ['Open']);
+        // Deliberately omit vtableAssignments so allLocations stays empty.
+        // Deliberately omit localTypeInfo for '/src/test_file.c'.
+
+        const resolver = new VtableResolver(index);
+        // generalRe matches 'ptHandle->ptApi->Open(' at [0, 22); col 0 is inside.
+        const lineText = 'ptHandle->ptApi->Open(ptHandle);';
+        const result = resolver.resolve('/src/test_file.c', 10, 0, lineText);
+
+        expect(result.found).toBe(false);
+        expect(result.locations).toHaveLength(0);
+        expect(result.errorMsg).toContain('has not been indexed');
+        expect(result.errorMsg).toContain('test_file.c');
+    });
+
+    // @{"verify": ["REQ-VSCODE-040"]}
+    it('TC-RES-IDX-002: should return "No API type contains field" message when field is in apiStructFields and file IS in localTypeInfo', () => {
+        // Same field setup as TC-RES-IDX-001 but the file is present in
+        // localTypeInfo (with an empty variable map). This means the file IS
+        // indexed, so the generic "No API type contains field" message applies.
+        const index = createEmptyIndex();
+        index.apiStructFields.set('MY_API_T', ['Open']);
+        // No vtableAssignments — allLocations stays empty.
+        index.localTypeInfo.set('/src/test_file.c', {
+            localVariables: new Map(),
+            functionParameters: new Map(),
+        });
+
+        const resolver = new VtableResolver(index);
+        const lineText = 'ptHandle->ptApi->Open(ptHandle);';
+        const result = resolver.resolve('/src/test_file.c', 10, 0, lineText);
+
+        expect(result.found).toBe(false);
+        expect(result.locations).toHaveLength(0);
+        expect(result.errorMsg).toBe("No API type contains field 'Open'.");
+    });
+});
+
+// ---------------------------------------------------------------------------
 // Branch Coverage — uncovered paths in resolveChain / fieldNameFallback
 // ---------------------------------------------------------------------------
 
@@ -551,6 +654,14 @@ describe('VtableResolver — Branch Coverage', () => {
         index.apiStructFields.set('SPEED_API_T', ['GoFast']);
         // vtableAssignments does NOT contain 'SPEED_API_T' → fieldMap is undefined
         // fieldMap?.get('GoFast') evaluates to undefined → ?? [] → locs = []
+
+        // Provide localTypeInfo for the file so the file-not-indexed path is
+        // not taken (REQ-VSCODE-040); this test targets the vtableAssignments
+        // missing branch only.
+        index.localTypeInfo.set('/src/main.c', {
+            localVariables: new Map(),
+            functionParameters: new Map(),
+        });
 
         const resolver = new VtableResolver(index);
         // generalRe: "ptRacer->GoFast(" at index 4; cursor at 4 → inside match

@@ -34,8 +34,9 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 23 | Phase 24 ✅ | Test Case Completeness & README Update | TC-PP-001–004, TC-DECL-005, TC-CACHE-008 (6 new tests); `WorkspaceIndexer.scheduleSave()` debounce; README user guide updated through Sprint 22; 679 tests passing | 5% |
 | 24 | Phase 25 ✅ | MCP JSON-RPC 2.0 Protocol Implementation | `/mcp` endpoint: `initialize`, `tools/list`, `tools/call`, notification handling, `-32602` validation; TC-MCP-021–025 (5 new tests); README "Connecting AI Agents" section; 684 tests passing | 10% |
 | 25 | Phase 26 ✅ | Structural Composition Root Detection | `resolveCompositionRoots()` structural `&apiVar` scan; `initCallFile`/`initCallLine` on ConcreteLocation; TC-TRACE-016–022 (7 new tests); REQ-VSCODE-036; 691 tests passing | 5% |
+| 32 | Phase 27 | MCP Tool Quality Improvements | REQ-038–041 new requirements; `resolve_failure_handler` JUNO_APP_ROOT_T support; column hint in not-found errors; file-not-indexed message; `kind` field in results; standalone MCP launcher; 10 new tests; 708 tests passing | 5% |
 
-**Total: 25 sprints, 25 active phases (26 numbered; Phase 4 removed)**
+**Total: 26 sprints, 26 active phases (27 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 
