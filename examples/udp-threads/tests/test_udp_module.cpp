@@ -44,57 +44,28 @@
 static struct
 {
     /* call counts */
-    int iOpenCallCount;
     int iSendCallCount;
     int iReceiveCallCount;
-    int iCloseCallCount;
+    int iFreeCalled;
 
     /* injected failure flags */
-    bool bFailOpen;
     bool bFailSend;
     bool bFailReceive;
-    bool bFailClose;
+    bool bFailFree;
 
     /* injected statuses returned when the corresponding flag is set */
-    JUNO_STATUS_T tOpenStatus;
     JUNO_STATUS_T tSendStatus;
     JUNO_STATUS_T tReceiveStatus;
-    JUNO_STATUS_T tCloseStatus;
+    JUNO_STATUS_T tFreeStatus;
 
     /* last arguments captured by each function */
-    JUNO_UDP_ROOT_T        *ptLastOpenRoot;
-    const JUNO_UDP_CFG_T   *ptLastOpenCfg;
     const UDP_THREAD_MSG_T *ptLastSendMsg;
     UDP_THREAD_MSG_T       *ptLastReceiveMsg;
-
-    /* sentinel descriptor value written by TestOpen */
-    intptr_t iSentinelFd;
 
     /* payload written back by TestReceive (when not failing) */
     UDP_THREAD_MSG_T tReceivePayload;
 
 } s_tFakeState;
-
-/* ---------- TestOpen ---------------------------------------------------- */
-static JUNO_STATUS_T TestOpen(JUNO_UDP_ROOT_T *ptRoot, const JUNO_UDP_CFG_T *ptCfg)
-{
-    s_tFakeState.iOpenCallCount++;
-    s_tFakeState.ptLastOpenRoot = ptRoot;
-    s_tFakeState.ptLastOpenCfg  = ptCfg;
-
-    if (s_tFakeState.bFailOpen)
-    {
-        return s_tFakeState.tOpenStatus;
-    }
-
-    /* Write the sentinel descriptor into the root so callers can observe it. */
-    if (ptRoot != NULL)
-    {
-        ptRoot->_iSockFd = s_tFakeState.iSentinelFd;
-    }
-
-    return JUNO_STATUS_SUCCESS;
-}
 
 /* ---------- TestSend ---------------------------------------------------- */
 static JUNO_STATUS_T TestSend(JUNO_UDP_ROOT_T *ptRoot, const UDP_THREAD_MSG_T *ptMsg)
@@ -132,32 +103,20 @@ static JUNO_STATUS_T TestReceive(JUNO_UDP_ROOT_T *ptRoot, UDP_THREAD_MSG_T *ptMs
     return JUNO_STATUS_SUCCESS;
 }
 
-/* ---------- TestClose --------------------------------------------------- */
-static JUNO_STATUS_T TestClose(JUNO_UDP_ROOT_T *ptRoot)
+/* ---------- TestFree ---------------------------------------------------- */
+static JUNO_STATUS_T TestFree(JUNO_UDP_ROOT_T *ptRoot)
 {
-    s_tFakeState.iCloseCallCount++;
+    s_tFakeState.iFreeCalled++;
     (void)ptRoot;
-
-    if (s_tFakeState.bFailClose)
-    {
-        return s_tFakeState.tCloseStatus;
-    }
-
-    /* Reset the socket descriptor to the invalid sentinel on success. */
-    if (ptRoot != NULL)
-    {
-        ptRoot->_iSockFd = -1;
-    }
-
+    if (s_tFakeState.bFailFree) { return s_tFakeState.tFreeStatus; }
     return JUNO_STATUS_SUCCESS;
 }
 
-/* Statically allocated fake vtable (all four operations). */
+/* Statically allocated fake vtable (Send, Receive, Free). */
 static const JUNO_UDP_API_T s_tTestApi = {
-    TestOpen,
     TestSend,
     TestReceive,
-    TestClose
+    TestFree
 };
 
 /* =========================================================================
@@ -189,8 +148,6 @@ static void ResetAllDoubles(void)
 {
     memset(&s_tFakeState, 0, sizeof(s_tFakeState));
     memset(&s_tFhDouble,  0, sizeof(s_tFhDouble));
-    /* Default sentinel fd that Open writes when it succeeds. */
-    s_tFakeState.iSentinelFd = 5;
 }
 
 /* =========================================================================
@@ -200,7 +157,7 @@ static void ResetAllDoubles(void)
 class UdpModuleTest : public ::testing::Test
 {
 protected:
-    JUNO_UDP_T tUdp;
+    JUNO_UDP_ROOT_T tUdp;
 
     void SetUp() override
     {
@@ -212,7 +169,7 @@ protected:
     JUNO_STATUS_T InitWithDouble(void *pvUserData = NULL)
     {
         return JunoUdp_Init(
-            &tUdp.tRoot,
+            &tUdp,
             &s_tTestApi,
             TestFailureHandler,
             pvUserData);
@@ -227,13 +184,11 @@ protected:
 TEST_F(UdpModuleTest, InitHappyPathWiresVtable)
 {
     JUNO_STATUS_T eStatus = JunoUdp_Init(
-        &tUdp.tRoot, &s_tTestApi, TestFailureHandler, NULL);
+        &tUdp, &s_tTestApi, TestFailureHandler, NULL);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* Vtable must be wired — the pointer must equal the injected vtable. */
-    EXPECT_EQ(&s_tTestApi, tUdp.tRoot.ptApi);
-    /* Socket descriptor must be set to the invalid sentinel -1. */
-    EXPECT_EQ(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
+    EXPECT_EQ(&s_tTestApi, tUdp.ptApi);
     /* Failure handler must not have been invoked on a success path. */
     EXPECT_EQ(0, s_tFhDouble.iCallCount);
 }
@@ -252,12 +207,12 @@ TEST_F(UdpModuleTest, InitNullRootReturnsNullptrError)
 TEST_F(UdpModuleTest, InitNullVtableReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = JunoUdp_Init(
-        &tUdp.tRoot, NULL, TestFailureHandler, NULL);
+        &tUdp, NULL, TestFailureHandler, NULL);
 
     /* Must return the exact null-pointer error code. */
     EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
     /* Vtable must NOT have been wired (root was zeroed in SetUp). */
-    EXPECT_EQ(static_cast<const JUNO_UDP_API_T *>(NULL), tUdp.tRoot.ptApi);
+    EXPECT_EQ(static_cast<const JUNO_UDP_API_T *>(NULL), tUdp.ptApi);
 }
 
 // @{"verify": ["REQ-UDP-016"]}
@@ -266,15 +221,15 @@ TEST_F(UdpModuleTest, InitStoresFailureHandlerAndUserData)
     int iUserData = 42;
 
     JUNO_STATUS_T eStatus = JunoUdp_Init(
-        &tUdp.tRoot, &s_tTestApi, TestFailureHandler, &iUserData);
+        &tUdp, &s_tTestApi, TestFailureHandler, &iUserData);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* Failure handler function pointer must be stored. */
     EXPECT_EQ(reinterpret_cast<JUNO_FAILURE_HANDLER_T>(TestFailureHandler),
-              tUdp.tRoot.JUNO_FAILURE_HANDLER);
+              tUdp.JUNO_FAILURE_HANDLER);
     /* User-data pointer must be stored. */
     EXPECT_EQ(reinterpret_cast<void *>(&iUserData),
-              static_cast<void *>(tUdp.tRoot.JUNO_FAILURE_USER_DATA));
+              static_cast<void *>(tUdp.JUNO_FAILURE_USER_DATA));
 }
 
 // @{"verify": ["REQ-UDP-016"]}
@@ -282,11 +237,10 @@ TEST_F(UdpModuleTest, InitNullHandlerAndNullUserDataArePermitted)
 {
     /* Both optional parameters may be NULL — Init must still succeed. */
     JUNO_STATUS_T eStatus = JunoUdp_Init(
-        &tUdp.tRoot, &s_tTestApi, NULL, NULL);
+        &tUdp, &s_tTestApi, NULL, NULL);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_EQ(&s_tTestApi, tUdp.tRoot.ptApi);
-    EXPECT_EQ(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
+    EXPECT_EQ(&s_tTestApi, tUdp.ptApi);
 }
 
 /* =========================================================================
@@ -298,24 +252,7 @@ TEST_F(UdpModuleTest, RootHoldsPtApiField)
 {
     /* ptApi is the canonical vtable pointer mandated by REQ-UDP-001. */
     InitWithDouble();
-    EXPECT_EQ(&s_tTestApi, tUdp.tRoot.ptApi);
-}
-
-// @{"verify": ["REQ-UDP-001"]}
-TEST_F(UdpModuleTest, RootHoldsSocketDescriptorField)
-{
-    /* _iSockFd is the opaque socket descriptor in the root. */
-    InitWithDouble();
-    /* After init the descriptor must be -1 (closed/invalid state). */
-    EXPECT_EQ(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
-
-    /* Call Open via vtable; the fake writes the sentinel to _iSockFd. */
-    JUNO_UDP_CFG_T tCfg = { "127.0.0.1", 9000, 0, false };
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    /* Descriptor must now hold the sentinel (not still -1). */
-    EXPECT_EQ(s_tFakeState.iSentinelFd, tUdp.tRoot._iSockFd);
+    EXPECT_EQ(&s_tTestApi, tUdp.ptApi);
 }
 
 // @{"verify": ["REQ-UDP-001"]}
@@ -324,7 +261,7 @@ TEST_F(UdpModuleTest, RootHoldsFailureHandlerField)
     /* JUNO_FAILURE_HANDLER (expands to _pfcnFailureHandler) must be stored. */
     InitWithDouble();
     EXPECT_EQ(reinterpret_cast<JUNO_FAILURE_HANDLER_T>(TestFailureHandler),
-              tUdp.tRoot.JUNO_FAILURE_HANDLER);
+              tUdp.JUNO_FAILURE_HANDLER);
 }
 
 /* =========================================================================
@@ -335,34 +272,30 @@ TEST_F(UdpModuleTest, RootHoldsFailureHandlerField)
 TEST_F(UdpModuleTest, AllApiOperationsReturnStatusT)
 {
     /*
-     * This test exercises all four vtable operations and verifies each returns
+     * This test exercises all three vtable operations and verifies each returns
      * a JUNO_STATUS_T comparable to JUNO_STATUS_SUCCESS.  The compile-time
      * guarantee (function pointer type in JUNO_UDP_API_T) is reinforced here
      * at run time.
      */
     InitWithDouble();
 
-    JUNO_UDP_CFG_T   tCfg = { "127.0.0.1", 9000, 0, false };
     UDP_THREAD_MSG_T tMsg;
     memset(&tMsg, 0, sizeof(tMsg));
 
-    JUNO_STATUS_T eOpen    = tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-    JUNO_STATUS_T eSend    = tUdp.tRoot.ptApi->Send(&tUdp.tRoot, &tMsg);
+    JUNO_STATUS_T eSend    = tUdp.ptApi->Send(&tUdp, &tMsg);
     UDP_THREAD_MSG_T tOut;
     memset(&tOut, 0, sizeof(tOut));
-    JUNO_STATUS_T eReceive = tUdp.tRoot.ptApi->Receive(&tUdp.tRoot, &tOut);
-    JUNO_STATUS_T eClose   = tUdp.tRoot.ptApi->Close(&tUdp.tRoot);
+    JUNO_STATUS_T eReceive = tUdp.ptApi->Receive(&tUdp, &tOut);
+    JUNO_STATUS_T eFree    = tUdp.ptApi->Free(&tUdp);
 
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eOpen);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eSend);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eReceive);
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eClose);
+    EXPECT_EQ(JUNO_STATUS_SUCCESS, eFree);
 
     /* Each operation must have been dispatched exactly once. */
-    EXPECT_EQ(1, s_tFakeState.iOpenCallCount);
     EXPECT_EQ(1, s_tFakeState.iSendCallCount);
     EXPECT_EQ(1, s_tFakeState.iReceiveCallCount);
-    EXPECT_EQ(1, s_tFakeState.iCloseCallCount);
+    EXPECT_EQ(1, s_tFakeState.iFreeCalled);
 }
 
 /* =========================================================================
@@ -370,19 +303,11 @@ TEST_F(UdpModuleTest, AllApiOperationsReturnStatusT)
  * ========================================================================= */
 
 // @{"verify": ["REQ-UDP-013"]}
-TEST_F(UdpModuleTest, FailureHandlerInvokedWhenOpenFails)
+TEST_F(UdpModuleTest, FailureHandlerFiredViaJunoFailRoot)
 {
     /*
-     * The fake Open is configured to return an error.  The test double itself
-     * does not invoke the failure handler — the module under test (or the
-     * caller) is responsible.  Because the fake already returns an error status,
-     * we verify here that the module's error propagation path at a higher level
-     * invokes the handler.
-     *
-     * For this unit test we verify the mechanism by setting up a fake Open that
-     * returns an error AND the test manually calls JUNO_FAIL_ROOT as the caller
-     * would, confirming the stored handler fires.  Then we test the real path
-     * through JunoUdp_Init null-guard which does invoke the failure path.
+     * We verify the mechanism by manually calling JUNO_FAIL_ROOT as the caller
+     * would, confirming the stored handler fires.
      *
      * NOTE: JunoUdp_Init null-guard uses JUNO_ASSERT_EXISTS which does NOT
      * call the failure handler (no module instance is available for the ptRoot
@@ -394,7 +319,7 @@ TEST_F(UdpModuleTest, FailureHandlerInvokedWhenOpenFails)
     InitWithDouble();
 
     /* JUNO_FAIL_ROOT invokes the handler stored in the root. */
-    JUNO_FAIL_ROOT(JUNO_STATUS_ERR, (&tUdp.tRoot), "unit test injected error");
+    JUNO_FAIL_ROOT(JUNO_STATUS_ERR, (&tUdp), "unit test injected error");
 
     EXPECT_EQ(1, s_tFhDouble.iCallCount);
     EXPECT_EQ(JUNO_STATUS_ERR, s_tFhDouble.tLastStatus);
@@ -404,10 +329,10 @@ TEST_F(UdpModuleTest, FailureHandlerInvokedWhenOpenFails)
 TEST_F(UdpModuleTest, FailureHandlerReceivesCorrectUserData)
 {
     int iUserData = 99;
-    JunoUdp_Init(&tUdp.tRoot, &s_tTestApi, TestFailureHandler, &iUserData);
+    JunoUdp_Init(&tUdp, &s_tTestApi, TestFailureHandler, &iUserData);
 
     /* Fire the handler through the module's stored pointer. */
-    JUNO_FAIL_ROOT(JUNO_STATUS_WRITE_ERROR, (&tUdp.tRoot), "send failure");
+    JUNO_FAIL_ROOT(JUNO_STATUS_WRITE_ERROR, (&tUdp), "send failure");
 
     EXPECT_EQ(1, s_tFhDouble.iCallCount);
     EXPECT_EQ(JUNO_STATUS_WRITE_ERROR, s_tFhDouble.tLastStatus);
@@ -420,86 +345,17 @@ TEST_F(UdpModuleTest, FailureHandlerNotInvokedOnSuccess)
 {
     InitWithDouble();
 
-    JUNO_UDP_CFG_T   tCfg = { "127.0.0.1", 9001, 0, false };
     UDP_THREAD_MSG_T tMsg;
     memset(&tMsg, 0, sizeof(tMsg));
 
-    tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-    tUdp.tRoot.ptApi->Send(&tUdp.tRoot, &tMsg);
+    tUdp.ptApi->Send(&tUdp, &tMsg);
     UDP_THREAD_MSG_T tOut;
     memset(&tOut, 0, sizeof(tOut));
-    tUdp.tRoot.ptApi->Receive(&tUdp.tRoot, &tOut);
-    tUdp.tRoot.ptApi->Close(&tUdp.tRoot);
+    tUdp.ptApi->Receive(&tUdp, &tOut);
+    tUdp.ptApi->Free(&tUdp);
 
     /* All operations succeeded — handler must never have been called. */
     EXPECT_EQ(0, s_tFhDouble.iCallCount);
-}
-
-/* =========================================================================
- * Test Cases: Open dispatched through vtable (REQ-UDP-003)
- * ========================================================================= */
-
-// @{"verify": ["REQ-UDP-003"]}
-TEST_F(UdpModuleTest, OpenDispatchesViaVtable)
-{
-    InitWithDouble();
-
-    JUNO_UDP_CFG_T tCfg = { "127.0.0.1", 9000, 500, false };
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    /* Vtable was dispatched — fake call count must be 1. */
-    EXPECT_EQ(1, s_tFakeState.iOpenCallCount);
-    /* Descriptor must have been written by the fake (observable state change). */
-    EXPECT_EQ(s_tFakeState.iSentinelFd, tUdp.tRoot._iSockFd);
-    /* Configuration pointer must have been forwarded to the implementation. */
-    EXPECT_EQ(&tCfg, s_tFakeState.ptLastOpenCfg);
-}
-
-// @{"verify": ["REQ-UDP-003", "REQ-UDP-004"]}
-TEST_F(UdpModuleTest, OpenWithReceiverConfig)
-{
-    InitWithDouble();
-
-    JUNO_UDP_CFG_T tCfg = { "0.0.0.0", 9100, 100, true };
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_EQ(1, s_tFakeState.iOpenCallCount);
-    /* Config pointer forwarded correctly — bIsReceiver flag visible to impl. */
-    EXPECT_EQ(true, s_tFakeState.ptLastOpenCfg->bIsReceiver);
-}
-
-// @{"verify": ["REQ-UDP-003", "REQ-UDP-005"]}
-TEST_F(UdpModuleTest, OpenWithSenderConfig)
-{
-    InitWithDouble();
-
-    JUNO_UDP_CFG_T tCfg = { "127.0.0.1", 9101, 0, false };
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_EQ(1, s_tFakeState.iOpenCallCount);
-    EXPECT_EQ(false, s_tFakeState.ptLastOpenCfg->bIsReceiver);
-    /* Descriptor updated — socket logically opened. */
-    EXPECT_NE(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
-}
-
-// @{"verify": ["REQ-UDP-003", "REQ-UDP-012"]}
-TEST_F(UdpModuleTest, OpenInjectedFailureReturnsExactStatus)
-{
-    InitWithDouble();
-
-    s_tFakeState.bFailOpen    = true;
-    s_tFakeState.tOpenStatus  = JUNO_STATUS_INVALID_REF_ERROR;
-
-    JUNO_UDP_CFG_T tCfg = { "127.0.0.1", 9000, 0, false };
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-
-    EXPECT_EQ(JUNO_STATUS_INVALID_REF_ERROR, eStatus);
-    EXPECT_EQ(1, s_tFakeState.iOpenCallCount);
-    /* Descriptor must NOT have been modified by the failing fake. */
-    EXPECT_EQ(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
 }
 
 /* =========================================================================
@@ -518,7 +374,7 @@ TEST_F(UdpModuleTest, SendDispatchesViaVtable)
     tMsg.uTimestampSubSec = 500U;
     memset(tMsg.arrPayload, 0xAB, sizeof(tMsg.arrPayload));
 
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Send(&tUdp.tRoot, &tMsg);
+    JUNO_STATUS_T eStatus = tUdp.ptApi->Send(&tUdp, &tMsg);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* Vtable dispatched exactly once. */
@@ -542,7 +398,7 @@ TEST_F(UdpModuleTest, SendInjectedFailureReturnsExactStatus)
     UDP_THREAD_MSG_T tMsg;
     memset(&tMsg, 0, sizeof(tMsg));
 
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Send(&tUdp.tRoot, &tMsg);
+    JUNO_STATUS_T eStatus = tUdp.ptApi->Send(&tUdp, &tMsg);
 
     EXPECT_EQ(JUNO_STATUS_WRITE_ERROR, eStatus);
     EXPECT_EQ(1, s_tFakeState.iSendCallCount);
@@ -567,7 +423,7 @@ TEST_F(UdpModuleTest, ReceiveDispatchesViaVtableAndPopulatesOutput)
     UDP_THREAD_MSG_T tOut;
     memset(&tOut, 0, sizeof(tOut));
 
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Receive(&tUdp.tRoot, &tOut);
+    JUNO_STATUS_T eStatus = tUdp.ptApi->Receive(&tUdp, &tOut);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* Vtable dispatched exactly once. */
@@ -593,7 +449,7 @@ TEST_F(UdpModuleTest, ReceiveInjectedFailureReturnsExactStatus)
     UDP_THREAD_MSG_T tOut;
     memset(&tOut, 0, sizeof(tOut));
 
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Receive(&tUdp.tRoot, &tOut);
+    JUNO_STATUS_T eStatus = tUdp.ptApi->Receive(&tUdp, &tOut);
 
     EXPECT_EQ(JUNO_STATUS_READ_ERROR, eStatus);
     EXPECT_EQ(1, s_tFakeState.iReceiveCallCount);
@@ -615,7 +471,7 @@ TEST_F(UdpModuleTest, ReceiveTimeoutReturnsTimeoutError)
     UDP_THREAD_MSG_T tOut;
     memset(&tOut, 0, sizeof(tOut));
 
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Receive(&tUdp.tRoot, &tOut);
+    JUNO_STATUS_T eStatus = tUdp.ptApi->Receive(&tUdp, &tOut);
 
     /* Must return exactly JUNO_STATUS_TIMEOUT_ERROR, not a generic error. */
     EXPECT_EQ(JUNO_STATUS_TIMEOUT_ERROR, eStatus);
@@ -639,63 +495,33 @@ TEST_F(UdpModuleTest, ReceiveTimeoutStatusCodeIsDistinctFromSuccess)
 }
 
 /* =========================================================================
- * Test Cases: Close dispatched through vtable (REQ-UDP-009)
+ * Test Cases: Free dispatched through vtable (REQ-UDP-009)
  * ========================================================================= */
 
 // @{"verify": ["REQ-UDP-009"]}
-TEST_F(UdpModuleTest, CloseDispatchesViaVtableAndResetsDescriptor)
+TEST_F(UdpModuleTest, FreeDispatchesViaVtable)
 {
     InitWithDouble();
 
-    /* First open the socket so the descriptor is non-(-1). */
-    JUNO_UDP_CFG_T tCfg = { "127.0.0.1", 9000, 0, false };
-    tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg);
-    EXPECT_EQ(s_tFakeState.iSentinelFd, tUdp.tRoot._iSockFd);
-
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Close(&tUdp.tRoot);
+    JUNO_STATUS_T eStatus = tUdp.ptApi->Free(&tUdp);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
     /* Vtable dispatched exactly once. */
-    EXPECT_EQ(1, s_tFakeState.iCloseCallCount);
-    /* Descriptor must be reset to the invalid sentinel (-1) by the fake. */
-    EXPECT_EQ(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
+    EXPECT_EQ(1, s_tFakeState.iFreeCalled);
 }
 
 // @{"verify": ["REQ-UDP-009", "REQ-UDP-012"]}
-TEST_F(UdpModuleTest, CloseInjectedFailureReturnsExactStatus)
+TEST_F(UdpModuleTest, FreeInjectedFailureReturnsExactStatus)
 {
     InitWithDouble();
 
-    s_tFakeState.bFailClose    = true;
-    s_tFakeState.tCloseStatus  = JUNO_STATUS_INVALID_REF_ERROR;
+    s_tFakeState.bFailFree    = true;
+    s_tFakeState.tFreeStatus  = JUNO_STATUS_INVALID_REF_ERROR;
 
-    JUNO_STATUS_T eStatus = tUdp.tRoot.ptApi->Close(&tUdp.tRoot);
+    JUNO_STATUS_T eStatus = tUdp.ptApi->Free(&tUdp);
 
     EXPECT_EQ(JUNO_STATUS_INVALID_REF_ERROR, eStatus);
-    EXPECT_EQ(1, s_tFakeState.iCloseCallCount);
-}
-
-// @{"verify": ["REQ-UDP-009"]}
-TEST_F(UdpModuleTest, MultipleOpenCloseSequencesWorkCorrectly)
-{
-    InitWithDouble();
-
-    JUNO_UDP_CFG_T tCfg = { "127.0.0.1", 9000, 0, false };
-
-    /* First open/close cycle. */
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg));
-    EXPECT_EQ(s_tFakeState.iSentinelFd, tUdp.tRoot._iSockFd);
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, tUdp.tRoot.ptApi->Close(&tUdp.tRoot));
-    EXPECT_EQ(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
-
-    /* Second open/close cycle — same root reused. */
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, tUdp.tRoot.ptApi->Open(&tUdp.tRoot, &tCfg));
-    EXPECT_EQ(s_tFakeState.iSentinelFd, tUdp.tRoot._iSockFd);
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, tUdp.tRoot.ptApi->Close(&tUdp.tRoot));
-    EXPECT_EQ(static_cast<intptr_t>(-1), tUdp.tRoot._iSockFd);
-
-    EXPECT_EQ(2, s_tFakeState.iOpenCallCount);
-    EXPECT_EQ(2, s_tFakeState.iCloseCallCount);
+    EXPECT_EQ(1, s_tFakeState.iFreeCalled);
 }
 
 /* =========================================================================

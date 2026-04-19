@@ -32,7 +32,7 @@
  *  Typical usage:
  *  @code{.c}
  *  SENDER_APP_T tSender;
- *  SenderApp_Init(&tSender, &g_tSenderAppApi,
+ *  SenderApp_Init(&tSender,
  *                 &tUdp.tRoot, &tBroker,
  *                 MyFailureHandler, NULL);
  *
@@ -97,17 +97,15 @@ typedef struct SENDER_APP_TAG SENDER_APP_T;
  * @brief Initialize a SenderApp instance.
  *
  * @details
- *  Wires @p ptApi into @p ptApp->tRoot.ptApi, stores @p ptUdp and @p ptBroker,
- *  stores the failure handler and user data into the root, and sets
- *  @c _uSeqNum to zero. Verifies that no required injected pointer is NULL
- *  before returning.
+ *  Wires the internal static vtable into @p ptApp->tRoot.ptApi, stores
+ *  @p ptUdp and @p ptBroker, stores the failure handler and user data into
+ *  the root, and sets @c _uSeqNum to zero. Verifies that no required injected
+ *  pointer is NULL before returning.
  *
  *  Must be called before any lifecycle operation. All caller-allocated storage;
  *  this function does not allocate any memory.
  *
  * @param ptApp               Caller-owned SenderApp storage; must be non-NULL.
- * @param ptApi               Vtable to wire (use @c g_tSenderAppApi for production);
- *                            must be non-NULL.
  * @param ptUdp               UDP module root configured for sender role; must be
  *                            non-NULL and outlive @p ptApp.
  * @param ptBroker            Thread 1 broker root; must be non-NULL and outlive
@@ -121,76 +119,11 @@ typedef struct SENDER_APP_TAG SENDER_APP_T;
 // @{"req": ["REQ-UDPAPP-002"]}
 JUNO_STATUS_T SenderApp_Init(
     SENDER_APP_T              *ptApp,
-    const JUNO_APP_API_T      *ptApi,
     JUNO_UDP_ROOT_T           *ptUdp,
     JUNO_SB_BROKER_ROOT_T     *ptBroker,
     JUNO_FAILURE_HANDLER_T     pfcnFailureHandler,
     void                      *pvFailureUserData
 );
-
-/* --------------------------------------------------------------------------
- * Lifecycle vtable implementations
- * -------------------------------------------------------------------------- */
-
-/**
- * @brief Open the UDP sender socket and reset the sequence counter.
- *
- * @details
- *  Configures the UDP module as a sender (connect to 127.0.0.1:9000,
- *  @c bIsReceiver = false) and initializes @c _uSeqNum to zero. Intended
- *  to be stored in @c g_tSenderAppApi.OnStart.
- *
- * @param ptApp Pointer to the @c JUNO_APP_ROOT_T embedded in a @c SENDER_APP_T;
- *              must be non-NULL and previously initialized via @c SenderApp_Init.
- * @return @c JUNO_STATUS_SUCCESS on success; non-zero on failure.
- */
-// @{"req": ["REQ-UDPAPP-003"]}
-JUNO_STATUS_T SenderApp_OnStart(JUNO_APP_ROOT_T *ptApp);
-
-/**
- * @brief Build and transmit one @c UDP_THREAD_MSG_T per scheduler cycle.
- *
- * @details
- *  Increments @c _uSeqNum, fills a stack-allocated @c UDP_THREAD_MSG_T,
- *  publishes it to Thread 1's broker via @c Publish, then transmits it via
- *  the UDP module's @c Send. Intended to be stored in
- *  @c g_tSenderAppApi.OnProcess.
- *
- * @param ptApp Pointer to the @c JUNO_APP_ROOT_T embedded in a @c SENDER_APP_T;
- *              must be non-NULL and previously initialized via @c SenderApp_Init.
- * @return @c JUNO_STATUS_SUCCESS on success; non-zero on failure.
- */
-// @{"req": ["REQ-UDPAPP-004", "REQ-UDPAPP-005", "REQ-UDPAPP-006"]}
-JUNO_STATUS_T SenderApp_OnProcess(JUNO_APP_ROOT_T *ptApp);
-
-/**
- * @brief Close the UDP sender socket.
- *
- * @details
- *  Calls the UDP module's @c Close to release the socket descriptor. Intended
- *  to be stored in @c g_tSenderAppApi.OnExit.
- *
- * @param ptApp Pointer to the @c JUNO_APP_ROOT_T embedded in a @c SENDER_APP_T;
- *              must be non-NULL and previously initialized via @c SenderApp_Init.
- * @return @c JUNO_STATUS_SUCCESS on success; non-zero on failure.
- */
-// @{"req": ["REQ-UDPAPP-007"]}
-JUNO_STATUS_T SenderApp_OnExit(JUNO_APP_ROOT_T *ptApp);
-
-/* --------------------------------------------------------------------------
- * Production vtable
- * -------------------------------------------------------------------------- */
-
-/**
- * @brief Statically allocated production vtable for SenderApp.
- *
- * @details
- *  Defined in the SenderApp translation unit. Pass to @c SenderApp_Init as
- *  @p ptApi to obtain the standard OnStart/OnProcess/OnExit behavior. Must
- *  remain valid for the lifetime of all @c SENDER_APP_T instances wired with
- *  it.
- */
-extern const JUNO_APP_API_T g_tSenderAppApi;
 
 #ifdef __cplusplus
 }

@@ -36,7 +36,7 @@
  *  Typical usage:
  *  @code{.c}
  *  PROCESSOR_APP_T tProcessor;
- *  ProcessorApp_Init(&tProcessor, &g_tProcessorAppApi,
+ *  ProcessorApp_Init(&tProcessor,
  *                    &tBroker2, &tPipeArray,
  *                    MyFailureHandler, NULL);
  *
@@ -105,18 +105,16 @@ typedef struct PROCESSOR_APP_TAG PROCESSOR_APP_T;
  * @brief Initialize a ProcessorApp instance.
  *
  * @details
- *  Wires @p ptApi into @p ptApp->tRoot.ptApi, stores @p ptBroker,
- *  @p ptPipeArray, the failure handler, and user data. Verifies that no
- *  required injected pointer is NULL before returning. Pipe initialization
- *  is deferred to @c ProcessorApp_OnStart; this function does not call
- *  @c JunoSb_PipeInit or @c RegisterSubscriber.
+ *  Wires the internal static vtable into @p ptApp->tRoot.ptApi, stores
+ *  @p ptBroker, @p ptPipeArray, the failure handler, and user data. Verifies
+ *  that no required injected pointer is NULL before returning. Pipe
+ *  initialization is deferred to the @c OnStart lifecycle callback; this
+ *  function does not call @c JunoSb_PipeInit or @c RegisterSubscriber.
  *
  *  Must be called before any lifecycle operation. All caller-allocated storage;
  *  this function does not allocate any memory.
  *
  * @param ptApp               Caller-owned ProcessorApp storage; must be non-NULL.
- * @param ptApi               Vtable to wire (use @c g_tProcessorAppApi for
- *                            production); must be non-NULL.
  * @param ptBroker            Thread 2 broker root; must be non-NULL and outlive
  *                            @p ptApp.
  * @param ptPipeArray         Backing array for the subscription pipe; must be
@@ -130,84 +128,11 @@ typedef struct PROCESSOR_APP_TAG PROCESSOR_APP_T;
 // @{"req": ["REQ-UDPAPP-016"]}
 JUNO_STATUS_T ProcessorApp_Init(
     PROCESSOR_APP_T              *ptApp,
-    const JUNO_APP_API_T         *ptApi,
     JUNO_SB_BROKER_ROOT_T        *ptBroker,
     JUNO_DS_ARRAY_ROOT_T         *ptPipeArray,
     JUNO_FAILURE_HANDLER_T        pfcnFailureHandler,
     void                         *pvFailureUserData
 );
-
-/* --------------------------------------------------------------------------
- * Lifecycle vtable implementations
- * -------------------------------------------------------------------------- */
-
-/**
- * @brief Initialize the subscription pipe and register it with Thread 2's broker.
- *
- * @details
- *  Calls @c JunoSb_PipeInit to associate @c tPipe with @c UDPTH_MSG_MID and
- *  its backing array, then calls @c ptBroker->ptApi->RegisterSubscriber to
- *  enroll the pipe. After this call the broker will enqueue every message
- *  published under @c UDPTH_MSG_MID into @c tPipe. Intended to be stored in
- *  @c g_tProcessorAppApi.OnStart.
- *
- * @param ptApp Pointer to the @c JUNO_APP_ROOT_T embedded in a @c PROCESSOR_APP_T;
- *              must be non-NULL and previously initialized via @c ProcessorApp_Init.
- * @return @c JUNO_STATUS_SUCCESS on success; non-zero on failure.
- */
-// @{"req": ["REQ-UDPAPP-017"]}
-JUNO_STATUS_T ProcessorApp_OnStart(JUNO_APP_ROOT_T *ptApp);
-
-/**
- * @brief Drain and process all queued messages from the subscription pipe.
- *
- * @details
- *  Loops calling @c tPipe.tRoot.ptApi->Dequeue until @c JUNO_STATUS_OOB_ERROR
- *  is returned (indicating an empty pipe). Each successfully dequeued
- *  @c UDP_THREAD_MSG_T is processed (e.g., sequence-number validation, latency
- *  measurement). @c JUNO_STATUS_OOB_ERROR is the normal empty-drain sentinel
- *  and is not treated as an application error. Any other non-success status is
- *  propagated to the scheduler. Intended to be stored in
- *  @c g_tProcessorAppApi.OnProcess.
- *
- * @param ptApp Pointer to the @c JUNO_APP_ROOT_T embedded in a @c PROCESSOR_APP_T;
- *              must be non-NULL and previously initialized via @c ProcessorApp_Init.
- * @return @c JUNO_STATUS_SUCCESS when the pipe is fully drained; non-zero on
- *         unexpected dequeue failure.
- */
-// @{"req": ["REQ-UDPAPP-018"]}
-JUNO_STATUS_T ProcessorApp_OnProcess(JUNO_APP_ROOT_T *ptApp);
-
-/**
- * @brief No-op exit handler — no resources to release.
- *
- * @details
- *  ProcessorApp holds no OS resources: the embedded @c tPipe is released
- *  automatically when the app struct goes out of scope. The broker manages
- *  the pipe registration lifetime. This function exists to satisfy the
- *  @c JUNO_APP_API_T contract. Intended to be stored in
- *  @c g_tProcessorAppApi.OnExit.
- *
- * @param ptApp Pointer to the @c JUNO_APP_ROOT_T embedded in a @c PROCESSOR_APP_T;
- *              must be non-NULL.
- * @return @c JUNO_STATUS_SUCCESS unconditionally.
- */
-JUNO_STATUS_T ProcessorApp_OnExit(JUNO_APP_ROOT_T *ptApp);
-
-/* --------------------------------------------------------------------------
- * Production vtable
- * -------------------------------------------------------------------------- */
-
-/**
- * @brief Statically allocated production vtable for ProcessorApp.
- *
- * @details
- *  Defined in the ProcessorApp translation unit. Pass to @c ProcessorApp_Init
- *  as @p ptApi to obtain the standard OnStart/OnProcess/OnExit behavior. Must
- *  remain valid for the lifetime of all @c PROCESSOR_APP_T instances wired with
- *  it.
- */
-extern const JUNO_APP_API_T g_tProcessorAppApi;
 
 #ifdef __cplusplus
 }

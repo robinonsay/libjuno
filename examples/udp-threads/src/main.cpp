@@ -42,8 +42,8 @@
 extern "C" {
 #include "juno/sch/juno_sch_api.h"
 #include "juno/sb/broker_api.h"
-#include "juno/thread.h"
-#include "udp_api.h"
+#include "juno/thread_linux.h"
+#include "udp_linux.h"
 #include "udp_msg_api.h"
 #include "sender_app.h"
 #include "monitor_app.h"
@@ -86,8 +86,8 @@ static const JUNO_SCH_API_T s_tSchApi = { SchExecute, NULL, NULL };
 
 // @{"req": ["REQ-UDPAPP-019", "REQ-UDPAPP-022"]}
 /* Thread roots */
-static JUNO_THREAD_ROOT_T s_tThread1;
-static JUNO_THREAD_ROOT_T s_tThread2;
+static JUNO_THREAD_T s_tThread1;
+static JUNO_THREAD_T s_tThread2;
 
 /* Schedulers */
 static JUNO_SCH_ROOT_T s_tSch1;
@@ -102,8 +102,8 @@ static JUNO_SB_PIPE_T *s_aptBroker1Registry[2u];
 static JUNO_SB_PIPE_T *s_aptBroker2Registry[2u];
 
 /* UDP modules */
-static JUNO_UDP_ROOT_T s_tUdpSender;
-static JUNO_UDP_ROOT_T s_tUdpReceiver;
+static JUNO_UDP_T s_tUdpSender;
+static JUNO_UDP_T s_tUdpReceiver;
 
 /* Message backing arrays for pipe queues */
 static UDPTH_MSG_ARRAY_T s_tMsgArray1;   /* backs MonitorApp pipe on Broker1 */
@@ -168,17 +168,20 @@ static void *Thread2Entry(void *pvArg)
  * main — initialization, startup, shutdown
  * -------------------------------------------------------------------------- */
 
+static const JUNO_UDP_CFG_T s_tSenderCfg   = { "127.0.0.1", 9000u, false };
+static const JUNO_UDP_CFG_T s_tReceiverCfg = { "0.0.0.0",   9000u, true  };
+
 // @{"req": ["REQ-UDPAPP-001", "REQ-UDPAPP-023"]}
 int main(void)
 {
     JUNO_STATUS_T tStatus;
 
     /* 1. Initialize UDP sender */
-    tStatus = JunoUdp_Init(&s_tUdpSender, &g_junoUdpLinuxApi, NULL, NULL);
+    tStatus = JunoUdp_LinuxInit(&s_tUdpSender, &s_tSenderCfg, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* 2. Initialize UDP receiver */
-    tStatus = JunoUdp_Init(&s_tUdpReceiver, &g_junoUdpLinuxApi, NULL, NULL);
+    tStatus = JunoUdp_LinuxInit(&s_tUdpReceiver, &s_tReceiverCfg, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* 3. Initialize message backing array for MonitorApp pipe */
@@ -198,22 +201,22 @@ int main(void)
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* 7. Initialize SenderApp */
-    tStatus = SenderApp_Init(&s_tSenderApp, &g_tSenderAppApi,
-                             &s_tUdpSender, &s_tBroker1, NULL, NULL);
+    tStatus = SenderApp_Init(&s_tSenderApp,
+                             &s_tUdpSender.tRoot, &s_tBroker1, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* 8. Initialize MonitorApp */
-    tStatus = MonitorApp_Init(&s_tMonitorApp, &g_tMonitorAppApi,
+    tStatus = MonitorApp_Init(&s_tMonitorApp,
                               &s_tBroker1, &s_tMsgArray1.tRoot, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* 9. Initialize UdpBridgeApp */
-    tStatus = UdpBridgeApp_Init(&s_tBridgeApp, &g_tUdpBridgeAppApi,
-                                &s_tUdpReceiver, &s_tBroker2, NULL, NULL);
+    tStatus = UdpBridgeApp_Init(&s_tBridgeApp,
+                                &s_tUdpReceiver.tRoot, &s_tBroker2, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
     /* 10. Initialize ProcessorApp */
-    tStatus = ProcessorApp_Init(&s_tProcessorApp, &g_tProcessorAppApi,
+    tStatus = ProcessorApp_Init(&s_tProcessorApp,
                                 &s_tBroker2, &s_tMsgArray2.tRoot, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
@@ -233,38 +236,33 @@ int main(void)
     s_tSch2.zAppsPerMinorFrame = 2u;
     s_tSch2.zNumMinorFrames    = 1u;
 
-    /* 13. Initialize Thread 1 */
-    tStatus = JunoThread_Init(&s_tThread1, &g_junoThreadLinuxApi, NULL, NULL);
+    /* 13. Initialize and spawn Thread 1 (RAII) */
+    tStatus = JunoThread_LinuxInit(&s_tThread1, Thread1Entry, &s_tThread1.tRoot, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
 
-    /* 14. Initialize Thread 2 */
-    tStatus = JunoThread_Init(&s_tThread2, &g_junoThreadLinuxApi, NULL, NULL);
-    if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
-
-    /* Start Thread 1 */
-    tStatus = s_tThread1.ptApi->Create(&s_tThread1, Thread1Entry, &s_tThread1);
-    if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
-
-    /* Start Thread 2; on failure stop and join Thread 1 before returning */
-    tStatus = s_tThread2.ptApi->Create(&s_tThread2, Thread2Entry, &s_tThread2);
+    /* 14. Initialize and spawn Thread 2 (RAII); on failure stop and join Thread 1 first */
+    tStatus = JunoThread_LinuxInit(&s_tThread2, Thread2Entry, &s_tThread2.tRoot, NULL, NULL);
     if (tStatus != JUNO_STATUS_SUCCESS)
     {
-        tStatus = s_tThread1.ptApi->Stop(&s_tThread1);
-        tStatus = s_tThread1.ptApi->Join(&s_tThread1);
+        s_tThread1.tRoot.ptApi->Stop(&s_tThread1.tRoot);
+        s_tThread1.tRoot.ptApi->Join(&s_tThread1.tRoot);
+        s_tThread1.tRoot.ptApi->Free(&s_tThread1.tRoot);
         return 1;
     }
 
     sleep(10);
 
     /* Cooperative shutdown — Stop errors are non-fatal */
-    tStatus = s_tThread1.ptApi->Stop(&s_tThread1);
-    tStatus = s_tThread2.ptApi->Stop(&s_tThread2);
+    s_tThread1.tRoot.ptApi->Stop(&s_tThread1.tRoot);
+    s_tThread2.tRoot.ptApi->Stop(&s_tThread2.tRoot);
 
-    tStatus = s_tThread1.ptApi->Join(&s_tThread1);
+    tStatus = s_tThread1.tRoot.ptApi->Join(&s_tThread1.tRoot);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
+    s_tThread1.tRoot.ptApi->Free(&s_tThread1.tRoot);
 
-    tStatus = s_tThread2.ptApi->Join(&s_tThread2);
+    tStatus = s_tThread2.tRoot.ptApi->Join(&s_tThread2.tRoot);
     if (tStatus != JUNO_STATUS_SUCCESS) { return 1; }
+    s_tThread2.tRoot.ptApi->Free(&s_tThread2.tRoot);
 
     return 0;
 }

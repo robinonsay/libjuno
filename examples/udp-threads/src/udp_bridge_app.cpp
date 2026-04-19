@@ -21,21 +21,21 @@
 #include <stdio.h>
 
 /* --------------------------------------------------------------------------
- * Forward declarations of lifecycle functions (referenced by vtable below)
+ * Forward declarations of static lifecycle functions (referenced by vtable below)
  * -------------------------------------------------------------------------- */
 
-JUNO_STATUS_T UdpBridgeApp_OnStart(JUNO_APP_ROOT_T *ptApp);
-JUNO_STATUS_T UdpBridgeApp_OnProcess(JUNO_APP_ROOT_T *ptApp);
-JUNO_STATUS_T UdpBridgeApp_OnExit(JUNO_APP_ROOT_T *ptApp);
+static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp);
+static JUNO_STATUS_T OnProcess(JUNO_APP_ROOT_T *ptApp);
+static JUNO_STATUS_T OnExit(JUNO_APP_ROOT_T *ptApp);
 
 /* --------------------------------------------------------------------------
- * Global vtable
+ * Internal vtable — static, never exposed outside this translation unit
  * -------------------------------------------------------------------------- */
 
-const JUNO_APP_API_T g_tUdpBridgeAppApi = {
-    UdpBridgeApp_OnStart,
-    UdpBridgeApp_OnProcess,
-    UdpBridgeApp_OnExit
+static const JUNO_APP_API_T s_tUdpBridgeAppApi = {
+    OnStart,
+    OnProcess,
+    OnExit
 };
 
 /* --------------------------------------------------------------------------
@@ -45,7 +45,6 @@ const JUNO_APP_API_T g_tUdpBridgeAppApi = {
 // @{"req": ["REQ-UDPAPP-011"]}
 JUNO_STATUS_T UdpBridgeApp_Init(
     UDP_BRIDGE_APP_T              *ptApp,
-    const JUNO_APP_API_T          *ptApi,
     JUNO_UDP_ROOT_T               *ptUdp,
     JUNO_SB_BROKER_ROOT_T         *ptBroker,
     JUNO_FAILURE_HANDLER_T         pfcnFailureHandler,
@@ -53,11 +52,10 @@ JUNO_STATUS_T UdpBridgeApp_Init(
 )
 {
     JUNO_ASSERT_EXISTS(ptApp);
-    JUNO_ASSERT_EXISTS(ptApi);
     JUNO_ASSERT_EXISTS(ptUdp);
     JUNO_ASSERT_EXISTS(ptBroker);
 
-    ptApp->tRoot.ptApi                      = ptApi;
+    ptApp->tRoot.ptApi                      = &s_tUdpBridgeAppApi;
     ptApp->ptUdp                            = ptUdp;
     ptApp->ptBroker                         = ptBroker;
     ptApp->tRoot.JUNO_FAILURE_HANDLER       = pfcnFailureHandler;
@@ -71,22 +69,14 @@ JUNO_STATUS_T UdpBridgeApp_Init(
  * -------------------------------------------------------------------------- */
 
 // @{"req": ["REQ-UDPAPP-012"]}
-JUNO_STATUS_T UdpBridgeApp_OnStart(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
-    UDP_BRIDGE_APP_T *ptBridge = (UDP_BRIDGE_APP_T *)ptApp;
-
-    JUNO_UDP_CFG_T tCfg;
-    tCfg.pcAddress  = "127.0.0.1";
-    tCfg.uPort      = 9000u;
-    tCfg.uTimeoutMs = 100u;
-    tCfg.bIsReceiver = true;
-
-    return ptBridge->ptUdp->ptApi->Open(ptBridge->ptUdp, &tCfg);
+    return JUNO_STATUS_SUCCESS;
 }
 
 // @{"req": ["REQ-UDPAPP-013", "REQ-UDPAPP-014"]}
-JUNO_STATUS_T UdpBridgeApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnProcess(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
     UDP_BRIDGE_APP_T *ptBridge = (UDP_BRIDGE_APP_T *)ptApp;
@@ -116,9 +106,9 @@ JUNO_STATUS_T UdpBridgeApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
 }
 
 // @{"req": ["REQ-UDPAPP-015"]}
-JUNO_STATUS_T UdpBridgeApp_OnExit(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnExit(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
     UDP_BRIDGE_APP_T *ptBridge = (UDP_BRIDGE_APP_T *)ptApp;
-    return ptBridge->ptUdp->ptApi->Close(ptBridge->ptUdp);
+    return ptBridge->ptUdp->ptApi->Free(ptBridge->ptUdp);
 }

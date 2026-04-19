@@ -99,17 +99,16 @@ typedef struct MONITOR_APP_TAG MONITOR_APP_T;
  * @brief Initialize a MonitorApp instance.
  *
  * @details
- *  Wires the vtable pointer, stores all injected dependencies, and verifies
+ *  Wires the internal vtable, stores all injected dependencies, and verifies
  *  that no required pointer is NULL. The pipe (@c tPipe) is NOT initialized
  *  here; pipe initialization is deferred to @c OnStart so that the broker
  *  registration occurs at the correct point in the application lifecycle.
  *
  *  The caller must ensure:
- *  - @p ptApp, @p ptApi, @p ptBroker, and @p ptPipeArray are all non-NULL.
+ *  - @p ptApp, @p ptBroker, and @p ptPipeArray are all non-NULL.
  *  - @p ptBroker and @p ptPipeArray outlive this @c MONITOR_APP_T instance.
  *
  * @param ptApp               Caller-owned app storage; must be non-NULL.
- * @param ptApi               Vtable for the app lifecycle; must be non-NULL.
  * @param ptBroker            Thread 1's broker instance; must be non-NULL.
  * @param ptPipeArray         Backing array for the pipe's internal queue; must be
  *                            non-NULL and must outlive the pipe registration.
@@ -122,73 +121,11 @@ typedef struct MONITOR_APP_TAG MONITOR_APP_T;
  */
 JUNO_STATUS_T MonitorApp_Init(
     MONITOR_APP_T              *ptApp,
-    const JUNO_APP_API_T       *ptApi,
     JUNO_SB_BROKER_ROOT_T      *ptBroker,
     JUNO_DS_ARRAY_ROOT_T       *ptPipeArray,
     JUNO_FAILURE_HANDLER_T      pfcnFailureHandler,
     void                       *pvFailureUserData
 );
-
-/* --------------------------------------------------------------------------
- * Lifecycle function declarations
- * -------------------------------------------------------------------------- */
-
-/**
- * @brief Initialize the subscription pipe and register it with the broker.
- *
- * @details
- *  Calls @c JunoSb_PipeInit to associate the embedded @c tPipe with
- *  @c UDPTH_MSG_MID and its backing array, then calls
- *  @c ptBroker->ptApi->RegisterSubscriber to complete the subscription.
- *  After this call the broker enqueues a copy of every message published
- *  under @c UDPTH_MSG_MID into @c ptMonitor->tPipe.
- *
- * @param ptApp Application root pointer; cast internally to @c MONITOR_APP_T*.
- * @return @c JUNO_STATUS_SUCCESS on success; non-zero on failure.
- */
-JUNO_STATUS_T MonitorApp_OnStart(JUNO_APP_ROOT_T *ptApp);
-
-/**
- * @brief Drain the subscription pipe and log all available messages.
- *
- * @details
- *  Dequeues @c UDP_THREAD_MSG_T messages from @c tPipe in a loop until the
- *  pipe is empty (@c JUNO_STATUS_OOB_ERROR is returned by @c Dequeue, which
- *  is the queue's normal empty-drain sentinel). Any other non-success status
- *  is propagated to the scheduler.
- *
- * @param ptApp Application root pointer; cast internally to @c MONITOR_APP_T*.
- * @return @c JUNO_STATUS_SUCCESS when the pipe is fully drained; non-zero on
- *         an unexpected dequeue error.
- */
-JUNO_STATUS_T MonitorApp_OnProcess(JUNO_APP_ROOT_T *ptApp);
-
-/**
- * @brief No-op exit handler.
- *
- * @details
- *  MonitorApp holds no resources that require explicit release. The embedded
- *  @c tPipe is released automatically when the @c MONITOR_APP_T struct goes
- *  out of scope or the process exits.
- *
- * @param ptApp Application root pointer; cast internally to @c MONITOR_APP_T*.
- * @return @c JUNO_STATUS_SUCCESS unconditionally.
- */
-JUNO_STATUS_T MonitorApp_OnExit(JUNO_APP_ROOT_T *ptApp);
-
-/* --------------------------------------------------------------------------
- * Vtable
- * -------------------------------------------------------------------------- */
-
-/**
- * @brief Statically allocated MonitorApp vtable.
- *
- * @details
- *  Defined in @c monitor_app.c. Pass to @c MonitorApp_Init as @p ptApi.
- *  Must remain valid for the lifetime of all @c MONITOR_APP_T instances
- *  initialized with it.
- */
-extern const JUNO_APP_API_T g_tMonitorAppApi;
 
 #ifdef __cplusplus
 }

@@ -26,30 +26,39 @@ extern "C" {
 #include <stdalign.h>
 
 /* --------------------------------------------------------------------------
+ * Forward declarations — static lifecycle functions
+ * -------------------------------------------------------------------------- */
+
+static JUNO_STATUS_T OnStart  (JUNO_APP_ROOT_T *ptApp);
+static JUNO_STATUS_T OnProcess(JUNO_APP_ROOT_T *ptApp);
+static JUNO_STATUS_T OnExit   (JUNO_APP_ROOT_T *ptApp);
+
+/* --------------------------------------------------------------------------
+ * Production vtable — static, internal to this translation unit
+ * -------------------------------------------------------------------------- */
+
+static const JUNO_APP_API_T s_tSenderAppApi = {
+    OnStart,
+    OnProcess,
+    OnExit
+};
+
+/* --------------------------------------------------------------------------
  * Lifecycle vtable implementations
  * -------------------------------------------------------------------------- */
 
 // @{"req": ["REQ-UDPAPP-003"]}
-JUNO_STATUS_T SenderApp_OnStart(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
     SENDER_APP_T *ptSender = (SENDER_APP_T *)ptApp;
-
-    JUNO_UDP_CFG_T tCfg;
-    tCfg.pcAddress   = "127.0.0.1";
-    tCfg.uPort       = 9000u;
-    tCfg.uTimeoutMs  = 0u;
-    tCfg.bIsReceiver = false;
-
-    JUNO_STATUS_T tStatus = ptSender->ptUdp->ptApi->Open(ptSender->ptUdp, &tCfg);
-    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
 
     ptSender->_uSeqNum = 0u;
     return JUNO_STATUS_SUCCESS;
 }
 
 // @{"req": ["REQ-UDPAPP-004", "REQ-UDPAPP-005", "REQ-UDPAPP-006"]}
-JUNO_STATUS_T SenderApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnProcess(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
     SENDER_APP_T *ptSender = (SENDER_APP_T *)ptApp;
@@ -80,22 +89,12 @@ JUNO_STATUS_T SenderApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
 }
 
 // @{"req": ["REQ-UDPAPP-007"]}
-JUNO_STATUS_T SenderApp_OnExit(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnExit(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
     SENDER_APP_T *ptSender = (SENDER_APP_T *)ptApp;
-    return ptSender->ptUdp->ptApi->Close(ptSender->ptUdp);
+    return ptSender->ptUdp->ptApi->Free(ptSender->ptUdp);
 }
-
-/* --------------------------------------------------------------------------
- * Production vtable
- * -------------------------------------------------------------------------- */
-
-const JUNO_APP_API_T g_tSenderAppApi = {
-    SenderApp_OnStart,
-    SenderApp_OnProcess,
-    SenderApp_OnExit
-};
 
 /* --------------------------------------------------------------------------
  * Init — wire vtable and inject dependencies
@@ -104,7 +103,6 @@ const JUNO_APP_API_T g_tSenderAppApi = {
 // @{"req": ["REQ-UDPAPP-002"]}
 JUNO_STATUS_T SenderApp_Init(
     SENDER_APP_T              *ptApp,
-    const JUNO_APP_API_T      *ptApi,
     JUNO_UDP_ROOT_T           *ptUdp,
     JUNO_SB_BROKER_ROOT_T     *ptBroker,
     JUNO_FAILURE_HANDLER_T     pfcnFailureHandler,
@@ -112,11 +110,10 @@ JUNO_STATUS_T SenderApp_Init(
 )
 {
     JUNO_ASSERT_EXISTS(ptApp);
-    JUNO_ASSERT_EXISTS(ptApi);
     JUNO_ASSERT_EXISTS(ptUdp);
     JUNO_ASSERT_EXISTS(ptBroker);
 
-    ptApp->tRoot.ptApi                  = ptApi;
+    ptApp->tRoot.ptApi                  = &s_tSenderAppApi;
     ptApp->tRoot.JUNO_FAILURE_HANDLER   = pfcnFailureHandler;
     ptApp->tRoot.JUNO_FAILURE_USER_DATA = (JUNO_USER_DATA_T *)pvFailureUserData;
     ptApp->ptUdp                        = ptUdp;

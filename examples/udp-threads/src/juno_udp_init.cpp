@@ -35,9 +35,10 @@
  * @brief Initialise a UDP module root with a concrete vtable and failure handler.
  *
  * @details
- *  Wires @p ptApi into @p ptRoot->ptApi, stores the optional failure handler
- *  and user data, and sets @p ptRoot->_iSockFd to @c -1 (no socket open).
- *  Must be called before any vtable operation on the root.
+ *  Wires @p ptApi into @p ptRoot->ptApi and stores the optional failure handler
+ *  and user data. Must be called before any vtable operation on the root.
+ *  Platform-specific socket state (fd, address) is owned by the derivation
+ *  (@c JUNO_UDP_LINUX_T) and initialised in @c JunoUdp_LinuxInit.
  *
  * @param ptRoot             Caller-owned root storage; must be non-NULL.
  * @param ptApi              Vtable (Linux implementation or test double); must be non-NULL.
@@ -60,7 +61,6 @@ JUNO_STATUS_T JunoUdp_Init(
     ptRoot->ptApi                       = ptApi;
     ptRoot->JUNO_FAILURE_HANDLER        = pfcnFailureHandler;
     ptRoot->JUNO_FAILURE_USER_DATA      = (JUNO_USER_DATA_T *)pvFailureUserData;
-    ptRoot->_iSockFd                    = -1;
 
     return JUNO_STATUS_SUCCESS;
 }

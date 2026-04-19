@@ -28,68 +28,29 @@
  * @brief Linux/pthreads implementation of the Thread module vtable.
  *
  * @details
- *  Provides the @c g_junoThreadLinuxApi constant vtable that binds
- *  POSIX pthread operations to the LibJuno Thread module interface.
- *  pthreads headers are included only in this translation unit; the
- *  public @c thread.h header remains freestanding-clean.
+ *  Provides the static @c s_tJunoThreadLinuxApi vtable and the RAII entry
+ *  point @c JunoThread_LinuxInit.  Thread creation is handled entirely inside
+ *  @c JunoThread_LinuxInit (RAII pattern); no separate @c Create vtable slot
+ *  exists.  The @c pthread_t handle is stored in the @c JUNO_THREAD_LINUX_T
+ *  derivation, not in the freestanding root, so @c thread_api.h remains
+ *  compilable without POSIX headers.
+ *
+ *  pthreads headers are included only in this translation unit via
+ *  @c juno/thread_linux.h; all other translation units that need only the
+ *  generic interface include @c juno/thread_api.h.
  */
 
 extern "C"
 {
-#include "juno/thread.h"
+#include "juno/thread_linux.h"
 #include "juno/status.h"
 #include "juno/macros.h"
+#include <string.h>
 }
-
-#include <pthread.h>
-#include <stdint.h>
 
 /* -------------------------------------------------------------------------
  * Static vtable function implementations
  * ---------------------------------------------------------------------- */
-
-/**
- * @brief Create and start an OS thread via pthreads.
- *
- * @details
- *  Guards against a double-create by checking @c _uHandle.  Clears @c bStop
- *  before spawning so the entry function always starts with a clean flag.
- *  The @c pthread_t handle is stored as a @c uintptr_t opaque value.
- *
- * @param ptRoot      Thread module root instance (caller-owned). Must not be NULL.
- * @param pfcnEntry   Thread entry function. Must not be NULL.
- * @param pvArg       Argument forwarded verbatim to @p pfcnEntry.
- * @return @c JUNO_STATUS_SUCCESS on success.
- * @return @c JUNO_STATUS_NULLPTR_ERROR if @p ptRoot or @p pfcnEntry is NULL.
- * @return @c JUNO_STATUS_REF_IN_USE_ERROR if a thread is already running.
- * @return @c JUNO_STATUS_ERR if @c pthread_create() fails.
- */
-// @{"req": ["REQ-THREAD-003", "REQ-THREAD-004", "REQ-THREAD-010", "REQ-THREAD-015"]}
-static JUNO_STATUS_T Create(
-    JUNO_THREAD_ROOT_T *ptRoot,
-    void *(*pfcnEntry)(void *),
-    void *pvArg)
-{
-    JUNO_ASSERT_EXISTS(ptRoot && pfcnEntry);
-
-    if (ptRoot->_uHandle != 0u)
-    {
-        JUNO_FAIL_ROOT(JUNO_STATUS_REF_IN_USE_ERROR, ptRoot, "thread already running");
-        return JUNO_STATUS_REF_IN_USE_ERROR;
-    }
-
-    ptRoot->bStop = false;
-
-    pthread_t tHandle;
-    if (pthread_create(&tHandle, NULL, pfcnEntry, pvArg) != 0)
-    {
-        JUNO_FAIL_ROOT(JUNO_STATUS_ERR, ptRoot, "pthread_create() failed");
-        return JUNO_STATUS_ERR;
-    }
-
-    ptRoot->_uHandle = (uintptr_t)tHandle;
-    return JUNO_STATUS_SUCCESS;
-}
 
 /**
  * @brief Signal the managed thread to exit cooperatively.
@@ -114,9 +75,9 @@ static JUNO_STATUS_T Stop(JUNO_THREAD_ROOT_T *ptRoot)
  * @brief Block until the managed thread exits.
  *
  * @details
- *  Idempotent: returns @c JUNO_STATUS_SUCCESS immediately if @c _uHandle is
- *  already @c 0 (thread was never started or has already been joined).
- *  On success, resets @c _uHandle to @c 0 so the root may be reused.
+ *  Calls @c pthread_join on the handle stored in the Linux derivation and
+ *  blocks until the thread entry function returns.  On success, zeroes the
+ *  @c _tHandle field so the instance may be safely reused or freed.
  *
  * @param ptRoot Thread module root instance (caller-owned). Must not be NULL.
  * @return @c JUNO_STATUS_SUCCESS on success.
@@ -127,37 +88,94 @@ static JUNO_STATUS_T Stop(JUNO_THREAD_ROOT_T *ptRoot)
 static JUNO_STATUS_T Join(JUNO_THREAD_ROOT_T *ptRoot)
 {
     JUNO_ASSERT_EXISTS(ptRoot);
-
-    if (ptRoot->_uHandle == 0u)
-    {
-        /* Already stopped or never started — idempotent success */
-        return JUNO_STATUS_SUCCESS;
-    }
-
-    pthread_t tHandle = (pthread_t)ptRoot->_uHandle;
-    if (pthread_join(tHandle, NULL) != 0)
+    JUNO_THREAD_LINUX_T *ptLinux = (JUNO_THREAD_LINUX_T *)(ptRoot);
+    if (pthread_join(ptLinux->_tHandle, NULL) != 0)
     {
         JUNO_FAIL_ROOT(JUNO_STATUS_ERR, ptRoot, "pthread_join() failed");
         return JUNO_STATUS_ERR;
     }
+    memset(&ptLinux->_tHandle, 0, sizeof(pthread_t));
+    return JUNO_STATUS_SUCCESS;
+}
 
-    ptRoot->_uHandle = 0u;
+/**
+ * @brief Release platform resources held by the Thread module instance.
+ *
+ * @details
+ *  Zeroes the @c _tHandle field in the Linux derivation, resetting it to a
+ *  known-clean state.  Must be called only after @c Join has returned
+ *  successfully.
+ *
+ * @param ptRoot Thread module root instance (caller-owned). Must not be NULL.
+ * @return @c JUNO_STATUS_SUCCESS on success.
+ * @return @c JUNO_STATUS_NULLPTR_ERROR if @p ptRoot is NULL.
+ */
+// @{"req": ["REQ-THREAD-008", "REQ-THREAD-009"]}
+static JUNO_STATUS_T Free(JUNO_THREAD_ROOT_T *ptRoot)
+{
+    JUNO_ASSERT_EXISTS(ptRoot);
+    JUNO_THREAD_LINUX_T *ptLinux = (JUNO_THREAD_LINUX_T *)(ptRoot);
+    memset(&ptLinux->_tHandle, 0, sizeof(pthread_t));
     return JUNO_STATUS_SUCCESS;
 }
 
 /* -------------------------------------------------------------------------
  * Platform vtable definition
  * ---------------------------------------------------------------------- */
+// @{"req": ["REQ-THREAD-002", "REQ-THREAD-014"]}
+static const JUNO_THREAD_API_T s_tJunoThreadLinuxApi = {
+    Stop,
+    Join,
+    Free
+};
+
+/* -------------------------------------------------------------------------
+ * Platform RAII initialisation
+ * ---------------------------------------------------------------------- */
 
 /**
- * @brief Linux/pthreads vtable for the Thread module.
+ * @brief Initialise a Thread module instance and immediately spawn the OS thread.
  *
  * @details
- *  Pass @c &g_junoThreadLinuxApi to @c JunoThread_Init on Linux/POSIX targets.
+ *  1. Guards @p ptThread and @p pfcnEntry (returns
+ *     @c JUNO_STATUS_NULLPTR_ERROR if either is NULL).
+ *  2. Calls @c JunoThread_Init to wire @c s_tJunoThreadLinuxApi, clear
+ *     @c bStop, and store the failure handler.
+ *  3. Zeroes @c ptThread->tLinux._tHandle.
+ *  4. Calls @c pthread_create; on failure returns @c JUNO_STATUS_ERR.
+ *  5. Stores the resulting @c pthread_t in @c ptThread->tLinux._tHandle.
+ *
+ * @param ptThread            Caller-owned @c JUNO_THREAD_T union. Must not be NULL.
+ * @param pfcnEntry           Thread entry function. Must not be NULL.
+ * @param pvArg               Argument forwarded verbatim to @p pfcnEntry; may be NULL.
+ * @param pfcnFailureHandler  Diagnostic callback invoked before any error return; may be NULL.
+ * @param pvFailureUserData   Opaque pointer threaded to @p pfcnFailureHandler; may be NULL.
+ * @return @c JUNO_STATUS_SUCCESS on success.
+ * @return @c JUNO_STATUS_NULLPTR_ERROR if a required pointer is NULL.
+ * @return @c JUNO_STATUS_ERR if @c pthread_create() fails.
  */
-// @{"req": ["REQ-THREAD-011"]}
-const JUNO_THREAD_API_T g_junoThreadLinuxApi = {
-    Create,
-    Stop,
-    Join
-};
+// @{"req": ["REQ-THREAD-003", "REQ-THREAD-004", "REQ-THREAD-010", "REQ-THREAD-011", "REQ-THREAD-012", "REQ-THREAD-013", "REQ-THREAD-015"]}
+extern "C" JUNO_STATUS_T JunoThread_LinuxInit(
+    JUNO_THREAD_T          *ptThread,
+    void *(*pfcnEntry)(void *),
+    void                   *pvArg,
+    JUNO_FAILURE_HANDLER_T  pfcnFailureHandler,
+    void                   *pvFailureUserData
+)
+{
+    JUNO_ASSERT_EXISTS(ptThread);
+    JUNO_ASSERT_EXISTS(pfcnEntry);
+    JUNO_THREAD_ROOT_T *ptRoot = &ptThread->tRoot;
+    JUNO_STATUS_T tStatus = JunoThread_Init(
+        ptRoot, &s_tJunoThreadLinuxApi,
+        pfcnFailureHandler, pvFailureUserData
+    );
+    JUNO_ASSERT_SUCCESS(tStatus, return tStatus);
+    memset(&ptThread->tLinux._tHandle, 0, sizeof(pthread_t));
+    if (pthread_create(&ptThread->tLinux._tHandle, NULL, pfcnEntry, pvArg) != 0)
+    {
+        JUNO_FAIL_ROOT(JUNO_STATUS_ERR, ptRoot, "pthread_create() failed");
+        return JUNO_STATUS_ERR;
+    }
+    return JUNO_STATUS_SUCCESS;
+}

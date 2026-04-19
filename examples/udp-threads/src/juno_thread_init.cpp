@@ -23,19 +23,24 @@
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "juno/thread.h"
+#include "juno/thread_api.h"
 #include "juno/macros.h"
 
 /**
  * @brief Initialize a Thread module root instance.
  *
  * @details
- *  Wires the vtable pointer into the root, zeroes the opaque OS thread handle
- *  sentinel, clears the cooperative stop flag, and stores the optional failure
- *  handler and its associated user-data pointer. This function must be called
- *  before any vtable dispatch function (Create, Stop, Join).
+ *  Wires the vtable pointer into the root, clears the cooperative stop flag,
+ *  and stores the optional failure handler and its associated user-data pointer.
+ *  This function must be called before any vtable dispatch function
+ *  (Stop, Join, Free).
+ *
+ *  The OS thread handle is not initialised here; it is stored in the
+ *  platform-specific derivation and set by @c JunoThread_LinuxInit after
+ *  a successful @c pthread_create call.
  *
  * @param ptRoot               Caller-owned root storage. Must not be NULL.
+ * @param ptApi                Vtable (e.g., @c &g_junoThreadLinuxApi
  *                             or a test double). Must not be NULL.
  * @param pfcnFailureHandler   Optional diagnostic callback; may be NULL.
  * @param pvFailureUserData    Opaque user data passed to @p pfcnFailureHandler;
@@ -55,7 +60,6 @@ extern "C" JUNO_STATUS_T JunoThread_Init(
     JUNO_ASSERT_EXISTS(ptApi);
 
     ptRoot->ptApi                  = ptApi;
-    ptRoot->_uHandle               = 0;
     ptRoot->bStop                  = false;
     ptRoot->_pfcnFailureHandler    = pfcnFailureHandler;
     ptRoot->_pvFailureUserData     = pvFailureUserData;

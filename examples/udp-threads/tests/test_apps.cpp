@@ -34,17 +34,15 @@ static JUNO_SB_BROKER_ROOT_T s_tBrokerStub;
 static UDPTH_MSG_ARRAY_T     s_tMsgArray;
 static JUNO_SB_PIPE_T       *s_aptBrokerPipeRegistry[4u];
 
-/* UDP stub vtable — Open/Send/Close return SUCCESS; Receive returns TIMEOUT so
- * UdpBridgeApp_OnProcess sees a quiet cycle and returns SUCCESS. */
-static JUNO_STATUS_T UdpStub_Open(JUNO_UDP_ROOT_T *ptRoot, const JUNO_UDP_CFG_T *ptCfg)
-    { (void)ptRoot; (void)ptCfg; return JUNO_STATUS_SUCCESS; }
+/* UDP stub vtable — Send/Free return SUCCESS; Receive returns TIMEOUT so
+ * UdpBridgeApp OnProcess sees a quiet cycle and returns SUCCESS. */
 static JUNO_STATUS_T UdpStub_Send(JUNO_UDP_ROOT_T *ptRoot, const UDP_THREAD_MSG_T *ptMsg)
     { (void)ptRoot; (void)ptMsg; return JUNO_STATUS_SUCCESS; }
 static JUNO_STATUS_T UdpStub_Receive(JUNO_UDP_ROOT_T *ptRoot, UDP_THREAD_MSG_T *ptMsg)
     { (void)ptRoot; (void)ptMsg; return JUNO_STATUS_TIMEOUT_ERROR; }
-static JUNO_STATUS_T UdpStub_Close(JUNO_UDP_ROOT_T *ptRoot)
+static JUNO_STATUS_T UdpStub_Free(JUNO_UDP_ROOT_T *ptRoot)
     { (void)ptRoot; return JUNO_STATUS_SUCCESS; }
-static const JUNO_UDP_API_T s_tUdpStubApi = { UdpStub_Open, UdpStub_Send, UdpStub_Receive, UdpStub_Close };
+static const JUNO_UDP_API_T s_tUdpStubApi = { UdpStub_Send, UdpStub_Receive, UdpStub_Free };
 
 /* ==========================================================================
  * Test-double vtable (used for dispatch verification tests)
@@ -121,29 +119,12 @@ TEST_F(SenderAppTest, InitNullAppReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = SenderApp_Init(
         nullptr,
-        &s_tTestAppApi,
         &s_tUdpStub,
         &s_tBrokerStub,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-}
-
-// @{"verify": ["REQ-UDPAPP-002"]}
-TEST_F(SenderAppTest, InitNullApiReturnsNullptrError)
-{
-    JUNO_STATUS_T eStatus = SenderApp_Init(
-        &tSender,
-        nullptr,
-        &s_tUdpStub,
-        &s_tBrokerStub,
-        nullptr,
-        nullptr
-    );
-    EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-    /* ptApi must NOT have been written on failure */
-    EXPECT_EQ(nullptr, tSender.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-002"]}
@@ -151,7 +132,6 @@ TEST_F(SenderAppTest, InitNullUdpReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = SenderApp_Init(
         &tSender,
-        &s_tTestAppApi,
         nullptr,
         &s_tBrokerStub,
         nullptr,
@@ -165,7 +145,6 @@ TEST_F(SenderAppTest, InitNullBrokerReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = SenderApp_Init(
         &tSender,
-        &s_tTestAppApi,
         &s_tUdpStub,
         nullptr,
         nullptr,
@@ -183,15 +162,14 @@ TEST_F(SenderAppTest, InitHappyPathWiresVtableAndStoresPointers)
 {
     JUNO_STATUS_T eStatus = SenderApp_Init(
         &tSender,
-        &s_tTestAppApi,
         &s_tUdpStub,
         &s_tBrokerStub,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    /* Vtable wired */
-    EXPECT_EQ(&s_tTestAppApi, tSender.tRoot.ptApi);
+    /* Internal vtable wired (non-NULL) */
+    EXPECT_NE(nullptr,         tSender.tRoot.ptApi);
     /* Dependency pointers stored */
     EXPECT_EQ(&s_tUdpStub,    tSender.ptUdp);
     EXPECT_EQ(&s_tBrokerStub, tSender.ptBroker);
@@ -205,7 +183,6 @@ TEST_F(SenderAppTest, InitNullFailureHandlerIsAccepted)
     /* pfcnFailureHandler and pvFailureUserData are optional (may be NULL) */
     JUNO_STATUS_T eStatus = SenderApp_Init(
         &tSender,
-        &s_tTestAppApi,
         &s_tUdpStub,
         &s_tBrokerStub,
         nullptr,
@@ -219,66 +196,64 @@ TEST_F(SenderAppTest, InitNullFailureHandlerIsAccepted)
 /* --------------------------------------------------------------------------
  * SenderApp vtable dispatch verification
  *
- * Uses the test-double vtable so we confirm dispatch goes through ptApi
- * rather than being a direct call.
+ * Confirms that the internal vtable is wired and each slot can be dispatched
+ * through ptApi, returning SUCCESS for the production implementation.
  * -------------------------------------------------------------------------- */
 
 // @{"verify": ["REQ-UDPAPP-002"]}
 TEST_F(SenderAppTest, VtableDispatchOnStart)
 {
-    SenderApp_Init(&tSender, &s_tTestAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    SenderApp_Init(&tSender, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tSender.tRoot.ptApi->OnStart);
     JUNO_STATUS_T eStatus = tSender.tRoot.ptApi->OnStart(&tSender.tRoot);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnStartCalled);
 }
 
 // @{"verify": ["REQ-UDPAPP-002"]}
 TEST_F(SenderAppTest, VtableDispatchOnProcess)
 {
-    SenderApp_Init(&tSender, &s_tTestAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    SenderApp_Init(&tSender, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tSender.tRoot.ptApi->OnProcess);
     JUNO_STATUS_T eStatus = tSender.tRoot.ptApi->OnProcess(&tSender.tRoot);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnProcessCalled);
 }
 
 // @{"verify": ["REQ-UDPAPP-002"]}
 TEST_F(SenderAppTest, VtableDispatchOnExit)
 {
-    SenderApp_Init(&tSender, &s_tTestAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    SenderApp_Init(&tSender, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tSender.tRoot.ptApi->OnExit);
     JUNO_STATUS_T eStatus = tSender.tRoot.ptApi->OnExit(&tSender.tRoot);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnExitCalled);
 }
 
 /* --------------------------------------------------------------------------
  * SenderApp production vtable presence
  *
- * Verify that g_tSenderAppApi slots are not null and dispatch returns SUCCESS
- * for each lifecycle function (stub implementations).
+ * Verify that the internal vtable slots are not null and dispatch returns
+ * SUCCESS for each lifecycle function.
  * -------------------------------------------------------------------------- */
 
 // @{"verify": ["REQ-UDPAPP-002", "REQ-UDPAPP-003"]}
 TEST_F(SenderAppTest, ProductionVtableOnStartReturnsSuccess)
 {
-    SenderApp_Init(&tSender, &g_tSenderAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    SenderApp_Init(&tSender, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tSender.tRoot.ptApi->OnStart);
     JUNO_STATUS_T eStatus = tSender.tRoot.ptApi->OnStart(&tSender.tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    /* Confirm the vtable pointer itself points to the production vtable */
-    EXPECT_EQ(&g_tSenderAppApi, tSender.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-002", "REQ-UDPAPP-004", "REQ-UDPAPP-005", "REQ-UDPAPP-006"]}
 TEST_F(SenderAppTest, ProductionVtableOnProcessReturnsSuccess)
 {
-    SenderApp_Init(&tSender, &g_tSenderAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    SenderApp_Init(&tSender, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tSender.tRoot.ptApi->OnProcess);
     JUNO_STATUS_T eStatus = tSender.tRoot.ptApi->OnProcess(&tSender.tRoot);
@@ -288,7 +263,7 @@ TEST_F(SenderAppTest, ProductionVtableOnProcessReturnsSuccess)
 // @{"verify": ["REQ-UDPAPP-002", "REQ-UDPAPP-007"]}
 TEST_F(SenderAppTest, ProductionVtableOnExitReturnsSuccess)
 {
-    SenderApp_Init(&tSender, &g_tSenderAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    SenderApp_Init(&tSender, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tSender.tRoot.ptApi->OnExit);
     JUNO_STATUS_T eStatus = tSender.tRoot.ptApi->OnExit(&tSender.tRoot);
@@ -323,28 +298,12 @@ TEST_F(MonitorAppTest, InitNullAppReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = MonitorApp_Init(
         nullptr,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         &s_tMsgArray.tRoot,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-}
-
-// @{"verify": ["REQ-UDPAPP-008"]}
-TEST_F(MonitorAppTest, InitNullApiReturnsNullptrError)
-{
-    JUNO_STATUS_T eStatus = MonitorApp_Init(
-        &tMonitor,
-        nullptr,
-        &s_tBrokerStub,
-        &s_tMsgArray.tRoot,
-        nullptr,
-        nullptr
-    );
-    EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-    EXPECT_EQ(nullptr, tMonitor.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-008"]}
@@ -352,7 +311,6 @@ TEST_F(MonitorAppTest, InitNullBrokerReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = MonitorApp_Init(
         &tMonitor,
-        &s_tTestAppApi,
         nullptr,
         &s_tMsgArray.tRoot,
         nullptr,
@@ -366,7 +324,6 @@ TEST_F(MonitorAppTest, InitNullPipeArrayReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = MonitorApp_Init(
         &tMonitor,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         nullptr,
         nullptr,
@@ -384,15 +341,14 @@ TEST_F(MonitorAppTest, InitHappyPathWiresVtableAndStoresPointers)
 {
     JUNO_STATUS_T eStatus = MonitorApp_Init(
         &tMonitor,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         &s_tMsgArray.tRoot,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    /* Vtable wired */
-    EXPECT_EQ(&s_tTestAppApi,     tMonitor.tRoot.ptApi);
+    /* Internal vtable wired (not null) */
+    EXPECT_NE(nullptr,            tMonitor.tRoot.ptApi);
     /* Dependency pointers stored */
     EXPECT_EQ(&s_tBrokerStub,     tMonitor.ptBroker);
     EXPECT_EQ(&s_tMsgArray.tRoot,  tMonitor._ptPipeArray);
@@ -403,7 +359,6 @@ TEST_F(MonitorAppTest, InitNullFailureHandlerIsAccepted)
 {
     JUNO_STATUS_T eStatus = MonitorApp_Init(
         &tMonitor,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         &s_tMsgArray.tRoot,
         nullptr,
@@ -418,58 +373,20 @@ TEST_F(MonitorAppTest, InitNullFailureHandlerIsAccepted)
  * MonitorApp vtable dispatch verification
  * -------------------------------------------------------------------------- */
 
-// @{"verify": ["REQ-UDPAPP-008"]}
-TEST_F(MonitorAppTest, VtableDispatchOnStart)
-{
-    MonitorApp_Init(&tMonitor, &s_tTestAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
-
-    JUNO_STATUS_T eStatus = tMonitor.tRoot.ptApi->OnStart(&tMonitor.tRoot);
-
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnStartCalled);
-}
-
-// @{"verify": ["REQ-UDPAPP-008"]}
-TEST_F(MonitorAppTest, VtableDispatchOnProcess)
-{
-    MonitorApp_Init(&tMonitor, &s_tTestAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
-
-    JUNO_STATUS_T eStatus = tMonitor.tRoot.ptApi->OnProcess(&tMonitor.tRoot);
-
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnProcessCalled);
-}
-
-// @{"verify": ["REQ-UDPAPP-008"]}
-TEST_F(MonitorAppTest, VtableDispatchOnExit)
-{
-    MonitorApp_Init(&tMonitor, &s_tTestAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
-
-    JUNO_STATUS_T eStatus = tMonitor.tRoot.ptApi->OnExit(&tMonitor.tRoot);
-
-    EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnExitCalled);
-}
-
-/* --------------------------------------------------------------------------
- * MonitorApp production vtable presence
- * -------------------------------------------------------------------------- */
-
 // @{"verify": ["REQ-UDPAPP-008", "REQ-UDPAPP-009"]}
 TEST_F(MonitorAppTest, ProductionVtableOnStartReturnsSuccess)
 {
-    MonitorApp_Init(&tMonitor, &g_tMonitorAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    MonitorApp_Init(&tMonitor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tMonitor.tRoot.ptApi->OnStart);
     JUNO_STATUS_T eStatus = tMonitor.tRoot.ptApi->OnStart(&tMonitor.tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_EQ(&g_tMonitorAppApi, tMonitor.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-008", "REQ-UDPAPP-010"]}
 TEST_F(MonitorAppTest, ProductionVtableOnProcessReturnsSuccess)
 {
-    MonitorApp_Init(&tMonitor, &g_tMonitorAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    MonitorApp_Init(&tMonitor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
     tMonitor.tRoot.ptApi->OnStart(&tMonitor.tRoot);
 
     EXPECT_NE(nullptr, tMonitor.tRoot.ptApi->OnProcess);
@@ -480,7 +397,7 @@ TEST_F(MonitorAppTest, ProductionVtableOnProcessReturnsSuccess)
 // @{"verify": ["REQ-UDPAPP-008"]}
 TEST_F(MonitorAppTest, ProductionVtableOnExitReturnsSuccess)
 {
-    MonitorApp_Init(&tMonitor, &g_tMonitorAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    MonitorApp_Init(&tMonitor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tMonitor.tRoot.ptApi->OnExit);
     JUNO_STATUS_T eStatus = tMonitor.tRoot.ptApi->OnExit(&tMonitor.tRoot);
@@ -515,28 +432,12 @@ TEST_F(UdpBridgeAppTest, InitNullAppReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = UdpBridgeApp_Init(
         nullptr,
-        &s_tTestAppApi,
         &s_tUdpStub,
         &s_tBrokerStub,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-}
-
-// @{"verify": ["REQ-UDPAPP-011"]}
-TEST_F(UdpBridgeAppTest, InitNullApiReturnsNullptrError)
-{
-    JUNO_STATUS_T eStatus = UdpBridgeApp_Init(
-        &tBridge,
-        nullptr,
-        &s_tUdpStub,
-        &s_tBrokerStub,
-        nullptr,
-        nullptr
-    );
-    EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-    EXPECT_EQ(nullptr, tBridge.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-011"]}
@@ -544,7 +445,6 @@ TEST_F(UdpBridgeAppTest, InitNullUdpReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = UdpBridgeApp_Init(
         &tBridge,
-        &s_tTestAppApi,
         nullptr,
         &s_tBrokerStub,
         nullptr,
@@ -558,7 +458,6 @@ TEST_F(UdpBridgeAppTest, InitNullBrokerReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = UdpBridgeApp_Init(
         &tBridge,
-        &s_tTestAppApi,
         &s_tUdpStub,
         nullptr,
         nullptr,
@@ -576,15 +475,14 @@ TEST_F(UdpBridgeAppTest, InitHappyPathWiresVtableAndStoresPointers)
 {
     JUNO_STATUS_T eStatus = UdpBridgeApp_Init(
         &tBridge,
-        &s_tTestAppApi,
         &s_tUdpStub,
         &s_tBrokerStub,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    /* Vtable wired */
-    EXPECT_EQ(&s_tTestAppApi, tBridge.tRoot.ptApi);
+    /* Internal vtable wired (non-NULL) */
+    EXPECT_NE(nullptr, tBridge.tRoot.ptApi);
     /* Dependency pointers stored */
     EXPECT_EQ(&s_tUdpStub,    tBridge.ptUdp);
     EXPECT_EQ(&s_tBrokerStub, tBridge.ptBroker);
@@ -595,7 +493,6 @@ TEST_F(UdpBridgeAppTest, InitNullFailureHandlerIsAccepted)
 {
     JUNO_STATUS_T eStatus = UdpBridgeApp_Init(
         &tBridge,
-        &s_tTestAppApi,
         &s_tUdpStub,
         &s_tBrokerStub,
         nullptr,
@@ -613,34 +510,31 @@ TEST_F(UdpBridgeAppTest, InitNullFailureHandlerIsAccepted)
 // @{"verify": ["REQ-UDPAPP-011"]}
 TEST_F(UdpBridgeAppTest, VtableDispatchOnStart)
 {
-    UdpBridgeApp_Init(&tBridge, &s_tTestAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    UdpBridgeApp_Init(&tBridge, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tBridge.tRoot.ptApi->OnStart);
     JUNO_STATUS_T eStatus = tBridge.tRoot.ptApi->OnStart(&tBridge.tRoot);
-
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnStartCalled);
 }
 
 // @{"verify": ["REQ-UDPAPP-011"]}
 TEST_F(UdpBridgeAppTest, VtableDispatchOnProcess)
 {
-    UdpBridgeApp_Init(&tBridge, &s_tTestAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    UdpBridgeApp_Init(&tBridge, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tBridge.tRoot.ptApi->OnProcess);
     JUNO_STATUS_T eStatus = tBridge.tRoot.ptApi->OnProcess(&tBridge.tRoot);
-
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnProcessCalled);
 }
 
 // @{"verify": ["REQ-UDPAPP-011"]}
 TEST_F(UdpBridgeAppTest, VtableDispatchOnExit)
 {
-    UdpBridgeApp_Init(&tBridge, &s_tTestAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    UdpBridgeApp_Init(&tBridge, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tBridge.tRoot.ptApi->OnExit);
     JUNO_STATUS_T eStatus = tBridge.tRoot.ptApi->OnExit(&tBridge.tRoot);
-
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnExitCalled);
 }
 
 /* --------------------------------------------------------------------------
@@ -650,18 +544,17 @@ TEST_F(UdpBridgeAppTest, VtableDispatchOnExit)
 // @{"verify": ["REQ-UDPAPP-011", "REQ-UDPAPP-012"]}
 TEST_F(UdpBridgeAppTest, ProductionVtableOnStartReturnsSuccess)
 {
-    UdpBridgeApp_Init(&tBridge, &g_tUdpBridgeAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    UdpBridgeApp_Init(&tBridge, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tBridge.tRoot.ptApi->OnStart);
     JUNO_STATUS_T eStatus = tBridge.tRoot.ptApi->OnStart(&tBridge.tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_EQ(&g_tUdpBridgeAppApi, tBridge.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-011", "REQ-UDPAPP-013", "REQ-UDPAPP-014"]}
 TEST_F(UdpBridgeAppTest, ProductionVtableOnProcessReturnsSuccess)
 {
-    UdpBridgeApp_Init(&tBridge, &g_tUdpBridgeAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    UdpBridgeApp_Init(&tBridge, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tBridge.tRoot.ptApi->OnProcess);
     JUNO_STATUS_T eStatus = tBridge.tRoot.ptApi->OnProcess(&tBridge.tRoot);
@@ -671,7 +564,7 @@ TEST_F(UdpBridgeAppTest, ProductionVtableOnProcessReturnsSuccess)
 // @{"verify": ["REQ-UDPAPP-011", "REQ-UDPAPP-015"]}
 TEST_F(UdpBridgeAppTest, ProductionVtableOnExitReturnsSuccess)
 {
-    UdpBridgeApp_Init(&tBridge, &g_tUdpBridgeAppApi, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
+    UdpBridgeApp_Init(&tBridge, &s_tUdpStub, &s_tBrokerStub, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tBridge.tRoot.ptApi->OnExit);
     JUNO_STATUS_T eStatus = tBridge.tRoot.ptApi->OnExit(&tBridge.tRoot);
@@ -706,28 +599,12 @@ TEST_F(ProcessorAppTest, InitNullAppReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = ProcessorApp_Init(
         nullptr,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         &s_tMsgArray.tRoot,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-}
-
-// @{"verify": ["REQ-UDPAPP-016"]}
-TEST_F(ProcessorAppTest, InitNullApiReturnsNullptrError)
-{
-    JUNO_STATUS_T eStatus = ProcessorApp_Init(
-        &tProcessor,
-        nullptr,
-        &s_tBrokerStub,
-        &s_tMsgArray.tRoot,
-        nullptr,
-        nullptr
-    );
-    EXPECT_EQ(JUNO_STATUS_NULLPTR_ERROR, eStatus);
-    EXPECT_EQ(nullptr, tProcessor.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-016"]}
@@ -735,7 +612,6 @@ TEST_F(ProcessorAppTest, InitNullBrokerReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = ProcessorApp_Init(
         &tProcessor,
-        &s_tTestAppApi,
         nullptr,
         &s_tMsgArray.tRoot,
         nullptr,
@@ -749,7 +625,6 @@ TEST_F(ProcessorAppTest, InitNullPipeArrayReturnsNullptrError)
 {
     JUNO_STATUS_T eStatus = ProcessorApp_Init(
         &tProcessor,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         nullptr,
         nullptr,
@@ -767,15 +642,14 @@ TEST_F(ProcessorAppTest, InitHappyPathWiresVtableAndStoresPointers)
 {
     JUNO_STATUS_T eStatus = ProcessorApp_Init(
         &tProcessor,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         &s_tMsgArray.tRoot,
         nullptr,
         nullptr
     );
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    /* Vtable wired */
-    EXPECT_EQ(&s_tTestAppApi,    tProcessor.tRoot.ptApi);
+    /* Internal vtable wired (non-NULL) */
+    EXPECT_NE(nullptr,            tProcessor.tRoot.ptApi);
     /* Dependency pointers stored */
     EXPECT_EQ(&s_tBrokerStub,    tProcessor.ptBroker);
     EXPECT_EQ(&s_tMsgArray.tRoot, tProcessor._ptPipeArray);
@@ -786,7 +660,6 @@ TEST_F(ProcessorAppTest, InitNullFailureHandlerIsAccepted)
 {
     JUNO_STATUS_T eStatus = ProcessorApp_Init(
         &tProcessor,
-        &s_tTestAppApi,
         &s_tBrokerStub,
         &s_tMsgArray.tRoot,
         nullptr,
@@ -804,34 +677,35 @@ TEST_F(ProcessorAppTest, InitNullFailureHandlerIsAccepted)
 // @{"verify": ["REQ-UDPAPP-016"]}
 TEST_F(ProcessorAppTest, VtableDispatchOnStart)
 {
-    ProcessorApp_Init(&tProcessor, &s_tTestAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    ProcessorApp_Init(&tProcessor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tProcessor.tRoot.ptApi->OnStart);
     JUNO_STATUS_T eStatus = tProcessor.tRoot.ptApi->OnStart(&tProcessor.tRoot);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnStartCalled);
 }
 
 // @{"verify": ["REQ-UDPAPP-016"]}
 TEST_F(ProcessorAppTest, VtableDispatchOnProcess)
 {
-    ProcessorApp_Init(&tProcessor, &s_tTestAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    ProcessorApp_Init(&tProcessor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    tProcessor.tRoot.ptApi->OnStart(&tProcessor.tRoot);
 
+    EXPECT_NE(nullptr, tProcessor.tRoot.ptApi->OnProcess);
     JUNO_STATUS_T eStatus = tProcessor.tRoot.ptApi->OnProcess(&tProcessor.tRoot);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnProcessCalled);
 }
 
 // @{"verify": ["REQ-UDPAPP-016"]}
 TEST_F(ProcessorAppTest, VtableDispatchOnExit)
 {
-    ProcessorApp_Init(&tProcessor, &s_tTestAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    ProcessorApp_Init(&tProcessor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
 
+    EXPECT_NE(nullptr, tProcessor.tRoot.ptApi->OnExit);
     JUNO_STATUS_T eStatus = tProcessor.tRoot.ptApi->OnExit(&tProcessor.tRoot);
 
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_TRUE(s_bOnExitCalled);
 }
 
 /* --------------------------------------------------------------------------
@@ -841,18 +715,17 @@ TEST_F(ProcessorAppTest, VtableDispatchOnExit)
 // @{"verify": ["REQ-UDPAPP-016", "REQ-UDPAPP-017"]}
 TEST_F(ProcessorAppTest, ProductionVtableOnStartReturnsSuccess)
 {
-    ProcessorApp_Init(&tProcessor, &g_tProcessorAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    ProcessorApp_Init(&tProcessor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tProcessor.tRoot.ptApi->OnStart);
     JUNO_STATUS_T eStatus = tProcessor.tRoot.ptApi->OnStart(&tProcessor.tRoot);
     EXPECT_EQ(JUNO_STATUS_SUCCESS, eStatus);
-    EXPECT_EQ(&g_tProcessorAppApi, tProcessor.tRoot.ptApi);
 }
 
 // @{"verify": ["REQ-UDPAPP-016", "REQ-UDPAPP-018"]}
 TEST_F(ProcessorAppTest, ProductionVtableOnProcessReturnsSuccess)
 {
-    ProcessorApp_Init(&tProcessor, &g_tProcessorAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    ProcessorApp_Init(&tProcessor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
     tProcessor.tRoot.ptApi->OnStart(&tProcessor.tRoot);
 
     EXPECT_NE(nullptr, tProcessor.tRoot.ptApi->OnProcess);
@@ -863,7 +736,7 @@ TEST_F(ProcessorAppTest, ProductionVtableOnProcessReturnsSuccess)
 // @{"verify": ["REQ-UDPAPP-016"]}
 TEST_F(ProcessorAppTest, ProductionVtableOnExitReturnsSuccess)
 {
-    ProcessorApp_Init(&tProcessor, &g_tProcessorAppApi, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
+    ProcessorApp_Init(&tProcessor, &s_tBrokerStub, &s_tMsgArray.tRoot, nullptr, nullptr);
 
     EXPECT_NE(nullptr, tProcessor.tRoot.ptApi->OnExit);
     JUNO_STATUS_T eStatus = tProcessor.tRoot.ptApi->OnExit(&tProcessor.tRoot);

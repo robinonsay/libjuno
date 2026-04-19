@@ -21,11 +21,29 @@
 #include <stdio.h>
 
 /* --------------------------------------------------------------------------
+ * Forward declarations — static lifecycle functions
+ * -------------------------------------------------------------------------- */
+
+static JUNO_STATUS_T OnStart  (JUNO_APP_ROOT_T *ptApp);
+static JUNO_STATUS_T OnProcess(JUNO_APP_ROOT_T *ptApp);
+static JUNO_STATUS_T OnExit   (JUNO_APP_ROOT_T *ptApp);
+
+/* --------------------------------------------------------------------------
+ * Internal vtable — static, never exposed outside this translation unit
+ * -------------------------------------------------------------------------- */
+
+static const JUNO_APP_API_T s_tProcessorAppApi = {
+    OnStart,
+    OnProcess,
+    OnExit
+};
+
+/* --------------------------------------------------------------------------
  * Lifecycle implementations
  * -------------------------------------------------------------------------- */
 
 // @{"req": ["REQ-UDPAPP-017"]}
-JUNO_STATUS_T ProcessorApp_OnStart(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnStart(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
     PROCESSOR_APP_T *ptProcessor = (PROCESSOR_APP_T *)ptApp;
@@ -46,7 +64,7 @@ JUNO_STATUS_T ProcessorApp_OnStart(JUNO_APP_ROOT_T *ptApp)
 }
 
 // @{"req": ["REQ-UDPAPP-018"]}
-JUNO_STATUS_T ProcessorApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnProcess(JUNO_APP_ROOT_T *ptApp)
 {
     JUNO_ASSERT_EXISTS(ptApp);
     PROCESSOR_APP_T *ptProcessor = (PROCESSOR_APP_T *)ptApp;
@@ -78,21 +96,11 @@ JUNO_STATUS_T ProcessorApp_OnProcess(JUNO_APP_ROOT_T *ptApp)
     return JUNO_STATUS_SUCCESS;
 }
 
-JUNO_STATUS_T ProcessorApp_OnExit(JUNO_APP_ROOT_T *ptApp)
+static JUNO_STATUS_T OnExit(JUNO_APP_ROOT_T *ptApp)
 {
     (void)ptApp;
     return JUNO_STATUS_SUCCESS;
 }
-
-/* --------------------------------------------------------------------------
- * Vtable
- * -------------------------------------------------------------------------- */
-
-const JUNO_APP_API_T g_tProcessorAppApi = {
-    ProcessorApp_OnStart,
-    ProcessorApp_OnProcess,
-    ProcessorApp_OnExit
-};
 
 /* --------------------------------------------------------------------------
  * Init
@@ -101,7 +109,6 @@ const JUNO_APP_API_T g_tProcessorAppApi = {
 // @{"req": ["REQ-UDPAPP-016"]}
 JUNO_STATUS_T ProcessorApp_Init(
     PROCESSOR_APP_T              *ptApp,
-    const JUNO_APP_API_T         *ptApi,
     JUNO_SB_BROKER_ROOT_T        *ptBroker,
     JUNO_DS_ARRAY_ROOT_T         *ptPipeArray,
     JUNO_FAILURE_HANDLER_T        pfcnFailureHandler,
@@ -109,11 +116,10 @@ JUNO_STATUS_T ProcessorApp_Init(
 )
 {
     JUNO_ASSERT_EXISTS(ptApp);
-    JUNO_ASSERT_EXISTS(ptApi);
     JUNO_ASSERT_EXISTS(ptBroker);
     JUNO_ASSERT_EXISTS(ptPipeArray);
 
-    ptApp->tRoot.ptApi             = ptApi;
+    ptApp->tRoot.ptApi             = &s_tProcessorAppApi;
     ptApp->ptBroker                = ptBroker;
     ptApp->_ptPipeArray            = ptPipeArray;
     ptApp->_pfcnFailureHandler     = pfcnFailureHandler;
