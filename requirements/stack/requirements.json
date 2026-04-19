@@ -18,7 +18,12 @@
         "REQ-SYS-010",
         "REQ-ARRAY-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-STACK-002",
+        "REQ-STACK-003",
+        "REQ-STACK-005",
+        "REQ-STACK-007"
+      ]
     },
     {
       "id": "REQ-STACK-002",
@@ -44,7 +49,9 @@
       "uses": [
         "REQ-STACK-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-STACK-004"
+      ]
     },
     {
       "id": "REQ-STACK-004",
@@ -66,7 +73,9 @@
       "uses": [
         "REQ-STACK-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-STACK-006"
+      ]
     },
     {
       "id": "REQ-STACK-006",
@@ -88,7 +97,9 @@
       "uses": [
         "REQ-STACK-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-STACK-008"
+      ]
     },
     {
       "id": "REQ-STACK-008",

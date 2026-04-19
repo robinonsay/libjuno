@@ -17,6 +17,24 @@ LibJuno is a lightweight C11 embedded systems micro-framework designed to provid
 * **Modular**: Use the whole library or cherry-pick individual components
 * **Portable**: C11 standard with minimal platform assumptions
 
+# **NEW** [VSCode Extension](https://marketplace.visualstudio.com/items?itemName=RobinOnsay.libjuno) — Navigate Dependency Injection Like Magic
+
+Ever tried pressing **F12** on a vtable call like `ptLoggerApi->LogDebug(...)` and gotten... nothing? Standard C tooling can't see through function pointers. **The LibJuno VSCode Extension changes that.**
+
+<p align="center">
+  <img src="vscode-extension/LibJunoExtensionScreenshot.png" alt="LibJuno VSCode Extension — Go to Definition on a vtable call showing all matching implementations" width="700em"/>
+</p>
+
+Press **F12** or **Ctrl+Click** on any vtable method call and instantly jump to every implementation in your workspace — production code, test doubles, all of it. The extension understands LibJuno's dependency injection patterns and resolves function pointer assignments that no other C language tool can follow.
+
+**What it does:**
+- **Go to Definition** on vtable API calls (`ptApi->Method(...)`) — resolves through `struct` assignments to the actual function
+- **Failure handler navigation** — jump from `JUNO_ASSERT_*` macros to their registered handlers
+- **Automatic workspace indexing** — parses your entire C codebase on startup, stays up to date as you edit
+- **Built-in MCP server** — AI coding agents (Copilot, Cursor, Claude) can query your project's navigation index
+
+> Install it from the `.vsix` in the [`vscode-extension/`](vscode-extension/) directory. See the [Extension README](vscode-extension/README.md) for installation instructions, supported patterns, and troubleshooting.
+
 # The "Library of Everything" Problem
 Many developers try to write the "Library of Everything". This is a library
 that promises to solve all the problems that every developer has and does absolutely everything. It

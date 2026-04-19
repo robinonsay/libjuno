@@ -15,7 +15,11 @@
         "REQ-SYS-007",
         "REQ-SYS-009"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MTX-002",
+        "REQ-MTX-003",
+        "REQ-MTX-004"
+      ]
     },
     {
       "id": "REQ-MTX-002",

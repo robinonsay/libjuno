@@ -15,7 +15,12 @@
         "REQ-SYS-006",
         "REQ-SYS-009"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MEMORY-002",
+        "REQ-POINTER-002",
+        "REQ-POINTER-003",
+        "REQ-POINTER-004"
+      ]
     },
     {
       "id": "REQ-POINTER-002",
@@ -50,7 +55,9 @@
         "REQ-SYS-010",
         "REQ-POINTER-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-POINTER-005"
+      ]
     },
     {
       "id": "REQ-POINTER-005",

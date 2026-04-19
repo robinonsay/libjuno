@@ -19,7 +19,13 @@
         "REQ-SYS-009",
         "REQ-ARRAY-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MAP-002",
+        "REQ-MAP-003",
+        "REQ-MAP-004",
+        "REQ-MAP-006",
+        "REQ-MAP-008"
+      ]
     },
     {
       "id": "REQ-MAP-002",
@@ -54,7 +60,9 @@
       "uses": [
         "REQ-MAP-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MAP-005"
+      ]
     },
     {
       "id": "REQ-MAP-005",
@@ -76,7 +84,9 @@
       "uses": [
         "REQ-MAP-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MAP-007"
+      ]
     },
     {
       "id": "REQ-MAP-007",

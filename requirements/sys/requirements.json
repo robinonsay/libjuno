@@ -225,6 +225,8 @@
         "REQ-SM-009",
         "REQ-SM-011",
         "REQ-STACK-002",
+        "REQ-SYS-010",
+        "REQ-SYS-011",
         "REQ-TIME-001",
         "REQ-TIME-019"
       ]

@@ -19,7 +19,12 @@
         "REQ-SYS-009",
         "REQ-ARRAY-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-HEAP-002",
+        "REQ-HEAP-003",
+        "REQ-HEAP-004",
+        "REQ-HEAP-006"
+      ]
     },
     {
       "id": "REQ-HEAP-002",
@@ -53,7 +58,9 @@
       "uses": [
         "REQ-HEAP-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-HEAP-005"
+      ]
     },
     {
       "id": "REQ-HEAP-005",

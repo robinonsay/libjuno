@@ -31,7 +31,19 @@
       "uses": [
         "REQ-SYS-006"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SCH-007",
+        "REQ-TIME-003",
+        "REQ-TIME-005",
+        "REQ-TIME-009",
+        "REQ-TIME-010",
+        "REQ-TIME-011",
+        "REQ-TIME-012",
+        "REQ-TIME-013",
+        "REQ-TIME-014",
+        "REQ-TIME-015",
+        "REQ-TIME-016"
+      ]
     },
     {
       "id": "REQ-TIME-003",
@@ -42,7 +54,9 @@
       "uses": [
         "REQ-TIME-002"
       ],
-      "implements": []
+      "implements": [
+        "REQ-TIME-004"
+      ]
     },
     {
       "id": "REQ-TIME-004",
@@ -64,7 +78,10 @@
       "uses": [
         "REQ-TIME-002"
       ],
-      "implements": []
+      "implements": [
+        "REQ-TIME-006",
+        "REQ-TIME-007"
+      ]
     },
     {
       "id": "REQ-TIME-006",
@@ -86,7 +103,9 @@
       "uses": [
         "REQ-TIME-005"
       ],
-      "implements": []
+      "implements": [
+        "REQ-TIME-008"
+      ]
     },
     {
       "id": "REQ-TIME-008",
@@ -185,7 +204,9 @@
       "uses": [
         "REQ-TIME-002"
       ],
-      "implements": []
+      "implements": [
+        "REQ-TIME-017"
+      ]
     },
     {
       "id": "REQ-TIME-017",

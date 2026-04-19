@@ -1,0 +1,339 @@
+// @{"req": ["REQ-VSCODE-017", "REQ-VSCODE-018", "REQ-VSCODE-019", "REQ-VSCODE-020"]}
+import * as http from 'http';
+import { AddressInfo } from 'net';
+import { VtableResolver } from '../resolver/vtableResolver';
+import { FailureHandlerResolver } from '../resolver/failureHandlerResolver';
+import { NavigationIndex } from '../parser/types';
+
+/** Maximum allowed request body size (1 MB) to prevent DoS. */
+const MAX_BODY_BYTES = 1_048_576;
+
+/**
+ * Embedded HTTP MCP server that exposes LibJuno resolution tools to AI agent
+ * platforms (Section 7). Bound exclusively to 127.0.0.1 for security.
+ */
+export class McpServer {
+    private server: http.Server | undefined;
+
+    constructor(
+        private readonly vtableResolver: VtableResolver,
+        private readonly failureHandlerResolver: FailureHandlerResolver,
+        private readonly index: NavigationIndex,
+        private readonly log: (msg: string) => void = console.log
+    ) {}
+
+    /**
+     * Starts the HTTP server on the given port, bound to 127.0.0.1.
+     * @param port - Port to listen on. Pass 0 to let the OS assign a free port.
+     * @returns Promise that resolves with the actual bound port number.
+     */
+    start(port: number): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this.server = http.createServer((req, res) => {
+                this.handleRequest(req, res).catch(err => {
+                    this.log('[LibJuno] McpServer unhandled error: ' + String(err));
+                    if (!res.headersSent) {
+                        sendJson(res, 500, { error: 'Internal server error' });
+                    }
+                });
+            });
+
+            this.server.on('error', reject);
+            this.server.on('listening', () => {
+                resolve((this.server!.address() as AddressInfo).port);
+            });
+            this.server.listen(port, '127.0.0.1');
+        });
+    }
+
+    /** Stops the HTTP server. */
+    stop(): void {
+        if (this.server) {
+            this.server.close();
+            this.server = undefined;
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Private: request dispatch
+    // -----------------------------------------------------------------------
+
+    private async handleRequest(
+        req: http.IncomingMessage,
+        res: http.ServerResponse
+    ): Promise<void> {
+        const { method, url } = req;
+
+        if (url === '/mcp' && method === 'POST') {
+            await this.handleMcp(req, res);
+            return;
+        }
+
+        if (url === '/resolve_vtable_call' && method === 'POST') {
+            const body = await readBody(req);
+            if (body === null) {
+                sendJson(res, 400, { error: 'Request body too large.' });
+                return;
+            }
+            const parsed = parseBody(body);
+            if (!isResolveParams(parsed)) {
+                sendJson(res, 400, { error: 'Missing required fields: file, line, column, lineText.' });
+                return;
+            }
+            const result = this.vtableResolver.resolve(
+                parsed.file,
+                parsed.line,
+                parsed.column,
+                parsed.lineText
+            );
+            sendJson(res, 200, result.found ? result : { ...result, isError: true });
+            return;
+        }
+
+        if (url === '/resolve_failure_handler' && method === 'POST') {
+            const body = await readBody(req);
+            if (body === null) {
+                sendJson(res, 400, { error: 'Request body too large.' });
+                return;
+            }
+            const parsed = parseBody(body);
+            if (!isResolveParams(parsed)) {
+                sendJson(res, 400, { error: 'Missing required fields: file, line, column, lineText.' });
+                return;
+            }
+            const result = this.failureHandlerResolver.resolve(
+                parsed.file,
+                parsed.line,
+                parsed.column,
+                parsed.lineText
+            );
+            sendJson(res, 200, result.found ? result : { ...result, isError: true });
+            return;
+        }
+
+        if (url === '/index_status' && (method === 'GET' || method === 'POST')) {
+            const fileCount = this.index.localTypeInfo.size;
+            sendJson(res, 200, {
+                fileCount,
+                cacheValid: fileCount > 0,
+            });
+            return;
+        }
+
+        sendJson(res, 404, { error: `Unknown endpoint: ${url}` });
+    }
+
+    // -----------------------------------------------------------------------
+    // Private: JSON-RPC 2.0 MCP endpoint
+    // -----------------------------------------------------------------------
+
+    private async handleMcp(
+        req: http.IncomingMessage,
+        res: http.ServerResponse
+    ): Promise<void> {
+        const rawBody = await readBody(req);
+        if (rawBody === null) {
+            sendJson(res, 400, { error: 'Request body too large.' });
+            return;
+        }
+
+        let rpc: unknown;
+        try {
+            rpc = JSON.parse(rawBody);
+        } catch {
+            sendJson(res, 200, { jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } });
+            return;
+        }
+
+        const r = rpc as Record<string, unknown>;
+        const id: unknown = Object.prototype.hasOwnProperty.call(r, 'id') ? r['id'] : null;
+        const mcpMethod = typeof r['method'] === 'string' ? r['method'] : '';
+
+        // Notifications have no `id` — respond with HTTP 202 and no body per spec.
+        const isNotification = !Object.prototype.hasOwnProperty.call(r, 'id');
+        if (isNotification) {
+            res.writeHead(202);
+            res.end();
+            return;
+        }
+
+        if (mcpMethod === 'initialize') {
+            sendJson(res, 200, {
+                jsonrpc: '2.0',
+                id,
+                result: {
+                    protocolVersion: '2024-11-05',
+                    capabilities: { tools: {} },
+                    serverInfo: { name: 'libjuno', version: '0.1.7' },
+                },
+            });
+            return;
+        }
+
+        if (mcpMethod === 'tools/list') {
+            sendJson(res, 200, {
+                jsonrpc: '2.0',
+                id,
+                result: {
+                    tools: [
+                        {
+                            name: 'resolve_vtable_call',
+                            description:
+                                'Resolves a LibJuno vtable API call site to its concrete implementation function(s). Given a C source file path and cursor position (1-based line and column), returns the function name(s) and source location(s) of the implementation.',
+                            inputSchema: {
+                                type: 'object',
+                                required: ['file', 'line', 'column', 'lineText'],
+                                properties: {
+                                    file:     { type: 'string',  description: 'Absolute path to the C source file.' },
+                                    line:     { type: 'integer', description: '1-based line number of the call site.' },
+                                    column:   { type: 'integer', description: '1-based column number of the cursor.' },
+                                    lineText: { type: 'string',  description: 'Full text of the source line at the call site.' },
+                                },
+                            },
+                        },
+                        {
+                            name: 'resolve_failure_handler',
+                            description:
+                                'Resolves a LibJuno failure handler assignment or FAIL macro call site to the registered handler function. Given a C source file path and cursor position, returns the handler function name and source location.',
+                            inputSchema: {
+                                type: 'object',
+                                required: ['file', 'line', 'column', 'lineText'],
+                                properties: {
+                                    file:     { type: 'string',  description: 'Absolute path to the C source file.' },
+                                    line:     { type: 'integer', description: '1-based line number.' },
+                                    column:   { type: 'integer', description: '1-based column number of the cursor.' },
+                                    lineText: { type: 'string',  description: 'Full text of the source line.' },
+                                },
+                            },
+                        },
+                    ],
+                },
+            });
+            return;
+        }
+
+        if (mcpMethod === 'tools/call') {
+            const params = (r['params'] ?? {}) as Record<string, unknown>;
+            const toolName = typeof params['name'] === 'string' ? params['name'] : '';
+            const args = params['arguments'] ?? {};
+
+            if (!isResolveParams(args)) {
+                sendJson(res, 200, {
+                    jsonrpc: '2.0',
+                    id,
+                    error: { code: -32602, message: 'Invalid params: required fields file (string), line (number), column (number), lineText (string).' },
+                });
+                return;
+            }
+
+            if (toolName === 'resolve_vtable_call') {
+                const result = this.vtableResolver.resolve(
+                    args.file,
+                    args.line,
+                    args.column,
+                    args.lineText
+                );
+                sendJson(res, 200, {
+                    jsonrpc: '2.0',
+                    id,
+                    result: { content: [{ type: 'text', text: JSON.stringify(result) }] },
+                });
+                return;
+            }
+
+            if (toolName === 'resolve_failure_handler') {
+                const result = this.failureHandlerResolver.resolve(
+                    args.file,
+                    args.line,
+                    args.column,
+                    args.lineText
+                );
+                sendJson(res, 200, {
+                    jsonrpc: '2.0',
+                    id,
+                    result: { content: [{ type: 'text', text: JSON.stringify(result) }] },
+                });
+                return;
+            }
+
+            sendJson(res, 200, {
+                jsonrpc: '2.0',
+                id,
+                error: { code: -32601, message: `Unknown tool: ${toolName}` },
+            });
+            return;
+        }
+
+        sendJson(res, 200, {
+            jsonrpc: '2.0',
+            id,
+            error: { code: -32601, message: `Method not found: ${mcpMethod}` },
+        });
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+interface ResolveParams {
+    file: string;
+    line: number;
+    column: number;
+    lineText: string;
+}
+
+function isResolveParams(obj: unknown): obj is ResolveParams {
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+        return false;
+    }
+    const r = obj as Record<string, unknown>;
+    return (
+        typeof r['file'] === 'string' &&
+        typeof r['line'] === 'number' &&
+        typeof r['column'] === 'number' &&
+        typeof r['lineText'] === 'string'
+    );
+}
+
+function parseBody(raw: string): unknown {
+    try {
+        return JSON.parse(raw);
+    } catch {
+        return null;
+    }
+}
+
+function readBody(req: http.IncomingMessage): Promise<string | null> {
+    return new Promise(resolve => {
+        const chunks: Buffer[] = [];
+        let totalBytes = 0;
+
+        req.on('data', (chunk: Buffer) => {
+            totalBytes += chunk.length;
+            if (totalBytes > MAX_BODY_BYTES) {
+                req.destroy();
+                resolve(null);
+            } else {
+                chunks.push(chunk);
+            }
+        });
+
+        req.on('end', () => {
+            resolve(Buffer.concat(chunks).toString('utf8'));
+        });
+
+        req.on('error', () => {
+            resolve(null);
+        });
+    });
+}
+
+function sendJson(res: http.ServerResponse, status: number, body: unknown): void {
+    const payload = JSON.stringify(body);
+    res.writeHead(status, {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+    });
+    res.end(payload);
+}

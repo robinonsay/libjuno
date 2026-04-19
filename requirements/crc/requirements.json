@@ -12,7 +12,14 @@
         "REQ-SYS-003",
         "REQ-SYS-009"
       ],
-      "implements": []
+      "implements": [
+        "REQ-CRC-004",
+        "REQ-CRC-005",
+        "REQ-CRC-006",
+        "REQ-CRC-007",
+        "REQ-CRC-008",
+        "REQ-CRC-009"
+      ]
     },
     {
       "id": "REQ-CRC-002",
@@ -100,7 +107,9 @@
       "uses": [
         "REQ-CRC-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-CRC-010"
+      ]
     },
     {
       "id": "REQ-CRC-010",

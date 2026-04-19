@@ -1,0 +1,101 @@
+{
+  "name": "libjuno",
+  "displayName": "LibJuno",
+  "description": "Vtable-aware Go to Definition for LibJuno embedded C projects",
+  "version": "0.1.15",
+  "publisher": "RobinOnsay",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robinonsay/libjuno.git"
+  },
+  "icon": "assets/icon.png",
+  "categories": [
+    "Other"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:c",
+    "onLanguage:cpp"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "libjuno.goToImplementation",
+        "title": "LibJuno: Go to Implementation"
+      },
+      {
+        "command": "libjuno.reindexWorkspace",
+        "title": "LibJuno: Re-index Workspace"
+      },
+      {
+        "command": "libjuno.showVtableTrace",
+        "title": "LibJuno: Show Vtable Resolution Trace"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "libjuno.showVtableTrace",
+        "key": "ctrl+shift+t",
+        "when": "editorTextFocus && resourceLangId =~ /^c/"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "libjuno.showVtableTrace",
+          "when": "resourceLangId =~ /^c/",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "LibJuno",
+      "properties": {
+        "libjuno.excludedDirectories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "build",
+            "deps",
+            ".libjuno"
+          ],
+          "description": "Directories to exclude from workspace indexing."
+        },
+        "libjuno.mcpServerPort": {
+          "type": "number",
+          "default": 6543,
+          "description": "Port for the embedded MCP server."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "chevrotain": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.1",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.3.0"
+  },
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "package": "vsce package"
+  },
+  "overrides": {
+    "glob": "^13.0.0",
+    "test-exclude": "^8.0.0"
+  }
+}

@@ -1,5 +1,6 @@
 # Prerequisites
 *.d
+.libjuno
 
 # Object files
 *.o
@@ -59,3 +60,4 @@ venv/
 .clangd
 .local
 .DS_Store
+.stryker-tmp

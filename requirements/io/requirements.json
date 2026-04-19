@@ -16,7 +16,15 @@
         "REQ-SYS-009",
         "REQ-SYS-010"
       ],
-      "implements": []
+      "implements": [
+        "REQ-IO-002",
+        "REQ-IO-003",
+        "REQ-IO-004",
+        "REQ-IO-005",
+        "REQ-IO-006",
+        "REQ-IO-007",
+        "REQ-IO-008"
+      ]
     },
     {
       "id": "REQ-IO-002",
@@ -104,7 +112,9 @@
       "uses": [
         "REQ-SYS-006"
       ],
-      "implements": []
+      "implements": [
+        "REQ-IO-010"
+      ]
     },
     {
       "id": "REQ-IO-010",
@@ -115,7 +125,9 @@
       "uses": [
         "REQ-IO-009"
       ],
-      "implements": []
+      "implements": [
+        "REQ-IO-011"
+      ]
     },
     {
       "id": "REQ-IO-011",
@@ -126,7 +138,9 @@
       "uses": [
         "REQ-IO-010"
       ],
-      "implements": []
+      "implements": [
+        "REQ-IO-012"
+      ]
     },
     {
       "id": "REQ-IO-012",
@@ -148,7 +162,9 @@
       "uses": [
         "REQ-SYS-006"
       ],
-      "implements": []
+      "implements": [
+        "REQ-IO-014"
+      ]
     },
     {
       "id": "REQ-IO-014",

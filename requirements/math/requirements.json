@@ -23,7 +23,16 @@
       "uses": [
         "REQ-SYS-003"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MATH-003",
+        "REQ-MATH-005",
+        "REQ-MATH-006",
+        "REQ-MATH-007",
+        "REQ-MATH-008",
+        "REQ-MATH-009",
+        "REQ-MATH-010",
+        "REQ-MATH-011"
+      ]
     },
     {
       "id": "REQ-MATH-003",
@@ -45,7 +54,14 @@
       "uses": [
         "REQ-SYS-003"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MATH-012",
+        "REQ-MATH-013",
+        "REQ-MATH-014",
+        "REQ-MATH-015",
+        "REQ-MATH-016",
+        "REQ-MATH-018"
+      ]
     },
     {
       "id": "REQ-MATH-005",
@@ -177,7 +193,9 @@
       "uses": [
         "REQ-MATH-004"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MATH-017"
+      ]
     },
     {
       "id": "REQ-MATH-017",
@@ -200,7 +218,9 @@
       "uses": [
         "REQ-MATH-004"
       ],
-      "implements": []
+      "implements": [
+        "REQ-MATH-017"
+      ]
     }
   ]
 }

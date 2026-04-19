@@ -44,11 +44,15 @@
 
 #include "juno_math_types.h"
 #include "juno_vec.h"
+#include "juno/math/juno_math_constants.h"
 #include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define Juno_Deg2Rad(deg)   deg * JUNO_PI / 180.0
+#define Juno_Rad2Deg(rad)   rad * 180.0 / JUNO_PI
 
 #ifdef __cplusplus
 }

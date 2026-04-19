@@ -16,7 +16,11 @@
         "REQ-SYS-009",
         "REQ-SYS-010"
       ],
-      "implements": []
+      "implements": [
+        "REQ-APP-002",
+        "REQ-APP-003",
+        "REQ-APP-004"
+      ]
     },
     {
       "id": "REQ-APP-002",
@@ -38,7 +42,9 @@
       "uses": [
         "REQ-APP-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SCH-004"
+      ]
     },
     {
       "id": "REQ-APP-004",

@@ -16,7 +16,10 @@
         "REQ-SYS-009",
         "REQ-SYS-010"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SCH-002",
+        "REQ-SCH-003"
+      ]
     },
     {
       "id": "REQ-SCH-002",
@@ -27,7 +30,10 @@
       "uses": [
         "REQ-SCH-001"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SCH-004",
+        "REQ-SCH-005"
+      ]
     },
     {
       "id": "REQ-SCH-003",
@@ -62,7 +68,9 @@
       "uses": [
         "REQ-SCH-002"
       ],
-      "implements": []
+      "implements": [
+        "REQ-SCH-006"
+      ]
     },
     {
       "id": "REQ-SCH-006",

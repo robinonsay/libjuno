@@ -51,7 +51,7 @@ requirements/<module>/requirements.json
           },
           "rationale": {
             "type": "string",
-            "description": "Why this requirement exists (provided by Program/user)"
+            "description": "Why this requirement exists (provided by Project manager/user)"
           },
           "verification_method": {
             "type": "string",
