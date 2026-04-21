@@ -291,10 +291,10 @@ describe("Failure Handler Assignment Extraction (Section 10)", () => {
 
     // -----------------------------------------------------------------------
     // TC-P10-007: Failure handler assignment is not mistakenly captured as a
-    //             call site — apiCallSites must not include the FH assignment
+    //             call site
     // -----------------------------------------------------------------------
 
-    it("TC-P10-007: JUNO_FAILURE_HANDLER assignment produces a failureHandlerAssign record and no apiCallSite", () => {
+    it("TC-P10-007: JUNO_FAILURE_HANDLER assignment produces a failureHandlerAssign record only", () => {
         const src =
             "static JUNO_STATUS_T SomeInit(JUNO_APP_ROOT_T *ptApp)\n" +
             "{\n" +
@@ -307,8 +307,5 @@ describe("Failure Handler Assignment Extraction (Section 10)", () => {
         // Failure handler record must be present
         expect(result.failureHandlerAssigns).toHaveLength(1);
         expect(result.failureHandlerAssigns[0].functionName).toBe("AppFailureHandler");
-
-        // An assignment expression is not a call site — apiCallSites must be empty
-        expect(result.apiCallSites).toHaveLength(0);
     });
 });

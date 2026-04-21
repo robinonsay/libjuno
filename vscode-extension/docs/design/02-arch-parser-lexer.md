@@ -58,7 +58,6 @@ interface ParsedFile {
   apiStructDefinitions:  ApiStructRecord[];
   vtableAssignments:     VtableAssignmentRecord[];
   failureHandlerAssigns: FailureHandlerRecord[];
-  apiCallSites:          ApiCallSiteRecord[];
   localTypeInfo:         LocalTypeInfo;
 }
 
@@ -103,14 +102,6 @@ interface FailureHandlerRecord {
   functionName: string;
   file:         string;
   line:         number;
-}
-
-interface ApiCallSiteRecord {
-  variableName: string;   // e.g. "ptHeap"
-  fieldName:    string;   // e.g. "Insert"
-  file:         string;
-  line:         number;
-  column:       number;
 }
 ```
 

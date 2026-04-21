@@ -15,7 +15,9 @@
         "REQ-VSCODE-016",
         "REQ-VSCODE-017",
         "REQ-VSCODE-021",
-        "REQ-VSCODE-027"
+        "REQ-VSCODE-027",
+        "REQ-VSCODE-042",
+        "REQ-VSCODE-043"
       ]
     },
     {
@@ -497,6 +499,28 @@
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-022"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-042",
+      "title": "Automatic Indexing of Newly Created Files",
+      "description": "When a new C or C++ source file with a recognized extension (.c, .h, .cpp, .hpp, .hh, or .cc) is created within the workspace, the extension shall automatically parse and index that file into the navigation index without requiring a manual workspace re-index.",
+      "rationale": "Developers create new source files continuously during development. Without automatic indexing of new files, vtable definitions, function implementations, and failure handler assignments in those files remain invisible to the resolver until the user manually triggers a full re-index, producing silent resolution failures on newly written code.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-043",
+      "title": "Automatic Index Cleanup on File Deletion",
+      "description": "When a C or C++ source file is deleted from the workspace, the extension shall automatically remove all navigation index records associated with that file — including module roots, derivations, vtable assignments, failure handler assignments, function definitions, and local type information — and update the cache to reflect the deletion.",
+      "rationale": "Retaining stale index records from deleted files causes the extension to return ghost navigation targets: vtable implementations and function definitions that no longer exist in the codebase. This silently misleads the developer with incorrect Go to Definition results.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-001"
       ],
       "implements": []
     }

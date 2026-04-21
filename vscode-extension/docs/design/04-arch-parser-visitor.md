@@ -175,6 +175,51 @@ RESOLVE positional initializers with missing field orders (cross-file deferred r
 SAVE cache to disk
 ```
 
+**`reindexFile(filePath)` — Incremental Indexing Algorithm:**
+
+Both the `onDidChange` and `onDidCreate` handlers delegate to `reindexFile()`. This procedure re-parses a single file and merges its updated records into the index:
+
+```
+reindexFile(filePath):
+  fileContent = readFile(filePath)
+  IF readFile fails (ENOENT or permission error):
+    LOG warning to Output Channel; RETURN
+  parsedFile = ChevrotainParser.parse(filePath, fileContent)
+  IF parsedFile.errors.length > 0:
+    LOG warning to Output Channel ("Parse errors in <filePath>: <errors>"); RETURN
+  removeFileRecords(index, filePath)          // clear all prior records for this file
+  deferred = []
+  mergeInto(index, parsedFile, deferred)
+  STORE parsedFile.localTypeInfo INTO index.localTypeInfo[filePath]
+  resolveDeferred(index, deferred)
+  resolveCompositionRoots(index)
+  resolveInitCallers(index)
+  cache.fileHashes[filePath] = sha256(fileContent)
+  scheduleSave()
+```
+
+> **`removeFileRecords` contract:** Clears all index maps for the given `filePath`, including `moduleRoots`, `traitRoots`, `derivationChain`, `apiStructFields`, `vtableAssignments`, `failureHandlerAssignments`, `functionDefinitions`, `apiMemberRegistry`, and `localTypeInfo[filePath]`. Also clears `initCallIndex` records originating from `filePath`.
+
+**File System Event Handlers:**
+
+```
+WHEN FileSystemWatcher.onDidCreate fires:
+  IF file path is in an excluded directory (build/, deps/, .libjuno/): RETURN
+  reindexFile(filePath)
+
+WHEN FileSystemWatcher.onDidChange fires:
+  reindexFile(filePath)
+
+WHEN FileSystemWatcher.onDidDelete fires:
+  removeFileRecords(index, filePath)
+  delete cache.fileHashes[filePath]
+  scheduleSave()
+```
+
+> **Note on excluded-directory guard:** The `onDidCreate` handler checks the excluded-directory list because newly created files may appear in excluded paths (e.g., a build system writing to `build/`). The `onDidChange` handler does not need this guard because the `FileSystemWatcher` glob (`**/*.{c,h,cpp,hpp,hh,cc}`) excludes those directories at the platform level — only files that were already indexed can trigger `onDidChange`.
+
+> **`onDidCreate` edge case:** If a file is created and immediately deleted before `readFile` executes, `reindexFile` catches the `ENOENT` error, logs a warning, and returns without modifying the index or cache.
+
 > **Single-pass note:** Function definitions are extracted by `visitFunctionDefinition` in the same parse pass as vtable assignments. The previous "second pass for Pattern P11" is eliminated. The `apiMemberRegistry` is also populated inline by `visitStructDefinition` for all struct bodies encountered during the same parse pass.
 
 For each file, the parser also extracts local declarations and function parameters into a per-file type map (`LocalTypeInfo`). This data is stored in the cache under `localTypeInfo` and used at query time for expression type resolution in the chain-walk algorithm (§5.1).

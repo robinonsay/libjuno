@@ -21,9 +21,8 @@ import { parseFile, parseFileWithDefs } from "../visitor";
 
 // @{"verify": ["REQ-VSCODE-003"]}
 describe("walkStatement — selectionStatement branch", () => {
-    it("VB-001: processes if-statement body and extracts call site inside", () => {
+    it("VB-001: processes if-statement body without crash", () => {
         // An if-statement causes walkStatement → walkSelectionStatement.
-        // The expression inside the body exercises tryExtractCallSite happy path.
         const src = `
 static JUNO_STATUS_T Init(MY_API_T *ptApi)
 {
@@ -34,14 +33,13 @@ static JUNO_STATUS_T Init(MY_API_T *ptApi)
 }
 `;
         const result = parseFile("/test/file.c", src);
-
-        // The call site ptApi->Insert(ptApi) must be detected
-        expect(result.apiCallSites).toHaveLength(1);
-        expect(result.apiCallSites[0].variableName).toBe("ptApi");
-        expect(result.apiCallSites[0].fieldName).toBe("Insert");
+        // Parameters are recorded even when statement body has call expressions
+        const params = result.localTypeInfo.functionParameters.get("Init");
+        expect(params).toBeDefined();
+        expect(params![0].typeName).toBe("MY_API_T");
     });
 
-    it("VB-002: processes if-else with two statement paths", () => {
+    it("VB-002: processes if-else with two statement paths without crash", () => {
         const src = `
 static void Foo(MY_API_T *ptApi)
 {
@@ -53,12 +51,8 @@ static void Foo(MY_API_T *ptApi)
 }
 `;
         const result = parseFile("/test/file.c", src);
-
-        // Both call sites inside if and else are detected
-        expect(result.apiCallSites).toHaveLength(2);
-        const fields = result.apiCallSites.map((s) => s.fieldName);
-        expect(fields).toContain("DoA");
-        expect(fields).toContain("DoB");
+        const params = result.localTypeInfo.functionParameters.get("Foo");
+        expect(params).toBeDefined();
     });
 });
 
@@ -68,7 +62,7 @@ static void Foo(MY_API_T *ptApi)
 
 // @{"verify": ["REQ-VSCODE-003"]}
 describe("walkStatement — iterationStatement branch", () => {
-    it("VB-003: processes while-loop body and extracts call site inside", () => {
+    it("VB-003: processes while-loop body without crash", () => {
         const src = `
 static void Loop(MY_API_T *ptApi)
 {
@@ -78,13 +72,11 @@ static void Loop(MY_API_T *ptApi)
 }
 `;
         const result = parseFile("/test/file.c", src);
-
-        expect(result.apiCallSites).toHaveLength(1);
-        expect(result.apiCallSites[0].variableName).toBe("ptApi");
-        expect(result.apiCallSites[0].fieldName).toBe("Process");
+        const params = result.localTypeInfo.functionParameters.get("Loop");
+        expect(params).toBeDefined();
     });
 
-    it("VB-004: processes for-loop body and extracts call site", () => {
+    it("VB-004: processes for-loop body without crash", () => {
         const src = `
 static void ForLoop(MY_API_T *ptApi)
 {
@@ -95,9 +87,8 @@ static void ForLoop(MY_API_T *ptApi)
 }
 `;
         const result = parseFile("/test/file.c", src);
-
-        expect(result.apiCallSites).toHaveLength(1);
-        expect(result.apiCallSites[0].fieldName).toBe("Step");
+        const params = result.localTypeInfo.functionParameters.get("ForLoop");
+        expect(params).toBeDefined();
     });
 });
 
@@ -107,7 +98,7 @@ static void ForLoop(MY_API_T *ptApi)
 
 // @{"verify": ["REQ-VSCODE-003"]}
 describe("walkStatement — nested compoundStatement branch", () => {
-    it("VB-005: processes nested compound statement (bare braces block)", () => {
+    it("VB-005: processes nested compound statement (bare braces block) without crash", () => {
         const src = `
 static void Nested(MY_API_T *ptApi)
 {
@@ -117,10 +108,8 @@ static void Nested(MY_API_T *ptApi)
 }
 `;
         const result = parseFile("/test/file.c", src);
-
-        // Call inside nested block is still detected
-        expect(result.apiCallSites).toHaveLength(1);
-        expect(result.apiCallSites[0].fieldName).toBe("NestedCall");
+        const params = result.localTypeInfo.functionParameters.get("Nested");
+        expect(params).toBeDefined();
     });
 });
 
@@ -323,10 +312,10 @@ struct MY_IMPL_TAG JUNO_TRAIT_DERIVE(JUNO_POINTER_T,
 // ---------------------------------------------------------------------------
 
 // @{"verify": ["REQ-VSCODE-012"]}
-describe("tryExtractCallSite — no member access expressions", () => {
-    it("VB-016: simple function call (no member access) produces no apiCallSite", () => {
+describe("walkExpressionStatement — non-assignment expressions", () => {
+    it("VB-016: simple function call (no member access) does not produce vtable assignment", () => {
         // MyFunction(); — expression without -> or . member access
-        // Covers `if (memberIdents.length === 0) { return; }` in tryExtractCallSite.
+        // Covers non-assignment expression path in walkExpressionStatement.
         const src = `
 static void Foo(void)
 {
@@ -335,13 +324,11 @@ static void Foo(void)
 `;
         const result = parseFile("/test/file.c", src);
 
-        // No member access = no call site recorded
-        expect(result.apiCallSites).toHaveLength(0);
+        // No vtable assignment recorded
+        expect(result.vtableAssignments).toHaveLength(0);
     });
 
-    it("VB-017: member access expression without call produces no apiCallSite", () => {
-        // foo->field; — member access without function call ()
-        // Covers `if (!hasCall) { return; }` in tryExtractCallSite.
+    it("VB-017: member access call expression does not produce vtable assignment", () => {
         const src = `
 static void Bar(MY_API_T *ptApi)
 {
@@ -351,8 +338,8 @@ static void Bar(MY_API_T *ptApi)
 `;
         const result = parseFile("/test/file.c", src);
 
-        // Both call expressions are valid call sites
-        expect(result.apiCallSites).toHaveLength(2);
+        // Call expressions are not vtable assignments
+        expect(result.vtableAssignments).toHaveLength(0);
     });
 });
 
@@ -549,8 +536,7 @@ static void Foo(MY_ROOT_T *ptRoot)
 
 // @{"verify": ["REQ-VSCODE-012"]}
 describe("walkExpressionStatement — non-assignment expression shapes", () => {
-    it("VB-027: call site with two chained member dereferences is extracted correctly", () => {
-        // ptRoot->ptApi->Method(x) — nested member access produces call site
+    it("VB-027: member call expression does not produce vtable assignment", () => {
         const src = `
 static void Foo(MY_ROOT_T *ptRoot)
 {
@@ -558,13 +544,10 @@ static void Foo(MY_ROOT_T *ptRoot)
 }
 `;
         const result = parseFile("/test/file.c", src);
-
-        expect(result.apiCallSites).toHaveLength(1);
-        expect(result.apiCallSites[0].variableName).toBe("ptRoot");
-        expect(result.apiCallSites[0].fieldName).toBe("Method");
+        expect(result.vtableAssignments).toHaveLength(0);
     });
 
-    it("VB-028: multiple call sites in same function body are all extracted", () => {
+    it("VB-028: multiple call expressions in same function body do not produce vtable assignments", () => {
         const src = `
 static void Multi(MY_API_T *ptApi)
 {
@@ -574,12 +557,7 @@ static void Multi(MY_API_T *ptApi)
 }
 `;
         const result = parseFile("/test/file.c", src);
-
-        expect(result.apiCallSites).toHaveLength(3);
-        const fields = result.apiCallSites.map((s) => s.fieldName);
-        expect(fields).toContain("Init");
-        expect(fields).toContain("Run");
-        expect(fields).toContain("Stop");
+        expect(result.vtableAssignments).toHaveLength(0);
     });
 });
 
@@ -814,11 +792,9 @@ static void Foo(MY_API_T *ptApi)
 `;
         const result = parseFile("/test/file.c", src);
 
-        // The function and call site are still extracted correctly
+        // The function parameters are still extracted correctly despite the preprocessor directive
         const params = result.localTypeInfo.functionParameters.get("Foo");
         expect(params).toBeDefined();
-        expect(result.apiCallSites).toHaveLength(1);
-        expect(result.apiCallSites[0].fieldName).toBe("Init");
     });
 });
 
@@ -920,10 +896,6 @@ static void Foo(MY_API_T *ptApi)
 
         expect(functionDefs).toHaveLength(1);
         expect(functionDefs[0].functionName).toBe("Foo");
-
-        expect(result.apiCallSites).toHaveLength(1);
-        expect(result.apiCallSites[0].variableName).toBe("ptApi");
-        expect(result.apiCallSites[0].fieldName).toBe("Initialize");
     });
 
     it("VB-101: extern C block with preprocessor directive inside does not crash", () => {
@@ -937,7 +909,6 @@ extern "C" {
 
         // No crash and no spurious records
         expect(result.moduleRoots).toHaveLength(0);
-        expect(result.apiCallSites).toHaveLength(0);
     });
 
     it("VB-102: extern C block with struct macro definition extracts moduleRoots", () => {
@@ -1567,9 +1538,9 @@ static void Dispatch(MY_API_T *ptApi, int eCmd)
 `;
         const result = parseFile("/test/file.c", src);
 
-        // Labeled statements (case:) are not visited by walkStatement — call sites inside
-        // switch case bodies are not extracted. This is the documented limitation.
-        expect(result.apiCallSites).toHaveLength(0);
+        // Labeled statements (case:) are not visited by walkStatement.
+        // This is the documented limitation — no vtable assignments inside switch bodies.
+        expect(result.vtableAssignments).toHaveLength(0);
     });
 });
 
@@ -1620,10 +1591,9 @@ describe("extractDeclaratorInfo — defensive no-directDeclarator guard", () => 
         // Must not throw
         const result = parseFile("/test/file.c", src);
 
-        // No vtable assignments, no local variables, no API call sites extracted
+        // No vtable assignments, no local variables extracted
         expect(result.vtableAssignments).toHaveLength(0);
         expect(result.localTypeInfo.localVariables.size).toBe(0);
-        expect(result.apiCallSites).toHaveLength(0);
     });
 });
 

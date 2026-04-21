@@ -1003,7 +1003,6 @@ describe('WorkspaceIndexer — core behaviour', () => {
                     file: implPath,
                     line: 10,
                 }],
-                apiCallSites: [],
                 pendingPositionalVtables: [],
                 initCallSites: [],
                 localTypeInfo: {
@@ -1079,7 +1078,6 @@ describe('WorkspaceIndexer — core behaviour', () => {
                     file: implPath,
                     line: 10,
                 }],
-                apiCallSites: [],
                 pendingPositionalVtables: [],
                 initCallSites: [],
                 localTypeInfo: {

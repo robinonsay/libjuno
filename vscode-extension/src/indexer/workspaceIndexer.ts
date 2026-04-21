@@ -60,6 +60,7 @@ export class WorkspaceIndexer {
      *
      * @param filePath Absolute path of the file to re-index.
      */
+    // @{"req": ["REQ-VSCODE-042"]}
     public async reindexFile(filePath: string): Promise<void> {
         removeFileRecords(this.index, filePath);
         const relPath = path.relative(this.workspaceRoot, filePath);
@@ -77,10 +78,12 @@ export class WorkspaceIndexer {
      *
      * @param filePath Absolute path of the file to remove.
      */
+    // @{"req": ["REQ-VSCODE-043"]}
     public removeFile(filePath: string): void {
         removeFileRecords(this.index, filePath);
         const relPath = path.relative(this.workspaceRoot, filePath);
         this.fileHashes.delete(relPath);
+        this.scheduleSave();
     }
 
     /**

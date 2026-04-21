@@ -166,6 +166,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     // 10. FileSystemWatcher for incremental updates (Section 9.3)
     const watcher = vscode.workspace.createFileSystemWatcher('**/*.{c,h,cpp,hpp,hh,cc}');
 
+    // @{"req": ["REQ-VSCODE-042"]}
     watcher.onDidCreate((uri: vscode.Uri) => {
         indexer.reindexFile(uri.fsPath).catch(err => {
             log('[LibJuno] watcher onDidCreate error: ' + (err instanceof Error ? (err.stack ?? String(err)) : String(err)));
@@ -178,6 +179,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         });
     });
 
+    // @{"req": ["REQ-VSCODE-043"]}
     watcher.onDidDelete((uri: vscode.Uri) => {
         indexer.removeFile(uri.fsPath);
     });

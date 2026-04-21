@@ -36,8 +36,6 @@ export interface ParsedFile {
   vtableAssignments: VtableAssignmentRecord[];
   /** All failure handler assignments found in the file. */
   failureHandlerAssigns: FailureHandlerRecord[];
-  /** All API call sites found in the file. */
-  apiCallSites: ApiCallSiteRecord[];
   /** Positional vtable initializers that could not be resolved at parse time (API struct in different file). */
   pendingPositionalVtables: PendingPositionalVtable[];
   /** Call sites where a known API struct variable's address is passed as an argument. Populated by scanInitCallSites(). */
@@ -185,24 +183,6 @@ export interface InitCallRecord {
   file: string;
   /** 1-based line number of the call site. */
   line: number;
-}
-
-/**
- * An API call site — a location in source where a vtable-dispatched method is
- * invoked via `->` or `.`. Used at query time to anchor the chain-walk
- * algorithm (Section 5.1).
- */
-export interface ApiCallSiteRecord {
-  /** Name of the local variable or parameter that holds the root/API pointer. */
-  variableName: string;
-  /** Name of the function pointer field being invoked, e.g. "Insert". */
-  fieldName: string;
-  /** Absolute path of the file that contains this call site. */
-  file: string;
-  /** 1-based line number of the call site. */
-  line: number;
-  /** 1-based column number of the call site. */
-  column: number;
 }
 
 // ---------------------------------------------------------------------------

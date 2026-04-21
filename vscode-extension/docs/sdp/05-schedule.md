@@ -35,8 +35,10 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 24 | Phase 25 ✅ | MCP JSON-RPC 2.0 Protocol Implementation | `/mcp` endpoint: `initialize`, `tools/list`, `tools/call`, notification handling, `-32602` validation; TC-MCP-021–025 (5 new tests); README "Connecting AI Agents" section; 684 tests passing | 10% |
 | 25 | Phase 26 ✅ | Structural Composition Root Detection | `resolveCompositionRoots()` structural `&apiVar` scan; `initCallFile`/`initCallLine` on ConcreteLocation; TC-TRACE-016–022 (7 new tests); REQ-VSCODE-036; 691 tests passing | 5% |
 | 32 | Phase 27 | MCP Tool Quality Improvements | REQ-038–041 new requirements; `resolve_failure_handler` JUNO_APP_ROOT_T support; column hint in not-found errors; file-not-indexed message; `kind` field in results; standalone MCP launcher; 10 new tests; 708 tests passing | 5% |
+| 33 | Phase 29 | File System Events: Requirements, Design & Test Cases | REQ-042/043; design §3.2 `reindexFile()` algorithm; TC-FSE-001–009 spec; 0 new tests (implementation in Sprint 34) | 5% |
+| 34 | Phase 30 | File System Events: Implementation & Tests | `removeFile()` + `scheduleSave()` fix; `@req` tags on FSW handlers; TC-FSE-001–009 (9 new tests); 717 tests passing | 5% |
 
-**Total: 26 sprints, 26 active phases (27 numbered; Phase 4 removed)**
+**Total: 29 sprints, 29 active phases (30 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

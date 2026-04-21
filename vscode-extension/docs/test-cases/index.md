@@ -43,6 +43,7 @@ Section 3.
 | [11-local-preprocessor-macro.md](11-local-preprocessor-macro.md) | Sections 22-24: LocalTypeInfo, Preprocessor Directive, Standalone Macro Tests |
 | [12-system-e2e.md](12-system-e2e.md) | Section 19: System-Level End-to-End Tests |
 | [13-vtable-trace-view.md](13-vtable-trace-view.md) | Section 25: Vtable Resolution Trace View |
+| [14-file-system-events.md](14-file-system-events.md) | Section 26: File System Event Handling Tests |
 
 ---
 
@@ -243,6 +244,22 @@ Section 3.
 
 ---
 
+## Summary Table (Section 26)
+
+| Test Case ID | Section | Scenario | Requirement(s) |
+|-------------|---------|----------|----------------|
+| TC-FSE-001 | File System Events | `onDidCreate` watcher registered on activation | REQ-VSCODE-042 |
+| TC-FSE-002 | File System Events | New `.c` file created — vtable assignment indexed | REQ-VSCODE-042 |
+| TC-FSE-003 | File System Events | New `.h` file created — module root record indexed | REQ-VSCODE-042 |
+| TC-FSE-004 | File System Events | Negative: non-C file created — glob excludes non-C extensions | REQ-VSCODE-042 |
+| TC-FSE-005 | File System Events | `onDidDelete` watcher registered on activation | REQ-VSCODE-043 |
+| TC-FSE-006 | File System Events | Existing file deleted — all index records for that file removed | REQ-VSCODE-043 |
+| TC-FSE-007 | File System Events | Deleted file's hash removed from cache and save scheduled | REQ-VSCODE-043 |
+| TC-FSE-008 | File System Events | Delete sole implementation file — resolver returns `found: false` | REQ-VSCODE-042, REQ-VSCODE-043 |
+| TC-FSE-009 | File System Events | Boundary: file created then immediately deleted (`readFile` throws ENOENT) — no crash, no stale entry | REQ-VSCODE-042 |
+
+---
+
 ## Requirements Coverage Matrix
 
 | Requirement ID | Title | Test Case(s) |
@@ -278,5 +295,7 @@ Section 3.
 | REQ-VSCODE-030 | Trace View Call Site Node | TC-TRACE-001, TC-TRACE-004 |
 | REQ-VSCODE-031 | Trace View Composition Root Node | TC-TRACE-001, TC-TRACE-005 |
 | REQ-VSCODE-032 | Trace View Implementation Node | TC-TRACE-001, TC-TRACE-006 |
+| REQ-VSCODE-042 | Automatic Indexing of Newly Created Files | TC-FSE-001, TC-FSE-002, TC-FSE-003, TC-FSE-004, TC-FSE-008, TC-FSE-009 |
+| REQ-VSCODE-043 | Automatic Index Cleanup on File Deletion | TC-FSE-005, TC-FSE-006, TC-FSE-007, TC-FSE-008 |
 
 ---

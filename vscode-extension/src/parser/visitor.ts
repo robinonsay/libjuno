@@ -1,5 +1,6 @@
 // @{"req": ["REQ-VSCODE-003", "REQ-VSCODE-008", "REQ-VSCODE-009", "REQ-VSCODE-010", "REQ-VSCODE-011", "REQ-VSCODE-012", "REQ-VSCODE-014", "REQ-VSCODE-015", "REQ-VSCODE-016", "REQ-VSCODE-031"]}
 import { CstNode, IToken } from "chevrotain";
+import { getChild, getChildren } from "./cstHelpers";
 import { CLexer } from "./lexer";
 import { CParser } from "./parser";
 import {
@@ -10,7 +11,6 @@ import {
     ApiStructRecord,
     VtableAssignmentRecord,
     FailureHandlerRecord,
-    ApiCallSiteRecord,
     LocalTypeInfo,
     TypeInfo,
     FunctionDefinitionRecord,
@@ -61,24 +61,21 @@ function extractTypeName(
     const c = declSpecNode.children;
 
     // Static
-    for (const node of c["storageClassSpecifier"] ?? []) {
-        const n = node as CstNode;
+    for (const n of getChildren(declSpecNode, "storageClassSpecifier")) {
         if (hasToken(n.children, "Static")) {
             isStatic = true;
         }
     }
 
     // Walk typeQualifier nodes for Const
-    for (const node of c["typeQualifier"] ?? []) {
-        const n = node as CstNode;
+    for (const n of getChildren(declSpecNode, "typeQualifier")) {
         if (hasToken(n.children, "Const")) {
             isConst = true;
         }
     }
 
     // Walk typeSpecifier nodes for the type name
-    for (const node of c["typeSpecifier"] ?? []) {
-        const n = node as CstNode;
+    for (const n of getChildren(declSpecNode, "typeSpecifier")) {
         // Could be an Identifier (custom type like JUNO_DS_HEAP_API_T)
         const ident = tok(n.children, "Identifier");
         if (ident) {
@@ -194,7 +191,7 @@ function getPostfixSuffixes(postNode: CstNode): PostfixSuffix[] {
     for (const entry of sorted) {
         if (isToken(entry)) {
             const t = entry as IToken;
-            const tName = (t as any).tokenType?.name ?? "";
+            const tName = (t as IToken).tokenType.name;
             if (tName === "JunoFailureHandler" || tName === "JunoFailureUserData") {
                 // These appear after a . or -> which was already processed; mark last suffix
                 if (suffixes.length > 0 && (suffixes[suffixes.length - 1].kind === "arrow" || suffixes[suffixes.length - 1].kind === "dot")) {
@@ -243,7 +240,6 @@ class CSTWalker {
             apiStructDefinitions: [],
             vtableAssignments: [],
             failureHandlerAssigns: [],
-            apiCallSites: [],
             pendingPositionalVtables: [],
             initCallSites: [],
             localTypeInfo: {
@@ -267,35 +263,36 @@ class CSTWalker {
     // -----------------------------------------------------------------------
 
     private walkTranslationUnit(node: CstNode): void {
-        const c = node.children;
         // Both externalDeclaration and preprocessorDirective are arrays of CstNodes
-        for (const n of (c["externalDeclaration"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "externalDeclaration")) {
             this.walkExternalDeclaration(n);
         }
-        for (const n of (c["preprocessorDirective"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "preprocessorDirective")) {
             this.walkPreprocessorDirective(n);
         }
-        for (const n of (c["externCBlock"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "externCBlock")) {
             this.walkExternCBlock(n);
         }
     }
 
     private walkExternCBlock(node: CstNode): void {
-        const c = node.children;
-        for (const n of (c["externalDeclaration"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "externalDeclaration")) {
             this.walkExternalDeclaration(n);
         }
-        for (const n of (c["preprocessorDirective"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "preprocessorDirective")) {
             this.walkPreprocessorDirective(n);
         }
     }
 
     private walkExternalDeclaration(node: CstNode): void {
-        const c = node.children;
-        if (c["functionDefinition"]?.length) {
-            this.walkFunctionDefinition(c["functionDefinition"][0] as CstNode);
-        } else if (c["declaration"]?.length) {
-            this.walkDeclaration(c["declaration"][0] as CstNode);
+        const fnDef = getChild(node, "functionDefinition");
+        if (fnDef) {
+            this.walkFunctionDefinition(fnDef);
+        } else {
+            const decl = getChild(node, "declaration");
+            if (decl) {
+                this.walkDeclaration(decl);
+            }
         }
         // junoStandaloneDeclaration: no data to extract for the index
     }
@@ -383,7 +380,7 @@ class CSTWalker {
         const pl = child(ptl.children, "parameterList");
         if (!pl) { return params; }
 
-        for (const pdEntry of (pl.children["parameterDeclaration"] ?? []) as CstNode[]) {
+        for (const pdEntry of getChildren(pl, "parameterDeclaration")) {
             const ti = this.extractTypeInfoFromParamDecl(pdEntry, fnName);
             if (ti) { params.push(ti); }
         }
@@ -424,39 +421,47 @@ class CSTWalker {
     // -----------------------------------------------------------------------
 
     private walkCompoundStatement(node: CstNode): void {
-        const c = node.children;
         // Local declarations
-        for (const n of (c["declaration"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "declaration")) {
             this.walkDeclaration(n);
         }
         // Statements (may contain nested compound statements, expression statements, etc.)
-        for (const n of (c["statement"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "statement")) {
             this.walkStatement(n);
         }
     }
 
     private walkStatement(node: CstNode): void {
-        const c = node.children;
-        if (c["compoundStatement"]?.length) {
-            this.walkCompoundStatement(c["compoundStatement"][0] as CstNode);
-        } else if (c["expressionStatement"]?.length) {
-            this.walkExpressionStatement(c["expressionStatement"][0] as CstNode);
-        } else if (c["selectionStatement"]?.length) {
-            this.walkSelectionStatement(c["selectionStatement"][0] as CstNode);
-        } else if (c["iterationStatement"]?.length) {
-            this.walkIterationStatement(c["iterationStatement"][0] as CstNode);
+        const compound = getChild(node, "compoundStatement");
+        if (compound) {
+            this.walkCompoundStatement(compound);
+        } else {
+            const exprStmt = getChild(node, "expressionStatement");
+            if (exprStmt) {
+                this.walkExpressionStatement(exprStmt);
+            } else {
+                const selStmt = getChild(node, "selectionStatement");
+                if (selStmt) {
+                    this.walkSelectionStatement(selStmt);
+                } else {
+                    const iterStmt = getChild(node, "iterationStatement");
+                    if (iterStmt) {
+                        this.walkIterationStatement(iterStmt);
+                    }
+                }
+            }
         }
         // jumpStatement / labeledStatement: no index data
     }
 
     private walkSelectionStatement(node: CstNode): void {
-        for (const n of (node.children["statement"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "statement")) {
             this.walkStatement(n);
         }
     }
 
     private walkIterationStatement(node: CstNode): void {
-        for (const n of (node.children["statement"] ?? []) as CstNode[]) {
+        for (const n of getChildren(node, "statement")) {
             this.walkStatement(n);
         }
     }
@@ -484,7 +489,7 @@ class CSTWalker {
         }
 
         // Walk any structOrUnionSpecifier in the declarationSpecifiers
-        for (const n of (declSpec.children["typeSpecifier"] ?? []) as CstNode[]) {
+        for (const n of getChildren(declSpec, "typeSpecifier")) {
             const sus = child(n.children, "structOrUnionSpecifier");
             if (sus) {
                 this.walkStructOrUnionSpecifier(sus);
@@ -514,7 +519,7 @@ class CSTWalker {
         }
         const fnMap = this.result.localTypeInfo.localVariables.get(fn)!;
 
-        for (const entry of (idl.children["initDeclarator"] ?? []) as CstNode[]) {
+        for (const entry of getChildren(idl, "initDeclarator")) {
             const declarator = child(entry.children, "declarator");
             if (!declarator) { continue; }
             const info = extractDeclaratorInfo(declarator);
@@ -539,7 +544,7 @@ class CSTWalker {
         const idl = child(c, "initDeclaratorList");
         if (!idl) { return; }
 
-        for (const entry of (idl.children["initDeclarator"] ?? []) as CstNode[]) {
+        for (const entry of getChildren(idl, "initDeclarator")) {
             const initNode = child(entry.children, "initializer");
             if (!initNode) { continue; }
 
@@ -553,8 +558,8 @@ class CSTWalker {
 
             // Collect all designation+initializer pairs
             const ilic = ilitNode.children;
-            const designations = (ilic["designation"] ?? []) as CstNode[];
-            const initializers = (ilic["initializer"] ?? []) as CstNode[];
+            const designations = getChildren(ilitNode, "designation");
+            const initializers = getChildren(ilitNode, "initializer");
 
             if (designations.length > 0) {
                 // Designated initializer
@@ -633,7 +638,7 @@ class CSTWalker {
 
     private extractDesignationField(desigNode: CstNode): string | undefined {
         // designation → designator+ '='
-        for (const desigEntry of (desigNode.children["designator"] ?? []) as CstNode[]) {
+        for (const desigEntry of getChildren(desigNode, "designator")) {
             // designator → '.' Identifier (for field designation)
             const ident = tok(desigEntry.children, "Identifier");
             if (ident) { return ident.image; }
@@ -724,11 +729,13 @@ class CSTWalker {
     }
 
     private dispatchMacro(macroCst: CstNode, tag: string, line: number): void {
-        const mc = macroCst.children;
+        const mRoot = getChild(macroCst, "junoModuleRootMacro");
+        const mDerive = getChild(macroCst, "junoModuleDeriveMacro");
+        const mTraitRoot = getChild(macroCst, "junoTraitRootMacro");
+        const mTraitDerive = getChild(macroCst, "junoTraitDeriveMacro");
 
-        if (mc["junoModuleRootMacro"]?.length) {
-            const m = mc["junoModuleRootMacro"][0] as CstNode;
-            const apiType = (tok(m.children, "Identifier") ?? tok(m.children, "Void"))?.image ?? "";
+        if (mRoot) {
+            const apiType = (tok(mRoot.children, "Identifier") ?? tok(mRoot.children, "Void"))?.image ?? "";
             if (!apiType) { return; }
             const rec: ModuleRootRecord = {
                 rootType: tagToType(tag),
@@ -738,10 +745,9 @@ class CSTWalker {
             };
             this.result.moduleRoots.push(rec);
             // Also walk macro body tokens for nested struct members
-            this.walkMacroBodyForApiMembers(m, tag);
-        } else if (mc["junoModuleDeriveMacro"]?.length) {
-            const m = mc["junoModuleDeriveMacro"][0] as CstNode;
-            const rootType = tok(m.children, "Identifier")?.image ?? "";
+            this.walkMacroBodyForApiMembers(mRoot, tag);
+        } else if (mDerive) {
+            const rootType = tok(mDerive.children, "Identifier")?.image ?? "";
             if (!rootType) { return; }
             const rec: DerivationRecord = {
                 derivedType: tagToType(tag),
@@ -750,10 +756,9 @@ class CSTWalker {
                 line,
             };
             this.result.derivations.push(rec);
-            this.walkMacroBodyForApiMembers(m, tag);
-        } else if (mc["junoTraitRootMacro"]?.length) {
-            const m = mc["junoTraitRootMacro"][0] as CstNode;
-            const apiType = tok(m.children, "Identifier")?.image ?? "";
+            this.walkMacroBodyForApiMembers(mDerive, tag);
+        } else if (mTraitRoot) {
+            const apiType = tok(mTraitRoot.children, "Identifier")?.image ?? "";
             if (!apiType) { return; }
             const rec: TraitRootRecord = {
                 rootType: tagToType(tag),
@@ -762,10 +767,9 @@ class CSTWalker {
                 line,
             };
             this.result.traitRoots.push(rec);
-            this.walkMacroBodyForApiMembers(m, tag);
-        } else if (mc["junoTraitDeriveMacro"]?.length) {
-            const m = mc["junoTraitDeriveMacro"][0] as CstNode;
-            const rootType = tok(m.children, "Identifier")?.image ?? "";
+            this.walkMacroBodyForApiMembers(mTraitRoot, tag);
+        } else if (mTraitDerive) {
+            const rootType = tok(mTraitDerive.children, "Identifier")?.image ?? "";
             if (!rootType) { return; }
             const rec: DerivationRecord = {
                 derivedType: tagToType(tag),
@@ -774,7 +778,7 @@ class CSTWalker {
                 line,
             };
             this.result.derivations.push(rec);
-            this.walkMacroBodyForApiMembers(m, tag);
+            this.walkMacroBodyForApiMembers(mTraitDerive, tag);
         }
         // junoModuleMacro: no root/derive data to extract for the index
     }
@@ -797,7 +801,7 @@ class CSTWalker {
         // We need them in source order.
         const allToks = (Object.values(bodyNode.children).flat() as Array<CstNode | IToken>)
             .filter(isToken)
-            .sort((a, b) => (a as IToken).startOffset - (b as IToken).startOffset) as IToken[];
+            .sort((a, b) => a.startOffset - b.startOffset);
 
         // Scan for pattern: IDENT(_API_T) [*] IDENT ;
         for (let i = 0; i < allToks.length - 1; i++) {
@@ -808,7 +812,6 @@ class CSTWalker {
                 if (j < allToks.length && allToks[j].image === "*") { j++; }
                 if (j < allToks.length && /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(allToks[j].image)) {
                     const memberName = allToks[j].image;
-                    this.result.apiCallSites; // touch to avoid unused warning
                     // Populate apiMemberRegistry — stored in a side channel exposed via getter
                     this._apiMemberRegistry.set(memberName, t.image);
                 }
@@ -830,14 +833,14 @@ class CSTWalker {
         const fields: string[] = [];
 
         if (sdlNode) {
-            for (const sdEntry of (sdlNode.children["structDeclaration"] ?? []) as CstNode[]) {
+            for (const sdEntry of getChildren(sdlNode, "structDeclaration")) {
                 // Function pointer field: structDeclarator → declarator
                 // directDeclarator form: '(' '*' Identifier ')' '(' parameterTypeList ')'
                 const sdlc = sdEntry.children;
                 const sdList = child(sdlc, "structDeclaratorList");
                 if (!sdList) { continue; }
 
-                for (const sd of (sdList.children["structDeclarator"] ?? []) as CstNode[]) {
+                for (const sd of getChildren(sdList, "structDeclarator")) {
                     const declarator = child(sd.children, "declarator");
                     if (!declarator) { continue; }
                     const directDecl = child(declarator.children, "directDeclarator");
@@ -902,7 +905,7 @@ class CSTWalker {
     }
 
     private extractTypeFromSpecifierQualifierList(sqlNode: CstNode): string {
-        for (const tsEntry of (sqlNode.children["typeSpecifier"] ?? []) as CstNode[]) {
+        for (const tsEntry of getChildren(sqlNode, "typeSpecifier")) {
             const ident = tok(tsEntry.children, "Identifier");
             if (ident) { return ident.image; }
         }
@@ -926,8 +929,6 @@ class CSTWalker {
         const aeC = ae.children;
         // Check if this is an assignment: conditionalExpression assignmentOperator assignmentExpression
         if (!aeC["assignmentOperator"]?.length) {
-            // Not an assignment — check for call sites
-            this.tryExtractCallSite(ae);
             return;
         }
 
@@ -943,7 +944,7 @@ class CSTWalker {
         const functionName = rhsPostfix ? getPostfixPrimary(rhsPostfix) : undefined;
         if (!functionName) { return; }
 
-        const assignLine = (aeC["assignmentOperator"][0] as CstNode).location?.startLine
+        const assignLine = getChild(ae, "assignmentOperator")?.location?.startLine
             ?? lhsPostfix.location?.startLine ?? 0;
 
         // Check for failure handler: LHS ends with JunoFailureHandler member access
@@ -989,7 +990,7 @@ class CSTWalker {
         const varName = getPostfixPrimary(lhsPostfix);
         if (!varName) { return; }
 
-        const memberIdents = (lhsPostfix.children["memberIdentifier"] ?? []) as CstNode[];
+        const memberIdents = getChildren(lhsPostfix, "memberIdentifier");
         if (memberIdents.length === 0) { return; }
 
         const lastMember = memberIdents[memberIdents.length - 1];
@@ -1024,46 +1025,6 @@ class CSTWalker {
         });
     }
 
-    // -----------------------------------------------------------------------
-    // tryExtractCallSite — `ptApi->Method(args)` patterns
-    // -----------------------------------------------------------------------
-
-    private tryExtractCallSite(ae: CstNode): void {
-        const postfix = drillToPostfix(ae);
-        if (!postfix) { return; }
-
-        const pc = postfix.children;
-        // Requires at least: primaryExpression → varName, then '->' memberIdentifier, then '(' args ')'
-        const varName = getPostfixPrimary(postfix);
-        if (!varName) { return; }
-
-        const memberIdents = (pc["memberIdentifier"] ?? []) as CstNode[];
-        if (memberIdents.length === 0) { return; }
-
-        // Detect if there's a call (LParen following the last member)
-        // In the postfix expression, the call '(' is represented by LParen tokens.
-        // We look for the pattern: memberIdentifier followed by LParen.
-        // Since all such children are in the postfix node, we check for ArrowOp or Dot
-        // followed by memberIdentifier followed by LParen.
-        const hasCall = hasToken(pc, "LParen");
-        if (!hasCall) { return; }
-
-        // The field being called is the last memberIdentifier before the call
-        const lastMember = memberIdents[memberIdents.length - 1];
-        const field = tok(lastMember.children, "Identifier")?.image;
-        if (!field) { return; }
-
-        const line = postfix.location?.startLine ?? 0;
-        const col = tok(lastMember.children, "Identifier")?.startColumn ?? 0;
-
-        this.result.apiCallSites.push({
-            variableName: varName,
-            fieldName: field,
-            file: this.filePath,
-            line,
-            column: col,
-        });
-    }
 }
 
 // ---------------------------------------------------------------------------

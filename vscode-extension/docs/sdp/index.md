@@ -11,3 +11,4 @@ This document has been split into the following sections for easier agent naviga
 | [05-schedule.md](05-schedule.md) | Section 5: Sprint Schedule and entry/exit criteria |
 | [06-strategy-traceability-done.md](06-strategy-traceability-done.md) | Sections 6-8: Debugging Strategy, Test Case Traceability, Definition of Done |
 | [07-appendix.md](07-appendix.md) | Sections 9-10: File Structure Appendix, Review Findings Log |
+| [08-technical-debt.md](08-technical-debt.md) | Section 9: Technical Debt Register — 22 debt items across 6 categories (Source Code, Coverage, Test Infrastructure, Documentation, Requirements, Architecture) |
