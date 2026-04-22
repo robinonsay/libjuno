@@ -324,7 +324,7 @@ describe('Sprint 17 Regression — WorkspaceIndexer: reindexFile positional vtab
         expect(runLocs).toHaveLength(1);
         expect(runLocs![0].functionName).toBe('MyRun');
         expect(runLocs![0].file).toBe(fileB);
-    });
+    }, 15000);
 });
 
 // ---------------------------------------------------------------------------

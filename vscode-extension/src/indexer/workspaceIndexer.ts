@@ -83,6 +83,8 @@ export class WorkspaceIndexer {
         removeFileRecords(this.index, filePath);
         const relPath = path.relative(this.workspaceRoot, filePath);
         this.fileHashes.delete(relPath);
+        this.resolveCompositionRoots();
+        this.resolveInitCallers();
         this.scheduleSave();
     }
 
@@ -195,7 +197,7 @@ export class WorkspaceIndexer {
      * Parses one file and merges its results into the index.
      * Appends any unresolved positional vtable initializers to `deferred`.
      */
-    private async indexFile(filePath: string, deferred?: DeferredPositional[]): Promise<void> {
+    private async indexFile(filePath: string, deferred: DeferredPositional[]): Promise<void> {
         let text: string;
         try {
             text = await fs.promises.readFile(filePath, "utf8");
@@ -219,7 +221,7 @@ export class WorkspaceIndexer {
         parsed: ParsedFile,
         functionDefs: FunctionDefinitionRecord[],
         apiMemberRegistry: Map<string, string>,
-        deferred?: DeferredPositional[]
+        deferred: DeferredPositional[]
     ): void {
         const idx = this.index;
 
@@ -305,16 +307,14 @@ export class WorkspaceIndexer {
         idx.localTypeInfo.set(parsed.filePath, parsed.localTypeInfo);
 
         // pendingPositionalVtables: convert to DeferredPositional and append
-        if (deferred) {
-            for (const pp of parsed.pendingPositionalVtables) {
-                deferred.push({
-                    apiType: pp.apiType,
-                    initializers: pp.initializers,
-                    filePath: pp.file,
-                    lines: pp.lines,
-                    varName: pp.varName,
-                });
-            }
+        for (const pp of parsed.pendingPositionalVtables) {
+            deferred.push({
+                apiType: pp.apiType,
+                initializers: pp.initializers,
+                filePath: pp.file,
+                lines: pp.lines,
+                varName: pp.varName,
+            });
         }
     }
 
@@ -424,7 +424,7 @@ export class WorkspaceIndexer {
         return best?.functionName;
     }
 
-    // @{"req": ["REQ-VSCODE-036"]}
+    // @{"req": ["REQ-VSCODE-036", "REQ-VSCODE-044"]}
     /**
      * Scans all indexed source files for call sites where a known API struct
      * variable's address is passed as an argument (e.g. `&gtMyLoggerApi`).
@@ -458,10 +458,13 @@ export class WorkspaceIndexer {
                 continue;
             }
             const lines = text.split('\n');
+            let inBlock = false;
             for (let i = 0; i < lines.length; i++) {
+                const { stripped, inBlockComment } = this.stripNonCode(lines[i], inBlock);
+                inBlock = inBlockComment;
                 pattern.lastIndex = 0;
                 let m: RegExpExecArray | null;
-                while ((m = pattern.exec(lines[i])) !== null) {
+                while ((m = pattern.exec(stripped)) !== null) {
                     const varName = m[1];
                     let sites = this.index.initCallIndex.get(varName);
                     if (!sites) {
@@ -488,7 +491,7 @@ export class WorkspaceIndexer {
         }
     }
 
-    // @{"req": ["REQ-VSCODE-037"]}
+    // @{"req": ["REQ-VSCODE-037", "REQ-VSCODE-044", "REQ-VSCODE-045", "REQ-VSCODE-047", "REQ-VSCODE-048"]}
     private resolveInitCallers(): void {
         for (const fieldMap of this.index.vtableAssignments.values()) {
             for (const locs of fieldMap.values()) {
@@ -501,33 +504,36 @@ export class WorkspaceIndexer {
                     );
                     if (!initFnName) { continue; }
 
-                    // 'main' has no callers in C user code — skip to avoid false positives.
-                    if (initFnName === 'main') { continue; }
-
-                    // Scan all indexed files for a call to that function.
+                    // Scan all indexed files for all calls to that function.
                     const callPattern = new RegExp(`\\b${initFnName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\(`, 'g');
-                    let found = false;
+                    const allCallers: Array<{ file: string; line: number }> = [];
                     for (const relPath of this.fileHashes.keys()) {
-                        if (found) { break; }
                         const ext = path.extname(relPath).toLowerCase();
                         if (ext !== '.c' && ext !== '.cpp') { continue; }
                         const absPath = path.join(this.workspaceRoot, relPath);
                         let text: string;
                         try { text = fs.readFileSync(absPath, 'utf8'); } catch { continue; }
                         const lines = text.split('\n');
+                        let inBlock = false;
                         for (let i = 0; i < lines.length; i++) {
+                            const { stripped, inBlockComment } = this.stripNonCode(lines[i], inBlock);
+                            inBlock = inBlockComment;
                             callPattern.lastIndex = 0;
-                            if (callPattern.test(lines[i])) {
+                            if (callPattern.test(stripped)) {
                                 // Skip the function definition line itself.
                                 const defs = this.index.functionDefinitions.get(initFnName);
                                 const isDef = defs?.some((d) => d.file === absPath && d.line === i + 1);
                                 if (isDef) { continue; }
-                                loc.compRootFile = absPath;
-                                loc.compRootLine = i + 1;
-                                found = true;
-                                break;
+                                allCallers.push({ file: absPath, line: i + 1 });
                             }
                         }
+                    }
+
+                    allCallers.sort((a, b) => a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line);
+                    if (allCallers.length > 0) {
+                        loc.compRootFile = allCallers[0].file;
+                        loc.compRootLine = allCallers[0].line;
+                        loc.allCompRoots = allCallers;
                     }
                 }
             }
@@ -570,6 +576,53 @@ export class WorkspaceIndexer {
                 fieldMap.set(fields[i], existing);
             }
         }
+    }
+
+    /**
+     * Strips C/C++ comments and string/character literals from a single source line,
+     * carrying block-comment state across lines via the `inBlockComment` parameter.
+     *
+     * @param line - The raw source line to process.
+     * @param inBlockComment - Whether a block comment was open at the start of this line.
+     * @returns The stripped line and the updated block-comment state.
+     */
+    // @{"req": ["REQ-VSCODE-044"]}
+    private stripNonCode(line: string, inBlockComment: boolean): { stripped: string; inBlockComment: boolean } {
+        let result = '';
+        let i = 0;
+        while (i < line.length) {
+            if (inBlockComment) {
+                const end = line.indexOf('*/', i);
+                if (end === -1) {
+                    return { stripped: result, inBlockComment: true };
+                }
+                i = end + 2;
+                inBlockComment = false;
+            } else if (line[i] === '/' && line[i + 1] === '/') {
+                break; // rest of line is a line comment
+            } else if (line[i] === '/' && line[i + 1] === '*') {
+                inBlockComment = true;
+                i += 2;
+            } else if (line[i] === '"') {
+                i++;
+                while (i < line.length && line[i] !== '"') {
+                    if (line[i] === '\\') { i++; } // skip escaped char
+                    i++;
+                }
+                i++; // skip closing quote
+            } else if (line[i] === "'") {
+                i++;
+                while (i < line.length && line[i] !== "'") {
+                    if (line[i] === '\\') { i++; }
+                    i++;
+                }
+                i++; // skip closing quote
+            } else {
+                result += line[i];
+                i++;
+            }
+        }
+        return { stripped: result, inBlockComment };
     }
 
     /**

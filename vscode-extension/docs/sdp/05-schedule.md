@@ -37,8 +37,10 @@ Each sprint represents one orchestration cycle: plan → delegate → verify →
 | 32 | Phase 27 | MCP Tool Quality Improvements | REQ-038–041 new requirements; `resolve_failure_handler` JUNO_APP_ROOT_T support; column hint in not-found errors; file-not-indexed message; `kind` field in results; standalone MCP launcher; 10 new tests; 708 tests passing | 5% |
 | 33 | Phase 29 | File System Events: Requirements, Design & Test Cases | REQ-042/043; design §3.2 `reindexFile()` algorithm; TC-FSE-001–009 spec; 0 new tests (implementation in Sprint 34) | 5% |
 | 34 | Phase 30 | File System Events: Implementation & Tests | `removeFile()` + `scheduleSave()` fix; `@req` tags on FSW handlers; TC-FSE-001–009 (9 new tests); 717 tests passing | 5% |
+| 39 | — | Composition Root Detection Robustness (Option B) | `stripNonCode()` helper; `resolveCompositionRoots()` comment/string stripping; `resolveInitCallers()` collect-all-callers + `main()` recognition + deterministic sort; `allCompRoots` field on `ConcreteLocation`; TC-COMPROOT-001–008 (8 new tests); 725 tests passing; REQ-044, 045, 047, 048 traced | 5% |
+| 40 | — | Composition Root Callers List in Trace Panel (REQ-046) | `VtableTrace.compositionRoots: TraceNode[]`; `<ul class="caller-list">` in WebviewPanel; `allCompRoots` consumed by provider; TC-TRACE-046-001–003 (3 new tests); 728 tests passing; REQ-046 traced | 5% |
 
-**Total: 29 sprints, 29 active phases (30 numbered; Phase 4 removed)**
+**Total: 31 sprints, 29 active phases (30 numbered; Phase 4 removed)**
 
 ### Sprint Entry Criteria
 

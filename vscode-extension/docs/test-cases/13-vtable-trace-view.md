@@ -606,3 +606,82 @@ provider does not attempt to render an empty trace. It also documents known beha
 **Expected:** `ConcreteLocation.compRootFile` is `undefined`; `initCallFile` ends with `trace029_main.c`.
 
 ---
+
+### TC-TRACE-046-001: Single allCompRoots entry renders as caller-list with one item
+
+**Requirement:** REQ-VSCODE-046
+
+**Scenario:** When `ConcreteLocation.allCompRoots` contains exactly one entry, the WebviewPanel HTML contains a `<ul class="caller-list">` with exactly one `<li>` and shows `(1 caller)`.
+
+**Setup:**
+- `VtableResolver` mock returns one location:
+  ```typescript
+  {
+    functionName: 'JunoDs_BuffQueue_Dequeue',
+    file: 'src/juno_buff_queue.c',
+    line: 112,
+    assignmentFile: 'src/engine_app.c',
+    assignmentLine: 45,
+    allCompRoots: [{ file: '/abs/main.c', line: 12 }]
+  }
+  ```
+
+**Expected:**
+- HTML contains `<ul class="caller-list">`.
+- HTML contains exactly one `<li>` inside the caller-list.
+- HTML contains `(1 caller)`.
+- HTML contains a link with `data-file` pointing to `/abs/main.c` and `data-line="12"`.
+
+---
+
+### TC-TRACE-046-002: Multiple allCompRoots entries render as caller-list with N items
+
+**Requirement:** REQ-VSCODE-046
+
+**Scenario:** When `ConcreteLocation.allCompRoots` contains three entries, the WebviewPanel HTML contains a `<ul class="caller-list">` with three `<li>` items and shows `(3 callers)`.
+
+**Setup:**
+- `VtableResolver` mock returns one location with:
+  ```typescript
+  allCompRoots: [
+    { file: '/abs/main.c',          line: 12 },
+    { file: '/abs/test_broker.c',   line: 45 },
+    { file: '/abs/platform_init.c', line: 88 }
+  ]
+  ```
+
+**Expected:**
+- HTML contains `(3 callers)`.
+- HTML contains exactly three `<li>` elements inside the caller-list.
+- All three file paths appear in the HTML (as `data-file` attributes or in link text).
+
+---
+
+### TC-TRACE-046-003: Fallback when allCompRoots absent — single caller from compRootFile
+
+**Requirement:** REQ-VSCODE-046
+
+**Scenario:** When `ConcreteLocation.allCompRoots` is undefined, the provider falls back to the single `compRootFile`/`compRootLine` and renders a caller-list with one item.
+
+**Setup:**
+- `VtableResolver` mock returns one location with `compRootFile: '/abs/main.c'`, `compRootLine: 12`, and NO `allCompRoots` field.
+
+**Expected:**
+- HTML contains `<ul class="caller-list">`.
+- HTML contains exactly one `<li>` inside the caller-list.
+- HTML contains a link targeting `/abs/main.c:12`.
+
+---
+
+## Requirements Coverage Matrix
+
+| Requirement ID | Title | Test Case(s) |
+|---|---|---|
+| REQ-VSCODE-027 | Vtable Resolution Trace View | TC-TRACE-002, TC-TRACE-003, TC-TRACE-007, TC-TRACE-008, TC-TRACE-009, TC-TRACE-013, TC-TRACE-014, TC-TRACE-015 |
+| REQ-VSCODE-028 | Trace View Activation via Keyboard | TC-TRACE-010, TC-TRACE-011 |
+| REQ-VSCODE-029 | Trace View Activation via Command Palette | TC-TRACE-010, TC-TRACE-012 |
+| REQ-VSCODE-030 | Trace View Call Site Node | TC-TRACE-001, TC-TRACE-004 |
+| REQ-VSCODE-031 | Trace View Composition Root Node | TC-TRACE-001, TC-TRACE-005 |
+| REQ-VSCODE-032 | Trace View Implementation Node | TC-TRACE-001, TC-TRACE-006 |
+| REQ-VSCODE-043 | Automatic Index Cleanup on File Deletion | TC-FSE-005, TC-FSE-006, TC-FSE-007, TC-FSE-008 |
+| REQ-VSCODE-046 | Composition Root Callers List in Trace Panel | TC-TRACE-046-001, TC-TRACE-046-002, TC-TRACE-046-003 |

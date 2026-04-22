@@ -246,3 +246,56 @@ This is non-negotiable every sprint without exception.
 - Notifications (no `id` field) must return HTTP 202 with no body — NOT a MethodNotFound error. A specific check for one notification name is insufficient; the guard must cover ALL methods with no `id`.
 - `tools/call` must validate `arguments` fields before passing to the handler, returning `-32602 InvalidParams` on missing/wrong-typed fields. Silently casting `undefined` as `string` is a latent crash.
 - Both issues are caught by code review, not unit tests (unit tests typically supply well-formed inputs). Always ask: "what happens if `id` is absent?" and "what happens if required `arguments` fields are missing?" when implementing any JSON-RPC handler.
+
+### 2026-04-20 — Pre-existing implementations discovered during sprint: annotate only, don't re-implement
+- Sprint 34: `onDidCreate`/`onDidChange`/`onDidDelete` handlers in `extension.ts` were already correctly wired from a prior sprint. The only source gap was `removeFile()` missing `scheduleSave()`.
+- When the implementation is 95%+ complete, scope the sprint to the actual gap, not a full reimplementation.
+- Always read the source files before planning implementation work items — discovery prevents wasted effort.
+
+### 2026-04-20 — Test specs using manual index injection may not match real indexer behavior
+- TC-FSE-008 spec assumed manual `apiStructFields` setup would produce "JUNO_LOG_API_T" in the errorMsg. The real indexer flow (fullIndex → removeFile) produces "No API type contains field 'LogInfo'." instead.
+- When test specs describe pre-populated NavigationIndex states and the test uses a real indexer with `fullIndex()`, the resolver's error messages may differ from the spec's predicted strings.
+- Fix: assert the field name (`'LogInfo'`) rather than the type name, since fieldNameFallback always produces a field-centric message. Update the spec assertion to match what the production code actually emits.
+
+### 2026-04-20 — Two verifiers giving conflicting verdicts on the same check: trust the one who ran the tool
+- Quality engineer reported traceability tool exits 1; verification engineer ran the tool and confirmed exit 0.
+- When two verifiers conflict on a binary outcome (tool pass/fail), trust the verifier who executed the command and reported the actual output, not the one who inferred it.
+- Resolution: the verification engineer's APPROVED stands; the quality engineer's Finding 1 was erroneous.
+
+### 2026-04-20 — Documentation-only sprints: traceability exits 1 is expected and accepted
+- When a sprint adds requirements with `verification_method: "Test"` but defers Jest implementation to the next sprint, `verify_traceability.py` will exit 1 (missing @req/@verify tags). This is expected and should be noted explicitly in the SDP phase's Known Traceability Gap section.
+- Do NOT block the sprint exit on this — the gap is by design and will be closed next sprint.
+- When spawning the final quality engineer, explicitly state which traceability errors are expected so they are not misclassified as blocking defects.
+
+### 2026-04-20 — Parallel research agents are effective for codebase-wide documentation sprints
+- Sprint 35: Three parallel agents (source scan, docs scan, lessons-learned scan) produced comprehensive input for the technical debt register. Total round-trip was one spawning wave + one writing wave + one fix wave.
+- For documentation tasks where codebase scanning is needed, spawn multiple lightweight research agents in parallel, then synthesize in a single writing agent.
+- Factual claims (counts, method names) must always be verified by a senior engineer before the document is submitted — "~39" vs "~47" cast count and `gobbleMacroCallStatement` vs `macroCallStatement` were both caught in review.
+
+### 2026-04-21 — Dead code removal: always brief the worker to delete the backing type, not just the field
+- Sprint 36 WI-36.1: worker removed `ParsedFile.apiCallSites` and `tryExtractCallSite()` but left the `ApiCallSiteRecord` interface exported in `types.ts`. Senior engineer caught it.
+- When briefing dead code removal, explicitly list every artifact to delete: the field in the consuming interface, the backing type definition, any associated Doxygen comment, any references in design docs, and any stale test description strings.
+- Brief template: "Delete: (a) the field from the interface, (b) the type definition, (c) the test assertions, (d) the design doc references."
+
+### 2026-04-21 — Stale text in test `it()` description strings is a code quality finding
+- Senior engineer flagged `"no apiCallSite"` inside an `it()` description string as a stale reference even after the comment above it was cleaned.
+- Test description strings are as much part of the codebase as comments — they appear in CI output and communicate intent. Grep for the removed concept in both comments AND string literals.
+
+### 2026-04-21 — Design-only sprint: traceability script failures for new unimplemented REQs are non-blocking
+- When new requirements are added without source/test annotations (design sprint, no implementation), the traceability script exits FAIL. This is expected and does not block the sprint gate.
+- Final quality engineer brief must explicitly state this so the gate is not rejected on traceability alone.
+
+### 2026-04-21 — Option A feasibility claims must include empirical CST node investigation prerequisite upfront
+- Sprint 37 WI-37.2: design doc claimed "no grammar changes needed, only new visitor code" without prominently flagging the required CST key investigation. Senior engineer caught the contradiction.
+- Any design proposal that extends the Chevrotain visitor must include a bolded prerequisite at the TOP of the proposal: "CST node shapes must be verified empirically before writing visitor code."
+
+### 2026-04-21 — Traceability link direction: always verify uses/implements polarity in requirements
+- Sprint 37 WI-37.4: requirements agent set `implements` on REQ-VSCODE-045 pointing to REQ-VSCODE-048, and `uses` on REQ-VSCODE-047 pointing to an unrelated sibling requirement.
+- Before the senior engineer review, the Lead should spot-check new requirements: does `uses` point UP (to a parent that constrains this one), and does `implements` point DOWN (to a child that this one subsumes)?
+- Wrong polarity breaks traceability graph traversal silently.
+
+### 2026-04-20 — Design doc pseudocode must match the full algorithm contract of named helper functions
+- When a design doc references a helper function (e.g., `mergeInto`, `removeFileRecords`), the contract of that function must be spelled out either inline or via a blockquote note.
+- Missing contracts cause verifiers to flag the algorithm as incomplete even if the behavior is correct.
+- When `reindexFile()` is introduced as a named algorithm, it must include ALL steps from `fullIndex()` that apply per-file (including localTypeInfo store, deferred resolution, composition root + init caller resolution).
+- Delegating from two event handlers to one named algorithm (`onDidCreate` and `onDidChange` both call `reindexFile()`) is the correct pattern — avoids maintenance divergence and makes verification tractable.

@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-027", "REQ-VSCODE-028", "REQ-VSCODE-029", "REQ-VSCODE-030", "REQ-VSCODE-031", "REQ-VSCODE-032"]}
+// @{"req": ["REQ-VSCODE-027", "REQ-VSCODE-028", "REQ-VSCODE-029", "REQ-VSCODE-030", "REQ-VSCODE-031", "REQ-VSCODE-032", "REQ-VSCODE-046"]}
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { VtableResolver } from '../resolver/vtableResolver';
@@ -24,10 +24,10 @@ interface TraceNode {
  * implementation, producing a 4-node chain.
  */
 interface VtableTrace {
-    callSite:        TraceNode;
-    compositionRoot: TraceNode;
-    initImpl?:       TraceNode;  // present only when both compRootFile and initCallFile are resolved
-    implementation:  TraceNode;
+    callSite:         TraceNode;
+    compositionRoots: TraceNode[];
+    initImpl?:        TraceNode;  // present only when both compRootFile and initCallFile are resolved
+    implementation:   TraceNode;
 }
 
 /**
@@ -57,7 +57,7 @@ function generateNonce(): string {
  * Builds the HTML for a single composition-root (+ optional init-impl) +
  * implementation subtree.
  */
-function buildSubtreeHtml(compositionRoot: TraceNode, implementation: TraceNode, initImpl?: TraceNode): string {
+function buildSubtreeHtml(compositionRoots: TraceNode[], implementation: TraceNode, initImpl?: TraceNode): string {
     const initImplHtml = initImpl ? `
   <div class="trace-connector">│</div>
   <div class="trace-node init-impl">
@@ -69,15 +69,22 @@ function buildSubtreeHtml(compositionRoot: TraceNode, implementation: TraceNode,
     </div>
   </div>` : '';
 
+    const callerCount = compositionRoots.length;
+    const callerLabel = callerCount === 1 ? '(1 caller)' : `(${callerCount} callers)`;
+    const callerListHtml = compositionRoots.map(cr => `
+    <li>
+      <a href="#" data-file="${escHtml(cr.file)}" data-line="${cr.line}">${escHtml(cr.file)}:${cr.line}</a>
+      <code>${escHtml(cr.detail)}</code>
+    </li>`).join('');
+
     return `
   <div class="trace-connector">│</div>
   <div class="trace-node composition-root">
     <span class="node-icon">🔗</span>
-    <span class="node-label">Composition Root</span>
-    <div class="node-detail">
-      <a href="#" data-file="${escHtml(compositionRoot.file)}" data-line="${compositionRoot.line}">${escHtml(compositionRoot.file)}:${compositionRoot.line}</a>
-      <code>${escHtml(compositionRoot.detail)}</code>
-    </div>
+    <span class="node-label">Composition Roots</span>
+    <span class="node-count">${callerLabel}</span>
+    <ul class="caller-list">${callerListHtml}
+    </ul>
   </div>${initImplHtml}
   <div class="trace-connector">│</div>
   <div class="trace-node implementation">
@@ -98,11 +105,11 @@ function generateHtml(traces: VtableTrace[], nonce: string): string {
 
     let subtreesHtml: string;
     if (traces.length === 1) {
-        subtreesHtml = buildSubtreeHtml(traces[0].compositionRoot, traces[0].implementation, traces[0].initImpl);
+        subtreesHtml = buildSubtreeHtml(traces[0].compositionRoots, traces[0].implementation, traces[0].initImpl);
     } else {
         subtreesHtml = traces.map((trace, idx) => `
   <details open>
-    <summary>Result ${idx + 1}: ${escHtml(trace.implementation.label)}</summary>${buildSubtreeHtml(trace.compositionRoot, trace.implementation, trace.initImpl)}
+    <summary>Result ${idx + 1}: ${escHtml(trace.implementation.label)}</summary>${buildSubtreeHtml(trace.compositionRoots, trace.implementation, trace.initImpl)}
   </details>`).join('');
     }
 
@@ -130,6 +137,9 @@ function generateHtml(traces: VtableTrace[], nonce: string): string {
     .trace-connector { color: var(--vscode-descriptionForeground, #888); padding: 2px 16px; }
     details { margin: 8px 0; }
     summary { cursor: pointer; font-weight: bold; padding: 4px 0; }
+    .caller-list { list-style: none; margin: 4px 0 0 0; padding: 0; }
+    .caller-list li { margin: 4px 0; padding: 4px 0; border-top: 1px solid var(--vscode-panel-border, #444); }
+    .node-count { font-size: 0.85em; color: var(--vscode-descriptionForeground, #888); margin-left: 4px; }
   </style>
 </head>
 <body>
@@ -182,7 +192,7 @@ export class VtableTraceProvider {
         private readonly showTextDocument: typeof vscode.window.showTextDocument
     ) {}
 
-    // @{"req": ["REQ-VSCODE-027", "REQ-VSCODE-028", "REQ-VSCODE-029", "REQ-VSCODE-030", "REQ-VSCODE-031", "REQ-VSCODE-032"]}
+    // @{"req": ["REQ-VSCODE-027", "REQ-VSCODE-028", "REQ-VSCODE-029", "REQ-VSCODE-030", "REQ-VSCODE-031", "REQ-VSCODE-032", "REQ-VSCODE-046"]}
     /**
      * Resolves the vtable call at the given cursor position and shows the full
      * resolution trace (up to 4 nodes) in a WebviewPanel.
@@ -211,18 +221,29 @@ export class VtableTraceProvider {
 
         // Steps 3–4 — Build one VtableTrace per resolved location.
         const traces: VtableTrace[] = result.locations.map(location => {
-            // Step 3 — Composition root node (REQ-VSCODE-031, REQ-VSCODE-036, REQ-VSCODE-037).
-            // When compRootFile is set, use it as the true composition root (caller of Init, e.g.
-            // main.c). Otherwise fall back to initCallFile ?? assignmentFile as before.
-            const compRootFile = location.compRootFile ?? location.initCallFile ?? location.assignmentFile ?? 'unknown';
-            const compRootLine = location.compRootLine ?? location.initCallLine ?? location.assignmentLine ?? 0;
-            const compositionRoot: TraceNode = {
-                type:   'composition-root',
-                label:  location.functionName,
-                file:   compRootFile,
-                line:   compRootLine,
-                detail: this.readSourceLine(compRootFile, compRootLine),
-            };
+            // Step 3 — Composition root nodes (REQ-VSCODE-031, REQ-VSCODE-036, REQ-VSCODE-037, REQ-VSCODE-046).
+            // When allCompRoots is set, build one TraceNode per entry.
+            // Otherwise fall back to a single-element array using compRootFile ?? initCallFile ?? assignmentFile.
+            let compositionRoots: TraceNode[];
+            if (location.allCompRoots && location.allCompRoots.length > 0) {
+                compositionRoots = location.allCompRoots.map(entry => ({
+                    type:   'composition-root' as const,
+                    label:  location.functionName,
+                    file:   entry.file,
+                    line:   entry.line,
+                    detail: this.readSourceLine(entry.file, entry.line),
+                }));
+            } else {
+                const compRootFile = location.compRootFile ?? location.initCallFile ?? location.assignmentFile ?? 'unknown';
+                const compRootLine = location.compRootLine ?? location.initCallLine ?? location.assignmentLine ?? 0;
+                compositionRoots = [{
+                    type:   'composition-root',
+                    label:  location.functionName,
+                    file:   compRootFile,
+                    line:   compRootLine,
+                    detail: this.readSourceLine(compRootFile, compRootLine),
+                }];
+            }
 
             // Step 3b — Initialization implementation node (REQ-VSCODE-037).
             // Only present when compRootFile is resolved and initCallFile is known, and they
@@ -256,7 +277,7 @@ export class VtableTraceProvider {
                 detail: signature,
             };
 
-            return { callSite, compositionRoot, initImpl, implementation };
+            return { callSite, compositionRoots, initImpl, implementation };
         });
 
         // Step 5 — Display the WebviewPanel (§11.2 Step 5, §11.3).
@@ -274,7 +295,7 @@ export class VtableTraceProvider {
         panel.webview.html = generateHtml(traces, nonce);
 
         // Register message handler for file navigation clicks.
-        panel.webview.onDidReceiveMessage((message: { type: string; file: string; line: number }) => {
+        const messageDisposable = panel.webview.onDidReceiveMessage((message: { type: string; file: string; line: number }) => {
             if (message.type === 'navigate') {
                 this.showTextDocument(
                     vscode.Uri.file(message.file),
@@ -282,6 +303,7 @@ export class VtableTraceProvider {
                 );
             }
         });
+        panel.onDidDispose(() => messageDisposable.dispose());
     }
 
     /**

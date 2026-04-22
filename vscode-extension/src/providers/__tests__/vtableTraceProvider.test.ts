@@ -831,3 +831,187 @@ describe('VtableTraceProvider', () => {
         expect(rootLink).toBeDefined();
     });
 });
+
+// ---------------------------------------------------------------------------
+// REQ-VSCODE-046: Composition Root Callers List in Trace Panel
+// ---------------------------------------------------------------------------
+
+describe('REQ-VSCODE-046: Composition Root Callers List', () => {
+    let mockResolver: jest.Mocked<Pick<VtableResolver, 'resolve'>>;
+    let mockStatusBar: { showError: jest.Mock; dispose: jest.Mock };
+    let mockCreateWebviewPanel: jest.Mock;
+    let mockShowTextDocument: jest.Mock;
+    let fakePanel: ReturnType<typeof createFakePanel>;
+
+    beforeEach(() => {
+        fakePanel = createFakePanel();
+
+        mockResolver = {
+            resolve: jest.fn(),
+        };
+
+        mockStatusBar = {
+            showError: jest.fn(),
+            dispose: jest.fn(),
+        };
+
+        mockCreateWebviewPanel = jest.fn().mockReturnValue(fakePanel);
+        mockShowTextDocument = jest.fn().mockResolvedValue(undefined);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    // -------------------------------------------------------------------------
+    // TC-TRACE-046-001: Single allCompRoots entry — caller-list with 1 item, "(1 caller)" label
+    // -------------------------------------------------------------------------
+
+    // @{"verify": ["REQ-VSCODE-046"]}
+    it('TC-TRACE-046-001: single allCompRoots entry renders caller-list with 1 item and "(1 caller)" label', () => {
+        mockResolver.resolve.mockReturnValue({
+            found: true,
+            locations: [{
+                functionName: 'JunoDs_BuffQueue_Dequeue',
+                file: '/abs/juno_buff_queue.c',
+                line: 112,
+                assignmentFile: '/abs/engine_app.c',
+                assignmentLine: 45,
+                allCompRoots: [{ file: '/abs/main.c', line: 12 }],
+            }],
+        });
+
+        const provider = new VtableTraceProvider(
+            mockResolver as unknown as VtableResolver,
+            createMinimalIndex(),
+            mockStatusBar as unknown as StatusBarHelper,
+            mockCreateWebviewPanel,
+            mockShowTextDocument
+        );
+
+        provider.showTrace(
+            '/abs/engine_app.c',
+            200,
+            20,
+            '    tStatus = ptCmdPipeApi->Dequeue(ptCmdPipe, &tMsg);'
+        );
+
+        expect(mockCreateWebviewPanel).toHaveBeenCalledTimes(1);
+        const html: string = fakePanel.webview.html;
+
+        // caller-list container must be present
+        expect(html).toContain('<ul class="caller-list">');
+
+        // singular label — must NOT say "(1 callers)"
+        expect(html).toContain('(1 caller)');
+        expect(html).not.toContain('(1 callers)');
+
+        // the single entry must link to /abs/main.c at line 12
+        expect(html).toContain('data-file="/abs/main.c"');
+        expect(html).toContain('data-line="12"');
+    });
+
+    // -------------------------------------------------------------------------
+    // TC-TRACE-046-002: Three allCompRoots entries — caller-list with 3 items, "(3 callers)" label
+    // -------------------------------------------------------------------------
+
+    // @{"verify": ["REQ-VSCODE-046"]}
+    it('TC-TRACE-046-002: three allCompRoots entries render "(3 callers)" label and exactly 3 <li> elements', () => {
+        mockResolver.resolve.mockReturnValue({
+            found: true,
+            locations: [{
+                functionName: 'JunoDs_BuffQueue_Dequeue',
+                file: '/abs/juno_buff_queue.c',
+                line: 112,
+                assignmentFile: '/abs/engine_app.c',
+                assignmentLine: 45,
+                allCompRoots: [
+                    { file: '/abs/main.c',          line: 12 },
+                    { file: '/abs/test_broker.c',   line: 45 },
+                    { file: '/abs/platform_init.c', line: 88 },
+                ],
+            }],
+        });
+
+        const provider = new VtableTraceProvider(
+            mockResolver as unknown as VtableResolver,
+            createMinimalIndex(),
+            mockStatusBar as unknown as StatusBarHelper,
+            mockCreateWebviewPanel,
+            mockShowTextDocument
+        );
+
+        provider.showTrace(
+            '/abs/engine_app.c',
+            200,
+            20,
+            '    tStatus = ptCmdPipeApi->Dequeue(ptCmdPipe, &tMsg);'
+        );
+
+        expect(mockCreateWebviewPanel).toHaveBeenCalledTimes(1);
+        const html: string = fakePanel.webview.html;
+
+        // plural label
+        expect(html).toContain('(3 callers)');
+
+        // exactly 3 <li> elements in the HTML
+        const liMatches = html.match(/<li>/g);
+        expect(liMatches).not.toBeNull();
+        expect(liMatches!.length).toBe(3);
+
+        // all three file paths must appear in the HTML
+        expect(html).toContain('/abs/main.c');
+        expect(html).toContain('/abs/test_broker.c');
+        expect(html).toContain('/abs/platform_init.c');
+    });
+
+    // -------------------------------------------------------------------------
+    // TC-TRACE-046-003: No allCompRoots — fallback to compRootFile as single-item list
+    // -------------------------------------------------------------------------
+
+    // @{"verify": ["REQ-VSCODE-046"]}
+    it('TC-TRACE-046-003: absent allCompRoots falls back to compRootFile as a single-item caller-list', () => {
+        mockResolver.resolve.mockReturnValue({
+            found: true,
+            locations: [{
+                functionName: 'JunoDs_BuffQueue_Dequeue',
+                file: '/abs/juno_buff_queue.c',
+                line: 112,
+                assignmentFile: '/abs/engine_app.c',
+                assignmentLine: 45,
+                compRootFile: '/abs/fallback.c',
+                compRootLine: 7,
+                // allCompRoots intentionally absent
+            }],
+        });
+
+        const provider = new VtableTraceProvider(
+            mockResolver as unknown as VtableResolver,
+            createMinimalIndex(),
+            mockStatusBar as unknown as StatusBarHelper,
+            mockCreateWebviewPanel,
+            mockShowTextDocument
+        );
+
+        provider.showTrace(
+            '/abs/engine_app.c',
+            200,
+            20,
+            '    tStatus = ptCmdPipeApi->Dequeue(ptCmdPipe, &tMsg);'
+        );
+
+        expect(mockCreateWebviewPanel).toHaveBeenCalledTimes(1);
+        const html: string = fakePanel.webview.html;
+
+        // caller-list container must be present even in fallback mode
+        expect(html).toContain('<ul class="caller-list">');
+
+        // singular label for single fallback entry
+        expect(html).toContain('(1 caller)');
+        expect(html).not.toContain('(1 callers)');
+
+        // the fallback entry must link to /abs/fallback.c at line 7
+        expect(html).toContain('data-file="/abs/fallback.c"');
+        expect(html).toContain('data-line="7"');
+    });
+});

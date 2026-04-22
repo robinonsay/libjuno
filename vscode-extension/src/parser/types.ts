@@ -1,4 +1,4 @@
-// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003", "REQ-VSCODE-031", "REQ-VSCODE-041"]}
+// @{"req": ["REQ-VSCODE-001", "REQ-VSCODE-003", "REQ-VSCODE-031", "REQ-VSCODE-041", "REQ-VSCODE-045", "REQ-VSCODE-048"]}
 /**
  * @file types.ts
  *
@@ -353,6 +353,8 @@ export interface ConcreteLocation {
   compRootFile?: string;
   /** 1-based line of the composition root call site. */
   compRootLine?: number;
+  /** All callers of the Init function found during resolveInitCallers(), sorted by file then line. */
+  allCompRoots?: Array<{ file: string; line: number }>;
   /**
    * Discriminates the origin of this location. REQ-VSCODE-041.
    * - 'assignment' — location came from failureHandlerAssignments (a handler wiring site).

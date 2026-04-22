@@ -86,7 +86,7 @@
       "title": "Multiple Implementation Selection",
       "description": "When multiple concrete implementations are found for a vtable API function call, the extension shall present a selection list to the user.",
       "rationale": "Multiple implementations may exist across a workspace. Presenting a selection list allows the developer to choose the correct target without the extension making an incorrect assumption.",
-      "verification_method": "Demonstration",
+      "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-002"
       ],
@@ -97,7 +97,7 @@
       "title": "Native Go to Definition Integration",
       "description": "The extension shall integrate with VSCode's built-in Go to Definition system.",
       "rationale": "Integrating with the native Go to Definition system (Ctrl+Click, F12) provides a familiar, zero-learning-curve experience for developers.",
-      "verification_method": "Demonstration",
+      "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-002"
       ],
@@ -199,7 +199,7 @@
       "title": "Failure Handler Navigation",
       "description": "The extension shall provide Go to Definition navigation that resolves failure handler function pointers to their concrete implementation functions.",
       "rationale": "Failure handlers are injected via dependency injection in the same manner as vtable API functions. Developers need to trace failure handler assignments to understand diagnostic and error-handling behavior in their system.",
-      "verification_method": "Demonstration",
+      "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-001"
       ],
@@ -227,7 +227,7 @@
       "title": "AI Vtable Resolution Access",
       "description": "The extension shall expose vtable API function resolution capabilities to AI developer tools.",
       "rationale": "AI developer tools need to resolve vtable-dispatched API calls to concrete implementations in order to understand and reason about LibJuno codebases effectively.",
-      "verification_method": "Demonstration",
+      "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-017"
       ],
@@ -238,7 +238,7 @@
       "title": "AI Failure Handler Resolution Access",
       "description": "The extension shall expose failure handler function resolution capabilities to AI developer tools.",
       "rationale": "AI developer tools need to trace failure handler assignments to understand error-handling behavior when analyzing or generating LibJuno code.",
-      "verification_method": "Demonstration",
+      "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-017"
       ],
@@ -389,7 +389,9 @@
       ],
       "implements": [
         "REQ-VSCODE-036",
-        "REQ-VSCODE-037"
+        "REQ-VSCODE-037",
+        "REQ-VSCODE-044",
+        "REQ-VSCODE-045"
       ]
     },
     {
@@ -521,6 +523,61 @@
       "verification_method": "Test",
       "uses": [
         "REQ-VSCODE-001"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-044",
+      "title": "Composition Root Detection Comment and String Immunity",
+      "description": "The composition root detection algorithm shall not produce false-positive results from C line comments (//), block comments (/* */), or string literals. When the Init function name or API variable name appears only inside a comment or string literal on a source line, that line shall not be recorded as a composition root call site.",
+      "rationale": "The current regex-based scan matches &varName and Init function names inside C-style block comments, line comments, and string literals, producing false positives that point to incorrect files and lines. Developers following the trace view are navigated to comment text rather than real call sites, with no warning or diagnostic emitted.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-031"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-045",
+      "title": "All Composition Root Callers Collected",
+      "description": "When multiple call sites invoke the Init function that wires a vtable, the composition root detection algorithm shall collect all such call sites, not only the first one encountered during the file scan.",
+      "rationale": "The current resolveInitCallers() stops at the first match via found=true/break, and the selection depends on the non-deterministic iteration order of the file hash map. In multi-translation-unit projects there can be multiple callers of the same Init function (e.g., main.c, test harnesses, platform variants), and the developer needs to see all of them to understand the full wiring context.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-031"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-046",
+      "title": "Composition Root Callers List in Trace Panel",
+      "description": "The Vtable Resolution Trace webview panel shall display a list of all composition root callers (all call sites that invoke the vtable-wiring Init function) as clickable file:line links. Each link shall navigate the editor to the corresponding source file and line when clicked.",
+      "rationale": "The current trace view shows a single Composition Root node. In a real workspace the same Init function may be called from multiple places — unit test harnesses, application entry points, platform variants. A developer debugging a DI wiring problem needs to see all of those callers at a glance without switching to a separate panel or performing an additional gesture.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-027"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-047",
+      "title": "Composition Root Detection Recognizes main()",
+      "description": "The composition root detection algorithm shall correctly identify main() as a composition root caller when main() directly calls the Init function that wires a vtable, rather than skipping it.",
+      "rationale": "The current resolveInitCallers() contains the guard `initFnName === 'main': CONTINUE`, which was intended to skip cases where main is merely the enclosing function of a vtable assignment (not a caller of a separate Init function). When main() IS the direct caller of the Init function, skipping it means the composition root node is absent from the trace view, leaving the wiring chain unresolved for the simplest and most common project topology.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-036"
+      ],
+      "implements": []
+    },
+    {
+      "id": "REQ-VSCODE-048",
+      "title": "Deterministic Composition Root Caller Ordering",
+      "description": "When multiple callers of an Init function are collected, the extension shall present those callers in a deterministic order (sorted by file path, then by line number ascending), independent of workspace file scan order.",
+      "rationale": "The current implementation stops at the first caller found in an arbitrary Map iteration order that changes between cache invalidations. Even when all callers are collected, presenting them in scan order means the displayed list changes across indexing runs, which is disorienting and makes automated testing non-reproducible.",
+      "verification_method": "Test",
+      "uses": [
+        "REQ-VSCODE-045"
       ],
       "implements": []
     }

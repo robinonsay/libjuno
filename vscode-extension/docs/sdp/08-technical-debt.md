@@ -102,8 +102,8 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | **Origin** | Sprint 34 — discovered when writing TC-FSE-001–009 |
 | **Severity** | Low |
 | **Effort** | S |
-| **Status** | Deferred |
-| **Resolution** | Deferred to future sprint (PM decision, Sprint 36). |
+| **Status** | Closed (Sprint 38) |
+| **Resolution** | Added optional `indexerFactory` parameter to `activate()` in `extension.ts`. Default path unchanged; tests can now inject a stub through the production DI boundary without `jest.mock()`. |
 
 **Description:** The `activate()` function constructs a `WorkspaceIndexer` directly with `new WorkspaceIndexer(...)`. There is no factory parameter or injectable seam through which tests can supply a pre-configured indexer without intercepting the module registry. The `fileSystemEvents.test.ts` activation tests work around this by using `jest.mock('../indexer/workspaceIndexer')` on an internal module — a pattern explicitly discouraged by the project's DI standards.
 
@@ -119,7 +119,7 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | TD-SRC-002 | `JUNO_MODULE_RESULT` Extracted but Not Consumed | Source Code | Low | S | Closed (Sprint 36) |
 | TD-SRC-003 | `(t as any).tokenType?.name` Unsafe Cast in Visitor | Source Code | Medium | S | Closed (Sprint 36) |
 | TD-SRC-004 | Heavy Type Assertion Usage in Visitor | Source Code | Low | L | Closed (Sprint 36) |
-| TD-SRC-005 | `activate()` Has No DI Seam for `WorkspaceIndexer` | Source Code | Low | S | Deferred |
+| TD-SRC-005 | `activate()` Has No DI Seam for `WorkspaceIndexer` | Source Code | Low | S | Closed (Sprint 38) |
 
 ---
 
@@ -233,7 +233,8 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | **Origin** | Sprint 17 — regression test for cross-file deferred vtable resolution |
 | **Severity** | Medium |
 | **Effort** | XS |
-| **Status** | Open |
+| **Status** | Closed (Sprint 38) |
+| **Resolution** | Added `15000` (15 s) as third argument to the `it()` call for REG-17-007 in `sprint17-regression.test.ts`. |
 
 **Description:** REG-17-007 exercises the cross-file deferred positional vtable resolution path which involves real file I/O and a full workspace index cycle. Under parallel Jest execution the test times out with the default 5-second timeout; it passes reliably when run serially. The fix is a single `timeout` option on the test function.
 
@@ -250,7 +251,8 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | **Origin** | Sprint 12 — StatusBarHelper added; dispose() pattern not enforced |
 | **Severity** | Medium |
 | **Effort** | S |
-| **Status** | Open |
+| **Status** | Closed (Sprint 38) |
+| **Resolution** | Confirmed `junoDefinitionProvider.test.ts` already had proper `afterEach` disposal. Fixed `statusBarHelper.test.ts` — moved `helper` to suite scope with `afterEach(() => helper?.dispose())`. |
 
 **Description:** `StatusBarHelper.showError()` schedules a 5-second auto-clear timeout. Any test suite that creates a `StatusBarHelper` in `beforeEach` but omits `afterEach(() => statusBar.dispose())` leaks the active timer into the Jest worker process. On full-suite runs, Jest logs "A worker process has failed to exit gracefully" and force-kills the worker. This is a pre-existing issue visible on every `npm test` run but not affecting test results.
 
@@ -267,7 +269,8 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | **Origin** | Sprint 34 — activation tests require a mock indexer; no DI seam available in `activate()` |
 | **Severity** | Low |
 | **Effort** | S |
-| **Status** | Open |
+| **Status** | Closed (Sprint 38) |
+| **Resolution** | Removed `jest.mock('../indexer/workspaceIndexer')`. Rewrote TC-FSE-001, TC-FSE-004, TC-FSE-005 to pass a stub factory through `activate()`'s new `indexerFactory` parameter (enabled by TD-SRC-005 fix). |
 
 **Description:** The activation-level tests (TC-FSE-001, TC-FSE-004, TC-FSE-005) mock the `workspaceIndexer` module at the Jest registry level because `activate()` provides no DI seam for the indexer. This pattern is explicitly discouraged by the project's DI standards (test doubles must be injected through the production DI boundary). The mock is functional but couples the tests to Jest's module system rather than to the production interface.
 
@@ -279,9 +282,9 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 
 | ID | Title | Category | Severity | Effort | Status |
 |----|-------|----------|----------|--------|--------|
-| TD-TST-001 | REG-17-007 Needs Custom Timeout | Test Infrastructure | Medium | XS | Open |
-| TD-TST-002 | Jest Worker Force-Exit Warning (StatusBarHelper Timer Leak) | Test Infrastructure | Medium | S | Open |
-| TD-TST-003 | `jest.mock()` on Internal Module in `fileSystemEvents.test.ts` | Test Infrastructure | Low | S | Open |
+| TD-TST-001 | REG-17-007 Needs Custom Timeout | Test Infrastructure | Medium | XS | Closed (Sprint 38) |
+| TD-TST-002 | Jest Worker Force-Exit Warning (StatusBarHelper Timer Leak) | Test Infrastructure | Medium | S | Closed (Sprint 38) |
+| TD-TST-003 | `jest.mock()` on Internal Module in `fileSystemEvents.test.ts` | Test Infrastructure | Low | S | Closed (Sprint 38) |
 
 ---
 
@@ -377,7 +380,8 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | **Origin** | Noted as "O2" finding in Sprint review; deferred from `07-appendix.md` |
 | **Severity** | Low |
 | **Effort** | XS |
-| **Status** | Open (deferred from Appendix O2) |
+| **Status** | Closed (Sprint 38) |
+| **Resolution** | Changed `verification_method` from `"Demonstration"` to `"Test"` for REQ-VSCODE-006, REQ-VSCODE-007, REQ-VSCODE-016, REQ-VSCODE-018, REQ-VSCODE-019 in `requirements.json`. |
 
 **Description:** Five requirements are classified as `verification_method: "Demonstration"` but each has one or more automated Jest tests with `@{"verify": [...]}` tags. The correct method is `"Test"`. The misclassification does not affect test execution or the traceability tool (which checks tag-to-requirement links, not verification methods), but it misrepresents the project's automated coverage level in documentation and audits.
 
@@ -395,7 +399,7 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 
 | ID | Title | Category | Severity | Effort | Status |
 |----|-------|----------|----------|--------|--------|
-| TD-REQ-001 | Five Requirements Misclassified as "Demonstration" Instead of "Test" | Requirements | Low | XS | Open (deferred from Appendix O2) |
+| TD-REQ-001 | Five Requirements Misclassified as "Demonstration" Instead of "Test" | Requirements | Low | XS | Closed (Sprint 38) |
 
 ---
 
@@ -410,7 +414,8 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | **Origin** | Sprint 17 — discovered that `reindexFile()` silently dropped cross-file positional vtable initializers because `mergeInto()` was called without a `DeferredPositional[]` array |
 | **Severity** | High |
 | **Effort** | S |
-| **Status** | Open (fixed for known paths; maintenance risk for future paths) |
+| **Status** | Closed (Sprint 38) |
+| **Resolution** | Made `deferred` parameter required (not optional) in both `indexFile()` and `mergeInto()` in `workspaceIndexer.ts`. The `if (deferred)` guard was removed. TypeScript now enforces at compile time that all call sites supply an explicit array, eliminating the silent data-loss risk. |
 
 **Description:** `mergeInto()` has an `if (deferred)` guard that silently drops `pendingPositionalVtables` when no deferred array is provided. This means any future deferred data path added to `mergeInto()` will also be silently dropped by `reindexFile()` unless the developer explicitly threads the array through. The Sprint 17 fix addressed the known `DeferredPositional` path, but the architecture creates an ongoing maintenance trap: there is no compile-time check or type-level guarantee that all deferred data paths are wired in both `fullIndex()` and `reindexFile()`.
 
@@ -461,7 +466,8 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | **Origin** | Sprint 22 — discovered that without explicit exclusion, `__mocks__/` compiles to `out/__mocks__/` and ships in the VSIX |
 | **Severity** | Medium |
 | **Effort** | XS |
-| **Status** | Open (documented, requires verification each build) |
+| **Status** | Closed (Sprint 38) |
+| **Resolution** | Verified `"**/__mocks__/**"` is present in `tsconfig.json` `exclude` array. No change needed; item is confirmed correct. |
 
 **Description:** Jest `__mocks__/` directories are test infrastructure and must not appear in the compiled `out/` directory or in the packaged VSIX. Without `"**/__mocks__/**"` in `tsconfig.json` `exclude`, the TypeScript compiler picks them up alongside production source files. The entry should be present but must be verified after any `tsconfig.json` restructuring.
 
@@ -473,10 +479,10 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 
 | ID | Title | Category | Severity | Effort | Status |
 |----|-------|----------|----------|--------|--------|
-| TD-ARCH-001 | `reindexFile()` Must Mirror `fullIndex()` for All Deferred Data Paths | Architecture | High | S | Open (fixed for known paths; maintenance risk for future paths) |
+| TD-ARCH-001 | `reindexFile()` Must Mirror `fullIndex()` for All Deferred Data Paths | Architecture | High | S | Closed (Sprint 38) |
 | TD-ARCH-002 | Chevrotain `gobbleMacroCallStatement` Uses Private Method Instead of Grammar Rule | Architecture | Medium | M | Open |
 | TD-ARCH-003 | VSIX Packaging: Runtime Dependency Bundling Requires Manual Verification | Architecture | High | S | Open |
-| TD-ARCH-004 | TypeScript `__mocks__/` Directory Excluded from Production Build | Architecture | Medium | XS | Open (documented, requires verification each build) |
+| TD-ARCH-004 | TypeScript `__mocks__/` Directory Excluded from Production Build | Architecture | Medium | XS | Closed (Sprint 38) |
 
 ---
 
@@ -488,25 +494,25 @@ This register catalogs known technical debt in the LibJuno VSCode extension as o
 | TD-SRC-002 | `JUNO_MODULE_RESULT` Extracted but Not Consumed | Source Code | Low | S | Closed (Sprint 36) |
 | TD-SRC-003 | `(t as any).tokenType?.name` Unsafe Cast in Visitor | Source Code | Medium | S | Closed (Sprint 36) |
 | TD-SRC-004 | Heavy Type Assertion Usage in Visitor | Source Code | Low | L | Closed (Sprint 36) |
-| TD-SRC-005 | `activate()` Has No DI Seam for `WorkspaceIndexer` | Source Code | Low | S | Deferred |
+| TD-SRC-005 | `activate()` Has No DI Seam for `WorkspaceIndexer` | Source Code | Low | S | Closed (Sprint 38) |
 | TD-COV-001 | `extension.ts` Branch Coverage 67.2% | Coverage | High | S | Open |
 | TD-COV-002 | `visitor.ts` Branch Coverage 77.97% | Coverage | High | L | Open |
 | TD-COV-003 | `vtableTraceProvider.ts` Branch Coverage 78.12% | Coverage | Medium | S | Open |
 | TD-COV-004 | `workspaceIndexer.ts` Branch Coverage 83.46% | Coverage | Medium | S | Open |
 | TD-COV-005 | `mcpServer.ts` Branch Coverage 83.09% | Coverage | Medium | S | Open |
-| TD-TST-001 | REG-17-007 Needs Custom Timeout | Test Infrastructure | Medium | XS | Open |
-| TD-TST-002 | Jest Worker Force-Exit Warning (StatusBarHelper Timer Leak) | Test Infrastructure | Medium | S | Open |
-| TD-TST-003 | `jest.mock()` on Internal Module in `fileSystemEvents.test.ts` | Test Infrastructure | Low | S | Open |
+| TD-TST-001 | REG-17-007 Needs Custom Timeout | Test Infrastructure | Medium | XS | Closed (Sprint 38) |
+| TD-TST-002 | Jest Worker Force-Exit Warning (StatusBarHelper Timer Leak) | Test Infrastructure | Medium | S | Closed (Sprint 38) |
+| TD-TST-003 | `jest.mock()` on Internal Module in `fileSystemEvents.test.ts` | Test Infrastructure | Low | S | Closed (Sprint 38) |
 | TD-DOC-001 | `01-overview.md` Test Count Stale (622 vs 717) | Documentation | Low | XS | Open |
 | TD-DOC-002 | `01-overview.md` Source File Line Counts Stale | Documentation | Low | S | Open |
 | TD-DOC-003 | `01-overview.md` Phase WBS Stops at Phase 19 (Actual: Phase 30) | Documentation | High | M | Open |
 | TD-DOC-004 | TC-P9-201/202/203 and TC-RES-005 Mislabeled in Test Case Docs | Documentation | Low | XS | Open (deferred from Appendix m4) |
-| TD-REQ-001 | Five Requirements Misclassified as "Demonstration" Instead of "Test" | Requirements | Low | XS | Open (deferred from Appendix O2) |
-| TD-ARCH-001 | `reindexFile()` Must Mirror `fullIndex()` for All Deferred Data Paths | Architecture | High | S | Open (fixed for known paths; maintenance risk for future paths) |
+| TD-REQ-001 | Five Requirements Misclassified as "Demonstration" Instead of "Test" | Requirements | Low | XS | Closed (Sprint 38) |
+| TD-ARCH-001 | `reindexFile()` Must Mirror `fullIndex()` for All Deferred Data Paths | Architecture | High | S | Closed (Sprint 38) |
 | TD-ARCH-002 | Chevrotain `gobbleMacroCallStatement` Uses Private Method Instead of Grammar Rule | Architecture | Medium | M | Open |
 | TD-ARCH-003 | VSIX Packaging: Runtime Dependency Bundling Requires Manual Verification | Architecture | High | S | Open |
-| TD-ARCH-004 | TypeScript `__mocks__/` Directory Excluded from Production Build | Architecture | Medium | XS | Open (documented, requires verification each build) |
+| TD-ARCH-004 | TypeScript `__mocks__/` Directory Excluded from Production Build | Architecture | Medium | XS | Closed (Sprint 38) |
 
 ---
 
-**Last Updated:** Sprint 36 (2026-04-21)
+**Last Updated:** Sprint 38 (2026-04-21)

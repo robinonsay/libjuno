@@ -14,7 +14,10 @@ import { VtableTraceProvider } from './providers/vtableTraceProvider';
 let mcpServer: McpServer | undefined;
 
 // @{"req": ["REQ-VSCODE-001"]}
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
+export async function activate(
+    context: vscode.ExtensionContext,
+    indexerFactory?: (root: string, excludes: string[]) => WorkspaceIndexer
+): Promise<void> {
     const outputChannel = vscode.window.createOutputChannel('LibJuno');
     context.subscriptions.push(outputChannel);
     const log = (msg: string) => outputChannel.appendLine(msg);
@@ -33,7 +36,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const mcpServerPort = config.get<number>('mcpServerPort', 6543);
 
     // 3. Create indexer
-    const indexer = new WorkspaceIndexer(workspaceRoot, excludedDirs);
+    const factory = indexerFactory ?? ((r: string, ex: string[]) => new WorkspaceIndexer(r, ex));
+    const indexer = factory(workspaceRoot, excludedDirs);
 
     // Status bar — created early so progress/errors can show
     const statusBar = new StatusBarHelper();

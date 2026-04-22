@@ -23,6 +23,8 @@ import * as os from 'os';
 import * as vscode from 'vscode';
 import { createMockExtensionContext, resetMocks } from '../__mocks__/vscode';
 import { VtableResolver } from '../resolver/vtableResolver';
+import { WorkspaceIndexer } from '../indexer/workspaceIndexer';
+import { activate } from '../extension';
 
 // ---------------------------------------------------------------------------
 // Prevent MCP server from binding a real TCP port during activation tests.
@@ -35,48 +37,41 @@ jest.mock('../mcp/mcpServer', () => ({
 }));
 
 // ---------------------------------------------------------------------------
-// Mock WorkspaceIndexer for activation tests only (TC-FSE-001, 004, 005).
-// Real indexer tests use jest.requireActual to bypass this mock.
-// ---------------------------------------------------------------------------
-jest.mock('../indexer/workspaceIndexer', () => {
-    const actual = jest.requireActual('../indexer/workspaceIndexer');
-    return {
-        ...actual,
-        WorkspaceIndexer: jest.fn().mockImplementation(() => ({
-            loadFromCache: jest.fn().mockResolvedValue(false),
-            fullIndex: jest.fn().mockResolvedValue(undefined),
-            reindexFile: jest.fn().mockResolvedValue(undefined),
-            removeFile: jest.fn(),
-            index: {
-                localTypeInfo: new Map(),
-                vtableAssignments: new Map(),
-                functionDefinitions: new Map(),
-                moduleRoots: new Map(),
-                traitRoots: new Map(),
-                derivationChain: new Map(),
-                apiStructFields: new Map(),
-                failureHandlerAssignments: new Map(),
-                apiMemberRegistry: new Map(),
-                initCallIndex: new Map(),
-            },
-            dispose: jest.fn(),
-        })),
-    };
-});
-
-// Import activate AFTER jest.mock() calls so mocks are in place.
-import { activate } from '../extension';
-
-// Real WorkspaceIndexer constructor — bypasses the module-level mock above.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const RealWorkspaceIndexer: typeof import('../indexer/workspaceIndexer').WorkspaceIndexer =
-    jest.requireActual('../indexer/workspaceIndexer').WorkspaceIndexer;
-
-// ---------------------------------------------------------------------------
 // Helper: get the FSW watcher returned by createFileSystemWatcher.
 // ---------------------------------------------------------------------------
 function getActivatedWatcher(): any {
     return (vscode.workspace.createFileSystemWatcher as jest.Mock).mock.results[0].value;
+}
+
+// ---------------------------------------------------------------------------
+// Helper: build a stub WorkspaceIndexer and the factory that returns it.
+// The stub mirrors the methods activate() actually calls so that tests can
+// assert on interaction behavior without touching the real file system.
+// ---------------------------------------------------------------------------
+function makeStubIndexer() {
+    const stubIndexer = {
+        loadFromCache: jest.fn().mockResolvedValue(false),
+        fullIndex: jest.fn().mockResolvedValue(undefined),
+        reindexFile: jest.fn().mockResolvedValue(undefined),
+        removeFile: jest.fn(),
+        dispose: jest.fn(),
+        index: {
+            localTypeInfo: new Map(),
+            vtableAssignments: new Map(),
+            functionDefinitions: new Map(),
+            moduleRoots: new Map(),
+            traitRoots: new Map(),
+            derivationChain: new Map(),
+            apiStructFields: new Map(),
+            failureHandlerAssignments: new Map(),
+            apiMemberRegistry: new Map(),
+            initCallIndex: new Map(),
+        },
+    } as unknown as WorkspaceIndexer;
+
+    const factory = (_root: string, _excludes: string[]) => stubIndexer;
+
+    return { stubIndexer, factory };
 }
 
 // ===========================================================================
@@ -96,7 +91,8 @@ describe('FileSystemWatcher — activation registration', () => {
     // @{"verify": ["REQ-VSCODE-042"]}
     it('TC-FSE-001: onDidCreate is registered with a function callback on activation', async () => {
         const context = createMockExtensionContext();
-        await activate(context);
+        const { factory } = makeStubIndexer();
+        await activate(context, factory);
 
         const watcher = getActivatedWatcher();
 
@@ -107,7 +103,8 @@ describe('FileSystemWatcher — activation registration', () => {
     // @{"verify": ["REQ-VSCODE-042"]}
     it('TC-FSE-004: createFileSystemWatcher is called with the exact C/C++ glob pattern', async () => {
         const context = createMockExtensionContext();
-        await activate(context);
+        const { factory } = makeStubIndexer();
+        await activate(context, factory);
 
         const glob = (vscode.workspace.createFileSystemWatcher as jest.Mock).mock.calls[0][0];
 
@@ -119,7 +116,8 @@ describe('FileSystemWatcher — activation registration', () => {
     // @{"verify": ["REQ-VSCODE-043"]}
     it('TC-FSE-005: onDidDelete is registered with a function callback on activation', async () => {
         const context = createMockExtensionContext();
-        await activate(context);
+        const { factory } = makeStubIndexer();
+        await activate(context, factory);
 
         const watcher = getActivatedWatcher();
 
@@ -136,7 +134,7 @@ describe('FileSystemWatcher — activation registration', () => {
 describe('FileSystemWatcher — real indexer integration', () => {
 
     let tempDir: string;
-    let indexer: InstanceType<typeof RealWorkspaceIndexer>;
+    let indexer: WorkspaceIndexer;
 
     beforeAll(() => {
         tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'libjuno-fse-'));
@@ -169,7 +167,7 @@ describe('FileSystemWatcher — real indexer integration', () => {
             'JUNO_LOG_API_T gtApi = { .LogInfo = MyLogInfo };\n'
         );
 
-        indexer = new RealWorkspaceIndexer(dir, []);
+        indexer = new WorkspaceIndexer(dir, []);
 
         // Pre-condition: index is empty before reindexFile is called.
         expect(indexer.index.vtableAssignments.size).toBe(0);
@@ -204,7 +202,7 @@ describe('FileSystemWatcher — real indexer integration', () => {
             ].join('\n')
         );
 
-        indexer = new RealWorkspaceIndexer(dir, []);
+        indexer = new WorkspaceIndexer(dir, []);
 
         // Pre-condition: index is empty before reindexFile is called.
         expect(indexer.index.moduleRoots.size).toBe(0);
@@ -235,7 +233,7 @@ describe('FileSystemWatcher — real indexer integration', () => {
         );
         fs.writeFileSync(barPath, 'static void BarFunction(void) {}');
 
-        indexer = new RealWorkspaceIndexer(dir, []);
+        indexer = new WorkspaceIndexer(dir, []);
         await indexer.fullIndex();
 
         // Pre-condition: both files contribute records to the index.
@@ -280,7 +278,7 @@ describe('FileSystemWatcher — real indexer integration', () => {
         const filePath = path.join(dir, 'foo.c');
         fs.writeFileSync(filePath, 'static void Foo007(void) {}\n');
 
-        indexer = new RealWorkspaceIndexer(dir, []);
+        indexer = new WorkspaceIndexer(dir, []);
 
         // Call fullIndex() with real timers before switching to fake timers.
         // fullIndex() calls saveToCache() directly (not via scheduleSave), so the
@@ -335,7 +333,7 @@ describe('FileSystemWatcher — real indexer integration', () => {
         const callerFile = path.join(dir, 'caller.c');
         fs.writeFileSync(callerFile, 'static void Caller008(void) {}\n');
 
-        indexer = new RealWorkspaceIndexer(dir, []);
+        indexer = new WorkspaceIndexer(dir, []);
         await indexer.fullIndex();
 
         // Pre-condition: vtable assignment for JUNO_LOG_API_T.LogInfo must be present.
@@ -373,7 +371,7 @@ describe('FileSystemWatcher — real indexer integration', () => {
         // immediately deleted before the onDidCreate handler ran.
         expect(fs.existsSync(ghostPath)).toBe(false);
 
-        indexer = new RealWorkspaceIndexer(dir, []);
+        indexer = new WorkspaceIndexer(dir, []);
 
         // reindexFile() must not throw for a nonexistent path.
         await expect(indexer.reindexFile(ghostPath)).resolves.toBeUndefined();

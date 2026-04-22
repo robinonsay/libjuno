@@ -6,19 +6,25 @@ import * as vscode from 'vscode';
 import { resetMocks } from '../../__mocks__/vscode';
 
 describe('StatusBarHelper', () => {
-    afterEach(() => {
-        jest.useRealTimers();
-    });
+    let helper: StatusBarHelper | undefined;
 
     beforeEach(() => {
         resetMocks();
+        helper = undefined;
+    });
+
+    afterEach(() => {
+        if (helper) {
+            helper.dispose();
+        }
+        jest.useRealTimers();
     });
 
     // TC-ERR-001
     // @{"verify": ["REQ-VSCODE-004", "REQ-VSCODE-013"]}
     it('TC-ERR-001: Status bar message is displayed when showError() is called (non-intrusive)', () => {
         jest.useFakeTimers();
-        const helper = new StatusBarHelper();
+        helper = new StatusBarHelper();
         const item = (vscode.window.createStatusBarItem as jest.Mock).mock.results[0].value;
 
         helper.showError("No implementation found for 'JUNO_APP_API_T::Launch'.");
@@ -27,15 +33,13 @@ describe('StatusBarHelper', () => {
         expect(item.text).toContain("No implementation found for 'JUNO_APP_API_T::Launch'.");
         expect(item.show).toHaveBeenCalled();
         expect(vscode.window.showErrorMessage).not.toHaveBeenCalled();
-
-        helper.dispose();
     });
 
     // TC-ERR-002
     // @{"verify": ["REQ-VSCODE-013"]}
     it('TC-ERR-002: Status bar message auto-clears after 5 seconds (text restoration)', () => {
         jest.useFakeTimers();
-        const helper = new StatusBarHelper();
+        helper = new StatusBarHelper();
         const item = (vscode.window.createStatusBarItem as jest.Mock).mock.results[0].value;
 
         helper.showIndexed(10);
@@ -57,7 +61,7 @@ describe('StatusBarHelper', () => {
     // @{"verify": ["REQ-VSCODE-013"]}
     it('TC-ERR-003: Information message on repeated failure within 10 seconds', () => {
         jest.useFakeTimers();
-        const helper = new StatusBarHelper();
+        helper = new StatusBarHelper();
 
         // First error at T=0: showInformationMessage must NOT be called
         helper.showError('Error A');
